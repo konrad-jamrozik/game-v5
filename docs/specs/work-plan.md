@@ -16,8 +16,8 @@ owns the accepted authoring sequence and work tracking; individual specification
 The specifications are the durable design artifacts. Code and tests will be derived from accepted contracts. This is a
 specification work plan, not an implementation schedule, and it does not select formulas, frameworks, or balance values.
 
-**Next work:** draft [Domain Model](foundation/domain-model.md) alone and present it for review. No subject-spec
-drafting has started as part of creating this work plan.
+**Current work:** [Domain Model](foundation/domain-model.md) is Draft and **In review** for batch 1. Review its proposed
+model and section 7 decisions before advancing. Later batches have not started.
 
 ## 2. Dependencies and terminology
 
@@ -50,7 +50,7 @@ instead of marking the whole batch Complete.
 ### Current baseline
 
 - Specification Conventions is Accepted.
-- All 19 subject specifications are Stub documents.
+- Domain Model is Draft and In review for batch 1; the other 18 subject specifications remain Stub documents.
 - This work plan is Accepted; the 10-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
@@ -63,7 +63,7 @@ propose the change explicitly and update this table when agreed rather than sile
 
 | Batch | Specifications                                                                                                                                       | Review objective and reason for this order                                                                                                    | Work state |
 | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| 1     | [Domain Model](foundation/domain-model.md)                                                                                                           | Agree on vocabulary, entities, relationships, authoritative state, and boundaries before specifying behavior. Review this document alone.     | Queued     |
+| 1     | [Domain Model](foundation/domain-model.md)                                                                                                           | Agree on vocabulary, entities, relationships, authoritative state, and boundaries before specifying behavior. Review this document alone.     | In review  |
 | 2     | [Numbers and Randomness](foundation/numbers-and-randomness.md); [History and Persistence](foundation/history-and-persistence.md)                     | Establish exact calculations, reproducible randomness, reversible state, replay, and save/load contracts before relying on them in mechanics. | Queued     |
 | 3     | [Agents](mechanics/agents.md); [Economy and Upgrades](mechanics/economy-and-upgrades.md)                                                             | Define personnel availability, effectiveness, growth, resources, and purchases used by other mechanics.                                       | Queued     |
 | 4     | [Leads and Progression](mechanics/leads-and-progression.md); [Investigations](mechanics/investigations.md)                                           | Define the first major strategic subsystem, including precise progress, completion probabilities, player uncertainty, and commitment costs.   | Queued     |
@@ -146,7 +146,7 @@ available for revision; a change in order alone does not invalidate their conten
 
 These are workflow checks, not gameplay tests:
 
-- **First review (PLAN-001, PLAN-003, PLAN-005):** Starting from the current baseline, drafting Domain Model changes it to
+- **First review (PLAN-001, PLAN-003, PLAN-005):** Starting from a Stub Domain Model, drafting it changes its status to
   Draft and batch 1 to In review when presented. Preliminary API/information notes do not imply those contracts are
   complete. The next batch does not begin without the review opportunity or an explicit instruction to continue.
 - **Requested revision (PLAN-005, PLAN-006):** Feedback requests a different agent-assignment model. Batch 1 remains

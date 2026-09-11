@@ -12,7 +12,8 @@
 - [Specification conventions](spec-conventions.md): accepted layout, precision requirements, ownership, and lifecycle.
 - [Specification work plan and backlog](work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 
-All 19 subject documents below are **Stub** documents. They contain scoped TODOs, not accepted gameplay rules.
+[Domain Model](foundation/domain-model.md) is **Draft**, in review for batch 1. The other 18 subject documents remain
+**Stub** documents. No subject specification has been accepted yet.
 The conventions are **Accepted**; their acceptance reference is recorded in that document. Exact formulas, content values,
 public signatures, and frameworks have not been chosen.
 The work plan is **Accepted**; its acceptance reference is recorded in that document. This does not accept or implement the subject specifications.
