@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2025"],
+    "types": ["node"],
+    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.node.tsbuildinfo"
+  },
+  "include": [
+    "*.config.ts",
+    "*.config.js",
+    "*.config.mjs",
+    "test/**/*.ts",
+    "test/**/*.js",
+    "scripts/**/*.ts",
+    "scripts/**/*.js"
+  ]
+}

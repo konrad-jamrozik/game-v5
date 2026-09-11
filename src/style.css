@@ -1,0 +1,19 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+}
+
+#app {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 600;
+}
