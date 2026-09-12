@@ -7,6 +7,7 @@
 | Acceptance reference | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted." |
 | Scope                | Writing, reviewing, and maintaining game-v5 specifications                                                |
 | Related documents    | [Spec index](README.md), [game design brief](../game-design-brief.md)                                            |
+| Relationship revision | Requested by the project owner: simplify relationship listings with implicit defaults and only meaningful explicit edges; detailed REL contract remains Draft. |
 
 ## 1. Purpose and boundaries
 
@@ -55,15 +56,39 @@ restating a competing version.
 - Interface specs reference mechanical eligibility and effects rather than independently defining them.
 - Acceptance scenarios exercise rules; they cannot introduce new ones.
 
-List dependencies with their reason. Distinguish normative dependencies from background references. Cross-references
-can be mutual; they do not require duplicated ownership or imply a strict authoring order.
+### Relationship inventories
+
+Use the exact types defined in [Specification Relationships](specification-relationships.md): `follows`, `refines`,
+`uses`, `implements`, and `verifies`. That specification owns their definitions and defaults; this document owns
+how relationship listings fit into specifications.
+
+All registered specification documents implicitly follow these conventions; do not repeat that edge in every document.
+List only additional actual outbound edges in a `Relationships` subsection in section 2, using **Type, Target, Scope**.
+The source is the current document unless a Source column says otherwise. Usually a mechanics document lists `refines`
+and `uses`. It does not need empty categories for the other types. Test-scenario requirement references already declare
+`verifies` edges, and implementations are recorded where identified rather than inventoried in every specification.
+
+Omit the subsection if it would be empty. Do not require None, Not applicable, or Pending rows. Record a concrete TODO
+only for a known unresolved relationship. Inbound edges are optional derived navigation, not a second maintained
+inventory. Changes update the declaration and any published derived views, without requiring tables at both endpoints.
+Documents exempt from the seven-section layout may place Relationships in an appropriate existing section.
+
+Separate background references from declared edges. Do not use "Normative", "Normative draft", or unqualified
+"depends on" as edge types. The project owner requested these simplified listings; the detailed REL contract remains
+Draft. Existing free-form relationship migration is tracked in the work plan.
+
+### Relationships
+
+| Type | Target | Scope |
+| ---- | ------ | ----- |
+| `uses` | [REL](specification-relationships.md) | Relationship terminology and inventory format |
 
 ## 3. Predictable layout and allowed variation
 
 Rule specifications use the following top-level headings in this order:
 
 1. **Purpose and boundaries** — intent, owned behavior, included/excluded scope.
-2. **Dependencies and terminology** — authoritative references and terms needed to read this spec.
+2. **Dependencies and terminology** — explicit relationships when needed, background references, and defined terms.
 3. **Concepts and contract** — state, inputs, outputs, units, visibility, and relevant types or tables.
 4. **Requirements** — normative formulas, transitions, tables, or interface behavior.
 5. **Edge cases and failure behavior** — thresholds, invalid inputs, simultaneous effects, and exceptional cases.
@@ -188,6 +213,8 @@ default to close a TODO unless it is explicitly labeled as a proposal.
 Before acceptance, verify:
 
 - Scope and ownership are clear and all references resolve.
+- Explicit relationships and applicable defaults satisfy Specification Relationships; links resolve, contract-affecting
+  relationship TODOs are resolved, and any published derived views agree with their declarations.
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
@@ -203,5 +230,7 @@ duplicating every edit in per-document changelogs.
 ## 7. Acceptance
 
 Accepted by the project owner through the explicit approval recorded above. This acceptance applies to the conventions
-only; the subject specifications remain stubs until drafted and reviewed separately. Future changes to the conventions
-must be presented as revisions rather than silently changing the accepted agreement.
+only; subject specifications retain their own statuses. The simplified relationship listing rules were
+requested explicitly by the project owner and are recorded above. The detailed REL contract remains Draft, and existing
+relationship migration remains queued in the work plan. Future changes must be presented as revisions rather than silently changing the
+accepted agreement.

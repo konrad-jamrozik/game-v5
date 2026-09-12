@@ -10,6 +10,8 @@
 
 - [Game Design Brief](../game-design-brief.md): strategic intent and architectural constraints.
 - [Specification conventions](spec-conventions.md): accepted layout, precision requirements, ownership, and lifecycle.
+- [Specification Relationships](specification-relationships.md): Draft definitions of `follows`, `refines`, `uses`,
+  `implements`, and `verifies`, with implicit defaults, compact relationship listings, and examples.
 - [Specification work plan and backlog](work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 
 [Domain Model](foundation/domain-model.md), [Modeling Foundations](foundation/modeling-foundations.md), and
@@ -17,6 +19,8 @@
 **Stub** documents. No subject specification has been accepted yet.
 The conventions are **Accepted**; their acceptance reference is recorded in that document. Exact formulas, content values,
 public signatures, and frameworks have not been chosen.
+Specification Relationships is a separate governance Draft. The requested simplified relationship listings are recorded in the
+conventions; existing inventory migration is tracked in the work plan.
 The work plan is **Accepted**; its acceptance reference is recorded in that document. This does not accept or implement the subject specifications.
 
 ## Specification register
@@ -24,6 +28,7 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 | ID      | Document                                                          | Owns                                                                                                          |
 | ------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | CONV    | [Specification conventions](spec-conventions.md)                  | How specifications are written, reviewed, and maintained.                                                     |
+| REL     | [Specification Relationships](specification-relationships.md) | Relationship terminology, edge direction, document inventories, and graph validation. |
 | PLAN    | [Specification work plan and backlog](work-plan.md)               | Specification authoring order, review checkpoints, and work tracking.                                         |
 | DOM     | [Domain Model](foundation/domain-model.md)                        | Game concepts, their properties and relationships, and structural domain invariants.           |
 | MOD     | [Modeling Foundations](foundation/modeling-foundations.md) | Modeling vocabulary, definition boundaries, identity/references, and historical fact preservation. |

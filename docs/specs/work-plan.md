@@ -59,6 +59,23 @@ instead of marking the whole batch Complete.
 - This work plan is Accepted; the 10-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
+### Relationship inventory migration
+
+[Specification Relationships](specification-relationships.md) is Draft and In review as a separately requested
+governance specification. The project owner requested simplified relationship listings: implicit `follows` edges to
+CONV, only additional actual outbound edges, test-scenario requirement references for `verifies`, and optional derived
+inbound navigation. This work does not advance mechanics review batches or accept the detailed REL contract.
+
+Inventory migration is **Queued** for existing free-form relationship lists. REL and CONV use the simplified format.
+No document must enumerate empty categories or audit all possible inbound implementations and tests.
+
+- TODO: Replace existing free-form dependency classifications with scoped `refines`, `uses`, or other applicable
+  declarations. Apply REL defaults and omit empty categories. Preserve background references separately.
+- TODO: Review Domain Model's use of Modeling Foundations; distinguish actual rule reliance from reading references,
+  and move game-specific identity scope to Domain Model without changing the proposed identity guarantees.
+- TODO: Validate declarations, defaults, links, and type graphs as documents are migrated. Record concrete unresolved
+  relationships rather than blanket Pending inventories. Preserve the review sequence and status of game rules.
+
 ## 4. Requirements
 
 ### Review sequence and backlog
