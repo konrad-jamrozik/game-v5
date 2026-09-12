@@ -30,7 +30,8 @@ duplicating shared definitions.
 
 ## 3. Concepts and contract
 
-TODO: Specify Scenario fixture, rules/content version, seed or RNG state, command sequence, expected state/view, and requirement reference.
+TODO: Specify Scenario fixture, game revision when needed for reproducibility, seed or RNG state, command sequence,
+expected state/view, and requirement reference.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -38,7 +39,9 @@ appropriate to this document.
 
 ### Deterministic fixtures
 
-TODO: Define scenario IDs, exact starting state/content version/seed, ordered commands, expected results, and references to owning requirements. Identify any test-only reduced scenario explicitly.
+TODO: Define scenario IDs, exact starting state, content fixture, seed, ordered commands, expected results, and references
+to owning requirements. Record the game revision when needed for reproducibility. Identify any test-only reduced scenario
+explicitly.
 
 ### Integration scenarios
 
@@ -52,7 +55,8 @@ TODO: Assign stable SCEN-NNN requirement IDs when concrete rules replace these p
 
 ## 5. Edge cases and failure behavior
 
-TODO: Define behavior for Same-turn cross-system interactions, endpoint thresholds, hidden-state restoration, failed command batches, and version mismatches.
+TODO: Define behavior for same-turn cross-system interactions, endpoint thresholds, hidden-state restoration, failed
+command batches, and attempts to load saves from incompatible earlier builds.
 State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
 that truly fall outside this document's scope.
 

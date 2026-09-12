@@ -38,7 +38,9 @@ TODO: Specify atomic history boundaries, restored fields including RNG/IDs/repor
 
 ### Replay and persistence
 
-TODO: Define save contents, encoding, rules/content version references, load validation, replay inputs, and mismatch behavior. Decide whether saves retain undo and redo history.
+TODO: Define save contents, encoding, load validation, and replay inputs for the current game build. Incompatible saves
+from earlier builds may be rejected or discarded; backward compatibility is out of scope during intensive development.
+Decide whether saves retain undo and redo history.
 
 ### Session-owned state
 

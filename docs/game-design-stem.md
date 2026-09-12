@@ -144,7 +144,7 @@ Only these interfaces are in scope. Dedicated native game engines such as Unity 
 
 Management commands take immediate effect. **Advance turn** atomically resolves time-dependent activity and generates a report. Combat rounds remain internal to that resolution.
 
-- Identical initial state, rules/content version, and commands reproduce identical outcomes.
+- Under the same game revision, identical initial state and commands reproduce identical outcomes.
 - Random-generator state and deterministic ID counters belong to authoritative state.
 - Processing order and rounding are explicit. Queries, rendering, and wall-clock time do not influence gameplay.
 - Every accepted command, including an entire turn advancement, is one history step.

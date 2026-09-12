@@ -148,7 +148,7 @@ throughout mechanics docs.
 
 Every substantial rule must be covered by an acceptance example or a referenced test scenario. Examples identify:
 
-- The rule IDs exercised and any content/rules version.
+- The rule IDs exercised and, when needed for reproducibility, the game revision and content fixture.
 - Initial state and inputs, including the seed or RNG state for stochastic results.
 - The command or event sequence.
 - Expected state, output, visibility, history, and RNG behavior where relevant.

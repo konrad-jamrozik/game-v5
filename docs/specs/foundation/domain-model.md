@@ -55,27 +55,28 @@ The following downstream contracts are currently stubs. They do not supply unsta
 
 | Term                     | Meaning                                                                                          |
 | ------------------------ | ------------------------------------------------------------------------------------------------ |
-| Definition               | Immutable content describing a kind of opportunity, opponent, equipment, or upgrade              |
+| Definition               | Immutable content describing a reusable game concept, such as a lead, mission, faction, enemy, weapon, or upgrade |
 | Instance                 | An occurrence or individual with its own identity and evolving campaign facts                    |
 | Authoritative fact       | Information needed to resolve play or preserve history, rather than merely a current calculation |
-| Derived value            | A deterministic calculation from authoritative facts and selected rules/content                  |
+| Derived value            | A deterministic calculation from authoritative facts and the current rules/content               |
 | Player observation       | Information deliberately exposed by the engine to an ordinary player                             |
 | Committed state          | Complete state before or after an accepted command, not intermediate battle/turn processing      |
 | Current assignment       | An agent's orders, including the destination while travelling                                    |
-| Historical participation | Past involvement that does not assign or reserve an agent now                                    |
-| Session                  | Owner of current campaign state, history navigation, and optional controller bookkeeping         |
+| Historical agent participation | An agent's past involvement in an investigation or mission that does not assign or reserve that agent now |
+| Session                  | Owner of current campaign state, history navigation, and any controller state that must follow that history, such as persistent AI strategy memory |
 
 ## 3. Concepts and contract
 
 ### Definitions, campaign, and agency
 
-A campaign selects a rules version and content version. It contains the agency, current turn, panic and campaign outcome,
-progression facts, agents, factions, investigations, missions, and deterministic bookkeeping.
+A campaign uses the rules and content provided by the current game build. It contains the agency, current turn, panic and
+campaign outcome, progression facts, agents, factions, investigations, missions, and deterministic bookkeeping. Earlier
+rules, content, and incompatible saved campaigns need not remain supported.
 
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
 switching between human and AI control does not create another agency.
 
-Definitions are shared within the selected content version. Campaign instances refer to them. A purchase or injury changes
+Definitions are shared within the current content catalog. Campaign instances refer to them. A purchase or injury changes
 campaign facts, not the immutable definition used by other instances.
 
 ### Conceptual records
@@ -88,7 +89,7 @@ These are conceptual responsibilities, not a complete serialized schema.
 | Agent                                 | Campaign entity ID                                  | Lifecycle, career, skill, health, exhaustion, equipped weapon values, orders and task phase while serving                     |
 | Lead definition                       | Content ID                                          | Difficulty parameter, repeatability, prerequisites, effects, optional explicit faction reference                              |
 | Lead progression                      | Campaign facts keyed by lead definition             | Completions and earned facts; discovery/availability is derived rather than stored in a mutable copy of the definition        |
-| Investigation                         | Campaign entity ID; one lead definition             | Progress, hidden difficulty, lifecycle, timing facts, current team, historical participation                                  |
+| Investigation                         | Campaign entity ID; one lead definition             | Progress, hidden difficulty, lifecycle, timing facts, current team, historical agent participation                            |
 | Mission definition                    | Content ID                                          | Encounter configuration and content references                                                                                |
 | Mission                               | Campaign entity ID; one mission definition          | Initiative/Response kind, provenance, optional target faction, deadline facts, lifecycle/outcome, enemies, deployment, result |
 | Faction definition                    | Content ID                                          | Descriptive identity and configuration references                                                                             |
@@ -127,7 +128,7 @@ Arrows show relationships, not inheritance or storage layout.
 
 | Authoritative facts to preserve                                    | Derived values                                                      |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| Turn, selected versions, RNG state, ID-generation state            | Labels and presentation formatting                                  |
+| Turn, RNG state, ID-generation state                               | Labels and presentation formatting                                  |
 | Money, funding, upgrade acquisitions                               | Effective capacities and upgrade effects                            |
 | Agent attributes, health/fatigue, orders, transit timing facts     | Effective skill, readiness, eligibility, current combat rating      |
 | Investigation progress and sampled hidden difficulty               | Team contribution, true completion probability, permitted estimates |
@@ -148,7 +149,7 @@ not require retaining every intermediate calculation or every possible chart.
 must belong to that campaign. AI memory, UI selections, browser state, and CLI preferences are not campaign facts.
 Multiplayer agencies and cross-campaign trading are outside this model.
 
-**DOM-002 — Definition boundary.** Campaigns must resolve definition references against their selected content version.
+**DOM-002 — Definition boundary.** Campaigns must resolve definition references against the current content catalog.
 Ordinary gameplay must not mutate definitions. Multiple instances can share a definition without sharing mutable state.
 
 **DOM-003 — Identity.** Entity IDs must be unique across agents, factions, investigations, missions, and enemies in one
@@ -159,8 +160,8 @@ Repeated missions/investigations must have distinct IDs from earlier occurrences
 the previous ID-generation state, and a discarded future is not another live campaign. NUM owns generation; API owns
 stale client-handle behavior.
 
-**DOM-004 — References.** All committed-state references must resolve to the required kind in the same campaign or selected
-content version. Historical references to terminal/archived subjects must remain resolvable. Storage can be compacted
+**DOM-004 — References.** All committed-state references must resolve to the required kind in the same campaign or current
+content catalog. Historical references to terminal/archived subjects must remain resolvable. Storage can be compacted
 provided required facts remain available; this spec does not mandate full snapshots forever.
 
 ### Agents, assignments, and participation
@@ -194,7 +195,7 @@ Dismissal eligibility, fatigue caps, rounding, and recovery formulas belong to l
 and Abandoned lifecycle states. At most one Active investigation may exist for a lead in a campaign. Active attempts
 must have at least one currently assigned agent in committed state; terminal attempts must have no current team.
 
-Terminal attempts retain identity and historical participation. Restarting after abandonment creates another attempt;
+Terminal attempts retain identity and historical agent participation. Restarting after abandonment creates another attempt;
 prior progress is historical, not resumable. LEAD/INV own eligibility and numerical progress-loss rules.
 
 **DOM-010 — Progression facts.** Wins, completed investigations, and earned unlocks must be explicit campaign facts with
@@ -217,14 +218,14 @@ The model must retain the facts required by the eventual partial-success formula
 
 ### Engine and clients
 
-**DOM-013 — Derived consistency.** Derived values must be reproducible from authoritative facts and selected rules/content
+**DOM-013 — Derived consistency.** Derived values must be reproducible from authoritative facts and the current rules/content
 without consuming gameplay randomness or mutating state. Caches must be updated or invalidated when inputs change,
 including after undo/redo. Required historical values must not be overwritten with current calculations.
 
-**DOM-014 — Continuation state.** Campaign facts and selected rules/content must contain everything required to resolve a
-given future command sequence: sampled hidden values, RNG state, ID-generation state, and gameplay facts. Outcomes must
-not depend on a previous UI render or particular AI implementation. This does not require AI to choose identical commands
-after every restart.
+**DOM-014 — Continuation state.** Campaign facts and the rules/content supplied by the current game build must contain
+everything required to resolve a given future command sequence: sampled hidden values, RNG state, ID-generation state,
+and gameplay facts. Outcomes must not depend on a previous UI render or particular AI implementation. This does not
+require AI to choose identical commands after every restart.
 
 **DOM-015 — Information boundary.** Ordinary human and AI callers must receive the same permitted information for equal
 state and queries. They must not receive writable campaign references, hidden investigation difficulty, RNG state, or
@@ -271,7 +272,7 @@ the source working tree.
 | Agent travels toward an investigation                        | Remains assigned; arrival/progress timing belongs to AGENT/INV                                                  |
 | Last investigator removed                                    | No committed Active attempt with an empty team; numerical effects belong to INV                                 |
 | Investigation concludes while members travel                 | Remove current links to the terminal attempt before publication; replacement orders/transit belong to AGENT/INV |
-| Concluded mission lists a historical participant             | Does not reserve current assignment; DOM-004/007                                                                |
+| Concluded mission lists an agent as a historical participant | Does not reserve current assignment; DOM-004/007                                                                |
 | Empty roster or no missions/investigations                   | Structurally valid; CAMP owns initialization and defeat conditions                                              |
 | Faction defeated with outstanding missions/leads             | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                   |
 | Undo removes an entity created later                         | Restore earlier references consistently; no dangling future-only links                                          |
@@ -285,7 +286,7 @@ consume no draws. All other rule-owned scalar values are assumed valid for purpo
 
 ### A. Valid relationships
 
-Given selected content C and rules R, turn 3, RNG state G, ID state N, and:
+Given the current content catalog C and rules R, turn 3, RNG state G, ID state N, and:
 
 - One agency and content definitions L1 (lead), M1 (mission), F1 (faction), E1 (enemy), W1 (weapon).
 - Faction f1 referring to F1.
@@ -323,8 +324,8 @@ the original committed state (DOM-016).
 
 Given i1 concludes and m1 resolves under their owning rules, a structurally valid resulting state has:
 
-- i1 Completed, with no current team, and a1 retained as a historical participant.
-- m1 with a retained result and historical participant a2, but no current assignment from a2.
+- i1 Completed, with no current team, and a1 retained as a historical agent participant.
+- m1 with a retained result and a2 as a historical agent participant, but no current assignment from a2.
 - a1 and a2 Serving with one new valid assignment and task phase each.
 - Explicit progression facts for i1's completion and any win of m1.
 
