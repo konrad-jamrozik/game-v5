@@ -62,7 +62,7 @@ The following downstream contracts are currently stubs. They do not supply unsta
 | Player observation       | Information deliberately exposed by the engine to an ordinary player                             |
 | Committed state          | Complete state before or after an accepted command, not intermediate battle/turn processing      |
 | Current assignment       | An agent's orders, including the destination while travelling                                    |
-| Historical agent participation | An agent's past involvement in an investigation or mission that does not assign or reserve that agent now |
+| Agent history             | Immutable facts about an agent's past, including completed investigation and mission participation, that do not assign or reserve the agent now |
 | Session                  | Owner of current campaign state, history navigation, and any controller state that must follow that history, such as persistent AI strategy memory |
 
 ## 3. Concepts and contract
@@ -89,7 +89,7 @@ These are conceptual responsibilities, not a complete serialized schema.
 | Agent                                 | Campaign entity ID                                  | Lifecycle, career, skill, health, exhaustion, equipped weapon values, orders and task phase while serving                     |
 | Lead definition                       | Content ID                                          | Difficulty parameter, repeatability, prerequisites, effects, optional explicit faction reference                              |
 | Lead progression                      | Campaign facts keyed by lead definition             | Completions and earned facts; discovery/availability is derived rather than stored in a mutable copy of the definition        |
-| Investigation                         | Campaign entity ID; one lead definition             | Progress, hidden difficulty, lifecycle, timing facts, current team, historical agent participation                            |
+| Investigation                         | Campaign entity ID; one lead definition             | Progress, hidden difficulty, lifecycle, timing facts, current team, agent history                                             |
 | Mission definition                    | Content ID                                          | Encounter configuration and content references                                                                                |
 | Mission                               | Campaign entity ID; one mission definition          | Initiative/Response kind, provenance, optional target faction, deadline facts, lifecycle/outcome, enemies, deployment, result |
 | Faction definition                    | Content ID                                          | Descriptive identity and configuration references                                                                             |
@@ -181,7 +181,7 @@ which tasks require transit, and travel duration. This spec does not select a on
 An agent assigned to investigation I belongs to its current team even while travelling; contribution eligibility is an
 Agents/Investigations rule. An agent cannot be assigned to multiple investigations/missions at once.
 
-If both agent-side and team-side links are stored, they must agree in committed state. Historical participants are not
+If both agent-side and team-side links are stored, they must agree in committed state. Agents recorded in history are not
 current team members: a concluded mission can retain an agent's participation after that agent is assigned elsewhere.
 
 **DOM-008 — Attribute bounds.** For agents and enemies, maximum health must be positive; current health must be between
@@ -195,7 +195,7 @@ Dismissal eligibility, fatigue caps, rounding, and recovery formulas belong to l
 and Abandoned lifecycle states. At most one Active investigation may exist for a lead in a campaign. Active attempts
 must have at least one currently assigned agent in committed state; terminal attempts must have no current team.
 
-Terminal attempts retain identity and historical agent participation. Restarting after abandonment creates another attempt;
+Terminal attempts retain identity and agent history. Restarting after abandonment creates another attempt;
 prior progress is historical, not resumable. LEAD/INV own eligibility and numerical progress-loss rules.
 
 **DOM-010 — Progression facts.** Wins, completed investigations, and earned unlocks must be explicit campaign facts with
@@ -272,7 +272,7 @@ the source working tree.
 | Agent travels toward an investigation                        | Remains assigned; arrival/progress timing belongs to AGENT/INV                                                  |
 | Last investigator removed                                    | No committed Active attempt with an empty team; numerical effects belong to INV                                 |
 | Investigation concludes while members travel                 | Remove current links to the terminal attempt before publication; replacement orders/transit belong to AGENT/INV |
-| Concluded mission lists an agent as a historical participant | Does not reserve current assignment; DOM-004/007                                                                |
+| Concluded mission retains an agent in its history            | Does not reserve current assignment; DOM-004/007                                                                |
 | Empty roster or no missions/investigations                   | Structurally valid; CAMP owns initialization and defeat conditions                                              |
 | Faction defeated with outstanding missions/leads             | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                   |
 | Undo removes an entity created later                         | Restore earlier references consistently; no dangling future-only links                                          |
@@ -324,8 +324,8 @@ the original committed state (DOM-016).
 
 Given i1 concludes and m1 resolves under their owning rules, a structurally valid resulting state has:
 
-- i1 Completed, with no current team, and a1 retained as a historical agent participant.
-- m1 with a retained result and a2 as a historical agent participant, but no current assignment from a2.
+- i1 Completed, with no current team, and a1 retained in its agent history.
+- m1 with a retained result and a2 in its agent history, but no current assignment from a2.
 - a1 and a2 Serving with one new valid assignment and task phase each.
 - Explicit progression facts for i1's completion and any win of m1.
 
