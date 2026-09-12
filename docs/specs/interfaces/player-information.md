@@ -18,6 +18,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
+- **Normative draft:** [Engine Contract](../foundation/engine-contract.md) owns human/AI information parity and the player/dev boundary (ENG-003).
+- **Normative draft:** [Modeling Foundations](../foundation/modeling-foundations.md) defines player observations and historical fact preservation (MOD-004).
 - [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 - [Leads and Progression](../mechanics/leads-and-progression.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 

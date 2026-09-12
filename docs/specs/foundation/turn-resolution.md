@@ -18,6 +18,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
+- **Normative draft:** [Engine Contract](engine-contract.md) owns calculation consistency and committed-state integrity (ENG-001/004).
 - [Domain Model](domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 - [Numbers and Randomness](numbers-and-randomness.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 - [Agents](../mechanics/agents.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.

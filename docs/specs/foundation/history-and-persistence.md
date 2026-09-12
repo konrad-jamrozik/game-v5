@@ -18,6 +18,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
+- **Normative draft:** [Modeling Foundations](modeling-foundations.md) owns identity, references, and historical preservation (MOD-002–004).
+- **Normative draft:** [Engine Contract](engine-contract.md) owns continuation and restoration integrity (ENG-001/002/004).
 - [Domain Model](domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 - [Numbers and Randomness](numbers-and-randomness.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 
@@ -26,7 +28,15 @@ duplicating shared definitions.
 
 ## 3. Concepts and contract
 
-TODO: Specify Session, snapshot, history entry, cursor, redo continuation, command log, save format, and version.
+### Session
+
+**Draft definition migrated from Domain Model:** Session is the owner of current campaign state, history navigation,
+and any controller state that must follow that history, such as persistent AI strategy memory. This definition does
+not resolve the storage/restoration TODOs below or promote this specification from Stub.
+
+### Remaining contract details
+
+TODO: Specify session storage/restoration, snapshot, history entry, cursor, redo continuation, command log, save format, and version.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 

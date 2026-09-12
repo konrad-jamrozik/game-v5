@@ -12,7 +12,8 @@
 - [Specification conventions](spec-conventions.md): accepted layout, precision requirements, ownership, and lifecycle.
 - [Specification work plan and backlog](work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 
-[Domain Model](foundation/domain-model.md) is **Draft**, in review for batch 1. The other 18 subject documents remain
+[Domain Model](foundation/domain-model.md), [Modeling Foundations](foundation/modeling-foundations.md), and
+[Engine Contract](foundation/engine-contract.md) are **Draft**, in review for batch 1. The other 18 subject documents remain
 **Stub** documents. No subject specification has been accepted yet.
 The conventions are **Accepted**; their acceptance reference is recorded in that document. Exact formulas, content values,
 public signatures, and frameworks have not been chosen.
@@ -24,7 +25,9 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 | ------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | CONV    | [Specification conventions](spec-conventions.md)                  | How specifications are written, reviewed, and maintained.                                                     |
 | PLAN    | [Specification work plan and backlog](work-plan.md)               | Specification authoring order, review checkpoints, and work tracking.                                         |
-| DOM     | [Domain Model](foundation/domain-model.md)                        | Define the shared conceptual state model without prescribing a framework or storage implementation.           |
+| DOM     | [Domain Model](foundation/domain-model.md)                        | Game concepts, their properties and relationships, and structural domain invariants.           |
+| MOD     | [Modeling Foundations](foundation/modeling-foundations.md) | Modeling vocabulary, definition boundaries, identity/references, and historical fact preservation. |
+| ENG     | [Engine Contract](foundation/engine-contract.md) | Calculation, continuation, information access, and committed-state guarantees. |
 | NUM     | [Numbers and Randomness](foundation/numbers-and-randomness.md)    | Make every numeric calculation and random outcome reproducible across supported runtimes.                     |
 | TURN    | [Turn Resolution](foundation/turn-resolution.md)                  | Define exactly when subsystem rules run and which state each phase reads.                                     |
 | HIST    | [History and Persistence](foundation/history-and-persistence.md)  | Define reversible sessions, reproducible replay, and durable save/load behavior.                              |
@@ -47,12 +50,15 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 ## Work plan
 
 The [work plan and backlog](work-plan.md) owns the accepted authoring sequence and review checkpoints. Start with
-Domain Model alone; grow content and acceptance scenarios alongside the reviewed mechanics. See that document for
+the three batch 1 drafts; grow content and acceptance scenarios alongside the reviewed mechanics. See that document for
 the full sequence, current work states, and treatment of cross-spec dependencies.
 
 ## Index completion TODOs
 
-- TODO: Confirm this document split before accepting individual contracts; the conventions have been accepted separately.
+The three-document split of the former Domain Model was approved by the project owner with "I love it. Do it."
+This approves the organization, not the proposed rules. Read Domain Model for game concepts, Modeling Foundations for
+modeling conventions, and Engine Contract for execution guarantees.
+
 - TODO: Link separately agreed implementation milestones once the first playable slice is selected; authoring order is tracked in the work plan.
 - TODO: Track acceptance references and update this register if a document is split, renamed, or superseded.
 - TODO: Maintain links to the final requirement owners and integration scenarios as draft rules replace placeholders.

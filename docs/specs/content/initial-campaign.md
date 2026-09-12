@@ -18,6 +18,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
+- **Normative draft:** [Modeling Foundations](../foundation/modeling-foundations.md) owns immutable definitions and typed content references (MOD-001/002).
 - [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 - [Campaign](../mechanics/campaign.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 - [Leads and Progression](../mechanics/leads-and-progression.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.

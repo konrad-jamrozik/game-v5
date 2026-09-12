@@ -16,8 +16,13 @@ owns the accepted authoring sequence and work tracking; individual specification
 The specifications are the durable design artifacts. Code and tests will be derived from accepted contracts. This is a
 specification work plan, not an implementation schedule, and it does not select formulas, frameworks, or balance values.
 
-**Current work:** [Domain Model](foundation/domain-model.md) is Draft and **In review** for batch 1. Review its proposed
-model and section 7 decisions before advancing. Later batches have not started.
+**Current work:** [Domain Model](foundation/domain-model.md), [Modeling Foundations](foundation/modeling-foundations.md),
+and [Engine Contract](foundation/engine-contract.md) are Draft and **In review** for batch 1. Review their proposed
+contracts and section 7 decisions before advancing. Later batches have not started.
+
+**Approved organization revision:** the project owner approved splitting the former Domain Model into these three
+documents with "I love it. Do it." after the three-document proposal. PLAN-001 and PLAN-003 now reflect that grouping;
+the ten-batch order is unchanged. This approval does not accept the subject rules.
 
 ## 2. Dependencies and terminology
 
@@ -50,7 +55,7 @@ instead of marking the whole batch Complete.
 ### Current baseline
 
 - Specification Conventions is Accepted.
-- Domain Model is Draft and In review for batch 1; the other 18 subject specifications remain Stub documents.
+- Domain Model, Modeling Foundations, and Engine Contract are Draft and In review for batch 1; the other 18 subject specifications remain Stub documents.
 - This work plan is Accepted; the 10-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
@@ -58,12 +63,12 @@ instead of marking the whole batch Complete.
 
 ### Review sequence and backlog
 
-**PLAN-001:** Use the following 10-batch sequence, starting with Domain Model alone. If review reveals a better grouping,
+**PLAN-001:** Use the following 10-batch sequence, starting with Domain Model, Modeling Foundations, and Engine Contract. If review reveals a better grouping,
 propose the change explicitly and update this table when agreed rather than silently changing the order.
 
 | Batch | Specifications                                                                                                                                       | Review objective and reason for this order                                                                                                    | Work state |
 | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| 1     | [Domain Model](foundation/domain-model.md)                                                                                                           | Agree on vocabulary, entities, relationships, authoritative state, and boundaries before specifying behavior. Review this document alone.     | In review  |
+| 1     | [Domain Model](foundation/domain-model.md); [Modeling Foundations](foundation/modeling-foundations.md); [Engine Contract](foundation/engine-contract.md)                                                                                                           | Agree on vocabulary, entities, relationships, authoritative state, and boundaries before specifying behavior. Review the three drafts as one batch.     | In review  |
 | 2     | [Numbers and Randomness](foundation/numbers-and-randomness.md); [History and Persistence](foundation/history-and-persistence.md)                     | Establish exact calculations, reproducible randomness, reversible state, replay, and save/load contracts before relying on them in mechanics. | Queued     |
 | 3     | [Agents](mechanics/agents.md); [Economy and Upgrades](mechanics/economy-and-upgrades.md)                                                             | Define personnel availability, effectiveness, growth, resources, and purchases used by other mechanics.                                       | Queued     |
 | 4     | [Leads and Progression](mechanics/leads-and-progression.md); [Investigations](mechanics/investigations.md)                                           | Define the first major strategic subsystem, including precise progress, completion probabilities, player uncertainty, and commitment costs.   | Queued     |
@@ -93,7 +98,7 @@ is scheduled work in that specification, not an unresolved decision about this w
 
 **PLAN-003:** During batch 1, identify the player-information boundary and outline the API capabilities needed to support
 it. Refine these notes with each mechanic; do not defer their design influence until batch 8. Keep supporting notes
-explicitly preliminary, and keep Domain Model as the first standalone review deliverable. Exact observation fields and
+explicitly preliminary in Engine Contract, alongside Domain Model and Modeling Foundations as the batch 1 deliverable. Exact observation fields and
 public signatures are finalized in their owning specs during batch 8.
 
 **PLAN-004:** Refine turn timing and shared contracts as mechanics are drafted. Batch 7 reconciles the complete turn
@@ -124,7 +129,7 @@ deferred until those stages are requested.
 
 **PLAN-011:** After the batch 4 review, assess whether the accepted contracts support a small headless playable slice.
 Propose its concrete scope and identify missing contracts, content, or acceptance scenarios before implementation is
-authorized. Do not assume completing batch 4 guarantees readiness, or that all 19 subject specifications must be accepted
+authorized. Do not assume completing batch 4 guarantees readiness, or that all 21 subject specifications must be accepted
 before any implementation can begin. If contracts are missing, schedule their resolution before implementing the slice.
 
 ## 5. Edge cases and failure behavior
@@ -146,7 +151,7 @@ available for revision; a change in order alone does not invalidate their conten
 
 These are workflow checks, not gameplay tests:
 
-- **First review (PLAN-001, PLAN-003, PLAN-005):** Starting from a Stub Domain Model, drafting it changes its status to
+- **First review (PLAN-001, PLAN-003, PLAN-005):** Drafting the three batch 1 documents changes their statuses to
   Draft and batch 1 to In review when presented. Preliminary API/information notes do not imply those contracts are
   complete. The next batch does not begin without the review opportunity or an explicit instruction to continue.
 - **Requested revision (PLAN-005, PLAN-006):** Feedback requests a different agent-assignment model. Batch 1 remains

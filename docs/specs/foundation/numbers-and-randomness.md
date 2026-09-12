@@ -18,6 +18,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
+- **Normative draft:** [Modeling Foundations](modeling-foundations.md) owns identity semantics (MOD-002); this spec owns generation.
+- **Normative draft:** [Engine Contract](engine-contract.md) owns reproducible continuation and non-mutating calculations (ENG-001/002).
 - TODO: Identify any normative dependencies needed beyond the design stem; do not introduce ambient platform behavior as an unstated dependency.
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
