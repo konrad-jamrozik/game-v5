@@ -8,7 +8,7 @@
 | Conventions | [Specification conventions](../spec-conventions.md)                                      |
 | Review      | Batch 1; proposed rules awaiting user review                                             |
 
-## 1. Purpose and boundaries
+# Purpose and boundaries
 
 Define the guarantees the engine provides when running the game, exposing information, and restoring history.
 
@@ -16,36 +16,34 @@ Define the guarantees the engine provides when running the game, exposing inform
 observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
 RNG algorithm, save encoding, or subsystem mechanics. Accepting it alone does not make those details implementable.
 
-## 2. Dependencies and terminology
+# Relationships
 
-### Relationships
+## Dependencies
 
-| Type   | Target                                          | Scope                                                                                                                            |
-| ------ | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `uses` | [Domain Model](domain-model.md)                 | Game entities, relationships, game-specific identity scope, and structural invariants                                            |
-| `uses` | [Modeling Foundations](modeling-foundations.md) | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MOD-001–004) |
+| Dependency                                        | Relationship | Scope                                                                                                                            |
+| ------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| [Domain Model](./domain-model.md)                 | `uses`       | Game entities, relationships, game-specific identity scope, and structural invariants                                            |
+| [Modeling Foundations](./modeling-foundations.md) | `uses`       | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MOD-001–004) |
 
-### Background references
+## Dependents
 
-- The [Game Design Brief](../../game-design-brief.md) requires determinism, undo/redo, and human/AI interface parity.
-- The [work plan](../work-plan.md) includes this draft in batch 1.
+| Dependent                                                 | Relationship | Scope                                                                                                     |
+| --------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------- |
+| [Developer API](../interfaces/developer-api.md)           | `refines`    | Separate developer inspection and enablement boundary (ENG-003)                                           |
+| [Domain Model](./domain-model.md)                         | `uses`       | Execution, information-access, and committed-state guarantees (ENG-001–004)                               |
+| [History and Persistence](./history-and-persistence.md)   | `refines`    | Session continuation, restoration, and committed-state integrity (ENG-001/002/004)                        |
+| [Numbers and Randomness](./numbers-and-randomness.md)     | `uses`       | Reproducible continuation and non-mutating calculations (ENG-001/002)                                     |
+| [Player Information](../interfaces/player-information.md) | `refines`    | Human/AI information parity, permitted observations, and the player/developer boundary (ENG-003)          |
+| [Turn Resolution](./turn-resolution.md)                   | `refines`    | Phase boundaries, state-read timing, calculation consistency, and committed-state integrity (ENG-001/004) |
+| [TypeScript Player API](../interfaces/typescript-api.md)  | `refines`    | Callable query, information, continuation, and command-integrity guarantees (ENG-001–004)                 |
 
-### Downstream ownership (informative)
+# Glossary
 
-These contracts remain stubs and do not supply unstated rules:
+None.
 
-| Owner                                                     | Details owned there                                                                     |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| [Numbers and Randomness](numbers-and-randomness.md)       | Numeric representation, RNG algorithm, draws, and ID generation                         |
-| [History and Persistence](history-and-persistence.md)     | Session meaning and ownership, undo/redo, restoration, serialization, and compatibility |
-| [Turn Resolution](turn-resolution.md)                     | Phase ordering and state-read timing                                                    |
-| [Player Information](../interfaces/player-information.md) | Observation/report fields, reveal conditions, and permitted estimates                   |
-| [TypeScript API](../interfaces/typescript-api.md)         | Exact callable contracts, public errors, and stale handles                              |
-| [Developer API](../interfaces/developer-api.md)           | Developer inspection and enablement                                                     |
+# Concepts and contract
 
-## 3. Concepts and contract
-
-### Continuation and control
+## Continuation and control
 
 Campaign continuation requires gameplay facts and deterministic bookkeeping, including RNG state, ID-generation state,
 and sampled hidden values. The current game build supplies rules and content. ENG-002 defines completeness.
@@ -53,19 +51,19 @@ and sampled hidden values. The current game build supplies rules and content. EN
 AI memory, UI selections, browser state, and CLI preferences are outside campaign facts (DOM-001).
 [History and Persistence](history-and-persistence.md#session) defines Session and owns how controller state follows history.
 
-### Queries and information
+## Queries and information
 
 Player observations are deliberately exposed information, not writable campaign references. The engine supplies
 permitted decision-support calculations. Human and AI control use the same information boundary, while separate developer
 capabilities expose full authoritative state (ENG-003). Hidden facts remain part of the game domain.
 
-### Committed state
+## Committed state
 
 Committed state is the complete state before or after an accepted command, as defined in Modeling Foundations. Runtime
 integrity covers domain invariants and modeling/reference conventions, including restoration; intermediate processing
 is not a committed observation (ENG-004).
 
-## 4. Requirements
+# Requirements
 
 **ENG-001 — Derived consistency.** Derived values must be reproducible from authoritative facts and the current rules/content
 without consuming gameplay randomness or mutating state. Caches must be updated or invalidated when inputs change,
@@ -90,7 +88,7 @@ be exposed as committed observations. Invalid player requests must leave campaig
 history unchanged. Broken internal references/invariants
 must be reported as engine/data defects rather than silently repaired into different gameplay outcomes.
 
-### Preliminary API capabilities
+## Preliminary API capabilities
 
 **Informative outline:** the player interface needs campaign creation/resumption, visible-state and relationship queries,
 action discovery/explanations, structured management commands, Advance turn, results/reports, and undo/redo. Session
@@ -99,15 +97,17 @@ save/load supports continuation without adding an ordinary full-state inspection
 This is not a finalized function list, wire schema, or error vocabulary. It constrains later API/INFO drafts while keeping
 the three foundation drafts as the batch 1 review deliverable.
 
-### Source basis (informative)
+## Evidence basis (informative)
 
+[Game Design Brief](../../game-design-brief.md) supplies the calculation, continuation, information-access, and
+committed-state constraints.
 Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited model file was unmodified in the source
 working tree when the original Domain Model draft was prepared.
 
 **v5 requirement:** [Campaign model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/gameStateModel.ts)
 lacks RNG state. The brief requires reproducible continuation and separate player/dev access (ENG-002/003).
 
-## 5. Edge cases and failure behavior
+# Edge cases and failure behavior
 
 | Case                                              | Result / owner                                                                                                                 |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -118,9 +118,9 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 | Intermediate battle/turn state                    | Do not expose it as a committed observation (ENG-004)                                                                          |
 | Current calculation differs from historical value | Refresh current calculations under ENG-001; preserve historical facts under MOD-004                                            |
 
-## 6. Acceptance examples
+# Acceptance examples
 
-### Player and controller boundary
+## Player and controller boundary
 
 Given hidden investigation difficulty H, opaque RNG state G, and opaque ID-generation state N:
 
@@ -133,13 +133,13 @@ Given hidden investigation difficulty H, opaque RNG state G, and opaque ID-gener
 
 These cover DOM-001 and ENG-001 through ENG-004. Exact field names and returned errors await INFO/API/DEV.
 
-### Reproducible calculations and continuation
+## Reproducible calculations and continuation
 
 Given equal committed campaign facts (including RNG and ID state), the same current rules/content, and the same future
 command sequence, continuation has the same outcomes regardless of earlier UI renders or which controller supplied
 those commands (ENG-001/002). This does not require AI controllers to choose identical commands.
 
-### Restoration and integrity
+## Restoration and integrity
 
 - Undo restores prior facts and corresponding derived values, without future-only references or stale readiness values;
   redo also updates or invalidates affected caches (ENG-001/002/004; MOD-002/003).
@@ -153,7 +153,7 @@ those commands (ENG-001/002). This does not require AI controllers to choose ide
 
 Exact save/restore procedures and public errors remain owned by HIST/API/DEV.
 
-## 7. Open decisions
+# Open decisions
 
 No additional design choices are introduced by this split. ENG-001–004 remain proposed rules awaiting review.
 RNG algorithms, turn phase order, save encoding, observation fields, reveal conditions, estimates, public signatures,

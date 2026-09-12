@@ -9,61 +9,69 @@
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
-## 1. Purpose and boundaries
+# Purpose and boundaries
 
 Provide a complete terminal adapter usable by humans and AI over the same player API.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-## 2. Dependencies and terminology
+# Relationships
 
-### Relationships
+## Dependencies
 
-| Type   | Target                                                              | Scope                                                                       |
-| ------ | ------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `uses` | [TypeScript Player API](typescript-api.md)                          | Session lifecycle, action discovery, queries, commands, results, and errors |
-| `uses` | [Player Information](player-information.md)                         | Human-readable and machine-readable fields, visibility, and reports         |
-| `uses` | [History and Persistence](../foundation/history-and-persistence.md) | Save/load, undo/redo, branching, and session behavior                       |
+| Dependency                                                          | Relationship | Scope                                                                       |
+| ------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
+| [TypeScript Player API](./typescript-api.md)                        | `uses`       | Session lifecycle, action discovery, queries, commands, results, and errors |
+| [Player Information](./player-information.md)                       | `uses`       | Human-readable and machine-readable fields, visibility, and reports         |
+| [History and Persistence](../foundation/history-and-persistence.md) | `uses`       | Save/load, undo/redo, branching, and session behavior                       |
 
-TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
+## Dependents
+
+| Dependent                                                                                            | Relationship | Scope                                            |
+| ---------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------ |
+| [Campaign Integration and Acceptance Tests](../testing/campaign-integration-and-acceptance-tests.md) | `uses`       | CLI end-to-end flows and machine-readable output |
+
+# Glossary
+
+TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-## 3. Concepts and contract
+# Concepts and contract
 
 TODO: Specify Command, argument, identifier, session, save path, readable output, JSON result, standard streams, and exit status.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
-## 4. Requirements
+# Requirements
 
-### Commands and sessions
+## Commands and sessions
 
 TODO: Specify command grammar, argument parsing, help/discovery, session creation/loading, persistence, and mappings to API operations. Cover the complete gameplay surface.
 
-### Output contract
+## Output contract
 
 TODO: Specify human-readable and machine-readable output, stable JSON shapes, errors, exit codes, and stdout/stderr separation. Both modes must respect INFO.
 
-### Interaction behavior
+## Interaction behavior
 
 TODO: Specify noninteractive automation, any interactive mode, invalid input, history commands, and process interruption behavior. Keep business rules in the engine.
 
 TODO: Assign stable CLI-NNN requirement IDs when concrete rules replace these placeholders.
 
-## 5. Edge cases and failure behavior
+# Edge cases and failure behavior
 
 TODO: Define behavior for Quoting/escaping identifiers, malformed arguments, missing saves, failed commands, no interactive terminal, and interruption while saving.
 State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
 that truly fall outside this document's scope.
 
-## 6. Acceptance examples
+# Acceptance examples
 
 TODO: Provide matching human and JSON play transcripts including an invalid command and undo/redo.
 Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
-## 7. Open decisions
+# Open decisions
 
 - TODO: Choose CLI syntax, process/session model, and output versioning before implementation.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly

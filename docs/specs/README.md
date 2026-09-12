@@ -6,12 +6,31 @@
 | Status   | Draft                                                      |
 | Scope    | Navigation, document ownership, and spec-development order |
 
-## Start here
+# Purpose and boundaries
+
+This index registers every specification's stable ID, title, and ownership scope. It also provides navigation and the
+current specification-development status. It does not define gameplay behavior.
+
+# Relationships
+
+## Dependencies
+
+Only [implicit dependencies](spec-conventions.md#implicit-relationships).
+
+## Dependents
+
+None.
+
+# Glossary
+
+None.
+
+# Start here
 
 - [Game Design Brief](../game-design-brief.md): strategic intent and architectural constraints.
 - [Specification conventions](spec-conventions.md): accepted layout, precision requirements, ownership, and lifecycle.
-- [Specification Relationships](spec-relationships.md): Draft definitions of `follows`, `refines`, `uses`,
-  `implements`, and `verifies`, with implicit defaults, compact relationship listings, and examples.
+- [Artifact Relationships](artifact-relationships.md): Draft definitions of `follows`, `refines`, `uses`,
+  `implements`, and `verifies`, with direction, inventory rules, and examples for all artifacts.
 - [Specification work plan and backlog](work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 
 [Domain Model](foundation/domain-model.md), [Modeling Foundations](foundation/modeling-foundations.md), and
@@ -19,16 +38,16 @@
 **Stub** documents. No subject specification has been accepted yet.
 The conventions are **Accepted**; their acceptance reference is recorded in that document. Exact formulas, content values,
 public signatures, and frameworks have not been chosen.
-Specification Relationships is a separate governance Draft. The requested simplified relationship listings are recorded in the
-conventions; the completed inventory migration is recorded in the work plan.
+Artifact Relationships is a separate governance Draft. The two-direction inventory rules and implicit relationships are
+recorded in the conventions; the completed inventory migration is recorded in the work plan.
 The work plan is **Accepted**; its acceptance reference is recorded in that document. This does not accept or implement the subject specifications.
 
-## Specification register
+# Specification register
 
 | ID      | Document                                                                                          | Owns                                                                                                          |
 | ------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | CONV    | [Specification conventions](spec-conventions.md)                                                  | How specifications are written, reviewed, and maintained.                                                     |
-| REL     | [Specification Relationships](spec-relationships.md)                                              | Relationship terminology, edge direction, document inventories, and graph validation.                         |
+| REL     | [Artifact Relationships](artifact-relationships.md)                                               | Artifact relationship terminology, direction, inventories, and graph validation.                              |
 | PLAN    | [Specification work plan and backlog](work-plan.md)                                               | Specification authoring order, review checkpoints, and work tracking.                                         |
 | DOM     | [Domain Model](foundation/domain-model.md)                                                        | Game concepts, their properties and relationships, and structural domain invariants.                          |
 | MOD     | [Modeling Foundations](foundation/modeling-foundations.md)                                        | Modeling vocabulary, definition boundaries, identity/references, and historical fact preservation.            |
@@ -52,13 +71,13 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 | WEB     | [Web UI](interfaces/web-ui.md)                                                                    | Specify the first functional browser interface while keeping gameplay in the shared API.                      |
 | SCEN    | [Campaign Integration and Acceptance Tests](testing/campaign-integration-and-acceptance-tests.md) | Define test scenarios that verify how game systems work together.                                             |
 
-## Work plan
+# Work plan
 
 The [work plan and backlog](work-plan.md) owns the accepted authoring sequence and review checkpoints. Start with
 the three batch 1 drafts; grow content and acceptance scenarios alongside the reviewed mechanics. See that document for
 the full sequence, current work states, and treatment of cross-spec dependencies.
 
-## Index completion TODOs
+# Index completion TODOs
 
 The three-document split of the former Domain Model was approved by the project owner with "I love it. Do it."
 This approves the organization, not the proposed rules. Read Domain Model for game concepts, Modeling Foundations for

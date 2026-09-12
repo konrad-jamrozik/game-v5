@@ -8,38 +8,43 @@
 | Scope                | Specification authoring order, review checkpoints, and backlog tracking                                                   |
 | Conventions          | [Specification conventions](spec-conventions.md)                                                                          |
 
-## 1. Purpose and boundaries
+# Purpose and boundaries
 
 Develop the game specifications in manageable review batches rather than drafting the entire game at once. This document
 owns the accepted authoring sequence and work tracking; individual specifications own game rules and interface contracts.
 
 The specifications are the durable design artifacts. Code and tests will be derived from accepted contracts. This is a
 specification work plan, not an implementation schedule, and it does not select formulas, frameworks, or balance values.
+The [Game Design Brief](../game-design-brief.md) supplies strategic intent and architectural constraints, while the
+[spec index](README.md) registers document IDs and ownership.
 
 **Current work:** [Domain Model](foundation/domain-model.md), [Modeling Foundations](foundation/modeling-foundations.md),
 and [Engine Contract](foundation/engine-contract.md) are Draft and **In review** for batch 1. Review their proposed
-contracts and section 7 decisions before advancing. Later batches have not started.
+contracts and Open decisions before advancing. Later batches have not started.
 
 **Approved organization revision:** the project owner approved splitting the former Domain Model into these three
 documents with "I love it. Do it." after the three-document proposal. PLAN-001 and PLAN-003 now reflect that grouping;
 the ten-batch order is unchanged. This approval does not accept the subject rules.
 
-## 2. Dependencies and terminology
+# Relationships
 
-### Background references
+## Dependencies
 
-- [Specification conventions](spec-conventions.md) defines document structure, rule ownership, lifecycle, and
-  acceptance. This work plan implicitly follows it; its Accepted status does not accept other documents.
-- The [Game Design Brief](../game-design-brief.md) supplies strategic intent and architectural constraints.
-- The [spec index](README.md) registers document IDs and ownership. This work plan owns the detailed sequence.
+Only [implicit dependencies](spec-conventions.md#implicit-relationships).
 
-A **batch** is a bounded set of related specifications with one review checkpoint at its end. At that checkpoint, the
-user can accept the drafts, request revisions, or change direction. Feedback and revised drafts remain part of the same
-checkpoint until resolved; they do not create additional checkpoints. Combat and Missions are separate batches.
+## Dependents
 
-## 3. Concepts and contract
+None.
 
-### Work tracking
+# Glossary
+
+| Term  | Definition                                                                                                                                                                                                                                                                                                                                     |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Batch | A bounded set of related specifications with one review checkpoint at its end. At that checkpoint, the user can accept the drafts, request revisions, or change direction. Feedback and revised drafts remain part of the same checkpoint until resolved; they do not create additional checkpoints. Combat and Missions are separate batches. |
+
+# Concepts and contract
+
+## Work tracking
 
 Track work separately from document status:
 
@@ -54,29 +59,30 @@ Document metadata remains authoritative for Stub, Draft, Accepted, and Supersede
 feedback is incorporated and revised drafts are reviewed. For a multi-document batch, record partial completion explicitly
 instead of marking the whole batch Complete.
 
-### Current baseline
+## Current baseline
 
 - Specification Conventions is Accepted.
 - Domain Model, Modeling Foundations, and Engine Contract are Draft and In review for batch 1; the other 18 subject specifications remain Stub documents.
 - This work plan is Accepted; the 10-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
-### Relationship inventory migration
+## Relationship inventory migration
 
-[Specification Relationships](spec-relationships.md) is Draft and In review as a separately requested
-governance specification. The project owner requested simplified relationship listings: implicit `follows` edges to
-CONV, only additional actual outbound edges, test-scenario requirement references for `verifies`, and optional derived
-inbound navigation. This work does not advance mechanics review batches or accept the detailed REL contract.
+[Artifact Relationships](artifact-relationships.md) is Draft and In review as a separately requested governance
+specification. The project owner requested two directional inventories, centrally defined implicit relationships,
+mirrored explicit relationships, and canonical relationship terminology. This work does not advance mechanics review
+batches or accept the REL contract.
 
 Inventory migration is **Complete** for the current specification set. Free-form dependency classifications were
-replaced with scoped declarations, implicit `follows` edges and scenario-level `verifies` declarations were left out of
-document inventories, and background references were preserved separately. Domain Model now refines Modeling
-Foundations and owns the game-specific identity scope without changing the proposed identity guarantees. The migrated
-links and type graphs were validated. This migration does not change the review sequence or status of gameplay rules.
+replaced with scoped Dependencies and Dependents tables, all explicit relationships were mirrored, and implicit
+relationships were left out of tables. Useful evidence acknowledgements were preserved in Purpose or Evidence basis
+text. Domain Model still refines Modeling Foundations and owns the game-specific identity scope without changing the
+proposed identity guarantees. Relationship graphs and links were validated. This migration does not change the review
+sequence or status of gameplay rules.
 
-## 4. Requirements
+# Requirements
 
-### Review sequence and backlog
+## Review sequence and backlog
 
 **PLAN-001:** Use the following 10-batch sequence, starting with Domain Model, Modeling Foundations, and Engine Contract. If review reveals a better grouping,
 propose the change explicitly and update this table when agreed rather than silently changing the order.
@@ -97,7 +103,7 @@ propose the change explicitly and update this table when agreed rather than sile
 The table is an authoring sequence, not a declaration that every referenced spec is already accepted. Some dependencies
 are mutual. Drafts must identify unresolved dependencies explicitly rather than borrowing unstated rules from stubs.
 
-### Work that grows alongside the batches
+## Work that grows alongside the batches
 
 **PLAN-002:** Develop the following documents incrementally with the mechanics they support. They are part of the backlog,
 not work postponed until after the interfaces.
@@ -119,7 +125,7 @@ public signatures are finalized in their owning specs during batch 8.
 **PLAN-004:** Refine turn timing and shared contracts as mechanics are drafted. Batch 7 reconciles the complete turn
 schedule; earlier drafts must still state their local timing requirements and any unresolved cross-system ordering.
 
-### Review and completion workflow
+## Review and completion workflow
 
 **PLAN-005:** For each authorized batch:
 
@@ -140,14 +146,14 @@ status summaries consistent with document metadata.
 scope and milestones are selected separately. Graphics, animation, and possible browser-based 3D specifications remain
 deferred until those stages are requested.
 
-### First implementation milestone assessment
+## First implementation milestone assessment
 
 **PLAN-011:** After the batch 4 review, assess whether the accepted contracts support a small headless playable slice.
 Propose its concrete scope and identify missing contracts, content, or acceptance scenarios before implementation is
 authorized. Do not assume completing batch 4 guarantees readiness, or that all 21 subject specifications must be accepted
 before any implementation can begin. If contracts are missing, schedule their resolution before implementing the slice.
 
-## 5. Edge cases and failure behavior
+# Edge cases and failure behavior
 
 **PLAN-008:** If a later mechanic exposes a missing assumption in an earlier spec, identify the affected rule and propose a
 revision in its owning document. Do not silently change Accepted rules or duplicate a workaround in another spec.
@@ -162,7 +168,7 @@ implementation-affecting dependency prevents acceptance of the affected contract
 If review feedback changes priorities, update the backlog and explain affected dependencies. Existing drafts remain
 available for revision; a change in order alone does not invalidate their content.
 
-## 6. Acceptance examples
+# Acceptance examples
 
 These are workflow checks, not gameplay tests:
 
@@ -181,6 +187,6 @@ These are workflow checks, not gameplay tests:
   slice. If its required turn timing or API contract is unresolved, list the gap and propose the necessary specification
   work; do not invent the missing rule in code or treat the assessment as implementation authorization.
 
-## 7. Open decisions
+# Open decisions
 
 None.

@@ -8,7 +8,7 @@
 | Conventions | [Specification conventions](../spec-conventions.md)                                         |
 | Review      | Batch 1; proposed rules awaiting user review                                                |
 
-## 1. Purpose and boundaries
+# Purpose and boundaries
 
 Define the conventions used to describe the game model. These concepts organize game facts; they are not an additional
 set of in-world objects or a required implementation architecture.
@@ -17,29 +17,27 @@ set of in-world objects or a required implementation architecture.
 definition/instance boundaries, identity and reference semantics, and the distinction between current calculations and
 historical facts. It does not prescribe storage layout, ID-generation algorithms, serialization, or cache implementation.
 
-## 2. Dependencies and terminology
+# Relationships
 
-### Relationships
+## Dependencies
 
-| Type   | Target                          | Scope                                                                                                 |
-| ------ | ------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `uses` | [Domain Model](domain-model.md) | Campaign entity kinds, their structural relationships, and the game-specific identity scope (DOM-017) |
+| Dependency                        | Relationship | Scope                                                                                                 |
+| --------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------- |
+| [Domain Model](./domain-model.md) | `uses`       | Campaign entity kinds, their structural relationships, and the game-specific identity scope (DOM-017) |
 
-### Background references
+## Dependents
 
-- The [Game Design Brief](../../game-design-brief.md) supplies deterministic continuation and history requirements.
-- The [work plan](../work-plan.md) includes this draft in batch 1.
-- [Engine Contract](engine-contract.md) owns runtime calculation and committed-state guarantees.
+| Dependent                                                  | Relationship | Scope                                                                                                                            |
+| ---------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| [Domain Model](./domain-model.md)                          | `refines`    | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MOD-001–004)                |
+| [Engine Contract](./engine-contract.md)                    | `uses`       | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MOD-001–004) |
+| [History and Persistence](./history-and-persistence.md)    | `refines`    | Storage and restoration details for identity, references, and historical preservation (MOD-002–004)                              |
+| [Initial Campaign Content](../content/initial-campaign.md) | `uses`       | Immutable definitions and typed content-reference semantics (MOD-001/002)                                                        |
+| [Numbers and Randomness](./numbers-and-randomness.md)      | `refines`    | Deterministic generation within the identity semantics of MOD-002                                                                |
+| [Player Information](../interfaces/player-information.md)  | `uses`       | Player-observation and historical-fact semantics (MOD-004)                                                                       |
+| [TypeScript Player API](../interfaces/typescript-api.md)   | `uses`       | Identity, typed-reference, and historical-fact semantics (MOD-002–004)                                                           |
 
-### Downstream ownership (informative)
-
-[Numbers and Randomness](numbers-and-randomness.md) owns ID generation;
-[History and Persistence](history-and-persistence.md) owns storage/restoration;
-[TypeScript API](../interfaces/typescript-api.md) owns stale client-handle behavior;
-[Player Information](../interfaces/player-information.md) owns visible fields and estimates.
-These stubs do not supply unstated rules.
-
-### Modeling vocabulary
+# Glossary
 
 | Term               | Meaning                                                                                                           |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
@@ -50,9 +48,9 @@ These stubs do not supply unstated rules.
 | Player observation | Information deliberately exposed by the engine to an ordinary player                                              |
 | Committed state    | Complete state before or after an accepted command, not intermediate battle/turn processing                       |
 
-## 3. Concepts and contract
+# Concepts and contract
 
-### Content and campaign facts
+## Content and campaign facts
 
 Definitions are shared within the current content catalog; campaign instances refer to them. A purchase or injury
 changes campaign facts, not the immutable definition used by other instances. Definition references are resolved against
@@ -61,7 +59,7 @@ the current game build; earlier rules, content, and incompatible saved campaigns
 Being a property of a game concept does not make a value derived. Orders are authoritative facts; effective skill is a
 calculation. Visibility is independent: an authoritative fact or a calculation can be hidden from the player.
 
-### Authoritative versus derived state
+## Authoritative versus derived state
 
 | Authoritative facts to preserve                                    | Derived values                                                      |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
@@ -77,13 +75,13 @@ calculation. Visibility is independent: an authoritative fact or a calculation c
 The table illustrates the distinction using Domain Model concepts and engine bookkeeping; their owning specs define
 their detailed meaning. It does not mandate particular records or a complete serialized schema.
 
-### Historical facts
+## Historical facts
 
 A historical value is not necessarily a current derived value. Initial mission strength cannot be reconstructed from
 post-battle enemy health alone. MOD-004 governs preservation; it does not require every intermediate calculation or
 every possible chart to be retained.
 
-## 4. Requirements
+# Requirements
 
 **MOD-001 — Definition boundary.** Campaigns must resolve definition references against the current content catalog.
 Ordinary gameplay must not mutate definitions. Multiple instances can share a definition without sharing mutable state.
@@ -104,15 +102,16 @@ provided required facts remain available; this spec does not mandate full snapsh
 it. Required historical values must not be overwritten with current calculations. This does not require retaining
 every intermediate calculation or every possible chart.
 
-### Source basis (informative)
+## Evidence basis (informative)
 
+[Game Design Brief](../../game-design-brief.md) supplies the deterministic continuation and history requirements.
 Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited validation file was unmodified in the source
 working tree when the original Domain Model draft was prepared.
 
 **Proposed change:** [Invariant validation](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model_utils/validateGameStateInvariants.ts)
 derives some relationships from IDs. MOD-002 and DOM-010 require explicit references.
 
-## 5. Edge cases and failure behavior
+# Edge cases and failure behavior
 
 | Case                                                         | Result / owner                                                                                                       |
 | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
@@ -121,18 +120,18 @@ derives some relationships from IDs. MOD-002 and DOM-010 require explicit refere
 | Undo discards a later occurrence                             | IDs are timeline-scoped under MOD-002; restored references must resolve under MOD-003; HIST owns restoration details |
 | Current strength differs from battle-start strength          | Retain the historical basis required by the result/report under MOD-004                                              |
 
-## 6. Acceptance examples
+# Acceptance examples
 
 These examples use the symbolic content/entity IDs from
 [Domain Model fixture A](domain-model.md#a-valid-relationships), not a chosen ID format or balance values.
 
-### Definitions and distinct identities
+## Definitions and distinct identities
 
 Given two mission instances referring to M1, each contains distinct enemies referring to E1. Damage to one enemy changes
 that instance, not E1 or the other enemy (MOD-001/002; DOM-012/017). A repeated mission or investigation receives a
 distinct identity from an earlier occurrence in the same timeline (MOD-002; DOM-017).
 
-### Invalid identity and references
+## Invalid identity and references
 
 Each variant independently changes Domain Model fixture A:
 
@@ -146,7 +145,7 @@ Each variant independently changes Domain Model fixture A:
 These are invalid structural fixtures. If attempted through a player command, ENG-004 preserves the original state.
 Changing a display name does not change explicit relationships (MOD-002).
 
-### Retained history
+## Retained history
 
 - Current strength can change while a report's historical starting basis remains preserved (MOD-004).
 - Removing a terminated agent from the active roster does not break required historical references (MOD-003).
@@ -154,7 +153,7 @@ Changing a display name does not change explicit relationships (MOD-002).
 - Undo restores earlier identity-generation state and references; an entity in the discarded future is not another
   live campaign entity (MOD-002/003). HIST specifies storage and restoration details.
 
-## 7. Open decisions
+# Open decisions
 
 | Review decision                                   | Proposed answer                                                                            | Affected specs |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------- |

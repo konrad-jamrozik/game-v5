@@ -9,65 +9,75 @@
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
-## 1. Purpose and boundaries
+# Purpose and boundaries
 
 Provide the complete, versioned numeric and content inputs for the first playable campaign.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-## 2. Dependencies and terminology
+# Relationships
 
-### Relationships
+## Dependencies
 
-| Type      | Target                                                         | Scope                                                                           |
-| --------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `uses`    | [Modeling Foundations](../foundation/modeling-foundations.md)  | Immutable definitions and typed content-reference semantics (MOD-001/002)       |
-| `uses`    | [Domain Model](../foundation/domain-model.md)                  | Campaign entity kinds, structural invariants, and game-specific identity scope  |
-| `refines` | [Campaign](../mechanics/campaign.md)                           | Concrete starting configuration, outcome content, and named campaign parameters |
-| `refines` | [Leads and Progression](../mechanics/leads-and-progression.md) | Concrete lead definitions, prerequisites, and unlock effects                    |
-| `refines` | [Missions](../mechanics/missions.md)                           | Concrete mission templates, deadlines, rewards, and consequence parameters      |
-| `refines` | [Factions](../mechanics/factions.md)                           | Concrete faction definitions, escalation values, and operation pools            |
-| `refines` | [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | Concrete resource, purchase, capacity, and upgrade values                       |
+| Dependency                                                     | Relationship | Scope                                                                           |
+| -------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
+| [Modeling Foundations](../foundation/modeling-foundations.md)  | `uses`       | Immutable definitions and typed content-reference semantics (MOD-001/002)       |
+| [Domain Model](../foundation/domain-model.md)                  | `uses`       | Campaign entity kinds, structural invariants, and game-specific identity scope  |
+| [Campaign](../mechanics/campaign.md)                           | `refines`    | Concrete starting configuration, outcome content, and named campaign parameters |
+| [Leads and Progression](../mechanics/leads-and-progression.md) | `refines`    | Concrete lead definitions, prerequisites, and unlock effects                    |
+| [Missions](../mechanics/missions.md)                           | `refines`    | Concrete mission templates, deadlines, rewards, and consequence parameters      |
+| [Factions](../mechanics/factions.md)                           | `refines`    | Concrete faction definitions, escalation values, and operation pools            |
+| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | `refines`    | Concrete resource, purchase, capacity, and upgrade values                       |
 
-TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
+## Dependents
+
+| Dependent                                                                                            | Relationship | Scope                                                                        |
+| ---------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
+| [Campaign](../mechanics/campaign.md)                                                                 | `uses`       | Starting configuration, scenario values, and victory content                 |
+| [Campaign Integration and Acceptance Tests](../testing/campaign-integration-and-acceptance-tests.md) | `uses`       | Reproducible scenario content, named parameters, and starting configurations |
+| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                         | `uses`       | Purchase prices, upgrade increments, limits, and other named balance values  |
+
+# Glossary
+
+TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-## 3. Concepts and contract
+# Concepts and contract
 
 TODO: Specify Scenario ID/version, named balance parameter, definition ID, starting state, lead graph, enemy, weapon, faction, and mission template.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
-## 4. Requirements
+# Requirements
 
-### Starting configuration and parameters
+## Starting configuration and parameters
 
 TODO: List exact initial resources, roster, capabilities, faction setup, and all named balance parameters with units and valid ranges. Mechanics own formulas; this document owns values.
 
-### Content catalogs
+## Content catalogs
 
 TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, deadlines, all eight upgrade categories, lead prerequisites, and completion effects using explicit IDs.
 
-### Completeness and validation
+## Completeness and validation
 
 TODO: Ensure every formula parameter and content reference resolves, progression reaches its intended ending, and required operation pools exist. Distinguish source-game examples from chosen v5 content.
 
 TODO: Assign stable INIT-NNN requirement IDs when concrete rules replace these placeholders.
 
-## 5. Edge cases and failure behavior
+# Edge cases and failure behavior
 
 TODO: Define behavior for Missing IDs/parameters, duplicate definitions, impossible prerequisites, invalid weights, and incomplete mission or faction catalogs.
 State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
 that truly fall outside this document's scope.
 
-## 6. Acceptance examples
+# Acceptance examples
 
 TODO: Provide one fully specified scenario that acceptance fixtures can reference without inventing missing values.
 Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
-## 7. Open decisions
+# Open decisions
 
 - TODO: Select the initial campaign scope and balance values; do not imply the entire game-ts catalog must be transplanted.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly

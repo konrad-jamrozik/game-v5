@@ -1,30 +1,48 @@
 # Specification Conventions
 
-| Metadata              | Value                                                                                                                                                          |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID               | CONV                                                                                                                                                           |
-| Status                | Accepted                                                                                                                                                       |
-| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                                                      |
-| Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                                                                     |
-| Related documents     | [Spec index](README.md), [game design brief](../game-design-brief.md)                                                                                          |
-| Relationship revision | Requested by the project owner: simplify relationship listings with implicit defaults and only meaningful explicit edges; detailed REL contract remains Draft. |
+| Metadata              | Value                                                                                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID               | CONV                                                                                                                                                            |
+| Status                | Accepted                                                                                                                                                        |
+| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                                                       |
+| Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                                                                      |
+| Related documents     | [Spec index](README.md), [game design brief](../game-design-brief.md)                                                                                           |
+| Relationship revision | Requested by the project owner: use only Dependencies and Dependents, define implicit relationships centrally, and require one canonical term for each concept. |
 
-## 1. Purpose and boundaries
+# Purpose and boundaries
 
-Specifications are the durable source of truth for intended behavior. Code and tests implement that behavior and may be
-replaced without changing the contract. The [game design brief](../game-design-brief.md) explains intent and strategic tensions;
-the specifications resolve those ideas into precise rules.
+Specifications are the durable authority for intended behavior. Code and tests implement that behavior and may be replaced without changing the contract. The [game design brief](../game-design-brief.md) explains intent and strategic tensions; the specifications resolve those ideas into precise rules.
 
-These conventions are the accepted working agreement. The created stubs use this layout, but neither their presence nor
-their formatting makes their unresolved rules accepted.
+These conventions are the accepted working agreement. A stub uses the standard layout, but neither its presence nor its formatting makes unresolved rules accepted.
 
-Do not prescribe internal classes, file organization, libraries, or algorithms unless they affect an observable contract,
-determinism, compatibility, or an explicit architectural constraint. Exact public TypeScript signatures and the chosen
-random algorithm are examples of details that do belong in specifications.
+Do not prescribe internal classes, file organization, libraries, or algorithms unless they affect an observable contract, determinism, compatibility, or an explicit architectural constraint. Exact public TypeScript signatures and the chosen random algorithm are examples of details that belong in specifications.
 
-## 2. Document lifecycle and ownership
+# Relationships
 
-### Status
+## Dependencies
+
+| Dependency                                          | Relationship | Scope                                         |
+| --------------------------------------------------- | ------------ | --------------------------------------------- |
+| [Artifact Relationships](artifact-relationships.md) | `uses`       | Relationship terminology and inventory format |
+
+## Dependents
+
+Only [implicit dependents](#implicit-relationships).
+
+# Glossary
+
+| Term               | Definition                                                                                                                                                                    |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, content, governance, or planned specification work.                                |
+| Registered         | Listed in the [Specification register](README.md#specification-register) with a stable Spec ID.                                                                               |
+| Requirement        | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                           |
+| Canonical term     | The sole term assigned to one concept within the specification set.                                                                                                           |
+| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                             |
+| Evidence basis     | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships. |
+
+# Document lifecycle and ownership
+
+## Status
 
 Use one of these statuses in the metadata table:
 
@@ -35,112 +53,117 @@ Use one of these statuses in the metadata table:
 | Accepted   | The user or designated project owner has explicitly accepted the document as the implementation contract. |
 | Superseded | A replacement is linked; the document is retained only for historical context.                            |
 
-Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Record the
-acceptance reference when a document is accepted. Do not infer approval from silence. Work may explore a draft when
-requested, but must not silently settle its open design decisions.
+Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Record the acceptance reference when a document is accepted. Do not infer approval from silence. Work may explore a draft when requested, but must not silently settle its open design decisions.
 
-Each document has a stable Spec ID, title, status, scope, and related-document links. The index registers IDs and scopes.
-The spec index itself is a navigation document and need not follow the full rule-spec template.
+Each specification has a stable Spec ID, title, status, scope, and related-document links. The index registers IDs and scopes.
 
-### One owner per rule
+## One owner per rule
 
-A rule, formula, parameter value, or API field has one authoritative owner. Other documents reference it instead of
-restating a competing version.
+A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
 
-- Domain model owns shared entities and invariants; subsystem specs own their detailed transitions.
-- Numbers and randomness owns units, numeric operations, and reproducibility conventions.
-- Mechanics own formulas. Initial campaign content owns named balance values and content rows.
-- Turn resolution owns phase ordering and state-read timing, not subsystem formulas.
-- Combat produces battle results; missions converts them into campaign effects.
-- Investigations owns probability/estimate calculations; player information owns which results and fields players see.
-- Interface specs reference mechanical eligibility and effects rather than independently defining them.
-- Acceptance scenarios exercise rules; they cannot introduce new ones.
+- Domain Model owns shared entities and invariants; subsystem specifications own their detailed transitions.
+- Numbers and Randomness owns units, numeric operations, and reproducibility conventions.
+- Mechanics own formulas. Initial Campaign Content owns named balance values and content rows.
+- Turn Resolution owns phase ordering and state-read timing, not subsystem formulas.
+- Combat produces battle results; Missions converts them into campaign effects.
+- Investigations owns probability and estimate calculations; Player Information owns which results and fields players see.
+- Interface specifications reference mechanical eligibility and effects rather than independently defining them.
+- Acceptance scenarios exercise rules; they cannot introduce new rules.
 
-### Relationship inventories
+## Implicit relationships
 
-Use the exact types defined in [Specification Relationships](spec-relationships.md): `follows`, `refines`,
-`uses`, `implements`, and `verifies`. That specification owns their definitions and defaults; this document owns
-how relationship listings fit into specifications.
+The following relationships exist without explicit table rows:
 
-All registered specification documents implicitly follow these conventions; do not repeat that edge in every document.
-List only additional actual outbound edges in a `Relationships` subsection in section 2, using **Type, Target, Scope**.
-The source is the current document unless a Source column says otherwise. Usually a mechanics document lists `refines`
-and `uses`. It does not need empty categories for the other types. Test-scenario requirement references already declare
-`verifies` edges, and implementations are recorded where identified rather than inventoried in every specification.
+1. Every registered specification implicitly depends on Specification Conventions through `follows`, scoped to document structure, lifecycle, and writing rules.
+2. Specification Conventions consequently has every other registered specification as an implicit Dependent.
+3. An acceptance example or test scenario that explicitly identifies requirements it checks implicitly depends on those requirements through `verifies`.
+4. The checked requirements consequently have that acceptance example or test scenario as an implicit Dependent.
+5. No other relationship is implicit unless Specification Conventions adds and defines it.
 
-Omit the subsection if it would be empty. Do not require None, Not applicable, or Pending rows. Record a concrete TODO
-only for a known unresolved relationship. Inbound edges are optional derived navigation, not a second maintained
-inventory. Changes update the declaration and any published derived views, without requiring tables at both endpoints.
-Documents exempt from the seven-section layout may place Relationships in an appropriate existing section.
+Implicit relationships are exempt from mirrored table rows.
 
-Separate background references from declared edges. Do not use "Normative", "Normative draft", or unqualified
-"depends on" as edge types. The project owner requested these simplified listings; the detailed REL contract remains
-Draft. Completion of the free-form relationship migration is recorded in the work plan.
+## Relationship inventories
 
-### Relationships
+Use the relationship kinds and direction defined by [Artifact Relationships](artifact-relationships.md). Every specification contains adjacent `Relationships` and `Glossary` sections immediately after `Purpose and boundaries`. `Relationships` contains exactly the `Dependencies` and `Dependents` subsections, in that order.
 
-| Type   | Target                       | Scope                                         |
-| ------ | ---------------------------- | --------------------------------------------- |
-| `uses` | [REL](spec-relationships.md) | Relationship terminology and inventory format |
+When explicit Dependencies exist, list only this table:
 
-## 3. Predictable layout and allowed variation
+| Dependency | Relationship | Scope |
+| ---------- | ------------ | ----- |
+
+When no explicit Dependencies exist, write exactly:
+
+> Only [implicit dependencies](#implicit-relationships).
+
+The link must resolve to this section from the specification containing it. A registered specification's Dependencies subsection must never say `None.` because its implicit `follows` relationship always applies. Do not mention implicit dependencies beside an explicit table.
+
+When explicit Dependents exist, list only this table:
+
+| Dependent | Relationship | Scope |
+| --------- | ------------ | ----- |
+
+When no explicit Dependents exist but implicit dependents apply, write exactly:
+
+> Only [implicit dependents](#implicit-relationships).
+
+When neither explicit nor implicit Dependents exist, write `None.` Do not mention implicit dependents beside an explicit table.
+
+Every explicit relationship must appear in both artifacts with the same relationship kind and scope: the Dependent lists the Dependency under Dependencies, and the Dependency lists the Dependent under Dependents. Do not treat ordinary citations or evidence acknowledgements as relationships.
+
+## Canonical terminology
+
+One concept must have exactly one canonical term. Do not introduce synonyms, aliases, inverse labels, slash-separated alternatives, or interchangeable terms for the same concept.
+
+If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. Undefined synonyms or inconsistent terminology block acceptance.
+
+Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
+
+# Predictable layout and allowed variation
 
 Rule specifications use the following top-level headings in this order:
 
-1. **Purpose and boundaries** — intent, owned behavior, included/excluded scope.
-2. **Dependencies and terminology** — explicit relationships when needed, background references, and defined terms.
-3. **Concepts and contract** — state, inputs, outputs, units, visibility, and relevant types or tables.
-4. **Requirements** — normative formulas, transitions, tables, or interface behavior.
-5. **Edge cases and failure behavior** — thresholds, invalid inputs, simultaneous effects, and exceptional cases.
-6. **Acceptance examples** — worked examples and testable expected results with requirement references.
-7. **Open decisions** — unresolved choices, consequences, and TODOs; accepted documents state "None."
+1. `# Purpose and boundaries`
+2. `# Relationships`, containing `## Dependencies` and `## Dependents`
+3. `# Glossary`
+4. `# Concepts and contract`
+5. `# Requirements`
+6. `# Edge cases and failure behavior`
+7. `# Acceptance examples`
+8. `# Open decisions`
 
-Use a metadata table immediately below the title. Use numbered top-level headings and descriptive, unnumbered
-subheadings. Keep stable requirement IDs independent of heading numbers.
+Use a metadata table immediately below the document-title H1. Major sections are unnumbered H1 headings and their subsections are H2 headings. Keep stable requirement IDs independent of headings. Appendices follow Open decisions.
 
-### Handling sections that do not apply
+## Handling sections that do not apply
 
-Retain the seven headings for navigation. If a section truly does not apply, write **Not applicable —** followed by a
-specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
+Retain the standard headings for navigation. If a section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
 
-A missing decision is not "not applicable." For example, a mechanics document can have no public function signatures
-while still defining inputs, outputs, and state changes.
+A missing decision is not "not applicable." For example, a mechanics specification can have no public function signatures while still defining inputs, outputs, and state changes.
 
-### Specialized material
+## Specialized material
 
-Add domain-specific subsections under the closest shared heading. Examples:
+Add domain-specific subsections under the closest shared heading.
 
-| Spec kind          | Typical specialized subsections                                 |
+| Specification kind | Typical specialized subsections                                 |
 | ------------------ | --------------------------------------------------------------- |
 | Mechanics          | State transitions; formulas; effect timing; information exposed |
 | Numeric foundation | Representation; rounding; draw order; test vectors              |
-| API                | Functions/types; preconditions; results/errors; atomicity       |
+| API                | Functions; preconditions; results and errors; atomicity         |
 | CLI                | Grammar; sessions; output formats; exit codes                   |
-| UI                 | Screens; grids/trees; interactions; accessibility               |
+| UI                 | Screens; grids and trees; interactions; accessibility           |
 | Content            | Starting configuration; parameter tables; catalogs; validation  |
 | Acceptance         | Fixture format; scenarios; expected outcomes; traceability      |
 
-Long supporting tables may use descriptive appendices after section 7. State whether an appendix is normative or
-informative. Do not add unrelated top-level categories just to accommodate a unique feature. If a section repeatedly
-outgrows its document, split it into an indexed spec with clear ownership.
+Long supporting tables may use descriptive appendices after Open decisions. State whether an appendix is normative or informative. Do not add unrelated top-level categories for a unique feature. If a section repeatedly outgrows its specification, split it into an indexed specification with clear ownership.
 
-These conventions and the index are document-governance exceptions to the seven-section template.
+# Writing exact requirements
 
-## 4. Writing exact requirements
+Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative. Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
 
-Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative.
-Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable
-meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
-
-Give each implementable requirement a permanent identifier such as **INV-001**. The prefix comes from the index; the
-number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their
-replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section
-and name the ID when referencing a requirement.
+Give each implementable requirement a permanent identifier such as **INV-001**. The prefix comes from the index; the number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section and name the ID when referencing a requirement.
 
 Stubs do not invent requirement IDs for TODOs. Allocate IDs when actual rules are proposed.
 
-A rule should make its trigger, inputs, preconditions, outcome, and state changes clear. Use a transition table or
-pseudocode where prose would conceal ordering. Define:
+A rule should make its trigger, inputs, preconditions, outcome, and state changes clear. Use a transition table or pseudocode where prose would conceal ordering. Define:
 
 - Valid and invalid inputs, including empty and duplicate collections.
 - Exact thresholds, inclusivity, caps, floors, and tie-breaking.
@@ -148,73 +171,55 @@ pseudocode where prose would conceal ordering. Define:
 - Atomicity and whether rejection changes state, history, or randomness.
 - Expected player-command rejection separately from an internal invariant violation.
 
-### Formulas and uncertainty
+## Formulas and uncertainty
 
-Define every symbol, unit, domain, and referenced parameter. Show evaluation order and rounding points; link common
-numeric rules rather than assuming real-number arithmetic equals runtime arithmetic.
+Define every symbol, unit, domain, and referenced parameter. Show evaluation order and rounding points; link common numeric rules rather than assuming real-number arithmetic equals runtime arithmetic.
 
-For random rules, specify the distribution, draw timing/order, interval boundaries, success comparison, and which
-information is hidden. Distinguish the true probability, conditional probability, cumulative probability, and displayed
-estimate whenever relevant. Define what information an estimate conditions on, including previous outcomes.
+For random rules, specify the distribution, draw timing and order, interval boundaries, success comparison, and which information is hidden. Distinguish the true probability, conditional probability, cumulative probability, and displayed estimate whenever relevant. Define what information an estimate conditions on, including previous outcomes.
 
-Include worked numerical examples for normal cases and boundaries. Equations, prose, pseudocode, and examples must
-agree. An unexplained "chance increases over time" or "diminishing returns" is not a complete rule.
+Include worked numerical examples for normal cases and boundaries. Equations, prose, pseudocode, and examples must agree. An unexplained "chance increases over time" or "diminishing returns" is not a complete rule.
 
-### Contracts and content
+## Contracts and content
 
-Public API specs define exact names, types, argument shapes, outputs, and errors when they are ready for acceptance.
-Conceptual domain specs need not mirror implementation storage layouts.
+Public API specifications define exact names, types, argument shapes, outputs, and errors when they are ready for acceptance. Conceptual domain specifications need not mirror implementation storage layouts.
 
-Content tables define stable IDs, units, values, references, and their owning formulas. A name or a number appearing only
-inside an example is not an implicit content definition. Use parameter references instead of copying balance values
-throughout mechanics docs.
+Content tables define stable IDs, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit content definition. Use parameter references instead of copying balance values throughout mechanics specifications.
 
-## 5. Examples, conformance, and sources
+# Examples, conformance, and evidence
 
 Every substantial rule must be covered by an acceptance example or a referenced test scenario. Examples identify:
 
-- The rule IDs exercised and, when needed for reproducibility, the game revision and content fixture.
-- Initial state and inputs, including the seed or RNG state for stochastic results.
+- The requirement IDs exercised and, when needed for reproducibility, the game revision and content fixture.
+- Initial state and inputs, including the seed or random state for stochastic results.
 - The command or event sequence.
-- Expected state, output, visibility, history, and RNG behavior where relevant.
+- Expected state, output, visibility, history, and random behavior where relevant.
 - Exact comparisons or explicitly specified numeric tolerances.
 
-Subsystem examples stay with their rules. Cross-system scenarios belong in
-[Campaign Integration and Acceptance Tests](testing/campaign-integration-and-acceptance-tests.md) and reference their owners.
+Subsystem examples stay with their rules. Cross-system scenarios belong in [Campaign Integration and Acceptance Tests](testing/campaign-integration-and-acceptance-tests.md) and reference their owners.
 
-Test derivation must follow the spec; current code output is not an independent oracle. If code, tests, and the spec
-disagree, identify the discrepancy and resolve it explicitly. Do not rewrite a spec merely to bless existing behavior.
-Do not silently replace an accepted rule to match a newer brief passage; record the design conflict and proposed revision.
+Test derivation must follow the specification; current code output is not an independent oracle. If code, tests, and the specification disagree, identify the discrepancy and resolve it explicitly. Do not rewrite a specification merely to bless existing behavior. Do not silently replace an accepted rule to match a newer brief passage; record the design conflict and proposed revision.
 
-Separate exact conformance criteria from strategic playtesting goals. A game being interesting or having multiple viable
-strategies requires playtesting; it cannot be established by a deterministic unit test alone.
+Separate exact conformance criteria from strategic playtesting goals. A game being interesting or having multiple viable strategies requires playtesting; it cannot be established by a deterministic unit test alone.
 
-Use relative Markdown links between specs. For source-game references, identify relevant paths and, when a behavioral
-claim is carried into a drafted spec, the inspected revision where practical.
+Use relative Markdown links between specifications. For inherited-game evidence, identify relevant paths and, when a behavioral claim is carried into a drafted specification, the inspected revision where practical.
 
-Label source material or proposals as **Inherited behavior**, **v5 requirement**, **Proposed rule**, or
-**Informative rationale** when the distinction could be unclear. Legacy bugs and undocumented implementation quirks
-are not requirements. A legacy formula can become a proposed rule only by being stated explicitly.
+Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Proposed rule**, or **Informative rationale** when the distinction could be unclear. Legacy bugs and undocumented implementation quirks are not requirements. A legacy formula can become a proposed rule only by being stated explicitly.
 
-## 6. TODOs and acceptance checklist
+# TODOs and acceptance checklist
 
 A TODO states what is missing and what a complete answer must include. Prefer:
 
-> TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful turns,
-> progress-removal behavior, rounding, and a numerical example.
+> TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful turns, progress-removal behavior, rounding, and a numerical example.
 
-Avoid vague placeholders such as "TODO: implement investigations." Documentation TODOs request decisions or contract
-content, not implementation.
+Avoid vague placeholders such as "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation.
 
-Use Open decisions to collect unresolved choices and identify affected sections/specs. A TODO may appear at the exact
-location of missing content; summarize blocking choices in section 7 without duplicating entire rules. Do not invent a
-default to close a TODO unless it is explicitly labeled as a proposal.
+Use Open decisions to collect unresolved choices and identify affected sections or specifications. A TODO may appear at the exact location of missing content; summarize blocking choices in Open decisions without duplicating entire rules. Do not invent a default to close a TODO unless it is explicitly labeled as a proposal.
 
 Before acceptance, verify:
 
 - Scope and ownership are clear and all references resolve.
-- Explicit relationships and applicable defaults satisfy Specification Relationships; links resolve, contract-affecting
-  relationship TODOs are resolved, and any published derived views agree with their declarations.
+- Explicit and implicit relationships satisfy Artifact Relationships, including mirrored explicit entries.
+- Canonical terminology is consistent and every formal term is defined in the owning Glossary.
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
@@ -223,14 +228,8 @@ Before acceptance, verify:
 - Deferred features are explicitly out of scope, not holes in an allegedly complete contract.
 - The project owner has accepted the revision.
 
-When accepted behavior changes, identify affected requirement IDs and dependent specs, revise their examples together,
-and record any save/replay/API compatibility impact. Git history and review records provide change history; avoid
-duplicating every edit in per-document changelogs.
+When accepted behavior changes, identify affected requirement IDs and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.
 
-## 7. Acceptance
+# Acceptance
 
-Accepted by the project owner through the explicit approval recorded above. This acceptance applies to the conventions
-only; subject specifications retain their own statuses. The simplified relationship listing rules were
-requested explicitly by the project owner and are recorded above. The detailed REL contract remains Draft, and existing
-relationship inventories have been migrated as recorded in the work plan. Future changes must be presented as revisions
-rather than silently changing the accepted agreement.
+Accepted by the project owner through the explicit approval recorded above. This acceptance applies to the conventions only; subject specifications retain their own statuses. The relationship and canonical-terminology revisions were explicitly requested by the project owner. Future changes must be presented as revisions rather than silently changing the accepted agreement.

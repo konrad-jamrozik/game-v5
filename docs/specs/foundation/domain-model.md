@@ -8,7 +8,7 @@
 | Conventions | [Specification conventions](../spec-conventions.md)                                 |
 | Review      | Batch 1; proposed rules awaiting user review                                        |
 
-## 1. Purpose and boundaries
+# Purpose and boundaries
 
 Define what exists in the game and how those concepts relate. A campaign contains one player-controlled agency that
 allocates agents, pursues leads, undertakes missions, and opposes factions.
@@ -23,51 +23,48 @@ relationships; mechanics own formulas and detailed transitions. Accepting this m
 implementable. Numeric representation, RNG algorithms, phase order, content values, API/report schemas, and save encoding
 remain in their owning specs.
 
-## 2. Dependencies and terminology
+# Relationships
 
-### Relationships
+## Dependencies
 
-| Type      | Target                                          | Scope                                                                                                             |
-| --------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `refines` | [Modeling Foundations](modeling-foundations.md) | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MOD-001–004) |
-| `uses`    | [Engine Contract](engine-contract.md)           | Execution, information-access, and committed-state guarantees (ENG-001–004)                                       |
+| Dependency                                        | Relationship | Scope                                                                                                             |
+| ------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------- |
+| [Modeling Foundations](./modeling-foundations.md) | `refines`    | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MOD-001–004) |
+| [Engine Contract](./engine-contract.md)           | `uses`       | Execution, information-access, and committed-state guarantees (ENG-001–004)                                       |
 
-### Background references
+## Dependents
 
-- The [Game Design Brief](../../game-design-brief.md) supplies the required concepts, strategic tensions, interface
-  boundary, determinism, and undo/redo.
-- The [work plan](../work-plan.md) groups Domain Model, Modeling Foundations, and Engine Contract in batch 1.
+| Dependent                                                      | Relationship | Scope                                                                                                 |
+| -------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------- |
+| [Agents](../mechanics/agents.md)                               | `refines`    | Agent lifecycle, assignments, task phases, attributes, and participation history                      |
+| [Campaign](../mechanics/campaign.md)                           | `refines`    | Campaign initialization, global progression facts, panic, and terminal outcomes                       |
+| [Combat](../mechanics/combat.md)                               | `refines`    | Combatants, enemy instances, combat transitions, and battle-result facts                              |
+| [Developer API](../interfaces/developer-api.md)                | `uses`       | Authoritative campaign state, hidden facts, and structural invariants                                 |
+| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | `refines`    | Agency resources, roster, upgrade acquisitions, capabilities, and capacity                            |
+| [Engine Contract](./engine-contract.md)                        | `uses`       | Game entities, relationships, game-specific identity scope, and structural invariants                 |
+| [Factions](../mechanics/factions.md)                           | `refines`    | Faction lifecycle, activity, operation provenance, suppression, and defeat facts                      |
+| [History and Persistence](./history-and-persistence.md)        | `uses`       | Campaign entities, references, and structural invariants restored by history operations               |
+| [Initial Campaign Content](../content/initial-campaign.md)     | `uses`       | Campaign entity kinds, structural invariants, and game-specific identity scope                        |
+| [Investigations](../mechanics/investigations.md)               | `refines`    | Investigation attempts, lifecycle, teams, progress facts, and abandonment                             |
+| [Leads and Progression](../mechanics/leads-and-progression.md) | `refines`    | Lead definitions, progression facts, discovery, availability, and unlock effects                      |
+| [Missions](../mechanics/missions.md)                           | `refines`    | Mission lifecycle, deployment, provenance, deadlines, battle results, and campaign consequences       |
+| [Modeling Foundations](./modeling-foundations.md)              | `uses`       | Campaign entity kinds, their structural relationships, and the game-specific identity scope (DOM-017) |
+| [Player Information](../interfaces/player-information.md)      | `uses`       | Campaign entities, relationships, authoritative facts, and hidden state                               |
+| [Turn Resolution](./turn-resolution.md)                        | `uses`       | Campaign entities, state transitions, and structural invariants                                       |
+| [TypeScript Player API](../interfaces/typescript-api.md)       | `uses`       | Campaign entities, relationships, identifiers, and structural invariants                              |
 
-### Downstream ownership (informative)
+# Glossary
 
-The following downstream contracts are currently stubs. They do not supply unstated rules to this draft:
+None.
 
-| Owner                                                                                              | Details to be specified there                                                       |
-| -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [Numbers and Randomness](numbers-and-randomness.md)                                                | Representation, rounding, ID generation, and random draws                           |
-| [History and Persistence](history-and-persistence.md)                                              | Timeline storage, restoration, serialization, and compatibility                     |
-| [Agents](../mechanics/agents.md)                                                                   | Attribute formulas, eligibility, transitions, transit timing, fatigue, and recovery |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                       | Costs, income, purchases, capacity accounting, and upgrade application              |
-| [Leads and Progression](../mechanics/leads-and-progression.md)                                     | Prerequisites, discovery, availability, and unlock effects                          |
-| [Investigations](../mechanics/investigations.md)                                                   | Progress, probability, uncertainty, team changes, and abandonment                   |
-| [Combat](../mechanics/combat.md)                                                                   | Combat calculations, resolution, experience, and battle result details              |
-| [Missions](../mechanics/missions.md)                                                               | Deployment, deadlines, rewards, and partial success                                 |
-| [Factions](../mechanics/factions.md)                                                               | Escalation, operations, suppression, and defeat                                     |
-| [Campaign](../mechanics/campaign.md), [Turn Resolution](turn-resolution.md)                        | Initialization, outcomes, and effect ordering                                       |
-| [Initial Campaign Content](../content/initial-campaign.md)                                         | Definitions and balance values                                                      |
-| [Player Information](../interfaces/player-information.md)                                          | Observation/report fields, reveal conditions, and permitted estimates               |
-| [TypeScript API](../interfaces/typescript-api.md), [Developer API](../interfaces/developer-api.md) | Callable contracts and separation of player/dev access                              |
-
-Game terms are defined under their owning concepts in section 3 rather than in a flat glossary.
-
-## 3. Concepts and contract
+# Concepts and contract
 
 These are game concepts and relationships, not a serialized schema or a required storage hierarchy. A concept can
 include hidden facts; belonging to the game domain does not imply that every property is visible to the player.
 Player Information owns exact visibility. Generic modeling vocabulary belongs to
-[Modeling Foundations](modeling-foundations.md#2-dependencies-and-terminology).
+[Modeling Foundations](modeling-foundations.md#glossary).
 
-### Campaign and agency
+## Campaign and agency
 
 A campaign uses the rules and content supplied by the current game build. It contains one agency, the current turn,
 panic and campaign outcome, progression facts, agents, factions, investigations, and missions. Earlier rules, content,
@@ -75,9 +72,9 @@ and incompatible saved campaigns need not remain supported.
 
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
 switching between human and AI control does not create another agency. No separate agency ID is required.
-Engine continuation bookkeeping belongs to [Engine Contract](engine-contract.md#3-concepts-and-contract).
+Engine continuation bookkeeping belongs to [Engine Contract](engine-contract.md#concepts-and-contract).
 
-### Agent
+## Agent
 
 An agent is an individual with a campaign entity ID. Its identity persists through assignments and combat.
 
@@ -97,7 +94,7 @@ participants describe the same relationship from opposite sides; this model does
 Current teams follow current assignments (DOM-007). Agents owns detailed eligibility, transitions, transit, development,
 fatigue, and recovery rules.
 
-### Lead and investigation
+## Lead and investigation
 
 | Concept            | Identity and meaning                                                                                                                                                        |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -109,7 +106,7 @@ fatigue, and recovery rules.
 Restarting an abandoned investigation creates another attempt. Leads and Progression owns discovery and unlock effects;
 Investigations owns progress, probability, uncertainty, team changes, and abandonment details.
 
-### Mission and combat
+## Mission and combat
 
 | Concept                       | Identity and meaning                                                                                                                                                                      |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -125,7 +122,7 @@ a third entity copied alongside them. Combat changes the participating identitie
 Battle results are distinct from campaign consequences, so failed battles can still yield damage-related benefits.
 Combat owns resolution; Missions owns deployment, deadlines, rewards, and partial success.
 
-### Faction and operations
+## Faction and operations
 
 A faction definition supplies descriptive identity and configuration references. A faction is a campaign entity referring
 to that definition, with activity, operation clocks, suppression, and defeat/progression facts.
@@ -134,19 +131,19 @@ A faction operation occurrence is the origin of one Response mission: its initia
 facts are embedded in that mission. The containing mission ID identifies the occurrence. It is not a separate scheduled
 entity in this proposal. Factions owns escalation, operation generation, suppression, and defeat mechanics.
 
-### Weapons and upgrades
+## Weapons and upgrades
 
 Weapon definitions describe damage configuration. Equipped values and campaign modifications belong to the combatant;
 this scope does not track individual inventory items. Upgrade definitions describe reusable content; acquisitions and
 amount/level belong to the agency. Economy and Upgrades owns acquisition costs, capacity accounting, and upgrade effects.
 
-### Reports
+## Reports
 
 A report links historical facts and explanations to commands/turns and entities in the timeline. Player Information owns
 visible fields; History and Persistence owns timeline storage. Reports can explain retained results without replacing
 historical values with current calculations.
 
-### Relationship overview
+## Relationship overview
 
 ```mermaid
 flowchart TD
@@ -170,9 +167,9 @@ flowchart TD
 
 Arrows show relationships, not inheritance or storage layout.
 
-## 4. Requirements
+# Requirements
 
-### Campaign boundary
+## Campaign boundary
 
 **DOM-001 — Campaign boundary.** A campaign must have exactly one player-controlled agency. Mutable gameplay instances
 must belong to that campaign. AI memory, UI selections, browser state, and CLI preferences are not campaign facts.
@@ -183,7 +180,7 @@ those five entity kinds within one committed campaign state. Repeated mission an
 identities distinct from earlier occurrences in the same timeline. Modeling Foundations owns the general identity and
 explicit-reference semantics (MOD-002); this requirement owns which game entities share that identity scope.
 
-### Agents, assignments, and participation
+## Agents, assignments, and participation
 
 **DOM-005 — Agent lifecycle.** An agent's lifecycle must distinguish Serving, Killed, and Dismissed. A Serving agent must
 have exactly one assignment and task phase. Killed/Dismissed agents must have neither; their final attributes and career
@@ -208,7 +205,7 @@ zero and maximum health inclusive; skill and exhaustion must be nonnegative. Ser
 Killed agents zero health, and Dismissed agents positive health. Full health on dismissal is not a structural requirement.
 Dismissal eligibility, fatigue caps, rounding, and recovery formulas belong to later mechanics.
 
-### Opportunities and opponents
+## Opportunities and opponents
 
 **DOM-009 — Lead versus attempt.** An investigation must refer to one lead definition and distinguish Active, Completed,
 and Abandoned lifecycle states. At most one Active investigation may exist for a lead in a campaign. Active attempts
@@ -235,8 +232,9 @@ not reuse its identity or mutable health. Agent combat changes must affect the s
 Battle results and campaign consequences must be distinguished so failed battles can yield damage-related benefits.
 The model must retain the facts required by the eventual partial-success formula without selecting that formula here.
 
-### Source basis and proposed changes
+## Evidence basis and proposed changes
 
+[Game Design Brief](../../game-design-brief.md) supplies the intended campaign concepts and strategic constraints.
 Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited model/validation files were unmodified in
 the source working tree.
 
@@ -247,7 +245,7 @@ the source working tree.
 | Proposed clarification                      | [Mission model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/missionModel.ts) stores operation severity on missions. DOM-011 explicitly names mission kind and origin. |
 | Proposed scope choice                       | Weapon definitions and combatant-owned values suffice initially; individual inventory, trading, and transfers are not introduced.                                                                                                    |
 
-## 5. Edge cases and failure behavior
+# Edge cases and failure behavior
 
 | Case                                              | Result / owner                                                                                                  |
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -258,13 +256,13 @@ the source working tree.
 | Empty roster or no missions/investigations        | Structurally valid; CAMP owns initialization and defeat conditions                                              |
 | Faction defeated with outstanding missions/leads  | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                   |
 
-## 6. Acceptance examples
+# Acceptance examples
 
 These are structural fixtures, not playable scenarios or API signatures. Symbolic IDs are labels, not a chosen ID format.
 Numbers below are exact test-only integers, not campaign balance. RNG state G and ID state N are opaque; structural checks
 consume no draws. All other rule-owned scalar values are assumed valid for purposes of these structural checks.
 
-### A. Valid relationships
+## A. Valid relationships
 
 Given the current content catalog C and rules R, turn 3, RNG state G, ID state N, and:
 
@@ -282,7 +280,7 @@ These relationships satisfy DOM-001, DOM-005 through DOM-009, DOM-011, DOM-012, 
 Team membership does not assert that a1 makes progress while travelling. Structural validation leaves all facts, G,
 and N unchanged (ENG-001/004). Full mechanics validation requires the later owning specs.
 
-### B. Invalid variants
+## B. Invalid variants
 
 Each row independently changes fixture A. Reject the structural variant; if attempted through a player command, preserve
 the original committed state (ENG-004).
@@ -299,7 +297,7 @@ the original committed state (ENG-004).
 | Assign e1 a second owning mission                                                | DOM-012          |
 | Give e1 the same entity ID as a1                                                 | DOM-017; MOD-002 |
 
-### C. Completion and later participation
+## C. Completion and later participation
 
 Given i1 concludes and m1 resolves under their owning rules, a structurally valid resulting state has:
 
@@ -312,7 +310,7 @@ This satisfies MOD-003; DOM-005/007/009/010/012. Assigning a1 to another investi
 were Abandoned instead, restarting creates a new identity and does not resume i1's progress (MOD-002; DOM-009).
 This fixture does not choose the replacement orders or turn timing.
 
-## 7. Open decisions
+# Open decisions
 
 These have explicit proposed answers, not hidden implementation defaults. Review can accept them or request changes.
 
@@ -323,20 +321,21 @@ These have explicit proposed answers, not hidden implementation defaults. Review
 | Individually tracked equipment/inventory?           | No; definitions plus combatant-owned values for initial scope.                                       | AGENT, ECON, COMBAT    |
 | Full health on dismissal as a structural invariant? | No; require positive health and let AGENT/ECON determine eligibility (DOM-008).                      | AGENT, ECON            |
 
-Formulas, transitions, reveal conditions, and signatures listed in section 2 remain scheduled work outside this contract.
-They must be specified before their features are implemented, but do not require invented answers in this model.
+Formulas, transitions, reveal conditions, and signatures assigned to other specifications remain scheduled work outside
+this contract. They must be specified before their features are implemented, but do not require invented answers in
+this model.
 
-## Appendix A. Requirement migration (informative)
+# Appendix A. Requirement migration (informative)
 
 The split changes document ownership, not proposed gameplay. Retained DOM IDs keep their meanings. Retired IDs below
 must not be reused; follow the replacement owners for their normative text and acceptance examples.
 
-| Retired requirement                 | Replacement                                                                                                                                                                                    |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DOM-002 — Definition boundary       | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-001                                                                                                                        |
-| DOM-003 — Identity                  | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-002 for general identity semantics; DOM-017 for the game-specific identity scope                                           |
-| DOM-004 — References                | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-003                                                                                                                        |
-| DOM-013 — Derived consistency       | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-004 for historical preservation; [Engine Contract](engine-contract.md#4-requirements), ENG-001 for calculations and caches |
-| DOM-014 — Continuation state        | [Engine Contract](engine-contract.md#4-requirements), ENG-002                                                                                                                                  |
-| DOM-015 — Information boundary      | [Engine Contract](engine-contract.md#4-requirements), ENG-003                                                                                                                                  |
-| DOM-016 — Committed-state integrity | [Engine Contract](engine-contract.md#4-requirements), ENG-004                                                                                                                                  |
+| Retired requirement                 | Replacement                                                                                                                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| DOM-002 — Definition boundary       | [Modeling Foundations](modeling-foundations.md#requirements), MOD-001                                                                                                                      |
+| DOM-003 — Identity                  | [Modeling Foundations](modeling-foundations.md#requirements), MOD-002 for general identity semantics; DOM-017 for the game-specific identity scope                                         |
+| DOM-004 — References                | [Modeling Foundations](modeling-foundations.md#requirements), MOD-003                                                                                                                      |
+| DOM-013 — Derived consistency       | [Modeling Foundations](modeling-foundations.md#requirements), MOD-004 for historical preservation; [Engine Contract](engine-contract.md#requirements), ENG-001 for calculations and caches |
+| DOM-014 — Continuation state        | [Engine Contract](engine-contract.md#requirements), ENG-002                                                                                                                                |
+| DOM-015 — Information boundary      | [Engine Contract](engine-contract.md#requirements), ENG-003                                                                                                                                |
+| DOM-016 — Committed-state integrity | [Engine Contract](engine-contract.md#requirements), ENG-004                                                                                                                                |
