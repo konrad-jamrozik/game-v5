@@ -8,7 +8,7 @@
 
 ## Start here
 
-- [Design stem](../game-design-stem.md): strategic intent and architectural constraints.
+- [Game Design Brief](../game-design-brief.md): strategic intent and architectural constraints.
 - [Specification conventions](spec-conventions.md): accepted layout, precision requirements, ownership, and lifecycle.
 - [Specification work plan and backlog](work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 

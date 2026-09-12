@@ -13,14 +13,14 @@
 
 Make every numeric calculation and random outcome reproducible across supported runtimes.
 
-TODO: Confirm the precise included/excluded scope and rule ownership using the [design stem](../../game-design-stem.md).
+TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
 - **Normative draft:** [Modeling Foundations](modeling-foundations.md) owns identity semantics (MOD-002); this spec owns generation.
 - **Normative draft:** [Engine Contract](engine-contract.md) owns reproducible continuation and non-mutating calculations (ENG-001/002).
-- TODO: Identify any normative dependencies needed beyond the design stem; do not introduce ambient platform behavior as an unstated dependency.
+- TODO: Identify any normative dependencies needed beyond the game design brief; do not introduce ambient platform behavior as an unstated dependency.
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

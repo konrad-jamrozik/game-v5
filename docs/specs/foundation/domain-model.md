@@ -31,7 +31,7 @@ remain in their owning specs.
 - **Normative:** [Specification conventions](../spec-conventions.md) governs this document.
 - **Normative draft:** [Modeling Foundations](modeling-foundations.md) owns modeling vocabulary, identity/reference conventions, and historical fact preservation.
 - **Normative draft:** [Engine Contract](engine-contract.md) owns execution, information access, and committed-state guarantees.
-- **Design input:** [Design stem](../../game-design-stem.md) supplies the required concepts, strategic tensions, interface
+- **Design input:** [Game Design Brief](../../game-design-brief.md) supplies the required concepts, strategic tensions, interface
   boundary, determinism, and undo/redo.
 - **Process:** [Work plan](../work-plan.md) groups Domain Model, Modeling Foundations, and Engine Contract in batch 1.
 

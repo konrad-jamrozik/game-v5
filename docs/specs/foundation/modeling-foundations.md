@@ -22,7 +22,7 @@ historical facts. It does not prescribe storage layout, ID-generation algorithms
 - **Normative:** [Specification conventions](../spec-conventions.md) governs this document.
 - **Normative draft:** [Domain Model](domain-model.md) identifies game entities and their structural relationships.
 - **Normative draft:** [Engine Contract](engine-contract.md) defines runtime calculation and committed-state guarantees.
-- **Design input:** [Design stem](../../game-design-stem.md) supplies deterministic continuation and history requirements.
+- **Design input:** [Game Design Brief](../../game-design-brief.md) supplies deterministic continuation and history requirements.
 - **Process:** [Work plan](../work-plan.md) includes this draft in batch 1.
 - **Downstream stubs:** [Numbers and Randomness](numbers-and-randomness.md) owns ID generation;
   [History and Persistence](history-and-persistence.md) owns storage/restoration;

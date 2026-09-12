@@ -1,8 +1,8 @@
-# Game v5: Core Design Stem
+# Game v5: Game Design Brief
 
 ## 1. Purpose and core concepts
 
-Create `docs/game-design-stem.md` as inspiration for later specifications. Adapt the strategic ideas from `game-ts`; exact formulas, balance, content, and framework choices remain open.
+This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, content, and interfaces. Adapt the strategic ideas from `game-ts`; exact formulas, balance, content, and framework choices remain open.
 
 The game is a **web-based, turn-based agency-management strategy game**, with presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
 
@@ -116,7 +116,7 @@ Missions are auto-battles. The player chooses whether to commit and which agents
 
 Seeded determinism prevents replaying an identical attempt to obtain fresh rolls. Improving preparation may require revisiting earlier recruitment, training, recovery, and allocation decisions, abandoning the progress of that timeline.
 
-This reduces the value of retrying combat, but does not eliminate foreknowledge from undo. Undo remains supported; no additional rewind penalty is introduced by this stem.
+This reduces the value of retrying combat, but does not eliminate foreknowledge from undo. Undo remains supported; no additional rewind penalty is introduced by this brief.
 
 ## 3. Shared API and progressive interfaces
 
@@ -157,7 +157,7 @@ Begin with snapshots; optimize history storage later.
 
 ## 5. Delivery and acceptance
 
-The immediate deliverable is the Markdown stem, not implementation. Exact formulas, content, balance, and partial-success calculations belong in subsequent specifications.
+The immediate deliverable is the Markdown brief, not implementation. Exact formulas, content, balance, and partial-success calculations belong in subsequent specifications.
 
 Future validation should establish that:
 

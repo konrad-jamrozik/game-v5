@@ -28,7 +28,7 @@ the ten-batch order is unchanged. This approval does not accept the subject rule
 
 - **Normative:** [Specification conventions](spec-conventions.md) defines document structure, rule ownership, lifecycle,
   and acceptance. It is Accepted; its approval does not accept other documents.
-- **Design input:** [Design stem](../game-design-stem.md) supplies strategic intent and architectural constraints.
+- **Design input:** [Game Design Brief](../game-design-brief.md) supplies strategic intent and architectural constraints.
 - **Navigation:** [Spec index](README.md) registers document IDs and ownership. This work plan owns the detailed sequence.
 
 A **batch** is a bounded set of related specifications with one review checkpoint at its end. At that checkpoint, the
@@ -108,7 +108,7 @@ schedule; earlier drafts must still state their local timing requirements and an
 
 **PLAN-005:** For each authorized batch:
 
-1. Inspect the stem, accepted dependencies, related drafts, and relevant game-ts code where useful.
+1. Inspect the brief, accepted dependencies, related drafts, and relevant game-ts code where useful.
 2. Draft the contract using the accepted conventions. Clearly distinguish proposed rules from inherited behavior.
 3. Add formulas, boundary cases, worked examples, and relevant content/scenario updates.
 4. Check internal consistency and cross-spec references. Identify unresolved dependencies and decisions.

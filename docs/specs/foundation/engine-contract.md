@@ -22,7 +22,7 @@ RNG algorithm, save encoding, or subsystem mechanics. Accepting it alone does no
 - **Normative draft:** [Domain Model](domain-model.md) owns game entities, relationships, and domain invariants.
 - **Normative draft:** [Modeling Foundations](modeling-foundations.md) defines authoritative facts, derived values,
   player observations, committed state, identity/references, and historical preservation (MOD-001–004).
-- **Design input:** [Design stem](../../game-design-stem.md) requires determinism, undo/redo, and human/AI interface parity.
+- **Design input:** [Game Design Brief](../../game-design-brief.md) requires determinism, undo/redo, and human/AI interface parity.
 - **Process:** [Work plan](../work-plan.md) includes this draft in batch 1.
 
 ### Downstream ownership
@@ -100,7 +100,7 @@ Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited 
 working tree when the original Domain Model draft was prepared.
 
 **v5 requirement:** [Campaign model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/gameStateModel.ts)
-lacks RNG state. The stem requires reproducible continuation and separate player/dev access (ENG-002/003).
+lacks RNG state. The brief requires reproducible continuation and separate player/dev access (ENG-002/003).
 
 ## 5. Edge cases and failure behavior
 

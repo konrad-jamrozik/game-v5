@@ -13,7 +13,7 @@
 
 Define reversible sessions, reproducible replay, and durable save/load behavior.
 
-TODO: Confirm the precise included/excluded scope and rule ownership using the [design stem](../../game-design-stem.md).
+TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
@@ -44,7 +44,7 @@ appropriate to this document.
 
 ### Undo and redo
 
-TODO: Specify atomic history boundaries, restored fields including RNG/IDs/reports, new-command branching, rejected/no-op actions, and history limits. Preserve the stem's absence of an additional rewind penalty.
+TODO: Specify atomic history boundaries, restored fields including RNG/IDs/reports, new-command branching, rejected/no-op actions, and history limits. Preserve the brief's absence of an additional rewind penalty.
 
 ### Replay and persistence
 

@@ -13,7 +13,7 @@
 
 Define complete player-facing knowledge and a consistent boundary around hidden state.
 
-TODO: Confirm the precise included/excluded scope and rule ownership using the [design stem](../../game-design-stem.md).
+TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology

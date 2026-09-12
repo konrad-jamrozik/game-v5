@@ -6,12 +6,12 @@
 | Status               | Accepted                                                                                                  |
 | Acceptance reference | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted." |
 | Scope                | Writing, reviewing, and maintaining game-v5 specifications                                                |
-| Related documents    | [Spec index](README.md), [design stem](../game-design-stem.md)                                            |
+| Related documents    | [Spec index](README.md), [game design brief](../game-design-brief.md)                                            |
 
 ## 1. Purpose and boundaries
 
 Specifications are the durable source of truth for intended behavior. Code and tests implement that behavior and may be
-replaced without changing the contract. The [design stem](../game-design-stem.md) explains intent and strategic tensions;
+replaced without changing the contract. The [game design brief](../game-design-brief.md) explains intent and strategic tensions;
 the specifications resolve those ideas into precise rules.
 
 These conventions are the accepted working agreement. The created stubs use this layout, but neither their presence nor
@@ -159,7 +159,7 @@ Subsystem examples stay with their rules. Cross-system scenarios belong in
 
 Test derivation must follow the spec; current code output is not an independent oracle. If code, tests, and the spec
 disagree, identify the discrepancy and resolve it explicitly. Do not rewrite a spec merely to bless existing behavior.
-Do not silently replace an accepted rule to match a newer stem passage; record the design conflict and proposed revision.
+Do not silently replace an accepted rule to match a newer brief passage; record the design conflict and proposed revision.
 
 Separate exact conformance criteria from strategic playtesting goals. A game being interesting or having multiple viable
 strategies requires playtesting; it cannot be established by a deterministic unit test alone.
