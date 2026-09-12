@@ -18,15 +18,19 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- **Normative draft:** [Engine Contract](engine-contract.md) owns calculation consistency and committed-state integrity (ENG-001/004).
-- [Domain Model](domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Numbers and Randomness](numbers-and-randomness.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Agents](../mechanics/agents.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Investigations](../mechanics/investigations.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Missions](../mechanics/missions.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Factions](../mechanics/factions.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Economy and Upgrades](../mechanics/economy-and-upgrades.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Campaign](../mechanics/campaign.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                       | Scope                                                                                                     |
+| --------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `refines` | [Engine Contract](engine-contract.md)                        | Phase boundaries, state-read timing, calculation consistency, and committed-state integrity (ENG-001/004) |
+| `uses`    | [Domain Model](domain-model.md)                              | Campaign entities, state transitions, and structural invariants                                           |
+| `uses`    | [Numbers and Randomness](numbers-and-randomness.md)          | Deterministic draw ordering and numeric effect application                                                |
+| `uses`    | [Agents](../mechanics/agents.md)                             | Transit, task contribution, fatigue, recovery, and assignment transitions                                 |
+| `uses`    | [Investigations](../mechanics/investigations.md)             | Progress, completion, team-change, and abandonment effects                                                |
+| `uses`    | [Missions](../mechanics/missions.md)                         | Mission aging, resolution, expiration, and consequence effects                                            |
+| `uses`    | [Factions](../mechanics/factions.md)                         | Escalation, operation generation, suppression, and defeat effects                                         |
+| `uses`    | [Economy and Upgrades](../mechanics/economy-and-upgrades.md) | Income, upkeep, capacity, and upgrade timing                                                              |
+| `uses`    | [Campaign](../mechanics/campaign.md)                         | Turn counters, panic, and terminal-outcome evaluation                                                     |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

@@ -18,11 +18,15 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Agents](agents.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Combat](combat.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Economy and Upgrades](economy-and-upgrades.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Factions](factions.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                          | Scope                                                                                           |
+| --------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `refines` | [Domain Model](../foundation/domain-model.md)   | Mission lifecycle, deployment, provenance, deadlines, battle results, and campaign consequences |
+| `uses`    | [Agents](agents.md)                             | Deployment eligibility, transit, survivor return, casualties, and assignment changes            |
+| `uses`    | [Combat](combat.md)                             | Battle-result facts consumed by mission outcome and partial-success rules                       |
+| `uses`    | [Economy and Upgrades](economy-and-upgrades.md) | Resource rewards, penalties, and shared transport capacity                                      |
+| `uses`    | [Factions](factions.md)                         | Operation severity, suppression, and faction progression consequences                           |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

@@ -18,9 +18,13 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- [TypeScript Player API](typescript-api.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Player Information](player-information.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [History and Persistence](../foundation/history-and-persistence.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type   | Target                                                              | Scope                                                                         |
+| ------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `uses` | [TypeScript Player API](typescript-api.md)                          | Queries, action discovery, commands, results, refresh, and errors             |
+| `uses` | [Player Information](player-information.md)                         | Visible fields, relationships, estimates, reports, and information boundaries |
+| `uses` | [History and Persistence](../foundation/history-and-persistence.md) | Timeline navigation, undo/redo, restored observations, and session behavior   |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

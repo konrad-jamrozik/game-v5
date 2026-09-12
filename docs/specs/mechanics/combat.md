@@ -18,9 +18,13 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Numbers and Randomness](../foundation/numbers-and-randomness.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Agents](agents.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                            | Scope                                                                         |
+| --------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `refines` | [Domain Model](../foundation/domain-model.md)                     | Combatants, enemy instances, combat transitions, and battle-result facts      |
+| `uses`    | [Numbers and Randomness](../foundation/numbers-and-randomness.md) | Combat arithmetic, rounding, draw sites, and deterministic ordering           |
+| `uses`    | [Agents](agents.md)                                               | Agent capability, effective skill, health, exhaustion, and experience changes |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

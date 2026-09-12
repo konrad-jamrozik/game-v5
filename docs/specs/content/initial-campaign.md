@@ -18,13 +18,17 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- **Normative draft:** [Modeling Foundations](../foundation/modeling-foundations.md) owns immutable definitions and typed content references (MOD-001/002).
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Campaign](../mechanics/campaign.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Leads and Progression](../mechanics/leads-and-progression.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Missions](../mechanics/missions.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Factions](../mechanics/factions.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Economy and Upgrades](../mechanics/economy-and-upgrades.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                         | Scope                                                                           |
+| --------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `uses`    | [Modeling Foundations](../foundation/modeling-foundations.md)  | Immutable definitions and typed content-reference semantics (MOD-001/002)       |
+| `uses`    | [Domain Model](../foundation/domain-model.md)                  | Campaign entity kinds, structural invariants, and game-specific identity scope  |
+| `refines` | [Campaign](../mechanics/campaign.md)                           | Concrete starting configuration, outcome content, and named campaign parameters |
+| `refines` | [Leads and Progression](../mechanics/leads-and-progression.md) | Concrete lead definitions, prerequisites, and unlock effects                    |
+| `refines` | [Missions](../mechanics/missions.md)                           | Concrete mission templates, deadlines, rewards, and consequence parameters      |
+| `refines` | [Factions](../mechanics/factions.md)                           | Concrete faction definitions, escalation values, and operation pools            |
+| `refines` | [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | Concrete resource, purchase, capacity, and upgrade values                       |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

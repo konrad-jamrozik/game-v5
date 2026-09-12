@@ -1,12 +1,12 @@
 # Modeling Foundations
 
-| Metadata | Value |
-| -------- | ----- |
-| Spec ID | MOD |
-| Status | Draft |
-| Scope | Modeling vocabulary, definitions, identity and references, and historical fact preservation |
-| Conventions | [Specification conventions](../spec-conventions.md) |
-| Review | Batch 1; proposed rules awaiting user review |
+| Metadata    | Value                                                                                       |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| Spec ID     | MOD                                                                                         |
+| Status      | Draft                                                                                       |
+| Scope       | Modeling vocabulary, definitions, identity and references, and historical fact preservation |
+| Conventions | [Specification conventions](../spec-conventions.md)                                         |
+| Review      | Batch 1; proposed rules awaiting user review                                                |
 
 ## 1. Purpose and boundaries
 
@@ -19,27 +19,36 @@ historical facts. It does not prescribe storage layout, ID-generation algorithms
 
 ## 2. Dependencies and terminology
 
-- **Normative:** [Specification conventions](../spec-conventions.md) governs this document.
-- **Normative draft:** [Domain Model](domain-model.md) identifies game entities and their structural relationships.
-- **Normative draft:** [Engine Contract](engine-contract.md) defines runtime calculation and committed-state guarantees.
-- **Design input:** [Game Design Brief](../../game-design-brief.md) supplies deterministic continuation and history requirements.
-- **Process:** [Work plan](../work-plan.md) includes this draft in batch 1.
-- **Downstream stubs:** [Numbers and Randomness](numbers-and-randomness.md) owns ID generation;
-  [History and Persistence](history-and-persistence.md) owns storage/restoration;
-  [TypeScript API](../interfaces/typescript-api.md) owns stale client-handle behavior;
-  [Player Information](../interfaces/player-information.md) owns visible fields and estimates.
-  These stubs do not supply unstated rules.
+### Relationships
+
+| Type   | Target                          | Scope                                                                                                 |
+| ------ | ------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `uses` | [Domain Model](domain-model.md) | Campaign entity kinds, their structural relationships, and the game-specific identity scope (DOM-017) |
+
+### Background references
+
+- The [Game Design Brief](../../game-design-brief.md) supplies deterministic continuation and history requirements.
+- The [work plan](../work-plan.md) includes this draft in batch 1.
+- [Engine Contract](engine-contract.md) owns runtime calculation and committed-state guarantees.
+
+### Downstream ownership (informative)
+
+[Numbers and Randomness](numbers-and-randomness.md) owns ID generation;
+[History and Persistence](history-and-persistence.md) owns storage/restoration;
+[TypeScript API](../interfaces/typescript-api.md) owns stale client-handle behavior;
+[Player Information](../interfaces/player-information.md) owns visible fields and estimates.
+These stubs do not supply unstated rules.
 
 ### Modeling vocabulary
 
-| Term                     | Meaning                                                                                          |
-| ------------------------ | ------------------------------------------------------------------------------------------------ |
-| Definition               | Immutable content describing a reusable game concept, such as a lead, mission, faction, enemy, weapon, or upgrade |
-| Instance                 | An occurrence or individual with its own identity and evolving campaign facts                    |
-| Authoritative fact       | Information needed to resolve play or preserve history, rather than merely a current calculation |
-| Derived value            | A deterministic calculation from authoritative facts and the current rules/content               |
-| Player observation       | Information deliberately exposed by the engine to an ordinary player                             |
-| Committed state          | Complete state before or after an accepted command, not intermediate battle/turn processing      |
+| Term               | Meaning                                                                                                           |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| Definition         | Immutable content describing a reusable game concept, such as a lead, mission, faction, enemy, weapon, or upgrade |
+| Instance           | An occurrence or individual with its own identity and evolving campaign facts                                     |
+| Authoritative fact | Information needed to resolve play or preserve history, rather than merely a current calculation                  |
+| Derived value      | A deterministic calculation from authoritative facts and the current rules/content                                |
+| Player observation | Information deliberately exposed by the engine to an ordinary player                                              |
+| Committed state    | Complete state before or after an accepted command, not intermediate battle/turn processing                       |
 
 ## 3. Concepts and contract
 
@@ -79,9 +88,9 @@ every possible chart to be retained.
 **MOD-001 — Definition boundary.** Campaigns must resolve definition references against the current content catalog.
 Ordinary gameplay must not mutate definitions. Multiple instances can share a definition without sharing mutable state.
 
-**MOD-002 — Identity.** Entity IDs must be unique across agents, factions, investigations, missions, and enemies in one
-committed campaign state and stable during each entity's lifetime. Content references must identify their kind and ID.
-Relationships must use explicit references; rules must not parse display names or ID text to discover relationships.
+**MOD-002 — Identity.** Identity-bearing campaign entities must have IDs that are unique within the identity scope
+defined by the Domain Model and stable during each entity's lifetime. Content references must identify their kind and
+ID. Relationships must use explicit references; rules must not parse display names or ID text to discover relationships.
 
 Repeated missions/investigations must have distinct IDs from earlier occurrences. IDs are timeline-scoped: undo restores
 the previous ID-generation state, and a discarded future is not another live campaign. NUM owns generation; API owns
@@ -105,12 +114,12 @@ derives some relationships from IDs. MOD-002 and DOM-010 require explicit refere
 
 ## 5. Edge cases and failure behavior
 
-| Case | Result / owner |
-| ---- | -------------- |
-| Duplicate entity ID, missing reference, or wrong target kind | Invalid state under MOD-002/003; ENG-004 owns rejection and defect reporting; never infer a replacement by name |
-| Subject is terminal or archived | Required historical references still resolve under MOD-003; storage may be compacted without losing required facts |
-| Undo discards a later occurrence | IDs are timeline-scoped under MOD-002; restored references must resolve under MOD-003; HIST owns restoration details |
-| Current strength differs from battle-start strength | Retain the historical basis required by the result/report under MOD-004 |
+| Case                                                         | Result / owner                                                                                                       |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| Duplicate entity ID, missing reference, or wrong target kind | Invalid state under MOD-002/003; ENG-004 owns rejection and defect reporting; never infer a replacement by name      |
+| Subject is terminal or archived                              | Required historical references still resolve under MOD-003; storage may be compacted without losing required facts   |
+| Undo discards a later occurrence                             | IDs are timeline-scoped under MOD-002; restored references must resolve under MOD-003; HIST owns restoration details |
+| Current strength differs from battle-start strength          | Retain the historical basis required by the result/report under MOD-004                                              |
 
 ## 6. Acceptance examples
 
@@ -120,19 +129,19 @@ These examples use the symbolic content/entity IDs from
 ### Definitions and distinct identities
 
 Given two mission instances referring to M1, each contains distinct enemies referring to E1. Damage to one enemy changes
-that instance, not E1 or the other enemy (MOD-001/002; DOM-012). A repeated mission or investigation receives a distinct
-identity from an earlier occurrence in the same timeline (MOD-002).
+that instance, not E1 or the other enemy (MOD-001/002; DOM-012/017). A repeated mission or investigation receives a
+distinct identity from an earlier occurrence in the same timeline (MOD-002; DOM-017).
 
 ### Invalid identity and references
 
 Each variant independently changes Domain Model fixture A:
 
-| Change | Violation |
-| ------ | --------- |
-| Give e1 the same ID as a1 | MOD-002 |
-| Point a1's investigation reference at nonexistent i9 | MOD-003 |
-| Point a1's investigation reference at mission m1 | MOD-003 |
-| Omit the kind from a content reference | MOD-002 |
+| Change                                               | Violation        |
+| ---------------------------------------------------- | ---------------- |
+| Give e1 the same ID as a1                            | MOD-002; DOM-017 |
+| Point a1's investigation reference at nonexistent i9 | MOD-003          |
+| Point a1's investigation reference at mission m1     | MOD-003          |
+| Omit the kind from a content reference               | MOD-002          |
 
 These are invalid structural fixtures. If attempted through a player command, ENG-004 preserves the original state.
 Changing a display name does not change explicit relationships (MOD-002).
@@ -147,9 +156,9 @@ Changing a display name does not change explicit relationships (MOD-002).
 
 ## 7. Open decisions
 
-| Review decision | Proposed answer | Affected specs |
-| --------------- | --------------- | -------------- |
-| Unique IDs across all five campaign entity kinds? | Yes; separately identify content references by kind and ID (MOD-002). | NUM, HIST, API |
+| Review decision                                   | Proposed answer                                                                            | Affected specs |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------- |
+| Unique IDs across all five campaign entity kinds? | Yes; DOM-017 owns the game-specific scope and MOD-002 owns the general identity semantics. | NUM, HIST, API |
 
 ID generation, storage, serialization, and stale client-handle behavior remain scheduled work in their owning specs.
 The [migration table](domain-model.md#appendix-a-requirement-migration-informative) records the retired DOM IDs.

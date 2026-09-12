@@ -1,12 +1,12 @@
 # Engine Contract
 
-| Metadata | Value |
-| -------- | ----- |
-| Spec ID | ENG |
-| Status | Draft |
-| Scope | Execution, continuation, query and information boundaries, and committed-state integrity |
-| Conventions | [Specification conventions](../spec-conventions.md) |
-| Review | Batch 1; proposed rules awaiting user review |
+| Metadata    | Value                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------- |
+| Spec ID     | ENG                                                                                      |
+| Status      | Draft                                                                                    |
+| Scope       | Execution, continuation, query and information boundaries, and committed-state integrity |
+| Conventions | [Specification conventions](../spec-conventions.md)                                      |
+| Review      | Batch 1; proposed rules awaiting user review                                             |
 
 ## 1. Purpose and boundaries
 
@@ -18,25 +18,30 @@ RNG algorithm, save encoding, or subsystem mechanics. Accepting it alone does no
 
 ## 2. Dependencies and terminology
 
-- **Normative:** [Specification conventions](../spec-conventions.md) governs this document.
-- **Normative draft:** [Domain Model](domain-model.md) owns game entities, relationships, and domain invariants.
-- **Normative draft:** [Modeling Foundations](modeling-foundations.md) defines authoritative facts, derived values,
-  player observations, committed state, identity/references, and historical preservation (MOD-001–004).
-- **Design input:** [Game Design Brief](../../game-design-brief.md) requires determinism, undo/redo, and human/AI interface parity.
-- **Process:** [Work plan](../work-plan.md) includes this draft in batch 1.
+### Relationships
 
-### Downstream ownership
+| Type   | Target                                          | Scope                                                                                                                            |
+| ------ | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `uses` | [Domain Model](domain-model.md)                 | Game entities, relationships, game-specific identity scope, and structural invariants                                            |
+| `uses` | [Modeling Foundations](modeling-foundations.md) | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MOD-001–004) |
+
+### Background references
+
+- The [Game Design Brief](../../game-design-brief.md) requires determinism, undo/redo, and human/AI interface parity.
+- The [work plan](../work-plan.md) includes this draft in batch 1.
+
+### Downstream ownership (informative)
 
 These contracts remain stubs and do not supply unstated rules:
 
-| Owner | Details owned there |
-| ----- | ------------------- |
-| [Numbers and Randomness](numbers-and-randomness.md) | Numeric representation, RNG algorithm, draws, and ID generation |
-| [History and Persistence](history-and-persistence.md) | Session meaning and ownership, undo/redo, restoration, serialization, and compatibility |
-| [Turn Resolution](turn-resolution.md) | Phase ordering and state-read timing |
-| [Player Information](../interfaces/player-information.md) | Observation/report fields, reveal conditions, and permitted estimates |
-| [TypeScript API](../interfaces/typescript-api.md) | Exact callable contracts, public errors, and stale handles |
-| [Developer API](../interfaces/developer-api.md) | Developer inspection and enablement |
+| Owner                                                     | Details owned there                                                                     |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [Numbers and Randomness](numbers-and-randomness.md)       | Numeric representation, RNG algorithm, draws, and ID generation                         |
+| [History and Persistence](history-and-persistence.md)     | Session meaning and ownership, undo/redo, restoration, serialization, and compatibility |
+| [Turn Resolution](turn-resolution.md)                     | Phase ordering and state-read timing                                                    |
+| [Player Information](../interfaces/player-information.md) | Observation/report fields, reveal conditions, and permitted estimates                   |
+| [TypeScript API](../interfaces/typescript-api.md)         | Exact callable contracts, public errors, and stale handles                              |
+| [Developer API](../interfaces/developer-api.md)           | Developer inspection and enablement                                                     |
 
 ## 3. Concepts and contract
 
@@ -104,14 +109,14 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 
 ## 5. Edge cases and failure behavior
 
-| Case | Result / owner |
-| ---- | -------------- |
-| Query/command names an unknown or hidden ID | Respect visibility and non-mutation; exact public error belongs to INFO/API (ENG-003/004) |
-| Invalid player request | Leave campaign facts, RNG/ID state, reports, and history unchanged (ENG-004) |
-| Broken internal reference/invariant | Report an engine/data defect rather than silently repair gameplay (ENG-004; MOD-003) |
-| Undo removes an entity created later | Restore earlier references consistently, with no dangling future-only links or stale derived caches (ENG-001/004; MOD-002/003) |
-| Intermediate battle/turn state | Do not expose it as a committed observation (ENG-004) |
-| Current calculation differs from historical value | Refresh current calculations under ENG-001; preserve historical facts under MOD-004 |
+| Case                                              | Result / owner                                                                                                                 |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Query/command names an unknown or hidden ID       | Respect visibility and non-mutation; exact public error belongs to INFO/API (ENG-003/004)                                      |
+| Invalid player request                            | Leave campaign facts, RNG/ID state, reports, and history unchanged (ENG-004)                                                   |
+| Broken internal reference/invariant               | Report an engine/data defect rather than silently repair gameplay (ENG-004; MOD-003)                                           |
+| Undo removes an entity created later              | Restore earlier references consistently, with no dangling future-only links or stale derived caches (ENG-001/004; MOD-002/003) |
+| Intermediate battle/turn state                    | Do not expose it as a committed observation (ENG-004)                                                                          |
+| Current calculation differs from historical value | Refresh current calculations under ENG-001; preserve historical facts under MOD-004                                            |
 
 ## 6. Acceptance examples
 

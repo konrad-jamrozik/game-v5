@@ -18,9 +18,13 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Turn Resolution](../foundation/turn-resolution.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Initial Campaign Content](../content/initial-campaign.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                     | Scope                                                                           |
+| --------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `refines` | [Domain Model](../foundation/domain-model.md)              | Campaign initialization, global progression facts, panic, and terminal outcomes |
+| `uses`    | [Turn Resolution](../foundation/turn-resolution.md)        | Timing and precedence for turn counters, panic, and outcome evaluation          |
+| `uses`    | [Initial Campaign Content](../content/initial-campaign.md) | Starting configuration, scenario values, and victory content                    |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

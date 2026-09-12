@@ -1,12 +1,12 @@
 # Domain Model
 
-| Metadata | Value |
-| -------- | ----- |
-| Spec ID | DOM |
-| Status | Draft |
-| Scope | Game concepts, their properties and relationships, and structural domain invariants |
-| Conventions | [Specification conventions](../spec-conventions.md) |
-| Review | Batch 1; proposed rules awaiting user review |
+| Metadata    | Value                                                                               |
+| ----------- | ----------------------------------------------------------------------------------- |
+| Spec ID     | DOM                                                                                 |
+| Status      | Draft                                                                               |
+| Scope       | Game concepts, their properties and relationships, and structural domain invariants |
+| Conventions | [Specification conventions](../spec-conventions.md)                                 |
+| Review      | Batch 1; proposed rules awaiting user review                                        |
 
 ## 1. Purpose and boundaries
 
@@ -25,15 +25,20 @@ remain in their owning specs.
 
 ## 2. Dependencies and terminology
 
+### Relationships
 
-### Authority and downstream ownership
+| Type      | Target                                          | Scope                                                                                                             |
+| --------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `refines` | [Modeling Foundations](modeling-foundations.md) | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MOD-001–004) |
+| `uses`    | [Engine Contract](engine-contract.md)           | Execution, information-access, and committed-state guarantees (ENG-001–004)                                       |
 
-- **Normative:** [Specification conventions](../spec-conventions.md) governs this document.
-- **Normative draft:** [Modeling Foundations](modeling-foundations.md) owns modeling vocabulary, identity/reference conventions, and historical fact preservation.
-- **Normative draft:** [Engine Contract](engine-contract.md) owns execution, information access, and committed-state guarantees.
-- **Design input:** [Game Design Brief](../../game-design-brief.md) supplies the required concepts, strategic tensions, interface
+### Background references
+
+- The [Game Design Brief](../../game-design-brief.md) supplies the required concepts, strategic tensions, interface
   boundary, determinism, and undo/redo.
-- **Process:** [Work plan](../work-plan.md) groups Domain Model, Modeling Foundations, and Engine Contract in batch 1.
+- The [work plan](../work-plan.md) groups Domain Model, Modeling Foundations, and Engine Contract in batch 1.
+
+### Downstream ownership (informative)
 
 The following downstream contracts are currently stubs. They do not supply unstated rules to this draft:
 
@@ -76,12 +81,12 @@ Engine continuation bookkeeping belongs to [Engine Contract](engine-contract.md#
 
 An agent is an individual with a campaign entity ID. Its identity persists through assignments and combat.
 
-| Aspect | Meaning and relationships |
-| ------ | ------------------------- |
-| Lifecycle | Serving, Killed, or Dismissed; distinct from the agent's job |
-| Attributes | Career, skill, health, exhaustion, and equipped weapon values |
-| Current assignment | The agent's current orders, including the destination while travelling; an investigation or mission assignment references that activity |
-| Task phase | At assignment or In transit, with the timing facts needed to describe travel |
+| Aspect                           | Meaning and relationships                                                                                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lifecycle                        | Serving, Killed, or Dismissed; distinct from the agent's job                                                                                                  |
+| Attributes                       | Career, skill, health, exhaustion, and equipped weapon values                                                                                                 |
+| Current assignment               | The agent's current orders, including the destination while travelling; an investigation or mission assignment references that activity                       |
+| Task phase                       | At assignment or In transit, with the timing facts needed to describe travel                                                                                  |
 | Career and participation history | Retained facts about the agent's past; participation records link the agent to prior investigations and missions without assigning or reserving the agent now |
 
 An assignment is a current relationship, not merely a calculation. Career summaries may be calculated from retained
@@ -94,11 +99,11 @@ fatigue, and recovery rules.
 
 ### Lead and investigation
 
-| Concept | Identity and meaning |
-| ------- | -------------------- |
-| Lead | A content definition describing difficulty, repeatability, prerequisites, effects, and an optional explicit faction reference |
-| Lead progression | Campaign facts keyed by lead definition: completions and earned facts; discovery and availability are derived |
-| Investigation | A campaign entity representing one attempt at one lead; it has progress, hidden difficulty, lifecycle, timing facts, and a current team |
+| Concept            | Identity and meaning                                                                                                                                                        |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lead               | A content definition describing difficulty, repeatability, prerequisites, effects, and an optional explicit faction reference                                               |
+| Lead progression   | Campaign facts keyed by lead definition: completions and earned facts; discovery and availability are derived                                                               |
+| Investigation      | A campaign entity representing one attempt at one lead; it has progress, hidden difficulty, lifecycle, timing facts, and a current team                                     |
 | Past participation | Links to agents who participated in the attempt, using the participation-history meaning defined under Agent; terminal attempts retain these links and have no current team |
 
 Restarting an abandoned investigation creates another attempt. Leads and Progression owns discovery and unlock effects;
@@ -106,14 +111,14 @@ Investigations owns progress, probability, uncertainty, team changes, and abando
 
 ### Mission and combat
 
-| Concept | Identity and meaning |
-| ------- | -------------------- |
-| Mission definition | Content describing encounter configuration and content references |
-| Mission | A campaign entity referring to one mission definition, with Initiative/Response kind, origin, optional target faction, deadline facts, lifecycle/outcome, enemies, deployment, and result |
-| Current and past participants | Current deployment follows agent assignments; retained past participation uses the relationship defined under Agent |
-| Enemy definition | Content describing an archetype and combat configuration |
-| Enemy | A campaign entity owned by one mission, with a definition reference and its own combat attributes/results |
-| Battle result | Facts owned by the resolved mission: participants, outcome, combat facts, and measures needed for mission consequences |
+| Concept                       | Identity and meaning                                                                                                                                                                      |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mission definition            | Content describing encounter configuration and content references                                                                                                                         |
+| Mission                       | A campaign entity referring to one mission definition, with Initiative/Response kind, origin, optional target faction, deadline facts, lifecycle/outcome, enemies, deployment, and result |
+| Current and past participants | Current deployment follows agent assignments; retained past participation uses the relationship defined under Agent                                                                       |
+| Enemy definition              | Content describing an archetype and combat configuration                                                                                                                                  |
+| Enemy                         | A campaign entity owned by one mission, with a definition reference and its own combat attributes/results                                                                                 |
+| Battle result                 | Facts owned by the resolved mission: participants, outcome, combat facts, and measures needed for mission consequences                                                                    |
 
 **Actor/combatant** is the shared role of agents and enemies: skill, health, exhaustion, and weapon capability. It is not
 a third entity copied alongside them. Combat changes the participating identities and produces a battle result.
@@ -173,6 +178,11 @@ Arrows show relationships, not inheritance or storage layout.
 must belong to that campaign. AI memory, UI selections, browser state, and CLI preferences are not campaign facts.
 Multiplayer agencies and cross-campaign trading are outside this model.
 
+**DOM-017 — Campaign entity identity scope.** Agent, faction, investigation, mission, and enemy IDs must be unique across
+those five entity kinds within one committed campaign state. Repeated mission and investigation occurrences must have
+identities distinct from earlier occurrences in the same timeline. Modeling Foundations owns the general identity and
+explicit-reference semantics (MOD-002); this requirement owns which game entities share that identity scope.
+
 ### Agents, assignments, and participation
 
 **DOM-005 — Agent lifecycle.** An agent's lifecycle must distinguish Serving, Killed, and Dismissed. A Serving agent must
@@ -230,23 +240,23 @@ The model must retain the facts required by the eventual partial-success formula
 Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited model/validation files were unmodified in
 the source working tree.
 
-| Basis                                       | Source and interpretation                                                                                                                                                                                                                              |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Inherited concept / proposed simplification | [Agent model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/agentModel.ts) separates orders and state. DOM-005/006 separates lifecycle from both.                                         |
-| Inherited concept                           | [Lead model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/leadModel.ts) distinguishes definitions and attempts.                                                                          |
-| Proposed clarification                      | [Mission model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/missionModel.ts) stores operation severity on missions. DOM-011 explicitly names mission kind and origin.                   |
-| Proposed scope choice                       | Weapon definitions and combatant-owned values suffice initially; individual inventory, trading, and transfers are not introduced.                                                                                                                      |
+| Basis                                       | Source and interpretation                                                                                                                                                                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Inherited concept / proposed simplification | [Agent model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/agentModel.ts) separates orders and state. DOM-005/006 separates lifecycle from both.                       |
+| Inherited concept                           | [Lead model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/leadModel.ts) distinguishes definitions and attempts.                                                        |
+| Proposed clarification                      | [Mission model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/missionModel.ts) stores operation severity on missions. DOM-011 explicitly names mission kind and origin. |
+| Proposed scope choice                       | Weapon definitions and combatant-owned values suffice initially; individual inventory, trading, and transfers are not introduced.                                                                                                    |
 
 ## 5. Edge cases and failure behavior
 
-| Case                                                         | Result / owner                                                                                                  |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| Agent travels toward an investigation                        | Remains assigned; arrival/progress timing belongs to AGENT/INV                                                  |
-| Last investigator removed                                    | No committed Active attempt with an empty team; numerical effects belong to INV                                 |
-| Investigation concludes while members travel                 | Remove current links to the terminal attempt before publication; replacement orders/transit belong to AGENT/INV |
-| Concluded mission retains an agent in its history            | Does not reserve current assignment; MOD-003; DOM-007                                                                |
-| Empty roster or no missions/investigations                   | Structurally valid; CAMP owns initialization and defeat conditions                                              |
-| Faction defeated with outstanding missions/leads             | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                   |
+| Case                                              | Result / owner                                                                                                  |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Agent travels toward an investigation             | Remains assigned; arrival/progress timing belongs to AGENT/INV                                                  |
+| Last investigator removed                         | No committed Active attempt with an empty team; numerical effects belong to INV                                 |
+| Investigation concludes while members travel      | Remove current links to the terminal attempt before publication; replacement orders/transit belong to AGENT/INV |
+| Concluded mission retains an agent in its history | Does not reserve current assignment; MOD-003; DOM-007                                                           |
+| Empty roster or no missions/investigations        | Structurally valid; CAMP owns initialization and defeat conditions                                              |
+| Faction defeated with outstanding missions/leads  | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                   |
 
 ## 6. Acceptance examples
 
@@ -268,7 +278,7 @@ Given the current content catalog C and rules R, turn 3, RNG state G, ID state N
 - Each actor has skill 100, health/max-health 10/10, exhaustion 0, and equipped values referring to W1.
 - Other collections empty.
 
-These relationships satisfy DOM-001, DOM-005 through DOM-009, DOM-011, DOM-012, and MOD-001 through MOD-003.
+These relationships satisfy DOM-001, DOM-005 through DOM-009, DOM-011, DOM-012, DOM-017, and MOD-001 through MOD-003.
 Team membership does not assert that a1 makes progress while travelling. Structural validation leaves all facts, G,
 and N unchanged (ENG-001/004). Full mechanics validation requires the later owning specs.
 
@@ -277,16 +287,17 @@ and N unchanged (ENG-001/004). Full mechanics validation requires the later owni
 Each row independently changes fixture A. Reject the structural variant; if attempted through a player command, preserve
 the original committed state (ENG-004).
 
-| Change                                                                           | Violation   |
-| -------------------------------------------------------------------------------- | ----------- |
-| Add a second player agency                                                       | DOM-001     |
-| Mark a1 Killed while keeping its assignment/task phase                           | DOM-005     |
-| Give a1 both Training and Investigation assignments                              | DOM-005/006 |
-| List a1 in m1's current team while assigned to i1                                | DOM-007     |
-| Set health to 11 with maximum health 10, or set a Serving agent's health to zero | DOM-008     |
-| Add another Active attempt for L1, or leave i1 Active with no members            | DOM-009     |
-| Mark m1 Response without faction-operation provenance                            | DOM-011     |
-| Assign e1 a second owning mission                                                | DOM-012     |
+| Change                                                                           | Violation        |
+| -------------------------------------------------------------------------------- | ---------------- |
+| Add a second player agency                                                       | DOM-001          |
+| Mark a1 Killed while keeping its assignment/task phase                           | DOM-005          |
+| Give a1 both Training and Investigation assignments                              | DOM-005/006      |
+| List a1 in m1's current team while assigned to i1                                | DOM-007          |
+| Set health to 11 with maximum health 10, or set a Serving agent's health to zero | DOM-008          |
+| Add another Active attempt for L1, or leave i1 Active with no members            | DOM-009          |
+| Mark m1 Response without faction-operation provenance                            | DOM-011          |
+| Assign e1 a second owning mission                                                | DOM-012          |
+| Give e1 the same entity ID as a1                                                 | DOM-017; MOD-002 |
 
 ### C. Completion and later participation
 
@@ -320,12 +331,12 @@ They must be specified before their features are implemented, but do not require
 The split changes document ownership, not proposed gameplay. Retained DOM IDs keep their meanings. Retired IDs below
 must not be reused; follow the replacement owners for their normative text and acceptance examples.
 
-| Retired requirement | Replacement |
-| ------------------- | ----------- |
-| DOM-002 — Definition boundary | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-001 |
-| DOM-003 — Identity | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-002 |
-| DOM-004 — References | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-003 |
-| DOM-013 — Derived consistency | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-004 for historical preservation; [Engine Contract](engine-contract.md#4-requirements), ENG-001 for calculations and caches |
-| DOM-014 — Continuation state | [Engine Contract](engine-contract.md#4-requirements), ENG-002 |
-| DOM-015 — Information boundary | [Engine Contract](engine-contract.md#4-requirements), ENG-003 |
-| DOM-016 — Committed-state integrity | [Engine Contract](engine-contract.md#4-requirements), ENG-004 |
+| Retired requirement                 | Replacement                                                                                                                                                                                    |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DOM-002 — Definition boundary       | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-001                                                                                                                        |
+| DOM-003 — Identity                  | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-002 for general identity semantics; DOM-017 for the game-specific identity scope                                           |
+| DOM-004 — References                | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-003                                                                                                                        |
+| DOM-013 — Derived consistency       | [Modeling Foundations](modeling-foundations.md#4-requirements), MOD-004 for historical preservation; [Engine Contract](engine-contract.md#4-requirements), ENG-001 for calculations and caches |
+| DOM-014 — Continuation state        | [Engine Contract](engine-contract.md#4-requirements), ENG-002                                                                                                                                  |
+| DOM-015 — Information boundary      | [Engine Contract](engine-contract.md#4-requirements), ENG-003                                                                                                                                  |
+| DOM-016 — Committed-state integrity | [Engine Contract](engine-contract.md#4-requirements), ENG-004                                                                                                                                  |

@@ -18,10 +18,14 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- **Normative draft:** [Modeling Foundations](modeling-foundations.md) owns identity, references, and historical preservation (MOD-002–004).
-- **Normative draft:** [Engine Contract](engine-contract.md) owns continuation and restoration integrity (ENG-001/002/004).
-- [Domain Model](domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Numbers and Randomness](numbers-and-randomness.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                              | Scope                                                                                               |
+| --------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `refines` | [Modeling Foundations](modeling-foundations.md)     | Storage and restoration details for identity, references, and historical preservation (MOD-002–004) |
+| `refines` | [Engine Contract](engine-contract.md)               | Session continuation, restoration, and committed-state integrity (ENG-001/002/004)                  |
+| `uses`    | [Domain Model](domain-model.md)                     | Campaign entities, references, and structural invariants restored by history operations             |
+| `uses`    | [Numbers and Randomness](numbers-and-randomness.md) | RNG and ID-generation state required for replay and restoration                                     |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

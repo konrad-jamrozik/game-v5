@@ -1,11 +1,11 @@
 # Campaign Integration and Acceptance Tests
 
-| Metadata    | Value                                                                            |
-| ----------- | -------------------------------------------------------------------------------- |
-| Spec ID     | SCEN                                                                             |
-| Status      | Stub                                                                             |
+| Metadata    | Value                                                             |
+| ----------- | ----------------------------------------------------------------- |
+| Spec ID     | SCEN                                                              |
+| Status      | Stub                                                              |
 | Scope       | Define test scenarios that verify how game systems work together. |
-| Conventions | [Specification conventions](../spec-conventions.md)                              |
+| Conventions | [Specification conventions](../spec-conventions.md)               |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
@@ -31,20 +31,27 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- [Initial Campaign Content](../content/initial-campaign.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Turn Resolution](../foundation/turn-resolution.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [History and Persistence](../foundation/history-and-persistence.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [TypeScript Player API](../interfaces/typescript-api.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Terminal CLI](../interfaces/cli.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Web UI](../interfaces/web-ui.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
 
-| Term | Meaning in this document |
-| ---- | ------------------------ |
-| Test scenario | A specified starting state, sequence of actions, and expected results |
-| Fixture | The content, campaign state, and random seed or RNG state needed to reproduce a scenario |
-| Integration test | A test that exercises several game systems together, typically through the player API |
-| End-to-end test | A test that exercises a player flow through an interface and checks its resulting observations and game effects |
-| Acceptance test | A test that checks whether behavior satisfies referenced specification requirements; it can be an integration or end-to-end test |
+| Type   | Target                                                              | Scope                                                                        |
+| ------ | ------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `uses` | [Initial Campaign Content](../content/initial-campaign.md)          | Reproducible scenario content, named parameters, and starting configurations |
+| `uses` | [Turn Resolution](../foundation/turn-resolution.md)                 | Cross-system phase order, state-read timing, and same-turn effects           |
+| `uses` | [History and Persistence](../foundation/history-and-persistence.md) | Replay, save/load, undo/redo, branching, and restored-state fixtures         |
+| `uses` | [TypeScript Player API](../interfaces/typescript-api.md)            | Primary integration-test actions, observations, results, and errors          |
+| `uses` | [Terminal CLI](../interfaces/cli.md)                                | CLI end-to-end flows and machine-readable output                             |
+| `uses` | [Web UI](../interfaces/web-ui.md)                                   | Browser end-to-end flows and equivalent player interactions                  |
+
+Concrete scenarios declare `verifies` relationships by naming the requirement IDs they check; no duplicate rows are
+required here.
+
+| Term             | Meaning in this document                                                                                                         |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Test scenario    | A specified starting state, sequence of actions, and expected results                                                            |
+| Fixture          | The content, campaign state, and random seed or RNG state needed to reproduce a scenario                                         |
+| Integration test | A test that exercises several game systems together, typically through the player API                                            |
+| End-to-end test  | A test that exercises a player flow through an interface and checks its resulting observations and game effects                  |
+| Acceptance test  | A test that checks whether behavior satisfies referenced specification requirements; it can be an integration or end-to-end test |
 
 ## 3. Concepts and contract
 

@@ -18,10 +18,14 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- **Normative draft:** [Engine Contract](../foundation/engine-contract.md) owns the separate developer inspection boundary (ENG-003).
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [History and Persistence](../foundation/history-and-persistence.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [TypeScript Player API](typescript-api.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                              | Scope                                                                  |
+| --------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `refines` | [Engine Contract](../foundation/engine-contract.md)                 | Separate developer inspection and enablement boundary (ENG-003)        |
+| `uses`    | [Domain Model](../foundation/domain-model.md)                       | Authoritative campaign state, hidden facts, and structural invariants  |
+| `uses`    | [History and Persistence](../foundation/history-and-persistence.md) | Snapshot, restoration, replay, and debug-mutation history behavior     |
+| `uses`    | [TypeScript Player API](typescript-api.md)                          | Separation from ordinary player capabilities, observations, and errors |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

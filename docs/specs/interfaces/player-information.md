@@ -18,10 +18,22 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- **Normative draft:** [Engine Contract](../foundation/engine-contract.md) owns human/AI information parity and the player/dev boundary (ENG-003).
-- **Normative draft:** [Modeling Foundations](../foundation/modeling-foundations.md) defines player observations and historical fact preservation (MOD-004).
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Leads and Progression](../mechanics/leads-and-progression.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                              | Scope                                                                                            |
+| --------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `refines` | [Engine Contract](../foundation/engine-contract.md)                 | Human/AI information parity, permitted observations, and the player/developer boundary (ENG-003) |
+| `uses`    | [Modeling Foundations](../foundation/modeling-foundations.md)       | Player-observation and historical-fact semantics (MOD-004)                                       |
+| `uses`    | [Domain Model](../foundation/domain-model.md)                       | Campaign entities, relationships, authoritative facts, and hidden state                          |
+| `uses`    | [History and Persistence](../foundation/history-and-persistence.md) | Historical observations, reports, undo, and restored knowledge                                   |
+| `uses`    | [Agents](../mechanics/agents.md)                                    | Agent attributes, assignments, readiness, and career information                                 |
+| `uses`    | [Economy and Upgrades](../mechanics/economy-and-upgrades.md)        | Agency resources, funding, capacities, and upgrade information                                   |
+| `uses`    | [Leads and Progression](../mechanics/leads-and-progression.md)      | Lead discovery, availability, prerequisites, and progression information                         |
+| `uses`    | [Investigations](../mechanics/investigations.md)                    | Visible investigation state, calculated estimates, and uncertainty boundaries                    |
+| `uses`    | [Combat](../mechanics/combat.md)                                    | Player-visible battle results and combat records                                                 |
+| `uses`    | [Missions](../mechanics/missions.md)                                | Mission state, deadlines, outcomes, and consequence reports                                      |
+| `uses`    | [Factions](../mechanics/factions.md)                                | Revealed faction state, activity, operations, suppression, and defeat                            |
+| `uses`    | [Campaign](../mechanics/campaign.md)                                | Campaign status, panic, objectives, and terminal outcomes                                        |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

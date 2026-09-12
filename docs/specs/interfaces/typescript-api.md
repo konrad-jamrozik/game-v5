@@ -18,11 +18,15 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- **Normative draft:** [Engine Contract](../foundation/engine-contract.md) owns query, information, and command integrity guarantees (ENG-001/003/004).
-- **Normative draft:** [Modeling Foundations](../foundation/modeling-foundations.md) owns identity/reference semantics (MOD-002/003).
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [History and Persistence](../foundation/history-and-persistence.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Player Information](player-information.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                              | Scope                                                                                     |
+| --------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `refines` | [Engine Contract](../foundation/engine-contract.md)                 | Callable query, information, continuation, and command-integrity guarantees (ENG-001–004) |
+| `uses`    | [Modeling Foundations](../foundation/modeling-foundations.md)       | Identity, typed-reference, and historical-fact semantics (MOD-002–004)                    |
+| `uses`    | [Domain Model](../foundation/domain-model.md)                       | Campaign entities, relationships, identifiers, and structural invariants                  |
+| `uses`    | [History and Persistence](../foundation/history-and-persistence.md) | Session lifecycle, persistence, undo/redo, branching, and stale handles                   |
+| `uses`    | [Player Information](player-information.md)                         | Observation shapes, reveal conditions, action discovery, reports, and errors              |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

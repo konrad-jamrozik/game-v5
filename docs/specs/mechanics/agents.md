@@ -18,8 +18,12 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Numbers and Randomness](../foundation/numbers-and-randomness.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                            | Scope                                                                            |
+| --------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `refines` | [Domain Model](../foundation/domain-model.md)                     | Agent lifecycle, assignments, task phases, attributes, and participation history |
+| `uses`    | [Numbers and Randomness](../foundation/numbers-and-randomness.md) | Attribute arithmetic, thresholds, rounding, and reproducible random effects      |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

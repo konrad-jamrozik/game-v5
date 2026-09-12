@@ -1,12 +1,12 @@
 # Specification Relationships
 
-| Metadata | Value |
-| -------- | ----- |
-| Spec ID | REL |
-| Status | Draft |
-| Scope | Relationship terminology, edge direction, document inventories, and graph validation |
-| Conventions | [Specification Conventions](spec-conventions.md) |
-| Review | Proposed contract; terminology and examples awaiting review |
+| Metadata    | Value                                                                                |
+| ----------- | ------------------------------------------------------------------------------------ |
+| Spec ID     | REL                                                                                  |
+| Status      | Draft                                                                                |
+| Scope       | Relationship terminology, edge direction, document inventories, and graph validation |
+| Conventions | [Specification Conventions](spec-conventions.md)                                     |
+| Review      | Proposed contract; terminology and examples awaiting review                          |
 
 ## 1. Purpose and boundaries
 
@@ -25,24 +25,24 @@ they do not declare relationships in other documents or assert that software or 
 
 ### Terminology
 
-| Term | Definition |
-| ---- | ---------- |
-| Node | An identified document, concept, requirement, implementation, or test scenario |
-| Edge | A directed relationship with a source, type, target, and scope |
-| Source | The node that performs the relationship named by the type |
-| Target | The node to which the source relates |
-| Type | Exactly one of `follows`, `refines`, `uses`, `implements`, or `verifies` |
-| Scope | The specific subject matter covered by an edge, including requirement IDs when available |
-| Outbound edge | An edge whose source is the current document, a node contained in it, or an implementation whose declaration it records |
-| Inbound edge | An edge whose target is the current document or a node contained in it |
-| Declaration | The single authoritative edge record, written explicitly or determined by a defined default |
-| Inventory | A document's explicit outbound relationships, excluding edges supplied by defaults |
-| Graph | A set of nodes and edges |
-| Type graph | The graph containing only edges of one type |
-| Cycle | A directed path that returns to its starting node |
-| DAG | A directed acyclic graph: a graph with no cycle |
-| Implementation | Code or another executable artifact intended to satisfy a specified contract or execute a test scenario |
-| Test scenario | Specified initial conditions, actions, and expected results that check identified requirements |
+| Term           | Definition                                                                                                              |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Node           | An identified document, concept, requirement, implementation, or test scenario                                          |
+| Edge           | A directed relationship with a source, type, target, and scope                                                          |
+| Source         | The node that performs the relationship named by the type                                                               |
+| Target         | The node to which the source relates                                                                                    |
+| Type           | Exactly one of `follows`, `refines`, `uses`, `implements`, or `verifies`                                                |
+| Scope          | The specific subject matter covered by an edge, including requirement IDs when available                                |
+| Outbound edge  | An edge whose source is the current document, a node contained in it, or an implementation whose declaration it records |
+| Inbound edge   | An edge whose target is the current document or a node contained in it                                                  |
+| Declaration    | The single authoritative edge record, written explicitly or determined by a defined default                             |
+| Inventory      | A document's explicit outbound relationships, excluding edges supplied by defaults                                      |
+| Graph          | A set of nodes and edges                                                                                                |
+| Type graph     | The graph containing only edges of one type                                                                             |
+| Cycle          | A directed path that returns to its starting node                                                                       |
+| DAG            | A directed acyclic graph: a graph with no cycle                                                                         |
+| Implementation | Code or another executable artifact intended to satisfy a specified contract or execute a test scenario                 |
+| Test scenario  | Specified initial conditions, actions, and expected results that check identified requirements                          |
 
 In edge tables and diagrams, use the exact lowercase type names. Do not use inverse names such as "refined by" or
 substitute labels such as "obeys", "supports", or "depends on". Direction is expressed by Source and Target, even in an
@@ -54,13 +54,13 @@ inbound table. Status labels such as Draft belong to the endpoint document; they
 
 Read every edge as **Source → type → Target**.
 
-| Type | Meaning | Source and target | Illustrative example |
-| ---- | ------- | ----------------- | -------------------- |
-| `follows` | The source must conform to the target's document structure, lifecycle, or writing rules | Document → document containing those rules | Agents → `follows` → Specification Conventions |
-| `refines` | The source adds detail to a concept or contract specified by the target while preserving its constraints | Specification or specified concept/requirement → specification or specified concept/requirement | Agents → `refines` → Domain Model, scoped to Agent behavior |
-| `uses` | The source relies on the meaning or rules supplied by the target within the stated scope | Document, concept, or requirement → document, concept, or requirement | Domain Model → `uses` → Modeling Foundations, scoped to identity and reference conventions |
-| `implements` | The source is intended to provide executable behavior satisfying the target | Implementation → specification, requirement, or test scenario | Game engine implementation → `implements` → Engine Contract |
-| `verifies` | The source specifies or performs checks of the target's requirements | Test scenario or automated test → specification or requirement | Campaign test scenario → `verifies` → mission consequence requirements |
+| Type         | Meaning                                                                                                  | Source and target                                                                               | Illustrative example                                                                       |
+| ------------ | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `follows`    | The source must conform to the target's document structure, lifecycle, or writing rules                  | Document → document containing those rules                                                      | Agents → `follows` → Specification Conventions                                             |
+| `refines`    | The source adds detail to a concept or contract specified by the target while preserving its constraints | Specification or specified concept/requirement → specification or specified concept/requirement | Agents → `refines` → Domain Model, scoped to Agent behavior                                |
+| `uses`       | The source relies on the meaning or rules supplied by the target within the stated scope                 | Document, concept, or requirement → document, concept, or requirement                           | Engine Contract → `uses` → Modeling Foundations, scoped to authoritative and derived facts |
+| `implements` | The source is intended to provide executable behavior satisfying the target                              | Implementation → specification, requirement, or test scenario                                   | Game engine implementation → `implements` → Engine Contract                                |
+| `verifies`   | The source specifies or performs checks of the target's requirements                                     | Test scenario or automated test → specification or requirement                                  | Campaign test scenario → `verifies` → mission consequence requirements                     |
 
 `follows` concerns the document as a document. `uses` concerns the meaning of its content. `refines` adds detail;
 merely consuming another specification's result is `uses`. For example, Missions uses Combat's battle result; this alone
@@ -176,16 +176,16 @@ possible inbound edge or implementation merely to accept a specification.
 
 ## 5. Edge cases and failure behavior
 
-| Case | Required result |
-| ---- | --------------- |
-| Two types connect the same document pair | Keep both if they express distinct scopes; do not collapse them into "depends on" (REL-001/002) |
-| Inbound entry says CONV follows Agents | Correct it to Agents follows CONV; inbound does not reverse direction (REL-003) |
-| No implementation has been identified | Omit the edge; if a specific planned implementation needs tracking, use a TODO outside the inventory (REL-001/004) |
-| The source declares an edge and the target has no inbound table | Valid; inbound navigation is optional (REL-005/006) |
-| A requirement moves to another file | Update the declaration, links, scope, and any published derived views while preserving requirement traceability (REL-002/006) |
-| A target is still a Stub | Keep its status explicit in the target; identify unresolved rule dependencies instead of inferring missing rules (REL-008/009) |
-| A diagram contains illustrative code or tests | Label it illustrative and keep those nodes outside the declared inventory (REL-001) |
-| A work-plan row says review A before B | Keep that sequence in the work plan; it does not establish any of the five types (REL-001) |
+| Case                                                            | Required result                                                                                                                |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Two types connect the same document pair                        | Keep both if they express distinct scopes; do not collapse them into "depends on" (REL-001/002)                                |
+| Inbound entry says CONV follows Agents                          | Correct it to Agents follows CONV; inbound does not reverse direction (REL-003)                                                |
+| No implementation has been identified                           | Omit the edge; if a specific planned implementation needs tracking, use a TODO outside the inventory (REL-001/004)             |
+| The source declares an edge and the target has no inbound table | Valid; inbound navigation is optional (REL-005/006)                                                                            |
+| A requirement moves to another file                             | Update the declaration, links, scope, and any published derived views while preserving requirement traceability (REL-002/006)  |
+| A target is still a Stub                                        | Keep its status explicit in the target; identify unresolved rule dependencies instead of inferring missing rules (REL-008/009) |
+| A diagram contains illustrative code or tests                   | Label it illustrative and keep those nodes outside the declared inventory (REL-001)                                            |
+| A work-plan row says review A before B                          | Keep that sequence in the work plan; it does not establish any of the five types (REL-001)                                     |
 
 ## 6. Acceptance examples
 
@@ -194,22 +194,22 @@ for the referenced documents. They do not accept proposed mechanics or assert th
 
 ### One example of each type
 
-| Type | Fixture | Expected result |
-| ---- | ------- | --------------- |
-| `follows` | Agents → CONV, scoped to document structure and lifecycle | Implicit for registered specifications; neither document needs a row (REL-001/002/003) |
-| `refines` | Agents → Domain Model, scoped to Agent transitions within its lifecycle constraints | Valid if the added detail preserves those constraints; a contradictory lifecycle is a proposed rule revision (REL-001/008) |
-| `uses` | Domain Model → Modeling Foundations, scoped to MOD-002 identity conventions | Valid; the reverse reading reference alone does not create a reverse edge (REL-001/002) |
-| `implements` | An identified game engine implementation → Engine Contract, scoped to ENG-001 calculations | Valid after identifying its real path and recording the declaration; replacing the source with Engine Contract makes the edge invalid (REL-001/005) |
-| `verifies` | A specified undo scenario → Engine Contract, scoped to ENG-001/004 restoration checks | Valid coverage edge; it does not assert a passing automated test (REL-001/008) |
+| Type         | Fixture                                                                                                            | Expected result                                                                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `follows`    | Agents → CONV, scoped to document structure and lifecycle                                                          | Implicit for registered specifications; neither document needs a row (REL-001/002/003)                                                              |
+| `refines`    | Agents → Domain Model, scoped to Agent transitions within its lifecycle constraints                                | Valid if the added detail preserves those constraints; a contradictory lifecycle is a proposed rule revision (REL-001/008)                          |
+| `uses`       | Engine Contract → Modeling Foundations, scoped to authoritative facts, derived values, and historical preservation | Valid; the reverse reading reference alone does not create a reverse edge (REL-001/002)                                                             |
+| `implements` | An identified game engine implementation → Engine Contract, scoped to ENG-001 calculations                         | Valid after identifying its real path and recording the declaration; replacing the source with Engine Contract makes the edge invalid (REL-001/005) |
+| `verifies`   | A specified undo scenario → Engine Contract, scoped to ENG-001/004 restoration checks                              | Valid coverage edge; it does not assert a passing automated test (REL-001/008)                                                                      |
 
 ### A typical mechanics document
 
 Given an illustrative Agents document with these relationships:
 
-| Type | Target | Scope |
-| ---- | ------ | ----- |
-| `refines` | [Domain Model](foundation/domain-model.md) | Agent lifecycle and assignment behavior |
-| `uses` | [Numbers and Randomness](foundation/numbers-and-randomness.md) | Attribute arithmetic and rounding |
+| Type      | Target                                                         | Scope                                   |
+| --------- | -------------------------------------------------------------- | --------------------------------------- |
+| `refines` | [Domain Model](foundation/domain-model.md)                     | Agent lifecycle and assignment behavior |
+| `uses`    | [Numbers and Randomness](foundation/numbers-and-randomness.md) | Attribute arithmetic and rounding       |
 
 This is a sufficient inventory for those relationships. Agents implicitly follows CONV. It needs no empty
 `implements` or `verifies` rows, and Domain Model needs no inbound entry. Its acceptance examples declare their
@@ -251,7 +251,7 @@ implied. A failed run does not remove the coverage edge; it provides evidence of
 No unresolved terminology choices are hidden in this proposal. The five types, inventory format, graph rules, and
 adoption rules are proposed for review; this specification remains Draft.
 
-Repository-wide inventory migration is tracked in the [work plan](work-plan.md#relationship-inventory-migration).
-It must review actual relationships rather than mechanically translate existing "Normative draft" labels. In particular,
-review the Domain Model / Modeling Foundations relationship and the placement of game-specific identity rules. That
-migration is separate from defining this contract and must not silently change gameplay rules.
+Repository-wide inventory migration is complete for the current specification set and recorded in the
+[work plan](work-plan.md#relationship-inventory-migration). The migration reviewed actual relationships rather than
+mechanically translating former classifications. Domain Model now refines Modeling Foundations and owns the
+game-specific identity scope; the proposed identity guarantees and gameplay-rule statuses did not change.

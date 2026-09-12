@@ -18,10 +18,14 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- [Domain Model](../foundation/domain-model.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Numbers and Randomness](../foundation/numbers-and-randomness.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Agents](agents.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Initial Campaign Content](../content/initial-campaign.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                            | Scope                                                                       |
+| --------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `refines` | [Domain Model](../foundation/domain-model.md)                     | Agency resources, roster, upgrade acquisitions, capabilities, and capacity  |
+| `uses`    | [Numbers and Randomness](../foundation/numbers-and-randomness.md) | Money, funding, costs, attribute changes, and rounding                      |
+| `uses`    | [Agents](agents.md)                                               | Hiring, dismissal, roster eligibility, and agent-facing upgrade effects     |
+| `uses`    | [Initial Campaign Content](../content/initial-campaign.md)        | Purchase prices, upgrade increments, limits, and other named balance values |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

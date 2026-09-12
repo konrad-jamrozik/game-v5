@@ -18,10 +18,15 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## 2. Dependencies and terminology
 
-- [Numbers and Randomness](../foundation/numbers-and-randomness.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Agents](agents.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Leads and Progression](leads-and-progression.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
-- [Player Information](../interfaces/player-information.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
+### Relationships
+
+| Type      | Target                                                            | Scope                                                                             |
+| --------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `refines` | [Domain Model](../foundation/domain-model.md)                     | Investigation attempts, lifecycle, teams, progress facts, and abandonment         |
+| `uses`    | [Numbers and Randomness](../foundation/numbers-and-randomness.md) | Progress arithmetic, hidden-difficulty sampling, probability, draws, and rounding |
+| `uses`    | [Agents](agents.md)                                               | Team contribution, transit, exhaustion, withdrawal, and assignment effects        |
+| `uses`    | [Leads and Progression](leads-and-progression.md)                 | Lead eligibility, repeatability, completion facts, and unlock effects             |
+| `uses`    | [Player Information](../interfaces/player-information.md)         | Exposure and representation of estimates, uncertainty, and investigation results  |
 
 TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.

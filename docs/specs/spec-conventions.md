@@ -1,12 +1,12 @@
 # Specification Conventions
 
-| Metadata             | Value                                                                                                     |
-| -------------------- | --------------------------------------------------------------------------------------------------------- |
-| Spec ID              | CONV                                                                                                      |
-| Status               | Accepted                                                                                                  |
-| Acceptance reference | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted." |
-| Scope                | Writing, reviewing, and maintaining game-v5 specifications                                                |
-| Related documents    | [Spec index](README.md), [game design brief](../game-design-brief.md)                                            |
+| Metadata              | Value                                                                                                                                                          |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID               | CONV                                                                                                                                                           |
+| Status                | Accepted                                                                                                                                                       |
+| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                                                      |
+| Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                                                                     |
+| Related documents     | [Spec index](README.md), [game design brief](../game-design-brief.md)                                                                                          |
 | Relationship revision | Requested by the project owner: simplify relationship listings with implicit defaults and only meaningful explicit edges; detailed REL contract remains Draft. |
 
 ## 1. Purpose and boundaries
@@ -58,7 +58,7 @@ restating a competing version.
 
 ### Relationship inventories
 
-Use the exact types defined in [Specification Relationships](specification-relationships.md): `follows`, `refines`,
+Use the exact types defined in [Specification Relationships](spec-relationships.md): `follows`, `refines`,
 `uses`, `implements`, and `verifies`. That specification owns their definitions and defaults; this document owns
 how relationship listings fit into specifications.
 
@@ -75,13 +75,13 @@ Documents exempt from the seven-section layout may place Relationships in an app
 
 Separate background references from declared edges. Do not use "Normative", "Normative draft", or unqualified
 "depends on" as edge types. The project owner requested these simplified listings; the detailed REL contract remains
-Draft. Existing free-form relationship migration is tracked in the work plan.
+Draft. Completion of the free-form relationship migration is recorded in the work plan.
 
 ### Relationships
 
-| Type | Target | Scope |
-| ---- | ------ | ----- |
-| `uses` | [REL](specification-relationships.md) | Relationship terminology and inventory format |
+| Type   | Target                       | Scope                                         |
+| ------ | ---------------------------- | --------------------------------------------- |
+| `uses` | [REL](spec-relationships.md) | Relationship terminology and inventory format |
 
 ## 3. Predictable layout and allowed variation
 
@@ -232,5 +232,5 @@ duplicating every edit in per-document changelogs.
 Accepted by the project owner through the explicit approval recorded above. This acceptance applies to the conventions
 only; subject specifications retain their own statuses. The simplified relationship listing rules were
 requested explicitly by the project owner and are recorded above. The detailed REL contract remains Draft, and existing
-relationship migration remains queued in the work plan. Future changes must be presented as revisions rather than silently changing the
-accepted agreement.
+relationship inventories have been migrated as recorded in the work plan. Future changes must be presented as revisions
+rather than silently changing the accepted agreement.
