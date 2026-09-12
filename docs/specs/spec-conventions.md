@@ -155,7 +155,7 @@ Every substantial rule must be covered by an acceptance example or a referenced 
 - Exact comparisons or explicitly specified numeric tolerances.
 
 Subsystem examples stay with their rules. Cross-system scenarios belong in
-[Campaign Acceptance Scenarios](acceptance/campaign-scenarios.md) and reference their owners.
+[Campaign Integration and Acceptance Tests](testing/campaign-integration-and-acceptance-tests.md) and reference their owners.
 
 Test derivation must follow the spec; current code output is not an independent oracle. If code, tests, and the spec
 disagree, identify the discrepancy and resolve it explicitly. Do not rewrite a spec merely to bless existing behavior.

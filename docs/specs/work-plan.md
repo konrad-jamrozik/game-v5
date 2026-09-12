@@ -94,7 +94,7 @@ is scheduled work in that specification, not an unresolved decision about this w
 | Track       | Document                                                          | When and what to add                                                                                                                                              | Work state |
 | ----------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | Content     | [Initial Campaign Content](content/initial-campaign.md)           | Add exact named parameters and small example content as each subsystem needs them. Complete the playable campaign content after batch 7 and review it explicitly. | Queued     |
-| Conformance | [Campaign Acceptance Scenarios](acceptance/campaign-scenarios.md) | Add precise cross-system examples with each batch. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10.            | Queued     |
+| Conformance | [Campaign Integration and Acceptance Tests](testing/campaign-integration-and-acceptance-tests.md) | Add precise cross-system examples with each batch. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10.            | Queued     |
 
 **PLAN-003:** During batch 1, identify the player-information boundary and outline the API capabilities needed to support
 it. Refine these notes with each mechanic; do not defer their design influence until batch 8. Keep supporting notes

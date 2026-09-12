@@ -1,17 +1,30 @@
-# Campaign Acceptance Scenarios
+# Campaign Integration and Acceptance Tests
 
 | Metadata    | Value                                                                            |
 | ----------- | -------------------------------------------------------------------------------- |
 | Spec ID     | SCEN                                                                             |
 | Status      | Stub                                                                             |
-| Scope       | Specify cross-system conformance scenarios derived from the authoritative rules. |
+| Scope       | Define test scenarios that verify how game systems work together. |
 | Conventions | [Specification conventions](../spec-conventions.md)                              |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
 ## 1. Purpose and boundaries
 
-Specify cross-system conformance scenarios derived from the authoritative rules.
+This document defines test scenarios that verify how game systems work together. Each scenario specifies a starting
+state, player actions, and expected results derived from the game specifications. These scenarios guide automated
+integration and end-to-end tests.
+
+Most scenarios can exercise the game through the TypeScript Player API without a browser. A smaller set exercises the
+CLI or web UI to verify that equivalent actions produce equivalent results and respect the same information boundary.
+This document describes the test cases; the executable tests and their test framework belong to implementation work.
+
+Individual mechanics specs keep examples of their own rules. This document connects those rules across systems, such
+as investigation completion creating a mission whose result changes agent health, agency resources, and progression.
+Expected results must reference the owning rules; scenarios cannot introduce new mechanics. Strategic playtesting
+assesses whether the game is interesting and balanced separately from these exact behavior checks.
+
+This is currently a stub: the concrete test cases await the detailed rules and content they will exercise.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -25,8 +38,13 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - [Terminal CLI](../interfaces/cli.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 - [Web UI](../interfaces/web-ui.md): TODO: Identify the specific owned contracts referenced here and classify each dependency as normative or background.
 
-TODO: Define the local terms below or link their authoritative definitions. Resolve terminology conflicts without
-duplicating shared definitions.
+| Term | Meaning in this document |
+| ---- | ------------------------ |
+| Test scenario | A specified starting state, sequence of actions, and expected results |
+| Fixture | The content, campaign state, and random seed or RNG state needed to reproduce a scenario |
+| Integration test | A test that exercises several game systems together, typically through the player API |
+| End-to-end test | A test that exercises a player flow through an interface and checks its resulting observations and game effects |
+| Acceptance test | A test that checks whether behavior satisfies referenced specification requirements; it can be an integration or end-to-end test |
 
 ## 3. Concepts and contract
 
@@ -47,18 +65,20 @@ explicitly.
 
 TODO: Cover resource allocation, transit, investigation uncertainty/abandonment, deadline pressure, transport contention, partial-success missions, faction escalation/suppression, and campaign endings.
 
-### Interfaces and history
+### Interface flows and history
 
-TODO: Cover equivalent API/CLI/web actions, player/dev visibility, invalid-action atomicity, replay, save/load, undo/redo, and branching. Keep strategic playtesting observations separate from exact conformance assertions.
+TODO: Cover equivalent API/CLI/web actions, player/dev visibility, invalid-action atomicity, replay, save/load, undo/redo,
+and branching. Identify which cases run through the API and which need CLI or browser interaction. Keep strategic
+playtesting observations separate from exact expected-result checks.
 
 TODO: Assign stable SCEN-NNN requirement IDs when concrete rules replace these placeholders.
 
 ## 5. Edge cases and failure behavior
 
-TODO: Define behavior for same-turn cross-system interactions, endpoint thresholds, hidden-state restoration, failed
-command batches, and attempts to load saves from incompatible earlier builds.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+TODO: Specify test cases for same-turn interactions between systems, endpoint thresholds, hidden-state restoration,
+failed command batches, and attempts to load saves from incompatible earlier builds. Derive exact expected outcomes,
+thresholds, and effect ordering from their owning specifications. If a required rule is missing, record that dependency
+instead of choosing behavior in a test scenario.
 
 ## 6. Acceptance examples
 

@@ -45,7 +45,7 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 | DEV     | [Developer API](interfaces/developer-api.md)                      | Expose full authoritative state for debugging through a separate, explicit API surface.                       |
 | CLI     | [Terminal CLI](interfaces/cli.md)                                 | Provide a complete terminal adapter usable by humans and AI over the same player API.                         |
 | WEB     | [Web UI](interfaces/web-ui.md)                                    | Specify the first functional browser interface while keeping gameplay in the shared API.                      |
-| SCEN    | [Campaign Acceptance Scenarios](acceptance/campaign-scenarios.md) | Specify cross-system conformance scenarios derived from the authoritative rules.                              |
+| SCEN    | [Campaign Integration and Acceptance Tests](testing/campaign-integration-and-acceptance-tests.md) | Define test scenarios that verify how game systems work together.                              |
 
 ## Work plan
 
