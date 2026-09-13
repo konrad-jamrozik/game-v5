@@ -15,6 +15,26 @@ npm run dev
 
 Open the URL printed by Vite, normally `http://localhost:5173/game-v5/`. Application code lives in `src/`.
 
+## Agent environment setup
+
+Agents working in this repository need the same Node and npm versions as human contributors. On Windows, install
+Node **24.21.0** with npm **11.19.0** and ensure both executables are on the `PATH` inherited by the agent host. If Node
+or npm was installed while the agent application was open, restart the application so newly started tasks receive the
+updated environment.
+
+Before running repository commands, verify the toolchain from PowerShell without first attempting an npm script:
+
+```powershell
+Get-Command node
+Get-Command npm
+node --version
+npm --version
+```
+
+The reported versions should satisfy the `engines` field in `package.json`. Then install the pinned dependencies with
+`npm ci`. A bundled agent runtime is not a substitute for the repository toolchain unless it exposes both `node` and
+`npm`; this repository's validation commands call npm recursively.
+
 ## Commands
 
 | Command                 | Purpose                                              |
