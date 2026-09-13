@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                     |
 | ----------- | ----------------------------------------------------------------------------------------- |
 | Spec ID     | CAMP                                                                                      |
+| Family      | Mechanics                                                                                 |
 | Status      | Stub                                                                                      |
 | Scope       | Define campaign initialization, global panic, and the conditions that start and end play. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                       |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                            |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 

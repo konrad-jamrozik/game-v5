@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                     |
 | ----------- | ------------------------------------------------------------------------- |
 | Spec ID     | TURN                                                                      |
+| Family      | Foundation                                                                |
 | Status      | Stub                                                                      |
 | Scope       | Define exactly when subsystem rules run and which state each phase reads. |
-| Conventions | [Specification conventions](../spec-conventions.md)                       |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)            |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
@@ -34,10 +35,10 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependents
 
-| Dependent                                                                                            | Relationship | Scope                                                                  |
-| ---------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------- |
-| [Campaign](../mechanics/campaign.md)                                                                 | `uses`       | Timing and precedence for turn counters, panic, and outcome evaluation |
-| [Campaign Integration and Acceptance Tests](../testing/campaign-integration-and-acceptance-tests.md) | `uses`       | Cross-system phase order, state-read timing, and same-turn effects     |
+| Dependent                                                                                               | Relationship | Scope                                                                  |
+| ------------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------- |
+| [Campaign](../mechanics/campaign.md)                                                                    | `uses`       | Timing and precedence for turn counters, panic, and outcome evaluation |
+| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Cross-system phase order, state-read timing, and same-turn effects     |
 
 # Glossary
 

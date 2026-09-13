@@ -25,9 +25,10 @@ import type { Diagnostic, LintInput } from './types.ts'
 
 const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
-const CONVENTIONS_PATH = 'docs/specs/spec-conventions.md'
+const CONVENTIONS_PATH = 'docs/specs/governance/spec-conventions.md'
 const GOVERNANCE_LAYOUT_EXCEPTIONS = new Set(['CONV', 'INDEX'])
 const ALLOWED_STATUSES = new Set(['Stub', 'Draft', 'Accepted', 'Superseded'])
+const ALLOWED_FAMILIES = new Set(['Governance', 'Foundation', 'Mechanics', 'Content', 'Interfaces', 'Acceptance'])
 const ALLOWED_RELATIONSHIPS = new Set(['follows', 'refines', 'uses', 'implements', 'verifies'])
 const RULE_HEADINGS = [
   'Purpose and boundaries',
@@ -55,12 +56,14 @@ interface Specification {
   readonly document: ReturnType<typeof parseDocument>
   readonly metadata: Metadata
   readonly id: string | undefined
+  readonly family: string | undefined
   readonly status: string | undefined
   readonly title: string
 }
 
 interface RegistryEntry {
   readonly id: string
+  readonly family: string
   readonly title: string
   readonly path: string
   readonly node: Node
@@ -89,6 +92,7 @@ interface ParsedInput {
   readonly exactPaths: ReadonlySet<string>
   readonly casePaths: ReadonlyMap<string, string>
   readonly indexPath: string
+  readonly specificationRoot: string
 }
 
 function normalizePath(value: string): string {
@@ -239,11 +243,12 @@ function parseInput(input: LintInput, diagnostics: Diagnostic[]): ParsedInput {
       document,
       metadata,
       id: metadata.values.get('Spec ID'),
+      family: metadata.values.get('Family'),
       status: metadata.values.get('Status'),
       title: first && isHeading(first) ? headingText(first) : '',
     })
   }
-  return { specifications, allDocuments, exactPaths, casePaths, indexPath }
+  return { specifications, allDocuments, exactPaths, casePaths, indexPath, specificationRoot }
 }
 
 function registryEntries(
@@ -279,27 +284,34 @@ function registryEntries(
   }
   const rows = tableRows(table)
   const header = rows[0]?.map((cell) => textOf(cell).trim())
-  if (header?.[0] !== 'ID' || header[1] !== 'Document' || header[2] !== 'Owns' || header.length !== 3) {
+  if (
+    header?.[0] !== 'ID' ||
+    header[1] !== 'Family' ||
+    header[2] !== 'Document' ||
+    header[3] !== 'Owns' ||
+    header.length !== 4
+  ) {
     addDiagnostic(
       diagnostics,
       index.path,
       table,
       'SPEC006',
-      'The specification register header must be "ID | Document | Owns".',
+      'The specification register header must be "ID | Family | Document | Owns".',
     )
   }
   const entries: RegistryEntry[] = []
   for (const row of rows.slice(1)) {
     const id = row[0] ? textOf(row[0]).trim() : ''
-    const documentCell = row[1]
+    const family = row[1] ? textOf(row[1]).trim() : ''
+    const documentCell = row[2]
     const link = documentCell ? firstLink(documentCell) : undefined
-    if (!id || !link) {
+    if (!id || !family || !link) {
       addDiagnostic(
         diagnostics,
         index.path,
         row[0] ?? table,
         'SPEC007',
-        'Every specification register row must contain an ID and one document link.',
+        'Every specification register row must contain an ID, Family, and one document link.',
       )
       continue
     }
@@ -315,8 +327,18 @@ function registryEntries(
       )
       continue
     }
+    if (!ALLOWED_FAMILIES.has(family)) {
+      addDiagnostic(
+        diagnostics,
+        index.path,
+        row[1] ?? table,
+        'SPEC017',
+        'Register Family must be Governance, Foundation, Mechanics, Content, Interfaces, or Acceptance.',
+      )
+    }
     entries.push({
       id,
+      family,
       title: textOf(link).trim(),
       path: resolvePath(index.path, decodedPath),
       node: row[0] ?? table,
@@ -410,6 +432,15 @@ function validateRegistryAndMetadata(
         `Document title "${specification.title}" does not match registered title "${entry.title}".`,
       )
     }
+    if (entry && specification.family !== entry.family) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        specification.metadata.table,
+        'SPEC018',
+        `Metadata Family "${specification.family ?? ''}" does not match registered Family "${entry.family}".`,
+      )
+    }
     if (!specification.id) {
       addDiagnostic(
         diagnostics,
@@ -431,6 +462,33 @@ function validateRegistryAndMetadata(
         'SPEC105',
         'Metadata Status must be Stub, Draft, Accepted, or Superseded.',
       )
+    }
+    if (!specification.family || !ALLOWED_FAMILIES.has(specification.family)) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        specification.metadata.table,
+        'SPEC109',
+        'Metadata Family must be Governance, Foundation, Mechanics, Content, Interfaces, or Acceptance.',
+      )
+    } else {
+      const relativePath = specification.path.slice(parsed.specificationRoot.length + 1)
+      const actualDirectory = directoryOf(relativePath)
+      const expectedDirectory = specification.path === parsed.indexPath ? '' : specification.family.toLowerCase()
+      if (
+        actualDirectory !== expectedDirectory ||
+        (specification.path === parsed.indexPath && specification.family !== 'Governance')
+      ) {
+        addDiagnostic(
+          diagnostics,
+          specification.path,
+          specification.metadata.table,
+          'SPEC110',
+          specification.path === parsed.indexPath
+            ? `The specification index must use Family Governance and remain at ${parsed.indexPath}.`
+            : `Family ${specification.family} specifications must be direct children of ${parsed.specificationRoot}/${expectedDirectory}.`,
+        )
+      }
     }
     if (!specification.metadata.values.get('Scope')) {
       addDiagnostic(

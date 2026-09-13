@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                     |
 | ----------- | ----------------------------------------------------------------------------------------- |
 | Spec ID     | NUM                                                                                       |
+| Family      | Foundation                                                                                |
 | Status      | Stub                                                                                      |
 | Scope       | Make every numeric calculation and random outcome reproducible across supported runtimes. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                       |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                            |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 

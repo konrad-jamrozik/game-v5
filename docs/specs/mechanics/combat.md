@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                            |
 | ----------- | ------------------------------------------------------------------------------------------------ |
 | Spec ID     | COMBAT                                                                                           |
+| Family      | Mechanics                                                                                        |
 | Status      | Stub                                                                                             |
 | Scope       | Define fully automatic battles and their reproducible results independently of campaign rewards. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                              |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                   |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 

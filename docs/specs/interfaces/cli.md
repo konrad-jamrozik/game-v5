@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                 |
 | ----------- | ------------------------------------------------------------------------------------- |
 | Spec ID     | CLI                                                                                   |
+| Family      | Interfaces                                                                            |
 | Status      | Stub                                                                                  |
 | Scope       | Provide a complete terminal adapter usable by humans and AI over the same player API. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                   |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                        |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
@@ -28,9 +29,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependents
 
-| Dependent                                                                                            | Relationship | Scope                                            |
-| ---------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------ |
-| [Campaign Integration and Acceptance Tests](../testing/campaign-integration-and-acceptance-tests.md) | `uses`       | CLI end-to-end flows and machine-readable output |
+| Dependent                                                                                               | Relationship | Scope                                            |
+| ------------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------ |
+| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | CLI end-to-end flows and machine-readable output |
 
 # Glossary
 

@@ -21,6 +21,7 @@ function validCorpus(): SourceFile[] {
         '| Metadata | Value |',
         '| --- | --- |',
         '| Spec ID | INDEX |',
+        '| Family | Governance |',
         '| Status | Draft |',
         '| Scope | Registry |',
         '',
@@ -32,7 +33,7 @@ function validCorpus(): SourceFile[] {
         '',
         '## Dependencies',
         '',
-        'Only [implicit dependencies](spec-conventions.md#implicit-relationships).',
+        'Only [implicit dependencies](governance/spec-conventions.md#implicit-relationships).',
         '',
         '## Dependents',
         '',
@@ -44,21 +45,22 @@ function validCorpus(): SourceFile[] {
         '',
         '# Specification register',
         '',
-        '| ID | Document | Owns |',
-        '| --- | --- | --- |',
-        '| INDEX | [Game Specification Index](README.md) | Registry. |',
-        '| CONV | [Specification Conventions](spec-conventions.md) | Conventions. |',
-        '| AAA | [Alpha](alpha.md) | Alpha rules. |',
+        '| ID | Family | Document | Owns |',
+        '| --- | --- | --- | --- |',
+        '| INDEX | Governance | [Game Specification Index](README.md) | Registry. |',
+        '| CONV | Governance | [Specification Conventions](governance/spec-conventions.md) | Conventions. |',
+        '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
       ]),
     },
     {
-      path: 'docs/specs/spec-conventions.md',
+      path: 'docs/specs/governance/spec-conventions.md',
       content: lines([
         '# Specification Conventions',
         '',
         '| Metadata | Value |',
         '| --- | --- |',
         '| Spec ID | CONV |',
+        '| Family | Governance |',
         '| Status | Draft |',
         '| Scope | Conventions |',
         '',
@@ -88,13 +90,14 @@ function validCorpus(): SourceFile[] {
       ]),
     },
     {
-      path: 'docs/specs/alpha.md',
+      path: 'docs/specs/foundation/alpha.md',
       content: lines([
         '# Alpha',
         '',
         '| Metadata | Value |',
         '| --- | --- |',
         '| Spec ID | AAA |',
+        '| Family | Foundation |',
         '| Status | Draft |',
         '| Scope | Alpha rules |',
         '',
@@ -106,7 +109,7 @@ function validCorpus(): SourceFile[] {
         '',
         '## Dependencies',
         '',
-        'Only [implicit dependencies](spec-conventions.md#implicit-relationships).',
+        'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
         '',
         '## Dependents',
         '',
@@ -152,7 +155,7 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
     .replaceAll('Alpha', 'Beta')
     .replaceAll('AAA', 'BBB')
     .replace(
-      'Only [implicit dependencies](spec-conventions.md#implicit-relationships).',
+      'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
       lines([
         '| Dependency | Relationship | Scope |',
         '| --- | --- | --- |',
@@ -172,21 +175,24 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
   const withBeta = mutate(
     files,
     'docs/specs/README.md',
-    '| AAA | [Alpha](alpha.md) | Alpha rules. |',
-    lines(['| AAA | [Alpha](alpha.md) | Alpha rules. |', '| BBB | [Beta](beta.md) | Beta rules. |']),
+    '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
+    lines([
+      '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
+      '| BBB | Foundation | [Beta](foundation/beta.md) | Beta rules. |',
+    ]),
   )
   const withAlphaCycle = mutate(
     mutate(
       withBeta,
-      'docs/specs/alpha.md',
-      'Only [implicit dependencies](spec-conventions.md#implicit-relationships).',
+      'docs/specs/foundation/alpha.md',
+      'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
       lines([
         '| Dependency | Relationship | Scope |',
         '| --- | --- | --- |',
         `| [Beta](beta.md) | \`${kind}\` | Shared contract | `,
       ]),
     ),
-    'docs/specs/alpha.md',
+    'docs/specs/foundation/alpha.md',
     'None.\n\n# Glossary',
     lines([
       '| Dependent | Relationship | Scope |',
@@ -196,7 +202,7 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
       '# Glossary',
     ]),
   )
-  return [...withAlphaCycle, { path: 'docs/specs/beta.md', content: betaContent }]
+  return [...withAlphaCycle, { path: 'docs/specs/foundation/beta.md', content: betaContent }]
 }
 
 function mutate(files: readonly SourceFile[], path: string, find: string, replacement: string): SourceFile[] {
@@ -219,18 +225,58 @@ describe('specification linter', () => {
     ],
     [
       'metadata status',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/alpha.md', '| Status | Draft |', '| Status | Final |'),
+      (files: SourceFile[]) =>
+        mutate(files, 'docs/specs/foundation/alpha.md', '| Status | Draft |', '| Status | Final |'),
       'SPEC105',
     ],
-    ['title agreement', (files: SourceFile[]) => mutate(files, 'docs/specs/alpha.md', '# Alpha', '# ALPHA'), 'SPEC015'],
+    [
+      'invalid register family',
+      (files: SourceFile[]) =>
+        mutate(
+          files,
+          'docs/specs/README.md',
+          '| AAA | Foundation | [Alpha](foundation/alpha.md)',
+          '| AAA | Unknown | [Alpha](foundation/alpha.md)',
+        ),
+      'SPEC017',
+    ],
+    [
+      'metadata and register family disagreement',
+      (files: SourceFile[]) =>
+        mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Mechanics |'),
+      'SPEC018',
+    ],
+    [
+      'invalid metadata family',
+      (files: SourceFile[]) =>
+        mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Unknown |'),
+      'SPEC109',
+    ],
+    [
+      'family and directory disagreement',
+      (files: SourceFile[]) =>
+        mutate(
+          mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Mechanics |'),
+          'docs/specs/README.md',
+          '| AAA | Foundation | [Alpha](foundation/alpha.md)',
+          '| AAA | Mechanics | [Alpha](foundation/alpha.md)',
+        ),
+      'SPEC110',
+    ],
+    [
+      'title agreement',
+      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '# Alpha', '# ALPHA'),
+      'SPEC015',
+    ],
     [
       'standard heading order',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/alpha.md', '# Concepts and contract', '# Requirements'),
+      (files: SourceFile[]) =>
+        mutate(files, 'docs/specs/foundation/alpha.md', '# Concepts and contract', '# Requirements'),
       'SPEC209',
     ],
     [
       'removed headings',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/alpha.md', '# Glossary', '# Terminology'),
+      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '# Glossary', '# Terminology'),
       'SPEC203',
     ],
     [
@@ -238,15 +284,16 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(
           files,
-          'docs/specs/alpha.md',
-          'spec-conventions.md#implicit-relationships',
+          'docs/specs/foundation/alpha.md',
+          '../governance/spec-conventions.md#implicit-relationships',
           'missing.md#implicit-relationships',
         ),
       'SPEC303',
     ],
     [
       'broken anchors',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/alpha.md', '#implicit-relationships', '#missing-anchor'),
+      (files: SourceFile[]) =>
+        mutate(files, 'docs/specs/foundation/alpha.md', '#implicit-relationships', '#missing-anchor'),
       'SPEC304',
     ],
     [
@@ -254,8 +301,8 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(
           files,
-          'docs/specs/alpha.md',
-          'Only [implicit dependencies](spec-conventions.md#implicit-relationships).',
+          'docs/specs/foundation/alpha.md',
+          'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
           'None.',
         ),
       'SPEC401',
@@ -265,12 +312,12 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(
           files,
-          'docs/specs/alpha.md',
-          'Only [implicit dependencies](spec-conventions.md#implicit-relationships).',
+          'docs/specs/foundation/alpha.md',
+          'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
           lines([
             '| Dependency | Relationship | Scope |',
             '| --- | --- | --- |',
-            '| [Specification Conventions](spec-conventions.md) | `copies` | Rules |',
+            '| [Specification Conventions](../governance/spec-conventions.md) | `copies` | Rules |',
           ]),
         ),
       'SPEC409',
@@ -280,29 +327,31 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(
           files,
-          'docs/specs/alpha.md',
-          'Only [implicit dependencies](spec-conventions.md#implicit-relationships).',
+          'docs/specs/foundation/alpha.md',
+          'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
           lines([
             '| Dependency | Relationship | Scope |',
             '| --- | --- | --- |',
-            '| [Specification Conventions](spec-conventions.md) | `uses` | Rules |',
+            '| [Specification Conventions](../governance/spec-conventions.md) | `uses` | Rules |',
           ]),
         ),
       'SPEC413',
     ],
     [
       'prohibited formal terminology',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/alpha.md', 'None.\n\n# Concepts', 'Source.\n\n# Concepts'),
+      (files: SourceFile[]) =>
+        mutate(files, 'docs/specs/foundation/alpha.md', 'None.\n\n# Concepts', 'Source.\n\n# Concepts'),
       'SPEC501',
     ],
     [
       'requirement prefix',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/alpha.md', 'AAA-001 — Rule', 'BBB-001 — Rule'),
+      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', 'AAA-001 — Rule', 'BBB-001 — Rule'),
       'SPEC601',
     ],
     [
       'unresolved requirement reference',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/alpha.md', 'AAA-001: the same', 'AAA-999: the same'),
+      (files: SourceFile[]) =>
+        mutate(files, 'docs/specs/foundation/alpha.md', 'AAA-001: the same', 'AAA-999: the same'),
       'SPEC606',
     ],
     [
@@ -311,11 +360,11 @@ describe('specification linter', () => {
         mutate(
           mutate(
             files,
-            'docs/specs/alpha.md',
+            'docs/specs/foundation/alpha.md',
             '| Status | Draft |',
             '| Status | Accepted |\n| Acceptance reference | Owner approval |',
           ),
-          'docs/specs/alpha.md',
+          'docs/specs/foundation/alpha.md',
           'Contract.',
           'TODO: Complete the contract.',
         ),
@@ -327,8 +376,8 @@ describe('specification linter', () => {
 
   test('produces stable sorted diagnostics', () => {
     const files = mutate(
-      mutate(validCorpus(), 'docs/specs/alpha.md', '# Alpha', '# ALPHA'),
-      'docs/specs/alpha.md',
+      mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Alpha', '# ALPHA'),
+      'docs/specs/foundation/alpha.md',
       '| Status | Draft |',
       '| Status | Final |',
     )
@@ -356,7 +405,7 @@ describe('specification linter', () => {
   test('rejects duplicate glossary ownership and aliases', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/alpha.md',
+      'docs/specs/foundation/alpha.md',
       '# Glossary\n\nNone.',
       lines([
         '# Glossary',
@@ -373,10 +422,15 @@ describe('specification linter', () => {
   })
 
   test('resolves compact requirement ranges through retired IDs', () => {
-    let files = mutate(validCorpus(), 'docs/specs/alpha.md', 'AAA-001: the same input', 'AAA-001–002: the same input')
+    let files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      'AAA-001: the same input',
+      'AAA-001–002: the same input',
+    )
     files = mutate(
       files,
-      'docs/specs/alpha.md',
+      'docs/specs/foundation/alpha.md',
       '# Open decisions\n\nNone.',
       lines([
         '# Open decisions',
@@ -398,7 +452,7 @@ describe('specification linter', () => {
     expect(runSpecificationLint(validCorpus(), [], (message) => output.push(message))).toBe(0)
     expect(
       runSpecificationLint(
-        mutate(validCorpus(), 'docs/specs/alpha.md', '| Status | Draft |', '| Status | Final |'),
+        mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '| Status | Draft |', '| Status | Final |'),
         [],
         (message) => output.push(message),
       ),

@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                       |
 | ----------- | ------------------------------------------------------------------------------------------- |
 | Spec ID     | MOD                                                                                         |
+| Family      | Foundation                                                                                  |
 | Status      | Draft                                                                                       |
 | Scope       | Modeling vocabulary, definitions, identity and references, and historical fact preservation |
-| Conventions | [Specification conventions](../spec-conventions.md)                                         |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                              |
 | Review      | Batch 1; proposed rules awaiting user review                                                |
 
 # Purpose and boundaries

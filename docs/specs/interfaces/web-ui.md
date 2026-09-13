@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                    |
 | ----------- | ---------------------------------------------------------------------------------------- |
 | Spec ID     | WEB                                                                                      |
+| Family      | Interfaces                                                                               |
 | Status      | Stub                                                                                     |
 | Scope       | Specify the first functional browser interface while keeping gameplay in the shared API. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                      |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
@@ -28,9 +29,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependents
 
-| Dependent                                                                                            | Relationship | Scope                                                       |
-| ---------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------- |
-| [Campaign Integration and Acceptance Tests](../testing/campaign-integration-and-acceptance-tests.md) | `uses`       | Browser end-to-end flows and equivalent player interactions |
+| Dependent                                                                                               | Relationship | Scope                                                       |
+| ------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------- |
+| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Browser end-to-end flows and equivalent player interactions |
 
 # Glossary
 

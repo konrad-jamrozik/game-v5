@@ -3,6 +3,7 @@
 | Metadata    | Value                                                                           |
 | ----------- | ------------------------------------------------------------------------------- |
 | Spec ID     | REL                                                                             |
+| Family      | Governance                                                                      |
 | Status      | Draft                                                                           |
 | Scope       | Relationship terminology, direction, artifact inventories, and graph validation |
 | Conventions | [Specification Conventions](spec-conventions.md)                                |
@@ -64,13 +65,13 @@ are the only terms for the two participating artifacts in this model.
 
 Each kind describes how the Dependent relates to the Dependency.
 
-| Relationship kind | Meaning                                                                                     | Permitted artifacts                                                                                                   | Illustrative example                               |
-| ----------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules  | Document → document governed by those rules                                                                           | Specification Conventions → Agents                 |
-| `refines`         | The Dependent adds detail to the Dependency while preserving its constraints                | Specification or requirement → refining specification                                                                 | Domain Model → Agents                              |
-| `uses`            | The Dependent relies on meaning or rules supplied by the Dependency within the stated scope | Any suitable artifacts                                                                                                | Modeling Foundations → Engine Contract             |
-| `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency      | Specification or requirement → implementation                                                                         | Engine Contract → identified engine implementation |
-| `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency               | Specification or requirement → [test scenario](testing/campaign-integration-and-acceptance-tests.md#glossary) or test | ENG-004 → identified restoration test              |
+| Relationship kind | Meaning                                                                                     | Permitted artifacts                                                                                                         | Illustrative example                               |
+| ----------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules  | Document → document governed by those rules                                                                                 | Specification Conventions → Agents                 |
+| `refines`         | The Dependent adds detail to the Dependency while preserving its constraints                | Specification or requirement → refining specification                                                                       | Domain Model → Agents                              |
+| `uses`            | The Dependent relies on meaning or rules supplied by the Dependency within the stated scope | Any suitable artifacts                                                                                                      | Modeling Foundations → Engine Contract             |
+| `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency      | Specification or requirement → implementation                                                                               | Engine Contract → identified engine implementation |
+| `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency               | Specification or requirement → [test scenario](../acceptance/campaign-integration-and-acceptance-tests.md#glossary) or test | ENG-004 → identified restoration test              |
 
 Merely consuming a result is `uses`, not `refines`. An implementation can `implement` a specification; a specification
 does not implement its implementation. A test can `verify` a requirement without asserting that the test currently
@@ -189,15 +190,15 @@ check links, and validate the graphs. Do not invent implementation or test relat
 
 Given Agents depends on Domain Model for lifecycle constraints, Agents contains:
 
-| Dependency                                 | Relationship | Scope                                   |
-| ------------------------------------------ | ------------ | --------------------------------------- |
-| [Domain Model](foundation/domain-model.md) | `refines`    | Agent lifecycle and assignment behavior |
+| Dependency                                    | Relationship | Scope                                   |
+| --------------------------------------------- | ------------ | --------------------------------------- |
+| [Domain Model](../foundation/domain-model.md) | `refines`    | Agent lifecycle and assignment behavior |
 
 Domain Model contains the mirror:
 
-| Dependent                     | Relationship | Scope                                   |
-| ----------------------------- | ------------ | --------------------------------------- |
-| [Agents](mechanics/agents.md) | `refines`    | Agent lifecycle and assignment behavior |
+| Dependent                        | Relationship | Scope                                   |
+| -------------------------------- | ------------ | --------------------------------------- |
+| [Agents](../mechanics/agents.md) | `refines`    | Agent lifecycle and assignment behavior |
 
 Both entries describe `Domain Model → Agents`. Removing or changing either entry requires the same change in the other.
 

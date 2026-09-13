@@ -3,16 +3,18 @@
 | Metadata              | Value                                                                                                                                                           |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID               | CONV                                                                                                                                                            |
+| Family                | Governance                                                                                                                                                      |
 | Status                | Accepted                                                                                                                                                        |
 | Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                                                       |
 | Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                                                                      |
-| Related documents     | [Spec index](README.md), [game design brief](../game-design-brief.md)                                                                                           |
+| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                                                     |
 | Relationship revision | Requested by the project owner: use only Dependencies and Dependents, define implicit relationships centrally, and require one canonical term for each concept. |
 | Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                                                            |
+| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                                                           |
 
 # Purpose and boundaries
 
-Specifications are the durable authority for intended behavior. Code and tests implement that behavior and may be replaced without changing the contract. The [game design brief](../game-design-brief.md) explains intent and strategic tensions; the specifications resolve those ideas into precise rules.
+Specifications are the durable authority for intended behavior. Code and tests implement that behavior and may be replaced without changing the contract. The [game design brief](../../game-design-brief.md) explains intent and strategic tensions; the specifications resolve those ideas into precise rules.
 
 These conventions are the accepted working agreement. A stub uses the standard layout, but neither its presence nor its formatting makes unresolved rules accepted.
 
@@ -35,7 +37,8 @@ Only [implicit dependents](#implicit-relationships).
 | Term               | Definition                                                                                                                                                                    |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, content, governance, or planned specification work.                                |
-| Registered         | Listed in the [Specification register](README.md#specification-register) with a stable Spec ID.                                                                               |
+| Registered         | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                                            |
+| Family             | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                               |
 | Requirement        | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                           |
 | Canonical term     | The sole term assigned to one concept within the specification set.                                                                                                           |
 | Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                             |
@@ -56,7 +59,30 @@ Use one of these statuses in the metadata table:
 
 Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Record the acceptance reference when a document is accepted. Do not infer approval from silence. Work may explore a draft when requested, but must not silently settle its open design decisions.
 
-Each specification has a stable Spec ID, title, status, scope, and related-document links. The index registers IDs and scopes.
+Each specification has a stable Spec ID, Family, title, status, scope, and related-document links. The index registers IDs,
+Families, and scopes.
+
+## Specification families and paths
+
+Family classifies an artifact by the kind of authority it owns. It is independent of relationship direction, graph depth,
+and authoring order. A folder location does not create a relationship.
+
+Every registered specification declares exactly one of these Families in metadata and in the Specification register. With
+the exception of the root index, its file must be a direct child of the corresponding lowercase directory.
+
+| Family     | Directory     | Ownership boundary                                                                             |
+| ---------- | ------------- | ---------------------------------------------------------------------------------------------- |
+| Governance | `governance/` | Specification conventions, relationship rules, and planning or process contracts               |
+| Foundation | `foundation/` | Cross-cutting domain, modeling, execution, numeric, timing, history, and persistence contracts |
+| Mechanics  | `mechanics/`  | Player-facing game-system rules, transitions, formulas, and effects                            |
+| Content    | `content/`    | Versioned definitions, named parameters, catalogs, and starting configurations                 |
+| Interfaces | `interfaces/` | Observable player, developer, API, CLI, and UI contracts                                       |
+| Acceptance | `acceptance/` | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability              |
+
+The Game Specification Index has Family Governance and remains at `docs/specs/README.md` as the navigation entry point.
+Family describes ownership, not dependencies: a Foundation specification may depend on Mechanics specifications without
+changing Family. Moving a specification between Families changes its declared ownership category and requires updating its
+metadata, register entry, path, and links together.
 
 ## One owner per rule
 
@@ -144,17 +170,18 @@ A missing decision is not "not applicable." For example, a mechanics specificati
 
 ## Specialized material
 
-Add domain-specific subsections under the closest shared heading.
+Add domain-specific subsections under the closest shared heading. The following specializations describe useful content
+shapes within a Family; they do not define additional metadata categories or directories.
 
-| Specification kind | Typical specialized subsections                                 |
-| ------------------ | --------------------------------------------------------------- |
-| Mechanics          | State transitions; formulas; effect timing; information exposed |
-| Numeric foundation | Representation; rounding; draw order; test vectors              |
-| API                | Functions; preconditions; results and errors; atomicity         |
-| CLI                | Grammar; sessions; output formats; exit codes                   |
-| UI                 | Screens; grids and trees; interactions; accessibility           |
-| Content            | Starting configuration; parameter tables; catalogs; validation  |
-| Acceptance         | Fixture format; scenarios; expected outcomes; traceability      |
+| Specialized material | Typical subsections                                             |
+| -------------------- | --------------------------------------------------------------- |
+| Mechanics rules      | State transitions; formulas; effect timing; information exposed |
+| Numeric contracts    | Representation; rounding; draw order; test vectors              |
+| API contracts        | Functions; preconditions; results and errors; atomicity         |
+| CLI contracts        | Grammar; sessions; output formats; exit codes                   |
+| UI contracts         | Screens; grids and trees; interactions; accessibility           |
+| Content catalogs     | Starting configuration; parameter tables; catalogs; validation  |
+| Acceptance scenarios | Fixture format; scenarios; expected outcomes; traceability      |
 
 Long supporting tables may use descriptive appendices after Open decisions. State whether an appendix is normative or informative. Do not add unrelated top-level categories for a unique feature. If a section repeatedly outgrows its specification, split it into an indexed specification with clear ownership.
 
@@ -198,7 +225,7 @@ Every substantial rule must be covered by an acceptance example or a referenced 
 - Expected state, output, visibility, history, and random behavior where relevant.
 - Exact comparisons or explicitly specified numeric tolerances.
 
-Subsystem examples stay with their rules. Cross-system scenarios belong in [Campaign Integration and Acceptance Tests](testing/campaign-integration-and-acceptance-tests.md) and reference their owners.
+Subsystem examples stay with their rules. Cross-system scenarios belong in [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) and reference their owners.
 
 Test derivation must follow the specification; current code output is not an independent oracle. If code, tests, and the specification disagree, identify the discrepancy and resolve it explicitly. Do not rewrite a specification merely to bless existing behavior. Do not silently replace an accepted rule to match a newer brief passage; record the design conflict and proposed revision.
 

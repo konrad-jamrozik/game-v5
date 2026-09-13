@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                    |
 | ----------- | ---------------------------------------------------------------------------------------- |
 | Spec ID     | ENG                                                                                      |
+| Family      | Foundation                                                                               |
 | Status      | Draft                                                                                    |
 | Scope       | Execution, continuation, query and information boundaries, and committed-state integrity |
-| Conventions | [Specification conventions](../spec-conventions.md)                                      |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
 | Review      | Batch 1; proposed rules awaiting user review                                             |
 
 # Purpose and boundaries

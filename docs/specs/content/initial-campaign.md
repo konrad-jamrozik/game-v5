@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                       |
 | ----------- | ------------------------------------------------------------------------------------------- |
 | Spec ID     | INIT                                                                                        |
+| Family      | Content                                                                                     |
 | Status      | Stub                                                                                        |
 | Scope       | Provide the complete, versioned numeric and content inputs for the first playable campaign. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                         |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                              |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
@@ -32,11 +33,11 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependents
 
-| Dependent                                                                                            | Relationship | Scope                                                                        |
-| ---------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
-| [Campaign](../mechanics/campaign.md)                                                                 | `uses`       | Starting configuration, scenario values, and victory content                 |
-| [Campaign Integration and Acceptance Tests](../testing/campaign-integration-and-acceptance-tests.md) | `uses`       | Reproducible scenario content, named parameters, and starting configurations |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                         | `uses`       | Purchase prices, upgrade increments, limits, and other named balance values  |
+| Dependent                                                                                               | Relationship | Scope                                                                        |
+| ------------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
+| [Campaign](../mechanics/campaign.md)                                                                    | `uses`       | Starting configuration, scenario values, and victory content                 |
+| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Reproducible scenario content, named parameters, and starting configurations |
+| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                            | `uses`       | Purchase prices, upgrade increments, limits, and other named balance values  |
 
 # Glossary
 

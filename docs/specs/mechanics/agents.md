@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                           |
 | ----------- | ------------------------------------------------------------------------------- |
 | Spec ID     | AGENT                                                                           |
+| Family      | Mechanics                                                                       |
 | Status      | Stub                                                                            |
 | Scope       | Define agent capability, task availability, development, fatigue, and recovery. |
-| Conventions | [Specification conventions](../spec-conventions.md)                             |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                  |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 

@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                |
 | ----------- | -------------------------------------------------------------------- |
 | Spec ID     | ECON                                                                 |
+| Family      | Mechanics                                                            |
 | Status      | Stub                                                                 |
 | Scope       | Define resource flows, personnel purchases, and agency improvements. |
-| Conventions | [Specification conventions](../spec-conventions.md)                  |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)       |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 

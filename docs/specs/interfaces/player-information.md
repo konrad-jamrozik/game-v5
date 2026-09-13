@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                  |
 | ----------- | -------------------------------------------------------------------------------------- |
 | Spec ID     | INFO                                                                                   |
+| Family      | Interfaces                                                                             |
 | Status      | Stub                                                                                   |
 | Scope       | Define complete player-facing knowledge and a consistent boundary around hidden state. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                    |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                         |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 

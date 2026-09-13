@@ -3,9 +3,10 @@
 | Metadata    | Value                                                             |
 | ----------- | ----------------------------------------------------------------- |
 | Spec ID     | SCEN                                                              |
+| Family      | Acceptance                                                        |
 | Status      | Stub                                                              |
 | Scope       | Define test scenarios that verify how game systems work together. |
-| Conventions | [Specification conventions](../spec-conventions.md)               |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)    |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
@@ -48,13 +49,13 @@ None.
 
 # Glossary
 
-| Term             | Meaning in this document                                                                                                                                            |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Test scenario    | A specified starting state, sequence of actions, and expected results                                                                                               |
-| Fixture          | The content, campaign state, and random seed or RNG state needed to reproduce a scenario                                                                            |
-| Integration test | A test that exercises several game systems together, typically through the player API                                                                               |
-| End-to-end test  | A test that exercises a player flow through an interface and checks its resulting observations and game effects                                                     |
-| Acceptance test  | A test that checks whether behavior satisfies referenced specification [requirements](../spec-conventions.md#glossary); it can be an integration or end-to-end test |
+| Term             | Meaning in this document                                                                                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Test scenario    | A specified starting state, sequence of actions, and expected results                                                                                                          |
+| Fixture          | The content, campaign state, and random seed or RNG state needed to reproduce a scenario                                                                                       |
+| Integration test | A test that exercises several game systems together, typically through the player API                                                                                          |
+| End-to-end test  | A test that exercises a player flow through an interface and checks its resulting observations and game effects                                                                |
+| Acceptance test  | A test that checks whether behavior satisfies referenced specification [requirements](../governance/spec-conventions.md#glossary); it can be an integration or end-to-end test |
 
 # Concepts and contract
 

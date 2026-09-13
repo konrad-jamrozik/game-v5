@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                   |
 | ----------- | --------------------------------------------------------------------------------------- |
 | Spec ID     | DEV                                                                                     |
+| Family      | Interfaces                                                                              |
 | Status      | Stub                                                                                    |
 | Scope       | Expose full authoritative state for debugging through a separate, explicit API surface. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                     |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                          |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 

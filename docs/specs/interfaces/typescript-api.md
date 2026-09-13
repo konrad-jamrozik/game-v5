@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                                        |
 | ----------- | -------------------------------------------------------------------------------------------- |
 | Spec ID     | API                                                                                          |
+| Family      | Interfaces                                                                                   |
 | Status      | Stub                                                                                         |
 | Scope       | Define the callable TypeScript contract through which humans and AI can fully play the game. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                          |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                               |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
@@ -30,12 +31,12 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependents
 
-| Dependent                                                                                            | Relationship | Scope                                                                       |
-| ---------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
-| [Campaign Integration and Acceptance Tests](../testing/campaign-integration-and-acceptance-tests.md) | `uses`       | Primary integration-test actions, observations, results, and errors         |
-| [Developer API](./developer-api.md)                                                                  | `uses`       | Separation from ordinary player capabilities, observations, and errors      |
-| [Terminal CLI](./cli.md)                                                                             | `uses`       | Session lifecycle, action discovery, queries, commands, results, and errors |
-| [Web UI](./web-ui.md)                                                                                | `uses`       | Queries, action discovery, commands, results, refresh, and errors           |
+| Dependent                                                                                               | Relationship | Scope                                                                       |
+| ------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
+| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Primary integration-test actions, observations, results, and errors         |
+| [Developer API](./developer-api.md)                                                                     | `uses`       | Separation from ordinary player capabilities, observations, and errors      |
+| [Terminal CLI](./cli.md)                                                                                | `uses`       | Session lifecycle, action discovery, queries, commands, results, and errors |
+| [Web UI](./web-ui.md)                                                                                   | `uses`       | Queries, action discovery, commands, results, refresh, and errors           |
 
 # Glossary
 

@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                               |
 | ----------- | ----------------------------------------------------------------------------------- |
 | Spec ID     | DOM                                                                                 |
+| Family      | Foundation                                                                          |
 | Status      | Draft                                                                               |
 | Scope       | Game concepts, their properties and relationships, and structural domain invariants |
-| Conventions | [Specification conventions](../spec-conventions.md)                                 |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                      |
 | Review      | Batch 1; proposed rules awaiting user review                                        |
 
 # Purpose and boundaries

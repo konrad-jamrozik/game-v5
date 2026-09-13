@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                               |
 | ----------- | ----------------------------------------------------------------------------------- |
 | Spec ID     | MISSION                                                                             |
+| Family      | Mechanics                                                                           |
 | Status      | Stub                                                                                |
 | Scope       | Define mission commitments and translate combat results into campaign consequences. |
-| Conventions | [Specification conventions](../spec-conventions.md)                                 |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                      |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 

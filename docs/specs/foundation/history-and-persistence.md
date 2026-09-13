@@ -3,9 +3,10 @@
 | Metadata    | Value                                                                            |
 | ----------- | -------------------------------------------------------------------------------- |
 | Spec ID     | HIST                                                                             |
+| Family      | Foundation                                                                       |
 | Status      | Stub                                                                             |
 | Scope       | Define reversible sessions, reproducible replay, and durable save/load behavior. |
-| Conventions | [Specification conventions](../spec-conventions.md)                              |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                   |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
@@ -29,14 +30,14 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependents
 
-| Dependent                                                                                            | Relationship | Scope                                                                       |
-| ---------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
-| [Campaign Integration and Acceptance Tests](../testing/campaign-integration-and-acceptance-tests.md) | `uses`       | Replay, save/load, undo/redo, branching, and restored-state fixtures        |
-| [Developer API](../interfaces/developer-api.md)                                                      | `uses`       | Snapshot, restoration, replay, and debug-mutation history behavior          |
-| [Player Information](../interfaces/player-information.md)                                            | `uses`       | Historical observations, reports, undo, and restored knowledge              |
-| [Terminal CLI](../interfaces/cli.md)                                                                 | `uses`       | Save/load, undo/redo, branching, and session behavior                       |
-| [TypeScript Player API](../interfaces/typescript-api.md)                                             | `uses`       | Session lifecycle, persistence, undo/redo, branching, and stale handles     |
-| [Web UI](../interfaces/web-ui.md)                                                                    | `uses`       | Timeline navigation, undo/redo, restored observations, and session behavior |
+| Dependent                                                                                               | Relationship | Scope                                                                       |
+| ------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
+| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Replay, save/load, undo/redo, branching, and restored-state fixtures        |
+| [Developer API](../interfaces/developer-api.md)                                                         | `uses`       | Snapshot, restoration, replay, and debug-mutation history behavior          |
+| [Player Information](../interfaces/player-information.md)                                               | `uses`       | Historical observations, reports, undo, and restored knowledge              |
+| [Terminal CLI](../interfaces/cli.md)                                                                    | `uses`       | Save/load, undo/redo, branching, and session behavior                       |
+| [TypeScript Player API](../interfaces/typescript-api.md)                                                | `uses`       | Session lifecycle, persistence, undo/redo, branching, and stale handles     |
+| [Web UI](../interfaces/web-ui.md)                                                                       | `uses`       | Timeline navigation, undo/redo, restored observations, and session behavior |
 
 # Glossary
 
