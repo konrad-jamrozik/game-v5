@@ -421,6 +421,16 @@ describe('specification linter', () => {
     expect(codes).toContain('SPEC503')
   })
 
+  test('rejects incomplete glossary rows', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '# Glossary\n\nNone.',
+      lines(['# Glossary', '', '| Term | Definition |', '| --- | --- |', '| Incomplete | |']),
+    )
+    expect(diagnosticCodes(files)).toContain('SPEC504')
+  })
+
   test('resolves compact requirement ranges through retired IDs', () => {
     let files = mutate(
       validCorpus(),

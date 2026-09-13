@@ -1,5 +1,6 @@
 import type { Heading, Link, Root, RootContent, Table, TableCell } from 'mdast'
 import type { Node, Parent } from 'unist'
+import GithubSlugger from 'github-slugger'
 import { remark } from 'remark'
 import remarkGfm from 'remark-gfm'
 
@@ -19,6 +20,12 @@ export function parseDocument(file: SourceFile): ParsedDocument {
     children: tree.children,
     headings: tree.children.filter(isHeading),
   }
+}
+
+export function inlineMarkdown(cell: TableCell): string {
+  const paragraph = { type: 'paragraph' as const, children: structuredClone(cell.children) }
+  const tree: Root = { type: 'root', children: [paragraph] }
+  return remark().use(remarkGfm).stringify(tree).trim()
 }
 
 export function isHeading(node: Node): node is Heading {
@@ -133,4 +140,11 @@ export function headingAtLine(document: ParsedDocument, line: number, depth: num
     current = heading
   }
   return current
+}
+
+export function headingSlugs(document: ParsedDocument): ReadonlySet<string> {
+  const slugger = new GithubSlugger()
+  const slugs = new Set<string>()
+  for (const heading of document.headings) slugs.add(slugger.slug(headingText(heading)))
+  return slugs
 }

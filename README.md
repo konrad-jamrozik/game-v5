@@ -45,6 +45,8 @@ The reported versions should satisfy the `engines` field in `package.json`. Then
 | `npm run typecheck`     | Check application, tests, and tooling                |
 | `npm run lint:code`     | Run type-aware Oxlint; warnings fail                 |
 | `npm run lint:specs`    | Deterministically lint registered specifications     |
+| `npm run docs:generate` | Update views derived from registered specifications  |
+| `npm run docs:check`    | Check that derived specification views are current   |
 | `npm run lint`          | Run code and specification linting                   |
 | `npm run lint:fix`      | Fix code lint, then check specifications read-only   |
 | `npm run check:commit`  | Run the read-only checks used by the commit hook     |
@@ -56,6 +58,13 @@ The reported versions should satisfy the `engines` field in `package.json`. Then
 | `npm run test:coverage` | Generate text, HTML, and LCOV reports in `coverage/` |
 | `npm run hooks:install` | Enable the tracked Git hooks for this checkout       |
 | `npm run check`         | Run the same validation used in CI                   |
+
+## Derived specification views
+
+The [derived specification catalog](docs/derived/README.md) links an alphabetical glossary and specification relationship
+graphs. These informative Markdown files are generated from the registered specifications; the source specifications remain
+authoritative. After changing a specification, run `npm run docs:generate`. Commit the resulting files. `npm run docs:check`
+reports missing, stale, or unexpected files without modifying them, and runs as part of commit and CI checks.
 
 ## Strictness and tests
 

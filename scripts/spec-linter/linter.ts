@@ -1,4 +1,3 @@
-import GithubSlugger from 'github-slugger'
 import type { Blockquote, Heading, ListItem, Paragraph, Strong, Table } from 'mdast'
 import type { Node } from 'unist'
 
@@ -7,6 +6,8 @@ import {
   findHeading,
   firstLink,
   headingText,
+  headingSlugs,
+  inlineMarkdown,
   isHeading,
   isLink,
   isParent,
@@ -21,15 +22,34 @@ import {
   topLevelHeadings,
   visit,
 } from './markdown.ts'
-import type { Diagnostic, LintInput } from './types.ts'
+import { decodeUrlPart, directoryOf, isExternalUrl, normalizePath, resolvePath, splitUrl } from './paths.ts'
+import type {
+  Diagnostic,
+  GlossaryRecord,
+  LintInput,
+  RelationshipKind,
+  RelationshipRecord,
+  SpecificationAnalysis,
+  SpecificationCorpus,
+  SpecificationFamily,
+  SpecificationRecord,
+  SpecificationStatus,
+} from './types.ts'
 
 const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
 const CONVENTIONS_PATH = 'docs/specs/governance/spec-conventions.md'
 const GOVERNANCE_LAYOUT_EXCEPTIONS = new Set(['CONV', 'INDEX'])
-const ALLOWED_STATUSES = new Set(['Stub', 'Draft', 'Accepted', 'Superseded'])
-const ALLOWED_FAMILIES = new Set(['Governance', 'Foundation', 'Mechanics', 'Content', 'Interfaces', 'Acceptance'])
-const ALLOWED_RELATIONSHIPS = new Set(['follows', 'refines', 'uses', 'implements', 'verifies'])
+const ALLOWED_STATUSES: ReadonlySet<string> = new Set(['Stub', 'Draft', 'Accepted', 'Superseded'])
+const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
+  'Governance',
+  'Foundation',
+  'Mechanics',
+  'Content',
+  'Interfaces',
+  'Acceptance',
+])
+const ALLOWED_RELATIONSHIPS: ReadonlySet<string> = new Set(['follows', 'refines', 'uses', 'implements', 'verifies'])
 const RULE_HEADINGS = [
   'Purpose and boundaries',
   'Relationships',
@@ -66,6 +86,7 @@ interface RegistryEntry {
   readonly family: string
   readonly title: string
   readonly path: string
+  readonly owns: string
   readonly node: Node
 }
 
@@ -75,8 +96,27 @@ interface RelationshipRow {
   readonly inventory: Inventory
   readonly owner: Specification
   readonly destination: Specification
-  readonly kind: string
+  readonly kind: RelationshipKind
   readonly scope: string
+  readonly node: Node
+}
+
+function isSpecificationFamily(value: string | undefined): value is SpecificationFamily {
+  return value !== undefined && ALLOWED_FAMILIES.has(value)
+}
+
+function isSpecificationStatus(value: string | undefined): value is SpecificationStatus {
+  return value !== undefined && ALLOWED_STATUSES.has(value)
+}
+
+function isRelationshipKind(value: string): value is RelationshipKind {
+  return ALLOWED_RELATIONSHIPS.has(value)
+}
+
+interface GlossaryTerm {
+  readonly term: string
+  readonly definitionMarkdown: string
+  readonly specification: Specification
   readonly node: Node
 }
 
@@ -93,48 +133,6 @@ interface ParsedInput {
   readonly casePaths: ReadonlyMap<string, string>
   readonly indexPath: string
   readonly specificationRoot: string
-}
-
-function normalizePath(value: string): string {
-  const segments: string[] = []
-  for (const segment of value.replace(/\\/g, '/').split('/')) {
-    if (segment === '' || segment === '.') continue
-    if (segment === '..') {
-      segments.pop()
-      continue
-    }
-    segments.push(segment)
-  }
-  return segments.join('/')
-}
-
-function directoryOf(filePath: string): string {
-  const separator = filePath.lastIndexOf('/')
-  return separator < 0 ? '' : filePath.slice(0, separator)
-}
-
-function resolvePath(fromPath: string, targetPath: string): string {
-  return normalizePath(`${directoryOf(fromPath)}/${targetPath}`)
-}
-
-function splitUrl(url: string): {
-  readonly path: string
-  readonly fragment: string | undefined
-} {
-  const hash = url.indexOf('#')
-  return hash < 0 ? { path: url, fragment: undefined } : { path: url.slice(0, hash), fragment: url.slice(hash + 1) }
-}
-
-function decodeUrlPart(value: string): string | undefined {
-  try {
-    return decodeURIComponent(value)
-  } catch {
-    return undefined
-  }
-}
-
-function isExternalUrl(url: string): boolean {
-  return /^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith('//')
 }
 
 function isParagraph(node: Node): node is Paragraph {
@@ -304,14 +302,15 @@ function registryEntries(
     const id = row[0] ? textOf(row[0]).trim() : ''
     const family = row[1] ? textOf(row[1]).trim() : ''
     const documentCell = row[2]
+    const owns = row[3] ? textOf(row[3]).replace(/\s+/g, ' ').trim() : ''
     const link = documentCell ? firstLink(documentCell) : undefined
-    if (!id || !family || !link) {
+    if (!id || !family || !link || !owns) {
       addDiagnostic(
         diagnostics,
         index.path,
         row[0] ?? table,
         'SPEC007',
-        'Every specification register row must contain an ID, Family, and one document link.',
+        'Every specification register row must contain an ID, Family, one document link, and an Owns value.',
       )
       continue
     }
@@ -341,6 +340,7 @@ function registryEntries(
       family,
       title: textOf(link).trim(),
       path: resolvePath(index.path, decodedPath),
+      owns,
       node: row[0] ?? table,
     })
   }
@@ -682,15 +682,6 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
   }
 }
 
-function headingSlugs(document: ReturnType<typeof parseDocument>): ReadonlySet<string> {
-  const slugger = new GithubSlugger()
-  const slugs = new Set<string>()
-  for (const heading of document.headings) {
-    slugs.add(slugger.slug(headingText(heading)))
-  }
-  return slugs
-}
-
 function validateLinks(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
   const slugCache = new Map<string, ReadonlySet<string>>()
   for (const specification of parsed.specifications) {
@@ -879,7 +870,7 @@ function parseInventory(
     if (!scope) {
       addDiagnostic(diagnostics, specification.path, scopeCell, 'SPEC410', 'Relationship scope must not be empty.')
     }
-    if (destination && ALLOWED_RELATIONSHIPS.has(kind) && scope) {
+    if (destination && isRelationshipKind(kind) && scope) {
       relationships.push({
         inventory,
         owner: specification,
@@ -940,7 +931,10 @@ function validateGraph(rows: readonly RelationshipRow[], kind: string, diagnosti
   }
 }
 
-function validateRelationships(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
+function validateRelationships(
+  specifications: readonly Specification[],
+  diagnostics: Diagnostic[],
+): readonly RelationshipRow[] {
   const byPath = new Map(specifications.map((specification) => [specification.path, specification]))
   const rows = specifications.flatMap((specification) => [
     ...parseInventory(specification, 'Dependencies', byPath, diagnostics),
@@ -986,22 +980,31 @@ function validateRelationships(specifications: readonly Specification[], diagnos
   }
   validateGraph(rows, 'follows', diagnostics)
   validateGraph(rows, 'refines', diagnostics)
+  return rows
 }
 
-function glossaryTerms(
-  specification: Specification,
-  diagnostics: Diagnostic[],
-): readonly { readonly term: string; readonly node: Node }[] {
+function glossaryTerms(specification: Specification, diagnostics: Diagnostic[]): readonly GlossaryTerm[] {
   const glossary = findHeading(specification.document, 1, 'Glossary')
   if (!glossary) return []
-  const terms: { term: string; node: Node }[] = []
+  const terms: GlossaryTerm[] = []
   for (const table of tablesIn(sectionNodes(specification.document, glossary))) {
     const rows = tableRows(table)
     const header = rows[0]?.map((cell) => textOf(cell).trim())
     if (header?.[0] !== 'Term' || header[1] !== 'Definition') continue
     for (const row of rows.slice(1)) {
       const cell = row[0]
-      if (!cell) continue
+      const definitionCell = row[1]
+      const definition = definitionCell ? inlineMarkdown(definitionCell) : ''
+      if (row.length !== 2 || !cell || !definitionCell || !textOf(cell).trim() || !textOf(definitionCell).trim()) {
+        addDiagnostic(
+          diagnostics,
+          specification.path,
+          cell ?? table,
+          'SPEC504',
+          'Every glossary row must contain a nonempty Term and Definition.',
+        )
+        continue
+      }
       const term = textOf(cell).replace(/\s+/g, ' ').trim()
       if (/\//.test(term) || /\b(?:or|aka|a\.k\.a\.)\b/i.test(term)) {
         addDiagnostic(
@@ -1012,14 +1015,18 @@ function glossaryTerms(
           `Glossary term "${term}" must not declare aliases or slash-separated alternatives.`,
         )
       }
-      if (term) terms.push({ term, node: cell })
+      terms.push({ term, definitionMarkdown: definition, specification, node: cell })
     }
   }
   return terms
 }
 
-function validateTerminology(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
+function validateTerminology(
+  specifications: readonly Specification[],
+  diagnostics: Diagnostic[],
+): readonly GlossaryTerm[] {
   const owners = new Map<string, Specification>()
+  const terms: GlossaryTerm[] = []
   for (const specification of specifications) {
     for (const sectionName of ['Relationships', 'Glossary']) {
       const heading = findHeading(specification.document, 1, sectionName)
@@ -1043,6 +1050,7 @@ function validateTerminology(specifications: readonly Specification[], diagnosti
       }
     }
     for (const entry of glossaryTerms(specification, diagnostics)) {
+      terms.push(entry)
       const normalized = entry.term.toLocaleLowerCase('en-US').replace(/\s+/g, ' ')
       const owner = owners.get(normalized)
       if (owner) {
@@ -1058,6 +1066,7 @@ function validateTerminology(specifications: readonly Specification[], diagnosti
       }
     }
   }
+  return terms
 }
 
 function startsWithTodo(node: Node): boolean {
@@ -1246,7 +1255,110 @@ function compareDiagnostics(left: Diagnostic, right: Diagnostic): number {
   )
 }
 
-export function lintSpecifications(input: LintInput): readonly Diagnostic[] {
+function compareText(left: string, right: string): number {
+  return left < right ? -1 : left > right ? 1 : 0
+}
+
+function buildCorpus(
+  parsed: ParsedInput,
+  entries: readonly RegistryEntry[],
+  terms: readonly GlossaryTerm[],
+  relationshipRows: readonly RelationshipRow[],
+): SpecificationCorpus {
+  const entriesByPath = new Map(entries.map((entry) => [entry.path, entry]))
+  const specifications: SpecificationRecord[] = []
+  for (const specification of parsed.specifications) {
+    const entry = entriesByPath.get(specification.path)
+    const scope = specification.metadata.values.get('Scope')
+    if (
+      !entry ||
+      !specification.id ||
+      !isSpecificationFamily(specification.family) ||
+      !isSpecificationStatus(specification.status) ||
+      !scope
+    ) {
+      continue
+    }
+    specifications.push({
+      id: specification.id,
+      family: specification.family,
+      title: specification.title,
+      status: specification.status,
+      scope,
+      owns: entry.owns,
+      path: specification.path,
+    })
+  }
+  specifications.sort((left, right) => compareText(left.id, right.id))
+  const specificationByPath = new Map(specifications.map((specification) => [specification.path, specification]))
+
+  const glossary: GlossaryRecord[] = []
+  for (const entry of terms) {
+    const owner = specificationByPath.get(entry.specification.path)
+    if (!owner) continue
+    glossary.push({
+      term: entry.term,
+      definitionMarkdown: entry.definitionMarkdown,
+      ownerId: owner.id,
+      ownerPath: owner.path,
+      ownerStatus: owner.status,
+    })
+  }
+  glossary.sort(
+    (left, right) =>
+      compareText(
+        left.term.toLocaleLowerCase('en-US').replace(/\s+/g, ' '),
+        right.term.toLocaleLowerCase('en-US').replace(/\s+/g, ' '),
+      ) || compareText(left.ownerId, right.ownerId),
+  )
+
+  const relationships: RelationshipRecord[] = []
+  for (const row of relationshipRows) {
+    if (row.inventory !== 'Dependencies') continue
+    const pair = relationshipPair(row)
+    const dependency = specificationByPath.get(pair.dependency.path)
+    const dependent = specificationByPath.get(pair.dependent.path)
+    if (!dependency || !dependent) continue
+    relationships.push({
+      dependencyId: dependency.id,
+      dependencyPath: dependency.path,
+      dependentId: dependent.id,
+      dependentPath: dependent.path,
+      kind: row.kind,
+      scope: row.scope,
+      origin: 'explicit',
+      sourcePaths: [dependency.path, dependent.path],
+    })
+  }
+  const conventions = specifications.find((specification) => specification.id === 'CONV')
+  if (conventions) {
+    for (const dependent of specifications) {
+      if (dependent.id === conventions.id) continue
+      relationships.push({
+        dependencyId: conventions.id,
+        dependencyPath: conventions.path,
+        dependentId: dependent.id,
+        dependentPath: dependent.path,
+        kind: 'follows',
+        scope: 'Document structure, lifecycle, and writing rules',
+        origin: 'implicit',
+        sourcePaths: [CONVENTIONS_PATH],
+      })
+    }
+  }
+  relationships.sort(
+    (left, right) =>
+      compareText(left.dependencyId, right.dependencyId) ||
+      compareText(left.dependentId, right.dependentId) ||
+      compareText(left.kind, right.kind) ||
+      compareText(left.scope, right.scope) ||
+      compareText(left.origin, right.origin),
+  )
+
+  return { specifications, glossary, relationships }
+}
+
+export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   const diagnostics: Diagnostic[] = []
   const parsed = parseInput(input, diagnostics)
   const index = parsed.specifications.find((specification) => specification.path === parsed.indexPath)
@@ -1254,10 +1366,17 @@ export function lintSpecifications(input: LintInput): readonly Diagnostic[] {
   validateRegistryAndMetadata(parsed, entries, diagnostics)
   validateLayout(parsed.specifications, diagnostics)
   validateLinks(parsed, diagnostics)
-  validateRelationships(parsed.specifications, diagnostics)
-  validateTerminology(parsed.specifications, diagnostics)
+  const relationships = validateRelationships(parsed.specifications, diagnostics)
+  const glossary = validateTerminology(parsed.specifications, diagnostics)
   validateLifecycleAndRequirements(parsed.specifications, diagnostics)
-  return diagnostics.toSorted(compareDiagnostics)
+  return {
+    diagnostics: diagnostics.toSorted(compareDiagnostics),
+    corpus: buildCorpus(parsed, entries, glossary, relationships),
+  }
+}
+
+export function lintSpecifications(input: LintInput): readonly Diagnostic[] {
+  return analyzeSpecifications(input).diagnostics
 }
 
 export function formatDiagnostic(diagnostic: Diagnostic): string {

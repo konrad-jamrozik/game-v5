@@ -16,6 +16,8 @@
     "typecheck": "tsc --build",
     "lint:code": "oxlint . --type-aware --max-warnings 0 --report-unused-disable-directives",
     "lint:specs": "node scripts/lint-specs.ts",
+    "docs:generate": "node scripts/derived-docs.ts generate",
+    "docs:check": "node scripts/derived-docs.ts check",
     "lint": "npm run lint:specs && npm run lint:code",
     "lint:fix": "npm run lint:specs && npm run lint:code -- --fix",
     "format": "prettier . --write",
@@ -26,8 +28,8 @@
     "test:ui": "vitest --ui --watch --no-open",
     "test:coverage": "vitest run --coverage",
     "hooks:install": "git config core.hooksPath .githooks",
-    "check:commit": "npm run lint:specs && npm run format:check && npm run lint:code",
-    "check": "npm run lint:specs && npm run format:check && npm run lint:code && npm run test && npm run build"
+    "check:commit": "npm run lint:specs && npm run docs:check && npm run format:check && npm run lint:code",
+    "check": "npm run lint:specs && npm run docs:check && npm run format:check && npm run lint:code && npm run test && npm run build"
   },
   "devDependencies": {
     "@types/node": "24.13.4",

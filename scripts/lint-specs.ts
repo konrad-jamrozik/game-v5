@@ -27,13 +27,13 @@ export function runSpecificationLint(
   }
 }
 
-async function markdownFiles(root: string, directory: string): Promise<readonly SourceFile[]> {
+export async function collectMarkdownFiles(root: string, directory: string): Promise<readonly SourceFile[]> {
   const entries = await readdir(directory, { withFileTypes: true })
   const files: SourceFile[] = []
   for (const entry of entries) {
     const path = resolve(directory, entry.name)
     if (entry.isDirectory()) {
-      files.push(...(await markdownFiles(root, path)))
+      files.push(...(await collectMarkdownFiles(root, path)))
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
       files.push({
         path: relative(root, path).replace(/\\/g, '/'),
@@ -46,7 +46,7 @@ async function markdownFiles(root: string, directory: string): Promise<readonly 
 
 async function main(): Promise<void> {
   const root = process.cwd()
-  const files = await markdownFiles(root, resolve(root, 'docs'))
+  const files = await collectMarkdownFiles(root, resolve(root, 'docs'))
   process.exitCode = runSpecificationLint(files, process.argv.slice(2), console.error)
 }
 
