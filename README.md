@@ -27,12 +27,14 @@ Open the URL printed by Vite, normally `http://localhost:5173/game-v5/`. Applica
 | `npm run lint:specs`    | Deterministically lint registered specifications     |
 | `npm run lint`          | Run code and specification linting                   |
 | `npm run lint:fix`      | Fix code lint, then check specifications read-only   |
+| `npm run check:commit`  | Run the read-only checks used by the commit hook     |
 | `npm run format`        | Format supported files                               |
 | `npm run format:check`  | Check formatting without editing                     |
 | `npm test`              | Run tests once                                       |
 | `npm run test:watch`    | Watch tests                                          |
 | `npm run test:ui`       | Start the local Vitest UI                            |
 | `npm run test:coverage` | Generate text, HTML, and LCOV reports in `coverage/` |
+| `npm run hooks:install` | Enable the tracked Git hooks for this checkout       |
 | `npm run check`         | Run the same validation used in CI                   |
 
 ## Strictness and tests
@@ -53,6 +55,20 @@ for framework-independent game logic. No browser runner or DOM emulation is inst
 
 The specification linter has the repository's first tests. Coverage is available on demand; there is no initial coverage
 threshold.
+
+## Local Git hooks
+
+Enable the repository's tracked hooks once per checkout or worktree:
+
+```sh
+npm run hooks:install
+```
+
+The pre-commit hook runs specification linting first, followed by formatting and code linting. The pre-push hook runs the
+same validation pipeline as `npm run check` and CI: specification linting, formatting, code linting, tests, type checking,
+and the production build. The hooks invoke the installed project tools directly so Git clients and agents do not depend on
+shell-specific npm initialization. A failing command aborts the Git operation. Git's `--no-verify` option can bypass
+client-side hooks, so CI remains authoritative.
 
 ## Deployment and updates
 

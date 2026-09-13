@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+node scripts/lint-specs.ts
+node node_modules/prettier/bin/prettier.cjs . --check
+node node_modules/oxlint/bin/oxlint . --type-aware --max-warnings 0 --report-unused-disable-directives
