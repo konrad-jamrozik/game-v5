@@ -8,6 +8,7 @@
 | Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                                                                      |
 | Related documents     | [Spec index](README.md), [game design brief](../game-design-brief.md)                                                                                           |
 | Relationship revision | Requested by the project owner: use only Dependencies and Dependents, define implicit relationships centrally, and require one canonical term for each concept. |
+| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                                                            |
 
 # Purpose and boundaries
 
@@ -133,6 +134,8 @@ Rule specifications use the following top-level headings in this order:
 
 Use a metadata table immediately below the document-title H1. Major sections are unnumbered H1 headings and their subsections are H2 headings. Keep stable requirement IDs independent of headings. Appendices follow Open decisions.
 
+Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both must use the universal Purpose and boundaries, Relationships, and Glossary sequence, but they may replace the remaining standard rule-spec sections with governance-specific H1 sections.
+
 ## Handling sections that do not apply
 
 Retain the standard headings for navigation. If a section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
@@ -159,7 +162,7 @@ Long supporting tables may use descriptive appendices after Open decisions. Stat
 
 Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative. Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
 
-Give each implementable requirement a permanent identifier such as **INV-001**. The prefix comes from the index; the number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section and name the ID when referencing a requirement.
+Give each implementable requirement a permanent identifier such as **INV-nnn**, where `nnn` is a three-digit number. The prefix comes from the index; the number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section and name the ID when referencing a requirement.
 
 Stubs do not invent requirement IDs for TODOs. Allocate IDs when actual rules are proposed.
 
@@ -206,6 +209,12 @@ Use relative Markdown links between specifications. For inherited-game evidence,
 Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Proposed rule**, or **Informative rationale** when the distinction could be unclear. Legacy bugs and undocumented implementation quirks are not requirements. A legacy formula can become a proposed rule only by being stated explicitly.
 
 # TODOs and acceptance checklist
+
+## Deterministic validation
+
+Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for registry and metadata agreement, required layout, local links and anchors, relationship inventories and mirrors, acyclic `follows` and `refines` graphs, objectively prohibited terminology, requirement identifiers and references, and status-specific TODO and Open decisions rules. It performs no network access and offers no automatic fixes.
+
+A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, scope sufficiency, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
 
 A TODO states what is missing and what a complete answer must include. Prefer:
 

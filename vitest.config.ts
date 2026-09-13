@@ -5,8 +5,6 @@ export default defineConfig({
     environment: 'node',
     globals: false,
     include: ['test/**/*.test.{ts,js}'],
-    // Remove this allowance when the first real tests are added.
-    passWithNoTests: true,
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,js}'],

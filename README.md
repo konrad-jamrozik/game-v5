@@ -23,8 +23,10 @@ Open the URL printed by Vite, normally `http://localhost:5173/game-v5/`. Applica
 | `npm run build`         | Type-check and build into `dist/`                    |
 | `npm run preview`       | Serve the existing production build locally          |
 | `npm run typecheck`     | Check application, tests, and tooling                |
-| `npm run lint`          | Run type-aware Oxlint; warnings fail                 |
-| `npm run lint:fix`      | Apply available lint fixes                           |
+| `npm run lint:code`     | Run type-aware Oxlint; warnings fail                 |
+| `npm run lint:specs`    | Deterministically lint registered specifications     |
+| `npm run lint`          | Run code and specification linting                   |
+| `npm run lint:fix`      | Fix code lint, then check specifications read-only   |
 | `npm run format`        | Format supported files                               |
 | `npm run format:check`  | Check formatting without editing                     |
 | `npm test`              | Run tests once                                       |
@@ -49,9 +51,8 @@ matches [Vitest's v5.0.0 source](https://github.com/vitest-dev/vitest/blob/v5.0.
 Put unit tests in `test/**/*.test.ts` and import test APIs explicitly from `vitest`. The test environment is Node, suitable
 for framework-independent game logic. No browser runner or DOM emulation is installed.
 
-There are intentionally no example game functions or artificial tests. `passWithNoTests: true` lets the empty starter pass
-CI. **Remove that setting when adding the first real tests**, and remove `test/.gitkeep`. Coverage is available on demand;
-there is no initial coverage threshold.
+The specification linter has the repository's first tests. Coverage is available on demand; there is no initial coverage
+threshold.
 
 ## Deployment and updates
 

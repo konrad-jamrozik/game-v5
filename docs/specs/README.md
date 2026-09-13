@@ -46,9 +46,10 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 
 | ID      | Document                                                                                          | Owns                                                                                                          |
 | ------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| CONV    | [Specification conventions](spec-conventions.md)                                                  | How specifications are written, reviewed, and maintained.                                                     |
+| INDEX   | [Game Specification Index](README.md)                                                             | Specification registration, navigation, and ownership summaries.                                              |
+| CONV    | [Specification Conventions](spec-conventions.md)                                                  | How specifications are written, reviewed, and maintained.                                                     |
 | REL     | [Artifact Relationships](artifact-relationships.md)                                               | Artifact relationship terminology, direction, inventories, and graph validation.                              |
-| PLAN    | [Specification work plan and backlog](work-plan.md)                                               | Specification authoring order, review checkpoints, and work tracking.                                         |
+| PLAN    | [Specification Work Plan and Backlog](work-plan.md)                                               | Specification authoring order, review checkpoints, and work tracking.                                         |
 | DOM     | [Domain Model](foundation/domain-model.md)                                                        | Game concepts, their properties and relationships, and structural domain invariants.                          |
 | MOD     | [Modeling Foundations](foundation/modeling-foundations.md)                                        | Modeling vocabulary, definition boundaries, identity/references, and historical fact preservation.            |
 | ENG     | [Engine Contract](foundation/engine-contract.md)                                                  | Calculation, continuation, information access, and committed-state guarantees.                                |
