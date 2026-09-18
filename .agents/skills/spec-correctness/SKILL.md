@@ -10,11 +10,12 @@ Use this skill when a request concerns the correctness of specifications, their 
 ## Workflow
 
 1. Run `npm run lint:specs` first.
-2. Treat exit code 1 as deterministic findings. Treat exit code 2 as an execution or parser failure, report it separately, and do not describe the specifications as linted.
-3. For a review-only request, report diagnostics without modifying files.
-4. After deterministic linting, review the semantic concerns below.
-5. When the user requests fixes, repair the findings and run `npm run check:commit` after editing. Run focused tests during repair when they provide useful feedback.
-6. Before declaring repository changes complete, run `npm run check` as required by the repository's `AGENTS.md`.
+2. Run `npm run docs:check` after specification linting. Treat missing, stale, or unexpected derived specification views as deterministic findings.
+3. Treat exit code 1 as deterministic findings. Treat exit code 2 as an execution or parser failure, report it separately, and do not describe the specifications as linted.
+4. For a review-only request, report diagnostics without modifying files.
+5. After deterministic linting and derived-document checking, review the semantic concerns below.
+6. When the user requests fixes, repair the findings and run `npm run check:commit` after editing. Run focused tests during repair when they provide useful feedback.
+7. Before declaring repository changes complete, run `npm run check` as required by the repository's `AGENTS.md`.
 
 ## Semantic review
 
