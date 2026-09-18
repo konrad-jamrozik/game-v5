@@ -19,19 +19,10 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                          | Relationship | Scope                                                                         |
-| ------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------- |
-| [TypeScript Player API](./typescript-api.md)                        | `uses`       | Queries, action discovery, commands, results, refresh, and errors             |
-| [Player Information](./player-information.md)                       | `uses`       | Visible fields, relationships, estimates, reports, and information boundaries |
-| [History and Persistence](../foundation/history-and-persistence.md) | `uses`       | Timeline navigation, undo/redo, restored observations, and session behavior   |
-
-## Dependents
-
-| Dependent                                                                                               | Relationship | Scope                                                       |
-| ------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------- |
-| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Browser end-to-end flows and equivalent player interactions |
+- Uses [History and Persistence](../foundation/history-and-persistence.md)
+- Uses [Player Information](./player-information.md)
+- Uses [TypeScript Player API](./typescript-api.md)
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 
 # Glossary
 

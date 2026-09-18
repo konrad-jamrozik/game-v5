@@ -19,24 +19,15 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                        | Relationship | Scope                                                                                           |
-| ------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------- |
-| [Domain Model](../foundation/domain-model.md)     | `refines`    | Mission lifecycle, deployment, provenance, deadlines, battle results, and campaign consequences |
-| [Agents](./agents.md)                             | `uses`       | Deployment eligibility, transit, survivor return, casualties, and assignment changes            |
-| [Combat](./combat.md)                             | `uses`       | Battle-result facts consumed by mission outcome and partial-success rules                       |
-| [Economy and Upgrades](./economy-and-upgrades.md) | `uses`       | Resource rewards, penalties, and shared transport capacity                                      |
-| [Factions](./factions.md)                         | `uses`       | Operation severity, suppression, and faction progression consequences                           |
-
-## Dependents
-
-| Dependent                                                  | Relationship | Scope                                                                            |
-| ---------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
-| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete mission content entries, deadlines, rewards, and consequence parameters |
-| [Leads and Progression](./leads-and-progression.md)        | `uses`       | Mission creation, lifecycle, and outcomes that block or advance leads            |
-| [Player Information](../interfaces/player-information.md)  | `uses`       | Mission state, deadlines, outcomes, and consequence reports                      |
-| [Turn Resolution](../foundation/turn-resolution.md)        | `uses`       | Mission aging, resolution, expiration, and consequence effects                   |
+- Uses [Agents](./agents.md)
+- Uses [Combat](./combat.md)
+- Uses [Economy and Upgrades](./economy-and-upgrades.md)
+- Uses [Factions](./factions.md)
+- Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Leads and Progression](./leads-and-progression.md)
+- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Turn Resolution](../foundation/turn-resolution.md)
+- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 

@@ -1,16 +1,16 @@
 # Specification Conventions
 
-| Metadata              | Value                                                                                                                                                           |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID               | CONV                                                                                                                                                            |
-| Family                | Governance                                                                                                                                                      |
-| Status                | Accepted                                                                                                                                                        |
-| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                                                       |
-| Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                                                                      |
-| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                                                     |
-| Relationship revision | Requested by the project owner: use only Dependencies and Dependents, define implicit relationships centrally, and require one canonical term for each concept. |
-| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                                                            |
-| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                                                           |
+| Metadata              | Value                                                                                                          |
+| --------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Spec ID               | CONV                                                                                                           |
+| Family                | Governance                                                                                                     |
+| Status                | Accepted                                                                                                       |
+| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."      |
+| Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                     |
+| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                    |
+| Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology. |
+| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.           |
+| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                          |
 
 # Purpose and boundaries
 
@@ -18,19 +18,11 @@ Specifications are the durable authority for intended behavior. Code and tests i
 
 These conventions are the accepted working agreement. A stub uses the standard layout, but neither its presence nor its formatting makes unresolved rules accepted.
 
-Do not prescribe internal classes, file organization, libraries, or algorithms unless they affect an observable contract, determinism, compatibility, or an explicit architectural constraint. Exact public TypeScript signatures and the chosen random algorithm are examples of details that belong in specifications.
+Do not prescribe internal classes, file organization, libraries, or algorithms unless they affect an observable contract, determinism, compatibility, or an explicit architectural constraint. For example, exact public TypeScript signatures and the chosen random algorithm belong in specifications.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                          | Relationship | Scope                                         |
-| --------------------------------------------------- | ------------ | --------------------------------------------- |
-| [Artifact Relationships](artifact-relationships.md) | `uses`       | Relationship terminology and inventory format |
-
-## Dependents
-
-Only [implicit dependents](#implicit-relationships).
+- Uses [Artifact Relationships](artifact-relationships.md)
 
 # Glossary
 
@@ -101,7 +93,7 @@ A rule, formula, parameter value, or API field has one authoritative owner. Othe
 
 The following relationships exist without explicit table rows:
 
-1. Every registered specification implicitly depends on Specification Conventions through `follows`, scoped to document structure, lifecycle, and writing rules.
+1. Every registered specification implicitly depends on Specification Conventions through `follows` for document structure, lifecycle, and writing rules.
 2. Specification Conventions consequently has every other registered specification as an implicit Dependent.
 3. An acceptance example or test scenario that explicitly identifies requirements it checks implicitly depends on those requirements through `verifies`.
 4. The checked requirements consequently have that acceptance example or test scenario as an implicit Dependent.
@@ -111,57 +103,80 @@ Implicit relationships are exempt from mirrored table rows.
 
 ## Relationship inventories
 
-Use the relationship kinds and direction defined by [Artifact Relationships](artifact-relationships.md). Every specification contains adjacent `Relationships` and `Glossary` sections immediately after `Purpose and boundaries`. `Relationships` contains exactly the `Dependencies` and `Dependents` subsections, in that order.
+Every registered specification contains adjacent Relationships and Glossary H1 sections immediately after
+Purpose and boundaries. Relationships contains one flat unordered list, without tables or subsections. Each bullet
+describes the current document and consists of a directional phrase followed by one hyperlink whose text is the
+linked document's title. Link to the registered document itself, without an anchor or a scope annotation.
 
-When explicit Dependencies exist, list only this table:
+Use this complete phrase order; omit groups with no entries and sort document titles alphabetically within each group:
 
-| Dependency | Relationship | Scope |
-| ---------- | ------------ | ----- |
+1. Uses
+2. Refines
+3. Follows
+4. Implements
+5. Verifies
+6. Used by
+7. Refined by
+8. Followed by
+9. Implemented by
+10. Verified by
 
-When no explicit Dependencies exist, write exactly:
+Groups are contiguous entries, not headings. For example, Engine Contract contains:
 
-> Only [implicit dependencies](#implicit-relationships).
+- Uses [Modeling Foundations](../foundation/modeling-foundations.md)
 
-The link must resolve to this section from the specification containing it. A registered specification's Dependencies subsection must never say `None.` because its implicit `follows` relationship always applies. Do not mention implicit dependencies beside an explicit table.
+Modeling Foundations contains the mirror:
 
-When explicit Dependents exist, list only this table:
+- Used by [Engine Contract](../foundation/engine-contract.md)
 
-| Dependent | Relationship | Scope |
-| --------- | ------------ | ----- |
+Both entries describe the same relationship. The first five phrases describe the current document as Dependent;
+the last five describe it as Dependency. Reverse-facing phrases are grammatical presentations of the canonical
+relationship kinds, not additional kinds or glossary synonyms.
 
-When no explicit Dependents exist but implicit dependents apply, write exactly:
+List explicit relationships only. When there are none, write exactly **No explicit relationships.** as an unformatted
+paragraph. Do not repeat implicit relationships or the former implicit-only sentences. Every explicit relationship
+must have its mirror with the same Dependency, Dependent, and relationship kind. A document pair may have multiple
+kinds, but duplicate entries of the same kind and direction are invalid. Inventory lists are exhaustive, not example lists.
 
-> Only [implicit dependents](#implicit-relationships).
-
-When neither explicit nor implicit Dependents exist, write `None.` Do not mention implicit dependents beside an explicit table.
-
-Every explicit relationship must appear in both artifacts with the same relationship kind and scope: the Dependent lists the Dependency under Dependencies, and the Dependency lists the Dependent under Dependents. Do not treat ordinary citations or evidence acknowledgements as relationships.
+Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
+contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
+acknowledgements do not create relationships.
 
 ## Canonical terminology
 
+Specifications must strictly follow the owning glossaries. Before using a formal term, consult the existing glossaries
+and use the canonical term for that concept. Introduce a new formal term only when no existing term expresses the
+required concept; add its definition to the appropriate owning Glossary before using it. Ordinary prose words do not
+require glossary entries.
+
 One concept must have exactly one canonical term. Do not introduce synonyms, aliases, inverse labels, slash-separated alternatives, or interchangeable terms for the same concept.
 
-If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. Undefined synonyms or inconsistent terminology block acceptance.
+If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
+replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
+Glossary. If the concepts differ, make their distinct definitions explicit. Unresolved terminology blocks acceptance.
 
 Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
 
 ## Terminology replacements
 
-Use these replacements in the stated modeling context. Canonical modeling terms are owned by the
-[Modeling Foundations glossary](../foundation/modeling-foundations.md#glossary); this table does not redefine them.
+Use the following contextual replacements. This table records prohibited synonyms, not alternative accepted names.
+Canonical terms remain owned by their linked glossaries; this list does not redefine them.
 
-| Avoid                            | Use                 | Context                                                                 |
-| -------------------------------- | ------------------- | ----------------------------------------------------------------------- |
-| Entity ID                        | Instance ID         | Identifying an instantiated object, not its definition.                 |
-| Content definition; template     | Content entry       | Referring to immutable game data.                                       |
-| Evolving campaign facts          | Campaign state      | Describing the data of a particular campaign.                           |
-| Authoritative fact               | Authoritative value | Naming the source-of-truth category.                                    |
-| Computed value; calculated value | Derived value       | Naming the formal category of values calculated from other values.      |
-| Archived; archival               | Historical          | Describing retained past state or events.                               |
-| Deconstructed; destroyed         | Became historical   | Describing a lifecycle transition that retains the instance as history. |
+| INSTEAD OF                       | USE                                                                   | Context                                                                 |
+| -------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Entity ID                        | [Instance ID](../foundation/modeling-foundations.md#glossary)         | Identifying an instantiated object, not its definition.                 |
+| Content definition; template     | [Content entry](../foundation/modeling-foundations.md#glossary)       | Referring to immutable game data.                                       |
+| Evolving campaign facts          | [Campaign state](../foundation/modeling-foundations.md#glossary)      | Describing the data of a particular campaign.                           |
+| Authoritative fact               | [Authoritative value](../foundation/modeling-foundations.md#glossary) | Naming the source-of-truth category.                                    |
+| Computed value; calculated value | [Derived value](../foundation/modeling-foundations.md#glossary)       | Naming the formal category of values calculated from other values.      |
+| Archived; archival               | [Historical](../foundation/modeling-foundations.md#glossary)          | Describing retained past state or events.                               |
+| Deconstructed; destroyed         | [Became historical](../foundation/modeling-foundations.md#glossary)   | Describing a lifecycle transition that retains the instance as history. |
+| Fatigue                          | [Exhaustion](../mechanics/agents.md#glossary)                         | Naming the combatant attribute, its accumulation, or recovery.          |
+| Hit points; hit-point            | [Health](../mechanics/agents.md#glossary)                             | Naming the combatant health attribute.                                  |
+| Past participation               | [Participation history](../foundation/domain-model.md#glossary)       | Naming retained participation facts.                                    |
 
 These are contextual replacements, not a ban on ordinary uses of “definition,” legitimate destruction mechanics,
-or unrelated uses of “configuration.” Historical does not replace named lifecycle states such as Killed or Completed.
+or unrelated uses of “configuration.” Historical does not replace named lifecycle states; for example, Killed and Completed.
 
 When specifying a game concept, state its mutability, whether it can be instantiated, multiplicity with an explicit scope,
 creation and historical transitions, authoritative versus derived values, and which values affect current gameplay versus
@@ -173,7 +188,7 @@ Link to the owning specification for details; explicitly retain unresolved decis
 Rule specifications use the following top-level headings in this order:
 
 1. `# Purpose and boundaries`
-2. `# Relationships`, containing `## Dependencies` and `## Dependents`
+2. `# Relationships`, containing the flat directional inventory
 3. `# Glossary`
 4. `# Concepts and contract`
 5. `# Requirements`
@@ -193,18 +208,13 @@ A missing decision is not "not applicable." For example, a mechanics specificati
 
 ## Specialized material
 
-Add domain-specific subsections under the closest shared heading. The following specializations describe useful content
-shapes within a Family; they do not define additional metadata categories or directories.
+Add domain-specific subsections under the closest shared heading. Examples of useful content shapes within a Family follow; these are not additional metadata categories or directories.
 
-| Specialized material | Typical subsections                                             |
-| -------------------- | --------------------------------------------------------------- |
-| Mechanics rules      | State transitions; formulas; effect timing; information exposed |
-| Numeric contracts    | Representation; rounding; draw order; test vectors              |
-| API contracts        | Functions; preconditions; results and errors; atomicity         |
-| CLI contracts        | Grammar; sessions; output formats; exit codes                   |
-| UI contracts         | Screens; grids and trees; interactions; accessibility           |
-| Content catalogs     | Starting configuration; parameter tables; catalogs; validation  |
-| Acceptance scenarios | Fixture format; scenarios; expected outcomes; traceability      |
+| Specialized material | Examples of subsections                    |
+| -------------------- | ------------------------------------------ |
+| Mechanics rules      | State transitions; formulas; effect timing |
+| Numeric contracts    | Representation; rounding; test vectors     |
+| API contracts        | Functions; preconditions; results          |
 
 Long supporting tables may use descriptive appendices after Open decisions. State whether an appendix is normative or informative. Do not add unrelated top-level categories for a unique feature. If a section repeatedly outgrows its specification, split it into an indexed specification with clear ownership.
 
@@ -212,7 +222,7 @@ Long supporting tables may use descriptive appendices after Open decisions. Stat
 
 Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative. Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
 
-Give each implementable requirement a permanent identifier such as **INVSTG-nnn**, where `nnn` is a three-digit number. The prefix comes from the index; the number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section and name the ID when referencing a requirement.
+Give each implementable requirement a permanent identifier; for example, **INVSTG-nnn**, where `nnn` is a three-digit number. The prefix comes from the index; the number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section and name the ID when referencing a requirement.
 
 Stubs do not invent requirement IDs for TODOs. Allocate IDs when actual rules are proposed.
 
@@ -238,9 +248,22 @@ Public API specifications define exact names, types, argument shapes, outputs, a
 
 Content tables define stable IDs, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit content entry. Use parameter references instead of copying balance values throughout mechanics specifications.
 
+## Illustrative and exhaustive enumerations
+
+Every non-exhaustive enumeration must explicitly use "for example", "e.g.", or an "Examples" label. This applies to
+inline enumerations, bullet lists, and illustrative tables. "Such as", "including", and "illustrates" alone do not
+satisfy the rule. Each illustrative list must contain at most three examples. Do not split one list into smaller
+lists merely to evade this limit. Use the fewest representative examples needed and link to the authoritative
+enumeration when readers need the full set.
+
+Clearly identify exhaustive enumerations and maintain them in their authoritative owner. Elsewhere, reference that
+owner rather than copying the list. Do not shorten exhaustive contracts, procedures, or worked acceptance scenarios
+under the three-example limit, or relabel normative obligations as examples. This distinction prevents illustrative
+lists from looking like complete sets that must grow whenever a new value is added.
+
 # Examples, conformance, and evidence
 
-Every substantial rule must be covered by an acceptance example or a referenced test scenario. Examples identify:
+Every substantial rule must be covered by an acceptance example or a referenced test scenario. Every acceptance example must identify all applicable items in this checklist:
 
 - The requirement IDs exercised and, when needed for reproducibility, the game revision and content fixture.
 - Initial state and inputs, including the seed or random state for stochastic results.
@@ -264,13 +287,13 @@ Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Pro
 
 Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for registry and metadata agreement, required layout, local links and anchors, relationship inventories and mirrors, acyclic `follows` and `refines` graphs, objectively prohibited terminology, requirement identifiers and references, and status-specific TODO and Open decisions rules. It performs no network access and offers no automatic fixes.
 
-A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, scope sufficiency, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
+A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
 
 A TODO states what is missing and what a complete answer must include. Prefer:
 
 > TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful turns, progress-removal behavior, rounding, and a numerical example.
 
-Avoid vague placeholders such as "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation.
+Avoid vague placeholders; for example, "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation.
 
 Use Open decisions to collect unresolved choices and identify affected sections or specifications. A TODO may appear at the exact location of missing content; summarize blocking choices in Open decisions without duplicating entire rules. Do not invent a default to close a TODO unless it is explicitly labeled as a proposal.
 
@@ -278,7 +301,8 @@ Before acceptance, verify:
 
 - Scope and ownership are clear and all references resolve.
 - Explicit and implicit relationships satisfy Artifact Relationships, including mirrored explicit entries.
-- Canonical terminology is consistent and every formal term is defined in the owning Glossary.
+- Canonical terminology is consistent, necessary new formal terms are defined in their owning Glossary, and encountered synonyms are recorded in Terminology replacements.
+- Every illustrative enumeration is explicitly labeled and contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
@@ -291,4 +315,4 @@ When accepted behavior changes, identify affected requirement IDs and dependent 
 
 # Acceptance
 
-Accepted by the project owner through the explicit approval recorded above. This acceptance applies to the conventions only; subject specifications retain their own statuses. The relationship and canonical-terminology revisions were explicitly requested by the project owner. Future changes must be presented as revisions rather than silently changing the accepted agreement.
+Accepted by the project owner through the explicit approval recorded above. This acceptance applies to the conventions only; subject specifications retain their own statuses. The relationship, canonical-terminology, and illustrative-enumeration revisions were explicitly requested by the project owner. Future changes must be presented as revisions rather than silently changing the accepted agreement.

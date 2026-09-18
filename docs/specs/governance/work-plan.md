@@ -29,13 +29,7 @@ the ten-batch order is unchanged. This approval does not accept the subject rule
 
 # Relationships
 
-## Dependencies
-
-Only [implicit dependencies](spec-conventions.md#implicit-relationships).
-
-## Dependents
-
-None.
+No explicit relationships.
 
 # Glossary
 

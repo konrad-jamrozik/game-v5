@@ -19,24 +19,15 @@ RNG algorithm, save encoding, or subsystem mechanics. Accepting it alone does no
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                        | Relationship | Scope                                                                                                                               |
-| ------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [Domain Model](./domain-model.md)                 | `uses`       | Game instances, relationships, game-specific identity scope, and structural invariants                                              |
-| [Modeling Foundations](./modeling-foundations.md) | `uses`       | Authoritative values, derived values, player observations, committed state, references, and historical preservation (MODEL-001–004) |
-
-## Dependents
-
-| Dependent                                                 | Relationship | Scope                                                                                                     |
-| --------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------- |
-| [Developer API](../interfaces/developer-api.md)           | `refines`    | Separate developer inspection and enablement boundary (ENG-003)                                           |
-| [Domain Model](./domain-model.md)                         | `uses`       | Execution, information-access, and committed-state guarantees (ENG-001–004)                               |
-| [History and Persistence](./history-and-persistence.md)   | `refines`    | Session continuation, restoration, and committed-state integrity (ENG-001/002/004)                        |
-| [Numbers and Randomness](./numbers-and-randomness.md)     | `uses`       | Reproducible continuation and non-mutating calculations (ENG-001/002)                                     |
-| [Player Information](../interfaces/player-information.md) | `refines`    | Human/AI information parity, permitted observations, and the player/developer boundary (ENG-003)          |
-| [Turn Resolution](./turn-resolution.md)                   | `refines`    | Phase boundaries, state-read timing, calculation consistency, and committed-state integrity (ENG-001/004) |
-| [TypeScript Player API](../interfaces/typescript-api.md)  | `refines`    | Callable query, information, continuation, and command-integrity guarantees (ENG-001–004)                 |
+- Uses [Domain Model](./domain-model.md)
+- Uses [Modeling Foundations](./modeling-foundations.md)
+- Used by [Domain Model](./domain-model.md)
+- Used by [Numbers and Randomness](./numbers-and-randomness.md)
+- Refined by [Developer API](../interfaces/developer-api.md)
+- Refined by [History and Persistence](./history-and-persistence.md)
+- Refined by [Player Information](../interfaces/player-information.md)
+- Refined by [Turn Resolution](./turn-resolution.md)
+- Refined by [TypeScript Player API](../interfaces/typescript-api.md)
 
 # Glossary
 
@@ -46,7 +37,7 @@ None.
 
 ## Continuation and control
 
-Campaign continuation requires gameplay facts and deterministic bookkeeping, including RNG state, ID-generation state,
+Campaign continuation requires gameplay facts and deterministic bookkeeping; for example, RNG state, ID-generation state,
 and sampled hidden values. The current game build supplies rules and content. ENG-002 defines completeness.
 
 AI memory, UI selections, browser state, and CLI preferences are outside campaign state (DOM-001).
@@ -90,6 +81,8 @@ history unchanged. Broken internal references/invariants
 must be reported as engine/data defects rather than silently repaired into different gameplay outcomes.
 
 ## Preliminary API capabilities
+
+The following capabilities are all required planning coverage, not illustrative examples.
 
 **Informative outline:** the player interface needs campaign creation/resumption, visible-state and relationship queries,
 action discovery/explanations, structured management commands, Advance turn, results/reports, and undo/redo. Session

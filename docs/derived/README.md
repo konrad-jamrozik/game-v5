@@ -29,12 +29,12 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Governance
 
-| ID    | Document                                                                | Status   | Scope                                                                           | Owns                                                                             |
-| ----- | ----------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Accepted | Writing, reviewing, and maintaining game-v5 specifications                      | How specifications are written, reviewed, and maintained.                        |
-| INDEX | [Game Specification Index](../specs/README.md)                          | Draft    | Navigation, document ownership, and spec-development order                      | Specification registration, navigation, and ownership summaries.                 |
-| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Accepted | Specification authoring order, review checkpoints, and backlog tracking         | Specification authoring order, review checkpoints, and work tracking.            |
-| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft    | Relationship terminology, direction, artifact inventories, and graph validation | Artifact relationship terminology, direction, inventories, and graph validation. |
+| ID    | Document                                                                | Status   | Scope                                                                   | Owns                                                                             |
+| ----- | ----------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Accepted | Writing, reviewing, and maintaining game-v5 specifications              | How specifications are written, reviewed, and maintained.                        |
+| INDEX | [Game Specification Index](../specs/README.md)                          | Draft    | Navigation, document ownership, and spec-development order              | Specification registration, navigation, and ownership summaries.                 |
+| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Accepted | Specification authoring order, review checkpoints, and backlog tracking | Specification authoring order, review checkpoints, and work tracking.            |
+| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft    | Relationship terminology, direction, inventories, and graph validation  | Artifact relationship terminology, direction, inventories, and graph validation. |
 
 ## Foundation
 
@@ -51,7 +51,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID      | Document                                                             | Status | Scope                                                                                                         | Owns                                                                                                          |
 | ------- | -------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| AGENT   | [Agents](../specs/mechanics/agents.md)                               | Stub   | Define agent capability, task availability, development, fatigue, and recovery.                               | Define agent capability, task availability, development, fatigue, and recovery.                               |
+| AGENT   | [Agents](../specs/mechanics/agents.md)                               | Stub   | Define agent capability, task availability, development, exhaustion, and recovery.                            | Define agent capability, task availability, development, exhaustion, and recovery.                            |
 | CAMP    | [Campaign](../specs/mechanics/campaign.md)                           | Stub   | Define campaign initialization, global panic, and the conditions that start and end play.                     | Define campaign initialization, global panic, and the conditions that start and end play.                     |
 | COMBAT  | [Combat](../specs/mechanics/combat.md)                               | Stub   | Define fully automatic battles and their reproducible results independently of campaign rewards.              | Define fully automatic battles and their reproducible results independently of campaign rewards.              |
 | ECON    | [Economy and Upgrades](../specs/mechanics/economy-and-upgrades.md)   | Stub   | Define resource flows, personnel purchases, and agency improvements.                                          | Define resource flows, personnel purchases, and agency improvements.                                          |

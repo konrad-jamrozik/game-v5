@@ -81,7 +81,6 @@ function sampleCorpus(): SpecificationCorpus {
         dependentId: 'AAA',
         dependentPath: 'docs/specs/foundation/alpha.md',
         kind: 'follows',
-        scope: 'Document structure, lifecycle, and writing rules',
         origin: 'implicit',
         sourcePaths: ['docs/specs/governance/spec-conventions.md'],
       },
@@ -91,7 +90,6 @@ function sampleCorpus(): SpecificationCorpus {
         dependentId: 'ZZZ',
         dependentPath: 'docs/specs/mechanics/zulu.md',
         kind: 'uses',
-        scope: 'Shared state | flow',
         origin: 'explicit',
         sourcePaths: ['docs/specs/foundation/alpha.md', 'docs/specs/mechanics/zulu.md'],
       },
@@ -101,7 +99,6 @@ function sampleCorpus(): SpecificationCorpus {
         dependentId: 'ZZZ',
         dependentPath: 'docs/specs/mechanics/zulu.md',
         kind: 'refines',
-        scope: 'Detailed Alpha rules',
         origin: 'explicit',
         sourcePaths: ['docs/specs/foundation/alpha.md', 'docs/specs/mechanics/zulu.md'],
       },
@@ -111,7 +108,6 @@ function sampleCorpus(): SpecificationCorpus {
         dependentId: 'AAA',
         dependentPath: 'docs/specs/foundation/alpha.md',
         kind: 'uses',
-        scope: 'Separate result contract',
         origin: 'explicit',
         sourcePaths: ['docs/specs/mechanics/zulu.md', 'docs/specs/foundation/alpha.md'],
       },
@@ -202,7 +198,6 @@ describe('derived specification renderer', () => {
             dependentId: 'CONV',
             dependentPath: 'docs/specs/governance/spec-conventions.md',
             kind: 'refines',
-            scope: 'Engine-specific contract',
             origin: 'explicit',
             sourcePaths: ['docs/specs/foundation/engine-contract.md', 'docs/specs/governance/spec-conventions.md'],
           },
@@ -252,7 +247,6 @@ describe('derived specification renderer', () => {
             dependentId: 'AAA',
             dependentPath: 'docs/specs/foundation/alpha.md',
             kind: 'uses',
-            scope: 'Shared domain',
             origin: 'explicit',
             sourcePaths: ['docs/specs/foundation/domain-model.md', 'docs/specs/foundation/alpha.md'],
           },
@@ -262,7 +256,6 @@ describe('derived specification renderer', () => {
             dependentId: 'CONV',
             dependentPath: 'docs/specs/governance/spec-conventions.md',
             kind: 'uses',
-            scope: 'Relationship terminology',
             origin: 'explicit',
             sourcePaths: [
               'docs/specs/governance/artifact-relationships.md',
@@ -295,7 +288,7 @@ describe('shared specification analysis', () => {
     expect(analysis.diagnostics).toEqual([])
     const explicit = analysis.corpus.relationships.filter((relationship) => relationship.origin === 'explicit')
     const keys = explicit.map((relationship) =>
-      [relationship.dependencyId, relationship.dependentId, relationship.kind, relationship.scope].join('\0'),
+      [relationship.dependencyId, relationship.dependentId, relationship.kind].join('\0'),
     )
     expect(new Set(keys).size).toBe(explicit.length)
     expect(

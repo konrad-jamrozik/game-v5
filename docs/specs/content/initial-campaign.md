@@ -19,34 +19,27 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                     | Relationship | Scope                                                                            |
-| -------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
-| [Modeling Foundations](../foundation/modeling-foundations.md)  | `uses`       | Immutable content entries and typed content-reference semantics (MODEL-001/002)  |
-| [Domain Model](../foundation/domain-model.md)                  | `uses`       | Campaign instance kinds, structural invariants, and game-specific identity scope |
-| [Campaign](../mechanics/campaign.md)                           | `refines`    | Concrete starting configuration, outcome content, and named campaign parameters  |
-| [Leads and Progression](../mechanics/leads-and-progression.md) | `refines`    | Concrete lead content entries, prerequisites, and unlock effects                 |
-| [Missions](../mechanics/missions.md)                           | `refines`    | Concrete mission content entries, deadlines, rewards, and consequence parameters |
-| [Factions](../mechanics/factions.md)                           | `refines`    | Concrete faction content entries, escalation values, and operation pools         |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | `refines`    | Concrete resource, purchase, capacity, and upgrade values                        |
-
-## Dependents
-
-| Dependent                                                                                               | Relationship | Scope                                                                        |
-| ------------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
-| [Campaign](../mechanics/campaign.md)                                                                    | `uses`       | Starting configuration, scenario values, and victory content                 |
-| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Reproducible scenario content, named parameters, and starting configurations |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                            | `uses`       | Purchase prices, upgrade increments, limits, and other named balance values  |
+- Uses [Domain Model](../foundation/domain-model.md)
+- Uses [Modeling Foundations](../foundation/modeling-foundations.md)
+- Refines [Campaign](../mechanics/campaign.md)
+- Refines [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
+- Refines [Factions](../mechanics/factions.md)
+- Refines [Leads and Progression](../mechanics/leads-and-progression.md)
+- Refines [Missions](../mechanics/missions.md)
+- Used by [Campaign](../mechanics/campaign.md)
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 
 # Glossary
 
-Shared modeling terms, including Content entry and Instance, are owned by the
+Shared modeling terms, for example Content entry and Instance, are owned by the
 [Modeling Foundations glossary](../foundation/modeling-foundations.md#glossary).
 
 TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Concepts and contract
+
+Content entries and their references follow MODEL-001 and MODEL-002.
 
 TODO: Specify Scenario ID/version, named balance parameter, content entry ID, starting state, lead graph, enemy, weapon, faction, and mission content entry.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

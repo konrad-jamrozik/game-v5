@@ -20,38 +20,31 @@ historical facts. It does not prescribe storage layout, ID-generation algorithms
 
 # Relationships
 
-## Dependencies
-
-| Dependency                        | Relationship | Scope                                                                                                   |
-| --------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------- |
-| [Domain Model](./domain-model.md) | `uses`       | Campaign instance kinds, their structural relationships, and the game-specific identity scope (DOM-017) |
-
-## Dependents
-
-| Dependent                                                  | Relationship | Scope                                                                                                                               |
-| ---------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [Domain Model](./domain-model.md)                          | `refines`    | Game-specific definition/content entry/instance concepts, instance identity scope, references, and historical facts (MODEL-001–004) |
-| [Engine Contract](./engine-contract.md)                    | `uses`       | Authoritative values, derived values, player observations, committed state, references, and historical preservation (MODEL-001–004) |
-| [History and Persistence](./history-and-persistence.md)    | `refines`    | Storage and restoration details for identity, references, and historical preservation (MODEL-002–004)                               |
-| [Initial Campaign Content](../content/initial-campaign.md) | `uses`       | Immutable content entries and typed content-reference semantics (MODEL-001/002)                                                     |
-| [Numbers and Randomness](./numbers-and-randomness.md)      | `refines`    | Deterministic generation within the identity semantics of MODEL-002                                                                 |
-| [Player Information](../interfaces/player-information.md)  | `uses`       | Player-observation and historical-fact semantics (MODEL-004)                                                                        |
-| [TypeScript Player API](../interfaces/typescript-api.md)   | `uses`       | Identity, typed-reference, and historical-fact semantics (MODEL-002–004)                                                            |
+- Uses [Domain Model](./domain-model.md)
+- Used by [Engine Contract](./engine-contract.md)
+- Used by [Initial Campaign Content](../content/initial-campaign.md)
+- Used by [Player Information](../interfaces/player-information.md)
+- Used by [TypeScript Player API](../interfaces/typescript-api.md)
+- Refined by [Domain Model](./domain-model.md)
+- Refined by [History and Persistence](./history-and-persistence.md)
+- Refined by [Numbers and Randomness](./numbers-and-randomness.md)
 
 # Glossary
 
-| Term                | Definition                                                                                                                 |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Definition          | Declares a game concept, analogous to TypeScript types, interfaces, or classes. Definitions are immutable during gameplay. |
-| Entity              | A definition that can be instantiated.                                                                                     |
-| Instance            | A concrete instantiation of an entity, with its own identity and state.                                                    |
-| Content entry       | Immutable game data, such as a weapon’s name, base damage, and price.                                                      |
-| Campaign state      | Data describing a particular campaign, including its instances, resources, progress, and retained history.                 |
-| Authoritative value | A value treated as established truth rather than recomputed from other values.                                             |
-| Derived value       | A value calculated deterministically from authoritative values and the current rules and content entries.                  |
-| Historical          | Describes retained past state or events; does not by itself imply that gameplay rules cannot consult them.                 |
-| Player observation  | Information deliberately exposed by the engine to an ordinary player                                                       |
-| Committed state     | Complete state before or after an accepted command, not intermediate battle/turn processing                                |
+| Term                | Definition                                                                                                              |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Definition          | Declares a game concept, for example, analogous to a TypeScript interface. Definitions are immutable during gameplay.   |
+| Entity              | A definition that can be instantiated.                                                                                  |
+| Instance            | A concrete instantiation of an entity, with its own identity and state.                                                 |
+| Instance ID         | An identifier for an instance, stable during its lifetime under MODEL-002. DOM-017 defines the campaign identity scope. |
+| Became historical   | A lifecycle transition that retains an instance as history rather than deleting required facts or references.           |
+| Content entry       | Immutable game data, for example, a weapon’s name, base damage, and price.                                              |
+| Campaign state      | Data describing a particular campaign, for example, its instances, resources, and retained history.                     |
+| Authoritative value | A value treated as established truth rather than recomputed from other values.                                          |
+| Derived value       | A value calculated deterministically from authoritative values and the current rules and content entries.               |
+| Historical          | Describes retained past state or events; does not by itself imply that gameplay rules cannot consult them.              |
+| Player observation  | Information deliberately exposed by the engine to an ordinary player                                                    |
+| Committed state     | Complete state before or after an accepted command, not intermediate battle/turn processing                             |
 
 # Concepts and contract
 
@@ -68,19 +61,16 @@ derived value. Visibility is independent: either can be hidden from the player.
 
 ## Authoritative versus derived state
 
-| Authoritative values to preserve                                   | Derived values                                                      |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| Turn, RNG state, ID-generation state                               | Labels and presentation formatting                                  |
-| Money, funding, upgrade acquisitions                               | Effective capacities and upgrade effects                            |
-| Agent attributes, health/fatigue, orders, transit timing facts     | Effective skill, readiness, eligibility, current combat rating      |
-| Investigation progress and sampled hidden difficulty               | Team contribution, true completion probability, permitted estimates |
-| Investigation completions, mission wins, earned unlock facts       | Discovery, availability, progression summaries                      |
-| Faction activity, clocks, suppression, defeat facts                | Visible faction summaries and opportunities                         |
-| Mission origin, deadline facts, deployment, outcome, battle result | Current deployment usage and available transport                    |
-| Historical inputs/values needed to explain past results            | Charts and aggregates over retained history                         |
+Examples of the distinction (not a complete state inventory):
 
-The table illustrates the distinction using Domain Model concepts and engine bookkeeping; their owning specs define
-their detailed meaning. It does not mandate particular records or a complete serialized schema.
+| Authoritative value    | Derived value          |
+| ---------------------- | ---------------------- |
+| Upgrade acquisitions   | Effective capacity     |
+| Agent orders           | Readiness              |
+| Investigation progress | Completion probability |
+
+The owning [Domain Model](domain-model.md#concepts-and-contract) and [Engine Contract](engine-contract.md#concepts-and-contract)
+define the contract. These examples do not mandate records or a serialized schema.
 
 ## Historical values
 

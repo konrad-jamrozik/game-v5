@@ -49,7 +49,6 @@ const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Interfaces',
   'Acceptance',
 ])
-const ALLOWED_RELATIONSHIPS: ReadonlySet<string> = new Set(['follows', 'refines', 'uses', 'implements', 'verifies'])
 const RULE_HEADINGS = [
   'Purpose and boundaries',
   'Relationships',
@@ -97,7 +96,6 @@ interface RelationshipRow {
   readonly owner: Specification
   readonly destination: Specification
   readonly kind: RelationshipKind
-  readonly scope: string
   readonly node: Node
 }
 
@@ -107,10 +105,6 @@ function isSpecificationFamily(value: string | undefined): value is Specificatio
 
 function isSpecificationStatus(value: string | undefined): value is SpecificationStatus {
   return value !== undefined && ALLOWED_STATUSES.has(value)
-}
-
-function isRelationshipKind(value: string): value is RelationshipKind {
-  return ALLOWED_RELATIONSHIPS.has(value)
 }
 
 interface GlossaryTerm {
@@ -624,23 +618,23 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
       )
     }
 
-    if (relationships) {
-      const childHeadings = sectionNodes(specification.document, relationships).filter(isHeading)
-      if (
-        childHeadings.length !== 2 ||
-        childHeadings[0]?.depth !== 2 ||
-        headingText(childHeadings[0]) !== 'Dependencies' ||
-        childHeadings[1]?.depth !== 2 ||
-        headingText(childHeadings[1]) !== 'Dependents'
-      ) {
-        addDiagnostic(
-          diagnostics,
-          specification.path,
-          relationships,
-          'SPEC208',
-          'Relationships must contain exactly Dependencies then Dependents as H2 sections.',
-        )
-      }
+    if (relationships && sectionNodes(specification.document, relationships).some(isHeading)) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        relationships,
+        'SPEC208',
+        'Relationships must be a flat list without subsections.',
+      )
+    }
+    if (relationships && glossary && h1s.indexOf(glossary) !== h1s.indexOf(relationships) + 1) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        relationships,
+        'SPEC207',
+        'Glossary must immediately follow Relationships.',
+      )
     }
     for (const heading of universal) {
       if (heading) validateSectionContent(specification, heading, diagnostics)
@@ -735,151 +729,119 @@ function validateLinks(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
   }
 }
 
-function expectedImplicitSentence(inventory: Inventory, specification: Specification): string | undefined {
-  if (inventory === 'Dependencies') return 'Only implicit dependencies.'
-  if (specification.path === CONVENTIONS_PATH) return 'Only implicit dependents.'
-  return undefined
-}
+const RELATIONSHIP_PHRASES: readonly { phrase: string; kind: RelationshipKind; inventory: Inventory }[] = [
+  { phrase: 'Uses', kind: 'uses', inventory: 'Dependencies' },
+  { phrase: 'Refines', kind: 'refines', inventory: 'Dependencies' },
+  { phrase: 'Follows', kind: 'follows', inventory: 'Dependencies' },
+  { phrase: 'Implements', kind: 'implements', inventory: 'Dependencies' },
+  { phrase: 'Verifies', kind: 'verifies', inventory: 'Dependencies' },
+  { phrase: 'Used by', kind: 'uses', inventory: 'Dependents' },
+  { phrase: 'Refined by', kind: 'refines', inventory: 'Dependents' },
+  { phrase: 'Followed by', kind: 'follows', inventory: 'Dependents' },
+  { phrase: 'Implemented by', kind: 'implements', inventory: 'Dependents' },
+  { phrase: 'Verified by', kind: 'verifies', inventory: 'Dependents' },
+]
 
 function parseInventory(
   specification: Specification,
-  inventory: Inventory,
   specificationsByPath: ReadonlyMap<string, Specification>,
   diagnostics: Diagnostic[],
 ): readonly RelationshipRow[] {
-  const heading = findHeading(specification.document, 2, inventory)
+  const heading = findHeading(specification.document, 1, 'Relationships')
   if (!heading) return []
   const nodes = sectionNodes(specification.document, heading)
-  const tables = tablesIn(nodes)
-  const expectedHeader = [inventory === 'Dependencies' ? 'Dependency' : 'Dependent', 'Relationship', 'Scope']
-  if (tables.length === 0) {
-    const paragraph = nodes.find(isParagraph)
-    const actual = paragraph ? textOf(paragraph).trim() : ''
-    const implicit = expectedImplicitSentence(inventory, specification)
-    if (inventory === 'Dependencies' && actual === 'None.') {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        paragraph ?? heading,
-        'SPEC401',
-        'Dependencies must never say "None." because the implicit dependency applies.',
-      )
-    } else if (implicit) {
-      const link = paragraph ? firstLink(paragraph) : undefined
-      const linkParts = link ? splitUrl(link.url) : undefined
-      const linkedPath = linkParts?.path ? resolvePath(specification.path, linkParts.path) : specification.path
-      if (
-        actual !== implicit ||
-        !link ||
-        linkedPath !== CONVENTIONS_PATH ||
-        linkParts?.fragment !== 'implicit-relationships'
-      ) {
-        addDiagnostic(
-          diagnostics,
-          specification.path,
-          paragraph ?? heading,
-          'SPEC402',
-          `The empty ${inventory} inventory must use the exact implicit-only sentence and link.`,
-        )
-      }
-    } else if (actual !== 'None.') {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        paragraph ?? heading,
-        'SPEC403',
-        'Dependents with no explicit or implicit entries must contain exactly "None.".',
-      )
-    }
+  const only = nodes[0]
+  if (
+    nodes.length === 1 &&
+    only &&
+    isParagraph(only) &&
+    only.children.length === 1 &&
+    only.children[0]?.type === 'text' &&
+    textOf(only) === 'No explicit relationships.'
+  )
     return []
-  }
-  if (tables.length !== 1) {
+  if (nodes.length !== 1 || !only || only.type !== 'list' || only.ordered) {
     addDiagnostic(
       diagnostics,
       specification.path,
       heading,
-      'SPEC404',
-      `${inventory} must contain exactly one relationship table.`,
+      'SPEC401',
+      'Relationships must contain one unordered flat list or exactly "No explicit relationships.".',
     )
-  }
-  const table = tables[0]
-  if (!table) return []
-  const rows = tableRows(table)
-  const header = rows[0]?.map((cell) => textOf(cell).trim())
-  if (header?.length !== 3 || header.some((value, index) => value !== expectedHeader[index])) {
-    addDiagnostic(
-      diagnostics,
-      specification.path,
-      table,
-      'SPEC405',
-      `${inventory} table header must be "${expectedHeader.join(' | ')}".`,
-    )
-  }
-  for (const node of nodes) {
-    if (!isTable(node) && /implicit/i.test(textOf(node))) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        node,
-        'SPEC406',
-        `Explicit ${inventory} inventories must not mention implicit relationships.`,
-      )
-    }
+    return []
   }
   const relationships: RelationshipRow[] = []
-  for (const row of rows.slice(1)) {
-    const destinationCell = row[0]
-    const relationshipCell = row[1]
-    const scopeCell = row[2]
-    if (row.length !== 3 || !destinationCell || !relationshipCell || !scopeCell) {
+  let previousRank = -1
+  let previousTitle = ''
+  for (const item of only.children) {
+    const paragraph = item.children[0]
+    if (
+      item.children.length !== 1 ||
+      !paragraph ||
+      paragraph.type !== 'paragraph' ||
+      paragraph.children.length !== 2 ||
+      paragraph.children[0]?.type !== 'text' ||
+      paragraph.children[1]?.type !== 'link' ||
+      item.checked != null
+    ) {
       addDiagnostic(
         diagnostics,
         specification.path,
-        row[0] ?? table,
+        item,
         'SPEC407',
-        `Every ${inventory} row must contain exactly three cells.`,
+        'Each relationship must contain a directional phrase and one document hyperlink, without annotations.',
       )
       continue
     }
-    const link = firstLink(destinationCell)
-    const linkPath = link ? decodeUrlPart(splitUrl(link.url).path) : undefined
+    const phrase = paragraph.children[0].value
+    const link = paragraph.children[1]
+    const rank = RELATIONSHIP_PHRASES.findIndex((entry) => phrase === entry.phrase + ' ')
+    const entry = RELATIONSHIP_PHRASES[rank]
+    if (!entry) {
+      addDiagnostic(diagnostics, specification.path, item, 'SPEC409', 'Unknown relationship phrase or spelling.')
+      continue
+    }
+    const parts = splitUrl(link.url)
+    const linkPath = decodeUrlPart(parts.path)
     const destination =
-      linkPath && !isExternalUrl(link?.url ?? '')
+      linkPath && !isExternalUrl(link.url) && !parts.fragment
         ? specificationsByPath.get(resolvePath(specification.path, linkPath))
         : undefined
-    const kind = textOf(relationshipCell).trim()
-    const scope = textOf(scopeCell).replace(/\s+/g, ' ').trim()
     if (!destination) {
       addDiagnostic(
         diagnostics,
         specification.path,
-        destinationCell,
+        link,
         'SPEC408',
-        'Relationship destination must link to a registered specification.',
+        'Relationship destination must link to a registered specification document without an anchor.',
       )
+      continue
     }
-    if (!ALLOWED_RELATIONSHIPS.has(kind)) {
+    if (
+      textOf(link) !== destination.title ||
+      link.title != null ||
+      link.children.some((child) => child.type !== 'text')
+    ) {
       addDiagnostic(
         diagnostics,
         specification.path,
-        relationshipCell,
-        'SPEC409',
-        `Relationship kind "${kind}" is not permitted.`,
+        link,
+        'SPEC410',
+        'Relationship link text must be the document title.',
       )
     }
-    if (!scope) {
-      addDiagnostic(diagnostics, specification.path, scopeCell, 'SPEC410', 'Relationship scope must not be empty.')
+    if (rank < previousRank || (rank === previousRank && previousTitle.localeCompare(destination.title, 'en') > 0)) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        item,
+        'SPEC415',
+        'Relationships must follow directional phrase order and alphabetical document-title order within each group.',
+      )
     }
-    if (destination && isRelationshipKind(kind) && scope) {
-      relationships.push({
-        inventory,
-        owner: specification,
-        destination,
-        kind,
-        scope,
-        node: destinationCell,
-      })
-    }
+    previousRank = rank
+    previousTitle = destination.title
+    relationships.push({ inventory: entry.inventory, owner: specification, destination, kind: entry.kind, node: item })
   }
   return relationships
 }
@@ -895,7 +857,7 @@ function relationshipPair(row: RelationshipRow): {
 
 function relationshipKey(row: RelationshipRow): string {
   const pair = relationshipPair(row)
-  return [pair.dependency.path, pair.dependent.path, row.kind, row.scope].join('\u0000')
+  return [pair.dependency.path, pair.dependent.path, row.kind].join('\u0000')
 }
 
 function validateGraph(rows: readonly RelationshipRow[], kind: string, diagnostics: Diagnostic[]): void {
@@ -936,10 +898,7 @@ function validateRelationships(
   diagnostics: Diagnostic[],
 ): readonly RelationshipRow[] {
   const byPath = new Map(specifications.map((specification) => [specification.path, specification]))
-  const rows = specifications.flatMap((specification) => [
-    ...parseInventory(specification, 'Dependencies', byPath, diagnostics),
-    ...parseInventory(specification, 'Dependents', byPath, diagnostics),
-  ])
+  const rows = specifications.flatMap((specification) => parseInventory(specification, byPath, diagnostics))
   const seen = new Set<string>()
   for (const row of rows) {
     const pair = relationshipPair(row)
@@ -974,7 +933,7 @@ function validateRelationships(
         row.owner.path,
         row.node,
         'SPEC413',
-        `Explicit ${row.inventory} row has no mirrored entry with the same relationship kind and scope.`,
+        `Explicit ${row.inventory} row has no mirrored entry with the same relationship kind.`,
       )
     }
   }
@@ -1325,7 +1284,6 @@ function buildCorpus(
       dependentId: dependent.id,
       dependentPath: dependent.path,
       kind: row.kind,
-      scope: row.scope,
       origin: 'explicit',
       sourcePaths: [dependency.path, dependent.path],
     })
@@ -1340,7 +1298,6 @@ function buildCorpus(
         dependentId: dependent.id,
         dependentPath: dependent.path,
         kind: 'follows',
-        scope: 'Document structure, lifecycle, and writing rules',
         origin: 'implicit',
         sourcePaths: [CONVENTIONS_PATH],
       })
@@ -1351,7 +1308,6 @@ function buildCorpus(
       compareText(left.dependencyId, right.dependencyId) ||
       compareText(left.dependentId, right.dependentId) ||
       compareText(left.kind, right.kind) ||
-      compareText(left.scope, right.scope) ||
       compareText(left.origin, right.origin),
   )
 

@@ -180,7 +180,6 @@ function relationshipSort(left: RelationshipRecord, right: RelationshipRecord): 
     compareText(left.dependencyId, right.dependencyId) ||
     compareText(left.dependentId, right.dependentId) ||
     RELATIONSHIP_ORDER.indexOf(left.kind) - RELATIONSHIP_ORDER.indexOf(right.kind) ||
-    compareText(left.scope, right.scope) ||
     compareText(left.origin, right.origin)
   )
 }

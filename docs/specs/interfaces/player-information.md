@@ -19,31 +19,22 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                          | Relationship | Scope                                                                                            |
-| ------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
-| [Engine Contract](../foundation/engine-contract.md)                 | `refines`    | Human/AI information parity, permitted observations, and the player/developer boundary (ENG-003) |
-| [Modeling Foundations](../foundation/modeling-foundations.md)       | `uses`       | Player-observation and historical-fact semantics (MODEL-004)                                     |
-| [Domain Model](../foundation/domain-model.md)                       | `uses`       | Campaign instances, relationships, authoritative values, and hidden state                        |
-| [History and Persistence](../foundation/history-and-persistence.md) | `uses`       | Historical observations, reports, undo, and restored knowledge                                   |
-| [Agents](../mechanics/agents.md)                                    | `uses`       | Agent attributes, assignments, readiness, and career information                                 |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)        | `uses`       | Agency resources, funding, capacities, and upgrade information                                   |
-| [Leads and Progression](../mechanics/leads-and-progression.md)      | `uses`       | Lead discovery, availability, prerequisites, and progression information                         |
-| [Investigations](../mechanics/investigations.md)                    | `uses`       | Visible investigation state, calculated estimates, and uncertainty boundaries                    |
-| [Combat](../mechanics/combat.md)                                    | `uses`       | Player-visible battle results and combat records                                                 |
-| [Missions](../mechanics/missions.md)                                | `uses`       | Mission state, deadlines, outcomes, and consequence reports                                      |
-| [Factions](../mechanics/factions.md)                                | `uses`       | Revealed faction state, activity, operations, suppression, and defeat                            |
-| [Campaign](../mechanics/campaign.md)                                | `uses`       | Campaign status, panic, objectives, and terminal outcomes                                        |
-
-## Dependents
-
-| Dependent                                        | Relationship | Scope                                                                            |
-| ------------------------------------------------ | ------------ | -------------------------------------------------------------------------------- |
-| [Investigations](../mechanics/investigations.md) | `uses`       | Exposure and representation of estimates, uncertainty, and investigation results |
-| [Terminal CLI](./cli.md)                         | `uses`       | Human-readable and machine-readable fields, visibility, and reports              |
-| [TypeScript Player API](./typescript-api.md)     | `uses`       | Observation shapes, reveal conditions, action discovery, reports, and errors     |
-| [Web UI](./web-ui.md)                            | `uses`       | Visible fields, relationships, estimates, reports, and information boundaries    |
+- Uses [Agents](../mechanics/agents.md)
+- Uses [Campaign](../mechanics/campaign.md)
+- Uses [Combat](../mechanics/combat.md)
+- Uses [Domain Model](../foundation/domain-model.md)
+- Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
+- Uses [Factions](../mechanics/factions.md)
+- Uses [History and Persistence](../foundation/history-and-persistence.md)
+- Uses [Investigations](../mechanics/investigations.md)
+- Uses [Leads and Progression](../mechanics/leads-and-progression.md)
+- Uses [Missions](../mechanics/missions.md)
+- Uses [Modeling Foundations](../foundation/modeling-foundations.md)
+- Refines [Engine Contract](../foundation/engine-contract.md)
+- Used by [Investigations](../mechanics/investigations.md)
+- Used by [Terminal CLI](./cli.md)
+- Used by [TypeScript Player API](./typescript-api.md)
+- Used by [Web UI](./web-ui.md)
 
 # Glossary
 
@@ -51,6 +42,8 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+Player observations follow ENG-003; historical explanations preserve MODEL-004.
 
 TODO: Specify Player observation, known/unknown field, derived estimate, action explanation, report, history visibility, and dev-only information.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

@@ -19,23 +19,14 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                        | Relationship | Scope                                                                            |
-| ----------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
-| [Domain Model](../foundation/domain-model.md)                     | `refines`    | Faction lifecycle, activity, operation provenance, suppression, and defeat facts |
-| [Numbers and Randomness](../foundation/numbers-and-randomness.md) | `uses`       | Escalation arithmetic, timing distributions, and operation selection             |
-| [Leads and Progression](./leads-and-progression.md)               | `uses`       | Faction-linked discovery, progression, and defeat effects on leads               |
-
-## Dependents
-
-| Dependent                                                  | Relationship | Scope                                                                           |
-| ---------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
-| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete faction content entries, escalation values, and operation pools        |
-| [Leads and Progression](./leads-and-progression.md)        | `uses`       | Faction discovery, progression, and defeat states that affect lead availability |
-| [Missions](./missions.md)                                  | `uses`       | Operation severity, suppression, and faction progression consequences           |
-| [Player Information](../interfaces/player-information.md)  | `uses`       | Revealed faction state, activity, operations, suppression, and defeat           |
-| [Turn Resolution](../foundation/turn-resolution.md)        | `uses`       | Escalation, operation generation, suppression, and defeat effects               |
+- Uses [Leads and Progression](./leads-and-progression.md)
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Leads and Progression](./leads-and-progression.md)
+- Used by [Missions](./missions.md)
+- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Turn Resolution](../foundation/turn-resolution.md)
+- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 

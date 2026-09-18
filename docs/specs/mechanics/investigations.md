@@ -19,22 +19,13 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                        | Relationship | Scope                                                                             |
-| ----------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------- |
-| [Domain Model](../foundation/domain-model.md)                     | `refines`    | Investigation attempts, lifecycle, teams, progress facts, and abandonment         |
-| [Numbers and Randomness](../foundation/numbers-and-randomness.md) | `uses`       | Progress arithmetic, hidden-difficulty sampling, probability, draws, and rounding |
-| [Agents](./agents.md)                                             | `uses`       | Team contribution, transit, exhaustion, withdrawal, and assignment effects        |
-| [Leads and Progression](./leads-and-progression.md)               | `uses`       | Lead eligibility, repeatability, completion facts, and unlock effects             |
-| [Player Information](../interfaces/player-information.md)         | `uses`       | Exposure and representation of estimates, uncertainty, and investigation results  |
-
-## Dependents
-
-| Dependent                                                 | Relationship | Scope                                                                         |
-| --------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------- |
-| [Player Information](../interfaces/player-information.md) | `uses`       | Visible investigation state, calculated estimates, and uncertainty boundaries |
-| [Turn Resolution](../foundation/turn-resolution.md)       | `uses`       | Progress, completion, team-change, and abandonment effects                    |
+- Uses [Agents](./agents.md)
+- Uses [Leads and Progression](./leads-and-progression.md)
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Uses [Player Information](../interfaces/player-information.md)
+- Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Turn Resolution](../foundation/turn-resolution.md)
 
 # Glossary
 

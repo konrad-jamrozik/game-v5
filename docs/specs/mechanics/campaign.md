@@ -19,21 +19,12 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                 | Relationship | Scope                                                                           |
-| ---------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
-| [Domain Model](../foundation/domain-model.md)              | `refines`    | Campaign initialization, global progression facts, panic, and terminal outcomes |
-| [Turn Resolution](../foundation/turn-resolution.md)        | `uses`       | Timing and precedence for turn counters, panic, and outcome evaluation          |
-| [Initial Campaign Content](../content/initial-campaign.md) | `uses`       | Starting configuration, scenario values, and victory content                    |
-
-## Dependents
-
-| Dependent                                                  | Relationship | Scope                                                                           |
-| ---------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
-| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete starting configuration, outcome content, and named campaign parameters |
-| [Player Information](../interfaces/player-information.md)  | `uses`       | Campaign status, panic, objectives, and terminal outcomes                       |
-| [Turn Resolution](../foundation/turn-resolution.md)        | `uses`       | Turn counters, panic, and terminal-outcome evaluation                           |
+- Uses [Initial Campaign Content](../content/initial-campaign.md)
+- Uses [Turn Resolution](../foundation/turn-resolution.md)
+- Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Turn Resolution](../foundation/turn-resolution.md)
+- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 
@@ -50,7 +41,7 @@ appropriate to this document.
 
 ## Initialization
 
-TODO: Specify how the scenario and seed produce initial state, including roster, resources, progression, factions, and counters; link exact content values to INIT.
+TODO: Specify how the scenario and seed produce initial state, covering all of these required areas: roster, resources, progression, factions, and counters; link exact content values to INIT.
 
 ## Panic and endings
 

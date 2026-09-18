@@ -20,8 +20,7 @@ Most scenarios can exercise the game through the TypeScript Player API without a
 CLI or web UI to verify that equivalent actions produce equivalent results and respect the same information boundary.
 This document describes the test cases; the executable tests and their test framework belong to implementation work.
 
-Individual mechanics specs keep examples of their own rules. This document connects those rules across systems, such
-as investigation completion creating a mission whose result changes agent health, agency resources, and progression.
+Individual mechanics specs keep examples of their own rules. This document connects those rules across systems, for example, investigation completion creating a mission whose result changes agent health, agency resources, and progression.
 Expected results must reference the owning rules; scenarios cannot introduce new mechanics. Strategic playtesting
 assesses whether the game is interesting and balanced separately from these exact behavior checks.
 
@@ -32,20 +31,12 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                          | Relationship | Scope                                                                        |
-| ------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
-| [Initial Campaign Content](../content/initial-campaign.md)          | `uses`       | Reproducible scenario content, named parameters, and starting configurations |
-| [Turn Resolution](../foundation/turn-resolution.md)                 | `uses`       | Cross-system phase order, state-read timing, and same-turn effects           |
-| [History and Persistence](../foundation/history-and-persistence.md) | `uses`       | Replay, save/load, undo/redo, branching, and restored-state fixtures         |
-| [TypeScript Player API](../interfaces/typescript-api.md)            | `uses`       | Primary integration-test actions, observations, results, and errors          |
-| [Terminal CLI](../interfaces/cli.md)                                | `uses`       | CLI end-to-end flows and machine-readable output                             |
-| [Web UI](../interfaces/web-ui.md)                                   | `uses`       | Browser end-to-end flows and equivalent player interactions                  |
-
-## Dependents
-
-None.
+- Uses [History and Persistence](../foundation/history-and-persistence.md)
+- Uses [Initial Campaign Content](../content/initial-campaign.md)
+- Uses [Terminal CLI](../interfaces/cli.md)
+- Uses [Turn Resolution](../foundation/turn-resolution.md)
+- Uses [TypeScript Player API](../interfaces/typescript-api.md)
+- Uses [Web UI](../interfaces/web-ui.md)
 
 # Glossary
 

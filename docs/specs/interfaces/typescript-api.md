@@ -19,24 +19,15 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                          | Relationship | Scope                                                                                     |
-| ------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------- |
-| [Engine Contract](../foundation/engine-contract.md)                 | `refines`    | Callable query, information, continuation, and command-integrity guarantees (ENG-001–004) |
-| [Modeling Foundations](../foundation/modeling-foundations.md)       | `uses`       | Identity, typed-reference, and historical-fact semantics (MODEL-002–004)                  |
-| [Domain Model](../foundation/domain-model.md)                       | `uses`       | Campaign instances, relationships, identifiers, and structural invariants                 |
-| [History and Persistence](../foundation/history-and-persistence.md) | `uses`       | Session lifecycle, persistence, undo/redo, branching, and stale handles                   |
-| [Player Information](./player-information.md)                       | `uses`       | Observation shapes, reveal conditions, action discovery, reports, and errors              |
-
-## Dependents
-
-| Dependent                                                                                               | Relationship | Scope                                                                       |
-| ------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
-| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Primary integration-test actions, observations, results, and errors         |
-| [Developer API](./developer-api.md)                                                                     | `uses`       | Separation from ordinary player capabilities, observations, and errors      |
-| [Terminal CLI](./cli.md)                                                                                | `uses`       | Session lifecycle, action discovery, queries, commands, results, and errors |
-| [Web UI](./web-ui.md)                                                                                   | `uses`       | Queries, action discovery, commands, results, refresh, and errors           |
+- Uses [Domain Model](../foundation/domain-model.md)
+- Uses [History and Persistence](../foundation/history-and-persistence.md)
+- Uses [Modeling Foundations](../foundation/modeling-foundations.md)
+- Uses [Player Information](./player-information.md)
+- Refines [Engine Contract](../foundation/engine-contract.md)
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
+- Used by [Developer API](./developer-api.md)
+- Used by [Terminal CLI](./cli.md)
+- Used by [Web UI](./web-ui.md)
 
 # Glossary
 
@@ -44,6 +35,8 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+Public operations preserve ENG-001 through ENG-004 and MODEL-001 through MODEL-004.
 
 TODO: Specify Game/session handle, observation, command arguments, action discovery, validation result, structured error, and state revision.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

@@ -47,7 +47,6 @@ export interface RelationshipRecord {
   readonly dependentId: string
   readonly dependentPath: string
   readonly kind: RelationshipKind
-  readonly scope: string
   readonly origin: 'explicit' | 'implicit'
   readonly sourcePaths: readonly string[]
 }

@@ -19,26 +19,17 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                   | Relationship | Scope                                                                                                     |
-| ------------------------------------------------------------ | ------------ | --------------------------------------------------------------------------------------------------------- |
-| [Engine Contract](./engine-contract.md)                      | `refines`    | Phase boundaries, state-read timing, calculation consistency, and committed-state integrity (ENG-001/004) |
-| [Domain Model](./domain-model.md)                            | `uses`       | Campaign instances, state transitions, and structural invariants                                          |
-| [Numbers and Randomness](./numbers-and-randomness.md)        | `uses`       | Deterministic draw ordering and numeric effect application                                                |
-| [Agents](../mechanics/agents.md)                             | `uses`       | Transit, task contribution, fatigue, recovery, and assignment transitions                                 |
-| [Investigations](../mechanics/investigations.md)             | `uses`       | Progress, completion, team-change, and abandonment effects                                                |
-| [Missions](../mechanics/missions.md)                         | `uses`       | Mission aging, resolution, expiration, and consequence effects                                            |
-| [Factions](../mechanics/factions.md)                         | `uses`       | Escalation, operation generation, suppression, and defeat effects                                         |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md) | `uses`       | Income, upkeep, capacity, and upgrade timing                                                              |
-| [Campaign](../mechanics/campaign.md)                         | `uses`       | Turn counters, panic, and terminal-outcome evaluation                                                     |
-
-## Dependents
-
-| Dependent                                                                                               | Relationship | Scope                                                                  |
-| ------------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------- |
-| [Campaign](../mechanics/campaign.md)                                                                    | `uses`       | Timing and precedence for turn counters, panic, and outcome evaluation |
-| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Cross-system phase order, state-read timing, and same-turn effects     |
+- Uses [Agents](../mechanics/agents.md)
+- Uses [Campaign](../mechanics/campaign.md)
+- Uses [Domain Model](./domain-model.md)
+- Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
+- Uses [Factions](../mechanics/factions.md)
+- Uses [Investigations](../mechanics/investigations.md)
+- Uses [Missions](../mechanics/missions.md)
+- Uses [Numbers and Randomness](./numbers-and-randomness.md)
+- Refines [Engine Contract](./engine-contract.md)
+- Used by [Campaign](../mechanics/campaign.md)
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 
 # Glossary
 
@@ -46,6 +37,8 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+Phase ordering and state-read timing must preserve ENG-001 and ENG-004.
 
 TODO: Specify Turn number, management command, turn advancement, phase input, produced effect, and report boundary.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

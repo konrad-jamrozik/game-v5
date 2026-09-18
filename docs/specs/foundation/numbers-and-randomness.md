@@ -19,24 +19,15 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                        | Relationship | Scope                                                                 |
-| ------------------------------------------------- | ------------ | --------------------------------------------------------------------- |
-| [Modeling Foundations](./modeling-foundations.md) | `refines`    | Deterministic generation within the identity semantics of MODEL-002   |
-| [Engine Contract](./engine-contract.md)           | `uses`       | Reproducible continuation and non-mutating calculations (ENG-001/002) |
-
-## Dependents
-
-| Dependent                                                    | Relationship | Scope                                                                             |
-| ------------------------------------------------------------ | ------------ | --------------------------------------------------------------------------------- |
-| [Agents](../mechanics/agents.md)                             | `uses`       | Attribute arithmetic, thresholds, rounding, and reproducible random effects       |
-| [Combat](../mechanics/combat.md)                             | `uses`       | Combat arithmetic, rounding, draw sites, and deterministic ordering               |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md) | `uses`       | Money, funding, costs, attribute changes, and rounding                            |
-| [Factions](../mechanics/factions.md)                         | `uses`       | Escalation arithmetic, timing distributions, and operation selection              |
-| [History and Persistence](./history-and-persistence.md)      | `uses`       | RNG and ID-generation state required for replay and restoration                   |
-| [Investigations](../mechanics/investigations.md)             | `uses`       | Progress arithmetic, hidden-difficulty sampling, probability, draws, and rounding |
-| [Turn Resolution](./turn-resolution.md)                      | `uses`       | Deterministic draw ordering and numeric effect application                        |
+- Uses [Engine Contract](./engine-contract.md)
+- Refines [Modeling Foundations](./modeling-foundations.md)
+- Used by [Agents](../mechanics/agents.md)
+- Used by [Combat](../mechanics/combat.md)
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
+- Used by [Factions](../mechanics/factions.md)
+- Used by [History and Persistence](./history-and-persistence.md)
+- Used by [Investigations](../mechanics/investigations.md)
+- Used by [Turn Resolution](./turn-resolution.md)
 
 # Glossary
 
@@ -44,6 +35,8 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+Deterministic identity generation must preserve MODEL-002; calculations and continuation follow ENG-001 and ENG-002.
 
 TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, seeds, generator state, draws, and deterministic IDs.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

@@ -14,13 +14,7 @@ the current specification-development status. It does not define gameplay behavi
 
 # Relationships
 
-## Dependencies
-
-Only [implicit dependencies](governance/spec-conventions.md#implicit-relationships).
-
-## Dependents
-
-None.
+No explicit relationships.
 
 # Glossary
 
@@ -58,7 +52,7 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 | TURN    | Foundation | [Turn Resolution](foundation/turn-resolution.md)                                                     | Define exactly when subsystem rules run and which state each phase reads.                                            |
 | HIST    | Foundation | [History and Persistence](foundation/history-and-persistence.md)                                     | Define reversible sessions, reproducible replay, and durable save/load behavior.                                     |
 | CAMP    | Mechanics  | [Campaign](mechanics/campaign.md)                                                                    | Define campaign initialization, global panic, and the conditions that start and end play.                            |
-| AGENT   | Mechanics  | [Agents](mechanics/agents.md)                                                                        | Define agent capability, task availability, development, fatigue, and recovery.                                      |
+| AGENT   | Mechanics  | [Agents](mechanics/agents.md)                                                                        | Define agent capability, task availability, development, exhaustion, and recovery.                                   |
 | ECON    | Mechanics  | [Economy and Upgrades](mechanics/economy-and-upgrades.md)                                            | Define resource flows, personnel purchases, and agency improvements.                                                 |
 | LEAD    | Mechanics  | [Leads and Progression](mechanics/leads-and-progression.md)                                          | Define the progression graph and the lifecycle of lead opportunities, separately from investigation attempts.        |
 | INVSTG  | Mechanics  | [Investigations](mechanics/investigations.md)                                                        | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs.                |

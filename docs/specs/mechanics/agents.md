@@ -1,45 +1,43 @@
 # Agents
 
-| Metadata    | Value                                                                           |
-| ----------- | ------------------------------------------------------------------------------- |
-| Spec ID     | AGENT                                                                           |
-| Family      | Mechanics                                                                       |
-| Status      | Stub                                                                            |
-| Scope       | Define agent capability, task availability, development, fatigue, and recovery. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                  |
+| Metadata    | Value                                                                              |
+| ----------- | ---------------------------------------------------------------------------------- |
+| Spec ID     | AGENT                                                                              |
+| Family      | Mechanics                                                                          |
+| Status      | Stub                                                                               |
+| Scope       | Define agent capability, task availability, development, exhaustion, and recovery. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                     |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
 # Purpose and boundaries
 
-Define agent capability, task availability, development, fatigue, and recovery.
+Define agent capability, task availability, development, exhaustion, and recovery.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                        | Relationship | Scope                                                                            |
-| ----------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
-| [Domain Model](../foundation/domain-model.md)                     | `refines`    | Agent lifecycle, assignments, task phases, attributes, and participation history |
-| [Numbers and Randomness](../foundation/numbers-and-randomness.md) | `uses`       | Attribute arithmetic, thresholds, rounding, and reproducible random effects      |
-
-## Dependents
-
-| Dependent                                                 | Relationship | Scope                                                                                |
-| --------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------ |
-| [Combat](./combat.md)                                     | `uses`       | Agent capability, effective skill, health, exhaustion, and experience changes        |
-| [Economy and Upgrades](./economy-and-upgrades.md)         | `uses`       | Hiring, dismissal, roster eligibility, and agent-facing upgrade effects              |
-| [Investigations](./investigations.md)                     | `uses`       | Team contribution, transit, exhaustion, withdrawal, and assignment effects           |
-| [Missions](./missions.md)                                 | `uses`       | Deployment eligibility, transit, survivor return, casualties, and assignment changes |
-| [Player Information](../interfaces/player-information.md) | `uses`       | Agent attributes, assignments, readiness, and career information                     |
-| [Turn Resolution](../foundation/turn-resolution.md)       | `uses`       | Transit, task contribution, fatigue, recovery, and assignment transitions            |
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Combat](./combat.md)
+- Used by [Economy and Upgrades](./economy-and-upgrades.md)
+- Used by [Investigations](./investigations.md)
+- Used by [Missions](./missions.md)
+- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Turn Resolution](../foundation/turn-resolution.md)
 
 # Glossary
 
-TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
+Shared entity terms are owned by the [Domain Model glossary](../foundation/domain-model.md#glossary).
+
+| Term       | Definition                                                                                                          |
+| ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| Health     | The combatant attribute bounded by zero and maximum health under DOM-008.                                           |
+| Exhaustion | The nonnegative combatant attribute governed by DOM-008; accumulation, caps, and recovery await this specification. |
+
+TODO: Define remaining local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
 # Concepts and contract
@@ -60,7 +58,7 @@ TODO: Provide a transition table for standby, contracting, training, investigati
 
 ## Growth and recovery
 
-TODO: Specify training, task exhaustion, fatigue recovery, injury recovery, forced withdrawal, and career tracking. Link combat experience rules to COMBAT and economic effects to ECON.
+TODO: Specify training, task exhaustion, exhaustion recovery, injury recovery, forced withdrawal, and career tracking. Link combat experience rules to COMBAT and economic effects to ECON.
 
 TODO: Assign stable AGENT-NNN requirement IDs when concrete rules replace these placeholders.
 

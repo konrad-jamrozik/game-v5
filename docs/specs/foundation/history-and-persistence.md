@@ -19,38 +19,33 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                            | Relationship | Scope                                                                                                 |
-| ----------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------- |
-| [Modeling Foundations](./modeling-foundations.md)     | `refines`    | Storage and restoration details for identity, references, and historical preservation (MODEL-002–004) |
-| [Engine Contract](./engine-contract.md)               | `refines`    | Session continuation, restoration, and committed-state integrity (ENG-001/002/004)                    |
-| [Domain Model](./domain-model.md)                     | `uses`       | Campaign instances, references, and structural invariants restored by history operations              |
-| [Numbers and Randomness](./numbers-and-randomness.md) | `uses`       | RNG and ID-generation state required for replay and restoration                                       |
-
-## Dependents
-
-| Dependent                                                                                               | Relationship | Scope                                                                       |
-| ------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
-| [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | `uses`       | Replay, save/load, undo/redo, branching, and restored-state fixtures        |
-| [Developer API](../interfaces/developer-api.md)                                                         | `uses`       | Snapshot, restoration, replay, and debug-mutation history behavior          |
-| [Player Information](../interfaces/player-information.md)                                               | `uses`       | Historical observations, reports, undo, and restored knowledge              |
-| [Terminal CLI](../interfaces/cli.md)                                                                    | `uses`       | Save/load, undo/redo, branching, and session behavior                       |
-| [TypeScript Player API](../interfaces/typescript-api.md)                                                | `uses`       | Session lifecycle, persistence, undo/redo, branching, and stale handles     |
-| [Web UI](../interfaces/web-ui.md)                                                                       | `uses`       | Timeline navigation, undo/redo, restored observations, and session behavior |
+- Uses [Domain Model](./domain-model.md)
+- Uses [Numbers and Randomness](./numbers-and-randomness.md)
+- Refines [Engine Contract](./engine-contract.md)
+- Refines [Modeling Foundations](./modeling-foundations.md)
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
+- Used by [Developer API](../interfaces/developer-api.md)
+- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Terminal CLI](../interfaces/cli.md)
+- Used by [TypeScript Player API](../interfaces/typescript-api.md)
+- Used by [Web UI](../interfaces/web-ui.md)
 
 # Glossary
 
-TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
+| Term    | Definition                                                                                                   |
+| ------- | ------------------------------------------------------------------------------------------------------------ |
+| Session | The owner of current campaign state, history navigation, and controller state that must follow that history. |
+
+TODO: Define remaining local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
 # Concepts and contract
 
 ## Session
 
-**Draft definition migrated from Domain Model:** Session is the owner of current campaign state, history navigation,
-and any controller state that must follow that history, such as persistent AI strategy memory. This definition does
-not resolve the storage/restoration TODOs below or promote this specification from Stub.
+The [Session definition](#glossary) was migrated from Domain Model and remains a draft. Controller state can include,
+for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved; this specification stays Stub.
+Storage and restoration must preserve MODEL-002 through MODEL-004 and ENG-001, ENG-002, and ENG-004.
 
 ## Remaining contract details
 

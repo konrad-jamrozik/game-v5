@@ -4,7 +4,7 @@ import { relative, resolve } from 'node:path'
 import { describe, expect, test } from 'vitest'
 
 import { runSpecificationLint } from '../scripts/lint-specs.ts'
-import { lintSpecifications } from '../scripts/spec-linter/linter.ts'
+import { analyzeSpecifications, lintSpecifications } from '../scripts/spec-linter/linter.ts'
 import type { SourceFile } from '../scripts/spec-linter/types.ts'
 
 function lines(values: readonly string[]): string {
@@ -31,13 +31,7 @@ function validCorpus(): SourceFile[] {
         '',
         '# Relationships',
         '',
-        '## Dependencies',
-        '',
-        'Only [implicit dependencies](governance/spec-conventions.md#implicit-relationships).',
-        '',
-        '## Dependents',
-        '',
-        'None.',
+        'No explicit relationships.',
         '',
         '# Glossary',
         '',
@@ -70,13 +64,7 @@ function validCorpus(): SourceFile[] {
         '',
         '# Relationships',
         '',
-        '## Dependencies',
-        '',
-        'Only [implicit dependencies](#implicit-relationships).',
-        '',
-        '## Dependents',
-        '',
-        'Only [implicit dependents](#implicit-relationships).',
+        'No explicit relationships.',
         '',
         '# Glossary',
         '',
@@ -103,17 +91,11 @@ function validCorpus(): SourceFile[] {
         '',
         '# Purpose and boundaries',
         '',
-        'Alpha purpose.',
+        'Alpha purpose. See [conventions](../governance/spec-conventions.md#implicit-relationships).',
         '',
         '# Relationships',
         '',
-        '## Dependencies',
-        '',
-        'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
-        '',
-        '## Dependents',
-        '',
-        'None.',
+        'No explicit relationships.',
         '',
         '# Glossary',
         '',
@@ -151,58 +133,27 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
   const files = validCorpus()
   const alpha = files[2]
   if (!alpha) return files
+  const active = { follows: 'Follows', refines: 'Refines', uses: 'Uses' }[kind]
+  const passive = { follows: 'Followed by', refines: 'Refined by', uses: 'Used by' }[kind]
   const betaContent = alpha.content
     .replaceAll('Alpha', 'Beta')
     .replaceAll('AAA', 'BBB')
-    .replace(
-      'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
-      lines([
-        '| Dependency | Relationship | Scope |',
-        '| --- | --- | --- |',
-        `| [Alpha](alpha.md) | \`${kind}\` | Shared contract | `,
-      ]),
-    )
-    .replace(
-      'None.\n\n# Glossary',
-      lines([
-        '| Dependent | Relationship | Scope |',
-        '| --- | --- | --- |',
-        `| [Alpha](alpha.md) | \`${kind}\` | Shared contract | `,
-        '',
-        '# Glossary',
-      ]),
-    )
+    .replace('No explicit relationships.', '- ' + active + ' [Alpha](alpha.md)\n- ' + passive + ' [Alpha](alpha.md)')
   const withBeta = mutate(
     files,
     'docs/specs/README.md',
     '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
-    lines([
-      '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
-      '| BBB | Foundation | [Beta](foundation/beta.md) | Beta rules. |',
-    ]),
+    '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |\n| BBB | Foundation | [Beta](foundation/beta.md) | Beta rules. |',
   )
-  const withAlphaCycle = mutate(
-    mutate(
+  return [
+    ...mutate(
       withBeta,
-      'docs/specs/foundation/alpha.md',
-      'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
-      lines([
-        '| Dependency | Relationship | Scope |',
-        '| --- | --- | --- |',
-        `| [Beta](beta.md) | \`${kind}\` | Shared contract | `,
-      ]),
+      alpha.path,
+      'No explicit relationships.',
+      '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)',
     ),
-    'docs/specs/foundation/alpha.md',
-    'None.\n\n# Glossary',
-    lines([
-      '| Dependent | Relationship | Scope |',
-      '| --- | --- | --- |',
-      `| [Beta](beta.md) | \`${kind}\` | Shared contract | `,
-      '',
-      '# Glossary',
-    ]),
-  )
-  return [...withAlphaCycle, { path: 'docs/specs/foundation/beta.md', content: betaContent }]
+    { path: 'docs/specs/foundation/beta.md', content: betaContent },
+  ]
 }
 
 function mutate(files: readonly SourceFile[], path: string, find: string, replacement: string): SourceFile[] {
@@ -213,6 +164,90 @@ function mutate(files: readonly SourceFile[], path: string, find: string, replac
 }
 
 describe('specification linter', () => {
+  test.each([
+    ['Uses', 'Used by', 'uses'],
+    ['Refines', 'Refined by', 'refines'],
+    ['Follows', 'Followed by', 'follows'],
+    ['Implements', 'Implemented by', 'implements'],
+    ['Verifies', 'Verified by', 'verifies'],
+  ])('normalizes %s and %s into one correctly directed edge', (active, passive, kind) => {
+    const files = mutate(
+      mutate(
+        validCorpus(),
+        'docs/specs/foundation/alpha.md',
+        'No explicit relationships.',
+        `- ${active} [Game Specification Index](../README.md)`,
+      ),
+      'docs/specs/README.md',
+      'No explicit relationships.',
+      `- ${passive} [Alpha](foundation/alpha.md)`,
+    )
+    const result = analyzeSpecifications({ files })
+    expect(result.diagnostics).toEqual([])
+    expect(result.corpus.relationships.filter((edge) => edge.origin === 'explicit')).toEqual([
+      expect.objectContaining({ dependencyId: 'INDEX', dependentId: 'AAA', kind }),
+    ])
+    expect(result.corpus.relationships.every((edge) => !('scope' in edge))).toBe(true)
+  })
+
+  test.each([
+    ['old table', '| Dependency | Relationship | Scope |\n| --- | --- | --- |', 'SPEC401'],
+    ['old subsection', '## Dependencies\n\nNo explicit relationships.', 'SPEC208'],
+    [
+      'old empty sentence',
+      'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
+      'SPEC401',
+    ],
+    ['annotated entry', '- Uses [Game Specification Index](../README.md): rules', 'SPEC407'],
+    ['nested entry', '- Uses [Game Specification Index](../README.md)\n  - details', 'SPEC407'],
+    ['ordered list', '1. Uses [Game Specification Index](../README.md)', 'SPEC401'],
+    ['wrong phrase case', '- uses [Game Specification Index](../README.md)', 'SPEC409'],
+    ['external destination', '- Uses [Example](https://example.com)', 'SPEC408'],
+    ['nonregistered destination', '- Uses [Missing](missing.md)', 'SPEC408'],
+    ['fragment destination', '- Uses [Game Specification Index](../README.md#glossary)', 'SPEC408'],
+    ['incorrect title', '- Uses [Index](../README.md)', 'SPEC410'],
+    [
+      'duplicate',
+      '- Uses [Game Specification Index](../README.md)\n- Uses [Game Specification Index](../README.md)',
+      'SPEC412',
+    ],
+    ['self reference', '- Uses [Alpha](alpha.md)', 'SPEC411'],
+    [
+      'wrong group order',
+      '- Refines [Game Specification Index](../README.md)\n- Uses [Game Specification Index](../README.md)',
+      'SPEC415',
+    ],
+    [
+      'wrong title order',
+      '- Uses [Specification Conventions](../governance/spec-conventions.md)\n- Uses [Game Specification Index](../README.md)',
+      'SPEC415',
+    ],
+    [
+      'empty mixed with entries',
+      'No explicit relationships.\n\n- Uses [Game Specification Index](../README.md)',
+      'SPEC401',
+    ],
+  ])('rejects %s', (_name, inventory, code) => {
+    expect(
+      diagnosticCodes(mutate(validCorpus(), 'docs/specs/foundation/alpha.md', 'No explicit relationships.', inventory)),
+    ).toContain(code)
+  })
+
+  test('does not accept a mirror with the wrong direction', () => {
+    const files = mutate(
+      mutate(
+        validCorpus(),
+        'docs/specs/foundation/alpha.md',
+        'No explicit relationships.',
+        '- Uses [Game Specification Index](../README.md)',
+      ),
+      'docs/specs/README.md',
+      'No explicit relationships.',
+      '- Uses [Alpha](foundation/alpha.md)',
+    )
+    expect(diagnosticCodes(files).filter((code) => code === 'SPEC413')).toHaveLength(2)
+  })
+
   test('accepts a valid in-memory corpus', () => {
     expect(lintSpecifications({ files: validCorpus() })).toEqual([])
   })
@@ -298,13 +333,7 @@ describe('specification linter', () => {
     ],
     [
       'None dependencies',
-      (files: SourceFile[]) =>
-        mutate(
-          files,
-          'docs/specs/foundation/alpha.md',
-          'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
-          'None.',
-        ),
+      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', 'No explicit relationships.', 'None.'),
       'SPEC401',
     ],
     [
@@ -313,12 +342,8 @@ describe('specification linter', () => {
         mutate(
           files,
           'docs/specs/foundation/alpha.md',
-          'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
-          lines([
-            '| Dependency | Relationship | Scope |',
-            '| --- | --- | --- |',
-            '| [Specification Conventions](../governance/spec-conventions.md) | `copies` | Rules |',
-          ]),
+          'No explicit relationships.',
+          '- Copies [Specification Conventions](../governance/spec-conventions.md)',
         ),
       'SPEC409',
     ],
@@ -328,12 +353,8 @@ describe('specification linter', () => {
         mutate(
           files,
           'docs/specs/foundation/alpha.md',
-          'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
-          lines([
-            '| Dependency | Relationship | Scope |',
-            '| --- | --- | --- |',
-            '| [Specification Conventions](../governance/spec-conventions.md) | `uses` | Rules |',
-          ]),
+          'No explicit relationships.',
+          '- Uses [Specification Conventions](../governance/spec-conventions.md)',
         ),
       'SPEC413',
     ],
@@ -398,7 +419,7 @@ describe('specification linter', () => {
     expect(diagnosticCodes(cycleCorpus(kind))).toContain('SPEC414')
   })
 
-  test('permits scoped uses cycles', () => {
+  test('permits uses cycles', () => {
     expect(lintSpecifications({ files: cycleCorpus('uses') })).toEqual([])
   })
 

@@ -19,20 +19,11 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                        | Relationship | Scope                                                                         |
-| ----------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------- |
-| [Domain Model](../foundation/domain-model.md)                     | `refines`    | Combatants, enemy instances, combat transitions, and battle-result facts      |
-| [Numbers and Randomness](../foundation/numbers-and-randomness.md) | `uses`       | Combat arithmetic, rounding, draw sites, and deterministic ordering           |
-| [Agents](./agents.md)                                             | `uses`       | Agent capability, effective skill, health, exhaustion, and experience changes |
-
-## Dependents
-
-| Dependent                                                 | Relationship | Scope                                                                     |
-| --------------------------------------------------------- | ------------ | ------------------------------------------------------------------------- |
-| [Missions](./missions.md)                                 | `uses`       | Battle-result facts consumed by mission outcome and partial-success rules |
-| [Player Information](../interfaces/player-information.md) | `uses`       | Player-visible battle results and combat records                          |
+- Uses [Agents](./agents.md)
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Missions](./missions.md)
+- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 

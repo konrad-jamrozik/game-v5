@@ -19,23 +19,14 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                        | Relationship | Scope                                                                       |
-| ----------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
-| [Domain Model](../foundation/domain-model.md)                     | `refines`    | Agency resources, roster, upgrade acquisitions, capabilities, and capacity  |
-| [Numbers and Randomness](../foundation/numbers-and-randomness.md) | `uses`       | Money, funding, costs, attribute changes, and rounding                      |
-| [Agents](./agents.md)                                             | `uses`       | Hiring, dismissal, roster eligibility, and agent-facing upgrade effects     |
-| [Initial Campaign Content](../content/initial-campaign.md)        | `uses`       | Purchase prices, upgrade increments, limits, and other named balance values |
-
-## Dependents
-
-| Dependent                                                  | Relationship | Scope                                                          |
-| ---------------------------------------------------------- | ------------ | -------------------------------------------------------------- |
-| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete resource, purchase, capacity, and upgrade values      |
-| [Missions](./missions.md)                                  | `uses`       | Resource rewards, penalties, and shared transport capacity     |
-| [Player Information](../interfaces/player-information.md)  | `uses`       | Agency resources, funding, capacities, and upgrade information |
-| [Turn Resolution](../foundation/turn-resolution.md)        | `uses`       | Income, upkeep, capacity, and upgrade timing                   |
+- Uses [Agents](./agents.md)
+- Uses [Initial Campaign Content](../content/initial-campaign.md)
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Missions](./missions.md)
+- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Turn Resolution](../foundation/turn-resolution.md)
+- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 
@@ -56,7 +47,7 @@ TODO: Specify formulas for hiring, dismissal, upkeep, contracting, and recurring
 
 ## Upgrade effects
 
-TODO: Specify all eight categories: agent capacity, transport capacity, training capacity, training skill gain, exhaustion recovery, hit-point recovery, maximum hit points, and weapon damage. Define stacking and application to existing/future agents, including wounded/deployed agents.
+TODO: Specify all eight categories: agent capacity, transport capacity, training capacity, training skill gain, exhaustion recovery, health recovery, maximum health, and weapon damage. Define stacking and application to existing/future agents, including wounded/deployed agents.
 
 ## Purchase and capacity rules
 

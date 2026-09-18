@@ -19,18 +19,10 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-## Dependencies
-
-| Dependency                                                          | Relationship | Scope                                                                  |
-| ------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------- |
-| [Engine Contract](../foundation/engine-contract.md)                 | `refines`    | Separate developer inspection and enablement boundary (ENG-003)        |
-| [Domain Model](../foundation/domain-model.md)                       | `uses`       | Authoritative campaign state, hidden facts, and structural invariants  |
-| [History and Persistence](../foundation/history-and-persistence.md) | `uses`       | Snapshot, restoration, replay, and debug-mutation history behavior     |
-| [TypeScript Player API](./typescript-api.md)                        | `uses`       | Separation from ordinary player capabilities, observations, and errors |
-
-## Dependents
-
-None.
+- Uses [Domain Model](../foundation/domain-model.md)
+- Uses [History and Persistence](../foundation/history-and-persistence.md)
+- Uses [TypeScript Player API](./typescript-api.md)
+- Refines [Engine Contract](../foundation/engine-contract.md)
 
 # Glossary
 
@@ -38,6 +30,8 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+Developer inspection and enablement refine the separate capability boundary in ENG-003.
 
 TODO: Specify Developer capability, full-state inspection, hidden state, debugging operation, snapshot, and validation.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
@@ -47,7 +41,7 @@ appropriate to this document.
 
 ## Inspection contract
 
-TODO: Specify full-state inspection including hidden difficulty, RNG state, IDs, and other internal campaign state. Define read-only/copy behavior and separation from player observations.
+TODO: Specify full-state inspection (for example, hidden difficulty, RNG state, and IDs). Define read-only/copy behavior and separation from player observations.
 
 ## Optional debugging controls
 
