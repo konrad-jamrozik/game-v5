@@ -23,7 +23,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 | Dependency                                                     | Relationship | Scope                                                                           |
 | -------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
-| [Modeling Foundations](../foundation/modeling-foundations.md)  | `uses`       | Immutable definitions and typed content-reference semantics (MOD-001/002)       |
+| [Modeling Foundations](../foundation/modeling-foundations.md)  | `uses`       | Immutable definitions and typed content-reference semantics (MODEL-001/002)     |
 | [Domain Model](../foundation/domain-model.md)                  | `uses`       | Campaign entity kinds, structural invariants, and game-specific identity scope  |
 | [Campaign](../mechanics/campaign.md)                           | `refines`    | Concrete starting configuration, outcome content, and named campaign parameters |
 | [Leads and Progression](../mechanics/leads-and-progression.md) | `refines`    | Concrete lead definitions, prerequisites, and unlock effects                    |

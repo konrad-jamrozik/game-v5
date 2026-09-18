@@ -177,6 +177,47 @@ describe('derived specification renderer', () => {
     expect(outputs.has('docs/derived/relationships/verifies.md')).toBe(false)
   })
 
+  test('renders the Engine Contract refinement subtree as a separate diagram', async () => {
+    const corpus = sampleCorpus()
+    const outputs = await renderDerivedDocumentation(
+      {
+        ...corpus,
+        specifications: [
+          ...corpus.specifications,
+          {
+            id: 'ENG',
+            family: 'Foundation',
+            title: 'Engine Contract',
+            status: 'Draft',
+            scope: 'Engine behavior',
+            owns: 'Engine behavior.',
+            path: 'docs/specs/foundation/engine-contract.md',
+          },
+        ],
+        relationships: [
+          ...corpus.relationships,
+          {
+            dependencyId: 'ENG',
+            dependencyPath: 'docs/specs/foundation/engine-contract.md',
+            dependentId: 'CONV',
+            dependentPath: 'docs/specs/governance/spec-conventions.md',
+            kind: 'refines',
+            scope: 'Engine-specific contract',
+            origin: 'explicit',
+            sourcePaths: ['docs/specs/foundation/engine-contract.md', 'docs/specs/governance/spec-conventions.md'],
+          },
+        ],
+      },
+      PRETTIER_OPTIONS,
+    )
+    const refines = outputs.get('docs/derived/relationships/refines.md') ?? ''
+    expect(refines).toContain('## Model and gameplay specifications')
+    expect(refines).toContain('## Engine contract')
+    expect(refines.match(/```mermaid/g)).toHaveLength(2)
+    expect(refines.indexOf('AAA --> ZZZ')).toBeLessThan(refines.indexOf('## Engine contract'))
+    expect(refines.indexOf('ENG --> CONV')).toBeGreaterThan(refines.indexOf('## Engine contract'))
+  })
+
   test('produces identical output repeatedly', async () => {
     const first = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
     const second = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)

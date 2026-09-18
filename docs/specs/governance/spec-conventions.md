@@ -189,7 +189,7 @@ Long supporting tables may use descriptive appendices after Open decisions. Stat
 
 Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative. Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
 
-Give each implementable requirement a permanent identifier such as **INV-nnn**, where `nnn` is a three-digit number. The prefix comes from the index; the number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section and name the ID when referencing a requirement.
+Give each implementable requirement a permanent identifier such as **INVSTG-nnn**, where `nnn` is a three-digit number. The prefix comes from the index; the number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section and name the ID when referencing a requirement.
 
 Stubs do not invent requirement IDs for TODOs. Allocate IDs when actual rules are proposed.
 

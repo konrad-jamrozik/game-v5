@@ -24,7 +24,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 | Dependency                                                          | Relationship | Scope                                                                                            |
 | ------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
 | [Engine Contract](../foundation/engine-contract.md)                 | `refines`    | Human/AI information parity, permitted observations, and the player/developer boundary (ENG-003) |
-| [Modeling Foundations](../foundation/modeling-foundations.md)       | `uses`       | Player-observation and historical-fact semantics (MOD-004)                                       |
+| [Modeling Foundations](../foundation/modeling-foundations.md)       | `uses`       | Player-observation and historical-fact semantics (MODEL-004)                                     |
 | [Domain Model](../foundation/domain-model.md)                       | `uses`       | Campaign entities, relationships, authoritative facts, and hidden state                          |
 | [History and Persistence](../foundation/history-and-persistence.md) | `uses`       | Historical observations, reports, undo, and restored knowledge                                   |
 | [Agents](../mechanics/agents.md)                                    | `uses`       | Agent attributes, assignments, readiness, and career information                                 |

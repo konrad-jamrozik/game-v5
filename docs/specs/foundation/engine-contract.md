@@ -21,10 +21,10 @@ RNG algorithm, save encoding, or subsystem mechanics. Accepting it alone does no
 
 ## Dependencies
 
-| Dependency                                        | Relationship | Scope                                                                                                                            |
-| ------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| [Domain Model](./domain-model.md)                 | `uses`       | Game entities, relationships, game-specific identity scope, and structural invariants                                            |
-| [Modeling Foundations](./modeling-foundations.md) | `uses`       | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MOD-001–004) |
+| Dependency                                        | Relationship | Scope                                                                                                                              |
+| ------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [Domain Model](./domain-model.md)                 | `uses`       | Game entities, relationships, game-specific identity scope, and structural invariants                                              |
+| [Modeling Foundations](./modeling-foundations.md) | `uses`       | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MODEL-001–004) |
 
 ## Dependents
 
@@ -110,14 +110,14 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 
 # Edge cases and failure behavior
 
-| Case                                              | Result / owner                                                                                                                 |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Query/command names an unknown or hidden ID       | Respect visibility and non-mutation; exact public error belongs to INFO/API (ENG-003/004)                                      |
-| Invalid player request                            | Leave campaign facts, RNG/ID state, reports, and history unchanged (ENG-004)                                                   |
-| Broken internal reference/invariant               | Report an engine/data defect rather than silently repair gameplay (ENG-004; MOD-003)                                           |
-| Undo removes an entity created later              | Restore earlier references consistently, with no dangling future-only links or stale derived caches (ENG-001/004; MOD-002/003) |
-| Intermediate battle/turn state                    | Do not expose it as a committed observation (ENG-004)                                                                          |
-| Current calculation differs from historical value | Refresh current calculations under ENG-001; preserve historical facts under MOD-004                                            |
+| Case                                              | Result / owner                                                                                                                   |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Query/command names an unknown or hidden ID       | Respect visibility and non-mutation; exact public error belongs to INFO/API (ENG-003/004)                                        |
+| Invalid player request                            | Leave campaign facts, RNG/ID state, reports, and history unchanged (ENG-004)                                                     |
+| Broken internal reference/invariant               | Report an engine/data defect rather than silently repair gameplay (ENG-004; MODEL-003)                                           |
+| Undo removes an entity created later              | Restore earlier references consistently, with no dangling future-only links or stale derived caches (ENG-001/004; MODEL-002/003) |
+| Intermediate battle/turn state                    | Do not expose it as a committed observation (ENG-004)                                                                            |
+| Current calculation differs from historical value | Refresh current calculations under ENG-001; preserve historical facts under MODEL-004                                            |
 
 # Acceptance examples
 
@@ -143,14 +143,14 @@ those commands (ENG-001/002). This does not require AI controllers to choose ide
 ## Restoration and integrity
 
 - Undo restores prior facts and corresponding derived values, without future-only references or stale readiness values;
-  redo also updates or invalidates affected caches (ENG-001/002/004; MOD-002/003).
-- A historical battle-start value remains preserved when current strength is recalculated (MOD-004).
+  redo also updates or invalidates affected caches (ENG-001/002/004; MODEL-002/003).
+- A historical battle-start value remains preserved when current strength is recalculated (MODEL-004).
 - Structural validation of [Domain Model fixture A](domain-model.md#a-valid-relationships) leaves facts, RNG state G,
   and ID state N unchanged (ENG-001/004).
 - A successful command, turn advancement, or restoration exposes a state satisfying the domain and reference invariants.
   Intermediate battle/turn states are not exposed as committed observations (ENG-004).
 - A broken internal reference is reported as an engine/data defect, not silently reassigned to a similarly named entity
-  (ENG-004; MOD-002/003).
+  (ENG-004; MODEL-002/003).
 
 Exact save/restore procedures and public errors remain owned by HIST/API/DEV.
 

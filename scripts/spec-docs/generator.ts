@@ -243,6 +243,38 @@ function renderedRelationshipKinds(corpus: SpecificationCorpus): readonly Relati
   return RELATIONSHIP_ORDER.filter((kind) => explicitRelationships(corpus, kind).length > 0)
 }
 
+function descendantRelationships(
+  relationships: readonly RelationshipRecord[],
+  rootId: string,
+): readonly RelationshipRecord[] {
+  const descendantIds = new Set([rootId])
+  const descendants: RelationshipRecord[] = []
+  let added = true
+  while (added) {
+    added = false
+    for (const relationship of relationships) {
+      if (!descendantIds.has(relationship.dependencyId) || descendants.includes(relationship)) continue
+      descendants.push(relationship)
+      if (!descendantIds.has(relationship.dependentId)) {
+        descendantIds.add(relationship.dependentId)
+        added = true
+      }
+    }
+  }
+  return descendants
+}
+
+function renderRelationshipDiagram(
+  specifications: readonly SpecificationRecord[],
+  relationships: readonly RelationshipRecord[],
+): string {
+  const participantIds = new Set(
+    relationships.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
+  )
+  const participants = specifications.filter((specification) => participantIds.has(specification.id))
+  return renderMermaid(participants, relationships)
+}
+
 function renderRelationshipsIndex(corpus: SpecificationCorpus): string {
   const kinds = renderedRelationshipKinds(corpus)
   return `${[
@@ -278,11 +310,24 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
     '[Back to the derived specification catalog](../README.md)',
     '',
   ]
-  const participantIds = new Set(
-    kindRelationships.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
-  )
-  const participants = specifications.filter((specification) => participantIds.has(specification.id))
-  lines.push(renderMermaid(participants, kindRelationships))
+  if (kind === 'refines') {
+    const engineRelationships = descendantRelationships(kindRelationships, 'ENG')
+    if (engineRelationships.length > 0) {
+      const engineRelationshipSet = new Set(engineRelationships)
+      const otherRelationships = kindRelationships.filter((relationship) => !engineRelationshipSet.has(relationship))
+      if (otherRelationships.length > 0) {
+        lines.push(
+          '## Model and gameplay specifications',
+          '',
+          renderRelationshipDiagram(specifications, otherRelationships),
+          '',
+        )
+      }
+      lines.push('## Engine contract', '', renderRelationshipDiagram(specifications, engineRelationships))
+      return `${lines.join('\n')}\n`
+    }
+  }
+  lines.push(renderRelationshipDiagram(specifications, kindRelationships))
   return `${lines.join('\n')}\n`
 }
 

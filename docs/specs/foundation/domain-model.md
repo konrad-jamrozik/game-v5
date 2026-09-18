@@ -28,10 +28,10 @@ remain in their owning specs.
 
 ## Dependencies
 
-| Dependency                                        | Relationship | Scope                                                                                                             |
-| ------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------- |
-| [Modeling Foundations](./modeling-foundations.md) | `refines`    | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MOD-001–004) |
-| [Engine Contract](./engine-contract.md)           | `uses`       | Execution, information-access, and committed-state guarantees (ENG-001–004)                                       |
+| Dependency                                        | Relationship | Scope                                                                                                               |
+| ------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------- |
+| [Modeling Foundations](./modeling-foundations.md) | `refines`    | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MODEL-001–004) |
+| [Engine Contract](./engine-contract.md)           | `uses`       | Execution, information-access, and committed-state guarantees (ENG-001–004)                                         |
 
 ## Dependents
 
@@ -179,7 +179,7 @@ Multiplayer agencies and cross-campaign trading are outside this model.
 **DOM-017 — Campaign entity identity scope.** Agent, faction, investigation, mission, and enemy IDs must be unique across
 those five entity kinds within one committed campaign state. Repeated mission and investigation occurrences must have
 identities distinct from earlier occurrences in the same timeline. Modeling Foundations owns the general identity and
-explicit-reference semantics (MOD-002); this requirement owns which game entities share that identity scope.
+explicit-reference semantics (MODEL-002); this requirement owns which game entities share that identity scope.
 
 ## Agents, assignments, and participation
 
@@ -213,7 +213,7 @@ and Abandoned lifecycle states. At most one Active investigation may exist for a
 must have at least one currently assigned agent in committed state; terminal attempts must have no current team.
 
 Terminal attempts retain identity and agent history. Restarting after abandonment creates another attempt;
-prior progress is historical, not resumable. LEAD/INV own eligibility and numerical progress-loss rules.
+prior progress is historical, not resumable. LEAD/INVSTG own eligibility and numerical progress-loss rules.
 
 **DOM-010 — Progression facts.** Wins, completed investigations, and earned unlocks must be explicit campaign facts with
 source references where applicable. Derived completion counts must agree with supporting records. Faction defeat and
@@ -248,14 +248,14 @@ the source working tree.
 
 # Edge cases and failure behavior
 
-| Case                                              | Result / owner                                                                                                  |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Agent travels toward an investigation             | Remains assigned; arrival/progress timing belongs to AGENT/INV                                                  |
-| Last investigator removed                         | No committed Active attempt with an empty team; numerical effects belong to INV                                 |
-| Investigation concludes while members travel      | Remove current links to the terminal attempt before publication; replacement orders/transit belong to AGENT/INV |
-| Concluded mission retains an agent in its history | Does not reserve current assignment; MOD-003; DOM-007                                                           |
-| Empty roster or no missions/investigations        | Structurally valid; CAMP owns initialization and defeat conditions                                              |
-| Faction defeated with outstanding missions/leads  | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                   |
+| Case                                              | Result / owner                                                                                                     |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Agent travels toward an investigation             | Remains assigned; arrival/progress timing belongs to AGENT/INVSTG                                                  |
+| Last investigator removed                         | No committed Active attempt with an empty team; numerical effects belong to INVSTG                                 |
+| Investigation concludes while members travel      | Remove current links to the terminal attempt before publication; replacement orders/transit belong to AGENT/INVSTG |
+| Concluded mission retains an agent in its history | Does not reserve current assignment; MODEL-003; DOM-007                                                            |
+| Empty roster or no missions/investigations        | Structurally valid; CAMP owns initialization and defeat conditions                                                 |
+| Faction defeated with outstanding missions/leads  | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                      |
 
 # Acceptance examples
 
@@ -277,7 +277,7 @@ Given the current content catalog C and rules R, turn 3, RNG state G, ID state N
 - Each actor has skill 100, health/max-health 10/10, exhaustion 0, and equipped values referring to W1.
 - Other collections empty.
 
-These relationships satisfy DOM-001, DOM-005 through DOM-009, DOM-011, DOM-012, DOM-017, and MOD-001 through MOD-003.
+These relationships satisfy DOM-001, DOM-005 through DOM-009, DOM-011, DOM-012, DOM-017, and MODEL-001 through MODEL-003.
 Team membership does not assert that a1 makes progress while travelling. Structural validation leaves all facts, G,
 and N unchanged (ENG-001/004). Full mechanics validation requires the later owning specs.
 
@@ -286,17 +286,17 @@ and N unchanged (ENG-001/004). Full mechanics validation requires the later owni
 Each row independently changes fixture A. Reject the structural variant; if attempted through a player command, preserve
 the original committed state (ENG-004).
 
-| Change                                                                           | Violation        |
-| -------------------------------------------------------------------------------- | ---------------- |
-| Add a second player agency                                                       | DOM-001          |
-| Mark a1 Killed while keeping its assignment/task phase                           | DOM-005          |
-| Give a1 both Training and Investigation assignments                              | DOM-005/006      |
-| List a1 in m1's current team while assigned to i1                                | DOM-007          |
-| Set health to 11 with maximum health 10, or set a Serving agent's health to zero | DOM-008          |
-| Add another Active attempt for L1, or leave i1 Active with no members            | DOM-009          |
-| Mark m1 Response without faction-operation provenance                            | DOM-011          |
-| Assign e1 a second owning mission                                                | DOM-012          |
-| Give e1 the same entity ID as a1                                                 | DOM-017; MOD-002 |
+| Change                                                                           | Violation          |
+| -------------------------------------------------------------------------------- | ------------------ |
+| Add a second player agency                                                       | DOM-001            |
+| Mark a1 Killed while keeping its assignment/task phase                           | DOM-005            |
+| Give a1 both Training and Investigation assignments                              | DOM-005/006        |
+| List a1 in m1's current team while assigned to i1                                | DOM-007            |
+| Set health to 11 with maximum health 10, or set a Serving agent's health to zero | DOM-008            |
+| Add another Active attempt for L1, or leave i1 Active with no members            | DOM-009            |
+| Mark m1 Response without faction-operation provenance                            | DOM-011            |
+| Assign e1 a second owning mission                                                | DOM-012            |
+| Give e1 the same entity ID as a1                                                 | DOM-017; MODEL-002 |
 
 ## C. Completion and later participation
 
@@ -307,8 +307,8 @@ Given i1 concludes and m1 resolves under their owning rules, a structurally vali
 - a1 and a2 Serving with one new valid assignment and task phase each.
 - Explicit progression facts for i1's completion and any win of m1.
 
-This satisfies MOD-003; DOM-005/007/009/010/012. Assigning a1 to another investigation does not rewrite i1's history. If i1
-were Abandoned instead, restarting creates a new identity and does not resume i1's progress (MOD-002; DOM-009).
+This satisfies MODEL-003; DOM-005/007/009/010/012. Assigning a1 to another investigation does not rewrite i1's history. If i1
+were Abandoned instead, restarting creates a new identity and does not resume i1's progress (MODEL-002; DOM-009).
 This fixture does not choose the replacement orders or turn timing.
 
 # Open decisions
@@ -331,12 +331,12 @@ this model.
 The split changes document ownership, not proposed gameplay. Retained DOM IDs keep their meanings. Retired IDs below
 must not be reused; follow the replacement owners for their normative text and acceptance examples.
 
-| Retired requirement                 | Replacement                                                                                                                                                                                |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| DOM-002 — Definition boundary       | [Modeling Foundations](modeling-foundations.md#requirements), MOD-001                                                                                                                      |
-| DOM-003 — Identity                  | [Modeling Foundations](modeling-foundations.md#requirements), MOD-002 for general identity semantics; DOM-017 for the game-specific identity scope                                         |
-| DOM-004 — References                | [Modeling Foundations](modeling-foundations.md#requirements), MOD-003                                                                                                                      |
-| DOM-013 — Derived consistency       | [Modeling Foundations](modeling-foundations.md#requirements), MOD-004 for historical preservation; [Engine Contract](engine-contract.md#requirements), ENG-001 for calculations and caches |
-| DOM-014 — Continuation state        | [Engine Contract](engine-contract.md#requirements), ENG-002                                                                                                                                |
-| DOM-015 — Information boundary      | [Engine Contract](engine-contract.md#requirements), ENG-003                                                                                                                                |
-| DOM-016 — Committed-state integrity | [Engine Contract](engine-contract.md#requirements), ENG-004                                                                                                                                |
+| Retired requirement                 | Replacement                                                                                                                                                                                  |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DOM-002 — Definition boundary       | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-001                                                                                                                      |
+| DOM-003 — Identity                  | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-002 for general identity semantics; DOM-017 for the game-specific identity scope                                         |
+| DOM-004 — References                | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-003                                                                                                                      |
+| DOM-013 — Derived consistency       | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-004 for historical preservation; [Engine Contract](engine-contract.md#requirements), ENG-001 for calculations and caches |
+| DOM-014 — Continuation state        | [Engine Contract](engine-contract.md#requirements), ENG-002                                                                                                                                  |
+| DOM-015 — Information boundary      | [Engine Contract](engine-contract.md#requirements), ENG-003                                                                                                                                  |
+| DOM-016 — Committed-state integrity | [Engine Contract](engine-contract.md#requirements), ENG-004                                                                                                                                  |

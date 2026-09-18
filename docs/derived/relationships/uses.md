@@ -24,11 +24,11 @@ flowchart LR
   HIST["HIST — History and Persistence (Stub)"]
   INFO["INFO — Player Information (Stub)"]
   INIT["INIT — Initial Campaign Content (Stub)"]
-  INV["INV — Investigations (Stub)"]
+  INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
-  MOD["MOD — Modeling Foundations (Draft)"]
-  NUM["NUM — Numbers and Randomness (Stub)"]
+  MODEL["MODEL — Modeling Foundations (Draft)"]
+  NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   REL["REL — Artifact Relationships (Draft)"]
   SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
   TURN["TURN — Turn Resolution (Stub)"]
@@ -36,7 +36,7 @@ flowchart LR
   AGENT --> COMBAT
   AGENT --> ECON
   AGENT --> INFO
-  AGENT --> INV
+  AGENT --> INVSTG
   AGENT --> MISSION
   AGENT --> TURN
   API --> CLI
@@ -54,13 +54,13 @@ flowchart LR
   DOM --> HIST
   DOM --> INFO
   DOM --> INIT
-  DOM --> MOD
+  DOM --> MODEL
   DOM --> TURN
   ECON --> INFO
   ECON --> MISSION
   ECON --> TURN
   ENG --> DOM
-  ENG --> NUM
+  ENG --> NUMRNG
   FACTION --> INFO
   FACTION --> LEAD
   FACTION --> MISSION
@@ -73,30 +73,30 @@ flowchart LR
   HIST --> WEB
   INFO --> API
   INFO --> CLI
-  INFO --> INV
+  INFO --> INVSTG
   INFO --> WEB
   INIT --> CAMP
   INIT --> ECON
   INIT --> SCEN
-  INV --> INFO
-  INV --> TURN
+  INVSTG --> INFO
+  INVSTG --> TURN
   LEAD --> FACTION
   LEAD --> INFO
-  LEAD --> INV
+  LEAD --> INVSTG
   MISSION --> INFO
   MISSION --> LEAD
   MISSION --> TURN
-  MOD --> API
-  MOD --> ENG
-  MOD --> INFO
-  MOD --> INIT
-  NUM --> AGENT
-  NUM --> COMBAT
-  NUM --> ECON
-  NUM --> FACTION
-  NUM --> HIST
-  NUM --> INV
-  NUM --> TURN
+  MODEL --> API
+  MODEL --> ENG
+  MODEL --> INFO
+  MODEL --> INIT
+  NUMRNG --> AGENT
+  NUMRNG --> COMBAT
+  NUMRNG --> ECON
+  NUMRNG --> FACTION
+  NUMRNG --> HIST
+  NUMRNG --> INVSTG
+  NUMRNG --> TURN
   REL --> CONV
   TURN --> CAMP
   TURN --> SCEN

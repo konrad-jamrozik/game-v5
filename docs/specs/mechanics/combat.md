@@ -53,7 +53,7 @@ TODO: Specify initial snapshots, participation, round/side order, initiative, ta
 
 ## Combat calculations
 
-TODO: Specify combat-rating, hit/contest, damage, exhaustion, experience, and casualty formulas. Define random draw sites and reference NUM conventions.
+TODO: Specify combat-rating, hit/contest, damage, exhaustion, experience, and casualty formulas. Define random draw sites and reference NUMRNG conventions.
 
 ## Termination and results
 

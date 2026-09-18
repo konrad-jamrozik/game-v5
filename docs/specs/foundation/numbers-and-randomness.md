@@ -2,7 +2,7 @@
 
 | Metadata    | Value                                                                                     |
 | ----------- | ----------------------------------------------------------------------------------------- |
-| Spec ID     | NUM                                                                                       |
+| Spec ID     | NUMRNG                                                                                    |
 | Family      | Foundation                                                                                |
 | Status      | Stub                                                                                      |
 | Scope       | Make every numeric calculation and random outcome reproducible across supported runtimes. |
@@ -23,7 +23,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 | Dependency                                        | Relationship | Scope                                                                 |
 | ------------------------------------------------- | ------------ | --------------------------------------------------------------------- |
-| [Modeling Foundations](./modeling-foundations.md) | `refines`    | Deterministic generation within the identity semantics of MOD-002     |
+| [Modeling Foundations](./modeling-foundations.md) | `refines`    | Deterministic generation within the identity semantics of MODEL-002   |
 | [Engine Contract](./engine-contract.md)           | `uses`       | Reproducible continuation and non-mutating calculations (ENG-001/002) |
 
 ## Dependents
@@ -63,7 +63,7 @@ TODO: Specify the PRNG algorithm, seed encoding, initial state, distributions, i
 
 TODO: Specify behavior across runtimes and versions; exclude ambient randomness and wall-clock time from game results. Define whether rejected/no-op commands consume draws and how ID generation relates to RNG.
 
-TODO: Assign stable NUM-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Assign stable NUMRNG-NNN requirement IDs when concrete rules replace these placeholders.
 
 # Edge cases and failure behavior
 

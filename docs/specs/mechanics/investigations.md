@@ -2,7 +2,7 @@
 
 | Metadata    | Value                                                                                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------- |
-| Spec ID     | INV                                                                                                   |
+| Spec ID     | INVSTG                                                                                                |
 | Family      | Mechanics                                                                                             |
 | Status      | Stub                                                                                                  |
 | Scope       | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs. |
@@ -65,7 +65,7 @@ TODO: Define the mathematical meaning of displayed estimates/ranges, information
 
 TODO: Specify effective-skill-weighted progress loss on removal, the weighting snapshot, exhaustion-driven removal, and abandonment when everyone leaves. Adding agents preserves progress; a new attempt starts from zero.
 
-TODO: Assign stable INV-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Assign stable INVSTG-NNN requirement IDs when concrete rules replace these placeholders.
 
 # Edge cases and failure behavior
 

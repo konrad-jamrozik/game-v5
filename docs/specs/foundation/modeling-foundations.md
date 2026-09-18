@@ -2,7 +2,7 @@
 
 | Metadata    | Value                                                                                       |
 | ----------- | ------------------------------------------------------------------------------------------- |
-| Spec ID     | MOD                                                                                         |
+| Spec ID     | MODEL                                                                                       |
 | Family      | Foundation                                                                                  |
 | Status      | Draft                                                                                       |
 | Scope       | Modeling vocabulary, definitions, identity and references, and historical fact preservation |
@@ -28,15 +28,15 @@ historical facts. It does not prescribe storage layout, ID-generation algorithms
 
 ## Dependents
 
-| Dependent                                                  | Relationship | Scope                                                                                                                            |
-| ---------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| [Domain Model](./domain-model.md)                          | `refines`    | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MOD-001–004)                |
-| [Engine Contract](./engine-contract.md)                    | `uses`       | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MOD-001–004) |
-| [History and Persistence](./history-and-persistence.md)    | `refines`    | Storage and restoration details for identity, references, and historical preservation (MOD-002–004)                              |
-| [Initial Campaign Content](../content/initial-campaign.md) | `uses`       | Immutable definitions and typed content-reference semantics (MOD-001/002)                                                        |
-| [Numbers and Randomness](./numbers-and-randomness.md)      | `refines`    | Deterministic generation within the identity semantics of MOD-002                                                                |
-| [Player Information](../interfaces/player-information.md)  | `uses`       | Player-observation and historical-fact semantics (MOD-004)                                                                       |
-| [TypeScript Player API](../interfaces/typescript-api.md)   | `uses`       | Identity, typed-reference, and historical-fact semantics (MOD-002–004)                                                           |
+| Dependent                                                  | Relationship | Scope                                                                                                                              |
+| ---------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [Domain Model](./domain-model.md)                          | `refines`    | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MODEL-001–004)                |
+| [Engine Contract](./engine-contract.md)                    | `uses`       | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MODEL-001–004) |
+| [History and Persistence](./history-and-persistence.md)    | `refines`    | Storage and restoration details for identity, references, and historical preservation (MODEL-002–004)                              |
+| [Initial Campaign Content](../content/initial-campaign.md) | `uses`       | Immutable definitions and typed content-reference semantics (MODEL-001/002)                                                        |
+| [Numbers and Randomness](./numbers-and-randomness.md)      | `refines`    | Deterministic generation within the identity semantics of MODEL-002                                                                |
+| [Player Information](../interfaces/player-information.md)  | `uses`       | Player-observation and historical-fact semantics (MODEL-004)                                                                       |
+| [TypeScript Player API](../interfaces/typescript-api.md)   | `uses`       | Identity, typed-reference, and historical-fact semantics (MODEL-002–004)                                                           |
 
 # Glossary
 
@@ -79,27 +79,27 @@ their detailed meaning. It does not mandate particular records or a complete ser
 ## Historical facts
 
 A historical value is not necessarily a current derived value. Initial mission strength cannot be reconstructed from
-post-battle enemy health alone. MOD-004 governs preservation; it does not require every intermediate calculation or
+post-battle enemy health alone. MODEL-004 governs preservation; it does not require every intermediate calculation or
 every possible chart to be retained.
 
 # Requirements
 
-**MOD-001 — Definition boundary.** Campaigns must resolve definition references against the current content catalog.
+**MODEL-001 — Definition boundary.** Campaigns must resolve definition references against the current content catalog.
 Ordinary gameplay must not mutate definitions. Multiple instances can share a definition without sharing mutable state.
 
-**MOD-002 — Identity.** Identity-bearing campaign entities must have IDs that are unique within the identity scope
+**MODEL-002 — Identity.** Identity-bearing campaign entities must have IDs that are unique within the identity scope
 defined by the Domain Model and stable during each entity's lifetime. Content references must identify their kind and
 ID. Relationships must use explicit references; rules must not parse display names or ID text to discover relationships.
 
 Repeated missions/investigations must have distinct IDs from earlier occurrences. IDs are timeline-scoped: undo restores
-the previous ID-generation state, and a discarded future is not another live campaign. NUM owns generation; API owns
+the previous ID-generation state, and a discarded future is not another live campaign. NUMRNG owns generation; API owns
 stale client-handle behavior.
 
-**MOD-003 — References.** All committed-state references must resolve to the required kind in the same campaign or current
+**MODEL-003 — References.** All committed-state references must resolve to the required kind in the same campaign or current
 content catalog. Historical references to terminal/archived subjects must remain resolvable. Storage can be compacted
 provided required facts remain available; this spec does not mandate full snapshots forever.
 
-**MOD-004 — Historical fact preservation.** Preserve the original inputs or historical value when a rule/report needs
+**MODEL-004 — Historical fact preservation.** Preserve the original inputs or historical value when a rule/report needs
 it. Required historical values must not be overwritten with current calculations. This does not require retaining
 every intermediate calculation or every possible chart.
 
@@ -110,16 +110,16 @@ Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited 
 working tree when the original Domain Model draft was prepared.
 
 **Proposed change:** [Invariant validation](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model_utils/validateGameStateInvariants.ts)
-derives some relationships from IDs. MOD-002 and DOM-010 require explicit references.
+derives some relationships from IDs. MODEL-002 and DOM-010 require explicit references.
 
 # Edge cases and failure behavior
 
-| Case                                                         | Result / owner                                                                                                       |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| Duplicate entity ID, missing reference, or wrong target kind | Invalid state under MOD-002/003; ENG-004 owns rejection and defect reporting; never infer a replacement by name      |
-| Subject is terminal or archived                              | Required historical references still resolve under MOD-003; storage may be compacted without losing required facts   |
-| Undo discards a later occurrence                             | IDs are timeline-scoped under MOD-002; restored references must resolve under MOD-003; HIST owns restoration details |
-| Current strength differs from battle-start strength          | Retain the historical basis required by the result/report under MOD-004                                              |
+| Case                                                         | Result / owner                                                                                                           |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Duplicate entity ID, missing reference, or wrong target kind | Invalid state under MODEL-002/003; ENG-004 owns rejection and defect reporting; never infer a replacement by name        |
+| Subject is terminal or archived                              | Required historical references still resolve under MODEL-003; storage may be compacted without losing required facts     |
+| Undo discards a later occurrence                             | IDs are timeline-scoped under MODEL-002; restored references must resolve under MODEL-003; HIST owns restoration details |
+| Current strength differs from battle-start strength          | Retain the historical basis required by the result/report under MODEL-004                                                |
 
 # Acceptance examples
 
@@ -129,36 +129,36 @@ These examples use the symbolic content/entity IDs from
 ## Definitions and distinct identities
 
 Given two mission instances referring to M1, each contains distinct enemies referring to E1. Damage to one enemy changes
-that instance, not E1 or the other enemy (MOD-001/002; DOM-012/017). A repeated mission or investigation receives a
-distinct identity from an earlier occurrence in the same timeline (MOD-002; DOM-017).
+that instance, not E1 or the other enemy (MODEL-001/002; DOM-012/017). A repeated mission or investigation receives a
+distinct identity from an earlier occurrence in the same timeline (MODEL-002; DOM-017).
 
 ## Invalid identity and references
 
 Each variant independently changes Domain Model fixture A:
 
-| Change                                               | Violation        |
-| ---------------------------------------------------- | ---------------- |
-| Give e1 the same ID as a1                            | MOD-002; DOM-017 |
-| Point a1's investigation reference at nonexistent i9 | MOD-003          |
-| Point a1's investigation reference at mission m1     | MOD-003          |
-| Omit the kind from a content reference               | MOD-002          |
+| Change                                               | Violation          |
+| ---------------------------------------------------- | ------------------ |
+| Give e1 the same ID as a1                            | MODEL-002; DOM-017 |
+| Point a1's investigation reference at nonexistent i9 | MODEL-003          |
+| Point a1's investigation reference at mission m1     | MODEL-003          |
+| Omit the kind from a content reference               | MODEL-002          |
 
 These are invalid structural fixtures. If attempted through a player command, ENG-004 preserves the original state.
-Changing a display name does not change explicit relationships (MOD-002).
+Changing a display name does not change explicit relationships (MODEL-002).
 
 ## Retained history
 
-- Current strength can change while a report's historical starting basis remains preserved (MOD-004).
-- Removing a terminated agent from the active roster does not break required historical references (MOD-003).
-- Compaction is valid only if required historical facts and resolvable references remain available (MOD-003/004).
+- Current strength can change while a report's historical starting basis remains preserved (MODEL-004).
+- Removing a terminated agent from the active roster does not break required historical references (MODEL-003).
+- Compaction is valid only if required historical facts and resolvable references remain available (MODEL-003/004).
 - Undo restores earlier identity-generation state and references; an entity in the discarded future is not another
-  live campaign entity (MOD-002/003). HIST specifies storage and restoration details.
+  live campaign entity (MODEL-002/003). HIST specifies storage and restoration details.
 
 # Open decisions
 
-| Review decision                                   | Proposed answer                                                                            | Affected specs |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------- |
-| Unique IDs across all five campaign entity kinds? | Yes; DOM-017 owns the game-specific scope and MOD-002 owns the general identity semantics. | NUM, HIST, API |
+| Review decision                                   | Proposed answer                                                                              | Affected specs    |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------- |
+| Unique IDs across all five campaign entity kinds? | Yes; DOM-017 owns the game-specific scope and MODEL-002 owns the general identity semantics. | NUMRNG, HIST, API |
 
 ID generation, storage, serialization, and stale client-handle behavior remain scheduled work in their owning specs.
 The [migration table](domain-model.md#appendix-a-requirement-migration-informative) records the retired DOM IDs.
