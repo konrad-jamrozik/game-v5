@@ -4,7 +4,7 @@ import GithubSlugger from 'github-slugger'
 import { describe, expect, test } from 'vitest'
 
 import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
-import { DERIVED_OUTPUT_PATHS, renderDerivedDocumentation } from '../scripts/spec-docs/generator.ts'
+import { renderDerivedDocumentation } from '../scripts/spec-docs/generator.ts'
 import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
 import { headingText, isLink, parseDocument, visit } from '../scripts/spec-linter/markdown.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from '../scripts/spec-linter/paths.ts'
@@ -151,22 +151,30 @@ describe('derived specification renderer', () => {
     expect(glossary).toContain('[AAA — Alpha "Quoted" & More](../specs/foundation/alpha.md#glossary)')
   })
 
-  test('renders one unlabeled dependency-to-dependent graph per nonempty kind', async () => {
+  test('renders each explicit relationship-kind diagram in its own file and omits implicit follows', async () => {
     const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
-    const relationships = outputs.get('docs/derived/relationships.md') ?? ''
-    expect(relationships).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More (Draft)')
-    expect(relationships).toContain('A → B means A is refined by B.')
-    expect(relationships).toContain('A → B means A is used by B.')
-    expect(relationships).toContain('CONV --> AAA')
-    expect(relationships).toContain('AAA --> ZZZ')
-    expect(relationships).toContain('ZZZ --> AAA')
-    expect(relationships).not.toContain('REL-')
-    expect(relationships).not.toContain('-->|')
-    expect(relationships).not.toMatch(/^\|/m)
-    expect(relationships).not.toContain('Explicit relationship overview')
-    expect(relationships).not.toContain('Shared state')
-    expect(relationships).toContain('No implements relationships are declared.')
-    expect(relationships).toContain('No verifies relationships are declared.')
+    const index = outputs.get('docs/derived/relationships.md') ?? ''
+    const refines = outputs.get('docs/derived/relationships/refines.md') ?? ''
+    const uses = outputs.get('docs/derived/relationships/uses.md') ?? ''
+    expect(index).toContain('[Refines relationships](relationships/refines.md)')
+    expect(index).toContain('implicit `follows` relationship')
+    expect(outputs.has('docs/derived/relationships/follows.md')).toBe(false)
+    expect(refines).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More (Draft)')
+    expect(refines).toContain('A → B means A is refined by B.')
+    expect(refines).toContain('AAA --> ZZZ')
+    expect(uses).toContain('A → B means A is used by B.')
+    expect(uses).toContain('AAA --> ZZZ')
+    expect(uses).toContain('ZZZ --> AAA')
+    expect([...outputs.values()].join('\n')).not.toContain('CONV --> AAA')
+    expect(refines).not.toContain('REL-')
+    expect(refines).not.toContain('-->|')
+    expect(refines).not.toMatch(/^\|/m)
+    expect(refines).not.toContain('Explicit relationship overview')
+    expect(refines).not.toContain('Shared state')
+    expect(index).toContain('Implements: No explicit implements relationships are declared.')
+    expect(index).toContain('Verifies: No explicit verifies relationships are declared.')
+    expect(outputs.has('docs/derived/relationships/implements.md')).toBe(false)
+    expect(outputs.has('docs/derived/relationships/verifies.md')).toBe(false)
   })
 
   test('produces identical output repeatedly', async () => {
@@ -214,21 +222,27 @@ describe('shared specification analysis', () => {
 
 describe('derived documentation checking', () => {
   test('reports missing, stale, and unexpected files while accepting CRLF', () => {
-    const expected = new Map<string, string>(DERIVED_OUTPUT_PATHS.map((path) => [path, `${path}\n`]))
+    const expected = new Map<string, string>([
+      ['docs/derived/README.md', 'docs/derived/README.md\n'],
+      ['docs/derived/glossary.md', 'docs/derived/glossary.md\n'],
+      ['docs/derived/relationships.md', 'docs/derived/relationships.md\n'],
+      ['docs/derived/relationships/uses.md', 'docs/derived/relationships/uses.md\n'],
+    ])
     const actual = new Map<string, string>([
-      [DERIVED_OUTPUT_PATHS[0], `${DERIVED_OUTPUT_PATHS[0]}\r\n`],
-      [DERIVED_OUTPUT_PATHS[1], 'stale\n'],
+      ['docs/derived/README.md', 'docs/derived/README.md\r\n'],
+      ['docs/derived/glossary.md', 'stale\n'],
       ['docs/derived/extra.md', 'unexpected\n'],
     ])
     expect(derivedOutputFindings(expected, actual)).toEqual([
       'docs/derived/extra.md: unexpected generated documentation file; remove or relocate it.',
       'docs/derived/glossary.md: generated documentation is stale; run npm run docs:generate.',
       'docs/derived/relationships.md: generated documentation is missing; run npm run docs:generate.',
+      'docs/derived/relationships/uses.md: generated documentation is missing; run npm run docs:generate.',
     ])
   })
 
   test('reports broken generated destinations and anchors', () => {
-    const outputs = new Map([
+    const outputs = new Map<string, string>([
       ['docs/derived/README.md', '# Derived\n\n[Missing file](missing.md) and [missing anchor](glossary.md#absent).\n'],
       ['docs/derived/glossary.md', '# Glossary\n'],
       ['docs/derived/relationships.md', '# Relationships\n'],
@@ -271,7 +285,7 @@ test('generated local links and anchors resolve against the current corpus', asy
   const documents = new Map(files.map((file) => [file.path, parseDocument(file)]))
   for (const [path, content] of outputs) documents.set(path, parseDocument({ path, content }))
 
-  for (const path of DERIVED_OUTPUT_PATHS) {
+  for (const path of outputs.keys()) {
     const document = documents.get(path)
     expect(document).toBeDefined()
     if (!document) continue

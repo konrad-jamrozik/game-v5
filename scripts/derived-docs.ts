@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { resolveConfig, type Options } from 'prettier'
 
 import { collectMarkdownFiles } from './lint-specs.ts'
-import { DERIVED_OUTPUT_PATHS, renderDerivedDocumentation } from './spec-docs/generator.ts'
+import { renderDerivedDocumentation } from './spec-docs/generator.ts'
 import { analyzeSpecifications, formatDiagnostic } from './spec-linter/linter.ts'
 import { columnOf, headingSlugs, isLink, lineOf, parseDocument, visit } from './spec-linter/markdown.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from './spec-linter/paths.ts'
@@ -25,14 +25,14 @@ export function derivedOutputFindings(
   expected: ReadonlyMap<string, string>,
   actual: ReadonlyMap<string, string>,
 ): readonly string[] {
-  const expectedPaths: ReadonlySet<string> = new Set(DERIVED_OUTPUT_PATHS)
+  const expectedPaths: ReadonlySet<string> = new Set(expected.keys())
   const findings: string[] = []
   for (const path of actual.keys()) {
     if (!expectedPaths.has(path)) {
       findings.push(`${path}: unexpected generated documentation file; remove or relocate it.`)
     }
   }
-  for (const path of DERIVED_OUTPUT_PATHS) {
+  for (const path of expectedPaths) {
     const expectedContent = expected.get(path)
     const actualContent = actual.get(path)
     if (expectedContent === undefined) {
@@ -123,9 +123,7 @@ export async function runDerivedDocumentation(
       for (const finding of linkFindings) io.writeError(finding)
       return 1
     }
-    const unexpected = [...io.actualOutputs.keys()]
-      .filter((path) => !DERIVED_OUTPUT_PATHS.some((expectedPath) => expectedPath === path))
-      .toSorted()
+    const unexpected = [...io.actualOutputs.keys()].filter((path) => !expected.has(path)).toSorted()
     if (unexpected.length > 0) {
       for (const path of unexpected) {
         io.writeError(`${path}: unexpected generated documentation file; remove or relocate it.`)

@@ -17,7 +17,7 @@ import type {
   SpecificationStatus,
 } from '../spec-linter/types.ts'
 
-export const DERIVED_OUTPUT_PATHS = [
+export const DERIVED_BASE_OUTPUT_PATHS = [
   'docs/derived/README.md',
   'docs/derived/glossary.md',
   'docs/derived/relationships.md',
@@ -92,7 +92,7 @@ function rewriteInlineLinks(markdown: string, sourcePath: string, outputPath: st
 }
 
 function renderCatalog(corpus: SpecificationCorpus): string {
-  const outputPath = DERIVED_OUTPUT_PATHS[0]
+  const outputPath = DERIVED_BASE_OUTPUT_PATHS[0]
   const specifications = corpus.specifications.toSorted((left, right) => compareText(left.id, right.id))
   const lines = [
     '# Derived Specification Views',
@@ -144,7 +144,7 @@ function glossarySortKey(entry: GlossaryRecord): string {
 }
 
 function renderGlossary(corpus: SpecificationCorpus): string {
-  const outputPath = DERIVED_OUTPUT_PATHS[1]
+  const outputPath = DERIVED_BASE_OUTPUT_PATHS[1]
   const specifications = new Map(corpus.specifications.map((specification) => [specification.id, specification]))
   const entries = corpus.glossary.toSorted(
     (left, right) =>
@@ -229,33 +229,60 @@ function uniqueGraphRelationships(relationships: readonly RelationshipRecord[]):
   })
 }
 
-function renderRelationships(corpus: SpecificationCorpus): string {
-  const specifications = corpus.specifications.toSorted((left, right) => compareText(left.id, right.id))
-  const relationships = corpus.relationships.toSorted(relationshipSort)
-  const lines = [
+function relationshipOutputPath(kind: RelationshipKind): string {
+  return `docs/derived/relationships/${kind}.md`
+}
+
+function explicitRelationships(corpus: SpecificationCorpus, kind: RelationshipKind): readonly RelationshipRecord[] {
+  return uniqueGraphRelationships(
+    corpus.relationships.filter((relationship) => relationship.kind === kind && relationship.origin === 'explicit'),
+  )
+}
+
+function renderedRelationshipKinds(corpus: SpecificationCorpus): readonly RelationshipKind[] {
+  return RELATIONSHIP_ORDER.filter((kind) => explicitRelationships(corpus, kind).length > 0)
+}
+
+function renderRelationshipsIndex(corpus: SpecificationCorpus): string {
+  const kinds = renderedRelationshipKinds(corpus)
+  return `${[
     '# Specification Relationships',
     '',
     GENERATED_NOTICE,
     '',
-    'Arrows run from Dependency to Dependent. The section heading supplies the relationship kind, and the arrow is read in the passive direction described under that heading. These views contain declared relationships only and do not infer relationships from citations, paths, review order, or transitive reachability.',
+    'Each relationship-kind diagram has its own page. Arrows run from Dependency to Dependent and are read in the passive direction described on that page. These views contain declared relationships only and do not infer relationships from citations, paths, review order, or transitive reachability.',
     '',
     '[Back to the derived specification catalog](README.md)',
+    '',
+    ...kinds.map((kind) => `- [${titleForRelationshipKind(kind)} relationships](relationships/${kind}.md)`),
+    ...RELATIONSHIP_ORDER.filter((kind) => kind !== 'follows' && !kinds.includes(kind)).map(
+      (kind) => `- ${titleForRelationshipKind(kind)}: No explicit ${kind} relationships are declared.`,
+    ),
+    '',
+    'The always-present implicit `follows` relationship from Specification Conventions to every other registered specification is intentionally not rendered.',
+  ].join('\n')}\n`
+}
+
+function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipKind): string {
+  const specifications = corpus.specifications.toSorted((left, right) => compareText(left.id, right.id))
+  const kindRelationships = explicitRelationships(corpus, kind)
+  const lines = [
+    `# ${titleForRelationshipKind(kind)} Relationships`,
+    '',
+    GENERATED_NOTICE,
+    '',
+    passiveDescription(kind),
+    '',
+    '[Back to the relationship graph index](../relationships.md)',
+    '',
+    '[Back to the derived specification catalog](../README.md)',
+    '',
   ]
-  for (const kind of RELATIONSHIP_ORDER) {
-    const kindRelationships = uniqueGraphRelationships(
-      relationships.filter((relationship) => relationship.kind === kind),
-    )
-    lines.push('', `## ${titleForRelationshipKind(kind)}`, '', passiveDescription(kind), '')
-    if (kindRelationships.length === 0) {
-      lines.push(`No ${kind} relationships are declared.`)
-      continue
-    }
-    const participantIds = new Set(
-      kindRelationships.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
-    )
-    const participants = specifications.filter((specification) => participantIds.has(specification.id))
-    lines.push(renderMermaid(participants, kindRelationships))
-  }
+  const participantIds = new Set(
+    kindRelationships.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
+  )
+  const participants = specifications.filter((specification) => participantIds.has(specification.id))
+  lines.push(renderMermaid(participants, kindRelationships))
   return `${lines.join('\n')}\n`
 }
 
@@ -263,15 +290,15 @@ export async function renderDerivedDocumentation(
   corpus: SpecificationCorpus,
   prettierOptions: Options = {},
 ): Promise<ReadonlyMap<string, string>> {
+  const kinds = renderedRelationshipKinds(corpus)
   const unformatted = new Map<string, string>([
-    [DERIVED_OUTPUT_PATHS[0], renderCatalog(corpus)],
-    [DERIVED_OUTPUT_PATHS[1], renderGlossary(corpus)],
-    [DERIVED_OUTPUT_PATHS[2], renderRelationships(corpus)],
+    [DERIVED_BASE_OUTPUT_PATHS[0], renderCatalog(corpus)],
+    [DERIVED_BASE_OUTPUT_PATHS[1], renderGlossary(corpus)],
+    [DERIVED_BASE_OUTPUT_PATHS[2], renderRelationshipsIndex(corpus)],
+    ...kinds.map((kind) => [relationshipOutputPath(kind), renderRelationshipKind(corpus, kind)] as const),
   ])
   const formatted = new Map<string, string>()
-  for (const path of DERIVED_OUTPUT_PATHS) {
-    const content = unformatted.get(path)
-    if (content === undefined) throw new Error(`Renderer did not produce ${path}.`)
+  for (const [path, content] of unformatted) {
     formatted.set(
       path,
       normalizeOutput(await format(content, { ...prettierOptions, parser: 'markdown', endOfLine: 'lf' })),
