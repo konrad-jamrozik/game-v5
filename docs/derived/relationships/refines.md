@@ -18,14 +18,9 @@ flowchart LR
   DOM["DOM — Domain Model (Draft)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
   FACTION["FACTION — Factions (Stub)"]
-  HIST["HIST — History and Persistence (Stub)"]
-  INIT["INIT — Initial Campaign Content (Stub)"]
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
-  MODEL["MODEL — Modeling Foundations (Draft)"]
-  NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
-  CAMP --> INIT
   DOM --> AGENT
   DOM --> CAMP
   DOM --> COMBAT
@@ -34,13 +29,6 @@ flowchart LR
   DOM --> INVSTG
   DOM --> LEAD
   DOM --> MISSION
-  ECON --> INIT
-  FACTION --> INIT
-  LEAD --> INIT
-  MISSION --> INIT
-  MODEL --> DOM
-  MODEL --> HIST
-  MODEL --> NUMRNG
 ```
 
 ## Engine contract
@@ -52,10 +40,12 @@ flowchart LR
   ENG["ENG — Engine Contract (Draft)"]
   HIST["HIST — History and Persistence (Stub)"]
   INFO["INFO — Player Information (Stub)"]
+  NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   TURN["TURN — Turn Resolution (Stub)"]
   ENG --> API
   ENG --> DEV
   ENG --> HIST
   ENG --> INFO
+  ENG --> NUMRNG
   ENG --> TURN
 ```

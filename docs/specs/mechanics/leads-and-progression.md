@@ -20,12 +20,13 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 # Relationships
 
 - Uses [Factions](./factions.md)
+- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Missions](./missions.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Factions](./factions.md)
+- Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Investigations](./investigations.md)
 - Used by [Player Information](../interfaces/player-information.md)
-- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 
@@ -33,6 +34,11 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+This Stub intends to refine Domain Model's lead and progression contract (DOM-009/010) with prerequisite semantics,
+availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
+progression. Factions in turn uses this document's unlock effects. Initial Campaign Content supplies the actual lead
+graph and effect entries conforming to these rules. The expression and effect choices remain TODOs below.
 
 TODO: Specify Lead content entry, prerequisites, discovery, availability, blocking, repeatability, completion count, and unlock effect.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

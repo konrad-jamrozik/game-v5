@@ -33,6 +33,10 @@ duplicating shared definitions.
 
 Developer inspection and enablement refine the separate capability boundary in ENG-003.
 
+This is an intended Stub refinement: the TODOs below will detail acquisition of that capability and its inspection
+surface. Domain Model supplies the inspected state; History and Persistence supplies restoration semantics;
+TypeScript Player API supplies the ordinary callable surface from which developer access must remain separate.
+
 TODO: Specify Developer capability, full-state inspection, hidden state, debugging operation, snapshot, and validation.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.

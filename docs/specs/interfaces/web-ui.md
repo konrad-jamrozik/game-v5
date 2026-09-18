@@ -31,6 +31,10 @@ duplicating shared definitions.
 
 # Concepts and contract
 
+This adapter uses TypeScript Player API operations, Player Information's permitted views, and History and Persistence's
+history semantics. Screens and interactions apply those contracts without refining their gameplay behavior.
+Exact presentation choices remain TODOs below.
+
 TODO: Specify Screen, grid, tree, chart, detail view, selection, action control, notification, and local UI state.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.

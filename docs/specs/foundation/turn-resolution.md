@@ -30,6 +30,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Refines [Engine Contract](./engine-contract.md)
 - Used by [Campaign](../mechanics/campaign.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 
 # Glossary
 
@@ -39,6 +40,12 @@ duplicating shared definitions.
 # Concepts and contract
 
 Phase ordering and state-read timing must preserve ENG-001 and ENG-004.
+
+This Stub intends to refine ENG-001/004 by specifying calculation snapshots, ordered phases, and the atomic publication
+boundary. It uses Domain Model's valid-state constraints and Numbers and Randomness's arithmetic and draw ordering.
+Agents, Investigations, Missions, Factions, Economy and Upgrades, and Campaign supply the subsystem transitions and
+effects to schedule. Campaign supplies ending predicates; this document supplies when those predicates are evaluated.
+The phase order and simultaneous-effect decisions remain TODOs below.
 
 TODO: Specify Turn number, management command, turn advancement, phase input, produced effect, and report boundary.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

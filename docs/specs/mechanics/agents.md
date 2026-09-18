@@ -19,6 +19,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
+- Uses [Combat](./combat.md)
+- Uses [Economy and Upgrades](./economy-and-upgrades.md)
+- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Combat](./combat.md)
@@ -41,6 +44,13 @@ TODO: Define remaining local terms here or link their authoritative definitions.
 duplicating shared definitions.
 
 # Concepts and contract
+
+This Stub intends to refine Domain Model's agent contract (DOM-005 through DOM-008) with eligibility, assignment,
+travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
+Combat supplies battle-earned experience, Economy and Upgrades supplies economic effects on personnel and
+capabilities, and Initial Campaign Content supplies balance values. Those inputs are applied to agent transitions;
+this document supplies the agent capabilities used by Combat and Economy and Upgrades in return.
+The formulas and transition choices below remain TODOs; the domain constraints still apply.
 
 TODO: Specify Base/effective skill, health, exhaustion, equipment, orders, activity state, readiness, transit, and career statistics.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

@@ -44,8 +44,10 @@ flowchart TD
   API --> SCEN
   API --> WEB
   CAMP --> INFO
+  CAMP --> INIT
   CAMP --> TURN
   CLI --> SCEN
+  COMBAT --> AGENT
   COMBAT --> INFO
   COMBAT --> MISSION
   DOM --> API
@@ -54,14 +56,14 @@ flowchart TD
   DOM --> HIST
   DOM --> INFO
   DOM --> INIT
-  DOM --> MODEL
   DOM --> TURN
+  ECON --> AGENT
   ECON --> INFO
+  ECON --> INIT
   ECON --> MISSION
   ECON --> TURN
-  ENG --> DOM
-  ENG --> NUMRNG
   FACTION --> INFO
+  FACTION --> INIT
   FACTION --> LEAD
   FACTION --> MISSION
   FACTION --> TURN
@@ -75,21 +77,30 @@ flowchart TD
   INFO --> CLI
   INFO --> INVSTG
   INFO --> WEB
+  INIT --> AGENT
   INIT --> CAMP
   INIT --> ECON
+  INIT --> FACTION
+  INIT --> LEAD
+  INIT --> MISSION
   INIT --> SCEN
   INVSTG --> INFO
   INVSTG --> TURN
   LEAD --> FACTION
   LEAD --> INFO
+  LEAD --> INIT
   LEAD --> INVSTG
   MISSION --> INFO
+  MISSION --> INIT
   MISSION --> LEAD
   MISSION --> TURN
   MODEL --> API
+  MODEL --> DOM
   MODEL --> ENG
+  MODEL --> HIST
   MODEL --> INFO
   MODEL --> INIT
+  MODEL --> NUMRNG
   NUMRNG --> AGENT
   NUMRNG --> COMBAT
   NUMRNG --> ECON
@@ -98,6 +109,7 @@ flowchart TD
   NUMRNG --> INVSTG
   NUMRNG --> TURN
   TURN --> CAMP
+  TURN --> ECON
   TURN --> SCEN
   WEB --> SCEN
 ```

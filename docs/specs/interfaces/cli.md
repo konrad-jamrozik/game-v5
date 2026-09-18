@@ -31,6 +31,10 @@ duplicating shared definitions.
 
 # Concepts and contract
 
+This adapter uses TypeScript Player API operations, Player Information's permitted views, and History and Persistence's
+save/load and history semantics. CLI syntax and output formatting describe an interface using those contracts;
+they do not refine the API's gameplay behavior. Exact adapter choices remain TODOs below.
+
 TODO: Specify Command, argument, identifier, session, save path, readable output, JSON result, standard streams, and exit status.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.

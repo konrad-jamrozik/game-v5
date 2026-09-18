@@ -22,11 +22,13 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Agents](./agents.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Uses [Turn Resolution](../foundation/turn-resolution.md)
 - Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Agents](./agents.md)
+- Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Turn Resolution](../foundation/turn-resolution.md)
-- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 
@@ -34,6 +36,11 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+This Stub intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including DOM-008)
+with resource flows, purchase eligibility, and upgrade effects. Agents supplies personnel state and capabilities;
+Numbers and Randomness supplies arithmetic. Initial Campaign Content supplies prices and increments, while this
+document supplies their meanings and formulas. Turn Resolution supplies evaluation timing. These rules remain TODOs.
 
 TODO: Specify Spendable money, recurring funding, upkeep, contracting income, hiring, dismissal, capacity, and upgrades.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

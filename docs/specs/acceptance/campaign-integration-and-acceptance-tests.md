@@ -50,6 +50,11 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Concepts and contract
 
+This Stub uses Initial Campaign Content for reproducible inputs, Turn Resolution for effect timing, and History and
+Persistence for continuation scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
+under test. Specific checked requirements acquire implicit verifies relationships when scenarios identify them;
+these document-level uses entries do not claim that tests already exist or pass.
+
 TODO: Specify Scenario fixture, game revision when needed for reproducibility, seed or RNG state, command sequence,
 expected state/view, and requirement reference.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

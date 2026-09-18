@@ -20,9 +20,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 # Relationships
 
 - Uses [Domain Model](./domain-model.md)
+- Uses [Modeling Foundations](./modeling-foundations.md)
 - Uses [Numbers and Randomness](./numbers-and-randomness.md)
 - Refines [Engine Contract](./engine-contract.md)
-- Refines [Modeling Foundations](./modeling-foundations.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Player Information](../interfaces/player-information.md)
@@ -46,6 +46,12 @@ duplicating shared definitions.
 The [Session definition](#glossary) was migrated from Domain Model and remains a draft. Controller state can include,
 for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved; this specification stays Stub.
 Storage and restoration must preserve MODEL-002 through MODEL-004 and ENG-001, ENG-002, and ENG-004.
+
+This Stub intends to refine ENG-001/002/004 by specifying cache restoration or invalidation, complete continuation state, and atomic
+undo/redo and save/load procedures. It uses Modeling Foundations' identity, reference, and historical-preservation
+conventions; storage procedures do not refine those meanings. Domain Model supplies the game instances restored,
+and Numbers and Randomness supplies the numeric and generator-state contracts. The TODOs below retain the unresolved
+procedure and encoding choices.
 
 ## Remaining contract details
 

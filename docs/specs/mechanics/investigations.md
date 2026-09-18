@@ -34,6 +34,12 @@ duplicating shared definitions.
 
 # Concepts and contract
 
+This Stub intends to refine Domain Model's investigation contract (DOM-007/009/010) with start, progress, completion,
+team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
+and Numbers and Randomness's arithmetic/draws. Player Information supplies exposed field shapes and reveal conditions;
+this document supplies estimate mathematics and the information those estimates condition on. The exact mathematics
+and transitions remain TODOs below.
+
 TODO: Specify Visible difficulty, hidden actual difficulty, effective team contribution, progress, cumulative completion probability, per-turn conditional probability, and player estimate.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.

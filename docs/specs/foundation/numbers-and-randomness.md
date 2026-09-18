@@ -19,8 +19,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-- Uses [Engine Contract](./engine-contract.md)
-- Refines [Modeling Foundations](./modeling-foundations.md)
+- Uses [Modeling Foundations](./modeling-foundations.md)
+- Refines [Engine Contract](./engine-contract.md)
 - Used by [Agents](../mechanics/agents.md)
 - Used by [Combat](../mechanics/combat.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
@@ -38,6 +38,11 @@ duplicating shared definitions.
 
 Deterministic identity generation must preserve MODEL-002; calculations and continuation follow ENG-001 and ENG-002.
 
+This Stub intends to refine ENG-001/002/004 with numeric operations, reproducible generator-state evolution, and
+draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in MODEL-002;
+choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
+under ENG-004; the existing no-op and algorithm TODOs remain unresolved.
+
 TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, seeds, generator state, draws, and deterministic IDs.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
@@ -54,7 +59,9 @@ TODO: Specify the PRNG algorithm, seed encoding, initial state, distributions, i
 
 ## Deterministic boundaries
 
-TODO: Specify behavior across runtimes and versions; exclude ambient randomness and wall-clock time from game results. Define whether rejected/no-op commands consume draws and how ID generation relates to RNG.
+TODO: Specify behavior across runtimes and versions; exclude ambient randomness and wall-clock time from game results.
+Detail preservation of RNG state on rejection under ENG-004. Decide whether no-op commands consume draws and how ID
+generation relates to RNG.
 
 TODO: Assign stable NUMRNG-NNN requirement IDs when concrete rules replace these placeholders.
 

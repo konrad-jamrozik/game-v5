@@ -20,31 +20,30 @@ historical facts. It does not prescribe storage layout, ID-generation algorithms
 
 # Relationships
 
-- Uses [Domain Model](./domain-model.md)
+- Used by [Domain Model](./domain-model.md)
 - Used by [Engine Contract](./engine-contract.md)
+- Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
+- Used by [Numbers and Randomness](./numbers-and-randomness.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)
-- Refined by [Domain Model](./domain-model.md)
-- Refined by [History and Persistence](./history-and-persistence.md)
-- Refined by [Numbers and Randomness](./numbers-and-randomness.md)
 
 # Glossary
 
-| Term                | Definition                                                                                                              |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Definition          | Declares a game concept, for example, analogous to a TypeScript interface. Definitions are immutable during gameplay.   |
-| Entity              | A definition that can be instantiated.                                                                                  |
-| Instance            | A concrete instantiation of an entity, with its own identity and state.                                                 |
-| Instance ID         | An identifier for an instance, stable during its lifetime under MODEL-002. DOM-017 defines the campaign identity scope. |
-| Became historical   | A lifecycle transition that retains an instance as history rather than deleting required facts or references.           |
-| Content entry       | Immutable game data, for example, a weapon’s name, base damage, and price.                                              |
-| Campaign state      | Data describing a particular campaign, for example, its instances, resources, and retained history.                     |
-| Authoritative value | A value treated as established truth rather than recomputed from other values.                                          |
-| Derived value       | A value calculated deterministically from authoritative values and the current rules and content entries.               |
-| Historical          | Describes retained past state or events; does not by itself imply that gameplay rules cannot consult them.              |
-| Player observation  | Information deliberately exposed by the engine to an ordinary player                                                    |
-| Committed state     | Complete state before or after an accepted command, not intermediate battle/turn processing                             |
+| Term                | Definition                                                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Definition          | Declares a game concept, for example, analogous to a TypeScript interface. Definitions are immutable during gameplay.  |
+| Entity              | A definition that can be instantiated.                                                                                 |
+| Instance            | A concrete instantiation of an entity, with its own identity and state.                                                |
+| Instance ID         | An identifier for an instance, unique within a declared identity scope and stable during its lifetime under MODEL-002. |
+| Became historical   | A lifecycle transition that retains an instance as history rather than deleting required facts or references.          |
+| Content entry       | Immutable game data, for example, a weapon’s name, base damage, and price.                                             |
+| Campaign state      | Data describing a particular campaign, for example, its instances, resources, and retained history.                    |
+| Authoritative value | A value treated as established truth rather than recomputed from other values.                                         |
+| Derived value       | A value calculated deterministically from authoritative values and the current rules and content entries.              |
+| Historical          | Describes retained past state or events; does not by itself imply that gameplay rules cannot consult them.             |
+| Player observation  | Information deliberately exposed by the engine to an ordinary player                                                   |
+| Committed state     | Complete state before or after an accepted command, not intermediate battle/turn processing                            |
 
 # Concepts and contract
 
@@ -56,26 +55,27 @@ in the implementation. An abstract definition cannot be instantiated directly.
 Content references resolve against content entries supplied by the current game build (MODEL-001/003).
 Earlier rules, content entries, and incompatible saved campaigns need not remain supported.
 
-Being a property of a game concept does not make a value derived. Orders are authoritative values; effective skill is a
-derived value. Visibility is independent: either can be hidden from the player.
+Being a property of a game concept does not make a value derived. A value treated as established truth is authoritative;
+a value calculated from authoritative inputs is derived. Storing a calculated value does not change that distinction.
+Visibility is independent: either can be hidden from the player.
 
 ## Authoritative versus derived state
 
 Examples of the distinction (not a complete state inventory):
 
-| Authoritative value    | Derived value          |
-| ---------------------- | ---------------------- |
-| Upgrade acquisitions   | Effective capacity     |
-| Agent orders           | Readiness              |
-| Investigation progress | Completion probability |
+| Authoritative value    | Derived value           |
+| ---------------------- | ----------------------- |
+| Recorded acquisitions  | Total acquired quantity |
+| Recorded measurements  | Their arithmetic mean   |
+| Retained event records | Event count             |
 
-The owning [Domain Model](domain-model.md#concepts-and-contract) and [Engine Contract](engine-contract.md#concepts-and-contract)
-define the contract. These examples do not mandate records or a serialized schema.
+These examples illustrate the glossary distinction without prescribing particular game concepts, records, or a
+serialized schema. Each specification using these concepts declares which of its values are authoritative or derived.
 
 ## Historical values
 
-A historical value is not necessarily a current derived value. Initial mission strength cannot be reconstructed from
-post-battle enemy health alone. MODEL-004 governs preservation; it does not require every intermediate calculation or
+A historical value is not necessarily a current derived value. An earlier measurement cannot be reconstructed from
+its current replacement alone. MODEL-004 governs preservation; it does not require every intermediate calculation or
 every possible chart to be retained.
 
 # Requirements
@@ -84,13 +84,14 @@ every possible chart to be retained.
 Campaigns must resolve content references against content entries supplied by the current game build.
 Multiple instances can share content entries without sharing mutable instance state.
 
-**MODEL-002 — Identity.** Identity-bearing campaign instances must have IDs that are unique within the identity scope
-defined by the Domain Model and stable during each instance's lifetime. Content references must identify their kind and
+**MODEL-002 — Identity.** Identity-bearing campaign instances must have IDs that are unique within their declared
+identity scope and stable during each instance's lifetime. A specification using this convention must declare which
+instance kinds share an identity scope. Content references must identify their kind and
 ID. Relationships must use explicit references; rules must not parse display names or ID text to discover relationships.
 
-Repeated missions/investigations must have distinct IDs from earlier occurrences. IDs are timeline-scoped: undo restores
-the previous ID-generation state, and a discarded future is not another live campaign. NUMRNG owns generation; API owns
-stale client-handle behavior.
+Distinct occurrences within an identity scope must have distinct IDs in the same timeline. IDs are timeline-scoped:
+a discarded future is not another live campaign. This identity convention does not choose an ID-generation algorithm
+or a restoration procedure.
 
 **MODEL-003 — References.** All committed-state instance references must resolve to the required kind in the same campaign;
 content references must resolve to the required kind among content entries supplied by the current game build.
@@ -108,55 +109,56 @@ Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited 
 working tree when the original Domain Model draft was prepared.
 
 **Proposed change:** [Invariant validation](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model_utils/validateGameStateInvariants.ts)
-derives some relationships from IDs. MODEL-002 and DOM-010 require explicit references.
+derives some relationships from IDs. MODEL-002 requires explicit references.
 
 # Edge cases and failure behavior
 
-| Case                                                           | Result / owner                                                                                                           |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Duplicate instance ID, missing reference, or wrong target kind | Invalid state under MODEL-002/003; ENG-004 owns rejection and defect reporting; never infer a replacement by name        |
-| Instance is historical, including terminal lifecycle states    | Required historical references still resolve under MODEL-003; storage may be compacted without losing required facts     |
-| Undo discards a later occurrence                               | IDs are timeline-scoped under MODEL-002; restored references must resolve under MODEL-003; HIST owns restoration details |
-| Current strength differs from battle-start strength            | Retain the historical basis required by the result/report under MODEL-004                                                |
+| Case                                                           | Result / owner                                                                                                       |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Duplicate instance ID, missing reference, or wrong target kind | Invalid state under MODEL-002/003; never infer a replacement by name                                                 |
+| Instance is historical, including terminal lifecycle states    | Required historical references still resolve under MODEL-003; storage may be compacted without losing required facts |
+| A later occurrence belongs only to a discarded future          | IDs are timeline-scoped under MODEL-002; committed references must resolve under MODEL-003                           |
+| A current value differs from the retained original value       | Retain the historical basis required by the result/report under MODEL-004                                            |
 
 # Acceptance examples
 
-These examples use the symbolic content/instance IDs from
-[Domain Model fixture A](domain-model.md#a-valid-relationships), not a chosen ID format or balance values.
+This local fixture uses abstract instance kinds Record and Container solely to exercise MODEL-001 through MODEL-004.
+They are test-only definitions, not additional game concepts. All fixture values and checks below are explicit
+acceptance conditions, not an illustrative enumeration.
+
+Declare one shared identity scope for Record and Container. In one campaign, container c1 holds explicit references
+to records r1 and r2. Both records refer to the same typed Record content entry C1, whose base value is 10. Their
+independent mutable values are initially 10. Record r1 retains an original value of 10 for a historical report.
+All IDs are symbolic and impose no implementation format.
 
 ## Content entries and distinct identities
 
-Given two mission instances referring to M1, each contains distinct enemies referring to E1. Damage to one enemy changes
-that instance, not E1 or the other enemy (MODEL-001/002; DOM-012/017). A repeated mission or investigation receives a
-distinct identity from an earlier occurrence in the same timeline (MODEL-002; DOM-017).
+Changing r1's mutable value to 7 leaves r2's value and C1's base value at 10. The definitions and content entry remain
+unchanged (MODEL-001). A new Record occurrence r3 in the same timeline has an ID distinct from c1, r1, and r2 (MODEL-002).
 
 ## Invalid identity and references
 
-Each variant independently changes Domain Model fixture A:
+Each variant independently changes the local fixture:
 
-| Change                                               | Violation          |
-| ---------------------------------------------------- | ------------------ |
-| Give e1 the same ID as a1                            | MODEL-002; DOM-017 |
-| Point a1's investigation reference at nonexistent i9 | MODEL-003          |
-| Point a1's investigation reference at mission m1     | MODEL-003          |
-| Omit the kind from a content reference               | MODEL-002          |
+| Change                                        | Violation |
+| --------------------------------------------- | --------- |
+| Give r1 the same ID as c1                     | MODEL-002 |
+| Point c1's Record reference at nonexistent r9 | MODEL-003 |
+| Point c1's Record reference at Container c1   | MODEL-003 |
+| Omit the kind from a content reference        | MODEL-002 |
 
-These are invalid structural fixtures. If attempted through a player command, ENG-004 preserves the original state.
-Changing a display name does not change explicit relationships (MODEL-002).
+These are invalid structural fixtures. Changing a display name does not change explicit relationships (MODEL-002).
 
 ## Retained history
 
-- Current strength can change while a report's historical starting basis remains preserved (MODEL-004).
-- Removing a terminated agent from the active roster does not break required historical references (MODEL-003).
-- Compaction is valid only if required historical facts and resolvable references remain available (MODEL-003/004).
-- Undo restores earlier identity-generation state and references; an instance in the discarded future is not another
-  live campaign instance (MODEL-002/003). HIST specifies storage and restoration details.
+- After r1's current value becomes 7, its retained original value is still 10 (MODEL-004).
+- When r1 becomes historical, c1's required reference still resolves to r1 (MODEL-003).
+- Compacting r1 is valid only if that reference and the original value of 10 remain available (MODEL-003/004).
+- If r3 belongs only to a discarded future, it is not another live campaign instance. The retained timeline's
+  references still resolve within that campaign (MODEL-002/003).
 
 # Open decisions
 
-| Review decision                                     | Proposed answer                                                                              | Affected specs    |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------- |
-| Unique IDs across all five campaign instance kinds? | Yes; DOM-017 owns the game-specific scope and MODEL-002 owns the general identity semantics. | NUMRNG, HIST, API |
-
-ID generation, storage, serialization, and stale client-handle behavior remain scheduled work in their owning specs.
-The [migration table](domain-model.md#appendix-a-requirement-migration-informative) records the retired DOM IDs.
+MODEL-001 through MODEL-004 remain proposed rules awaiting review. No additional generic modeling decision is
+introduced by this separation. A consuming specification owns its game-specific identity scope and operational
+details; neither is needed to interpret the conventions or the local acceptance fixture.

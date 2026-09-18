@@ -22,7 +22,7 @@ Do not prescribe internal classes, file organization, libraries, or algorithms u
 
 # Relationships
 
-- Uses [Artifact Relationships](artifact-relationships.md)
+- Uses [Artifact Relationships](./artifact-relationships.md)
 
 # Glossary
 
@@ -141,6 +141,16 @@ kinds, but duplicate entries of the same kind and direction are invalid. Invento
 Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
 contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
 acknowledgements do not create relationships.
+
+Classify relationships using [Choosing uses or refines](artifact-relationships.md#choosing-uses-or-refines).
+Each refinement must identify the parent contract and the added detail about the same subject or behavior in its
+owning prose. A scoped Stub may declare that intended detail without settling its TODOs. Applying vocabulary,
+obeying invariants, or supplying content values alone establishes uses. Do not hide substantive reliance behind
+an informative citation or duplicate a refinement as uses for the same reliance.
+
+Maintain [Specification relationship cycles](../../spec-relationship-cycles.md) when changing relationships.
+The register must cover retained combined uses/refines cycles and mixed governance cycles, with supporting meanings
+and future removal criteria. It is an informative report outside the registered specification corpus.
 
 ## Canonical terminology
 

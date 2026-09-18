@@ -21,10 +21,9 @@ RNG algorithm, save encoding, or subsystem mechanics. Accepting it alone does no
 
 - Uses [Domain Model](./domain-model.md)
 - Uses [Modeling Foundations](./modeling-foundations.md)
-- Used by [Domain Model](./domain-model.md)
-- Used by [Numbers and Randomness](./numbers-and-randomness.md)
 - Refined by [Developer API](../interfaces/developer-api.md)
 - Refined by [History and Persistence](./history-and-persistence.md)
+- Refined by [Numbers and Randomness](./numbers-and-randomness.md)
 - Refined by [Player Information](../interfaces/player-information.md)
 - Refined by [Turn Resolution](./turn-resolution.md)
 - Refined by [TypeScript Player API](../interfaces/typescript-api.md)
@@ -41,7 +40,8 @@ Campaign continuation requires gameplay facts and deterministic bookkeeping; for
 and sampled hidden values. The current game build supplies rules and content. ENG-002 defines completeness.
 
 AI memory, UI selections, browser state, and CLI preferences are outside campaign state (DOM-001).
-[History and Persistence](history-and-persistence.md#session) defines Session and owns how controller state follows history.
+Controller-state restoration is outside this contract; its owner is
+[History and Persistence](history-and-persistence.md#session).
 
 ## Queries and information
 
@@ -80,12 +80,17 @@ be exposed as committed observations. Invalid player requests must leave campaig
 history unchanged. Broken internal references/invariants
 must be reported as engine/data defects rather than silently repaired into different gameplay outcomes.
 
+History restoration must restore the previous ID-generation state along with campaign references. This operational
+guarantee preserves the timeline-scoped identity convention in MODEL-002; a discarded future is not another live
+campaign. History and Persistence specifies restoration procedures, Numbers and Randomness specifies generation,
+and TypeScript Player API specifies stale client-handle behavior.
+
 ## Preliminary API capabilities
 
 The following capabilities are all required planning coverage, not illustrative examples.
 
 **Informative outline:** the player interface needs campaign creation/resumption, visible-state and relationship queries,
-action discovery/explanations, structured management commands, Advance turn, results/reports, and undo/redo. Session
+action discovery/explanations, structured management commands, Advance turn, results/reports, and undo/redo. Campaign
 save/load supports continuation without adding an ordinary full-state inspection function. Dev inspection is separate.
 
 This is not a finalized function list, wire schema, or error vocabulary. It constrains later API/INFO drafts while keeping
@@ -139,7 +144,12 @@ those commands (ENG-001/002). This does not require AI controllers to choose ide
   redo also updates or invalidates affected caches (ENG-001/002/004; MODEL-002/003).
 - A historical battle-start value remains preserved when current strength is recalculated (MODEL-004).
 - Structural validation of [Domain Model fixture A](domain-model.md#a-valid-relationships) leaves facts, RNG state G,
-  and ID state N unchanged (ENG-001/004).
+  and ID state N unchanged (ENG-001/004). G and N are opaque engine bookkeeping added to that structural fixture.
+- Starting from fixture A, any player command that would produce one of its
+  [invalid variants](domain-model.md#b-invalid-variants) is rejected without changing campaign state, G, N, reports,
+  or history (ENG-004).
+- Undo after creation restores the previous ID-generation state and references; an occurrence in the discarded
+  future does not constrain uniqueness in the restored timeline (ENG-004; MODEL-002/003).
 - A successful command, turn advancement, or restoration exposes a state satisfying the domain and reference invariants.
   Intermediate battle/turn states are not exposed as committed observations (ENG-004).
 - A broken internal reference is reported as an engine/data defect, not silently reassigned to a similarly named instance

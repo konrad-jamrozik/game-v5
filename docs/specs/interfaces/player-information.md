@@ -45,6 +45,12 @@ duplicating shared definitions.
 
 Player observations follow ENG-003; historical explanations preserve MODEL-004.
 
+This Stub intends to refine ENG-003 by specifying exposed fields, reveal conditions, and consistent human/AI views.
+It uses Modeling Foundations' observation and history meanings, Domain Model's concepts, and History and Persistence's
+history navigation. The mechanics dependencies supply the facts and calculated results to expose. In particular,
+Investigations owns estimate mathematics and permitted inputs; this document owns the exposed fields and reveal
+conditions. The exact field and reveal choices remain TODOs below.
+
 TODO: Specify Player observation, known/unknown field, derived estimate, action explanation, report, history visibility, and dev-only information.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.

@@ -19,16 +19,20 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
+- Uses [Campaign](../mechanics/campaign.md)
 - Uses [Domain Model](../foundation/domain-model.md)
+- Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
+- Uses [Factions](../mechanics/factions.md)
+- Uses [Leads and Progression](../mechanics/leads-and-progression.md)
+- Uses [Missions](../mechanics/missions.md)
 - Uses [Modeling Foundations](../foundation/modeling-foundations.md)
-- Refines [Campaign](../mechanics/campaign.md)
-- Refines [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
-- Refines [Factions](../mechanics/factions.md)
-- Refines [Leads and Progression](../mechanics/leads-and-progression.md)
-- Refines [Missions](../mechanics/missions.md)
+- Used by [Agents](../mechanics/agents.md)
 - Used by [Campaign](../mechanics/campaign.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
+- Used by [Factions](../mechanics/factions.md)
+- Used by [Leads and Progression](../mechanics/leads-and-progression.md)
+- Used by [Missions](../mechanics/missions.md)
 
 # Glossary
 
@@ -40,6 +44,12 @@ TODO: Define remaining local terms here without duplicating shared definitions.
 # Concepts and contract
 
 Content entries and their references follow MODEL-001 and MODEL-002.
+
+This document uses Domain Model's game concepts and Modeling Foundations' content and reference conventions. It uses
+Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and
+Progression's prerequisites/effects, and Missions' catalog requirements to supply valid content. Supplying those data
+values does not refine the mechanical behavior. The mechanics consume this document's exact values and catalogs;
+formulas and transitions remain owned by the mechanics. Values and catalogs remain TODOs below.
 
 TODO: Specify Scenario ID/version, named balance parameter, content entry ID, starting state, lead graph, enemy, weapon, faction, and mission content entry.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

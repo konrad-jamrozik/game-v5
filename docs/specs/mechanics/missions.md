@@ -23,11 +23,12 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Combat](./combat.md)
 - Uses [Economy and Upgrades](./economy-and-upgrades.md)
 - Uses [Factions](./factions.md)
+- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Turn Resolution](../foundation/turn-resolution.md)
-- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 
@@ -35,6 +36,12 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+This Stub intends to refine Domain Model's mission contract (DOM-007/011/012) with creation, deployment, deadlines,
+resolution, and campaign consequences. Agents supplies participant eligibility, Combat supplies battle results,
+Economy and Upgrades supplies capacities and resource effects, and Factions supplies operation provenance and
+suppression semantics. Initial Campaign Content supplies mission entries and numeric values under this contract.
+The lifecycle and consequence choices remain TODOs below.
 
 TODO: Specify Initiative mission, Response mission, faction operation, deadline, deployment, battle result, mission outcome, and partial success.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

@@ -38,6 +38,11 @@ duplicating shared definitions.
 
 Public operations preserve ENG-001 through ENG-004 and MODEL-001 through MODEL-004.
 
+This Stub intends to refine ENG-001 through ENG-004 with exact callable queries and commands, rejection behavior,
+observation isolation, and continuation operations. It uses Modeling Foundations' meanings, Domain Model's game
+concepts, Player Information's permitted views, and History and Persistence's restoration contract. The signatures
+and error choices below remain TODOs rather than an already specified API.
+
 TODO: Specify Game/session handle, observation, command arguments, action discovery, validation result, structured error, and state revision.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.

@@ -22,9 +22,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Turn Resolution](../foundation/turn-resolution.md)
 - Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Turn Resolution](../foundation/turn-resolution.md)
-- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 
@@ -32,6 +32,11 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+This Stub intends to refine Domain Model's campaign boundary (DOM-001 and its Campaign and agency section) with
+initialization and ending behavior. Initial Campaign Content supplies the exact starting values and catalogs;
+this document supplies their initialization meaning. Turn Resolution supplies state-read timing and the phase in
+which campaign predicates are checked; this document supplies the predicates. The exact rules remain TODOs below.
 
 TODO: Specify Initial campaign, ongoing/won/lost lifecycle, panic, funding/money boundary, and victory objective.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

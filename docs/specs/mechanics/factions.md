@@ -19,14 +19,15 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
+- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Turn Resolution](../foundation/turn-resolution.md)
-- Refined by [Initial Campaign Content](../content/initial-campaign.md)
 
 # Glossary
 
@@ -34,6 +35,12 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+This Stub intends to refine Domain Model's faction and operation-provenance contract (DOM-011) with escalation,
+operation generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
+Initial Campaign Content supplies operation catalogs and parameter values. Leads and Progression supplies earned
+unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.
+Exact thresholds and transitions remain TODOs below.
 
 TODO: Specify Faction discovery, activity level, escalation clock, operation level, operation clock, suppression, and defeat.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as

@@ -26,13 +26,11 @@ remain in their owning specs.
 
 # Relationships
 
-- Uses [Engine Contract](./engine-contract.md)
-- Refines [Modeling Foundations](./modeling-foundations.md)
+- Uses [Modeling Foundations](./modeling-foundations.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Engine Contract](./engine-contract.md)
 - Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
-- Used by [Modeling Foundations](./modeling-foundations.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Turn Resolution](./turn-resolution.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)
@@ -66,7 +64,8 @@ remain in their owning specs.
 | Task phase                   | The distinction between At assignment and In transit, including travel timing facts.                                                      |
 | Report                       | Historical facts and explanations linked to commands or turns and instances in the timeline.                                              |
 
-This document refines MODEL-001 through MODEL-004 and relies on ENG-001 through ENG-004 for execution guarantees.
+This document uses MODEL-001 through MODEL-004 to describe game concepts. It applies the modeling vocabulary and
+constraints; it does not add detail to the modeling language itself.
 
 Generic modeling terms are owned by the [Modeling Foundations glossary](modeling-foundations.md#glossary).
 
@@ -107,16 +106,24 @@ embedded in its Response mission, not represented by a separate instance (DOM-01
 
 The following table states the required modeling classifications; example values are explicitly marked.
 
-| Values                                                                            | Mutability during gameplay                                                               | Authority and gameplay relevance                                                                                                                                                                                                         |
-| --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Definitions and content entries                                                   | Immutable (MODEL-001).                                                                   | Definitions declare concepts; content entries supply authoritative game values used by rules. Neither is campaign history.                                                                                                               |
-| Instance IDs                                                                      | Stable for the lifetime of the instance; undo restores the earlier timeline (MODEL-002). | Authoritative identity; historical references remain resolvable (MODEL-003).                                                                                                                                                             |
-| Retained origin references                                                        | Preserve the creation source required by DOM-011.                                        | Authoritative provenance used by rules and historical explanations.                                                                                                                                                                      |
-| Current instance state; for example, money, orders, and health                    | Mutable under the owning mechanics; an instance can also contain immutable properties.   | Authoritative values used to resolve current gameplay. See [Modeling Foundations](modeling-foundations.md#authoritative-versus-derived-state) for the existing classification.                                                           |
-| Derived values; for example, effective skill, availability, and completion counts | Recomputed as their inputs change.                                                       | Derived values; caching does not make them authoritative (ENG-001). Gameplay relevance depends on the owning rule or report.                                                                                                             |
-| Completed investigations, mission wins, and earned unlocks                        | Retained outcomes must not be overwritten by current calculations (MODEL-004).           | Authoritative historical values can still affect current progression; [Leads and Progression](../mechanics/leads-and-progression.md) owns predicates and effects (DOM-010).                                                              |
-| Final attributes of Killed/Dismissed agents and participation history             | Retained historical values; undo may restore earlier state (DOM-005/007).                | Authoritative history. These records do not constitute current assignments or team membership.                                                                                                                                           |
-| Original inputs or values retained only to explain a past result                  | Preserve the historical basis (MODEL-004).                                               | Used for historical explanation; retaining such values does not make them current combat inputs. Retention details belong to History and Persistence and report visibility to [Player Information](../interfaces/player-information.md). |
+| Values                                                                            | Mutability during gameplay                                                             | Authority and gameplay relevance                                                                                                                                                                                                         |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Definitions and content entries                                                   | Immutable (MODEL-001).                                                                 | Definitions declare concepts; content entries supply authoritative game values used by rules. Neither is campaign history.                                                                                                               |
+| Instance IDs                                                                      | Stable for the lifetime of the instance within its timeline (MODEL-002).               | Authoritative identity; historical references remain resolvable (MODEL-003).                                                                                                                                                             |
+| Retained origin references                                                        | Preserve the creation source required by DOM-011.                                      | Authoritative provenance used by rules and historical explanations.                                                                                                                                                                      |
+| Current instance state; for example, money, orders, and health                    | Mutable under the owning mechanics; an instance can also contain immutable properties. | Authoritative values used to resolve current gameplay. See [Modeling Foundations](modeling-foundations.md#authoritative-versus-derived-state) for the existing classification.                                                           |
+| Derived values; for example, effective skill, availability, and completion counts | Calculated from authoritative values and the current rules/content.                    | Derived values under the Modeling Foundations glossary. Gameplay relevance depends on the owning rule or report.                                                                                                                         |
+| Completed investigations, mission wins, and earned unlocks                        | Retained outcomes must not be overwritten by current calculations (MODEL-004).         | Authoritative historical values can still affect current progression; [Leads and Progression](../mechanics/leads-and-progression.md) owns predicates and effects (DOM-010).                                                              |
+| Final attributes of Killed/Dismissed agents and participation history             | Retained historical values; undo may restore earlier state (DOM-005/007).              | Authoritative history. These records do not constitute current assignments or team membership.                                                                                                                                           |
+| Original inputs or values retained only to explain a past result                  | Preserve the historical basis (MODEL-004).                                             | Used for historical explanation; retaining such values does not make them current combat inputs. Retention details belong to History and Persistence and report visibility to [Player Information](../interfaces/player-information.md). |
+
+Examples of authoritative versus derived game values (not a complete state inventory):
+
+| Authoritative value    | Derived value          |
+| ---------------------- | ---------------------- |
+| Upgrade acquisitions   | Effective capacity     |
+| Agent orders           | Readiness              |
+| Investigation progress | Completion probability |
 
 Becoming historical is a lifecycle transition, not a requirement to destroy an object or choose a storage representation.
 Historical status and current gameplay relevance are independent; each owning mechanic must state whether it consults retained history.
@@ -315,12 +322,12 @@ the source working tree.
 # Acceptance examples
 
 These are structural fixtures, not playable scenarios or API signatures. Symbolic IDs are labels, not a chosen ID format.
-Numbers below are exact test-only integers, not campaign balance. RNG state G and ID state N are opaque; structural checks
-consume no draws. All other rule-owned scalar values are assumed valid for purposes of these structural checks.
+Numbers below are exact test-only integers, not campaign balance. All other rule-owned scalar values are assumed valid
+for purposes of these structural checks. Runtime validation behavior is tested by Engine Contract.
 
 ## A. Valid relationships
 
-Given the content entries C supplied by the current game build and rules R, turn 3, RNG state G, ID state N, and:
+Given the content entries C supplied by the current game build and rules R, turn 3, and:
 
 - One agency and content entries L1 (lead), M1 (mission), F1 (faction), E1 (enemy), W1 (weapon).
 - Faction f1 referring to F1.
@@ -333,13 +340,12 @@ Given the content entries C supplied by the current game build and rules R, turn
 - Other collections empty.
 
 These relationships satisfy DOM-001, DOM-005 through DOM-009, DOM-011, DOM-012, DOM-017, and MODEL-001 through MODEL-003.
-Team membership does not assert that a1 makes progress while travelling. Structural validation leaves all facts, G,
-and N unchanged (ENG-001/004). Full mechanics validation requires the later owning specs.
+Team membership does not assert that a1 makes progress while travelling. Full mechanics validation requires the later
+owning specs.
 
 ## B. Invalid variants
 
-Each row independently changes fixture A. Reject the structural variant; if attempted through a player command, preserve
-the original committed state (ENG-004).
+Each row independently changes fixture A and describes a structurally invalid state.
 
 | Change                                                                           | Violation          |
 | -------------------------------------------------------------------------------- | ------------------ |
@@ -373,6 +379,7 @@ These have explicit proposed answers, not hidden implementation defaults. Review
 | Review decision                                     | Proposed answer                                                                                      | Affected specs         |
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------- |
 | Separate terminal lifecycle from tasks?             | Serving/Killed/Dismissed plus assignment and task phase; death/dismissal are not jobs (DOM-005/006). | AGENT, API, HIST       |
+| Unique IDs across all five campaign instance kinds? | Yes; DOM-017 declares the shared scope using MODEL-002.                                              | NUMRNG, HIST, API      |
 | Independent faction-operation instances?            | Initially embed each occurrence in its single Response mission (DOM-011).                            | FACTION, MISSION, INFO |
 | Individually tracked equipment/inventory?           | No; content entries plus combatant-owned values for initial scope.                                   | AGENT, ECON, COMBAT    |
 | Full health on dismissal as a structural invariant? | No; require positive health and let AGENT/ECON determine eligibility (DOM-008).                      | AGENT, ECON            |
@@ -386,12 +393,12 @@ this model.
 The split changes document ownership, not proposed gameplay. Retained DOM IDs keep their meanings. Retired IDs below
 must not be reused; follow the replacement owners for their normative text and acceptance examples.
 
-| Retired requirement                 | Replacement                                                                                                                                                                                  |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DOM-002 — Definition boundary       | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-001                                                                                                                      |
-| DOM-003 — Identity                  | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-002 for general identity semantics; DOM-017 for the game-specific identity scope                                         |
-| DOM-004 — References                | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-003                                                                                                                      |
-| DOM-013 — Derived consistency       | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-004 for historical preservation; [Engine Contract](engine-contract.md#requirements), ENG-001 for calculations and caches |
-| DOM-014 — Continuation state        | [Engine Contract](engine-contract.md#requirements), ENG-002                                                                                                                                  |
-| DOM-015 — Information boundary      | [Engine Contract](engine-contract.md#requirements), ENG-003                                                                                                                                  |
-| DOM-016 — Committed-state integrity | [Engine Contract](engine-contract.md#requirements), ENG-004                                                                                                                                  |
+| Retired requirement                 | Replacement                                                                                                                                                                                                                                         |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DOM-002 — Definition boundary       | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-001                                                                                                                                                                             |
+| DOM-003 — Identity                  | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-002 for general identity semantics; DOM-017 for the game-specific identity scope; [Engine Contract](engine-contract.md#requirements), ENG-004 for restoring ID-generation state |
+| DOM-004 — References                | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-003                                                                                                                                                                             |
+| DOM-013 — Derived consistency       | [Modeling Foundations](modeling-foundations.md#requirements), MODEL-004 for historical preservation; [Engine Contract](engine-contract.md#requirements), ENG-001 for calculations and caches                                                        |
+| DOM-014 — Continuation state        | [Engine Contract](engine-contract.md#requirements), ENG-002                                                                                                                                                                                         |
+| DOM-015 — Information boundary      | [Engine Contract](engine-contract.md#requirements), ENG-003                                                                                                                                                                                         |
+| DOM-016 — Committed-state integrity | [Engine Contract](engine-contract.md#requirements), ENG-004                                                                                                                                                                                         |

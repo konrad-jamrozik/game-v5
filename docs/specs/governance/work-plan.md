@@ -68,12 +68,15 @@ specification. The project owner requested two directional inventories, centrall
 mirrored explicit relationships, and canonical relationship terminology. This work does not advance mechanics review
 batches or accept the REL contract.
 
-Inventory migration is **Complete** for the current specification set. Free-form dependency classifications were
-replaced with scoped Dependencies and Dependents tables, all explicit relationships were mirrored, and implicit
-relationships were left out of tables. Useful evidence acknowledgements were preserved in Purpose or Evidence basis
-text. Domain Model still refines Modeling Foundations and owns the game-specific identity scope without changing the
-proposed identity guarantees. Relationship graphs and links were validated. This migration does not change the review
-sequence or status of gameplay rules.
+Inventory migration is **Complete** for the current specification set. Explicit relationships use mirrored flat
+directional lists; implicit relationships are omitted from those lists. Substantive reliance is explained in owning
+contract prose. The project owner requested sharper uses/refines definitions and removal of the three foundation
+documents' cycles. Domain Model uses Modeling Foundations, and Engine Contract uses both. Domain Model retains the
+game-specific identity scope; Engine Contract retains execution guarantees. Operational specifications use modeling
+conventions and refine the corresponding engine behavior. These changes preserve proposed gameplay and review status.
+
+The [cycle register](../../spec-relationship-cycles.md) records retained cycles and prospective removal work. Its
+removal approaches do not select new gameplay rules or change the accepted review sequence.
 
 # Requirements
 

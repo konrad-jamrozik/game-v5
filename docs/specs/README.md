@@ -26,6 +26,8 @@ None.
 - [Specification conventions](governance/spec-conventions.md): accepted layout, precision requirements, ownership, and lifecycle.
 - [Artifact Relationships](governance/artifact-relationships.md): Draft definitions of `follows`, `refines`, `uses`,
   `implements`, and `verifies`, with direction, inventory rules, and examples for all artifacts.
+- [Specification relationship cycles](../spec-relationship-cycles.md): informative register of retained cycles,
+  their contract meanings, and future removal criteria.
 - [Specification work plan and backlog](governance/work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 
 [Domain Model](foundation/domain-model.md), [Modeling Foundations](foundation/modeling-foundations.md), and
@@ -33,7 +35,7 @@ None.
 **Stub** documents. No subject specification has been accepted yet.
 The conventions are **Accepted**; their acceptance reference is recorded in that document. Exact formulas, content values,
 public signatures, and frameworks have not been chosen.
-Artifact Relationships is a separate governance Draft. The two-direction inventory rules and implicit relationships are
+Artifact Relationships is a separate governance Draft. The flat directional inventory rules and implicit relationships are
 recorded in the conventions; the completed inventory migration is recorded in the work plan.
 The work plan is **Accepted**; its acceptance reference is recorded in that document. This does not accept or implement the subject specifications.
 

@@ -22,6 +22,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Agents](./agents.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Agents](./agents.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
 
@@ -31,6 +32,10 @@ TODO: Define the local terms here or link their authoritative definitions. Resol
 duplicating shared definitions.
 
 # Concepts and contract
+
+This Stub intends to refine Domain Model's combatant and battle-result contract (DOM-008/012) with battle transitions,
+calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
+and draws. The combat decisions below remain TODOs; campaign consequences remain owned by Missions.
 
 TODO: Specify Combatant, weapon, effective skill, combat rating, round, attack, damage, incapacitation, retreat, and battle result.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
