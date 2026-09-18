@@ -32,17 +32,17 @@
     "check": "npm run lint:specs && npm run docs:check && npm run format:check && npm run lint:code && npm run test && npm run build"
   },
   "devDependencies": {
-    "@types/node": "24.13.4",
-    "@vitest/coverage-v8": "5.0.0",
-    "@vitest/ui": "5.0.0",
+    "@types/node": "26.6.0",
+    "@vitest/coverage-v8": "5.0.1",
+    "@vitest/ui": "5.0.1",
     "github-slugger": "2.0.0",
-    "oxlint": "1.82.0",
+    "oxlint": "1.83.0",
     "oxlint-tsgolint": "7.0.2001",
     "prettier": "3.9.6",
     "remark": "15.0.1",
     "remark-gfm": "4.0.1",
     "typescript": "7.0.2",
     "vite": "8.3.0",
-    "vitest": "5.0.0"
+    "vitest": "5.0.1"
   }
 }
