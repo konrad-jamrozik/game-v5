@@ -25,7 +25,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 | ------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------- |
 | [Engine Contract](../foundation/engine-contract.md)                 | `refines`    | Callable query, information, continuation, and command-integrity guarantees (ENG-001–004) |
 | [Modeling Foundations](../foundation/modeling-foundations.md)       | `uses`       | Identity, typed-reference, and historical-fact semantics (MODEL-002–004)                  |
-| [Domain Model](../foundation/domain-model.md)                       | `uses`       | Campaign entities, relationships, identifiers, and structural invariants                  |
+| [Domain Model](../foundation/domain-model.md)                       | `uses`       | Campaign instances, relationships, identifiers, and structural invariants                 |
 | [History and Persistence](../foundation/history-and-persistence.md) | `uses`       | Session lifecycle, persistence, undo/redo, branching, and stale handles                   |
 | [Player Information](./player-information.md)                       | `uses`       | Observation shapes, reveal conditions, action discovery, reports, and errors              |
 

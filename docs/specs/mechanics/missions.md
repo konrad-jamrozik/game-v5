@@ -31,12 +31,12 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependents
 
-| Dependent                                                  | Relationship | Scope                                                                      |
-| ---------------------------------------------------------- | ------------ | -------------------------------------------------------------------------- |
-| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete mission templates, deadlines, rewards, and consequence parameters |
-| [Leads and Progression](./leads-and-progression.md)        | `uses`       | Mission creation, lifecycle, and outcomes that block or advance leads      |
-| [Player Information](../interfaces/player-information.md)  | `uses`       | Mission state, deadlines, outcomes, and consequence reports                |
-| [Turn Resolution](../foundation/turn-resolution.md)        | `uses`       | Mission aging, resolution, expiration, and consequence effects             |
+| Dependent                                                  | Relationship | Scope                                                                            |
+| ---------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
+| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete mission content entries, deadlines, rewards, and consequence parameters |
+| [Leads and Progression](./leads-and-progression.md)        | `uses`       | Mission creation, lifecycle, and outcomes that block or advance leads            |
+| [Player Information](../interfaces/player-information.md)  | `uses`       | Mission state, deadlines, outcomes, and consequence reports                      |
+| [Turn Resolution](../foundation/turn-resolution.md)        | `uses`       | Mission aging, resolution, expiration, and consequence effects                   |
 
 # Glossary
 

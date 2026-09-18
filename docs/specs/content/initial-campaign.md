@@ -21,15 +21,15 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependencies
 
-| Dependency                                                     | Relationship | Scope                                                                           |
-| -------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
-| [Modeling Foundations](../foundation/modeling-foundations.md)  | `uses`       | Immutable definitions and typed content-reference semantics (MODEL-001/002)     |
-| [Domain Model](../foundation/domain-model.md)                  | `uses`       | Campaign entity kinds, structural invariants, and game-specific identity scope  |
-| [Campaign](../mechanics/campaign.md)                           | `refines`    | Concrete starting configuration, outcome content, and named campaign parameters |
-| [Leads and Progression](../mechanics/leads-and-progression.md) | `refines`    | Concrete lead definitions, prerequisites, and unlock effects                    |
-| [Missions](../mechanics/missions.md)                           | `refines`    | Concrete mission templates, deadlines, rewards, and consequence parameters      |
-| [Factions](../mechanics/factions.md)                           | `refines`    | Concrete faction definitions, escalation values, and operation pools            |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | `refines`    | Concrete resource, purchase, capacity, and upgrade values                       |
+| Dependency                                                     | Relationship | Scope                                                                            |
+| -------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
+| [Modeling Foundations](../foundation/modeling-foundations.md)  | `uses`       | Immutable content entries and typed content-reference semantics (MODEL-001/002)  |
+| [Domain Model](../foundation/domain-model.md)                  | `uses`       | Campaign instance kinds, structural invariants, and game-specific identity scope |
+| [Campaign](../mechanics/campaign.md)                           | `refines`    | Concrete starting configuration, outcome content, and named campaign parameters  |
+| [Leads and Progression](../mechanics/leads-and-progression.md) | `refines`    | Concrete lead content entries, prerequisites, and unlock effects                 |
+| [Missions](../mechanics/missions.md)                           | `refines`    | Concrete mission content entries, deadlines, rewards, and consequence parameters |
+| [Factions](../mechanics/factions.md)                           | `refines`    | Concrete faction content entries, escalation values, and operation pools         |
+| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | `refines`    | Concrete resource, purchase, capacity, and upgrade values                        |
 
 ## Dependents
 
@@ -41,12 +41,14 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
-duplicating shared definitions.
+Shared modeling terms, including Content entry and Instance, are owned by the
+[Modeling Foundations glossary](../foundation/modeling-foundations.md#glossary).
+
+TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Concepts and contract
 
-TODO: Specify Scenario ID/version, named balance parameter, definition ID, starting state, lead graph, enemy, weapon, faction, and mission template.
+TODO: Specify Scenario ID/version, named balance parameter, content entry ID, starting state, lead graph, enemy, weapon, faction, and mission content entry.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -68,7 +70,7 @@ TODO: Assign stable INIT-NNN requirement IDs when concrete rules replace these p
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for Missing IDs/parameters, duplicate definitions, impossible prerequisites, invalid weights, and incomplete mission or faction catalogs.
+TODO: Define behavior for Missing IDs/parameters, duplicate content entries, impossible prerequisites, invalid weights, and incomplete mission or faction catalogs.
 State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
 that truly fall outside this document's scope.
 

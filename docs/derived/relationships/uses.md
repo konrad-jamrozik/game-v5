@@ -8,16 +8,17 @@ A → B means A is used by B.
 
 [Back to the derived specification catalog](../README.md)
 
+## Game specifications
+
 ```mermaid
-flowchart LR
+flowchart TD
+  DOM["DOM — Domain Model (Draft)"]
   AGENT["AGENT — Agents (Stub)"]
   API["API — TypeScript Player API (Stub)"]
   CAMP["CAMP — Campaign (Stub)"]
   CLI["CLI — Terminal CLI (Stub)"]
   COMBAT["COMBAT — Combat (Stub)"]
-  CONV["CONV — Specification Conventions (Accepted)"]
   DEV["DEV — Developer API (Stub)"]
-  DOM["DOM — Domain Model (Draft)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
   ENG["ENG — Engine Contract (Draft)"]
   FACTION["FACTION — Factions (Stub)"]
@@ -29,7 +30,6 @@ flowchart LR
   MISSION["MISSION — Missions (Stub)"]
   MODEL["MODEL — Modeling Foundations (Draft)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
-  REL["REL — Artifact Relationships (Draft)"]
   SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
   TURN["TURN — Turn Resolution (Stub)"]
   WEB["WEB — Web UI (Stub)"]
@@ -97,8 +97,16 @@ flowchart LR
   NUMRNG --> HIST
   NUMRNG --> INVSTG
   NUMRNG --> TURN
-  REL --> CONV
   TURN --> CAMP
   TURN --> SCEN
   WEB --> SCEN
+```
+
+## Relationship governance
+
+```mermaid
+flowchart LR
+  CONV["CONV — Specification Conventions (Accepted)"]
+  REL["REL — Artifact Relationships (Draft)"]
+  REL --> CONV
 ```

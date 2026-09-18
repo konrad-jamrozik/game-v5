@@ -197,9 +197,16 @@ function mermaidText(value: string): string {
 function renderMermaid(
   specifications: readonly SpecificationRecord[],
   relationships: readonly RelationshipRecord[],
+  direction: 'LR' | 'TD' = 'LR',
+  firstSpecificationId?: string,
 ): string {
-  const lines = ['```mermaid', 'flowchart LR']
-  for (const specification of specifications.toSorted((left, right) => compareText(left.id, right.id))) {
+  const lines = ['```mermaid', `flowchart ${direction}`]
+  const sortedSpecifications = specifications.toSorted((left, right) => {
+    if (left.id === firstSpecificationId) return -1
+    if (right.id === firstSpecificationId) return 1
+    return compareText(left.id, right.id)
+  })
+  for (const specification of sortedSpecifications) {
     lines.push(
       `  ${specification.id}["${mermaidText(`${specification.id} — ${specification.title} (${specification.status})`)}"]`,
     )
@@ -267,12 +274,14 @@ function descendantRelationships(
 function renderRelationshipDiagram(
   specifications: readonly SpecificationRecord[],
   relationships: readonly RelationshipRecord[],
+  direction: 'LR' | 'TD' = 'LR',
+  firstSpecificationId?: string,
 ): string {
   const participantIds = new Set(
     relationships.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
   )
   const participants = specifications.filter((specification) => participantIds.has(specification.id))
-  return renderMermaid(participants, relationships)
+  return renderMermaid(participants, relationships, direction, firstSpecificationId)
 }
 
 function renderRelationshipsIndex(corpus: SpecificationCorpus): string {
@@ -324,6 +333,25 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
         )
       }
       lines.push('## Engine contract', '', renderRelationshipDiagram(specifications, engineRelationships))
+      return `${lines.join('\n')}\n`
+    }
+  }
+  if (kind === 'uses') {
+    const governanceRelationships = kindRelationships.filter(
+      (relationship) => relationship.dependencyId === 'REL' && relationship.dependentId === 'CONV',
+    )
+    if (governanceRelationships.length > 0) {
+      const governanceRelationshipSet = new Set(governanceRelationships)
+      const gameRelationships = kindRelationships.filter((relationship) => !governanceRelationshipSet.has(relationship))
+      if (gameRelationships.length > 0) {
+        lines.push(
+          '## Game specifications',
+          '',
+          renderRelationshipDiagram(specifications, gameRelationships, 'TD', 'DOM'),
+          '',
+        )
+      }
+      lines.push('## Relationship governance', '', renderRelationshipDiagram(specifications, governanceRelationships))
       return `${lines.join('\n')}\n`
     }
   }

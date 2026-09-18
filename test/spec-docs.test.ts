@@ -218,6 +218,70 @@ describe('derived specification renderer', () => {
     expect(refines.indexOf('ENG --> CONV')).toBeGreaterThan(refines.indexOf('## Engine contract'))
   })
 
+  test('isolates relationship governance and renders the main uses graph top-down with Domain Model first', async () => {
+    const corpus = sampleCorpus()
+    const outputs = await renderDerivedDocumentation(
+      {
+        ...corpus,
+        specifications: [
+          ...corpus.specifications,
+          {
+            id: 'DOM',
+            family: 'Foundation',
+            title: 'Domain Model',
+            status: 'Draft',
+            scope: 'Shared domain',
+            owns: 'Shared domain.',
+            path: 'docs/specs/foundation/domain-model.md',
+          },
+          {
+            id: 'REL',
+            family: 'Governance',
+            title: 'Artifact Relationships',
+            status: 'Draft',
+            scope: 'Relationship rules',
+            owns: 'Relationship rules.',
+            path: 'docs/specs/governance/artifact-relationships.md',
+          },
+        ],
+        relationships: [
+          ...corpus.relationships,
+          {
+            dependencyId: 'DOM',
+            dependencyPath: 'docs/specs/foundation/domain-model.md',
+            dependentId: 'AAA',
+            dependentPath: 'docs/specs/foundation/alpha.md',
+            kind: 'uses',
+            scope: 'Shared domain',
+            origin: 'explicit',
+            sourcePaths: ['docs/specs/foundation/domain-model.md', 'docs/specs/foundation/alpha.md'],
+          },
+          {
+            dependencyId: 'REL',
+            dependencyPath: 'docs/specs/governance/artifact-relationships.md',
+            dependentId: 'CONV',
+            dependentPath: 'docs/specs/governance/spec-conventions.md',
+            kind: 'uses',
+            scope: 'Relationship terminology',
+            origin: 'explicit',
+            sourcePaths: [
+              'docs/specs/governance/artifact-relationships.md',
+              'docs/specs/governance/spec-conventions.md',
+            ],
+          },
+        ],
+      },
+      PRETTIER_OPTIONS,
+    )
+    const uses = outputs.get('docs/derived/relationships/uses.md') ?? ''
+    const governanceStart = uses.indexOf('## Relationship governance')
+    expect(uses).toContain('## Game specifications\n\n```mermaid\nflowchart TD\n  DOM[')
+    expect(uses.match(/```mermaid/g)).toHaveLength(2)
+    expect(uses.indexOf('DOM --> AAA')).toBeLessThan(governanceStart)
+    expect(uses.indexOf('REL --> CONV')).toBeGreaterThan(governanceStart)
+    expect(uses.slice(governanceStart)).not.toContain('DOM --> AAA')
+  })
+
   test('produces identical output repeatedly', async () => {
     const first = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
     const second = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)

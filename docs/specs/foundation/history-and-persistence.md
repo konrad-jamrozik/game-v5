@@ -25,7 +25,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 | ----------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------- |
 | [Modeling Foundations](./modeling-foundations.md)     | `refines`    | Storage and restoration details for identity, references, and historical preservation (MODEL-002–004) |
 | [Engine Contract](./engine-contract.md)               | `refines`    | Session continuation, restoration, and committed-state integrity (ENG-001/002/004)                    |
-| [Domain Model](./domain-model.md)                     | `uses`       | Campaign entities, references, and structural invariants restored by history operations               |
+| [Domain Model](./domain-model.md)                     | `uses`       | Campaign instances, references, and structural invariants restored by history operations              |
 | [Numbers and Randomness](./numbers-and-randomness.md) | `uses`       | RNG and ID-generation state required for replay and restoration                                       |
 
 ## Dependents

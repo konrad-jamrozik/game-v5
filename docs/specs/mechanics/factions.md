@@ -31,7 +31,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 | Dependent                                                  | Relationship | Scope                                                                           |
 | ---------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
-| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete faction definitions, escalation values, and operation pools            |
+| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete faction content entries, escalation values, and operation pools        |
 | [Leads and Progression](./leads-and-progression.md)        | `uses`       | Faction discovery, progression, and defeat states that affect lead availability |
 | [Missions](./missions.md)                                  | `uses`       | Operation severity, suppression, and faction progression consequences           |
 | [Player Information](../interfaces/player-information.md)  | `uses`       | Revealed faction state, activity, operations, suppression, and defeat           |
@@ -56,7 +56,7 @@ TODO: Specify starting activity, progression thresholds/distributions, update or
 
 ## Operation generation
 
-TODO: Specify countdown timing, severity distribution, mission-template selection, repeat rules, and behavior with existing active operations. Link tables to INIT.
+TODO: Specify countdown timing, severity distribution, mission content entry selection, repeat rules, and behavior with existing active operations. Link tables to INIT.
 
 ## Suppression and defeat
 
@@ -66,7 +66,7 @@ TODO: Assign stable FACTION-NNN requirement IDs when concrete rules replace thes
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for Suppression gained on a spawn turn, maximum activity, no eligible operation templates, repeated operations, and defeat concurrent with an operation.
+TODO: Define behavior for Suppression gained on a spawn turn, maximum activity, no eligible operation content entries, repeated operations, and defeat concurrent with an operation.
 State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
 that truly fall outside this document's scope.
 

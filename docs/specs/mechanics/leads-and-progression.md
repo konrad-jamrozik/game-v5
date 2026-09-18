@@ -21,18 +21,18 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 ## Dependencies
 
-| Dependency                                    | Relationship | Scope                                                                            |
-| --------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
-| [Domain Model](../foundation/domain-model.md) | `refines`    | Lead definitions, progression facts, discovery, availability, and unlock effects |
-| [Missions](./missions.md)                     | `uses`       | Mission creation, lifecycle, and outcomes that block or advance leads            |
-| [Factions](./factions.md)                     | `uses`       | Faction discovery, progression, and defeat states that affect lead availability  |
+| Dependency                                    | Relationship | Scope                                                                                |
+| --------------------------------------------- | ------------ | ------------------------------------------------------------------------------------ |
+| [Domain Model](../foundation/domain-model.md) | `refines`    | Lead content entries, progression facts, discovery, availability, and unlock effects |
+| [Missions](./missions.md)                     | `uses`       | Mission creation, lifecycle, and outcomes that block or advance leads                |
+| [Factions](./factions.md)                     | `uses`       | Faction discovery, progression, and defeat states that affect lead availability      |
 
 ## Dependents
 
 | Dependent                                                  | Relationship | Scope                                                                    |
 | ---------------------------------------------------------- | ------------ | ------------------------------------------------------------------------ |
 | [Factions](./factions.md)                                  | `uses`       | Faction-linked discovery, progression, and defeat effects on leads       |
-| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete lead definitions, prerequisites, and unlock effects             |
+| [Initial Campaign Content](../content/initial-campaign.md) | `refines`    | Concrete lead content entries, prerequisites, and unlock effects         |
 | [Investigations](./investigations.md)                      | `uses`       | Lead eligibility, repeatability, completion facts, and unlock effects    |
 | [Player Information](../interfaces/player-information.md)  | `uses`       | Lead discovery, availability, prerequisites, and progression information |
 
@@ -43,7 +43,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-TODO: Specify Lead definition, prerequisites, discovery, availability, blocking, repeatability, completion count, and unlock effect.
+TODO: Specify Lead content entry, prerequisites, discovery, availability, blocking, repeatability, completion count, and unlock effect.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -51,7 +51,7 @@ appropriate to this document.
 
 ## Prerequisites and lifecycle
 
-TODO: Specify prerequisite expression semantics, discovery, active/blocked/completed/archived states, and repeatability. Define blocking by active missions and completed objectives without relying on ID parsing.
+TODO: Specify prerequisite expression semantics, discovery, active/blocked/completed/historical states, and repeatability. Define blocking by active missions and completed objectives without relying on ID parsing.
 
 ## Completion and unlock effects
 

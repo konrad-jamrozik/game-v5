@@ -21,10 +21,10 @@ RNG algorithm, save encoding, or subsystem mechanics. Accepting it alone does no
 
 ## Dependencies
 
-| Dependency                                        | Relationship | Scope                                                                                                                              |
-| ------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| [Domain Model](./domain-model.md)                 | `uses`       | Game entities, relationships, game-specific identity scope, and structural invariants                                              |
-| [Modeling Foundations](./modeling-foundations.md) | `uses`       | Authoritative facts, derived values, player observations, committed state, references, and historical preservation (MODEL-001–004) |
+| Dependency                                        | Relationship | Scope                                                                                                                               |
+| ------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [Domain Model](./domain-model.md)                 | `uses`       | Game instances, relationships, game-specific identity scope, and structural invariants                                              |
+| [Modeling Foundations](./modeling-foundations.md) | `uses`       | Authoritative values, derived values, player observations, committed state, references, and historical preservation (MODEL-001–004) |
 
 ## Dependents
 
@@ -49,7 +49,7 @@ None.
 Campaign continuation requires gameplay facts and deterministic bookkeeping, including RNG state, ID-generation state,
 and sampled hidden values. The current game build supplies rules and content. ENG-002 defines completeness.
 
-AI memory, UI selections, browser state, and CLI preferences are outside campaign facts (DOM-001).
+AI memory, UI selections, browser state, and CLI preferences are outside campaign state (DOM-001).
 [History and Persistence](history-and-persistence.md#session) defines Session and owns how controller state follows history.
 
 ## Queries and information
@@ -66,11 +66,11 @@ is not a committed observation (ENG-004).
 
 # Requirements
 
-**ENG-001 — Derived consistency.** Derived values must be reproducible from authoritative facts and the current rules/content
+**ENG-001 — Derived consistency.** Derived values must be reproducible from authoritative values and the current rules/content
 without consuming gameplay randomness or mutating state. Caches must be updated or invalidated when inputs change,
 including after undo/redo.
 
-**ENG-002 — Continuation state.** Campaign facts and the rules/content supplied by the current game build must contain
+**ENG-002 — Continuation state.** Campaign state and the rules/content supplied by the current game build must contain
 everything required to resolve a given future command sequence: sampled hidden values, RNG state, ID-generation state,
 and gameplay facts. Outcomes must not depend on a previous UI render or particular AI implementation. This does not
 require AI to choose identical commands after every restart.
@@ -85,7 +85,7 @@ the owner of a browser runtime. INFO/API/DEV own exact fields, reveal conditions
 
 **ENG-004 — Committed-state integrity.** The invariants in Domain Model, Modeling Foundations, and this contract must hold
 before and after successful commands, turn advancement, and history restoration. Intermediate battle/turn states must not
-be exposed as committed observations. Invalid player requests must leave campaign facts, RNG/ID state, reports, and
+be exposed as committed observations. Invalid player requests must leave campaign state, RNG/ID state, reports, and
 history unchanged. Broken internal references/invariants
 must be reported as engine/data defects rather than silently repaired into different gameplay outcomes.
 
@@ -113,9 +113,9 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 | Case                                              | Result / owner                                                                                                                   |
 | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | Query/command names an unknown or hidden ID       | Respect visibility and non-mutation; exact public error belongs to INFO/API (ENG-003/004)                                        |
-| Invalid player request                            | Leave campaign facts, RNG/ID state, reports, and history unchanged (ENG-004)                                                     |
+| Invalid player request                            | Leave campaign state, RNG/ID state, reports, and history unchanged (ENG-004)                                                     |
 | Broken internal reference/invariant               | Report an engine/data defect rather than silently repair gameplay (ENG-004; MODEL-003)                                           |
-| Undo removes an entity created later              | Restore earlier references consistently, with no dangling future-only links or stale derived caches (ENG-001/004; MODEL-002/003) |
+| Undo removes an instance created later            | Restore earlier references consistently, with no dangling future-only links or stale derived caches (ENG-001/004; MODEL-002/003) |
 | Intermediate battle/turn state                    | Do not expose it as a committed observation (ENG-004)                                                                            |
 | Current calculation differs from historical value | Refresh current calculations under ENG-001; preserve historical facts under MODEL-004                                            |
 
@@ -130,13 +130,13 @@ Given hidden investigation difficulty H, opaque RNG state G, and opaque ID-gener
 - Mutating a returned player view cannot mutate the campaign.
 - Repeated queries leave G, N, progress, reports, and history unchanged.
 - Switching human/AI control does not replace the agency or alter gameplay facts.
-- An invalid command leaves campaign facts, G, N, reports, and history unchanged.
+- An invalid command leaves campaign state, G, N, reports, and history unchanged.
 
 These cover DOM-001 and ENG-001 through ENG-004. Exact field names and returned errors await INFO/API/DEV.
 
 ## Reproducible calculations and continuation
 
-Given equal committed campaign facts (including RNG and ID state), the same current rules/content, and the same future
+Given equal committed campaign state (including RNG and ID state), the same current rules/content, and the same future
 command sequence, continuation has the same outcomes regardless of earlier UI renders or which controller supplied
 those commands (ENG-001/002). This does not require AI controllers to choose identical commands.
 
@@ -149,7 +149,7 @@ those commands (ENG-001/002). This does not require AI controllers to choose ide
   and ID state N unchanged (ENG-001/004).
 - A successful command, turn advancement, or restoration exposes a state satisfying the domain and reference invariants.
   Intermediate battle/turn states are not exposed as committed observations (ENG-004).
-- A broken internal reference is reported as an engine/data defect, not silently reassigned to a similarly named entity
+- A broken internal reference is reported as an engine/data defect, not silently reassigned to a similarly named instance
   (ENG-004; MODEL-002/003).
 
 Exact save/restore procedures and public errors remain owned by HIST/API/DEV.

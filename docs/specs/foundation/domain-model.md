@@ -28,35 +28,39 @@ remain in their owning specs.
 
 ## Dependencies
 
-| Dependency                                        | Relationship | Scope                                                                                                               |
-| ------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------- |
-| [Modeling Foundations](./modeling-foundations.md) | `refines`    | Game-specific definition/instance concepts, entity identity scope, references, and historical facts (MODEL-001–004) |
-| [Engine Contract](./engine-contract.md)           | `uses`       | Execution, information-access, and committed-state guarantees (ENG-001–004)                                         |
+| Dependency                                        | Relationship | Scope                                                                                                                               |
+| ------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [Modeling Foundations](./modeling-foundations.md) | `refines`    | Game-specific definition/content entry/instance concepts, instance identity scope, references, and historical facts (MODEL-001–004) |
+| [Engine Contract](./engine-contract.md)           | `uses`       | Execution, information-access, and committed-state guarantees (ENG-001–004)                                                         |
 
 ## Dependents
 
-| Dependent                                                      | Relationship | Scope                                                                                                 |
-| -------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------- |
-| [Agents](../mechanics/agents.md)                               | `refines`    | Agent lifecycle, assignments, task phases, attributes, and participation history                      |
-| [Campaign](../mechanics/campaign.md)                           | `refines`    | Campaign initialization, global progression facts, panic, and terminal outcomes                       |
-| [Combat](../mechanics/combat.md)                               | `refines`    | Combatants, enemy instances, combat transitions, and battle-result facts                              |
-| [Developer API](../interfaces/developer-api.md)                | `uses`       | Authoritative campaign state, hidden facts, and structural invariants                                 |
-| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | `refines`    | Agency resources, roster, upgrade acquisitions, capabilities, and capacity                            |
-| [Engine Contract](./engine-contract.md)                        | `uses`       | Game entities, relationships, game-specific identity scope, and structural invariants                 |
-| [Factions](../mechanics/factions.md)                           | `refines`    | Faction lifecycle, activity, operation provenance, suppression, and defeat facts                      |
-| [History and Persistence](./history-and-persistence.md)        | `uses`       | Campaign entities, references, and structural invariants restored by history operations               |
-| [Initial Campaign Content](../content/initial-campaign.md)     | `uses`       | Campaign entity kinds, structural invariants, and game-specific identity scope                        |
-| [Investigations](../mechanics/investigations.md)               | `refines`    | Investigation attempts, lifecycle, teams, progress facts, and abandonment                             |
-| [Leads and Progression](../mechanics/leads-and-progression.md) | `refines`    | Lead definitions, progression facts, discovery, availability, and unlock effects                      |
-| [Missions](../mechanics/missions.md)                           | `refines`    | Mission lifecycle, deployment, provenance, deadlines, battle results, and campaign consequences       |
-| [Modeling Foundations](./modeling-foundations.md)              | `uses`       | Campaign entity kinds, their structural relationships, and the game-specific identity scope (DOM-017) |
-| [Player Information](../interfaces/player-information.md)      | `uses`       | Campaign entities, relationships, authoritative facts, and hidden state                               |
-| [Turn Resolution](./turn-resolution.md)                        | `uses`       | Campaign entities, state transitions, and structural invariants                                       |
-| [TypeScript Player API](../interfaces/typescript-api.md)       | `uses`       | Campaign entities, relationships, identifiers, and structural invariants                              |
+| Dependent                                                      | Relationship | Scope                                                                                                   |
+| -------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------- |
+| [Agents](../mechanics/agents.md)                               | `refines`    | Agent lifecycle, assignments, task phases, attributes, and participation history                        |
+| [Campaign](../mechanics/campaign.md)                           | `refines`    | Campaign initialization, global progression facts, panic, and terminal outcomes                         |
+| [Combat](../mechanics/combat.md)                               | `refines`    | Combatants, enemy instances, combat transitions, and battle-result facts                                |
+| [Developer API](../interfaces/developer-api.md)                | `uses`       | Authoritative campaign state, hidden facts, and structural invariants                                   |
+| [Economy and Upgrades](../mechanics/economy-and-upgrades.md)   | `refines`    | Agency resources, roster, upgrade acquisitions, capabilities, and capacity                              |
+| [Engine Contract](./engine-contract.md)                        | `uses`       | Game instances, relationships, game-specific identity scope, and structural invariants                  |
+| [Factions](../mechanics/factions.md)                           | `refines`    | Faction lifecycle, activity, operation provenance, suppression, and defeat facts                        |
+| [History and Persistence](./history-and-persistence.md)        | `uses`       | Campaign instances, references, and structural invariants restored by history operations                |
+| [Initial Campaign Content](../content/initial-campaign.md)     | `uses`       | Campaign instance kinds, structural invariants, and game-specific identity scope                        |
+| [Investigations](../mechanics/investigations.md)               | `refines`    | Investigation attempts, lifecycle, teams, progress facts, and abandonment                               |
+| [Leads and Progression](../mechanics/leads-and-progression.md) | `refines`    | Lead content entries, progression facts, discovery, availability, and unlock effects                    |
+| [Missions](../mechanics/missions.md)                           | `refines`    | Mission lifecycle, deployment, provenance, deadlines, battle results, and campaign consequences         |
+| [Modeling Foundations](./modeling-foundations.md)              | `uses`       | Campaign instance kinds, their structural relationships, and the game-specific identity scope (DOM-017) |
+| [Player Information](../interfaces/player-information.md)      | `uses`       | Campaign instances, relationships, authoritative values, and hidden state                               |
+| [Turn Resolution](./turn-resolution.md)                        | `uses`       | Campaign instances, state transitions, and structural invariants                                        |
+| [TypeScript Player API](../interfaces/typescript-api.md)       | `uses`       | Campaign instances, relationships, identifiers, and structural invariants                               |
 
 # Glossary
 
-None.
+| Term      | Definition                                                                                                                                |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Combatant | Abstract definition shared by Agent and Enemy, describing skill, health, exhaustion, and weapon capability; it has no separate instances. |
+
+Generic modeling terms are owned by the [Modeling Foundations glossary](modeling-foundations.md#glossary).
 
 # Concepts and contract
 
@@ -64,6 +68,46 @@ These are game concepts and relationships, not a serialized schema or a required
 include hidden facts; belonging to the game domain does not imply that every property is visible to the player.
 Player Information owns exact visibility. Generic modeling vocabulary belongs to
 [Modeling Foundations](modeling-foundations.md#glossary).
+
+## Modeling dimensions
+
+Concept names in the first table identify definitions unless explicitly labeled as content entries; a particular occurrence
+is an instance. Use the [Modeling Foundations glossary](modeling-foundations.md#glossary) for the generic terms. These
+classifications do not prescribe implementation classes or storage records.
+Content entries are immutable game data, not abstract definitions or separately identified campaign instances.
+
+## Instantiation, multiplicity, and lifecycle
+
+| Concept                                                            | Instantiation and multiplicity                                                                                                                                                | Creation and historical transition / owner                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign; Agency                                                   | Entities. Exactly one Agency instance per Campaign instance (DOM-001); no separate agency ID is required.                                                                     | Campaign initialization and ongoing/won/lost transitions belong to [Campaign](../mechanics/campaign.md); detailed creation and historical retention rules remain unresolved there and in [History and Persistence](history-and-persistence.md).                                                                                                            |
+| Agent                                                              | Entity. Multiple instances can belong to a campaign; roster limits belong to [Economy and Upgrades](../mechanics/economy-and-upgrades.md).                                    | Initial roster and recruitment details belong to [Initial Campaign Content](../content/initial-campaign.md) and Economy and Upgrades. Serving, Killed, and Dismissed are distinct states; Killed/Dismissed instances retain final attributes and career without current assignments (DOM-005). [Agents](../mechanics/agents.md) owns detailed transitions. |
+| Investigation                                                      | Entity. At most one Active instance per lead content entry per campaign; distinct instances for repeated attempts (DOM-009/017).                                              | Starting an attempt creates an instance; restarting after abandonment creates another. Completed/Abandoned instances retain identity and participation history without a current team. [Investigations](../mechanics/investigations.md) owns eligibility and transition details.                                                                           |
+| Mission                                                            | Entity. Multiple instances per campaign, with distinct identities for repeated occurrences; each faction operation occurrence has exactly one Response mission (DOM-011/017). | Initiative creation retains its investigation or scenario source; Response creation retains its operation origin. Exact creation timing, lifecycle, reattempt, and historical-transition rules remain with [Missions](../mechanics/missions.md).                                                                                                           |
+| Enemy                                                              | Entity. Each instance belongs to exactly one mission; instances may share an enemy content entry (DOM-012).                                                                   | Creation and combat transitions belong to Missions and [Combat](../mechanics/combat.md); exact timing and historical retention details remain unresolved with those owners and History and Persistence.                                                                                                                                                    |
+| Faction                                                            | Entity. Campaign instances refer to faction content entries; the allowed count per content entry is unresolved.                                                               | Initial setup belongs to Initial Campaign Content; activity, suppression, defeat, and lifecycle details belong to [Factions](../mechanics/factions.md). Historical-transition details remain unresolved.                                                                                                                                                   |
+| Combatant                                                          | Abstract definition shared by Agent and Enemy; no separate Combatant instance.                                                                                                | Combat operates on the participating Agent and Enemy instances (DOM-012).                                                                                                                                                                                                                                                                                  |
+| Lead, mission, enemy, faction, weapon, and upgrade content entries | Content entries, not campaign instances. Sharing an entry does not constrain instance multiplicity.                                                                           | Supplied by the current game build; fields and values belong to Initial Campaign Content. Individual weapon inventory instances are outside this model; upgrade acquisitions belong to the Agency instance.                                                                                                                                                |
+
+Agent, Faction, Investigation, Mission, and Enemy instances share the explicit ID scope in DOM-017. Classifying Campaign
+and Agency as entities does not extend that scope or introduce new ID requirements. A faction operation's provenance is
+embedded in its Response mission, not represented by a separate instance (DOM-011).
+
+## Mutability, authority, and gameplay relevance
+
+| Values                                                                    | Mutability during gameplay                                                               | Authority and gameplay relevance                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Definitions and content entries                                           | Immutable (MODEL-001).                                                                   | Definitions declare concepts; content entries supply authoritative game values used by rules. Neither is campaign history.                                                                                                               |
+| Instance IDs                                                              | Stable for the lifetime of the instance; undo restores the earlier timeline (MODEL-002). | Authoritative identity; historical references remain resolvable (MODEL-003).                                                                                                                                                             |
+| Retained origin references                                                | Preserve the creation source required by DOM-011.                                        | Authoritative provenance used by rules and historical explanations.                                                                                                                                                                      |
+| Money, orders, health, progress, clocks, and other current instance state | Mutable under the owning mechanics; an instance can also contain immutable properties.   | Authoritative values used to resolve current gameplay. See [Modeling Foundations](modeling-foundations.md#authoritative-versus-derived-state) for the existing classification.                                                           |
+| Effective skill, availability, completion counts, and summaries           | Recomputed as their inputs change.                                                       | Derived values; caching does not make them authoritative (ENG-001). Gameplay relevance depends on the owning rule or report.                                                                                                             |
+| Completed investigations, mission wins, and earned unlocks                | Retained outcomes must not be overwritten by current calculations (MODEL-004).           | Authoritative historical values can still affect current progression; [Leads and Progression](../mechanics/leads-and-progression.md) owns predicates and effects (DOM-010).                                                              |
+| Final attributes of Killed/Dismissed agents and past participation        | Retained historical values; undo may restore earlier state (DOM-005/007).                | Authoritative history. These records do not constitute current assignments or team membership.                                                                                                                                           |
+| Original inputs or values retained only to explain a past result          | Preserve the historical basis (MODEL-004).                                               | Used for historical explanation; retaining such values does not make them current combat inputs. Retention details belong to History and Persistence and report visibility to [Player Information](../interfaces/player-information.md). |
+
+Becoming historical is a lifecycle transition, not a requirement to destroy an object or choose a storage representation.
+Historical status and current gameplay relevance are independent; each owning mechanic must state whether it consults retained history.
 
 ## Campaign and agency
 
@@ -77,7 +121,7 @@ Engine continuation bookkeeping belongs to [Engine Contract](engine-contract.md#
 
 ## Agent
 
-An agent is an individual with a campaign entity ID. Its identity persists through assignments and combat.
+An agent instance has a campaign instance ID. Its identity persists through assignments and combat.
 
 | Aspect                           | Meaning and relationships                                                                                                                                     |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -99,9 +143,9 @@ fatigue, and recovery rules.
 
 | Concept            | Identity and meaning                                                                                                                                                        |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lead               | A content definition describing difficulty, repeatability, prerequisites, effects, and an optional explicit faction reference                                               |
-| Lead progression   | Campaign facts keyed by lead definition: completions and earned facts; discovery and availability are derived                                                               |
-| Investigation      | A campaign entity representing one attempt at one lead; it has progress, hidden difficulty, lifecycle, timing facts, and a current team                                     |
+| Lead               | A content entry describing difficulty, repeatability, prerequisites, effects, and an optional explicit faction reference                                                    |
+| Lead progression   | Campaign state keyed by lead content entry: completions and earned facts; discovery and availability are derived                                                            |
+| Investigation      | A campaign instance representing one attempt at one lead; it has progress, hidden difficulty, lifecycle, timing facts, and a current team                                   |
 | Past participation | Links to agents who participated in the attempt, using the participation-history meaning defined under Agent; terminal attempts retain these links and have no current team |
 
 Restarting an abandoned investigation creates another attempt. Leads and Progression owns discovery and unlock effects;
@@ -109,38 +153,37 @@ Investigations owns progress, probability, uncertainty, team changes, and abando
 
 ## Mission and combat
 
-| Concept                       | Identity and meaning                                                                                                                                                                      |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mission definition            | Content describing encounter configuration and content references                                                                                                                         |
-| Mission                       | A campaign entity referring to one mission definition, with Initiative/Response kind, origin, optional target faction, deadline facts, lifecycle/outcome, enemies, deployment, and result |
-| Current and past participants | Current deployment follows agent assignments; retained past participation uses the relationship defined under Agent                                                                       |
-| Enemy definition              | Content describing an archetype and combat configuration                                                                                                                                  |
-| Enemy                         | A campaign entity owned by one mission, with a definition reference and its own combat attributes/results                                                                                 |
-| Battle result                 | Facts owned by the resolved mission: participants, outcome, combat facts, and measures needed for mission consequences                                                                    |
+| Concept                       | Identity and meaning                                                                                                                                                                           |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mission content entry         | Content describing encounter configuration and content references                                                                                                                              |
+| Mission                       | A campaign instance referring to one mission content entry, with Initiative/Response kind, origin, optional target faction, deadline facts, lifecycle/outcome, enemies, deployment, and result |
+| Current and past participants | Current deployment follows agent assignments; retained past participation uses the relationship defined under Agent                                                                            |
+| Enemy content entry           | Content describing an archetype and combat configuration                                                                                                                                       |
+| Enemy                         | A campaign instance owned by one mission, with a content reference and its own combat attributes/results                                                                                       |
+| Battle result                 | Facts owned by the resolved mission: participants, outcome, combat facts, and measures needed for mission consequences                                                                         |
 
-**Actor/combatant** is the shared role of agents and enemies: skill, health, exhaustion, and weapon capability. It is not
-a third entity copied alongside them. Combat changes the participating identities and produces a battle result.
+The [Combatant definition](#glossary) does not introduce a third instance copied alongside agents and enemies. Combat changes the participating identities and produces a battle result.
 Battle results are distinct from campaign consequences, so failed battles can still yield damage-related benefits.
 Combat owns resolution; Missions owns deployment, deadlines, rewards, and partial success.
 
 ## Faction and operations
 
-A faction definition supplies descriptive identity and configuration references. A faction is a campaign entity referring
-to that definition, with activity, operation clocks, suppression, and defeat/progression facts.
+A faction content entry supplies descriptive identity and configuration references. A faction is a campaign instance referring
+to that content entry, with activity, operation clocks, suppression, and defeat/progression facts.
 
 A faction operation occurrence is the origin of one Response mission: its initiating faction, severity/type, and creation
 facts are embedded in that mission. The containing mission ID identifies the occurrence. It is not a separate scheduled
-entity in this proposal. Factions owns escalation, operation generation, suppression, and defeat mechanics.
+instance in this proposal. Factions owns escalation, operation generation, suppression, and defeat mechanics.
 
 ## Weapons and upgrades
 
-Weapon definitions describe damage configuration. Equipped values and campaign modifications belong to the combatant;
-this scope does not track individual inventory items. Upgrade definitions describe reusable content; acquisitions and
+Weapon content entries describe damage configuration. Equipped values and campaign modifications belong to the combatant;
+this scope does not track individual inventory items. Upgrade content entries describe reusable content; acquisitions and
 amount/level belong to the agency. Economy and Upgrades owns acquisition costs, capacity accounting, and upgrade effects.
 
 ## Reports
 
-A report links historical facts and explanations to commands/turns and entities in the timeline. Player Information owns
+A report links historical facts and explanations to commands/turns and instances in the timeline. Player Information owns
 visible fields; History and Persistence owns timeline storage. Reports can explain retained results without replacing
 historical values with current calculations.
 
@@ -154,7 +197,7 @@ flowchart TD
     Campaign --> Progression["Lead progression facts"]
     Campaign --> Investigations
     Campaign --> Missions
-    Investigations --> Lead["One lead definition"]
+    Investigations --> Lead["One lead content entry"]
     Agents --> Assignment["Current assignment and task phase"]
     Assignment --> Investigations
     Assignment --> Missions
@@ -173,13 +216,13 @@ Arrows show relationships, not inheritance or storage layout.
 ## Campaign boundary
 
 **DOM-001 — Campaign boundary.** A campaign must have exactly one player-controlled agency. Mutable gameplay instances
-must belong to that campaign. AI memory, UI selections, browser state, and CLI preferences are not campaign facts.
+must belong to that campaign. AI memory, UI selections, browser state, and CLI preferences are not campaign state.
 Multiplayer agencies and cross-campaign trading are outside this model.
 
-**DOM-017 — Campaign entity identity scope.** Agent, faction, investigation, mission, and enemy IDs must be unique across
-those five entity kinds within one committed campaign state. Repeated mission and investigation occurrences must have
+**DOM-017 — Campaign instance identity scope.** Agent, faction, investigation, mission, and enemy IDs must be unique across
+those five instance kinds within one committed campaign state. Repeated mission and investigation occurrences must have
 identities distinct from earlier occurrences in the same timeline. Modeling Foundations owns the general identity and
-explicit-reference semantics (MODEL-002); this requirement owns which game entities share that identity scope.
+explicit-reference semantics (MODEL-002); this requirement owns which game instances share that identity scope.
 
 ## Agents, assignments, and participation
 
@@ -208,14 +251,14 @@ Dismissal eligibility, fatigue caps, rounding, and recovery formulas belong to l
 
 ## Opportunities and opponents
 
-**DOM-009 — Lead versus attempt.** An investigation must refer to one lead definition and distinguish Active, Completed,
+**DOM-009 — Lead versus attempt.** An investigation must refer to one lead content entry and distinguish Active, Completed,
 and Abandoned lifecycle states. At most one Active investigation may exist for a lead in a campaign. Active attempts
 must have at least one currently assigned agent in committed state; terminal attempts must have no current team.
 
 Terminal attempts retain identity and agent history. Restarting after abandonment creates another attempt;
 prior progress is historical, not resumable. LEAD/INVSTG own eligibility and numerical progress-loss rules.
 
-**DOM-010 — Progression facts.** Wins, completed investigations, and earned unlocks must be explicit campaign facts with
+**DOM-010 — Progression facts.** Wins, completed investigations, and earned unlocks must be explicit authoritative values in campaign state with
 source references where applicable. Derived completion counts must agree with supporting records. Faction defeat and
 lead affiliation must not depend on specially spelled IDs. Their predicates and effects belong to mechanics owners.
 
@@ -224,11 +267,11 @@ lead affiliation must not depend on specially spelled IDs. Their predicates and 
 or scenario setup. Response missions must retain an operation origin identifying its initiating faction.
 
 For the initial model, each operation occurrence creates exactly one Response mission; provenance is embedded there
-rather than managed as a separately scheduled entity. Two Response missions from the same faction represent distinct
+rather than managed as a separately scheduled instance. Two Response missions from the same faction represent distinct
 occurrences. Operations spanning multiple missions or lacking a Response mission are outside this proposal. Target
 faction and initiating faction are explicit references, not inferences from a mission's name.
 
-**DOM-012 — Combat and consequences.** An enemy instance must belong to exactly one mission. Reusing its definition must
+**DOM-012 — Combat and consequences.** An enemy instance must belong to exactly one mission. Reusing its content entry must
 not reuse its identity or mutable health. Agent combat changes must affect the same identity that returns to the agency.
 Battle results and campaign consequences must be distinguished so failed battles can yield damage-related benefits.
 The model must retain the facts required by the eventual partial-success formula without selecting that formula here.
@@ -242,9 +285,9 @@ the source working tree.
 | Basis                                       | Source and interpretation                                                                                                                                                                                                            |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Inherited concept / proposed simplification | [Agent model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/agentModel.ts) separates orders and state. DOM-005/006 separates lifecycle from both.                       |
-| Inherited concept                           | [Lead model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/leadModel.ts) distinguishes definitions and attempts.                                                        |
+| Inherited concept                           | [Lead model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/leadModel.ts) distinguishes content entries and attempts.                                                    |
 | Proposed clarification                      | [Mission model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/missionModel.ts) stores operation severity on missions. DOM-011 explicitly names mission kind and origin. |
-| Proposed scope choice                       | Weapon definitions and combatant-owned values suffice initially; individual inventory, trading, and transfers are not introduced.                                                                                                    |
+| Proposed scope choice                       | Weapon content entries and combatant-owned values suffice initially; individual inventory, trading, and transfers are not introduced.                                                                                                |
 
 # Edge cases and failure behavior
 
@@ -265,16 +308,16 @@ consume no draws. All other rule-owned scalar values are assumed valid for purpo
 
 ## A. Valid relationships
 
-Given the current content catalog C and rules R, turn 3, RNG state G, ID state N, and:
+Given the content entries C supplied by the current game build and rules R, turn 3, RNG state G, ID state N, and:
 
-- One agency and content definitions L1 (lead), M1 (mission), F1 (faction), E1 (enemy), W1 (weapon).
+- One agency and content entries L1 (lead), M1 (mission), F1 (faction), E1 (enemy), W1 (weapon).
 - Faction f1 referring to F1.
 - Serving agent a1 assigned to investigation i1, In transit.
 - Serving agent a2 assigned to mission m1, At assignment.
 - Active investigation i1 referring to L1, current team {a1}.
 - Initiative mission m1 referring to M1, originating from scenario setup, targeting f1, current team {a2}.
 - Enemy e1 owned by m1 and referring to E1.
-- Each actor has skill 100, health/max-health 10/10, exhaustion 0, and equipped values referring to W1.
+- Each agent and enemy instance has skill 100, health/max-health 10/10, exhaustion 0, and equipped values referring to W1.
 - Other collections empty.
 
 These relationships satisfy DOM-001, DOM-005 through DOM-009, DOM-011, DOM-012, DOM-017, and MODEL-001 through MODEL-003.
@@ -296,7 +339,7 @@ the original committed state (ENG-004).
 | Add another Active attempt for L1, or leave i1 Active with no members            | DOM-009            |
 | Mark m1 Response without faction-operation provenance                            | DOM-011            |
 | Assign e1 a second owning mission                                                | DOM-012            |
-| Give e1 the same entity ID as a1                                                 | DOM-017; MODEL-002 |
+| Give e1 the same instance ID as a1                                               | DOM-017; MODEL-002 |
 
 ## C. Completion and later participation
 
@@ -318,8 +361,8 @@ These have explicit proposed answers, not hidden implementation defaults. Review
 | Review decision                                     | Proposed answer                                                                                      | Affected specs         |
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------- |
 | Separate terminal lifecycle from tasks?             | Serving/Killed/Dismissed plus assignment and task phase; death/dismissal are not jobs (DOM-005/006). | AGENT, API, HIST       |
-| Independent faction-operation entities?             | Initially embed each occurrence in its single Response mission (DOM-011).                            | FACTION, MISSION, INFO |
-| Individually tracked equipment/inventory?           | No; definitions plus combatant-owned values for initial scope.                                       | AGENT, ECON, COMBAT    |
+| Independent faction-operation instances?            | Initially embed each occurrence in its single Response mission (DOM-011).                            | FACTION, MISSION, INFO |
+| Individually tracked equipment/inventory?           | No; content entries plus combatant-owned values for initial scope.                                   | AGENT, ECON, COMBAT    |
 | Full health on dismissal as a structural invariant? | No; require positive health and let AGENT/ECON determine eligibility (DOM-008).                      | AGENT, ECON            |
 
 Formulas, transitions, reveal conditions, and signatures assigned to other specifications remain scheduled work outside

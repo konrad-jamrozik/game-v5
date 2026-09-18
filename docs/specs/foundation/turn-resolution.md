@@ -24,7 +24,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 | Dependency                                                   | Relationship | Scope                                                                                                     |
 | ------------------------------------------------------------ | ------------ | --------------------------------------------------------------------------------------------------------- |
 | [Engine Contract](./engine-contract.md)                      | `refines`    | Phase boundaries, state-read timing, calculation consistency, and committed-state integrity (ENG-001/004) |
-| [Domain Model](./domain-model.md)                            | `uses`       | Campaign entities, state transitions, and structural invariants                                           |
+| [Domain Model](./domain-model.md)                            | `uses`       | Campaign instances, state transitions, and structural invariants                                          |
 | [Numbers and Randomness](./numbers-and-randomness.md)        | `uses`       | Deterministic draw ordering and numeric effect application                                                |
 | [Agents](../mechanics/agents.md)                             | `uses`       | Transit, task contribution, fatigue, recovery, and assignment transitions                                 |
 | [Investigations](../mechanics/investigations.md)             | `uses`       | Progress, completion, team-change, and abandonment effects                                                |

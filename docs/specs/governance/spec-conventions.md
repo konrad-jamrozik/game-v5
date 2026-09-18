@@ -75,7 +75,7 @@ the exception of the root index, its file must be a direct child of the correspo
 | Governance | `governance/` | Specification conventions, relationship rules, and planning or process contracts               |
 | Foundation | `foundation/` | Cross-cutting domain, modeling, execution, numeric, timing, history, and persistence contracts |
 | Mechanics  | `mechanics/`  | Player-facing game-system rules, transitions, formulas, and effects                            |
-| Content    | `content/`    | Versioned definitions, named parameters, catalogs, and starting configurations                 |
+| Content    | `content/`    | Versioned content entries, named parameters, catalogs, and starting configurations             |
 | Interfaces | `interfaces/` | Observable player, developer, API, CLI, and UI contracts                                       |
 | Acceptance | `acceptance/` | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability              |
 
@@ -88,7 +88,7 @@ metadata, register entry, path, and links together.
 
 A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
 
-- Domain Model owns shared entities and invariants; subsystem specifications own their detailed transitions.
+- Domain Model owns shared entities, their instances, and invariants; subsystem specifications own their detailed transitions.
 - Numbers and Randomness owns units, numeric operations, and reproducibility conventions.
 - Mechanics own formulas. Initial Campaign Content owns named balance values and content rows.
 - Turn Resolution owns phase ordering and state-read timing, not subsystem formulas.
@@ -144,6 +144,29 @@ One concept must have exactly one canonical term. Do not introduce synonyms, ali
 If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. Undefined synonyms or inconsistent terminology block acceptance.
 
 Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
+
+## Terminology replacements
+
+Use these replacements in the stated modeling context. Canonical modeling terms are owned by the
+[Modeling Foundations glossary](../foundation/modeling-foundations.md#glossary); this table does not redefine them.
+
+| Avoid                            | Use                 | Context                                                                 |
+| -------------------------------- | ------------------- | ----------------------------------------------------------------------- |
+| Entity ID                        | Instance ID         | Identifying an instantiated object, not its definition.                 |
+| Content definition; template     | Content entry       | Referring to immutable game data.                                       |
+| Evolving campaign facts          | Campaign state      | Describing the data of a particular campaign.                           |
+| Authoritative fact               | Authoritative value | Naming the source-of-truth category.                                    |
+| Computed value; calculated value | Derived value       | Naming the formal category of values calculated from other values.      |
+| Archived; archival               | Historical          | Describing retained past state or events.                               |
+| Deconstructed; destroyed         | Became historical   | Describing a lifecycle transition that retains the instance as history. |
+
+These are contextual replacements, not a ban on ordinary uses of “definition,” legitimate destruction mechanics,
+or unrelated uses of “configuration.” Historical does not replace named lifecycle states such as Killed or Completed.
+
+When specifying a game concept, state its mutability, whether it can be instantiated, multiplicity with an explicit scope,
+creation and historical transitions, authoritative versus derived values, and which values affect current gameplay versus
+serve only historical explanation. Classify properties separately when these dimensions differ within one instance.
+Link to the owning specification for details; explicitly retain unresolved decisions rather than filling them with assumptions.
 
 # Predictable layout and allowed variation
 
@@ -213,7 +236,7 @@ Include worked numerical examples for normal cases and boundaries. Equations, pr
 
 Public API specifications define exact names, types, argument shapes, outputs, and errors when they are ready for acceptance. Conceptual domain specifications need not mirror implementation storage layouts.
 
-Content tables define stable IDs, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit content definition. Use parameter references instead of copying balance values throughout mechanics specifications.
+Content tables define stable IDs, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit content entry. Use parameter references instead of copying balance values throughout mechanics specifications.
 
 # Examples, conformance, and evidence
 
