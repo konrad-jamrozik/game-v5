@@ -36,8 +36,9 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Public operations preserve [ENG-001](../foundation/engine-contract.md#eng-001--derived-consistency), [ENG-002](../foundation/engine-contract.md#eng-002--continuation-state), [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary), and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) and [MODEL-001](../foundation/modeling-foundations.md#model-001--schema-content-and-campaign-instance-boundary), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), [MODEL-003](../foundation/modeling-foundations.md#model-003--references), and [MODEL-004](../foundation/modeling-foundations.md#model-004--historical-fact-preservation). An operation that creates a
-campaign instance must use a constructor contract satisfying [MODEL-006](../foundation/modeling-foundations.md#model-006--campaign-instance-construction), with a declared result campaign instance kind.
+Public operations preserve [ENG-001](../foundation/engine-contract.md#eng-001--derived-consistency), [ENG-002](../foundation/engine-contract.md#eng-002--continuation-state), [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary), and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) and [MODEL-001](../foundation/modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), [MODEL-003](../foundation/modeling-foundations.md#model-003--references), and [MODEL-004](../foundation/modeling-foundations.md#model-004--historical-fact-preservation). An operation that creates a
+campaign instance must use a constructor contract satisfying [MODEL-006](../foundation/modeling-foundations.md#model-006--campaign-instance-construction), with a declared result TypeScript type and initialization of Archetype, MutableState, and ImmutableState containing
+Instance ID. These conceptual components do not prescribe public argument shapes or serialized layouts.
 Returning an existing instance or restoring its earlier state does not itself create a new occurrence; restoration
 remains governed by History and Persistence and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity).
 

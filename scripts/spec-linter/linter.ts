@@ -995,7 +995,9 @@ function validateTerminology(
           if (!('value' in descendant) || typeof descendant.value !== 'string') {
             return
           }
-          const match = PROHIBITED_RELATIONSHIP_TERMS.exec(descendant.value)
+          // TypeScript type is programming vocabulary, not a synonym for relationship kind.
+          const relationshipText = descendant.value.replace(/\bTypeScript\s+types?\b/gi, '')
+          const match = PROHIBITED_RELATIONSHIP_TERMS.exec(relationshipText)
           if (match) {
             addDiagnostic(
               diagnostics,

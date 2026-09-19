@@ -54,6 +54,10 @@ capabilities expose full authoritative state ([ENG-003](#eng-003--information-bo
 Committed state is the complete state before or after an accepted command, as defined in Modeling Foundations. Runtime
 integrity covers domain invariants and modeling/reference conventions, including restoration; intermediate processing
 is not a committed observation ([ENG-004](#eng-004--committed-state-integrity)).
+Integrity includes three-component composition, valid typed references, and stable IDs and immutable facts under
+[MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition),
+[MODEL-002](modeling-foundations.md#model-002--identity), and [MODEL-003](modeling-foundations.md#model-003--references).
+Undo/redo restores occurrences rather than creating new identities or authorizing immutable-fact changes.
 
 # Requirements
 

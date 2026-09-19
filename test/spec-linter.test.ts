@@ -167,6 +167,32 @@ function mutate(files: readonly SourceFile[], path: string, find: string, replac
 }
 
 describe('specification linter', () => {
+  test.each(['TypeScript type', 'TypeScript types', '`TypeScript type`', '**TypeScript type**'])(
+    'allows explicit programming terminology: %s',
+    (term) => {
+      const files = mutate(
+        validCorpus(),
+        'docs/specs/foundation/alpha.md',
+        '# Glossary\n\nNone.',
+        `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Example | A ${term} describing data. |`,
+      )
+      expect(lintSpecifications({ files })).toEqual([])
+    },
+  )
+
+  test.each(['relationship type', 'TypeScript type and relationship type', 'TypeScript type and target'])(
+    'still rejects competing formal relationship terminology: %s',
+    (term) => {
+      const files = mutate(
+        validCorpus(),
+        'docs/specs/foundation/alpha.md',
+        '# Glossary\n\nNone.',
+        `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Example | A ${term}. |`,
+      )
+      expect(diagnosticCodes(files)).toContain('SPEC501')
+    },
+  )
+
   test.each([
     ['Uses', 'Used by', 'uses'],
     ['Refines', 'Refined by', 'refines'],

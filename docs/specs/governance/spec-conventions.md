@@ -80,7 +80,7 @@ metadata, register entry, path, and links together.
 
 A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
 
-- Domain Model owns shared campaign instance kinds, their campaign instances, and invariants; subsystem specifications own their detailed transitions.
+- Domain Model owns shared campaign-instance TypeScript types, their campaign instances, and invariants; subsystem specifications own their detailed transitions.
 - Numbers and Randomness owns units, numeric operations, and reproducibility conventions.
 - Mechanics own formulas. Initial Campaign Content owns named balance values and content rows.
 - Turn Resolution owns phase ordering and state-read timing, not subsystem formulas.
@@ -165,35 +165,42 @@ If two similar terms are retained, they must represent distinct concepts and hav
 replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
 Glossary. If the concepts differ, make their distinct definitions explicit. Unresolved terminology blocks acceptance.
 
-Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
+Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them. Explicit “TypeScript type”
+terminology describes programming structure and is allowed; “relationship type” remains a prohibited substitute for
+“relationship kind.”
 
 ## Terminology replacements
 
 Use the following contextual replacements. This table records prohibited synonyms, not alternative accepted names.
 Canonical terms remain owned by their linked glossaries; this list does not redefine them.
 
-| INSTEAD OF                       | USE                                                                   | Context                                                             |
-| -------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Entity ID                        | [Instance ID](../foundation/modeling-foundations.md#glossary)         | Identifying a campaign instance.                                    |
-| Content definition               | [Content entry](../foundation/modeling-foundations.md#glossary)       | Referring to concrete immutable game data rather than its schema.   |
-| Evolving campaign facts          | [Campaign state](../foundation/modeling-foundations.md#glossary)      | Describing the data of a particular campaign.                       |
-| Authoritative fact               | [Authoritative value](../foundation/modeling-foundations.md#glossary) | Naming the source-of-truth category.                                |
-| Computed value; calculated value | [Derived value](../foundation/modeling-foundations.md#glossary)       | Naming the formal category of values calculated from other values.  |
-| Archived; archival               | [Historical](../foundation/modeling-foundations.md#glossary)          | Describing retained past state or events.                           |
-| Deconstructed; destroyed         | [Became historical](../foundation/modeling-foundations.md#glossary)   | Describing a lifecycle transition that retains a campaign instance. |
-| Fatigue                          | [Exhaustion](../mechanics/agents.md#glossary)                         | Naming the combatant attribute, its accumulation, or recovery.      |
-| Hit points; hit-point            | [Health](../mechanics/agents.md#glossary)                             | Naming the combatant health attribute.                              |
-| Past participation               | [Participation history](../foundation/domain-model.md#glossary)       | Naming retained participation facts.                                |
+| INSTEAD OF                        | USE                                                                                                                                 | Context                                                                                                                                |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign instance kind            | TypeScript type                                                                                                                     | Describing a category of campaign instances using the [modeling vocabulary](../foundation/modeling-foundations.md#glossary).           |
+| Schema                            | TypeScript type                                                                                                                     | Describing model data structure; ordinary API or serialization schema usage remains valid.                                             |
+| Instance state (undifferentiated) | [MutableState](../foundation/modeling-foundations.md#glossary) and [ImmutableState](../foundation/modeling-foundations.md#glossary) | Separate changeable properties from fixed occurrence facts; do not put the latter in shared content.                                   |
+| EnemyType; EnemyKind              | EnemyArchetype                                                                                                                      | Naming the shared content structure, not the complete Enemy instance. See [Archetype](../foundation/modeling-foundations.md#glossary). |
+| Entity ID                         | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a campaign instance.                                                                                                       |
+| Content definition                | [Content entry](../foundation/modeling-foundations.md#glossary)                                                                     | Referring to concrete immutable game data rather than its TypeScript structure.                                                        |
+| Evolving campaign facts           | [Campaign state](../foundation/modeling-foundations.md#glossary)                                                                    | Describing the data of a particular campaign.                                                                                          |
+| Authoritative fact                | [Authoritative value](../foundation/modeling-foundations.md#glossary)                                                               | Naming the source-of-truth category.                                                                                                   |
+| Computed value; calculated value  | [Derived value](../foundation/modeling-foundations.md#glossary)                                                                     | Naming the formal category of values calculated from other values.                                                                     |
+| Archived; archival                | [Historical](../foundation/modeling-foundations.md#glossary)                                                                        | Describing retained past state or events.                                                                                              |
+| Deconstructed; destroyed          | [Became historical](../foundation/modeling-foundations.md#glossary)                                                                 | Describing a lifecycle transition that retains a campaign instance.                                                                    |
+| Fatigue                           | [Exhaustion](../mechanics/agents.md#glossary)                                                                                       | Naming the combatant attribute, its accumulation, or recovery.                                                                         |
+| Hit points; hit-point             | [Health](../mechanics/agents.md#glossary)                                                                                           | Naming the combatant health attribute.                                                                                                 |
+| Past participation                | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Naming retained participation facts.                                                                                                   |
 
 These are contextual replacements, not a ban on ordinary uses of “definition,” legitimate destruction mechanics,
 or unrelated uses of “configuration.” “Template” may describe the role of a content entry used to initialize a campaign
 instance, but it is not a synonym for every content entry or a separate formal modeling category. Historical does not
 replace named lifecycle states; for example, Killed and Completed.
 
-When specifying a game concept, state its applicable modeling role and mutability. For a campaign instance kind, identify
-its state schema and distinguish structural constraints, constructor initialization, and ongoing gameplay invariants.
-Declare whether explicit Instance IDs are required and their scopes; conceptual identity alone does not require an ID
-field. Constructor contracts identify their result kind, inputs, and dependencies. State
+When specifying a game concept, state its applicable modeling role and mutability. For a campaign instance, use a
+TypeScript type alias to describe its Archetype, MutableState, and ImmutableState, including its mandatory Instance ID.
+Distinguish structural constraints, constructor initialization, and ongoing gameplay invariants. Declare ID scopes;
+singleton occurrences are not exempt. Constructor contracts identify their result TypeScript type, inputs, dependencies,
+and initialization of all three components. TypeScript structural compatibility does not establish domain validity. State
 multiplicity with an explicit scope, construction and historical transitions, authoritative versus derived values, and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
 these dimensions differ within one campaign instance. Link to the owning specification for details; explicitly retain

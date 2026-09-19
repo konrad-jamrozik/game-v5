@@ -43,7 +43,7 @@ TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Concepts and contract
 
-Content entries and their references follow [MODEL-001](../foundation/modeling-foundations.md#model-001--schema-content-and-campaign-instance-boundary), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), and [MODEL-003](../foundation/modeling-foundations.md#model-003--references).
+Content entries and their references follow [MODEL-001](../foundation/modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), and [MODEL-003](../foundation/modeling-foundations.md#model-003--references).
 
 This document uses Domain Model's game concepts and Modeling Foundations' content and reference conventions. It uses
 Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and
@@ -63,6 +63,11 @@ TODO: List exact initial resources, roster, capabilities, faction setup, and all
 
 ## Content catalogs
 
+TODO: Supply archetype catalogs for every campaign-instance TypeScript type declared in
+[Domain Model](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including singleton Campaign and Agency.
+Declare each archetype’s content ID, shared characteristics, and construction defaults. Keep non-archetype balance
+parameters distinct. Mechanics retain ownership of constructor behavior; catalog details and balance values remain open.
+
 TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, deadlines, all eight upgrade categories, lead prerequisites, and completion effects using explicit IDs.
 
 ## Completeness and validation
@@ -79,7 +84,8 @@ that truly fall outside this document's scope.
 
 # Acceptance examples
 
-TODO: Provide one fully specified scenario that acceptance fixtures can reference without inventing missing values.
+TODO: Include the required archetypes, all three instance components, and IDs for every occurrence, including Campaign
+and Agency, in initial-state validation. Provide one fully specified scenario that acceptance fixtures can reference without inventing missing values.
 Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 

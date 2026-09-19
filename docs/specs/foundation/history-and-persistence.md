@@ -45,13 +45,17 @@ duplicating shared definitions.
 
 The [Session definition](#glossary) was migrated from Domain Model and remains a draft. Controller state can include,
 for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved; this specification stays Stub.
-Storage and restoration must preserve [MODEL-002](modeling-foundations.md#model-002--identity), [MODEL-003](modeling-foundations.md#model-003--references), and [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
+Storage and restoration must preserve [MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](modeling-foundations.md#model-002--identity), [MODEL-003](modeling-foundations.md#model-003--references), and [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
 
 This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
 undo/redo and save/load procedures. It uses Modeling Foundations' identity, reference, and historical-preservation
 conventions; storage procedures do not refine those meanings. Domain Model supplies the campaign instances restored,
 and Numbers and Randomness supplies the numeric and generator-state contracts. The TODOs below retain the unresolved
 procedure and encoding choices.
+
+Restoring history is not constructing a new occurrence. Undo may remove an occurrence or restore earlier MutableState;
+redo restores that occurrence’s ID, archetype, and ImmutableState unchanged. Required historical records remain immutable
+even in an evolving collection. These obligations do not select snapshots, reference encoding, or a save format.
 
 ## Remaining contract details
 
