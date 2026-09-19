@@ -6,14 +6,14 @@ This document defines the intended gameplay, strategic trade-offs, and foundatio
 
 The game is a **web-based, turn-based agency-management strategy game**, with presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
 
-**Core loop:** allocate agents → investigate leads → uncover opportunities → deploy teams → resolve the turn → manage consequences and reinvest.
+**Core loop:** allocate agents → investigate Leads → uncover Leads and Missions → deploy teams → resolve the turn → manage consequences and reinvest.
 
 The main domain concepts are:
 
 - **Agency and campaign:** resources, capabilities, roster, progression, and current turn.
 - **Agents:** persistent individuals with skill, health, exhaustion, equipment, Current assignments, and career history. Orders and physical availability are distinct.
-- **Leads:** discoverable opportunities connected by prerequisites. They can be repeatable, one-time, blocked, or completed.
-- **Investigations:** individual attempts to complete leads, with assigned agents, accumulated progress, and uncertain completion.
+- **Leads:** discoverable Leads connected by prerequisites. They can be repeatable, one-time, blocked, or completed.
+- **Investigations:** Investigations of given Leads, with assigned agents, accumulated progress, and uncertain completion.
 - **Initiative missions:** agency efforts to advance objectives, typically uncovered through investigations.
 - **Faction operations and Response missions:** enemy activity and the agency’s opportunities to intervene.
 - **Combat:** automatic battles with targeting, skill contests, damage, exhaustion, incapacitation, retreat, casualties, and experience.
@@ -62,18 +62,18 @@ Hiring increases flexibility but also recurring upkeep. Improving existing agent
 
 Spending immediately competes with keeping cash available for upkeep and emergencies. Mission rewards also create a distinction between **immediate cash and recurring funding**: one solves today’s shortage; the other improves long-term sustainability.
 
-### C. Strategic direction: which opportunities to pursue
+### C. Strategic direction: which Leads to pursue
 
 Lead selection determines where the agency invests its future.
 
-The intended lead portfolio includes opportunities to improve long-term agency capabilities, improve agent effectiveness, gain information, and counter particular factions. These are design directions for v5; the existing catalog is primarily faction-progression chains and faction profiles.
+The intended Lead portfolio includes Leads to improve long-term agency capabilities, improve agent effectiveness, gain information, and counter particular factions. These are design directions for v5; the existing catalog is primarily faction-progression chains and faction profiles.
 
 The player must choose:
 
 - Capability development versus immediate intervention.
 - Learning about a faction versus directly advancing against it.
 - Concentrating on one faction versus containing several.
-- Repeatable opportunities versus deeper progression.
+- Repeatable Leads versus deeper progression.
 - Which Initiative missions justify committing scarce combat-ready agents.
 
 Completing one faction’s defeat can remove a continuing source of pressure, but concentrating on it gives other factions time to strengthen.
@@ -86,7 +86,7 @@ Completing one faction’s defeat can remove a continuing source of pressure, bu
 
 This matters because completing a lead can create a time-limited mission. The player must prepare for a plausible completion window instead of scheduling deployment around a known completion turn.
 
-**Commitment cost.** Removing investigators loses progress in proportion to their contribution, following the existing effective-skill-based principle. Removing everyone abandons the attempt; a later attempt starts from zero. Adding agents does not erase progress.
+**Commitment cost.** Removing investigators loses progress in proportion to their contribution, following the existing effective-skill-based principle. Removing everyone abandons the Investigation; a later Investigation starts from zero. Adding agents does not erase progress.
 
 **Fatigue versus continuity.** Long investigations exhaust their teams. Rotating agents preserves readiness but sacrifices progress and incurs travel delays. Keeping the team together preserves momentum but risks declining effectiveness or forced withdrawal.
 

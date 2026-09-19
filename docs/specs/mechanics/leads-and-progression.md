@@ -1,18 +1,18 @@
 # Leads and Progression
 
-| Metadata    | Value                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | LEAD                                                                                                          |
-| Family      | Mechanics                                                                                                     |
-| Status      | Stub                                                                                                          |
-| Scope       | Define the progression graph and the lifecycle of lead opportunities, separately from investigation attempts. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                |
+| Metadata    | Value                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------- |
+| Spec ID     | LEAD                                                                                     |
+| Family      | Mechanics                                                                                |
+| Status      | Stub                                                                                     |
+| Scope       | Define the progression graph and the lifecycle of Leads, separately from Investigations. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
 # Purpose and boundaries
 
-Define the progression graph and the lifecycle of lead opportunities, separately from investigation attempts.
+Define the progression graph and the lifecycle of Leads, separately from Investigations.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -35,7 +35,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's lead and progression contract ([DOM-009](../foundation/domain-model.md#dom-009--lead-versus-attempt)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with prerequisite semantics,
+This Stub intends to refine Domain Model's lead and progression contract ([DOM-009](../foundation/domain-model.md#dom-009--leads-and-investigations)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with prerequisite semantics,
 availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
 progression. Factions in turn uses this document's unlock effects. Initial Campaign Content supplies the actual lead
 graph and effect Content entries conforming to these rules. The expression and effect choices remain TODOs below.

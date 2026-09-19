@@ -144,37 +144,38 @@ a production balance parameter.
 
 An Archetype supplies shared characteristics for particular Campaign instances. Consider an illustrative Enemy Type and a
 Thug Content entry of EnemyArchetype whose base health is 10. Creating two enemies from Thug produces two Campaign instances
-of Enemy, not two new Types and not two mutable copies of Thug.
+of Enemy, not two new Types and not two mutable copies of Thug. Their Instance IDs are `enemy_1` and `enemy_2`;
+both Campaign instances have Type Enemy. The numbered names identify Campaign instances, not Types.
 
 Every Campaign instance has exactly three conceptual components. The complete composition of the first enemy in
 this example is:
 
-| Component      | Purpose                                                     | Enemy e1 at construction                                   |
+| Component      | Purpose                                                     | Enemy enemy_1 at construction                              |
 | -------------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
 | Archetype      | Shared immutable characteristics and construction defaults. | Thug, an EnemyArchetype Content entry with base health 10. |
 | MutableState   | Campaign instance-specific properties permitted to change.  | Current health 10.                                         |
-| ImmutableState | Campaign instance-specific facts fixed at construction.     | Instance ID e1.                                            |
+| ImmutableState | Campaign instance-specific facts fixed at construction.     | Instance ID enemy_1.                                       |
 
 ```mermaid
 flowchart LR
-    ET["Type: Enemy"]
-    AT["Type: EnemyArchetype"]
-    T["Content entry: Thug · base health 10"]
-    T -->|has Type| AT
-    subgraph E1["Campaign instance e1"]
-        A1["Archetype: Thug"]
-        M1["MutableState: health 10"]
-        F1["ImmutableState: Instance ID e1"]
+    enemy_type["Type: Enemy"]
+    enemy_archetype_type["Type: EnemyArchetype"]
+    thug_content_entry["Content entry: Thug · base health 10"]
+    thug_content_entry -->|has Type| enemy_archetype_type
+    subgraph enemy_1["Campaign instance enemy_1"]
+        enemy_1_archetype["Archetype: Thug"]
+        enemy_1_mutable_state["MutableState: health 10"]
+        enemy_1_immutable_state["ImmutableState: Instance ID enemy_1"]
     end
-    subgraph E2["Campaign instance e2"]
-        A2["Archetype: Thug"]
-        M2["MutableState: health 10"]
-        F2["ImmutableState: Instance ID e2"]
+    subgraph enemy_2["Campaign instance enemy_2"]
+        enemy_2_archetype["Archetype: Thug"]
+        enemy_2_mutable_state["MutableState: health 10"]
+        enemy_2_immutable_state["ImmutableState: Instance ID enemy_2"]
     end
-    E1 -->|has Type| ET
-    E2 -->|has Type| ET
-    A1 -->|resolves to| T
-    A2 -->|resolves to| T
+    enemy_1 -->|has Type| enemy_type
+    enemy_2 -->|has Type| enemy_type
+    enemy_1_archetype -->|resolves to| thug_content_entry
+    enemy_2_archetype -->|resolves to| thug_content_entry
 ```
 
 The illustrative Campaign instance constructor `constructEnemy(archetype, instanceId)` receives an EnemyArchetype
@@ -200,7 +201,7 @@ same Type, provided each declares its inputs, dependencies, and initialization r
 instead of supplying the required inputs would violate [MODEL-007](#model-007--gameplay-dependency-direction).
 
 For this example, base health is a positive integer and current health must remain an integer between zero and base
-health, inclusive. Construction starts e1 and e2 at 10. Damage changes e1's health to 7; e2's health and Thug's base
+health, inclusive. Construction starts enemy_1 and enemy_2 at 10. Damage changes enemy_1's health to 7; enemy_2's health and Thug's base
 health remain 10. Both identities remain unchanged. Starting an enemy at 7 would satisfy the ongoing range but violate
 the initialization rule of `constructEnemy`; starting it at 11 would violate both.
 
@@ -214,20 +215,20 @@ their rules; they need not change in every playthrough or remain changeable afte
 
 The Instance ID distinguishes a Campaign instance from other Campaign instances within its declared identity scope. It belongs in ImmutableState:
 it must remain stable, and the shared Thug Content entry cannot supply a distinct identity for every enemy. In the example's
-campaign-wide scope, e2 cannot reuse e1's Instance ID. Other specifications must declare their own scopes explicitly
+campaign-wide scope, enemy_2 cannot reuse enemy_1's Instance ID. Other specifications must declare their own scopes explicitly
 ([MODEL-002](#model-002--identity)).
 
 References identify particular Content entries or Campaign instances and their expected Types. Thug has a Content entry
-identity as an EnemyArchetype Content entry; e1 has an Instance ID as an Enemy Campaign instance. A reference to a missing Content entry is
+identity as an EnemyArchetype Content entry; enemy_1 has an Instance ID as an Enemy Campaign instance. A reference to a missing Content entry is
 invalid, as is resolving an EnemyArchetype reference to Content entries of another Type merely because some fields match.
 References must resolve explicitly; display names and the spelling of identifiers do not encode relationships
 ([MODEL-003](#model-003--references)).
 
 For example, consider a variant `constructEnemy(archetype, instanceId, missionReference)` whose additional input is a
-typed reference to a Mission m1 representing a task. The Campaign instance constructor fixes that reference in e1's
+typed reference to a Mission mission_1 representing a task. The Campaign instance constructor fixes that reference in enemy_1's
 ImmutableState at construction. Mission follows the same three-component contract
-and can have a mutable collection of participating enemies. Its membership can change while e1's fixed mission
-reference continues to resolve to m1. Fixing the reference does not freeze m1's
+and can have a mutable collection of participating enemies. Its membership can change while enemy_1's fixed mission
+reference continues to resolve to mission_1. Fixing the reference does not freeze mission_1's
 MutableState; following a reference does not transfer ownership of the referenced Campaign instance's data.
 
 Conversely, a relationship whose members may change belongs in MutableState. Mutability follows the meaning of the
@@ -236,51 +237,50 @@ Campaign instances simply because they are stored, immutable, or associated with
 
 ## Archetypes and other referenced Content entries
 
-A Campaign instance can refer to Content entries for a purpose other than supplying its Archetype. Consider an illustrative opportunity
-called a Lead and an Investigation representing one attempt to pursue it. The complete comparison needed here is:
+A Campaign instance can refer to Content entries for a purpose other than supplying its Archetype. Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
 
-| Example concept        | Modeling role                                                                          | Question it answers                                          |
-| ---------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Lead                   | Content entry describing an opportunity.                                               | What is being investigated?                                  |
-| InvestigationArchetype | Content entry supplying shared characteristics and construction defaults for attempts. | What shared description does this attempt use?               |
-| Investigation          | Campaign instance with its own Instance ID and MutableState.                           | Which particular attempt is this, and how has it progressed? |
+| Example concept        | Modeling role                                                                                                                                          | Question it answers                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| Lead                   | Content entry representing a Lead to pursue.                                                                                                           | Which Lead can be pursued?                                                        |
+| Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in MutableState, and a fixed Lead reference in ImmutableState. | Which Investigation concerns that Lead, and how has it progressed?                |
+| InvestigationArchetype | Content entry used as an Investigation's Archetype, supplying shared characteristics and construction defaults independently of the referenced Lead.   | What shared characteristics and construction defaults does the Investigation use? |
 
-Suppose Lead L1 is referenced by Investigation i1, constructed with InvestigationArchetype A1. Its ImmutableState fixes its
+Suppose Lead lead_1 is referenced by Investigation investigation_1, constructed with InvestigationArchetype investigation_archetype_1. Its ImmutableState fixes its
 Instance ID and Lead reference; its MutableState contains lifecycle initialized to active and progress initialized to 0. The archetype remains the separate shared
-component. Adding the Lead reference does not create a fourth component or make L1 the Investigation's archetype.
+component. Adding the Lead reference does not create a fourth component or make lead_1 the Investigation's archetype.
 
-For this example, i1 reaches progress 2 and is abandoned. A new Investigation i2 at L1 starts at progress 0 with its own Instance ID.
-Use archetype A2 for i2 to show that the opportunity and the attempt's archetype are independent relationships. These
+For this example, investigation_1 reaches progress 2 and is abandoned. A new Investigation investigation_2 at lead_1 starts at progress 0 with its own Instance ID.
+Use archetype investigation_archetype_2 for investigation_2 to show that the Investigation's Lead reference and Archetype are independent relationships. These
 are symbolic Content entries without selected production fields or mechanics. The example assumes both combinations are
 permitted; it does not define eligibility or concurrency rules.
 
 ```mermaid
 flowchart LR
-    L["Lead L1: opportunity Content entry"]
-    A1["InvestigationArchetype A1"]
-    A2["InvestigationArchetype A2"]
-    subgraph I1["Investigation i1"]
-        C1["Archetype: A1"]
-        F1["ImmutableState: Instance ID i1, Lead L1"]
-        M1["MutableState: abandoned, progress 2"]
+    lead_1["Lead Content entry: lead_1"]
+    investigation_archetype_1["InvestigationArchetype investigation_archetype_1"]
+    investigation_archetype_2["InvestigationArchetype investigation_archetype_2"]
+    subgraph investigation_1["Investigation investigation_1"]
+        investigation_1_archetype["Archetype: investigation_archetype_1"]
+        investigation_1_immutable_state["ImmutableState: Instance ID investigation_1, Lead lead_1"]
+        investigation_1_mutable_state["MutableState: abandoned, progress 2"]
     end
-    subgraph I2["Investigation i2"]
-        C2["Archetype: A2"]
-        F2["ImmutableState: Instance ID i2, Lead L1"]
-        M2["MutableState: active, progress 0"]
+    subgraph investigation_2["Investigation investigation_2"]
+        investigation_2_archetype["Archetype: investigation_archetype_2"]
+        investigation_2_immutable_state["ImmutableState: Instance ID investigation_2, Lead lead_1"]
+        investigation_2_mutable_state["MutableState: active, progress 0"]
     end
-    C1 -->|resolves to| A1
-    C2 -->|resolves to| A2
-    F1 -->|fixed reference| L
-    F2 -->|fixed reference| L
+    investigation_1_archetype -->|resolves to| investigation_archetype_1
+    investigation_2_archetype -->|resolves to| investigation_archetype_2
+    investigation_1_immutable_state -->|fixed reference| lead_1
+    investigation_2_immutable_state -->|fixed reference| lead_1
 ```
 
-Both Investigations can share L1 without sharing progress. Retargeting i1 to another Lead or replacing A1 after construction
-would violate its fixed facts. Using L1 as its archetype would fail the expected InvestigationArchetype reference,
+Both Investigations can share lead_1 without sharing progress. Retargeting investigation_1 to another Lead or replacing investigation_archetype_1 after construction
+would violate its fixed facts. Using lead_1 as its archetype would fail the expected InvestigationArchetype reference,
 regardless of whether some fields match.
 
-If i2 later completes, Campaign state can retain a completion record associated with L1 and i2. L1 remains unchanged;
-the record belongs to the campaign. The number of completions for L1 can then be derived from those records. Content entries
+If investigation_2 later completes, Campaign state can retain a completion record associated with lead_1 and investigation_2. lead_1 remains unchanged;
+the record belongs to the campaign. The number of completions for lead_1 can then be derived from those records. Content entries
 can thus identify the subject of an activity and key campaign facts without becoming mutable itself.
 
 ### Content entry roles in context
@@ -293,7 +293,7 @@ can overlap; they are not a closed taxonomy of Content entry Types or five requi
 | Calculation parameter    | The upkeep Rule reads the upkeep rate.                                                                    |
 | Initialization source    | The initial-capacity Content entry supplies a starting value that subsequently evolves in Campaign state. |
 | Archetype                | Thug supplies shared enemy characteristics and a default for initial health.                              |
-| Referenced Content entry | An investigation's fixed Lead reference identifies its opportunity separately from its archetype.         |
+| Referenced Content entry | An Investigation's fixed Lead reference identifies its Lead separately from its Archetype.                |
 | Key for campaign facts   | Completion records are associated with the Lead's typed Content entry identity.                           |
 
 “Template” can explain a Content entry's initialization role; it is not another formal category or a synonym for every Content entry. “Definition” remains ordinary prose. A Rule and the data it reads remain distinct, and these roles do not
@@ -306,27 +306,27 @@ and current rules and Content entries. This classification is separate from muta
 recorded Instance ID can be Authoritative values even though neither changes during gameplay.
 
 In the enemy example, declare each enemy's current health an Authoritative value and their total current health a Derived value.
-Initially the total is 20. After e1 takes damage, it is 17. Caching the total does not make it an Authoritative value, and hiding
+Initially the total is 20. After enemy_1 takes damage, it is 17. Caching the total does not make it an Authoritative value, and hiding
 either the individual health or the total from the player does not change the classification
 ([MODEL-005](#model-005--value-classification)).
 
-Similarly, the recorded completion of i2 is an Authoritative value recording a historical fact. The completion count for L1 is a Derived value:
-it is 1 after i2 completes, and i1's abandonment does not add a completion. Facts associated with Content entries belong to
+Similarly, the recorded completion of investigation_2 is an Authoritative value recording a historical fact. The completion count for lead_1 is a Derived value:
+it is 1 after investigation_2 completes, and investigation_1's abandonment does not add a completion. Facts associated with Content entries belong to
 the campaign rather than being edits to those Content entries.
 
 ## Historical values and restoration
 
-A past value cannot always be recovered from its current replacement. For example, a report that needs e1's original
+A past value cannot always be recovered from its current replacement. For example, a report that needs enemy_1's original
 health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
 replacement for that historical fact. This obligation applies only when a rule or report needs the historical basis
 ([MODEL-004](#model-004--historical-fact-preservation)).
 
-The Became historical transition does not erase identity or required relationships. A retained reference to e1 must still resolve
+The Became historical transition does not erase identity or required relationships. A retained reference to enemy_1 must still resolve
 after its Became historical transition. Storage can be compacted only if required facts and references remain available.
 An evolving collection can contain immutable historical records: adding a completion record does not permit rewriting
 an earlier record.
 
-Lookup and restoration recover an existing Campaign instance rather than construct a new one. Undoing damage restores e1's
+Lookup and restoration recover an existing Campaign instance rather than construct a new one. Undoing damage restores enemy_1's
 health to 10; redoing it restores 7, with the same identity and immutable facts. Undoing a Campaign instance's creation
 removes it and its references from that timeline; redo restores the same Campaign instance and fixed facts. A Campaign instance
 belonging only to a discarded future is not another live Campaign instance in the retained timeline. These distinctions preserve

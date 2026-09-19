@@ -34,7 +34,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's investigation contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-009](../foundation/domain-model.md#dom-009--lead-versus-attempt)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with start, progress, completion,
+This Stub intends to refine Domain Model's investigation contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-009](../foundation/domain-model.md#dom-009--leads-and-investigations)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with start, progress, completion,
 team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
 and Numbers and Randomness's arithmetic/draws. Player Information supplies exposed field shapes and reveal conditions;
 this document supplies estimate mathematics and the information those estimates condition on. The exact mathematics
@@ -51,7 +51,7 @@ appropriate to this document.
 TODO: Specify eligibility, hidden-difficulty distribution and sampling time, agent contribution, sublinear team scaling, transit treatment, and when progress is added.
 
 TODO: Define InvestigationArchetype selection and allowed combinations with Lead Content entries. Preserve the
-separate Archetype and fixed Lead reference established by Domain Model; apply the one-Active-attempt-per-Lead
+separate Archetype and fixed Lead reference established by Domain Model; apply the at-most-one-Active-Investigation-per-Lead
 constraint across archetypes. The illustrative InvestigationArchetype Content entries in Modeling Foundations do not select mechanics.
 
 ## Completion probability
@@ -64,7 +64,7 @@ TODO: Define the mathematical meaning of displayed estimates/ranges, information
 
 ## Team changes and commitment
 
-TODO: Specify effective-skill-weighted progress loss on removal, the weighting snapshot, exhaustion-driven removal, and abandonment when everyone leaves. Adding agents preserves progress; a new attempt starts from zero.
+TODO: Specify effective-skill-weighted progress loss on removal, the weighting snapshot, exhaustion-driven removal, and abandonment when everyone leaves. Adding agents preserves progress; a new Investigation starts from zero.
 
 TODO: Assign stable INVSTG-NNN requirement IDs when concrete rules replace these placeholders.
 

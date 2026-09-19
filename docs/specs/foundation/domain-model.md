@@ -50,9 +50,9 @@ remain in their owning specifications.
 | Combatant                    | Reusable structure described by a Type for combat-related Agent and Enemy state, describing skill, health, exhaustion, and weapon capability; it is not a Campaign instance Type. |
 | Agency                       | The player-controlled Campaign instance Type whose Campaign instance owns resources, upgrades, and the roster within a campaign.                                                  |
 | Agent                        | A Campaign instance Type whose Campaign instances have identity, attributes, Current assignments, and Participation history.                                                      |
-| Lead                         | A Content entry describing an investigation opportunity and its progression rules.                                                                                                |
+| Lead                         | A Content entry representing a Lead to pursue and describing its progression rules.                                                                                               |
 | Lead progression             | Campaign state keyed by lead Content entry, recording completions and earned facts.                                                                                               |
-| Investigation                | A Campaign instance Type whose Campaign instances each represent one attempt at one lead.                                                                                         |
+| Investigation                | A Campaign instance Type whose Campaign instances each represent an Investigation of one Lead.                                                                                    |
 | Mission                      | A Campaign instance Type whose Campaign instances refer to mission Content entries and have their own origin, participants, and result.                                           |
 | Enemy                        | A Campaign instance Type whose Campaign instances are each owned by one mission and refer to enemy Content entries.                                                               |
 | Battle result                | Retained combat facts owned by a resolved mission and used to determine campaign consequences.                                                                                    |
@@ -92,7 +92,7 @@ The following table enumerates the complete concept classifications declared by 
 | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Campaign; Agency                                                                                              | Campaign instance Types. Exactly one Agency Campaign instance per Campaign instance ([DOM-001](#dom-001--campaign-boundary)); each has its own Instance ID and archetype.                                                                                                         | Campaign initialization and ongoing/won/lost transitions belong to [Campaign](../mechanics/campaign.md); detailed construction and historical retention rules remain unresolved there and in [History and Persistence](history-and-persistence.md).                                                                                                                                              |
 | Agent                                                                                                         | Campaign instance Type. Multiple Campaign instances can belong to a campaign; roster limits belong to [Economy and Upgrades](../mechanics/economy-and-upgrades.md).                                                                                                               | Initial roster and recruitment details belong to [Initial Campaign Content](../content/initial-campaign.md) and Economy and Upgrades. Serving, Killed, and Dismissed are distinct states; Killed/Dismissed Campaign instances retain final attributes and career without Current assignments ([DOM-005](#dom-005--agent-lifecycle)). [Agents](../mechanics/agents.md) owns detailed transitions. |
-| Investigation                                                                                                 | Campaign instance Type. At most one Active Campaign instance per lead Content entry per campaign; repeated attempts have distinct Campaign instances ([DOM-009](#dom-009--lead-versus-attempt)/[DOM-017](#dom-017--campaign-instance-identity-scope)).                            | Starting an attempt constructs a Campaign instance; restarting after abandonment constructs another. Completed/Abandoned Campaign instances retain identity and Participation history without a current team. [Investigations](../mechanics/investigations.md) owns eligibility and transition details.                                                                                          |
+| Investigation                                                                                                 | Campaign instance Type. At most one Active Campaign instance per lead Content entry per campaign; repeated Investigations of a Lead have distinct Campaign instances ([DOM-009](#dom-009--leads-and-investigations)/[DOM-017](#dom-017--campaign-instance-identity-scope)).       | Starting an Investigation constructs a Campaign instance; restarting after abandonment constructs another. Completed/Abandoned Campaign instances retain identity and Participation history without a current team. [Investigations](../mechanics/investigations.md) owns eligibility and transition details.                                                                                    |
 | Mission                                                                                                       | Campaign instance Type. A campaign can contain multiple Campaign instances with distinct identities; each Faction operation occurrence has exactly one Response mission ([DOM-011](#dom-011--mission-kind-and-provenance)/[DOM-017](#dom-017--campaign-instance-identity-scope)). | Initiative construction retains its investigation or scenario source; Response construction retains its Faction operation occurrence origin. Exact construction timing, lifecycle, reattempt, and historical-transition rules remain with [Missions](../mechanics/missions.md).                                                                                                                  |
 | Enemy                                                                                                         | Campaign instance Type. Each Campaign instance belongs to exactly one mission; multiple Campaign instances may share an enemy Content entry ([DOM-012](#dom-012--combat-and-consequences)).                                                                                       | Construction and combat transitions belong to Missions and [Combat](../mechanics/combat.md); exact timing and historical retention details remain unresolved with those owners and History and Persistence.                                                                                                                                                                                      |
 | Faction                                                                                                       | Campaign instance Type. Campaign instances refer to faction Content entries; the allowed count per Content entry is unresolved.                                                                                                                                                   | Initial setup belongs to Initial Campaign Content; activity, suppression, defeat, and lifecycle details belong to [Factions](../mechanics/factions.md). Historical-transition details remain unresolved.                                                                                                                                                                                         |
@@ -183,7 +183,7 @@ exhaustion, and recovery rules.
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Lead                  | A Content entry describing difficulty, repeatability, prerequisites, effects, and an optional explicit faction reference                                                                |
 | Lead progression      | Campaign state keyed by lead Content entry: completions and earned facts; discovery and availability are Derived values                                                                 |
-| Investigation         | A Campaign instance representing one attempt at one lead; it has progress, hidden difficulty, lifecycle, timing facts, and a current team                                               |
+| Investigation         | A Campaign instance for investigation of a given Lead; it has progress, hidden difficulty, lifecycle, timing facts, and a current team                                                  |
 | Participation history | Links to agents who participated in the Investigation, using the Participation history meaning defined under Agent; terminal Investigations retain these links and have no current team |
 
 Restarting an abandoned investigation creates another Investigation. Leads and Progression owns discovery and unlock effects;
@@ -192,7 +192,7 @@ Investigations owns progress, probability, uncertainty, team changes, and abando
 Lead is a referenced Content entry, distinct from the InvestigationArchetype that supplies an Investigation's Archetype component.
 The Lead reference belongs to the Investigation's ImmutableState; current team references belong to MutableState.
 Different Investigations at the same Lead may use different InvestigationArchetypes where the owning rules permit them,
-while the one-Active-attempt constraint still applies across archetypes. Production archetype fields, selection, and
+while the constraint of at most one Active Investigation per Lead still applies across archetypes. Production archetype fields, selection, and
 allowed combinations remain open. The [modeling example](./modeling-foundations.md#archetypes-and-other-referenced-content-entries)
 illustrates this separation without selecting investigation kinds as gameplay features.
 
@@ -308,15 +308,15 @@ zero and maximum health inclusive; skill and exhaustion must be nonnegative. Ser
 Killed agents zero health, and Dismissed agents positive health. Full health on dismissal is not a structural requirement.
 Dismissal eligibility, exhaustion caps, rounding, and recovery formulas belong to later mechanics.
 
-## Opportunities and opponents
+## Leads, Investigations, and opponents
 
-### DOM-009 — Lead versus attempt
+### DOM-009 — Leads and Investigations
 
 An investigation must retain its reference to one lead Content entry in ImmutableState and distinguish Active, Completed,
 and Abandoned lifecycle states. At most one Active investigation may exist for a lead in a campaign. Active Investigations
-must have at least one currently assigned agent in Committed state; terminal attempts must have no current team.
+must have at least one currently assigned agent in Committed state; terminal Investigations must have no current team.
 
-Terminal Investigations retain identity and Participation history. Restarting after abandonment creates another attempt;
+Terminal Investigations retain identity and Participation history. Restarting after abandonment creates another Investigation;
 prior progress is historical, not resumable. LEAD/INVSTG own eligibility and numerical progress-loss rules.
 
 ### DOM-010 — Progression facts
@@ -411,7 +411,7 @@ m1. Required references resolve in c1. Resource scalars are zero and other colle
 Fixed affiliation and target references are assumptions of this fixture, not new production lifecycle rules.
 Growing Participation history or Battle result collections does not permit rewriting retained historical elements.
 
-These relationships satisfy [DOM-001](#dom-001--campaign-boundary), [DOM-005](#dom-005--agent-lifecycle), [DOM-006](#dom-006--orders-and-task-phase), [DOM-007](#dom-007--current-versus-historical-teams), [DOM-008](#dom-008--attribute-bounds), and [DOM-009](#dom-009--lead-versus-attempt), [DOM-011](#dom-011--mission-kind-and-provenance), [DOM-012](#dom-012--combat-and-consequences), [DOM-017](#dom-017--campaign-instance-identity-scope), and [MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](modeling-foundations.md#model-002--identity), and [MODEL-003](modeling-foundations.md#model-003--references).
+These relationships satisfy [DOM-001](#dom-001--campaign-boundary), [DOM-005](#dom-005--agent-lifecycle), [DOM-006](#dom-006--orders-and-task-phase), [DOM-007](#dom-007--current-versus-historical-teams), [DOM-008](#dom-008--attribute-bounds), and [DOM-009](#dom-009--leads-and-investigations), [DOM-011](#dom-011--mission-kind-and-provenance), [DOM-012](#dom-012--combat-and-consequences), [DOM-017](#dom-017--campaign-instance-identity-scope), and [MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](modeling-foundations.md#model-002--identity), and [MODEL-003](modeling-foundations.md#model-003--references).
 Team membership does not assert that a1 makes progress while travelling. Full mechanics validation requires the later
 owning specifications.
 
@@ -431,7 +431,7 @@ Each row independently changes fixture A and describes a structurally invalid st
 | Give a1 both Training and Investigation Current assignments                      | [DOM-005](#dom-005--agent-lifecycle)/[DOM-006](#dom-006--orders-and-task-phase)                                 |
 | List a1 in m1's current team while assigned to i1                                | [DOM-007](#dom-007--current-versus-historical-teams)                                                            |
 | Set health to 11 with maximum health 10, or set a Serving agent's health to zero | [DOM-008](#dom-008--attribute-bounds)                                                                           |
-| Add another Active Investigation for L1, or leave i1 Active with no members      | [DOM-009](#dom-009--lead-versus-attempt)                                                                        |
+| Add another Active Investigation for L1, or leave i1 Active with no members      | [DOM-009](#dom-009--leads-and-investigations)                                                                   |
 | Mark m1 Response without Faction operation occurrence provenance                 | [DOM-011](#dom-011--mission-kind-and-provenance)                                                                |
 | Assign e1 a second owning mission                                                | [DOM-012](#dom-012--combat-and-consequences)                                                                    |
 | Give e1 the same Instance ID as a1                                               | [DOM-017](#dom-017--campaign-instance-identity-scope); [MODEL-002](modeling-foundations.md#model-002--identity) |
@@ -445,8 +445,8 @@ Given i1 concludes and m1 resolves under their owning rules, a structurally vali
 - a1 and a2 Serving with one new valid Current assignment and Task phase each.
 - Explicit progression facts for i1's completion and any win of m1.
 
-This satisfies [MODEL-003](modeling-foundations.md#model-003--references); [DOM-005](#dom-005--agent-lifecycle)/[DOM-007](#dom-007--current-versus-historical-teams)/[DOM-009](#dom-009--lead-versus-attempt)/[DOM-010](#dom-010--progression-facts)/[DOM-012](#dom-012--combat-and-consequences). Assigning a1 to another investigation does not rewrite i1's Participation history. If i1
-were Abandoned instead, restarting creates a new identity and does not resume i1's progress ([MODEL-002](modeling-foundations.md#model-002--identity); [DOM-009](#dom-009--lead-versus-attempt)).
+This satisfies [MODEL-003](modeling-foundations.md#model-003--references); [DOM-005](#dom-005--agent-lifecycle)/[DOM-007](#dom-007--current-versus-historical-teams)/[DOM-009](#dom-009--leads-and-investigations)/[DOM-010](#dom-010--progression-facts)/[DOM-012](#dom-012--combat-and-consequences). Assigning a1 to another investigation does not rewrite i1's Participation history. If i1
+were Abandoned instead, restarting creates a new identity and does not resume i1's progress ([MODEL-002](modeling-foundations.md#model-002--identity); [DOM-009](#dom-009--leads-and-investigations)).
 This fixture does not choose the replacement orders or turn timing.
 
 # Open decisions
