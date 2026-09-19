@@ -190,7 +190,10 @@ or unrelated uses of “configuration.” “Template” may describe the role o
 instance, but it is not a synonym for every content entry or a separate formal modeling category. Historical does not
 replace named lifecycle states; for example, Killed and Completed.
 
-When specifying a game concept, state its applicable modeling role and mutability. For a campaign instance kind, state
+When specifying a game concept, state its applicable modeling role and mutability. For a campaign instance kind, identify
+its state schema and distinguish structural constraints, constructor initialization, and ongoing gameplay invariants.
+Declare whether explicit Instance IDs are required and their scopes; conceptual identity alone does not require an ID
+field. Constructor contracts identify their result kind, inputs, and dependencies. State
 multiplicity with an explicit scope, construction and historical transitions, authoritative versus derived values, and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
 these dimensions differ within one campaign instance. Link to the owning specification for details; explicitly retain

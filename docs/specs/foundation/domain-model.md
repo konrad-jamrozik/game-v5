@@ -103,6 +103,16 @@ Agent, Faction, Investigation, Mission, and Enemy campaign instances share the e
 Campaign and Agency as campaign instance kinds does not extend that scope or introduce new ID requirements. A faction operation's provenance is
 embedded in its Response mission, not represented by a separate campaign instance (DOM-011).
 
+Each campaign instance has conceptual identity even when no separate ID field is required. The Campaign occurrence
+provides the campaign boundary, and its single Agency occurrence is identified within that boundary. DOM-017 requires
+explicit IDs for its five listed kinds; it does not require separate Campaign or Agency IDs. Changing an agency's money
+does not create a different agency.
+
+Kinds and state schemas have distinct roles: a kind names the domain category, while its state schema describes data
+structure. Combatant supplies reusable structure for Agent and Enemy state without being a separate campaign instance
+kind. The creation owners named above specify constructors and their result kinds under MODEL-006; production
+constructor details remain with those owners.
+
 ## Mutability, authority, and gameplay relevance
 
 The following table states the required modeling classifications; example values are explicitly marked.

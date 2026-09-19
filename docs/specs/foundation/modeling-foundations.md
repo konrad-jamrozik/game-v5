@@ -33,10 +33,10 @@ ID-generation algorithms, serialization, executable schema validation, implement
 
 | Term                          | Definition                                                                                                                                                                                                                                    |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Schema                        | A description of data structure and constraints. A schema may describe content entries or campaign state; it does not require a language-level declaration, class, or executable validator.                                                   |
+| Schema                        | A description of data structure and structural constraints. Schemas may reuse other schemas and describe reference fields with permitted targets. These declarations do not create the referenced objects.                                    |
 | Content entry                 | Concrete game data supplied by a game build, immutable during gameplay and conforming to an applicable schema.                                                                                                                                |
-| Campaign instance kind        | A category of campaign instances with common meaning and a state contract, for example, Enemy. A kind need not correspond one-to-one with an implementation construct.                                                                        |
-| Campaign instance             | A particular occurrence of a campaign instance kind, with occurrence-specific campaign state. Its owning specification states whether it is identity-bearing.                                                                                 |
+| Campaign instance kind        | A named category of campaign instances sharing a common domain meaning and state contract. The state contract includes its state schema and applicable gameplay invariants.                                                                   |
+| Campaign instance             | A particular occurrence of a declared campaign instance kind, with its own identity and campaign state.                                                                                                                                       |
 | Campaign instance constructor | A rule that declares its input parameters and dependencies, identifies the campaign instance kind it creates, and establishes the new campaign instance's initial state. It need not be a language-level constructor or public API operation. |
 | Instance ID                   | An identifier for a campaign instance, unique within a declared identity scope and stable during its lifetime under MODEL-002.                                                                                                                |
 | Became historical             | A lifecycle transition that retains a campaign instance as history rather than deleting required facts or references.                                                                                                                         |
@@ -51,8 +51,12 @@ ID-generation algorithms, serialization, executable schema validation, implement
 
 ## Schemas, content, and campaign instances
 
+Enemy is a campaign instance kind; EnemyState is the schema describing its state. A kind supplies domain meaning,
+while its schema describes data structure. Conformance to EnemyState alone does not establish Enemy kind membership
+or create a campaign occurrence: a temporary record can have the same fields without being an Enemy campaign instance.
+
 Schema conformance and content reference are different relationships. A content entry conforms to its content schema.
-A campaign instance conforms to the state schema for its campaign instance kind and may refer to one or more content
+A campaign instance's state conforms to the state schema for its campaign instance kind and may refer to one or more content
 entries. The complete description of such a campaign instance combines its individual campaign state with the shared
 content reached through those references. This composition requires neither inheritance nor copying content values into
 each campaign instance.
@@ -61,10 +65,26 @@ A content entry used to initialize a campaign instance plays a template role, bu
 category. Some content entries do not play that role; for example, a named balance parameter can be content consumed by
 a calculation without serving as a template for a campaign instance.
 
-A schema declares valid structure and constraints. A campaign instance constructor declares how its inputs and
-dependencies establish initial values. The state schema continues to govern later states after gameplay changes the
-instance. A campaign instance kind may have multiple constructors, and a constructor may use zero, one, or multiple
-content entries.
+A schema can describe collections and reference fields, including the permitted campaign instance kinds or content
+schemas of their targets. Such fields do not prescribe how the targets are created. Constructors determine initial
+population and values; gameplay rules determine ownership, lifecycle, and ongoing invariants. Reusing a schema does not
+require a separate category of reusable schemas.
+
+A campaign instance constructor declares how its inputs and dependencies create an occurrence of its declared result
+kind and establish initial values. The state schema and applicable gameplay invariants continue to govern later states.
+A kind may have multiple constructors, and a constructor may use zero, one, or multiple content entries. Returning an
+existing instance or restoring its earlier state does not itself construct a new occurrence. A constructor here is a
+gameplay creation rule, independent of implementation allocation or deserialization.
+
+## Identity and explicit IDs
+
+Identity distinguishes a campaign occurrence through changes to its state. An explicit Instance ID is one way to
+represent that identity. For example, the single agency in a particular campaign can be identified by that relationship
+without a separate agency ID. MODEL-002 requires specifications to declare where explicit IDs are needed.
+
+Content entries can also have IDs; their defining distinction is their role as immutable game-build data. Ordinary
+campaign values, for example, a current health value, do not become content entries merely because they lack independent
+identity. Neither a particular data shape nor the presence of an ID alone establishes a campaign instance.
 
 ## Authoritative versus derived state
 
@@ -92,12 +112,13 @@ every possible chart to be retained.
 
 **MODEL-001 — Schema, content, and campaign instance boundary.** Gameplay must not modify schemas or content entries.
 Every content entry must conform to its applicable schema. Every campaign instance must belong to a declared campaign
-instance kind and conform to that kind's state schema. Campaign instances that share content entries must not thereby
+instance kind throughout its lifetime, and its state must conform to that kind's state schema. Campaign instances that share content entries must not thereby
 share mutable campaign instance state.
 
-**MODEL-002 — Identity.** Identity-bearing campaign instances must have IDs that are unique within their declared
-identity scope and stable during each campaign instance's lifetime. A specification using this convention must declare
-which campaign instance kinds share an identity scope. Content references must identify their content schema and ID.
+**MODEL-002 — Identity.** A specification using campaign instance kinds must declare which kinds require explicit
+Instance IDs and which of those kinds share an identity scope. Required IDs must be unique within their declared scope
+and stable during each campaign instance's lifetime. Campaign instance identity does not itself require a separate ID
+field. Content references must identify their content schema and ID.
 Relationships must use explicit references; rules must not parse display names or ID text to discover relationships.
 
 Distinct occurrences within an identity scope must have distinct IDs in the same timeline. IDs are timeline-scoped:
@@ -120,10 +141,11 @@ classification as derived. Classification must be independent of player visibili
 from the player. Retaining a past calculation as a historical fact is governed by MODEL-004.
 
 **MODEL-006 — Campaign instance construction.** Each campaign instance constructor must declare its input parameters
-and dependencies, identify the campaign instance kind it creates, and establish initial state that conforms to that
-kind's state schema and all applicable committed-state invariants. A constructor contract must distinguish its
-fixture-specific or gameplay-specific initialization rules from schema constraints that remain valid after creation.
-The specification owning creation of that campaign instance kind owns its concrete constructor behavior.
+and dependencies and identify its result campaign instance kind. Every new occurrence it creates must belong to that
+declared kind, with initial state conforming to the kind's state schema and all applicable committed-state invariants.
+A constructor contract must distinguish initialization rules from structural constraints and gameplay invariants that
+continue to apply after creation. Concrete constructor behavior belongs in the gameplay specification responsible for
+that creation operation, as identified by the domain contract's ownership declarations.
 
 ## Evidence basis (informative)
 
@@ -156,15 +178,20 @@ All IDs are symbolic and impose no implementation format.
 
 For this fixture, declare the following example schemas:
 
-| Schema         | Required fields and constraints                                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `EnemyContent` | Content ID; display name; positive integer base health                                                                                |
-| `EnemyState`   | Instance ID; EnemyContent reference; current health from zero through the referenced base health; Mission campaign instance reference |
+| Schema         | Required fields and constraints                                                                              |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| `EnemyContent` | Content ID; display name; positive integer base health                                                       |
+| `EnemyState`   | Instance ID; EnemyContent reference; nonnegative integer current health; Mission campaign instance reference |
+| `MissionState` | Instance ID; collection of Enemy campaign instance references                                                |
 
 Declare Enemy as a campaign instance kind governed by `EnemyState`. Declare the Thug content entry as conforming to
 `EnemyContent`, with content ID `thug`, display name `Thug`, and base health 10. Declare mission `m3` as an existing
-campaign instance of the Mission kind. For this fixture, m3 records explicit references to the Enemy campaign instances
-that belong to it.
+campaign instance of the Mission kind, with state conforming to `MissionState` and initially no enemy references.
+Enemy and Mission require explicit Instance IDs and share one identity scope within the fixture's campaign.
+
+The fixture has two ongoing gameplay invariants: each enemy's current health must not exceed its referenced content's
+base health, and mission/enemy references must agree about membership. These are distinct from the structural schemas
+and from the constructor's initial-health choice. All required references must resolve under MODEL-003.
 
 ```mermaid
 flowchart LR
@@ -177,7 +204,9 @@ flowchart LR
     E17[enemy e17]
 
     Thug -->|conforms to| EnemyContent
-    E17 -->|conforms to| EnemyState
+    EnemyKind -->|has state schema| EnemyState
+    Constructor -->|declares result kind| EnemyKind
+    E17 -->|state conforms to| EnemyState
     Constructor -->|creates| E17
     E17 -->|is of kind| EnemyKind
     E17 -->|references| Thug
@@ -193,18 +222,22 @@ copied into e17.
 
 For this fixture, declare the conceptual constructor
 `createEnemy(campaign, content, mission) -> Enemy campaign instance`. Its parameters are the destination campaign, one
-EnemyContent entry, and one Mission campaign instance. Its declared dependencies are the campaign's ID-allocation state
-and the schemas and committed-state invariants governing its result. It consumes no randomness.
+EnemyContent entry, and one Mission campaign instance. The supplied content must resolve in the current build and
+conform to EnemyContent; the supplied mission must belong to the destination campaign. The constructor reads that
+campaign's current instance IDs and mission membership, and updates its ID-allocation state and supplied mission's
+enemy references. Its result is governed by the fixture schemas and committed-state invariants. It consumes no randomness.
 
 For each call, the constructor allocates a fresh instance ID, records typed references to the supplied content entry and
 mission, records the new enemy reference in the supplied mission, and initializes current health from the content entry's
 base health. These initialization choices belong only to this fixture. Calling it twice with Thug and m3 produces e17
 and e18, both with current health 10 and distinct IDs. Both conform to `EnemyState` and refer to the same Thug entry and
-mission m3 (MODEL-001/002/003/006).
+mission m3 (MODEL-001/002/003/006). Their IDs also differ from m3. Supplying Thug selects a concrete content entry;
+it does not require a Thug-specific schema or campaign instance kind.
 
 After damage changes e17's authoritative current health to 7, e18's current health and Thug's base health remain 10.
 The shared content reference does not share mutable campaign instance state, and neither schema nor Thug changes
-(MODEL-001).
+(MODEL-001). E17 remains an Enemy with the same identity and valid EnemyState. Its health no longer equals the
+constructor's initial value but still satisfies the ongoing health invariant.
 
 ## Value classification
 
@@ -216,17 +249,22 @@ leaves both classifications unchanged (MODEL-005).
 
 Each row independently changes the fixture and states the required result:
 
-| Change                                                               | Violation     |
-| -------------------------------------------------------------------- | ------------- |
-| Give e18 instance ID e17                                             | MODEL-002     |
-| Point e17's content reference at nonexistent EnemyContent ID `brute` | MODEL-003     |
-| Point e17's mission reference at Enemy e18                           | MODEL-003     |
-| Omit the schema from e17's content reference                         | MODEL-002     |
-| Construct e17 without recording its mission reference                | MODEL-003/006 |
-| Initialize e17 with current health 11 while Thug base health is 10   | MODEL-001/006 |
+| Change                                                               | Violation                                                                                   |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Give e18 instance ID e17                                             | MODEL-002                                                                                   |
+| Give e18 instance ID m3                                              | MODEL-002                                                                                   |
+| Point e17's content reference at nonexistent EnemyContent ID `brute` | MODEL-003                                                                                   |
+| Point e17's mission reference at nonexistent Mission m4              | MODEL-003                                                                                   |
+| Point e17's mission reference at Enemy e18                           | MODEL-003                                                                                   |
+| Omit the schema from e17's content reference                         | MODEL-002                                                                                   |
+| Construct e17 without recording its required mission field           | MODEL-001/006                                                                               |
+| Initialize e17 with negative current health                          | MODEL-001/006                                                                               |
+| Initialize e17 with current health 11 while Thug base health is 10   | Fixture health invariant; MODEL-006                                                         |
+| Initialize e17 with health 7 instead of 10                           | Fixture initialization rule; MODEL-006; schema and ongoing health invariant still satisfied |
 
-These are invalid structural fixtures. Changing Thug's display name does not change explicit relationships
-(MODEL-002).
+These variants distinguish structural failures, reference failures, and failures to follow construction rules.
+As a separate fixture variant, choosing a different display name for Thug when preparing the build leaves explicit
+relationships unchanged (MODEL-002); gameplay cannot rename the content entry under MODEL-001.
 
 ## Retained history
 
