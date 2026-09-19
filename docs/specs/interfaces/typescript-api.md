@@ -36,12 +36,12 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Public operations preserve ENG-001 through ENG-004 and MODEL-001 through MODEL-004. An operation that creates a
-campaign instance must use a constructor contract satisfying MODEL-006, with a declared result campaign instance kind.
+Public operations preserve [ENG-001](../foundation/engine-contract.md#eng-001--derived-consistency), [ENG-002](../foundation/engine-contract.md#eng-002--continuation-state), [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary), and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) and [MODEL-001](../foundation/modeling-foundations.md#model-001--schema-content-and-campaign-instance-boundary), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), [MODEL-003](../foundation/modeling-foundations.md#model-003--references), and [MODEL-004](../foundation/modeling-foundations.md#model-004--historical-fact-preservation). An operation that creates a
+campaign instance must use a constructor contract satisfying [MODEL-006](../foundation/modeling-foundations.md#model-006--campaign-instance-construction), with a declared result campaign instance kind.
 Returning an existing instance or restoring its earlier state does not itself create a new occurrence; restoration
-remains governed by History and Persistence and ENG-004.
+remains governed by History and Persistence and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity).
 
-This Stub intends to refine ENG-001 through ENG-004 with exact callable queries and commands, rejection behavior,
+This Stub intends to refine [ENG-001](../foundation/engine-contract.md#eng-001--derived-consistency), [ENG-002](../foundation/engine-contract.md#eng-002--continuation-state), [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary), and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) with exact callable queries and commands, rejection behavior,
 observation isolation, and continuation operations. It uses Modeling Foundations' meanings, Domain Model's game
 concepts, Player Information's permitted views, and History and Persistence's restoration contract. The signatures
 and error choices below remain TODOs rather than an already specified API.
@@ -63,7 +63,7 @@ TODO: Specify eligibility, atomic batch behavior, invalid/stale inputs, no-op ha
 ## Client boundaries
 
 TODO: Define observation immutability, data refresh behavior, and how callers persist sessions without obtaining dev-only gameplay information.
-Apply the build compatibility policy in [Engine Contract](../foundation/engine-contract.md#requirements), ENG-005.
+Apply the build compatibility policy in [Engine Contract](../foundation/engine-contract.md#requirements), [ENG-005](../foundation/engine-contract.md#eng-005--build-compatibility).
 Keep framework and AI-strategy dependencies out.
 
 TODO: Assign stable API-NNN requirement IDs when concrete rules replace these placeholders.

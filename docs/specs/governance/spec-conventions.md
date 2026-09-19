@@ -212,7 +212,9 @@ Rule specifications use the following top-level headings in this order:
 7. `# Acceptance examples`
 8. `# Open decisions`
 
-Use a metadata table immediately below the document-title H1. Major sections are unnumbered H1 headings and their subsections are H2 headings. Keep stable requirement IDs independent of headings. Appendices follow Open decisions.
+Use a metadata table immediately below the document-title H1. Major sections are unnumbered H1 headings. Subsections may
+nest from H2 through H6 when the hierarchy requires it, without skipping a heading level. Appendices follow Open
+decisions.
 
 Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both must use the universal Purpose and boundaries, Relationships, and Glossary sequence, but they may replace the remaining standard rule-spec sections with governance-specific H1 sections.
 
@@ -238,7 +240,16 @@ Long supporting tables may use descriptive appendices after Open decisions. Stat
 
 Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative. Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
 
-Give each implementable requirement a permanent identifier; for example, **INVSTG-nnn**, where `nnn` is a three-digit number. The prefix comes from the index; the number increases without reuse. Preserve identifiers when wording changes, and mark retired requirements with their replacement rather than reassigning the number. Place IDs in the text so they are searchable; link the owning section and name the ID when referencing a requirement.
+Give each implementable requirement a permanent identifier; for example, **INVSTG-nnn**, where `nnn` is a three-digit
+number. The prefix comes from the index; the number increases without reuse. Declare each requirement with a heading in
+the form `ID — Descriptive title`, exactly one level below its containing non-requirement heading. If that container is
+already H6, restructure the surrounding sections before adding the requirement. Preserve identifiers when wording
+changes. When removing a requirement, remove every reference to it and never reuse its identifier; Git history retains
+the historical record.
+
+Every occurrence of a live requirement ID outside its declaration heading must be its own Markdown hyperlink to that
+exact heading. Write each ID in full. Do not use compact forms or ranges such as `PREFIX-nnn/mmm` or `PREFIX-nnn`
+through `PREFIX-mmm`; list and link every referenced ID individually.
 
 Stubs do not invent requirement IDs for TODOs. Allocate IDs when actual rules are proposed.
 

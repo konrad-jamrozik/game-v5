@@ -36,7 +36,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's faction and operation-provenance contract (DOM-011) with escalation,
+This Stub intends to refine Domain Model's faction and operation-provenance contract ([DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)) with escalation,
 operation generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
 Initial Campaign Content supplies operation catalogs and parameter values. Leads and Progression supplies earned
 unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.

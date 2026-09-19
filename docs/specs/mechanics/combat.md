@@ -33,7 +33,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's combatant and battle-result contract (DOM-008/012) with battle transitions,
+This Stub intends to refine Domain Model's combatant and battle-result contract ([DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)/[DOM-012](../foundation/domain-model.md#dom-012--combat-and-consequences)) with battle transitions,
 calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
 and draws. The combat decisions below remain TODOs; campaign consequences remain owned by Missions.
 

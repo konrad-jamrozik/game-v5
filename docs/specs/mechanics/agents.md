@@ -35,17 +35,17 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 Shared campaign instance kind terms are owned by the [Domain Model glossary](../foundation/domain-model.md#glossary).
 
-| Term       | Definition                                                                                                          |
-| ---------- | ------------------------------------------------------------------------------------------------------------------- |
-| Health     | The combatant attribute bounded by zero and maximum health under DOM-008.                                           |
-| Exhaustion | The nonnegative combatant attribute governed by DOM-008; accumulation, caps, and recovery await this specification. |
+| Term       | Definition                                                                                                                                                                     |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Health     | The combatant attribute bounded by zero and maximum health under [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds).                                           |
+| Exhaustion | The nonnegative combatant attribute governed by [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds); accumulation, caps, and recovery await this specification. |
 
 TODO: Define remaining local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's agent contract (DOM-005 through DOM-008) with eligibility, assignment,
+This Stub intends to refine Domain Model's agent contract ([DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle), [DOM-006](../foundation/domain-model.md#dom-006--orders-and-task-phase), [DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams), and [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)) with eligibility, assignment,
 travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
 Combat supplies battle-earned experience, Economy and Upgrades supplies economic effects on personnel and
 capabilities, and Initial Campaign Content supplies balance values. Those inputs are applied to agent transitions;

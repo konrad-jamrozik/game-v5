@@ -33,7 +33,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's campaign boundary (DOM-001 and its Campaign and agency section) with
+This Stub intends to refine Domain Model's campaign boundary ([DOM-001](../foundation/domain-model.md#dom-001--campaign-boundary) and its Campaign and agency section) with
 initialization and ending behavior. Initial Campaign Content supplies the exact starting values and catalogs;
 this document supplies their initialization meaning. Turn Resolution supplies state-read timing and the phase in
 which campaign predicates are checked; this document supplies the predicates. The exact rules remain TODOs below.

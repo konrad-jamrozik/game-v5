@@ -39,9 +39,9 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Phase ordering and state-read timing must preserve ENG-001 and ENG-004.
+Phase ordering and state-read timing must preserve [ENG-001](engine-contract.md#eng-001--derived-consistency) and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
 
-This Stub intends to refine ENG-001/004 by specifying calculation snapshots, ordered phases, and the atomic publication
+This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-consistency)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying calculation snapshots, ordered phases, and the atomic publication
 boundary. It uses Domain Model's valid-state constraints and Numbers and Randomness's arithmetic and draw ordering.
 Agents, Investigations, Missions, Factions, Economy and Upgrades, and Campaign supply the subsystem transitions and
 effects to schedule. Campaign supplies ending predicates; this document supplies when those predicates are evaluated.

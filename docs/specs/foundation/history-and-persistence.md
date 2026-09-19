@@ -45,9 +45,9 @@ duplicating shared definitions.
 
 The [Session definition](#glossary) was migrated from Domain Model and remains a draft. Controller state can include,
 for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved; this specification stays Stub.
-Storage and restoration must preserve MODEL-002 through MODEL-004 and ENG-001, ENG-002, and ENG-004.
+Storage and restoration must preserve [MODEL-002](modeling-foundations.md#model-002--identity), [MODEL-003](modeling-foundations.md#model-003--references), and [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
 
-This Stub intends to refine ENG-001/002/004 by specifying cache restoration or invalidation, complete continuation state, and atomic
+This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
 undo/redo and save/load procedures. It uses Modeling Foundations' identity, reference, and historical-preservation
 conventions; storage procedures do not refine those meanings. Domain Model supplies the campaign instances restored,
 and Numbers and Randomness supplies the numeric and generator-state contracts. The TODOs below retain the unresolved
@@ -68,7 +68,7 @@ TODO: Specify atomic history boundaries, restored fields including RNG/IDs/repor
 ## Replay and persistence
 
 TODO: Define save contents, encoding, load validation, and replay inputs for the current game build under
-[Engine Contract](engine-contract.md#requirements), ENG-005. Decide whether saves retain undo and redo history.
+[Engine Contract](engine-contract.md#requirements), [ENG-005](engine-contract.md#eng-005--build-compatibility). Decide whether saves retain undo and redo history.
 
 ## Session-owned state
 
@@ -90,6 +90,6 @@ fixtures instead of introducing implicit balance values.
 
 # Open decisions
 
-- TODO: Choose history retention, serialization, incompatible-save handling under ENG-005, and how debug changes affect replay.
+- TODO: Choose history retention, serialization, incompatible-save handling under [ENG-005](engine-contract.md#eng-005--build-compatibility), and how debug changes affect replay.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

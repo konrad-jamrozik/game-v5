@@ -35,7 +35,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's lead and progression contract (DOM-009/010) with prerequisite semantics,
+This Stub intends to refine Domain Model's lead and progression contract ([DOM-009](../foundation/domain-model.md#dom-009--lead-versus-attempt)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with prerequisite semantics,
 availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
 progression. Factions in turn uses this document's unlock effects. Initial Campaign Content supplies the actual lead
 graph and effect entries conforming to these rules. The expression and effect choices remain TODOs below.

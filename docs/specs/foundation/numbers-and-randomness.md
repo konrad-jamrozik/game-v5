@@ -36,12 +36,12 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Deterministic identity generation must preserve MODEL-002; calculations and continuation follow ENG-001 and ENG-002.
+Deterministic identity generation must preserve [MODEL-002](modeling-foundations.md#model-002--identity); calculations and continuation follow [ENG-001](engine-contract.md#eng-001--derived-consistency) and [ENG-002](engine-contract.md#eng-002--continuation-state).
 
-This Stub intends to refine ENG-001/002/004 with numeric operations, reproducible generator-state evolution, and
-draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in MODEL-002;
+This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
+draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [MODEL-002](modeling-foundations.md#model-002--identity);
 choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
-under ENG-004; the existing no-op and algorithm TODOs remain unresolved.
+under [ENG-004](engine-contract.md#eng-004--committed-state-integrity); the existing no-op and algorithm TODOs remain unresolved.
 
 TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, seeds, generator state, draws, and deterministic IDs.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
@@ -60,8 +60,8 @@ TODO: Specify the PRNG algorithm, seed encoding, initial state, distributions, i
 ## Deterministic boundaries
 
 TODO: Specify behavior across supported runtimes and runtime versions under the build compatibility policy in
-[Engine Contract](engine-contract.md#requirements), ENG-005; exclude ambient randomness and wall-clock time from game results.
-Detail preservation of RNG state on rejection under ENG-004. Decide whether no-op commands consume draws and how ID
+[Engine Contract](engine-contract.md#requirements), [ENG-005](engine-contract.md#eng-005--build-compatibility); exclude ambient randomness and wall-clock time from game results.
+Detail preservation of RNG state on rejection under [ENG-004](engine-contract.md#eng-004--committed-state-integrity). Decide whether no-op commands consume draws and how ID
 generation relates to RNG.
 
 TODO: Assign stable NUMRNG-NNN requirement IDs when concrete rules replace these placeholders.

@@ -1,10 +1,11 @@
-import type { Blockquote, Heading, ListItem, Paragraph, Strong, Table } from 'mdast'
+import type { Blockquote, Heading, Link, ListItem, Paragraph, Table } from 'mdast'
 import type { Node } from 'unist'
 
 import {
   columnOf,
   findHeading,
   firstLink,
+  headingsWithSlugs,
   headingText,
   headingSlugs,
   inlineMarkdown,
@@ -63,7 +64,6 @@ const REMOVED_HEADINGS =
   /^(?:Terms|Terminology|Vocabulary|Background references?|Downstream ownership(?: \(informative\))?|Source basis)(?: \(informative\))?$/i
 const PROHIBITED_RELATIONSHIP_TERMS =
   /\b(?:source|target|upstream|downstream|dependee|inbound|outbound|edge|node|type)\b/i
-const REQUIREMENT_ID = /\b([A-Z][A-Z0-9]*-\d{3})\b/g
 
 interface Metadata {
   readonly values: ReadonlyMap<string, string>
@@ -116,6 +116,8 @@ interface GlossaryTerm {
 
 interface RequirementDeclaration {
   readonly id: string
+  readonly anchor: string
+  readonly depth: number
   readonly specification: Specification
   readonly node: Node
 }
@@ -139,10 +141,6 @@ function isBlockquote(node: Node): node is Blockquote {
 
 function isListItem(node: Node): node is ListItem {
   return node.type === 'listItem'
-}
-
-function isStrong(node: Node): node is Strong {
-  return node.type === 'strong'
 }
 
 function addDiagnostic(
@@ -565,15 +563,16 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
         'The document title must be an H1 at line 1.',
       )
     }
+    let previousHeading: Heading | undefined
     for (const heading of headings) {
       const text = headingText(heading)
-      if (heading.depth > 2) {
+      if (previousHeading && heading.depth > previousHeading.depth + 1) {
         addDiagnostic(
           diagnostics,
           specification.path,
           heading,
           'SPEC211',
-          'Specification subsections must use H2; deeper heading levels are not permitted.',
+          `Heading depth must not skip from H${previousHeading.depth} to H${heading.depth}.`,
         )
       }
       if (/^\d+(?:\.\d+)*[.)]?\s/.test(text)) {
@@ -594,6 +593,7 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
           `Heading "${text}" is prohibited by Specification Conventions.`,
         )
       }
+      previousHeading = heading
     }
 
     const purpose = findHeading(specification.document, 1, 'Purpose and boundaries')
@@ -1054,66 +1054,75 @@ function declaredRequirements(
   diagnostics: Diagnostic[],
 ): readonly RequirementDeclaration[] {
   const declarations: RequirementDeclaration[] = []
-  visit(specification.document.tree, (node) => {
-    if (!isStrong(node)) return
-    const match = /^([A-Z][A-Z0-9]*-\d{3})(?:\s+—|:)/.exec(textOf(node).trim())
-    if (!match?.[1]) return
-    const id = match[1]
+  let container: Heading | undefined
+  for (const { heading, slug } of headingsWithSlugs(specification.document)) {
+    const text = headingText(heading)
+    const start = /^([A-Z][A-Z0-9]*-\d{3})\b/.exec(text)
+    if (!start?.[1]) {
+      container = heading
+      continue
+    }
+    const match = /^([A-Z][A-Z0-9]*-\d{3})\s+—\s+(.+)$/.exec(text)
+    if (!match?.[1] || !match[2] || match[2].endsWith('.')) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        heading,
+        'SPEC607',
+        'Requirement headings must use "ID — Descriptive title" without a trailing period.',
+      )
+    }
+    const id = start[1]
     if (specification.id && !id.startsWith(`${specification.id}-`)) {
       addDiagnostic(
         diagnostics,
         specification.path,
-        node,
+        heading,
         'SPEC601',
         `Requirement "${id}" must use the ${specification.id} prefix.`,
       )
     }
-    declarations.push({ id, specification, node })
-  })
-  return declarations
-}
-
-function retiredRequirements(specification: Specification): readonly string[] {
-  const retired: string[] = []
-  for (const heading of specification.document.headings) {
-    if (heading.depth !== 1 || !headingText(heading).startsWith('Appendix')) {
-      continue
+    const expectedDepth = container ? container.depth + 1 : 2
+    if (heading.depth === 1 || expectedDepth > 6 || heading.depth !== expectedDepth) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        heading,
+        'SPEC608',
+        expectedDepth > 6
+          ? `Requirement "${id}" cannot be nested below an H6 container; restructure the containing sections.`
+          : `Requirement "${id}" must be H${expectedDepth}, one level below its containing heading.`,
+      )
     }
-    for (const table of tablesIn(sectionNodes(specification.document, heading))) {
-      const rows = tableRows(table)
-      const first = rows[0]?.[0]
-      if (!first || textOf(first).trim() !== 'Retired requirement') continue
-      for (const row of rows.slice(1)) {
-        const cell = row[0]
-        if (!cell) continue
-        for (const match of textOf(cell).matchAll(REQUIREMENT_ID)) {
-          if (match[1]) retired.push(match[1])
-        }
-      }
-    }
+    if (match?.[1] && match[2])
+      declarations.push({ id, anchor: slug, depth: heading.depth, specification, node: heading })
   }
-  return retired
+  return declarations
 }
 
 function expandRequirementReferences(text: string): readonly string[] {
   const references = new Set<string>()
-  const pattern = /\b([A-Z][A-Z0-9]*)-(\d{3})(?:(?:–|-)(\d{3})|((?:\/(?:[A-Z][A-Z0-9]*-)?\d{3})+))?/g
+  const pattern =
+    /\b([A-Z][A-Z0-9]*)-(\d{3})(?:(?:–|-)(\d{3})|\s+through\s+(?:([A-Z][A-Z0-9]*)-)?(\d{3})|((?:\/(?:[A-Z][A-Z0-9]*-)?\d{3})+))?/g
   for (const match of text.matchAll(pattern)) {
     const prefix = match[1]
     const startText = match[2]
     if (!prefix || !startText) continue
     references.add(`${prefix}-${startText}`)
-    const endText = match[3]
+    const endText = match[3] ?? match[5]
     if (endText) {
       const start = Number(startText)
       const end = Number(endText)
-      if (end >= start && end - start <= 999) {
+      const endPrefix = match[4] ?? prefix
+      if (endPrefix === prefix && end >= start && end - start <= 999) {
         for (let value = start + 1; value <= end; value += 1) {
           references.add(`${prefix}-${String(value).padStart(3, '0')}`)
         }
+      } else {
+        references.add(`${endPrefix}-${endText}`)
       }
     }
-    const compact = match[4]
+    const compact = match[6]
     if (compact) {
       for (const part of compact.slice(1).split('/')) {
         references.add(part.includes('-') ? part : `${prefix}-${part}`)
@@ -1123,18 +1132,105 @@ function expandRequirementReferences(text: string): readonly string[] {
   return [...references]
 }
 
-function validateLifecycleAndRequirements(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
-  const declarations = specifications.flatMap((specification) => declaredRequirements(specification, diagnostics))
+function validateRequirementReferences(
+  parsed: ParsedInput,
+  declarations: readonly RequirementDeclaration[],
+  diagnostics: Diagnostic[],
+  includeDerived: boolean,
+): void {
   const byId = new Map<string, RequirementDeclaration[]>()
-  const known = new Set<string>()
   for (const declaration of declarations) {
     const matches = byId.get(declaration.id) ?? []
     matches.push(declaration)
     byId.set(declaration.id, matches)
-    known.add(declaration.id)
   }
-  for (const specification of specifications) {
-    for (const retired of retiredRequirements(specification)) known.add(retired)
+  const declarationNodes = new Set(declarations.map((declaration) => declaration.node))
+  const compactPattern =
+    /\b[A-Z][A-Z0-9]*-\d{3}(?:(?:\/\d{3})+|(?:–|-)(?:[A-Z][A-Z0-9]*-)?\d{3}|\s+through\s+[A-Z][A-Z0-9]*-\d{3})\b/g
+
+  for (const [path, document] of parsed.allDocuments) {
+    if (!includeDerived && path.startsWith('docs/derived/')) continue
+    const walk = (node: Node, activeLink: Link | undefined): void => {
+      if (declarationNodes.has(node)) return
+      const link = isLink(node) ? node : activeLink
+      if (node.type === 'paragraph' || node.type === 'tableCell' || node.type === 'heading') {
+        for (const match of textOf(node).matchAll(compactPattern)) {
+          addDiagnostic(
+            diagnostics,
+            path,
+            node,
+            'SPEC610',
+            `Requirement reference "${match[0]}" must be expanded into individually linked full IDs.`,
+          )
+        }
+      }
+      if ('value' in node && typeof node.value === 'string') {
+        for (const reference of expandRequirementReferences(node.value)) {
+          const candidates = byId.get(reference) ?? []
+          if (candidates.length === 0) {
+            addDiagnostic(
+              diagnostics,
+              path,
+              node,
+              'SPEC606',
+              `Requirement reference "${reference}" does not resolve to a live requirement heading.`,
+            )
+            continue
+          }
+          if (candidates.length !== 1) continue
+          if (!link) {
+            addDiagnostic(
+              diagnostics,
+              path,
+              node,
+              'SPEC609',
+              `Requirement reference "${reference}" must be a hyperlink to its declaration.`,
+            )
+            continue
+          }
+          const expected = candidates[0]
+          if (!expected) continue
+          const parts = splitUrl(link.url)
+          const decodedPath = decodeUrlPart(parts.path)
+          const decodedFragment = parts.fragment === undefined ? undefined : decodeUrlPart(parts.fragment)
+          const destinationPath =
+            decodedPath === undefined ? undefined : decodedPath ? resolvePath(path, decodedPath) : path
+          if (
+            textOf(link).trim() !== reference ||
+            isExternalUrl(link.url) ||
+            destinationPath !== expected.specification.path ||
+            decodedFragment !== expected.anchor
+          ) {
+            addDiagnostic(
+              diagnostics,
+              path,
+              link,
+              'SPEC611',
+              `Requirement reference "${reference}" must be its own link to "${expected.specification.path}#${expected.anchor}".`,
+            )
+          }
+        }
+      }
+      if (!isParent(node)) return
+      for (const child of node.children) walk(child, link)
+    }
+    walk(document.tree, undefined)
+  }
+}
+
+function validateLifecycleAndRequirements(
+  parsed: ParsedInput,
+  diagnostics: Diagnostic[],
+  includeDerived = false,
+): void {
+  const declarations = parsed.specifications.flatMap((specification) =>
+    declaredRequirements(specification, diagnostics),
+  )
+  const byId = new Map<string, RequirementDeclaration[]>()
+  for (const declaration of declarations) {
+    const matches = byId.get(declaration.id) ?? []
+    matches.push(declaration)
+    byId.set(declaration.id, matches)
   }
   for (const [id, duplicates] of byId) {
     if (duplicates.length < 2) continue
@@ -1148,7 +1244,7 @@ function validateLifecycleAndRequirements(specifications: readonly Specification
       )
     }
   }
-  for (const specification of specifications) {
+  for (const specification of parsed.specifications) {
     const todos = todoNodes(specification)
     if (specification.status === 'Stub' && todos.length === 0) {
       addDiagnostic(
@@ -1188,20 +1284,8 @@ function validateLifecycleAndRequirements(specifications: readonly Specification
         }
       }
     }
-    for (const node of specification.document.children) {
-      for (const reference of expandRequirementReferences(textOf(node))) {
-        if (!known.has(reference)) {
-          addDiagnostic(
-            diagnostics,
-            specification.path,
-            node,
-            'SPEC606',
-            `Requirement reference "${reference}" does not resolve to a current or explicitly retired requirement.`,
-          )
-        }
-      }
-    }
   }
+  validateRequirementReferences(parsed, declarations, diagnostics, includeDerived)
 }
 
 function compareDiagnostics(left: Diagnostic, right: Diagnostic): number {
@@ -1324,7 +1408,7 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   validateLinks(parsed, diagnostics)
   const relationships = validateRelationships(parsed.specifications, diagnostics)
   const glossary = validateTerminology(parsed.specifications, diagnostics)
-  validateLifecycleAndRequirements(parsed.specifications, diagnostics)
+  validateLifecycleAndRequirements(parsed, diagnostics)
   return {
     diagnostics: diagnostics.toSorted(compareDiagnostics),
     corpus: buildCorpus(parsed, entries, glossary, relationships),
@@ -1333,6 +1417,13 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
 
 export function lintSpecifications(input: LintInput): readonly Diagnostic[] {
   return analyzeSpecifications(input).diagnostics
+}
+
+export function lintRequirementReferences(input: LintInput, includeDerived = false): readonly Diagnostic[] {
+  const diagnostics: Diagnostic[] = []
+  const parsed = parseInput(input, diagnostics)
+  validateLifecycleAndRequirements(parsed, diagnostics, includeDerived)
+  return diagnostics.toSorted(compareDiagnostics)
 }
 
 export function formatDiagnostic(diagnostic: Diagnostic): string {

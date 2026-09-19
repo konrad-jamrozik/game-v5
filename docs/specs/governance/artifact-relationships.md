@@ -56,13 +56,13 @@ are the only terms for the two participating artifacts in this model.
 
 Each kind describes how the Dependent relates to the Dependency.
 
-| Relationship kind | Meaning                                                                                                                   | Permitted artifacts                                                                                                         | Illustrative example                               |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules                                | Document → document governed by those rules                                                                                 | Specification Conventions → Agents                 |
-| `refines`         | The Dependent adds detail to the same subject or behavior already specified by the Dependency, preserving its constraints | Specification or requirement → refining specification                                                                       | Domain Model → Agents                              |
-| `uses`            | The Dependent applies the Dependency's concepts, constraints, data, or results to describe its own subject                | Any suitable artifacts                                                                                                      | Modeling Foundations → Domain Model                |
-| `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency                                    | Specification or requirement → implementation                                                                               | Engine Contract → identified engine implementation |
-| `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency                                             | Specification or requirement → [test scenario](../acceptance/campaign-integration-and-acceptance-tests.md#glossary) or test | ENG-004 → identified restoration test              |
+| Relationship kind | Meaning                                                                                                                   | Permitted artifacts                                                                                                         | Illustrative example                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules                                | Document → document governed by those rules                                                                                 | Specification Conventions → Agents                                                                           |
+| `refines`         | The Dependent adds detail to the same subject or behavior already specified by the Dependency, preserving its constraints | Specification or requirement → refining specification                                                                       | Domain Model → Agents                                                                                        |
+| `uses`            | The Dependent applies the Dependency's concepts, constraints, data, or results to describe its own subject                | Any suitable artifacts                                                                                                      | Modeling Foundations → Domain Model                                                                          |
+| `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency                                    | Specification or requirement → implementation                                                                               | Engine Contract → identified engine implementation                                                           |
+| `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency                                             | Specification or requirement → [test scenario](../acceptance/campaign-integration-and-acceptance-tests.md#glossary) or test | [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) → identified restoration test |
 
 Merely consuming a result is `uses`, not `refines`. An implementation can `implement` a specification; a specification
 does not implement its implementation. A test can `verify` a requirement without asserting that the test currently
@@ -155,42 +155,60 @@ location does not create a relationship.
 
 # Requirements
 
-**REL-001 — Canonical model.** Every relationship must use the canonical terms Artifact, Relationship, Dependency,
+## REL-001 — Canonical model
+
+Every relationship must use the canonical terms Artifact, Relationship, Dependency,
 Dependent, and Relationship kind as defined by the Glossary. Each relationship must use exactly one of the five
 relationship kinds and satisfy its permitted-artifact rules.
 
-**REL-002 — Identity.** Every explicit relationship must identify one Dependency, one Dependent, and one
+## REL-002 — Identity
+
+Every explicit relationship must identify one Dependency, one Dependent, and one
 relationship kind. Exact duplicates are invalid. Relationship inventories have no Scope field. Substantive constraints
 and requirement references belong in the owning contract prose; an artifact link alone must not imply reliance on
 every rule in that artifact.
 
-**REL-003 — Direction.** Every relationship must run `Dependency → Dependent`. The Dependent `follows`, `refines`,
+## REL-003 — Direction
+
+Every relationship must run `Dependency → Dependent`. The Dependent `follows`, `refines`,
 `uses`, `implements`, or `verifies` the Dependency. Do not reverse the relationship when presenting it in the other
 artifact's Relationships section. Do not enumerate a transitive relationship unless it also exists directly. An
 artifact must not depend on itself.
 
-**REL-004 — Flat inventories.** Every registered specification must contain one flat directional list under
+## REL-004 — Flat inventories
+
+Every registered specification must contain one flat directional list under
 Relationships, using the phrases, ordering, links, and empty-inventory sentence defined in Specification inventories.
 Tables, nested lists, annotations, and Dependencies/Dependents subsections are invalid.
 
-**REL-005 — Mirrored explicit relationships.** Every explicit entry must have one matching entry in the other artifact.
+## REL-005 — Mirrored explicit relationships
+
+Every explicit entry must have one matching entry in the other artifact.
 The pair must resolve to the same Dependency, Dependent, and relationship kind, with the reverse-facing phrase in
 the mirror. Implicit relationships are defined centrally and are not listed.
 
-**REL-006 — Relationship updates.** Adding, changing, or removing an explicit relationship must update both entries.
+## REL-006 — Relationship updates
+
+Adding, changing, or removing an explicit relationship must update both entries.
 A missing or disagreeing entry is a documentation defect. Changes must preserve rule ownership and requirement
 traceability. Update the cycle register whenever a change introduces, alters, or removes a cycle.
 
-**REL-007 — Graph validity.** Validate each relationship-kind graph separately. Reject cycles in `follows` and
+## REL-007 — Graph validity
+
+Validate each relationship-kind graph separately. Reject cycles in `follows` and
 `refines`, invalid artifacts, and self-relationships. The owning contracts of a `uses` cycle must identify distinct supplied meanings and must
 not leave a circular definition unresolved. A cycle containing different relationship kinds is not by itself a defect.
 
-**REL-008 — Status and evidence.** A relationship must not promote a Stub or Draft to Accepted. A refinement must
+## REL-008 — Status and evidence
+
+A relationship must not promote a Stub or Draft to Accepted. A refinement must
 identify the parent subject or behavior, the additional detail, and preservation of the Dependency's constraints.
 An intended Stub refinement must explicitly identify the detail still to be specified. An `implements` or `verifies` relationship must not be presented as evidence
 that implementation is complete or tests pass.
 
-**REL-009 — Adoption.** New and existing registered specifications must use the flat directional format and applicable
+## REL-009 — Adoption
+
+New and existing registered specifications must use the flat directional format and applicable
 implicit relationships. Before acceptance, resolve relationship TODOs that affect the contract, verify mirrored entries,
 check links, and validate the graphs. Do not invent implementation or test relationships for planned artifacts.
 
@@ -214,29 +232,29 @@ check links, and validate the graphs. Do not invent implementation or test relat
 ## Classification cases
 
 The following table gives the complete expected classifications for this acceptance scenario. These cases exercise
-REL-001, REL-003, and REL-008; they do not add relationships to the named documents.
+[REL-001](#rel-001--canonical-model), [REL-003](#rel-003--direction), and [REL-008](#rel-008--status-and-evidence); they do not add relationships to the named documents.
 
-| Case                                                                    | Expected classification and reason                                                    |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and Content entry | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
-| Agents supplies transitions for the lifecycle described by DOM-005      | Refines Domain Model; it adds detail to the same lifecycle                            |
-| History specifies restoration steps for ENG-004                         | Refines Engine Contract; it details the restoration behavior                          |
-| History preserves references under MODEL-003 while restoring state      | Uses Modeling Foundations; satisfying the reference invariant alone is not refinement |
-| Initial Campaign Content supplies prices under Economy's purchase rules | Uses Economy and Upgrades; data values do not elaborate purchase behavior             |
-| Terminal CLI maps commands to the player API                            | Uses TypeScript Player API; an adapter contract applies existing operations           |
-| A Stub names ENG-003 and TODOs for exact exposed fields                 | Intended refinement is permitted; the fields remain unspecified and status stays Stub |
-| A document merely says it must obey MODEL-002                           | Uses, not Refines; no added detail about the identity convention is identified        |
-| A refinement duplicates the same reliance as a Uses entry               | Keep only Refines; two kinds require distinct reliance                                |
+| Case                                                                                                                              | Expected classification and reason                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and Content entry                                                           | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
+| Agents supplies transitions for the lifecycle described by [DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle)      | Refines Domain Model; it adds detail to the same lifecycle                            |
+| History specifies restoration steps for [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity)            | Refines Engine Contract; it details the restoration behavior                          |
+| History preserves references under [MODEL-003](../foundation/modeling-foundations.md#model-003--references) while restoring state | Uses Modeling Foundations; satisfying the reference invariant alone is not refinement |
+| Initial Campaign Content supplies prices under Economy's purchase rules                                                           | Uses Economy and Upgrades; data values do not elaborate purchase behavior             |
+| Terminal CLI maps commands to the player API                                                                                      | Uses TypeScript Player API; an adapter contract applies existing operations           |
+| A Stub names [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) and TODOs for exact exposed fields         | Intended refinement is permitted; the fields remain unspecified and status stays Stub |
+| A document merely says it must obey [MODEL-002](../foundation/modeling-foundations.md#model-002--identity)                        | Uses, not Refines; no added detail about the identity convention is identified        |
+| A refinement duplicates the same reliance as a Uses entry                                                                         | Keep only Refines; two kinds require distinct reliance                                |
 
 ## Complete coverage of relationship kinds
 
-| Relationship kind | Dependency                | Dependent                        | Expected interpretation                       |
-| ----------------- | ------------------------- | -------------------------------- | --------------------------------------------- |
-| `follows`         | Specification Conventions | Agents                           | Agents follows Specification Conventions      |
-| `refines`         | Domain Model              | Agents                           | Agents refines Domain Model                   |
-| `uses`            | Modeling Foundations      | Engine Contract                  | Engine Contract uses Modeling Foundations     |
-| `implements`      | Engine Contract           | Identified engine implementation | The implementation implements Engine Contract |
-| `verifies`        | ENG-004                   | Identified restoration test      | The test verifies ENG-004                     |
+| Relationship kind | Dependency                                                                     | Dependent                        | Expected interpretation                                                                          |
+| ----------------- | ------------------------------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `follows`         | Specification Conventions                                                      | Agents                           | Agents follows Specification Conventions                                                         |
+| `refines`         | Domain Model                                                                   | Agents                           | Agents refines Domain Model                                                                      |
+| `uses`            | Modeling Foundations                                                           | Engine Contract                  | Engine Contract uses Modeling Foundations                                                        |
+| `implements`      | Engine Contract                                                                | Identified engine implementation | The implementation implements Engine Contract                                                    |
+| `verifies`        | [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) | Identified restoration test      | The test verifies [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) |
 
 ## Mirrored entries
 

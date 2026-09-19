@@ -43,9 +43,9 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Player observations follow ENG-003; historical explanations preserve MODEL-004.
+Player observations follow [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary); historical explanations preserve [MODEL-004](../foundation/modeling-foundations.md#model-004--historical-fact-preservation).
 
-This Stub intends to refine ENG-003 by specifying exposed fields, reveal conditions, and consistent human/AI views.
+This Stub intends to refine [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) by specifying exposed fields, reveal conditions, and consistent human/AI views.
 It uses Modeling Foundations' observation and history meanings, Domain Model's concepts, and History and Persistence's
 history navigation. The mechanics dependencies supply the facts and calculated results to expose. In particular,
 Investigations owns estimate mathematics and permitted inputs; this document owns the exposed fields and reveal

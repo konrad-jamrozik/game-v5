@@ -43,7 +43,7 @@ TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Concepts and contract
 
-Content entries and their references follow MODEL-001 through MODEL-003.
+Content entries and their references follow [MODEL-001](../foundation/modeling-foundations.md#model-001--schema-content-and-campaign-instance-boundary), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), and [MODEL-003](../foundation/modeling-foundations.md#model-003--references).
 
 This document uses Domain Model's game concepts and Modeling Foundations' content and reference conventions. It uses
 Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and

@@ -31,7 +31,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Developer inspection and enablement refine the separate capability boundary in ENG-003.
+Developer inspection and enablement refine the separate capability boundary in [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary).
 
 This is an intended Stub refinement: the TODOs below will detail acquisition of that capability and its inspection
 surface. Domain Model supplies the inspected state; History and Persistence supplies restoration semantics;

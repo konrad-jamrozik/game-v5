@@ -74,11 +74,11 @@ function specificationLink(specification: SpecificationRecord, outputPath: strin
 }
 
 function rewriteLink(link: Link, sourcePath: string, outputPath: string): void {
-  if (isExternalUrl(link.url) || link.url.startsWith('#')) return
+  if (isExternalUrl(link.url)) return
   const parts = splitUrl(link.url)
   const decodedPath = decodeUrlPart(parts.path)
-  if (!decodedPath) return
-  const destination = resolvePath(sourcePath, decodedPath)
+  if (decodedPath === undefined) return
+  const destination = decodedPath ? resolvePath(sourcePath, decodedPath) : sourcePath
   link.url = relativeLink(outputPath, destination, parts.fragment)
 }
 

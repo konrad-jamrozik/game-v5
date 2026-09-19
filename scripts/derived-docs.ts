@@ -6,7 +6,7 @@ import { resolveConfig, type Options } from 'prettier'
 
 import { collectMarkdownFiles } from './lint-specs.ts'
 import { renderDerivedDocumentation } from './spec-docs/generator.ts'
-import { analyzeSpecifications, formatDiagnostic } from './spec-linter/linter.ts'
+import { analyzeSpecifications, formatDiagnostic, lintRequirementReferences } from './spec-linter/linter.ts'
 import { columnOf, headingSlugs, isLink, lineOf, parseDocument, visit } from './spec-linter/markdown.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from './spec-linter/paths.ts'
 import type { SourceFile } from './spec-linter/types.ts'
@@ -121,6 +121,19 @@ export async function runDerivedDocumentation(
     const linkFindings = derivedLinkFindings(files, expected)
     if (linkFindings.length > 0) {
       for (const finding of linkFindings) io.writeError(finding)
+      return 1
+    }
+    const requirementDiagnostics = lintRequirementReferences(
+      {
+        files: [
+          ...files.filter((file) => !file.path.startsWith('docs/derived/')),
+          ...[...expected].map(([path, content]) => ({ path, content })),
+        ],
+      },
+      true,
+    )
+    if (requirementDiagnostics.length > 0) {
+      for (const diagnostic of requirementDiagnostics) io.writeError(formatDiagnostic(diagnostic))
       return 1
     }
     const unexpected = [...io.actualOutputs.keys()].filter((path) => !expected.has(path)).toSorted()

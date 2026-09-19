@@ -143,8 +143,12 @@ export function headingAtLine(document: ParsedDocument, line: number, depth: num
 }
 
 export function headingSlugs(document: ParsedDocument): ReadonlySet<string> {
+  return new Set(headingsWithSlugs(document).map(({ slug }) => slug))
+}
+
+export function headingsWithSlugs(
+  document: ParsedDocument,
+): readonly { readonly heading: Heading; readonly slug: string }[] {
   const slugger = new GithubSlugger()
-  const slugs = new Set<string>()
-  for (const heading of document.headings) slugs.add(slugger.slug(headingText(heading)))
-  return slugs
+  return document.headings.map((heading) => ({ heading, slug: slugger.slug(headingText(heading)) }))
 }
