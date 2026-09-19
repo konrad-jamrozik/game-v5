@@ -5,19 +5,24 @@
 | Spec ID     | MODEL                                                                                                                          |
 | Family      | Foundation                                                                                                                     |
 | Status      | Draft                                                                                                                          |
-| Scope       | Modeling vocabulary, TypeScript types/content entries/campaign instances, identity and references, and historical preservation |
+| Scope       | Types, campaigns, content entries, instance construction and composition, identity and references, and historical preservation |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                 |
 | Review      | Batch 1; proposed rules awaiting user review                                                                                   |
 
 # Purpose and boundaries
 
-Define the conventions used to describe the game model. These concepts organize game facts; they are not an additional
-set of in-world objects or a required implementation architecture.
+A campaign is a particular playthrough with its own evolving state and retained history. Immutable content entries
+supply shared game data. Rules use that content directly or construct campaign instances whose state changes as play
+proceeds. Types describe the structure of this data; construction establishes initial values, and gameplay rules
+govern subsequent changes.
 
-**Draft proposal:** requirements were extracted from Domain Model and remain proposed contracts. This document owns
-type/content entry/campaign instance boundaries, campaign instance construction, identity and reference semantics,
-and the distinction between current calculations and historical facts. It does not prescribe storage layout,
-ID-generation algorithms, serialization, a runtime validation library, implementation classes, or cache implementation.
+This document defines that modeling vocabulary and its contracts. It explains how shared content, individual
+occurrences, and historical facts fit together without prescribing storage layout or a programming language.
+Its examples are self-contained illustrations, not production game definitions or balance decisions.
+
+**Draft proposal:** the requirements remain proposed contracts. Concrete game structures and gameplay rules are
+specified by documents that use these foundations. This document does not select ID-generation algorithms,
+serialization, implementation classes, validation libraries, or cache implementations.
 
 # Relationships
 
@@ -31,170 +36,280 @@ ID-generation algorithms, serialization, a runtime validation library, implement
 
 # Glossary
 
-| Term                          | Definition                                                                                                                                                                                                                         |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Content entry                 | Concrete game data supplied by a game build and immutable during gameplay. It has a declared TypeScript type; archetypes and balance parameters are content entries.                                                               |
-| Archetype                     | An immutable content entry describing shared characteristics and construction defaults for a category of campaign instances.                                                                                                       |
-| Rule                          | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided.                                                           |
-| MutableState                  | Occurrence-specific data whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                             |
-| ImmutableState                | Occurrence-specific data established during construction and preserved for the occurrence’s lifetime, always including its Instance ID.                                                                                            |
-| Campaign instance             | A particular campaign occurrence of a declared TypeScript type, composed of an Archetype, MutableState, and ImmutableState containing its Instance ID.                                                                             |
-| Campaign instance constructor | A rule that declares its input parameters and dependencies, identifies its result TypeScript type, and establishes the new campaign instance's initial state. It need not be a language-level constructor or public API operation. |
-| Instance ID                   | An identifier for a campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity).                                                                             |
-| Became historical             | A lifecycle transition that retains a campaign instance as history rather than deleting required facts or references.                                                                                                              |
-| Campaign state                | Data describing a particular campaign, for example, its campaign instances, resources, and retained history.                                                                                                                       |
-| Authoritative value           | A value treated as established truth rather than recomputed from other values.                                                                                                                                                     |
-| Derived value                 | A value calculated deterministically from authoritative values and the current rules and content entries.                                                                                                                          |
-| Historical                    | Describes retained past state or events; does not by itself imply that gameplay rules cannot consult them.                                                                                                                         |
-| Player observation            | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                              |
-| Committed state               | Complete state before or after an accepted command, not intermediate battle/turn processing.                                                                                                                                       |
+Terms are ordered from general descriptions and campaign context through content and individual occurrences to
+rules, value classification, and history.
+
+| Term                          | Definition                                                                                                                                                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type                          | A named description of data structure and permitted values, including the Types of its constituent properties, collections, and references.                                                                 |
+| Campaign                      | A particular playthrough with its own evolving state and retained history.                                                                                                                                  |
+| Campaign state                | Data describing one Campaign; for example, its campaign instances, resources, and retained history.                                                                                                         |
+| Content entry                 | Concrete game data supplied by a game build, conforming to a declared Type and immutable during gameplay.                                                                                                   |
+| Archetype                     | A content entry describing shared characteristics and construction defaults for a category of campaign instances.                                                                                           |
+| Campaign instance             | A particular occurrence within a campaign of a declared Type, composed of an Archetype, MutableState, and ImmutableState.                                                                                   |
+| MutableState                  | Occurrence-specific data whose properties are permitted to evolve under their declared gameplay rules.                                                                                                      |
+| ImmutableState                | Occurrence-specific data established during construction and preserved for the occurrence's lifetime, always including its Instance ID.                                                                     |
+| Instance ID                   | An identifier for a campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity).                                                      |
+| Rule                          | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided.                                    |
+| Campaign instance constructor | A Rule that declares its inputs and dependencies, identifies its result Type, and establishes a new campaign instance's initial state. It need not be a language-level constructor or public API operation. |
+| Authoritative value           | A value treated as established truth rather than recomputed from other values.                                                                                                                              |
+| Derived value                 | A value calculated deterministically from authoritative values and the current rules and content entries.                                                                                                   |
+| Historical                    | Describes retained past state or events; does not by itself imply that gameplay rules cannot consult them.                                                                                                  |
+| Became historical             | A lifecycle transition that retains a campaign instance as history rather than deleting required facts or references.                                                                                       |
+| Committed state               | Complete state before or after an accepted command, not intermediate processing.                                                                                                                            |
+| Player observation            | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                       |
 
 # Concepts and contract
 
-## Types and three-component campaign instances
+## From content to a running campaign
 
-TypeScript type aliases describe data structure, including reusable structures, collections, and reference fields.
-They do not construct the referenced objects or establish domain validity. Matching a TypeScript shape alone does not
-establish campaign membership, valid references, or valid health. Runtime constraints remain explicit prose rules.
+A campaign separates shared game data from the facts of one playthrough. Content entries supply the shared data and
+remain unchanged during play. Campaign state records what is happening in that playthrough and what must be remembered
+about its past. Two campaigns can use the same content while developing different state.
 
-Every campaign instance has exactly three conceptual components: Archetype, MutableState, and ImmutableState.
-The instance's declared TypeScript type identifies the required structure of each component. Archetype supplies shared
-immutable characteristics; MutableState holds occurrence-specific properties permitted to change; ImmutableState holds
-occurrence-specific facts fixed at construction. Every MutableState property must support change under its declared
-rules, but need not change in every run or remain changeable after a terminal lifecycle transition.
+Rules connect the two. A calculation can read content together with current campaign values. A constructor can use
+content to create an individual campaign instance. Later rules can change that instance's mutable properties while
+preserving its identity and fixed facts. Not every use of content creates an instance, and not every campaign value
+needs independent identity.
 
-Both Archetype and ImmutableState are immutable during gameplay, including nested data. TypeScript `readonly`
-communicates intent; it neither recursively makes all nested data readonly nor enforces runtime immutability.
-The three components are a conceptual contract, not a prescribed storage layout. Components may be embedded or resolved
-through references, provided resolution supplies the required component. Shared archetypes do not require inheritance
-or copies of content into each occurrence, and gameplay cannot replace an occurrence's archetype.
+Types describe the data on both sides of this distinction. A Type describes what a value contains; a content entry
+provides concrete shared values; a campaign instance represents one occurrence. An Archetype is the content entry
+supplying an instance's shared characteristics. The following sections build up these relationships from direct
+content use to instances with multiple content references.
 
-A content entry used to initialize instances plays a template role. Archetype names the shared-content component,
-not every possible content entry: a named balance parameter used in a calculation need not initialize any instance.
-“Template” remains an explanatory role, not a separate formal category. “Definition” remains ordinary prose.
+## Types describe model data
 
-Constructors declare inputs, dependencies, a result TypeScript type, and how they establish initial values. Multiple
-constructors may create instances of the same type. Every created instance requires an archetype, whether selected by
-an input or resolved by a declared dependency; constructors can use additional content. Structure and ongoing gameplay
-rules constrain later states independently of initialization. Collections and reference fields describe relationships;
-creation and gameplay rules determine their population, ownership, and lifecycle.
+A Type names a data description rather than a particular value. It can describe a simple value, a collection, or a
+structured set of properties. Each property has a declared Type, and a reference identifies the Type of data it
+expects to resolve. Types describe content entries and campaign instances as well as their constituent values;
+having a Type does not itself give a value independent identity.
 
-## Five roles of content entries
+For readers familiar with TypeScript, its `type` declarations offer an intuition for naming and composing data
+descriptions. Here, Type is an independently defined modeling concept; these contracts do not use TypeScript syntax
+or rely on its type system.
 
-The following table defines the five explanatory data-flow roles used in this document. It is the complete inventory
-for this explanation, not a closed taxonomy of content types or a requirement for five implementation interfaces.
-Roles can overlap; for example, one entry can be referenced by an instance, supply initialization values, and key campaign facts.
+Structure, initialization, and ongoing validity answer different questions. A health property can be an integer;
+a constructor can initialize it from shared content; gameplay rules can constrain its later range. Matching the
+structure alone does not establish campaign membership, resolve references, or prove that initialization was valid.
+Likewise, matching fields do not make an entry valid for every reference: references name the expected Type.
 
-| Role                   | Data flow                                                                                                                     | Example                                                                                                                                                   |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Calculation parameter  | A Rule reads content and campaign values to compute a result.                                                                 | An agent upkeep rate multiplied by the serving-agent count gives total upkeep. The parameter is immutable content; the total is derived.                  |
-| Archetype              | Content supplies the shared Archetype component of a campaign instance.                                                       | Thug supplies the Enemy fixture's shared base health; InvestigationArchetype supplies shared characteristics of an investigation attempt.                 |
-| Referenced content     | Campaign state refers to content as the subject or configuration of an activity, without making it that instance's Archetype. | An Investigation's ImmutableState refers to the Lead being investigated, separately from its InvestigationArchetype.                                      |
-| Key for campaign facts | Campaign facts are associated with a content entry's typed identity.                                                          | Completed investigations and earned progression facts are associated with their Lead; a completion count can be derived from retained completion records. |
-| Initialization source  | A constructor reads content to establish campaign-owned initial values.                                                       | An initial agency-capacity parameter initializes mutable agency capacity, which can later increase through upgrades while the parameter stays unchanged.  |
+## Using content directly
 
-A Rule and the data it consumes are distinct. In the upkeep example, the multiplication formula is a Rule and the
-upkeep rate is a content entry used by that Rule. Applying the computed upkeep changes campaign money without
-constructing an upkeep campaign instance. A constraint is another possible Rule form; for example, requiring
-nonnegative current health. This introduces vocabulary only: further Rule forms and their representation remain TBD.
-It does not require Rule objects, a Ruleset type, or rules to be stored as content entries. Gameplay specifications
-own concrete rules; Initial Campaign Content owns production parameter values.
+Consider an illustrative upkeep calculation for agents serving in a campaign. Its complete local setup is:
 
-Initialization also differs from ongoing calculation: once an initial capacity has been placed in campaign state,
-the current capacity follows its declared rules rather than being reset from content whenever it is read. An
-archetype may supply such defaults, but additional content can supply them too. The examples here explain data flow;
-they do not select production economy formulas, balance values, or storage layouts.
+| Element             | Meaning in this example                                                             |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| UpkeepRate          | A Type describing a nonnegative integer amount of money per serving agent per turn. |
+| Standard upkeep     | A content entry of UpkeepRate with value 2 money per serving agent per turn.        |
+| Serving-agent count | An authoritative campaign value, currently 3.                                       |
+| Upkeep calculation  | A Rule: upkeep for one turn equals the rate multiplied by the serving-agent count.  |
+| Total upkeep        | A Derived value: 2 × 3 = 6 money for this turn.                                     |
 
-## Lead, InvestigationArchetype, and Investigation
+The rule reads the entry directly. Applying the upkeep charge changes campaign money without constructing an upkeep
+campaign instance. The rate remains 2 when the serving-agent count changes. The formula and its input content are
+distinct: a Rule is not automatically a content entry or an object stored in campaign state.
 
-The following three-concept comparison applies the modeling vocabulary to Domain Model's lead-versus-attempt
-distinction. Domain Model retains ownership of those game concepts.
+Content can also supply an initial value. For example, an initial-capacity entry of 4 can initialize a campaign's
+mutable capacity to 4. If an upgrade later changes capacity to 5, reading capacity returns 5; it does not copy 4 from
+content again. This is initialization, whereas upkeep is an ongoing calculation. Neither illustrative value selects
+a production balance parameter.
 
-| Concept                | Classification                                       | Role                                                                                                                                                                      |
-| ---------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lead                   | Content entry; not an Archetype or campaign instance | Describes the opportunity being investigated; for example, its difficulty, prerequisites, and effects. It is referenced content and a key for campaign progression facts. |
-| InvestigationArchetype | Content entry, specifically an Archetype             | Supplies shared characteristics and construction defaults for investigation attempts, independently of which Lead is their subject.                                       |
-| Investigation          | Campaign instance                                    | Represents one particular attempt at one Lead, with its own identity, MutableState, and ImmutableState, together with its InvestigationArchetype.                         |
+## Constructing instances from shared content
 
-An Investigation has the same three-component layout as an Enemy. Its Lead reference is an additional fixed
-relationship in ImmutableState, not a replacement for its Archetype component. Lead answers what opportunity is
-being investigated; InvestigationArchetype describes shared characteristics of the attempt. A Lead can exist before
-any Investigation, and successive attempts at the same Lead have distinct identities and independent attempt state.
-Campaign progression facts associated with the Lead span those attempts rather than belonging to the content entry.
+An Archetype supplies shared characteristics for particular occurrences. Consider an illustrative Enemy Type and a
+Thug content entry of EnemyArchetype whose base health is 10. Creating two enemies from Thug produces two occurrences
+of Enemy, not two new Types and not two mutable copies of Thug.
 
-The model does not require a Lead to determine one unique InvestigationArchetype. Different attempts at the same
-Lead can refer to different archetypes where the owning gameplay rules permit those combinations. This does not
-permit changing an existing attempt's Archetype or Lead, or bypassing the one-Active-attempt-per-Lead constraint.
+Every campaign instance has exactly three conceptual components. The complete composition of the first enemy in
+this example is:
 
-Production InvestigationArchetype fields remain unspecified. Speculative examples of possible fields are `kind` and
-`difficultyClass`. A hypothetical `kind` could distinguish dangerous infiltration from passive intelligence gathering
-through paid informants. These possibilities are not features selected by the Game Design Brief, available player
-choices, or promises of particular mechanical effects. The acceptance fixture below uses them solely to demonstrate
-that Lead and InvestigationArchetype are independent content references.
+| Component      | Purpose                                                     | Enemy e1 at construction                           |
+| -------------- | ----------------------------------------------------------- | -------------------------------------------------- |
+| Archetype      | Shared immutable characteristics and construction defaults. | Thug, an EnemyArchetype entry with base health 10. |
+| MutableState   | Occurrence-specific properties permitted to change.         | Current health 10.                                 |
+| ImmutableState | Occurrence-specific facts fixed at construction.            | Instance ID e1.                                    |
 
-## Identity and immutable facts
+```mermaid
+flowchart LR
+    ET["Type: Enemy"]
+    AT["Type: EnemyArchetype"]
+    T["Content entry: Thug · base health 10"]
+    T -->|has Type| AT
+    subgraph E1["Campaign instance e1"]
+        A1["Archetype: Thug"]
+        M1["MutableState: health 10"]
+        F1["ImmutableState: ID e1"]
+    end
+    subgraph E2["Campaign instance e2"]
+        A2["Archetype: Thug"]
+        M2["MutableState: health 10"]
+        F2["ImmutableState: ID e2"]
+    end
+    E1 -->|has Type| ET
+    E2 -->|has Type| ET
+    A1 -->|resolves to| T
+    A2 -->|resolves to| T
+```
 
-Every campaign instance has an explicit Instance ID in ImmutableState. ID cannot belong to MutableState because it
-must remain stable; it cannot belong to Archetype because multiple occurrences can share an archetype but must have
-distinct identities within their declared scope. ImmutableState may contain other fixed occurrence facts.
+The example's constructor takes the destination campaign and an EnemyArchetype entry and returns an Enemy. Its
+dependencies are current-build content resolution and the campaign's identity-allocation state; it uses no randomness.
+It allocates a fresh ID in a scope shared by all instances in this example campaign, fixes the archetype, initializes
+current health to base health, and registers the occurrence in campaign state. No particular allocation algorithm is
+implied. Multiple constructors can produce the same Type, provided each declares its inputs, dependencies, and
+initialization rules ([MODEL-006](#model-006--campaign-instance-construction)).
 
-Fixed occurrence-specific references belong in ImmutableState; the Investigation's Lead reference is an example.
-Immutability fixes which entry or occurrence is referenced, not merely the spelling of its ID. A constructor
-establishes the reference, and gameplay cannot retarget it. References whose targets or membership can change under
-gameplay rules belong in MutableState; for example, an Investigation's current team. The Archetype component remains
-conceptually separate even when represented by a reference. References do not all have the same mutability merely
-because they are references.
+For this example, base health is a positive integer and current health must remain an integer between zero and base
+health, inclusive. Construction starts e1 and e2 at 10. Damage changes e1's health to 7; e2's health and Thug's base
+health remain 10. Both identities remain unchanged. Starting an enemy at 7 would satisfy the ongoing range but violate
+this constructor's initialization rule; starting it at 11 would violate both.
 
-Content entries may also have IDs. They are distinguished by their role as immutable game-build data, not merely by
-immutability or an identifier. Ordinary campaign values without independent identity are not thereby content entries,
-and nested values or historical records do not automatically become campaign instances.
+The components describe meaning, not storage. They can be embedded or resolved through references. Sharing an
+archetype does not require inheritance or copies of content, and it must not cause occurrences to share mutable state.
+Gameplay cannot replace an occurrence's archetype or modify its ImmutableState, including owned nested data
+([MODEL-001](#model-001--campaign-instance-composition)). MutableState properties must be permitted to change under
+their rules; they need not change in every playthrough or remain changeable after a terminal lifecycle transition.
 
-Lookup and history restoration return an existing occurrence rather than construct a new one. Undo may remove an
-occurrence from the retained timeline or restore its prior MutableState; it does not authorize changing that occurrence's
-ImmutableState or archetype. Redo restores the same identity and immutable facts. An evolving collection may contain
-immutable historical records: changing collection membership does not permit rewriting retained elements.
+## Identity and references
+
+The Instance ID distinguishes an occurrence from others sharing its Type or archetype. It belongs in ImmutableState:
+it must remain stable, and shared Thug content cannot supply a distinct identity for every enemy. In the example's
+campaign-wide scope, e2 cannot reuse e1's ID. Other specifications must declare their own scopes explicitly
+([MODEL-002](#model-002--identity)).
+
+References identify particular content entries or campaign instances and their expected Types. Thug has a content
+identity as an EnemyArchetype entry; e1 has an Instance ID as an Enemy occurrence. A reference to a missing entry is
+invalid, as is resolving an EnemyArchetype reference to content of another Type merely because some fields match.
+References must resolve explicitly; display names and the spelling of IDs do not encode relationships
+([MODEL-003](#model-003--references)).
+
+For example, consider a variant in which the Enemy constructor also receives a Mission instance m1 representing a task
+and fixes a reference to it in e1's ImmutableState at construction. Mission follows the same three-component contract
+and can have a mutable collection of participating enemies. Its membership can change while e1's fixed mission
+reference continues to resolve to m1. Fixing the reference does not freeze m1's
+MutableState; following a reference does not transfer ownership of the referenced occurrence's data.
+
+Conversely, a relationship whose members may change belongs in MutableState. Mutability follows the meaning of the
+relationship, not whether it is represented by an ID. Ordinary nested values and retained records do not become
+campaign instances simply because they are stored, immutable, or associated with an identifier.
+
+## Archetypes and other referenced content
+
+An instance can refer to content for a purpose other than supplying its Archetype. Consider an illustrative opportunity
+called a Lead and an Investigation representing one attempt to pursue it. The complete comparison needed here is:
+
+| Example concept        | Modeling role                                                                          | Question it answers                                          |
+| ---------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Lead                   | Content entry describing an opportunity.                                               | What is being investigated?                                  |
+| InvestigationArchetype | Content entry supplying shared characteristics and construction defaults for attempts. | What shared description does this attempt use?               |
+| Investigation          | Campaign instance with its own identity and attempt state.                             | Which particular attempt is this, and how has it progressed? |
+
+Suppose Lead L1 is referenced by attempt i1, constructed with InvestigationArchetype A1. Its ImmutableState fixes its
+ID and Lead reference; its MutableState contains lifecycle initialized to active and progress initialized to 0. The archetype remains the separate shared
+component. Adding the Lead reference does not create a fourth component or make L1 the attempt's archetype.
+
+For this example, i1 reaches progress 2 and is abandoned. A new attempt i2 at L1 starts at progress 0 with its own ID.
+Use archetype A2 for i2 to show that the opportunity and the attempt's archetype are independent relationships. These
+are symbolic entries without selected production fields or mechanics. The example assumes both combinations are
+permitted; it does not define eligibility or concurrency rules.
+
+```mermaid
+flowchart LR
+    L["Lead L1: opportunity content"]
+    A1["InvestigationArchetype A1"]
+    A2["InvestigationArchetype A2"]
+    subgraph I1["Investigation i1"]
+        C1["Archetype: A1"]
+        F1["ImmutableState: ID i1, Lead L1"]
+        M1["MutableState: abandoned, progress 2"]
+    end
+    subgraph I2["Investigation i2"]
+        C2["Archetype: A2"]
+        F2["ImmutableState: ID i2, Lead L1"]
+        M2["MutableState: active, progress 0"]
+    end
+    C1 -->|resolves to| A1
+    C2 -->|resolves to| A2
+    F1 -->|fixed reference| L
+    F2 -->|fixed reference| L
+```
+
+Both attempts can share L1 without sharing progress. Retargeting i1 to another Lead or replacing A1 after construction
+would violate its fixed facts. Using L1 as its archetype would fail the expected InvestigationArchetype reference,
+regardless of whether some fields match.
+
+If i2 later completes, campaign state can retain a completion record associated with L1 and i2. L1 remains unchanged;
+the record belongs to the campaign. The number of completions for L1 can then be derived from those records. Content
+can thus identify the subject of an activity and key campaign facts without becoming mutable itself.
+
+### Content roles in context
+
+The following table recaps the complete set of five explanatory content roles used in this document. These roles
+can overlap; they are not a closed taxonomy of content Types or five required implementation interfaces.
+
+| Role                   | Data flow demonstrated above                                                                      |
+| ---------------------- | ------------------------------------------------------------------------------------------------- |
+| Calculation parameter  | The upkeep Rule reads the upkeep rate.                                                            |
+| Initialization source  | The initial-capacity entry supplies a starting value that subsequently evolves in campaign state. |
+| Archetype              | Thug supplies shared enemy characteristics and a default for initial health.                      |
+| Referenced content     | An investigation's fixed Lead reference identifies its opportunity separately from its archetype. |
+| Key for campaign facts | Completion records are associated with the Lead's typed content identity.                         |
+
+“Template” can explain content's initialization role; it is not another formal category or a synonym for every content
+entry. “Definition” remains ordinary prose. A Rule and the data it reads remain distinct, and these roles do not
+require Rule objects or a Ruleset Type.
 
 ## Authoritative versus derived state
 
-Being a property of a game concept does not make a value derived. The glossary defines the distinction;
-[MODEL-005](#model-005--value-classification) governs classification independently of storage and player visibility.
+A value is authoritative when it is treated as established truth; it is derived when calculated from authoritative
+values and current rules and content. This classification is separate from mutability. Shared base health and a
+recorded Instance ID can be authoritative even though neither changes during gameplay.
 
-Examples of the distinction (not a complete state inventory):
+In the enemy example, declare each enemy's current health authoritative and their total current health derived.
+Initially the total is 20. After e1 takes damage, it is 17. Caching the total does not make it authoritative, and hiding
+either the individual health or the total from the player does not change the classification
+([MODEL-005](#model-005--value-classification)).
 
-| Authoritative value    | Derived value           |
-| ---------------------- | ----------------------- |
-| Recorded acquisitions  | Total acquired quantity |
-| Recorded measurements  | Their arithmetic mean   |
-| Retained event records | Event count             |
+Similarly, the recorded completion of i2 is an authoritative historical fact. The completion count for L1 is derived:
+it is 1 after i2 completes, and i1's abandonment does not add a completion. Facts associated with content belong to
+the campaign rather than being edits to that content.
 
-These examples illustrate the glossary distinction without prescribing particular game concepts, records, or a
-serialized schema.
+## Historical values and restoration
 
-## Historical values
+A past value cannot always be recovered from its current replacement. For example, a report that needs e1's original
+health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
+replacement for that historical fact. This obligation applies only when a rule or report needs the historical basis
+([MODEL-004](#model-004--historical-fact-preservation)).
 
-A historical value is not necessarily a current derived value. An earlier measurement cannot be reconstructed from
-its current replacement alone. [MODEL-004](#model-004--historical-fact-preservation) governs preservation; it does not require every intermediate calculation or
-every possible chart to be retained.
+Becoming historical does not erase identity or required relationships. A retained reference to e1 must still resolve
+after it becomes historical. Storage can be compacted only if required facts and references remain available.
+An evolving collection can contain immutable historical records: adding a completion record does not permit rewriting
+an earlier record.
+
+Lookup and restoration recover an existing occurrence rather than construct a new one. Undoing damage restores e1's
+health to 10; redoing it restores 7, with the same identity and immutable facts. Undoing an occurrence's creation
+removes it and its references from that timeline; redo restores the same occurrence and fixed facts. An occurrence
+belonging only to a discarded future is not another live instance in the retained timeline. These distinctions preserve
+identity without selecting a restoration procedure.
 
 # Requirements
 
 ## MODEL-001 — Campaign instance composition
 
 Every campaign instance must have exactly three conceptual components: an Archetype, MutableState, and ImmutableState,
-with structures described by its declared TypeScript type. Every content entry must match its declared TypeScript type.
+with structures described by its declared Type. Every content entry must match its declared Type.
 Gameplay must not modify content entries, replace an occurrence's archetype, or modify its ImmutableState, including
 nested data. MutableState properties must be permitted to change under their declared gameplay rules. Instances sharing
 an archetype must have independent occurrence-specific components; they must not thereby share mutable state.
 Fixed occurrence-specific references must belong to ImmutableState. For a reference held there, immutability fixes
 the referenced content entry or campaign instance, not a referenced campaign instance's MutableState.
 Nested value data owned by ImmutableState remains immutable; following a reference does not transfer ownership.
-TypeScript structural compatibility alone does not establish a valid campaign occurrence or satisfy runtime invariants.
+Structural compatibility alone does not establish a valid campaign occurrence or satisfy runtime invariants.
 
 ## MODEL-002 — Identity
 
 Every campaign instance must have an Instance ID in ImmutableState. Each consuming specification must declare its
 identity scopes. IDs must be unique within their declared scope and stable for each occurrence's lifetime.
-Content references must identify the expected content TypeScript type and content ID.
+Content references must identify the expected content Type and content ID.
 Relationships must use explicit references; rules must not parse display names or ID text to discover relationships.
 This specifies reference meaning, not a serialized discriminator field.
 
@@ -205,8 +320,8 @@ or restoration procedure.
 
 ## MODEL-003 — References
 
-All committed-state campaign instance references must resolve to an instance of the expected TypeScript type in the
-same campaign; content references must resolve to an entry of the expected TypeScript type supplied by the current
+All committed-state campaign instance references must resolve to an instance of the expected Type in the
+same campaign; content references must resolve to an entry of the expected Type supplied by the current
 game build. References to historical campaign instances, including terminal lifecycle states, must remain resolvable.
 Storage can be compacted provided required facts remain available; this specification does not mandate full snapshots
 forever. Structural compatibility alone is insufficient to prove reference validity.
@@ -227,297 +342,29 @@ from the player. Retaining a past calculation as a historical fact is governed b
 ## MODEL-006 — Campaign instance construction
 
 Each campaign instance constructor must declare its input parameters
-and dependencies and identify its result TypeScript type. Every new occurrence must initialize all three required
+and dependencies and identify its result Type. Every new occurrence must initialize all three required
 components, receive a fresh Instance ID within its declared scope, and satisfy its declared structure and all applicable
 committed-state invariants. Dependencies must include any content selection, ID-allocation state, or randomness used.
 A constructor contract must distinguish initialization rules from structural constraints and gameplay invariants that
 continue to apply after creation. Concrete constructor behavior belongs in the gameplay specification responsible for
-that creation operation, as identified by the domain contract's ownership declarations.
-
-## Evidence basis (informative)
-
-[Game Design Brief](../../game-design-brief.md) supplies the deterministic continuation and history requirements.
-Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited validation file was unmodified in the source
-working tree when the original Domain Model draft was prepared.
-
-**Proposed change:** [Invariant validation](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model_utils/validateGameStateInvariants.ts)
-derives some relationships from IDs. [MODEL-002](#model-002--identity) requires explicit references.
+that creation operation; consuming specifications identify those owners.
 
 # Edge cases and failure behavior
 
-| Case                                                                       | Result / owner                                                                                                                                 |
-| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Missing component, incorrect structure, or mutation of immutable data      | Invalid data or state under [MODEL-001](#model-001--campaign-instance-composition)                                                             |
-| Constructor omits an input, dependency, result type, or initial-state rule | Incomplete constructor contract under [MODEL-006](#model-006--campaign-instance-construction)                                                  |
-| Duplicate instance ID, missing reference, or wrong expected type           | Invalid state under [MODEL-002](#model-002--identity)/[MODEL-003](#model-003--references); never infer a replacement by name                   |
-| Campaign instance is historical, including terminal lifecycle states       | Required historical references still resolve under [MODEL-003](#model-003--references); storage may be compacted without losing required facts |
-| A later occurrence belongs only to a discarded future                      | IDs are timeline-scoped under [MODEL-002](#model-002--identity); committed references must resolve under [MODEL-003](#model-003--references)   |
-| A current value differs from the retained original value                   | Retain the historical basis required by the result/report under [MODEL-004](#model-004--historical-fact-preservation)                          |
-
-# Acceptance examples
-
-The Enemy fixture below is deliberately simplified and exists solely to exercise [MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity), [MODEL-003](#model-003--references), [MODEL-004](#model-004--historical-fact-preservation), [MODEL-005](#model-005--value-classification), and [MODEL-006](#model-006--campaign-instance-construction). Its
-types, fields, values, and construction choices are explicit test conditions, not production Enemy content or
-gameplay rules. Domain Model and its refining mechanics retain ownership of production concepts and creation behavior.
-All IDs are symbolic and impose no implementation format.
-
-## Types and fixture entries
-
-These type aliases are conceptual documentation, not production runtime declarations or public API signatures.
-Object-valued fields below denote typed relationships; an implementation may represent them with resolving references.
-
-```ts
-type EnemyArchetype = {
-  readonly contentId: string
-  readonly name: string
-  readonly baseHealth: number
-}
-type EnemyMutableState = { currentHealth: number }
-type EnemyImmutableState = {
-  readonly id: string
-  readonly mission: Mission
-}
-type Enemy = {
-  readonly archetype: EnemyArchetype
-  readonly mutable: EnemyMutableState
-  readonly immutable: EnemyImmutableState
-}
-
-type MissionArchetype = {
-  readonly contentId: string
-  readonly name: string
-}
-type MissionMutableState = { enemies: Enemy[] }
-type MissionImmutableState = { readonly id: string }
-type Mission = {
-  readonly archetype: MissionArchetype
-  readonly mutable: MissionMutableState
-  readonly immutable: MissionImmutableState
-}
-
-type CampaignArchetype = { readonly contentId: string }
-type CampaignMutableState = {
-  missions: Mission[]
-  nextEnemyNumber: number
-}
-type CampaignImmutableState = { readonly id: string }
-type Campaign = {
-  readonly archetype: CampaignArchetype
-  readonly mutable: CampaignMutableState
-  readonly immutable: CampaignImmutableState
-}
-```
-
-The complete fixture content inventory is Thug (`EnemyArchetype`: contentId `thug`, name `Thug`, baseHealth 10),
-Patrol (`MissionArchetype`: contentId `patrol`, name `Patrol`), and Sandbox
-(`CampaignArchetype`: contentId `sandbox`). These entries resolve in the current fixture build.
-Initially campaign c1 has Sandbox, mutable missions [m3] and nextEnemyNumber 17, and immutable ID c1.
-Mission m3 has Patrol, mutable enemies [], and immutable ID m3. Campaign, Mission, and Enemy share one ID scope.
-This standalone modeling fixture has no dependency on production Domain Model composition or agency rules.
-
-Runtime constraints require positive integer base health and nonnegative integer current health. The ongoing health
-invariant limits current health to the referenced archetype's base health. Mission/enemy references must agree about
-membership and resolve in this campaign. Mission membership is fixed for each enemy in this fixture, so its mission
-reference belongs to ImmutableState. Mission enemy membership can change through construction or history restoration;
-immutable enemy facts do not make the referenced Mission's MutableState immutable. The reference itself cannot change.
-The allocation counter is a positive integer advanced by this fixture's constructor.
-
-```mermaid
-flowchart LR
-    Constructor[createEnemy] -->|declares result type| Enemy[Enemy]
-    Constructor -->|creates| E17[enemy e17]
-    E17 -->|has TypeScript type| Enemy
-    E17 -->|archetype references| Thug[Thug content entry]
-    Thug -->|has TypeScript type| Archetype[EnemyArchetype]
-    E17 -->|mutable has TypeScript type| Mutable[EnemyMutableState]
-    E17 -->|immutable has TypeScript type| Immutable[EnemyImmutableState]
-    E17 -->|immutable mission references| M3[mission m3]
-    M3 -->|mutable enemies references| E17
-```
-
-An enemy's complete description combines its two occurrence-specific components with shared Thug content.
-Supplying Thug selects an entry of EnemyArchetype, not a new Thug-specific type.
-
-## Construction and independent state
-
-The conceptual constructor `createEnemy(campaign, archetype, mission) -> Enemy` takes the destination Campaign,
-one EnemyArchetype entry, and one Mission in that campaign. Its declared dependencies are current-build content
-resolution, the campaign's current and retained instance IDs, its ID-allocation counter, and supplied mission membership.
-It uses no randomness. These are fixture initialization rules, not production gameplay defaults.
-
-For each call, choose the first unused symbolic enemy ID starting at the counter, then advance the counter beyond it.
-Construct an Enemy whose archetype references the supplied entry, whose MutableState starts with currentHealth equal
-to baseHealth, and whose ImmutableState contains the new ID and supplied mission reference. Add the enemy reference to
-the mission's mutable enemies collection. Publish only a state satisfying all fixture invariants.
-The readonly wrapper fields do not prevent declared changes to the contents of MutableState.
-
-Calling twice with c1, Thug, and m3 creates e17 and e18, each with health 10 and independent occurrence-specific
-components. Their IDs differ from each other, c1, and m3. Mission m3 references both, and the counter becomes 19
-([MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity),
-[MODEL-003](#model-003--references), [MODEL-006](#model-006--campaign-instance-construction)).
-
-Damage changes e17.mutable.currentHealth from 10 to 7. E18's health and Thug's baseHealth remain 10; both enemies'
-ImmutableState remains unchanged. E17 is still an Enemy with the same ID. Its health no longer equals its initial value
-but remains within the ongoing bounds ([MODEL-001](#model-001--campaign-instance-composition)).
-
-## Value classification
-
-Declare e17's and e18's current health authoritative and their total current health derived. Initially the total is 20;
-after e17 takes damage it is 17. Caching that total leaves it derived. Hiding e17's health and the total from the player
-leaves both classifications unchanged ([MODEL-005](#model-005--value-classification)).
-
-## Invalid identity, construction, and references
-
-Each row independently changes the fixture and states the required result:
-
-| Change                                                                                           | Violation                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Omit any one of the three components                                                             | [MODEL-001](#model-001--campaign-instance-composition), [MODEL-006](#model-006--campaign-instance-construction)                              |
-| Omit e17's Instance ID                                                                           | [MODEL-002](#model-002--identity), [MODEL-006](#model-006--campaign-instance-construction)                                                   |
-| Use Patrol as e17's archetype                                                                    | [MODEL-001](#model-001--campaign-instance-composition), [MODEL-003](#model-003--references)                                                  |
-| Change Thug's baseHealth or either enemy's ImmutableState, including its ID or mission reference | [MODEL-001](#model-001--campaign-instance-composition)                                                                                       |
-| Give e18 instance ID e17                                                                         | [MODEL-002](#model-002--identity)                                                                                                            |
-| Give e18 instance ID m3                                                                          | [MODEL-002](#model-002--identity)                                                                                                            |
-| Point e17's archetype reference at nonexistent EnemyArchetype ID `brute`                         | [MODEL-003](#model-003--references)                                                                                                          |
-| Point e17's mission reference at nonexistent Mission m4                                          | [MODEL-003](#model-003--references)                                                                                                          |
-| Point e17's mission reference at Enemy e18                                                       | [MODEL-003](#model-003--references)                                                                                                          |
-| Leave the expected type of e17's archetype reference unspecified                                 | [MODEL-002](#model-002--identity)                                                                                                            |
-| Construct e17 without recording its required mission field                                       | [MODEL-001](#model-001--campaign-instance-composition)/[MODEL-006](#model-006--campaign-instance-construction)                               |
-| Initialize e17 with negative or fractional current health                                        | Fixture runtime health constraint; [MODEL-006](#model-006--campaign-instance-construction); TypeScript number structure alone permits this   |
-| Initialize e17 with current health 11 while Thug base health is 10                               | Fixture health invariant; [MODEL-006](#model-006--campaign-instance-construction)                                                            |
-| Initialize e17 with health 7 instead of 10                                                       | Fixture initialization rule; [MODEL-006](#model-006--campaign-instance-construction); structure and ongoing health invariant still satisfied |
-
-These variants distinguish structural failures, reference failures, and failures to follow construction rules.
-As a separate fixture variant, choosing a different display name for Thug when preparing the build leaves explicit
-relationships unchanged ([MODEL-002](#model-002--identity)); gameplay cannot rename the content entry under [MODEL-001](#model-001--campaign-instance-composition).
-
-## Retained history
-
-Retain e17's original health of 10 in a historical report required by this fixture. This report is a retained value,
-not another campaign instance. It need not be reconstructed from current health or treated as mutable merely because
-a report collection can grow.
-
-- After e17's current health becomes 7, its retained original health is still 10 ([MODEL-004](#model-004--historical-fact-preservation)).
-- When e17 becomes historical, m3's required reference still resolves to e17 ([MODEL-003](#model-003--references)).
-- Compacting e17 is valid only if that reference and the original health of 10 remain available ([MODEL-003](#model-003--references)/[MODEL-004](#model-004--historical-fact-preservation)).
-- Undoing damage restores e17's health to 10; redoing restores 7, with the same ID, mission reference, and archetype.
-  Undoing e18's creation removes it and its reciprocal membership; redo restores that same occurrence and immutable facts
-  ([MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity)).
-- If e18 belongs only to a discarded future, it is not another live campaign instance. The retained timeline's
-  references still resolve within that campaign ([MODEL-002](#model-002--identity)/[MODEL-003](#model-003--references)).
-
-## Lead and Investigation fixture
-
-This separate, simplified fixture exercises [MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity), [MODEL-003](#model-003--references), [MODEL-004](#model-004--historical-fact-preservation), [MODEL-005](#model-005--value-classification), and [MODEL-006](#model-006--campaign-instance-construction). Its declarations
-are conceptual TypeScript shapes, not a production schema or public API. The complete fixture content inventory is
-Lead L1 (`locate-safehouse`, visible difficulty 6, repeatable), InvestigationArchetype I1 (`infiltration`, kind
-`Infiltration`), and InvestigationArchetype I2 (`informants`, kind `Informants`). The two kinds are speculative test
-labels only; neither has a selected gameplay effect. All content IDs are symbolic and resolved with their expected
-TypeScript types. Domain Model's campaign and agent structure supplies the surrounding campaign; existing agent a1
-is eligible and available before each attempt starts.
-
-```ts
-type Lead = {
-  readonly contentId: string
-  readonly visibleDifficulty: number
-  readonly repeatable: boolean
-}
-type InvestigationArchetype = {
-  readonly contentId: string
-  readonly kind: 'Infiltration' | 'Informants'
-}
-type InvestigationImmutableState = {
-  readonly id: string
-  readonly lead: Lead
-  readonly actualDifficulty: number
-}
-type InvestigationMutableState = {
-  progress: number
-  lifecycle: 'Active' | 'Completed' | 'Abandoned'
-  currentAgentIds: string[]
-  participantIds: string[]
-}
-type Investigation = {
-  readonly archetype: InvestigationArchetype
-  readonly immutable: InvestigationImmutableState
-  readonly mutable: InvestigationMutableState
-}
-```
-
-The agent ID fields denote typed references to Agent occurrences in the same campaign, not arbitrary strings.
-The Lead field denotes a typed content reference, not an owned copy of mutable opportunity data. Lead and
-InvestigationArchetype are separate content types even if their structures happen to be compatible.
-
-For this fixture, `createInvestigation(campaign, archetype, lead, agent) -> Investigation` receives one of I1 or I2,
-L1, and a1. Its dependencies are typed content resolution, current campaign references and assignments, and the
-campaign's ID-allocation state. It uses no randomness: actual difficulty is set to L1's visible difficulty of 6 solely
-as a fixture initialization rule. Production sampling and visibility remain with the owning specifications.
-
-Construction allocates a fresh campaign-scoped ID, fixes the Archetype and Lead, sets actual difficulty to 6, and
-initializes progress to 0, lifecycle to Active, and both agent-reference lists to [a1]. It registers the attempt and
-updates a1's assignment consistently. Construction is permitted only when no Active attempt already references L1.
-Progress is nonnegative and difficulty positive. While Active, an attempt's team can change under its owning rules
-and its participant history can grow; progress and team state follow those rules independently of initialization.
-Terminal attempts have no current team and retain participation history. These are the fixture's complete local
-constraints, alongside the shared modeling and domain constraints.
-
-The worked sequence is:
-
-1. Construct i1 with I1 and L1. Its three components contain Archetype I1; immutable ID i1, Lead L1, and difficulty 6;
-   and mutable progress 0, Active lifecycle, current team [a1], and participants [a1].
-2. Advance i1's progress to 2, then abandon it. Clear its current team and a1's assignment consistently, retaining
-   participant a1 and the historical progress. Once a1 is available, construct i2 with I2 and the same L1. It starts
-   at progress 0 with a fresh ID, without resuming i1. Both attempts exist in retained state, but only i2 is Active.
-3. For the fixture's completion transition, advance i2's progress to 6, mark it Completed, and clear its current
-   team and a1's assignment consistently. Retain a completion record associated with Lead L1 and source attempt i2.
-   The record is ordinary campaign data, not another campaign instance. The completion count derived for L1 is 1;
-   i1's abandonment does not count as completion.
-
-This diagram shows the state after step 2. The progression collection has no completion record yet; step 3 adds one.
-
-```mermaid
-flowchart LR
-    L1["Lead L1: content entry"]
-    I1["InvestigationArchetype I1: Infiltration"]
-    I2["InvestigationArchetype I2: Informants"]
-    subgraph Attempt1["Investigation i1: campaign instance"]
-        A1["Archetype"]
-        F1["ImmutableState: ID i1, Lead reference, difficulty 6"]
-        M1["MutableState: Abandoned, progress 2, no current team"]
-    end
-    subgraph Attempt2["Investigation i2: campaign instance"]
-        A2["Archetype"]
-        F2["ImmutableState: ID i2, Lead reference, difficulty 6"]
-        M2["MutableState: Active, progress 0, current team a1"]
-    end
-    A1 -->|resolves to| I1
-    A2 -->|resolves to| I2
-    F1 -->|fixed Lead reference| L1
-    F2 -->|fixed Lead reference| L1
-    Facts["Campaign progression facts: no completions yet"] -->|keyed by typed content identity| L1
-```
-
-The fixed references and recorded attempt progress are authoritative. The completion record is an authoritative
-historical fact; its count is derived. L1 and both archetypes remain unchanged throughout the sequence. The extra
-Lead relationship does not create a fourth component, and two archetypes do not require two copies of L1.
-Undo/redo restores the same attempt identities, content references, and progression records without reconstructing
-new attempts ([MODEL-002](#model-002--identity)/[MODEL-004](#model-004--historical-fact-preservation)).
-
-Examples of invalid variants:
-
-| Variant                                                              | Why invalid                                                                                                                                                                                     |
-| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Use L1 as i2's Archetype                                             | Lead does not satisfy the expected InvestigationArchetype content type, even if some fields match ([MODEL-001](#model-001--campaign-instance-composition)/[MODEL-003](#model-003--references)). |
-| Retarget i1 to another Lead or replace I1 with I2 after construction | The Lead belongs to ImmutableState and the Archetype is fixed for the occurrence ([MODEL-001](#model-001--campaign-instance-composition)).                                                      |
-| Start i2 while i1 remains Active                                     | The domain permits at most one Active attempt per Lead in a campaign; distinct archetypes do not bypass that constraint.                                                                        |
+| Case                                                                       | Result / owner                                                                                                                                  |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Missing component, incorrect structure, or mutation of immutable data      | Invalid data or state under [MODEL-001](#model-001--campaign-instance-composition).                                                             |
+| Constructor omits an input, dependency, result Type, or initial-state rule | Incomplete constructor contract under [MODEL-006](#model-006--campaign-instance-construction).                                                  |
+| Duplicate Instance ID, missing reference, or wrong expected Type           | Invalid state under [MODEL-002](#model-002--identity)/[MODEL-003](#model-003--references); never infer a replacement by name.                   |
+| Campaign instance is historical, including terminal lifecycle states       | Required historical references still resolve under [MODEL-003](#model-003--references); storage may be compacted without losing required facts. |
+| A later occurrence belongs only to a discarded future                      | IDs are timeline-scoped under [MODEL-002](#model-002--identity); committed references must resolve under [MODEL-003](#model-003--references).   |
+| A current value differs from the retained original value                   | Retain the historical basis required by the result/report under [MODEL-004](#model-004--historical-fact-preservation).                          |
 
 # Open decisions
 
-[MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity), [MODEL-003](#model-003--references), [MODEL-004](#model-004--historical-fact-preservation), [MODEL-005](#model-005--value-classification), and [MODEL-006](#model-006--campaign-instance-construction) remain proposed rules awaiting review. A consuming specification owns its game-specific
-TypeScript types, identity scopes, and concrete constructor behavior. This document defines the shared
-modeling relationships without selecting production Enemy fields, constructor inputs, storage, or gameplay rules.
+[MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity), [MODEL-003](#model-003--references), [MODEL-004](#model-004--historical-fact-preservation), [MODEL-005](#model-005--value-classification), and [MODEL-006](#model-006--campaign-instance-construction) remain proposed rules awaiting review.
+Consuming specifications own their concrete game Types, identity scopes, constructor behavior, and gameplay rules.
+The illustrations here do not settle those decisions or select production content fields and allowed combinations.
 
 Further Rule forms and any formal representation remain undecided. The five content roles are explanatory, not a
-new implementation taxonomy. Production InvestigationArchetype fields, allowed Lead/archetype combinations, and how
-an archetype is selected remain decisions for the domain's owning mechanics and content specifications. The
-speculative `kind` and `difficultyClass` examples do not settle those decisions.
+new implementation taxonomy.

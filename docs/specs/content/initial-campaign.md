@@ -63,7 +63,7 @@ TODO: List exact initial resources, roster, capabilities, faction setup, and all
 
 ## Content catalogs
 
-TODO: Supply archetype catalogs for every campaign-instance TypeScript type declared in
+TODO: Supply archetype catalogs for every campaign-instance Type declared in
 [Domain Model](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including singleton Campaign and Agency.
 Declare each archetype’s content ID, shared characteristics, and construction defaults. Keep non-archetype balance
 parameters distinct. Mechanics retain ownership of constructor behavior; catalog details and balance values remain open.

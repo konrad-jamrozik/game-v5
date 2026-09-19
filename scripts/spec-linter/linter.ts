@@ -62,8 +62,7 @@ const RULE_HEADINGS = [
 ]
 const REMOVED_HEADINGS =
   /^(?:Terms|Terminology|Vocabulary|Background references?|Downstream ownership(?: \(informative\))?|Source basis)(?: \(informative\))?$/i
-const PROHIBITED_RELATIONSHIP_TERMS =
-  /\b(?:source|target|upstream|downstream|dependee|inbound|outbound|edge|node|type)\b/i
+const PROHIBITED_RELATIONSHIP_TERMS = /\b(?:source|target|upstream|downstream|dependee|inbound|outbound|edge|node)\b/i
 
 interface Metadata {
   readonly values: ReadonlyMap<string, string>
@@ -643,7 +642,10 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
     if (specification.id && !GOVERNANCE_LAYOUT_EXCEPTIONS.has(specification.id)) {
       const topLevel = h1s.slice(1)
       const actual = topLevel.map(headingText)
-      const positions = RULE_HEADINGS.map((text) => actual.indexOf(text))
+      const requiredHeadings = RULE_HEADINGS.filter(
+        (text) => text !== 'Acceptance examples' || specification.family !== 'Foundation' || actual.includes(text),
+      )
+      const positions = requiredHeadings.map((text) => actual.indexOf(text))
       const valid = positions.every(
         (position, index) => position >= 0 && (index === 0 || position > (positions[index - 1] ?? -1)),
       )
@@ -653,7 +655,7 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
           specification.path,
           topLevel[0],
           'SPEC209',
-          `Standard specifications must use this H1 order: ${RULE_HEADINGS.join(' -> ')}.`,
+          `Standard specifications must use this H1 order: ${requiredHeadings.join(' -> ')}.`,
         )
       }
       for (const sectionName of RULE_HEADINGS.slice(3)) {
@@ -992,10 +994,23 @@ function validateTerminology(
       if (!heading) continue
       for (const node of sectionNodes(specification.document, heading)) {
         visit(node, (descendant) => {
+          // Check whole inline phrases so emphasis cannot hide a competing relationship term.
+          if (descendant.type === 'paragraph' || descendant.type === 'tableCell') {
+            const match = /\brelationship\s+types?\b/i.exec(textOf(descendant))
+            if (match) {
+              addDiagnostic(
+                diagnostics,
+                specification.path,
+                descendant,
+                'SPEC501',
+                `Prohibited formal relationship term "${match[0]}" appears in ${sectionName}.`,
+              )
+            }
+          }
           if (!('value' in descendant) || typeof descendant.value !== 'string') {
             return
           }
-          // TypeScript type is programming vocabulary, not a synonym for relationship kind.
+          // Modeling Types and programming types are distinct from relationship kinds.
           const relationshipText = descendant.value.replace(/\bTypeScript\s+types?\b/gi, '')
           const match = PROHIBITED_RELATIONSHIP_TERMS.exec(relationshipText)
           if (match) {

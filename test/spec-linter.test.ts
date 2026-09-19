@@ -167,6 +167,81 @@ function mutate(files: readonly SourceFile[], path: string, find: string, replac
 }
 
 describe('specification linter', () => {
+  test('accepts modeling Types as glossary terms and descriptions', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '# Glossary\n\nNone.',
+      '# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Type | A named description of data. |\n| Value | Data conforming to a Type. |',
+    )
+    expect(lintSpecifications({ files })).toEqual([])
+  })
+
+  test('accepts Foundation examples embedded beside concepts', () => {
+    const files = mutate(
+      mutate(
+        validCorpus(),
+        'docs/specs/foundation/alpha.md',
+        'Contract.',
+        'Contract. For example, [AAA-001](#aaa-001--rule): the same input has the same result.',
+      ),
+      'docs/specs/foundation/alpha.md',
+      '# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.\n\n',
+      '',
+    )
+    expect(lintSpecifications({ files })).toEqual([])
+  })
+
+  test.each(['Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance'])(
+    'still requires the separate acceptance section for standard %s specifications',
+    (family) => {
+      const directory = family.toLowerCase()
+      const files = validCorpus().map((file) => ({
+        path: file.path.replace('foundation/alpha.md', `${directory}/alpha.md`),
+        content: file.content
+          .replaceAll('Foundation', family)
+          .replaceAll('foundation/alpha.md', `${directory}/alpha.md`)
+          .replace('# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.\n\n', ''),
+      }))
+      expect(diagnosticCodes(files)).toEqual(['SPEC209'])
+    },
+  )
+
+  test('rejects a misplaced optional Foundation acceptance section', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '# Edge cases and failure behavior\n\nFailures are defined.\n\n# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.',
+      '# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.\n\n# Edge cases and failure behavior\n\nFailures are defined.',
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC209'])
+  })
+
+  test('rejects an empty optional Foundation acceptance section', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '[AAA-001](#aaa-001--rule): the same input has the same result.',
+      '',
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC204'])
+  })
+
+  test('still requires other Foundation sections when examples are embedded', () => {
+    const files = mutate(
+      mutate(
+        validCorpus(),
+        'docs/specs/foundation/alpha.md',
+        '# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.\n\n',
+        '',
+      ),
+      'docs/specs/foundation/alpha.md',
+      '# Edge cases and failure behavior\n\nFailures are defined.\n\n',
+      '',
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC209'])
+  })
+
   test.each(['TypeScript type', 'TypeScript types', '`TypeScript type`', '**TypeScript type**'])(
     'allows explicit programming terminology: %s',
     (term) => {
@@ -180,18 +255,23 @@ describe('specification linter', () => {
     },
   )
 
-  test.each(['relationship type', 'TypeScript type and relationship type', 'TypeScript type and target'])(
-    'still rejects competing formal relationship terminology: %s',
-    (term) => {
-      const files = mutate(
-        validCorpus(),
-        'docs/specs/foundation/alpha.md',
-        '# Glossary\n\nNone.',
-        `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Example | A ${term}. |`,
-      )
-      expect(diagnosticCodes(files)).toContain('SPEC501')
-    },
-  )
+  test.each([
+    'relationship type',
+    'relationship Types',
+    'relationship **type**',
+    '`relationship` type',
+    'Type and relationship type',
+    'TypeScript type and relationship type',
+    'TypeScript type and target',
+  ])('still rejects competing formal relationship terminology: %s', (term) => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '# Glossary\n\nNone.',
+      `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Example | A ${term}. |`,
+    )
+    expect(diagnosticCodes(files)).toContain('SPEC501')
+  })
 
   test.each([
     ['Uses', 'Used by', 'uses'],

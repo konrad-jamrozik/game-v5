@@ -1,16 +1,17 @@
 # Specification Conventions
 
-| Metadata              | Value                                                                                                          |
-| --------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Spec ID               | CONV                                                                                                           |
-| Family                | Governance                                                                                                     |
-| Status                | Accepted                                                                                                       |
-| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."      |
-| Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                     |
-| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                    |
-| Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology. |
-| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.           |
-| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                          |
+| Metadata              | Value                                                                                                                       |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID               | CONV                                                                                                                        |
+| Family                | Governance                                                                                                                  |
+| Status                | Accepted                                                                                                                    |
+| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                   |
+| Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                                  |
+| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                 |
+| Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology.              |
+| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                        |
+| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                       |
+| Modeling revision     | Project owner requested language-independent Types, foundation-owned Campaign vocabulary, and embedded Foundation examples. |
 
 # Purpose and boundaries
 
@@ -80,7 +81,7 @@ metadata, register entry, path, and links together.
 
 A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
 
-- Domain Model owns shared campaign-instance TypeScript types, their campaign instances, and invariants; subsystem specifications own their detailed transitions.
+- Domain Model owns shared campaign-instance Types, their campaign instances, and invariants; subsystem specifications own their detailed transitions.
 - Numbers and Randomness owns units, numeric operations, and reproducibility conventions.
 - Mechanics own formulas. Initial Campaign Content owns named balance values and content rows.
 - Turn Resolution owns phase ordering and state-read timing, not subsystem formulas.
@@ -165,9 +166,10 @@ If two similar terms are retained, they must represent distinct concepts and hav
 replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
 Glossary. If the concepts differ, make their distinct definitions explicit. Unresolved terminology blocks acceptance.
 
-Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them. Explicit “TypeScript type”
-terminology describes programming structure and is allowed; “relationship type” remains a prohibited substitute for
-“relationship kind.”
+Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
+The modeling term [Type](../foundation/modeling-foundations.md#glossary) describes data independently of a programming
+language. Explicit TypeScript terminology remains valid for programming contracts and explanatory analogies;
+“relationship type” remains a prohibited substitute for “relationship kind.”
 
 ## Terminology replacements
 
@@ -176,12 +178,13 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 
 | INSTEAD OF                        | USE                                                                                                                                 | Context                                                                                                                                |
 | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance kind            | TypeScript type                                                                                                                     | Describing a category of campaign instances using the [modeling vocabulary](../foundation/modeling-foundations.md#glossary).           |
-| Schema                            | TypeScript type                                                                                                                     | Describing model data structure; ordinary API or serialization schema usage remains valid.                                             |
+| Campaign instance kind            | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing a category of campaign instances.                                                                                           |
+| Schema                            | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing model data structure; ordinary API or serialization schema usage remains valid.                                             |
+| TypeScript type                   | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Naming a modeling concept; actual TypeScript API declarations and explanatory language analogies remain valid.                         |
 | Instance state (undifferentiated) | [MutableState](../foundation/modeling-foundations.md#glossary) and [ImmutableState](../foundation/modeling-foundations.md#glossary) | Separate changeable properties from fixed occurrence facts; do not put the latter in shared content.                                   |
 | EnemyType; EnemyKind              | EnemyArchetype                                                                                                                      | Naming the shared content structure, not the complete Enemy instance. See [Archetype](../foundation/modeling-foundations.md#glossary). |
 | Entity ID                         | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a campaign instance.                                                                                                       |
-| Content definition                | [Content entry](../foundation/modeling-foundations.md#glossary)                                                                     | Referring to concrete immutable game data rather than its TypeScript structure.                                                        |
+| Content definition                | [Content entry](../foundation/modeling-foundations.md#glossary)                                                                     | Referring to concrete immutable game data rather than its Type.                                                                        |
 | Evolving campaign facts           | [Campaign state](../foundation/modeling-foundations.md#glossary)                                                                    | Describing the data of a particular campaign.                                                                                          |
 | Authoritative fact                | [Authoritative value](../foundation/modeling-foundations.md#glossary)                                                               | Naming the source-of-truth category.                                                                                                   |
 | Computed value; calculated value  | [Derived value](../foundation/modeling-foundations.md#glossary)                                                                     | Naming the formal category of values calculated from other values.                                                                     |
@@ -196,11 +199,12 @@ or unrelated uses of “configuration.” “Template” may describe the role o
 instance, but it is not a synonym for every content entry or a separate formal modeling category. Historical does not
 replace named lifecycle states; for example, Killed and Completed.
 
-When specifying a game concept, state its applicable modeling role and mutability. For a campaign instance, use a
-TypeScript type alias to describe its Archetype, MutableState, and ImmutableState, including its mandatory Instance ID.
+When specifying a game concept, state its applicable modeling role and mutability. A campaign instance's Type describes
+its Archetype, MutableState, and ImmutableState, including its mandatory Instance ID.
 Distinguish structural constraints, constructor initialization, and ongoing gameplay invariants. Declare ID scopes;
-singleton occurrences are not exempt. Constructor contracts identify their result TypeScript type, inputs, dependencies,
-and initialization of all three components. TypeScript structural compatibility does not establish domain validity. State
+singleton occurrences are not exempt. Constructor contracts identify their result Type, inputs, dependencies,
+and initialization of all three components. Structural compatibility does not establish domain validity. Use prose,
+property tables, and diagrams for conceptual descriptions; a programming-language declaration is not required. State
 multiplicity with an explicit scope, construction and historical transitions, authoritative versus derived values, and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
 these dimensions differ within one campaign instance. Link to the owning specification for details; explicitly retain
@@ -225,9 +229,14 @@ decisions.
 
 Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both must use the universal Purpose and boundaries, Relationships, and Glossary sequence, but they may replace the remaining standard rule-spec sections with governance-specific H1 sections.
 
+Foundation specifications may embed illustrative examples beside the concepts they explain and omit the separate
+Acceptance examples section. If present, that section retains its standard position and content requirements.
+All other standard sections remain required. Whether embedded examples explain the contracts adequately is a semantic
+review concern; the linter checks section presence, content, and order, not the examples' explanatory quality.
+
 ## Handling sections that do not apply
 
-Retain the standard headings for navigation. If a section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
+Retain the standard headings for navigation, except for the Foundation example-layout option above. If a required section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
 
 A missing decision is not "not applicable." For example, a mechanics specification can have no public function signatures while still defining inputs, outputs, and state changes.
 
@@ -297,7 +306,11 @@ lists from looking like complete sets that must grow whenever a new value is add
 
 # Examples, conformance, and evidence
 
-Every substantial rule must be covered by an acceptance example or a referenced test scenario. Every acceptance example must identify all applicable items in this checklist:
+Every substantial rule must be covered by an acceptance example or a referenced test scenario. Foundation specifications
+using embedded examples may instead explain their modeling contracts through self-contained illustrations alongside
+the concepts, linking to the applicable requirements. These illustrations introduce no production gameplay rules and
+need not be organized as test fixtures or command sequences. Every acceptance example must identify all applicable
+items in this checklist:
 
 - The requirement IDs exercised and, when needed for reproducibility, the game revision and content fixture.
 - Initial state and inputs, including the seed or random state for stochastic results.
