@@ -77,14 +77,13 @@ A Campaign instance constructor is a Rule that constructs a Campaign instance an
 
 These concepts describe how values are established, retained, and exposed within the preceding model.
 
-| Term                | Definition                                                                                                            |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Authoritative value | A value treated as established truth rather than recomputed from other values.                                        |
-| Derived value       | A value calculated deterministically from Authoritative values and the current rules and Content entries.             |
-| Historical          | Describes retained past data or events; does not by itself imply that gameplay rules cannot consult them.             |
-| Became historical   | A lifecycle transition that retains a Campaign instance as history rather than deleting required facts or references. |
-| Committed state     | Complete Campaign state before or after an accepted command, not intermediate processing.                             |
-| Player observation  | Information deliberately exposed by the engine to an ordinary player.                                                 |
+| Term                | Definition                                                                                                |
+| ------------------- | --------------------------------------------------------------------------------------------------------- |
+| Authoritative value | A value treated as established truth rather than recomputed from other values.                            |
+| Derived value       | A value calculated deterministically from Authoritative values and the current rules and Content entries. |
+| History             | Retained data describing past Campaign state or events. Rules and reports may consult History.            |
+| Committed state     | Complete Campaign state before or after an accepted command, not intermediate processing.                 |
+| Player observation  | Information deliberately exposed by the engine to an ordinary player.                                     |
 
 ## Rejected terms and synonyms
 
@@ -367,8 +366,11 @@ health must retain that value of 10 or the original inputs needed to reconstruct
 replacement for that historical fact. This obligation applies only when a rule or report needs the historical basis
 ([MODEL-004](#model-004--historical-fact-preservation)).
 
-The Became historical transition does not erase identity or required relationships. A retained reference to enemy_1 must still resolve
-after its Became historical transition. Storage can be compacted only if required facts and references remain available.
+When a Campaign instance no longer participates in current gameplay, data required by rules, reports, or retained
+references remains in History rather than being deleted. For example, if enemy_1 no longer participates in a Mission,
+a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
+name; the consuming specification defines its lifecycle and which data must remain available
+([MODEL-004](#model-004--historical-fact-preservation)). Storage can be compacted only if required facts and references remain available.
 An evolving collection can contain immutable historical records: adding a completion record does not permit rewriting
 an earlier record.
 
@@ -424,6 +426,12 @@ regardless of the mutability of references to them.
 Preserve the original inputs or historical value when a rule/report needs
 it. Required historical values must not be overwritten with current calculations. This does not require retaining
 every intermediate calculation or every possible chart.
+
+When a Campaign instance no longer participates in current gameplay, retain in History the data required by rules,
+reports, or retained references instead of deleting it. Preserve the Instance ID and relationships needed to resolve
+those references under [MODEL-002](#model-002--identity) and [MODEL-003](#model-003--references). Consuming specifications
+must declare which lifecycle changes require retention and which data must remain available. This obligation does not
+introduce a lifecycle state or require moving data into a separate storage location.
 
 ## MODEL-005 — Value classification
 
