@@ -35,6 +35,7 @@ ID-generation algorithms, serialization, a runtime validation library, implement
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Content entry                 | Concrete game data supplied by a game build and immutable during gameplay. It has a declared TypeScript type; archetypes and balance parameters are content entries.                                                               |
 | Archetype                     | An immutable content entry describing shared characteristics and construction defaults for a category of campaign instances.                                                                                                       |
+| Rule                          | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided.                                                           |
 | MutableState                  | Occurrence-specific data whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                             |
 | ImmutableState                | Occurrence-specific data established during construction and preserved for the occurrence’s lifetime, always including its Instance ID.                                                                                            |
 | Campaign instance             | A particular campaign occurrence of a declared TypeScript type, composed of an Archetype, MutableState, and ImmutableState containing its Instance ID.                                                                             |
@@ -78,11 +79,71 @@ an input or resolved by a declared dependency; constructors can use additional c
 rules constrain later states independently of initialization. Collections and reference fields describe relationships;
 creation and gameplay rules determine their population, ownership, and lifecycle.
 
+## Five roles of content entries
+
+The following table defines the five explanatory data-flow roles used in this document. It is the complete inventory
+for this explanation, not a closed taxonomy of content types or a requirement for five implementation interfaces.
+Roles can overlap; for example, one entry can be referenced by an instance, supply initialization values, and key campaign facts.
+
+| Role                   | Data flow                                                                                                                     | Example                                                                                                                                                   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Calculation parameter  | A Rule reads content and campaign values to compute a result.                                                                 | An agent upkeep rate multiplied by the serving-agent count gives total upkeep. The parameter is immutable content; the total is derived.                  |
+| Archetype              | Content supplies the shared Archetype component of a campaign instance.                                                       | Thug supplies the Enemy fixture's shared base health; InvestigationArchetype supplies shared characteristics of an investigation attempt.                 |
+| Referenced content     | Campaign state refers to content as the subject or configuration of an activity, without making it that instance's Archetype. | An Investigation's ImmutableState refers to the Lead being investigated, separately from its InvestigationArchetype.                                      |
+| Key for campaign facts | Campaign facts are associated with a content entry's typed identity.                                                          | Completed investigations and earned progression facts are associated with their Lead; a completion count can be derived from retained completion records. |
+| Initialization source  | A constructor reads content to establish campaign-owned initial values.                                                       | An initial agency-capacity parameter initializes mutable agency capacity, which can later increase through upgrades while the parameter stays unchanged.  |
+
+A Rule and the data it consumes are distinct. In the upkeep example, the multiplication formula is a Rule and the
+upkeep rate is a content entry used by that Rule. Applying the computed upkeep changes campaign money without
+constructing an upkeep campaign instance. A constraint is another possible Rule form; for example, requiring
+nonnegative current health. This introduces vocabulary only: further Rule forms and their representation remain TBD.
+It does not require Rule objects, a Ruleset type, or rules to be stored as content entries. Gameplay specifications
+own concrete rules; Initial Campaign Content owns production parameter values.
+
+Initialization also differs from ongoing calculation: once an initial capacity has been placed in campaign state,
+the current capacity follows its declared rules rather than being reset from content whenever it is read. An
+archetype may supply such defaults, but additional content can supply them too. The examples here explain data flow;
+they do not select production economy formulas, balance values, or storage layouts.
+
+## Lead, InvestigationArchetype, and Investigation
+
+The following three-concept comparison applies the modeling vocabulary to Domain Model's lead-versus-attempt
+distinction. Domain Model retains ownership of those game concepts.
+
+| Concept                | Classification                                       | Role                                                                                                                                                                      |
+| ---------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lead                   | Content entry; not an Archetype or campaign instance | Describes the opportunity being investigated; for example, its difficulty, prerequisites, and effects. It is referenced content and a key for campaign progression facts. |
+| InvestigationArchetype | Content entry, specifically an Archetype             | Supplies shared characteristics and construction defaults for investigation attempts, independently of which Lead is their subject.                                       |
+| Investigation          | Campaign instance                                    | Represents one particular attempt at one Lead, with its own identity, MutableState, and ImmutableState, together with its InvestigationArchetype.                         |
+
+An Investigation has the same three-component layout as an Enemy. Its Lead reference is an additional fixed
+relationship in ImmutableState, not a replacement for its Archetype component. Lead answers what opportunity is
+being investigated; InvestigationArchetype describes shared characteristics of the attempt. A Lead can exist before
+any Investigation, and successive attempts at the same Lead have distinct identities and independent attempt state.
+Campaign progression facts associated with the Lead span those attempts rather than belonging to the content entry.
+
+The model does not require a Lead to determine one unique InvestigationArchetype. Different attempts at the same
+Lead can refer to different archetypes where the owning gameplay rules permit those combinations. This does not
+permit changing an existing attempt's Archetype or Lead, or bypassing the one-Active-attempt-per-Lead constraint.
+
+Production InvestigationArchetype fields remain unspecified. Speculative examples of possible fields are `kind` and
+`difficultyClass`. A hypothetical `kind` could distinguish dangerous infiltration from passive intelligence gathering
+through paid informants. These possibilities are not features selected by the Game Design Brief, available player
+choices, or promises of particular mechanical effects. The acceptance fixture below uses them solely to demonstrate
+that Lead and InvestigationArchetype are independent content references.
+
 ## Identity and immutable facts
 
 Every campaign instance has an explicit Instance ID in ImmutableState. ID cannot belong to MutableState because it
 must remain stable; it cannot belong to Archetype because multiple occurrences can share an archetype but must have
 distinct identities within their declared scope. ImmutableState may contain other fixed occurrence facts.
+
+Fixed occurrence-specific references belong in ImmutableState; the Investigation's Lead reference is an example.
+Immutability fixes which entry or occurrence is referenced, not merely the spelling of its ID. A constructor
+establishes the reference, and gameplay cannot retarget it. References whose targets or membership can change under
+gameplay rules belong in MutableState; for example, an Investigation's current team. The Archetype component remains
+conceptually separate even when represented by a reference. References do not all have the same mutability merely
+because they are references.
 
 Content entries may also have IDs. They are distinguished by their role as immutable game-build data, not merely by
 immutability or an identifier. Ordinary campaign values without independent identity are not thereby content entries,
@@ -124,7 +185,8 @@ with structures described by its declared TypeScript type. Every content entry m
 Gameplay must not modify content entries, replace an occurrence's archetype, or modify its ImmutableState, including
 nested data. MutableState properties must be permitted to change under their declared gameplay rules. Instances sharing
 an archetype must have independent occurrence-specific components; they must not thereby share mutable state.
-For a reference held in ImmutableState, immutability fixes the referenced occurrence, not that occurrence's MutableState.
+Fixed occurrence-specific references must belong to ImmutableState. For a reference held there, immutability fixes
+the referenced content entry or campaign instance, not a referenced campaign instance's MutableState.
 Nested value data owned by ImmutableState remains immutable; following a reference does not transfer ownership.
 TypeScript structural compatibility alone does not establish a valid campaign occurrence or satisfy runtime invariants.
 
@@ -344,8 +406,118 @@ a report collection can grow.
 - If e18 belongs only to a discarded future, it is not another live campaign instance. The retained timeline's
   references still resolve within that campaign ([MODEL-002](#model-002--identity)/[MODEL-003](#model-003--references)).
 
+## Lead and Investigation fixture
+
+This separate, simplified fixture exercises [MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity), [MODEL-003](#model-003--references), [MODEL-004](#model-004--historical-fact-preservation), [MODEL-005](#model-005--value-classification), and [MODEL-006](#model-006--campaign-instance-construction). Its declarations
+are conceptual TypeScript shapes, not a production schema or public API. The complete fixture content inventory is
+Lead L1 (`locate-safehouse`, visible difficulty 6, repeatable), InvestigationArchetype I1 (`infiltration`, kind
+`Infiltration`), and InvestigationArchetype I2 (`informants`, kind `Informants`). The two kinds are speculative test
+labels only; neither has a selected gameplay effect. All content IDs are symbolic and resolved with their expected
+TypeScript types. Domain Model's campaign and agent structure supplies the surrounding campaign; existing agent a1
+is eligible and available before each attempt starts.
+
+```ts
+type Lead = {
+  readonly contentId: string
+  readonly visibleDifficulty: number
+  readonly repeatable: boolean
+}
+type InvestigationArchetype = {
+  readonly contentId: string
+  readonly kind: 'Infiltration' | 'Informants'
+}
+type InvestigationImmutableState = {
+  readonly id: string
+  readonly lead: Lead
+  readonly actualDifficulty: number
+}
+type InvestigationMutableState = {
+  progress: number
+  lifecycle: 'Active' | 'Completed' | 'Abandoned'
+  currentAgentIds: string[]
+  participantIds: string[]
+}
+type Investigation = {
+  readonly archetype: InvestigationArchetype
+  readonly immutable: InvestigationImmutableState
+  readonly mutable: InvestigationMutableState
+}
+```
+
+The agent ID fields denote typed references to Agent occurrences in the same campaign, not arbitrary strings.
+The Lead field denotes a typed content reference, not an owned copy of mutable opportunity data. Lead and
+InvestigationArchetype are separate content types even if their structures happen to be compatible.
+
+For this fixture, `createInvestigation(campaign, archetype, lead, agent) -> Investigation` receives one of I1 or I2,
+L1, and a1. Its dependencies are typed content resolution, current campaign references and assignments, and the
+campaign's ID-allocation state. It uses no randomness: actual difficulty is set to L1's visible difficulty of 6 solely
+as a fixture initialization rule. Production sampling and visibility remain with the owning specifications.
+
+Construction allocates a fresh campaign-scoped ID, fixes the Archetype and Lead, sets actual difficulty to 6, and
+initializes progress to 0, lifecycle to Active, and both agent-reference lists to [a1]. It registers the attempt and
+updates a1's assignment consistently. Construction is permitted only when no Active attempt already references L1.
+Progress is nonnegative and difficulty positive. While Active, an attempt's team can change under its owning rules
+and its participant history can grow; progress and team state follow those rules independently of initialization.
+Terminal attempts have no current team and retain participation history. These are the fixture's complete local
+constraints, alongside the shared modeling and domain constraints.
+
+The worked sequence is:
+
+1. Construct i1 with I1 and L1. Its three components contain Archetype I1; immutable ID i1, Lead L1, and difficulty 6;
+   and mutable progress 0, Active lifecycle, current team [a1], and participants [a1].
+2. Advance i1's progress to 2, then abandon it. Clear its current team and a1's assignment consistently, retaining
+   participant a1 and the historical progress. Once a1 is available, construct i2 with I2 and the same L1. It starts
+   at progress 0 with a fresh ID, without resuming i1. Both attempts exist in retained state, but only i2 is Active.
+3. For the fixture's completion transition, advance i2's progress to 6, mark it Completed, and clear its current
+   team and a1's assignment consistently. Retain a completion record associated with Lead L1 and source attempt i2.
+   The record is ordinary campaign data, not another campaign instance. The completion count derived for L1 is 1;
+   i1's abandonment does not count as completion.
+
+This diagram shows the state after step 2. The progression collection has no completion record yet; step 3 adds one.
+
+```mermaid
+flowchart LR
+    L1["Lead L1: content entry"]
+    I1["InvestigationArchetype I1: Infiltration"]
+    I2["InvestigationArchetype I2: Informants"]
+    subgraph Attempt1["Investigation i1: campaign instance"]
+        A1["Archetype"]
+        F1["ImmutableState: ID i1, Lead reference, difficulty 6"]
+        M1["MutableState: Abandoned, progress 2, no current team"]
+    end
+    subgraph Attempt2["Investigation i2: campaign instance"]
+        A2["Archetype"]
+        F2["ImmutableState: ID i2, Lead reference, difficulty 6"]
+        M2["MutableState: Active, progress 0, current team a1"]
+    end
+    A1 -->|resolves to| I1
+    A2 -->|resolves to| I2
+    F1 -->|fixed Lead reference| L1
+    F2 -->|fixed Lead reference| L1
+    Facts["Campaign progression facts: no completions yet"] -->|keyed by typed content identity| L1
+```
+
+The fixed references and recorded attempt progress are authoritative. The completion record is an authoritative
+historical fact; its count is derived. L1 and both archetypes remain unchanged throughout the sequence. The extra
+Lead relationship does not create a fourth component, and two archetypes do not require two copies of L1.
+Undo/redo restores the same attempt identities, content references, and progression records without reconstructing
+new attempts ([MODEL-002](#model-002--identity)/[MODEL-004](#model-004--historical-fact-preservation)).
+
+Examples of invalid variants:
+
+| Variant                                                              | Why invalid                                                                                                                                                                                     |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Use L1 as i2's Archetype                                             | Lead does not satisfy the expected InvestigationArchetype content type, even if some fields match ([MODEL-001](#model-001--campaign-instance-composition)/[MODEL-003](#model-003--references)). |
+| Retarget i1 to another Lead or replace I1 with I2 after construction | The Lead belongs to ImmutableState and the Archetype is fixed for the occurrence ([MODEL-001](#model-001--campaign-instance-composition)).                                                      |
+| Start i2 while i1 remains Active                                     | The domain permits at most one Active attempt per Lead in a campaign; distinct archetypes do not bypass that constraint.                                                                        |
+
 # Open decisions
 
 [MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity), [MODEL-003](#model-003--references), [MODEL-004](#model-004--historical-fact-preservation), [MODEL-005](#model-005--value-classification), and [MODEL-006](#model-006--campaign-instance-construction) remain proposed rules awaiting review. A consuming specification owns its game-specific
 TypeScript types, identity scopes, and concrete constructor behavior. This document defines the shared
 modeling relationships without selecting production Enemy fields, constructor inputs, storage, or gameplay rules.
+
+Further Rule forms and any formal representation remain undecided. The five content roles are explanatory, not a
+new implementation taxonomy. Production InvestigationArchetype fields, allowed Lead/archetype combinations, and how
+an archetype is selected remain decisions for the domain's owning mechanics and content specifications. The
+speculative `kind` and `difficultyClass` examples do not settle those decisions.

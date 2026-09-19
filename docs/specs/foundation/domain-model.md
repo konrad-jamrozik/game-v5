@@ -183,6 +183,13 @@ exhaustion, and recovery rules.
 Restarting an abandoned investigation creates another attempt. Leads and Progression owns discovery and unlock effects;
 Investigations owns progress, probability, uncertainty, team changes, and abandonment details.
 
+Lead is referenced content, distinct from the InvestigationArchetype that supplies an attempt's Archetype component.
+The Lead reference belongs to the attempt's ImmutableState; current team references belong to MutableState.
+Different attempts at the same Lead may use different InvestigationArchetypes where the owning rules permit them,
+while the one-Active-attempt constraint still applies across archetypes. Production archetype fields, selection, and
+allowed combinations remain open. The [modeling fixture](./modeling-foundations.md#lead-and-investigation-fixture)
+illustrates this separation without selecting investigation kinds as gameplay features.
+
 ## Mission and combat
 
 | Concept                       | Identity and meaning                                                                                                                                                                           |
@@ -300,7 +307,7 @@ Dismissal eligibility, exhaustion caps, rounding, and recovery formulas belong t
 
 ### DOM-009 — Lead versus attempt
 
-An investigation must refer to one lead content entry and distinguish Active, Completed,
+An investigation must retain its reference to one lead content entry in ImmutableState and distinguish Active, Completed,
 and Abandoned lifecycle states. At most one Active investigation may exist for a lead in a campaign. Active attempts
 must have at least one currently assigned agent in committed state; terminal attempts must have no current team.
 

@@ -68,6 +68,10 @@ TODO: Supply archetype catalogs for every campaign-instance TypeScript type decl
 Declare each archetype’s content ID, shared characteristics, and construction defaults. Keep non-archetype balance
 parameters distinct. Mechanics retain ownership of constructor behavior; catalog details and balance values remain open.
 
+InvestigationArchetype entries and Lead entries are separate catalogs. Their references and allowed combinations
+must follow the owning mechanics; speculative investigation kinds in Modeling Foundations do not select production
+content. A Lead is not automatically an InvestigationArchetype.
+
 TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, deadlines, all eight upgrade categories, lead prerequisites, and completion effects using explicit IDs.
 
 ## Completeness and validation
