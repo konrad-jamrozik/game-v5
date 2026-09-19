@@ -30,36 +30,28 @@ historical facts. It does not prescribe storage layout, ID-generation algorithms
 
 # Glossary
 
-| Term                | Definition                                                                                                             |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Definition          | Declares a game concept, for example, analogous to a TypeScript interface. Definitions are immutable during gameplay.  |
-| Entity              | A definition that can be instantiated.                                                                                 |
-| Instance            | A concrete instantiation of an entity, with its own identity and state.                                                |
-| Instance ID         | An identifier for an instance, unique within a declared identity scope and stable during its lifetime under MODEL-002. |
-| Became historical   | A lifecycle transition that retains an instance as history rather than deleting required facts or references.          |
-| Content entry       | Immutable game data, for example, a weapon’s name, base damage, and price.                                             |
-| Campaign state      | Data describing a particular campaign, for example, its instances, resources, and retained history.                    |
-| Authoritative value | A value treated as established truth rather than recomputed from other values.                                         |
-| Derived value       | A value calculated deterministically from authoritative values and the current rules and content entries.              |
-| Historical          | Describes retained past state or events; does not by itself imply that gameplay rules cannot consult them.             |
-| Player observation  | Information deliberately exposed by the engine to an ordinary player                                                   |
-| Committed state     | Complete state before or after an accepted command, not intermediate battle/turn processing                            |
+| Term                | Definition                                                                                                                                                                                |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Definition          | An immutable declaration of a game concept. The umbrella term for entities (can be instantiated) and abstract definitions (cannot be instantiated directly).                              |
+| Abstract definition | A definition that cannot be instantiated directly; it describes a shared concept rather than a kind of concrete instance.                                                                 |
+| Entity              | A definition that can be instantiated; each instance has its own identity and state. For example, this is similar to a TypeScript class, without requiring classes in the implementation. |
+| Instance            | A concrete instantiation of an entity, with its own identity and state.                                                                                                                   |
+| Instance ID         | An identifier for an instance, unique within a declared identity scope and stable during its lifetime under MODEL-002.                                                                    |
+| Became historical   | A lifecycle transition that retains an instance as history rather than deleting required facts or references.                                                                             |
+| Content entry       | Immutable game data, for example, a weapon’s name, base damage, and price.                                                                                                                |
+| Campaign state      | Data describing a particular campaign, for example, its instances, resources, and retained history.                                                                                       |
+| Authoritative value | A value treated as established truth rather than recomputed from other values.                                                                                                            |
+| Derived value       | A value calculated deterministically from authoritative values and the current rules and content entries.                                                                                 |
+| Historical          | Describes retained past state or events; does not by itself imply that gameplay rules cannot consult them.                                                                                |
+| Player observation  | Information deliberately exposed by the engine to an ordinary player                                                                                                                      |
+| Committed state     | Complete state before or after an accepted command, not intermediate battle/turn processing                                                                                               |
 
 # Concepts and contract
 
-## Content and campaign state
-
-Definitions declare concepts; content entries supply game data. The TypeScript analogy does not require classes or constructors
-in the implementation. An abstract definition cannot be instantiated directly.
-
-Content references resolve against content entries supplied by the current game build (MODEL-001/003).
-Earlier rules, content entries, and incompatible saved campaigns need not remain supported.
-
-Being a property of a game concept does not make a value derived. A value treated as established truth is authoritative;
-a value calculated from authoritative inputs is derived. Storing a calculated value does not change that distinction.
-Visibility is independent: either can be hidden from the player.
-
 ## Authoritative versus derived state
+
+Being a property of a game concept does not make a value derived. The glossary defines the distinction;
+MODEL-005 governs classification independently of storage and player visibility.
 
 Examples of the distinction (not a complete state inventory):
 
@@ -70,7 +62,7 @@ Examples of the distinction (not a complete state inventory):
 | Retained event records | Event count             |
 
 These examples illustrate the glossary distinction without prescribing particular game concepts, records, or a
-serialized schema. Each specification using these concepts declares which of its values are authoritative or derived.
+serialized schema.
 
 ## Historical values
 
@@ -81,7 +73,7 @@ every possible chart to be retained.
 # Requirements
 
 **MODEL-001 — Definition and content boundary.** Gameplay must not modify definitions or content entries.
-Campaigns must resolve content references against content entries supplied by the current game build.
+Only entities may be instantiated; abstract definitions must not be instantiated directly.
 Multiple instances can share content entries without sharing mutable instance state.
 
 **MODEL-002 — Identity.** Identity-bearing campaign instances must have IDs that are unique within their declared
@@ -101,6 +93,11 @@ provided required facts remain available; this spec does not mandate full snapsh
 **MODEL-004 — Historical fact preservation.** Preserve the original inputs or historical value when a rule/report needs
 it. Required historical values must not be overwritten with current calculations. This does not require retaining
 every intermediate calculation or every possible chart.
+
+**MODEL-005 — Value classification.** Each specification using these concepts must declare which of its values are
+authoritative and which are derived, using the glossary definitions. Caching a current calculation must not change its classification as derived.
+Classification must be independent of player visibility: either kind of value may be hidden from the player.
+Retaining a past calculation as a historical fact is governed by MODEL-004.
 
 ## Evidence basis (informative)
 
@@ -122,7 +119,7 @@ derives some relationships from IDs. MODEL-002 requires explicit references.
 
 # Acceptance examples
 
-This local fixture uses abstract instance kinds Record and Container solely to exercise MODEL-001 through MODEL-004.
+This local fixture uses instance kinds Record and Container solely to exercise MODEL-001 through MODEL-005.
 They are test-only definitions, not additional game concepts. All fixture values and checks below are explicit
 acceptance conditions, not an illustrative enumeration.
 
@@ -133,8 +130,17 @@ All IDs are symbolic and impose no implementation format.
 
 ## Content entries and distinct identities
 
+Record and Container are entities. A separate abstract definition describing their shared concepts has no direct
+instances; adding one would violate MODEL-001.
+
 Changing r1's mutable value to 7 leaves r2's value and C1's base value at 10. The definitions and content entry remain
 unchanged (MODEL-001). A new Record occurrence r3 in the same timeline has an ID distinct from c1, r1, and r2 (MODEL-002).
+
+## Value classification
+
+Declare r1's and r2's current mutable values authoritative and their sum derived. Initially the sum is 20; after r1's
+value changes to 7, it is 17. Caching that sum leaves it derived. Hiding r1's value and the sum from the player leaves
+both classifications unchanged (MODEL-005).
 
 ## Invalid identity and references
 
@@ -159,6 +165,6 @@ These are invalid structural fixtures. Changing a display name does not change e
 
 # Open decisions
 
-MODEL-001 through MODEL-004 remain proposed rules awaiting review. No additional generic modeling decision is
+MODEL-001 through MODEL-005 remain proposed rules awaiting review. No additional generic modeling decision is
 introduced by this separation. A consuming specification owns its game-specific identity scope and operational
 details; neither is needed to interpret the conventions or the local acceptance fixture.

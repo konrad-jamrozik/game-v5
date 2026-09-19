@@ -59,7 +59,8 @@ TODO: Specify the PRNG algorithm, seed encoding, initial state, distributions, i
 
 ## Deterministic boundaries
 
-TODO: Specify behavior across runtimes and versions; exclude ambient randomness and wall-clock time from game results.
+TODO: Specify behavior across supported runtimes and runtime versions under the build compatibility policy in
+[Engine Contract](engine-contract.md#requirements), ENG-005; exclude ambient randomness and wall-clock time from game results.
 Detail preservation of RNG state on rejection under ENG-004. Decide whether no-op commands consume draws and how ID
 generation relates to RNG.
 
@@ -79,6 +80,6 @@ fixtures instead of introducing implicit balance values.
 
 # Open decisions
 
-- TODO: Choose numeric representation, PRNG, draw ordering, and compatibility guarantees; do not silently inherit Math.random().
+- TODO: Choose numeric representation, PRNG, draw ordering, and supported-runtime guarantees; do not silently inherit Math.random().
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

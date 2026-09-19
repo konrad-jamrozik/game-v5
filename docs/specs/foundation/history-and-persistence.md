@@ -67,9 +67,8 @@ TODO: Specify atomic history boundaries, restored fields including RNG/IDs/repor
 
 ## Replay and persistence
 
-TODO: Define save contents, encoding, load validation, and replay inputs for the current game build. Incompatible saves
-from earlier builds may be rejected or discarded; backward compatibility is out of scope during intensive development.
-Decide whether saves retain undo and redo history.
+TODO: Define save contents, encoding, load validation, and replay inputs for the current game build under
+[Engine Contract](engine-contract.md#requirements), ENG-005. Decide whether saves retain undo and redo history.
 
 ## Session-owned state
 
@@ -91,6 +90,6 @@ fixtures instead of introducing implicit balance values.
 
 # Open decisions
 
-- TODO: Choose history retention, serialization, compatibility policy, and how debug changes affect replay.
+- TODO: Choose history retention, serialization, incompatible-save handling under ENG-005, and how debug changes affect replay.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

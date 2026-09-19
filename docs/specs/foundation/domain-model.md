@@ -64,7 +64,7 @@ remain in their owning specs.
 | Task phase                   | The distinction between At assignment and In transit, including travel timing facts.                                                      |
 | Report                       | Historical facts and explanations linked to commands or turns and instances in the timeline.                                              |
 
-This document uses MODEL-001 through MODEL-004 to describe game concepts. It applies the modeling vocabulary and
+This document uses MODEL-001 through MODEL-005 to describe game concepts. It applies the modeling vocabulary and
 constraints; it does not add detail to the modeling language itself.
 
 Generic modeling terms are owned by the [Modeling Foundations glossary](modeling-foundations.md#glossary).
@@ -131,8 +131,7 @@ Historical status and current gameplay relevance are independent; each owning me
 ## Campaign and agency
 
 A campaign uses the rules and content supplied by the current game build. It contains one agency, the current turn,
-panic and campaign outcome, progression facts, agents, factions, investigations, and missions. Earlier rules, content,
-and incompatible saved campaigns need not remain supported.
+panic and campaign outcome, progression facts, agents, factions, investigations, and missions.
 
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
 switching between human and AI control does not create another agency. No separate agency ID is required.

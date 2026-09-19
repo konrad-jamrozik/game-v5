@@ -59,7 +59,9 @@ TODO: Specify eligibility, atomic batch behavior, invalid/stale inputs, no-op ha
 
 ## Client boundaries
 
-TODO: Define observation immutability, API compatibility, data refresh behavior, and how callers persist sessions without obtaining dev-only gameplay information. Keep framework and AI-strategy dependencies out.
+TODO: Define observation immutability, data refresh behavior, and how callers persist sessions without obtaining dev-only gameplay information.
+Apply the build compatibility policy in [Engine Contract](../foundation/engine-contract.md#requirements), ENG-005.
+Keep framework and AI-strategy dependencies out.
 
 TODO: Assign stable API-NNN requirement IDs when concrete rules replace these placeholders.
 

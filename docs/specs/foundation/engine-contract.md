@@ -1,13 +1,13 @@
 # Engine Contract
 
-| Metadata    | Value                                                                                    |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| Spec ID     | ENG                                                                                      |
-| Family      | Foundation                                                                               |
-| Status      | Draft                                                                                    |
-| Scope       | Execution, continuation, query and information boundaries, and committed-state integrity |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
-| Review      | Batch 1; proposed rules awaiting user review                                             |
+| Metadata    | Value                                                                                                   |
+| ----------- | ------------------------------------------------------------------------------------------------------- |
+| Spec ID     | ENG                                                                                                     |
+| Family      | Foundation                                                                                              |
+| Status      | Draft                                                                                                   |
+| Scope       | Execution, continuation, compatibility, query and information boundaries, and committed-state integrity |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                          |
+| Review      | Batch 1; proposed rules awaiting user review                                                            |
 
 # Purpose and boundaries
 
@@ -85,6 +85,11 @@ guarantee preserves the timeline-scoped identity convention in MODEL-002; a disc
 campaign. History and Persistence specifies restoration procedures, Numbers and Randomness specifies generation,
 and TypeScript Player API specifies stale client-handle behavior.
 
+**ENG-005 — Build compatibility.** Backward compatibility across game builds is out of scope. A build may replace earlier
+rules and content without retaining support for them, and may reject or discard incompatible saved campaigns; migration
+is not required. ENG-001/002 continuation guarantees apply to the rules and content supplied by the current build.
+History and Persistence owns save validation and incompatible-save handling under this policy.
+
 ## Preliminary API capabilities
 
 The following capabilities are all required planning coverage, not illustrative examples.
@@ -157,9 +162,15 @@ those commands (ENG-001/002). This does not require AI controllers to choose ide
 
 Exact save/restore procedures and public errors remain owned by HIST/API/DEV.
 
+## Build compatibility
+
+Given a save from build A that references content removed in build B, rejecting that save in build B is permitted
+under ENG-005. The build need not restore the removed content or migrate the save. Exact rejection behavior belongs
+to History and Persistence; successful restoration must still satisfy ENG-004.
+
 # Open decisions
 
-No additional design choices are introduced by this split. ENG-001–004 remain proposed rules awaiting review.
+ENG-001 through ENG-005 remain proposed rules awaiting review.
 RNG algorithms, turn phase order, save encoding, observation fields, reveal conditions, estimates, public signatures,
 and developer enablement remain scheduled work in their owning specs, not implicit defaults in this contract.
 
