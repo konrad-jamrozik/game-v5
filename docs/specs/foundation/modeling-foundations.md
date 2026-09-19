@@ -77,6 +77,27 @@ provides concrete shared values; a campaign instance represents one occurrence. 
 supplying an instance's shared characteristics. The following sections build up these relationships from direct
 content use to instances with multiple content references.
 
+```mermaid
+flowchart TB
+    Types["Types: descriptions of data"]
+    subgraph Content["Content entries: shared and immutable"]
+        Archetypes["Archetypes"]
+        OtherContent["Other content"]
+    end
+    Rules["Rules: calculations, construction, and gameplay"]
+    subgraph Campaign["Campaign state: one playthrough"]
+        Instances["Campaign instances: individual occurrences"]
+        Values["Other values and retained history"]
+    end
+    Types -.->|describe| Content
+    Types -.->|describe| Campaign
+    Content -->|supplies inputs to| Rules
+    Campaign -->|supplies current values to| Rules
+    Rules -->|construct and govern changes to| Instances
+    Rules -->|calculate, update, or retain| Values
+    Archetypes -->|supply shared characteristics to| Instances
+```
+
 ## Types describe model data
 
 A Type names a data description rather than a particular value. It can describe a simple value, a collection, or a
