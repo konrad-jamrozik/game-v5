@@ -118,13 +118,13 @@ Likewise, matching fields do not make an entry valid for every reference: refere
 
 Consider an illustrative upkeep calculation for agents serving in a campaign. Its complete local setup is:
 
-| Element             | Meaning in this example                                                             |
-| ------------------- | ----------------------------------------------------------------------------------- |
-| UpkeepRate          | A Type describing a nonnegative integer amount of money per serving agent per turn. |
-| Standard upkeep     | A content entry of UpkeepRate with value 2 money per serving agent per turn.        |
-| Serving-agent count | An authoritative campaign value, currently 3.                                       |
-| Upkeep calculation  | A Rule: upkeep for one turn equals the rate multiplied by the serving-agent count.  |
-| Total upkeep        | A Derived value: 2 × 3 = 6 money for this turn.                                     |
+| Element             | Modeling role       | Meaning in this example                                                     |
+| ------------------- | ------------------- | --------------------------------------------------------------------------- |
+| UpkeepRate          | Type                | Describes a nonnegative integer amount of money per serving agent per turn. |
+| Standard upkeep     | Content entry       | Has Type UpkeepRate and value 2 money per serving agent per turn.           |
+| Serving-agent count | Authoritative value | Campaign value, currently 3.                                                |
+| Upkeep calculation  | Rule                | Upkeep for one turn equals the rate multiplied by the serving-agent count.  |
+| Total upkeep        | Derived value       | 2 × 3 = 6 money for this turn.                                              |
 
 The rule reads the entry directly. Applying the upkeep charge changes campaign money without constructing an upkeep
 campaign instance. The rate remains 2 when the serving-agent count changes. The formula and its input content are
