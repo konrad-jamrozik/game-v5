@@ -80,7 +80,7 @@ metadata, register entry, path, and links together.
 
 A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
 
-- Domain Model owns shared entities, their instances, and invariants; subsystem specifications own their detailed transitions.
+- Domain Model owns shared campaign instance kinds, their campaign instances, and invariants; subsystem specifications own their detailed transitions.
 - Numbers and Randomness owns units, numeric operations, and reproducibility conventions.
 - Mechanics own formulas. Initial Campaign Content owns named balance values and content rows.
 - Turn Resolution owns phase ordering and state-read timing, not subsystem formulas.
@@ -172,26 +172,29 @@ Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifa
 Use the following contextual replacements. This table records prohibited synonyms, not alternative accepted names.
 Canonical terms remain owned by their linked glossaries; this list does not redefine them.
 
-| INSTEAD OF                       | USE                                                                   | Context                                                                 |
-| -------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Entity ID                        | [Instance ID](../foundation/modeling-foundations.md#glossary)         | Identifying an instantiated object, not its definition.                 |
-| Content definition; template     | [Content entry](../foundation/modeling-foundations.md#glossary)       | Referring to immutable game data.                                       |
-| Evolving campaign facts          | [Campaign state](../foundation/modeling-foundations.md#glossary)      | Describing the data of a particular campaign.                           |
-| Authoritative fact               | [Authoritative value](../foundation/modeling-foundations.md#glossary) | Naming the source-of-truth category.                                    |
-| Computed value; calculated value | [Derived value](../foundation/modeling-foundations.md#glossary)       | Naming the formal category of values calculated from other values.      |
-| Archived; archival               | [Historical](../foundation/modeling-foundations.md#glossary)          | Describing retained past state or events.                               |
-| Deconstructed; destroyed         | [Became historical](../foundation/modeling-foundations.md#glossary)   | Describing a lifecycle transition that retains the instance as history. |
-| Fatigue                          | [Exhaustion](../mechanics/agents.md#glossary)                         | Naming the combatant attribute, its accumulation, or recovery.          |
-| Hit points; hit-point            | [Health](../mechanics/agents.md#glossary)                             | Naming the combatant health attribute.                                  |
-| Past participation               | [Participation history](../foundation/domain-model.md#glossary)       | Naming retained participation facts.                                    |
+| INSTEAD OF                       | USE                                                                   | Context                                                             |
+| -------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Entity ID                        | [Instance ID](../foundation/modeling-foundations.md#glossary)         | Identifying a campaign instance.                                    |
+| Content definition               | [Content entry](../foundation/modeling-foundations.md#glossary)       | Referring to concrete immutable game data rather than its schema.   |
+| Evolving campaign facts          | [Campaign state](../foundation/modeling-foundations.md#glossary)      | Describing the data of a particular campaign.                       |
+| Authoritative fact               | [Authoritative value](../foundation/modeling-foundations.md#glossary) | Naming the source-of-truth category.                                |
+| Computed value; calculated value | [Derived value](../foundation/modeling-foundations.md#glossary)       | Naming the formal category of values calculated from other values.  |
+| Archived; archival               | [Historical](../foundation/modeling-foundations.md#glossary)          | Describing retained past state or events.                           |
+| Deconstructed; destroyed         | [Became historical](../foundation/modeling-foundations.md#glossary)   | Describing a lifecycle transition that retains a campaign instance. |
+| Fatigue                          | [Exhaustion](../mechanics/agents.md#glossary)                         | Naming the combatant attribute, its accumulation, or recovery.      |
+| Hit points; hit-point            | [Health](../mechanics/agents.md#glossary)                             | Naming the combatant health attribute.                              |
+| Past participation               | [Participation history](../foundation/domain-model.md#glossary)       | Naming retained participation facts.                                |
 
 These are contextual replacements, not a ban on ordinary uses of “definition,” legitimate destruction mechanics,
-or unrelated uses of “configuration.” Historical does not replace named lifecycle states; for example, Killed and Completed.
+or unrelated uses of “configuration.” “Template” may describe the role of a content entry used to initialize a campaign
+instance, but it is not a synonym for every content entry or a separate formal modeling category. Historical does not
+replace named lifecycle states; for example, Killed and Completed.
 
-When specifying a game concept, state its mutability, whether it can be instantiated, multiplicity with an explicit scope,
-creation and historical transitions, authoritative versus derived values, and which values affect current gameplay versus
-serve only historical explanation. Classify properties separately when these dimensions differ within one instance.
-Link to the owning specification for details; explicitly retain unresolved decisions rather than filling them with assumptions.
+When specifying a game concept, state its applicable modeling role and mutability. For a campaign instance kind, state
+multiplicity with an explicit scope, construction and historical transitions, authoritative versus derived values, and
+which values affect current gameplay versus serve only historical explanation. Classify properties separately when
+these dimensions differ within one campaign instance. Link to the owning specification for details; explicitly retain
+unresolved decisions rather than filling them with assumptions.
 
 # Predictable layout and allowed variation
 

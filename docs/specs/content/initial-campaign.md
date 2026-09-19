@@ -36,14 +36,14 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-Shared modeling terms, for example Content entry and Instance, are owned by the
+Shared modeling terms, for example Content entry and Campaign instance, are owned by the
 [Modeling Foundations glossary](../foundation/modeling-foundations.md#glossary).
 
 TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Concepts and contract
 
-Content entries and their references follow MODEL-001 and MODEL-002.
+Content entries and their references follow MODEL-001 through MODEL-003.
 
 This document uses Domain Model's game concepts and Modeling Foundations' content and reference conventions. It uses
 Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and

@@ -118,7 +118,7 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 | Query/command names an unknown or hidden ID       | Respect visibility and non-mutation; exact public error belongs to INFO/API (ENG-003/004)                                        |
 | Invalid player request                            | Leave campaign state, RNG/ID state, reports, and history unchanged (ENG-004)                                                     |
 | Broken internal reference/invariant               | Report an engine/data defect rather than silently repair gameplay (ENG-004; MODEL-003)                                           |
-| Undo removes an instance created later            | Restore earlier references consistently, with no dangling future-only links or stale derived caches (ENG-001/004; MODEL-002/003) |
+| Undo removes a campaign instance created later    | Restore earlier references consistently, with no dangling future-only links or stale derived caches (ENG-001/004; MODEL-002/003) |
 | Intermediate battle/turn state                    | Do not expose it as a committed observation (ENG-004)                                                                            |
 | Current calculation differs from historical value | Refresh current calculations under ENG-001; preserve historical facts under MODEL-004                                            |
 
@@ -157,7 +157,7 @@ those commands (ENG-001/002). This does not require AI controllers to choose ide
   future does not constrain uniqueness in the restored timeline (ENG-004; MODEL-002/003).
 - A successful command, turn advancement, or restoration exposes a state satisfying the domain and reference invariants.
   Intermediate battle/turn states are not exposed as committed observations (ENG-004).
-- A broken internal reference is reported as an engine/data defect, not silently reassigned to a similarly named instance
+- A broken internal reference is reported as an engine/data defect, not silently reassigned to a similarly named campaign instance
   (ENG-004; MODEL-002/003).
 
 Exact save/restore procedures and public errors remain owned by HIST/API/DEV.

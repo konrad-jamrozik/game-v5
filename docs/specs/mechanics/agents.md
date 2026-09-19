@@ -33,7 +33,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-Shared entity terms are owned by the [Domain Model glossary](../foundation/domain-model.md#glossary).
+Shared campaign instance kind terms are owned by the [Domain Model glossary](../foundation/domain-model.md#glossary).
 
 | Term       | Definition                                                                                                          |
 | ---------- | ------------------------------------------------------------------------------------------------------------------- |

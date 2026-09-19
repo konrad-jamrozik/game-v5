@@ -218,7 +218,7 @@ REL-001, REL-003, and REL-008; they do not add relationships to the named docume
 
 | Case                                                                    | Expected classification and reason                                                    |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Instance and Content entry          | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
+| Domain Model describes agents using Campaign instance and Content entry | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
 | Agents supplies transitions for the lifecycle described by DOM-005      | Refines Domain Model; it adds detail to the same lifecycle                            |
 | History specifies restoration steps for ENG-004                         | Refines Engine Contract; it details the restoration behavior                          |
 | History preserves references under MODEL-003 while restoring state      | Uses Modeling Foundations; satisfying the reference invariant alone is not refinement |

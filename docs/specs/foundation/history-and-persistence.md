@@ -49,7 +49,7 @@ Storage and restoration must preserve MODEL-002 through MODEL-004 and ENG-001, E
 
 This Stub intends to refine ENG-001/002/004 by specifying cache restoration or invalidation, complete continuation state, and atomic
 undo/redo and save/load procedures. It uses Modeling Foundations' identity, reference, and historical-preservation
-conventions; storage procedures do not refine those meanings. Domain Model supplies the game instances restored,
+conventions; storage procedures do not refine those meanings. Domain Model supplies the campaign instances restored,
 and Numbers and Randomness supplies the numeric and generator-state contracts. The TODOs below retain the unresolved
 procedure and encoding choices.
 

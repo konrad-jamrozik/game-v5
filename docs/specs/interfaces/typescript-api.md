@@ -36,7 +36,8 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Public operations preserve ENG-001 through ENG-004 and MODEL-001 through MODEL-004.
+Public operations preserve ENG-001 through ENG-004 and MODEL-001 through MODEL-004. An operation that creates a
+campaign instance must use a constructor contract satisfying MODEL-006.
 
 This Stub intends to refine ENG-001 through ENG-004 with exact callable queries and commands, rejection behavior,
 observation isolation, and continuation operations. It uses Modeling Foundations' meanings, Domain Model's game
