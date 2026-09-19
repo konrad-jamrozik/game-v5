@@ -36,28 +36,72 @@ serialization, implementation classes, validation libraries, or cache implementa
 
 # Glossary
 
-Terms are ordered from general descriptions and campaign context through Content entries and individual Campaign instances to
-rules, value classification, and history.
+The subsections expose conceptual layers: foundational concepts, data described by those concepts, roles of that data,
+and the Campaign instances and operations built from them. Component definitions refer to the whole they describe.
+
+## Foundational concepts
+
+Type describes data, Campaign establishes the playthrough context, and Rule describes calculations and permitted behavior.
+
+| Term     | Definition                                                                                                                                                               |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Type     | A named description of data structure and permitted values, including the Types of its constituent properties, collections, and references.                              |
+| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                                      |
+| Rule     | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided. |
+
+## Data within a Campaign
+
+These concepts build on Type and Campaign: Content entries supply immutable shared data, while Campaign state describes one playthrough.
+
+| Term           | Definition                                                                                                |
+| -------------- | --------------------------------------------------------------------------------------------------------- |
+| Content entry  | Concrete game data supplied by a game build, conforming to a declared Type and immutable during gameplay. |
+| Campaign state | Data describing one Campaign; for example, its Campaign instances, resources, and retained history.       |
+
+## Archetype: a role of a Content entry
+
+An Archetype is a Content entry used to supply shared characteristics and construction defaults for Campaign instances.
+
+| Term      | Definition                                                                                                        |
+| --------- | ----------------------------------------------------------------------------------------------------------------- |
+| Archetype | A Content entry describing shared characteristics and construction defaults for a category of Campaign instances. |
+
+## Campaign instances and their components
+
+A Campaign instance combines a declared Type and an Archetype with its own MutableState and ImmutableState. Instance ID distinguishes individual Campaign instances.
+
+| Term              | Definition                                                                                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Campaign instance | A particular occurrence within a campaign of a declared Type, composed of an Archetype, MutableState, and ImmutableState.                              |
+| MutableState      | Campaign instance-specific data whose properties are permitted to evolve under their declared gameplay rules.                                          |
+| ImmutableState    | Campaign instance-specific data established during construction and preserved for the Campaign instance's lifetime, always including its Instance ID.  |
+| Instance ID       | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity). |
+
+## Construction
+
+A Campaign instance constructor specializes Rule to establish a Campaign instance and its components.
 
 | Term                          | Definition                                                                                                                                                                                                                                  |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Type                          | A named description of data structure and permitted values, including the Types of its constituent properties, collections, and references.                                                                                                 |
-| Campaign                      | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                                                                         |
-| Campaign state                | Data describing one Campaign; for example, its Campaign instances, resources, and retained history.                                                                                                                                         |
-| Content entry                 | Concrete game data supplied by a game build, conforming to a declared Type and immutable during gameplay.                                                                                                                                   |
-| Archetype                     | A Content entry describing shared characteristics and construction defaults for a category of Campaign instances.                                                                                                                           |
-| Campaign instance             | A particular occurrence within a campaign of a declared Type, composed of an Archetype, MutableState, and ImmutableState.                                                                                                                   |
-| MutableState                  | Campaign instance-specific data whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                               |
-| ImmutableState                | Campaign instance-specific data established during construction and preserved for the Campaign instance's lifetime, always including its Instance ID.                                                                                       |
-| Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity).                                                                                      |
-| Rule                          | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided.                                                                    |
 | Campaign instance constructor | A Rule that declares its inputs and dependencies, identifies the Type of the returned Campaign instance, and establishes a new Campaign instance's initial components. It need not be a language-level constructor or public API operation. |
-| Authoritative value           | A value treated as established truth rather than recomputed from other values.                                                                                                                                                              |
-| Derived value                 | A value calculated deterministically from Authoritative values and the current rules and Content entries.                                                                                                                                   |
-| Historical                    | Describes retained past data or events; does not by itself imply that gameplay rules cannot consult them.                                                                                                                                   |
-| Became historical             | A lifecycle transition that retains a Campaign instance as history rather than deleting required facts or references.                                                                                                                       |
-| Committed state               | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                                                                                   |
-| Player observation            | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                       |
+
+## Value classification, history, and observation
+
+These concepts describe how values are established, retained, and exposed within the preceding model.
+
+| Term                | Definition                                                                                                            |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Authoritative value | A value treated as established truth rather than recomputed from other values.                                        |
+| Derived value       | A value calculated deterministically from Authoritative values and the current rules and Content entries.             |
+| Historical          | Describes retained past data or events; does not by itself imply that gameplay rules cannot consult them.             |
+| Became historical   | A lifecycle transition that retains a Campaign instance as history rather than deleting required facts or references. |
+| Committed state     | Complete Campaign state before or after an accepted command, not intermediate processing.                             |
+| Player observation  | Information deliberately exposed by the engine to an ordinary player.                                                 |
+
+## Rejected terms and synonyms
+
+- **Template:** not a modeling term or a synonym for Content entry or Archetype. Use Content entry when naming shared immutable data, and Archetype when naming its role in Campaign instance composition. Describe initialization directly.
+- **Definition:** not a modeling category or a substitute for Type or Content entry. Use Type for a named data description and Content entry for concrete shared immutable data. The ordinary word remains valid when discussing a term’s definition.
 
 # Concepts and contract
 
@@ -118,6 +162,23 @@ Structure, initialization, and ongoing validity answer different questions. A he
 a Campaign instance constructor can initialize it from shared Content entries; gameplay rules can constrain its later range. Matching the
 structure alone does not establish campaign membership, resolve references, or prove that initialization was valid.
 Likewise, matching fields do not make a Content entry valid for every reference: references name the expected Type.
+
+## Roles of Content entries
+
+Content entries can serve the following five roles. The roles can overlap; they do not define separate Types or required
+implementation interfaces. The following sections illustrate these roles, beginning with direct use and then construction
+and references.
+
+| Role                     | Relationship to Rules and Campaign state                                                                          |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| Calculation parameter    | A Rule reads a Content entry when calculating a value.                                                            |
+| Initialization source    | A Rule uses a Content entry to establish an initial value in Campaign state; later changes follow gameplay rules. |
+| Archetype                | A Content entry supplies shared characteristics and construction defaults for Campaign instances.                 |
+| Referenced Content entry | A Campaign instance references a Content entry for a purpose other than supplying its Archetype.                  |
+| Key for campaign facts   | Campaign state associates facts with the identity of a Content entry while the Content entry remains immutable.   |
+
+A Rule describes the calculation or behavior; a Content entry supplies data that the Rule reads. These roles do not
+require Rules to be stored as objects or grouped into a Ruleset Type.
 
 ## Using Content entries directly
 
@@ -238,7 +299,7 @@ For example, consider a variant `constructEnemy(archetype, instanceId, missionRe
 typed reference to a Mission mission_1 representing a task. The Campaign instance constructor initializes that immutable reference in enemy_1's
 ImmutableState at construction. Mission follows the same three-component contract
 and can have a mutable collection of participating enemies. Its membership can change while enemy_1's immutable Mission
-reference continues to resolve to mission_1. The immutable reference does not make immutable mission_1's
+reference continues to resolve to mission_1. The immutable reference does not prevent changes to mission_1's
 MutableState; following a reference does not transfer ownership of the referenced Campaign instance's data.
 
 Lead is an immutable Content entry in these examples. Its immutability follows from being a Content entry, not from
@@ -295,22 +356,6 @@ regardless of whether some fields match.
 If investigation_2 later completes, Campaign state can retain a completion record associated with lead_1 and investigation_2. lead_1 remains unchanged;
 the record belongs to the campaign. The number of completions for lead_1 can then be derived from those records. Content entries
 can thus identify the subject of an activity and key campaign facts without becoming mutable itself.
-
-### Content entry roles in context
-
-The following table recaps the complete set of five explanatory Content entry roles used in this document. These roles
-can overlap; they are not a closed taxonomy of Content entry Types or five required implementation interfaces.
-
-| Role                     | Data flow demonstrated above                                                                              |
-| ------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Calculation parameter    | The upkeep Rule reads the upkeep rate.                                                                    |
-| Initialization source    | The initial-capacity Content entry supplies a starting value that subsequently evolves in Campaign state. |
-| Archetype                | Thug supplies shared enemy characteristics and a default for initial health.                              |
-| Referenced Content entry | An Investigation's immutable Lead reference identifies its Lead separately from its Archetype.            |
-| Key for campaign facts   | Completion records are associated with the Lead's typed Content entry identity.                           |
-
-“Template” can explain a Content entry's initialization role; it is not another formal category or a synonym for every Content entry. “Definition” remains ordinary prose. A Rule and the data it reads remain distinct, and these roles do not
-require Rule objects or a Ruleset Type.
 
 ## Authoritative values and Derived values
 
