@@ -224,6 +224,16 @@ invalid, as is resolving an EnemyArchetype reference to Content entries of anoth
 References must resolve explicitly; display names and the spelling of identifiers do not encode relationships
 ([MODEL-003](#model-003--references)).
 
+For a reference stored in a Campaign instance, its placement depends on whether the reference itself can change.
+A fixed reference belongs in ImmutableState: construction establishes its target, and gameplay cannot replace or clear
+that reference. A changeable reference belongs in MutableState: gameplay rules may replace its target or clear the
+reference when permitted. This classification is independent of whether the referenced data can change.
+
+For example, an Investigation's fixed Lead reference belongs in the Investigation's ImmutableState. An illustrative
+Agent's reference to the Mission to which the Agent is currently deployed belongs in the Agent's MutableState if
+gameplay permits deployment changes. Changing that reference changes which Mission the Agent references; it does not
+modify either Mission. This example establishes no deployment eligibility or timing rules.
+
 For example, consider a variant `constructEnemy(archetype, instanceId, missionReference)` whose additional input is a
 typed reference to a Mission mission_1 representing a task. The Campaign instance constructor fixes that reference in enemy_1's
 ImmutableState at construction. Mission follows the same three-component contract
@@ -231,8 +241,11 @@ and can have a mutable collection of participating enemies. Its membership can c
 reference continues to resolve to mission_1. Fixing the reference does not freeze mission_1's
 MutableState; following a reference does not transfer ownership of the referenced Campaign instance's data.
 
-Conversely, a relationship whose members may change belongs in MutableState. Mutability follows the meaning of the
-relationship, not whether it is represented by an identifier. Ordinary nested values and retained records do not become
+Lead is an immutable Content entry in these examples. Its immutability follows from being a Content entry, not from
+the Investigation's reference being fixed. Mutable campaign facts associated with a Lead belong in Campaign state,
+as illustrated by the completion records in the next section; changing those facts does not replace the Lead reference.
+
+Mutability of a reference does not depend on whether it is represented by an identifier. Ordinary nested values and retained records do not become
 Campaign instances simply because they are stored, immutable, or associated with an identifier.
 
 ## Archetypes and other referenced Content entries
@@ -366,6 +379,11 @@ same campaign; Content entry references must resolve to a Content entry of the e
 game build. References to historical Campaign instances, including terminal lifecycle states, must remain resolvable.
 Storage can be compacted provided required facts remain available; this specification does not mandate full snapshots
 forever. Structural compatibility alone is insufficient to prove reference validity.
+
+Within a Campaign instance, a fixed reference must belong in ImmutableState, and a reference that gameplay may replace
+or clear must belong in MutableState. Fixing a reference fixes its target, not the target's data. Changes to the referenced
+Campaign instance's MutableState remain governed by that Campaign instance's rules. Content entries remain immutable
+regardless of the mutability of references to them.
 
 ## MODEL-004 — Historical fact preservation
 
