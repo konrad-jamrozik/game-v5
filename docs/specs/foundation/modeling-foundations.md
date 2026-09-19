@@ -225,24 +225,24 @@ References must resolve explicitly; display names and the spelling of identifier
 ([MODEL-003](#model-003--references)).
 
 For a reference stored in a Campaign instance, its placement depends on whether the reference itself can change.
-A fixed reference belongs in ImmutableState: construction establishes its target, and gameplay cannot replace or clear
-that reference. A changeable reference belongs in MutableState: gameplay rules may replace its target or clear the
+An immutable reference belongs in ImmutableState: construction establishes its target, and gameplay cannot replace or clear
+that reference. A mutable reference belongs in MutableState: gameplay rules may replace its target or clear the
 reference when permitted. This classification is independent of whether the referenced data can change.
 
-For example, an Investigation's fixed Lead reference belongs in the Investigation's ImmutableState. An illustrative
+For example, an Investigation's immutable Lead reference belongs in the Investigation's ImmutableState. An illustrative
 Agent's reference to the Mission to which the Agent is currently deployed belongs in the Agent's MutableState if
 gameplay permits deployment changes. Changing that reference changes which Mission the Agent references; it does not
 modify either Mission. This example establishes no deployment eligibility or timing rules.
 
 For example, consider a variant `constructEnemy(archetype, instanceId, missionReference)` whose additional input is a
-typed reference to a Mission mission_1 representing a task. The Campaign instance constructor fixes that reference in enemy_1's
+typed reference to a Mission mission_1 representing a task. The Campaign instance constructor initializes that immutable reference in enemy_1's
 ImmutableState at construction. Mission follows the same three-component contract
-and can have a mutable collection of participating enemies. Its membership can change while enemy_1's fixed mission
-reference continues to resolve to mission_1. Fixing the reference does not freeze mission_1's
+and can have a mutable collection of participating enemies. Its membership can change while enemy_1's immutable Mission
+reference continues to resolve to mission_1. The immutable reference does not make immutable mission_1's
 MutableState; following a reference does not transfer ownership of the referenced Campaign instance's data.
 
 Lead is an immutable Content entry in these examples. Its immutability follows from being a Content entry, not from
-the Investigation's reference being fixed. Mutable campaign facts associated with a Lead belong in Campaign state,
+the Investigation's reference being immutable. Mutable campaign facts associated with a Lead belong in Campaign state,
 as illustrated by the completion records in the next section; changing those facts does not replace the Lead reference.
 
 Mutability of a reference does not depend on whether it is represented by an identifier. Ordinary nested values and retained records do not become
@@ -252,14 +252,14 @@ Campaign instances simply because they are stored, immutable, or associated with
 
 A Campaign instance can refer to Content entries for a purpose other than supplying its Archetype. Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
 
-| Example concept        | Modeling role                                                                                                                                          | Question it answers                                                               |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
-| Lead                   | Content entry representing a Lead to pursue.                                                                                                           | Which Lead can be pursued?                                                        |
-| Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in MutableState, and a fixed Lead reference in ImmutableState. | Which Investigation concerns that Lead, and how has it progressed?                |
-| InvestigationArchetype | Content entry used as an Investigation's Archetype, supplying shared characteristics and construction defaults independently of the referenced Lead.   | What shared characteristics and construction defaults does the Investigation use? |
+| Example concept        | Modeling role                                                                                                                                              | Question it answers                                                               |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Lead                   | Content entry representing a Lead to pursue.                                                                                                               | Which Lead can be pursued?                                                        |
+| Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in MutableState, and a immutable Lead reference in ImmutableState. | Which Investigation concerns that Lead, and how has it progressed?                |
+| InvestigationArchetype | Content entry used as an Investigation's Archetype, supplying shared characteristics and construction defaults independently of the referenced Lead.       | What shared characteristics and construction defaults does the Investigation use? |
 
-Suppose Lead lead_1 is referenced by Investigation investigation_1, constructed with InvestigationArchetype investigation_archetype_1. Its ImmutableState fixes its
-Instance ID and Lead reference; its MutableState contains lifecycle initialized to active and progress initialized to 0. The archetype remains the separate shared
+Suppose Lead lead_1 is referenced by Investigation investigation_1, constructed with InvestigationArchetype investigation_archetype_1. Its ImmutableState contains its
+Instance ID and immutable Lead reference; its MutableState contains lifecycle initialized to active and progress initialized to 0. The archetype remains the separate shared
 component. Adding the Lead reference does not create a fourth component or make lead_1 the Investigation's archetype.
 
 For this example, investigation_1 reaches progress 2 and is abandoned. A new Investigation investigation_2 at lead_1 starts at progress 0 with its own Instance ID.
@@ -284,8 +284,8 @@ flowchart LR
     end
     investigation_1_archetype -->|resolves to| investigation_archetype_1
     investigation_2_archetype -->|resolves to| investigation_archetype_2
-    investigation_1_immutable_state -->|fixed reference| lead_1
-    investigation_2_immutable_state -->|fixed reference| lead_1
+    investigation_1_immutable_state -->|immutable reference| lead_1
+    investigation_2_immutable_state -->|immutable reference| lead_1
 ```
 
 Both Investigations can share lead_1 without sharing progress. Retargeting investigation_1 to another Lead or replacing investigation_archetype_1 after construction
@@ -306,7 +306,7 @@ can overlap; they are not a closed taxonomy of Content entry Types or five requi
 | Calculation parameter    | The upkeep Rule reads the upkeep rate.                                                                    |
 | Initialization source    | The initial-capacity Content entry supplies a starting value that subsequently evolves in Campaign state. |
 | Archetype                | Thug supplies shared enemy characteristics and a default for initial health.                              |
-| Referenced Content entry | An Investigation's fixed Lead reference identifies its Lead separately from its Archetype.                |
+| Referenced Content entry | An Investigation's immutable Lead reference identifies its Lead separately from its Archetype.            |
 | Key for campaign facts   | Completion records are associated with the Lead's typed Content entry identity.                           |
 
 “Template” can explain a Content entry's initialization role; it is not another formal category or a synonym for every Content entry. “Definition” remains ordinary prose. A Rule and the data it reads remain distinct, and these roles do not
@@ -354,8 +354,8 @@ with structures described by its declared Type. Every Content entry must match i
 Gameplay must not modify Content entries, replace a Campaign instance's archetype, or modify its ImmutableState, including
 nested data. MutableState properties must be permitted to change under their declared gameplay rules. Campaign instances sharing
 an archetype must have independent Campaign instance-specific components; they must not thereby share MutableState.
-Fixed Campaign instance-specific references must belong to ImmutableState. For a reference held there, immutability fixes
-the referenced Content entry or Campaign instance, not a referenced Campaign instance's MutableState.
+Immutable Campaign instance-specific references must belong to ImmutableState. An immutable reference cannot be replaced
+or cleared; the referenced Campaign instance's MutableState can change under its gameplay rules.
 Nested value data owned by ImmutableState remains immutable; following a reference does not transfer ownership.
 Structural compatibility alone does not establish a valid Campaign instance or satisfy runtime invariants.
 
@@ -380,8 +380,9 @@ game build. References to historical Campaign instances, including terminal life
 Storage can be compacted provided required facts remain available; this specification does not mandate full snapshots
 forever. Structural compatibility alone is insufficient to prove reference validity.
 
-Within a Campaign instance, a fixed reference must belong in ImmutableState, and a reference that gameplay may replace
-or clear must belong in MutableState. Fixing a reference fixes its target, not the target's data. Changes to the referenced
+Within a Campaign instance, an immutable reference must belong in ImmutableState, and a mutable reference must belong in
+MutableState. Gameplay may replace or clear a mutable reference under its declared rules. An immutable reference cannot
+be replaced or cleared; it does not make the referenced data immutable. Changes to the referenced
 Campaign instance's MutableState remain governed by that Campaign instance's rules. Content entries remain immutable
 regardless of the mutability of references to them.
 

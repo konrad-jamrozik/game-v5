@@ -392,7 +392,7 @@ Given the Content entries C supplied by the current game build and rules R, turn
 - Other collections empty.
 
 Each Campaign instance has the following complete conceptual component allocation for this fixture. Archetypes are shared
-immutable Content entries; all Instance IDs and fixed references are in ImmutableState. MutableState fields below can evolve
+immutable Content entries; all Instance IDs and immutable references are in ImmutableState. MutableState fields below can evolve
 under their owning mechanics; their concrete transitions remain deferred. The health bounds and other test values
 above still apply.
 
@@ -408,7 +408,7 @@ above still apply.
 
 Campaign collections contain agency ag1, agents a1/a2, investigation i1, mission m1, and faction f1; e1 is reached through
 m1. Required references resolve in c1. Resource scalars are zero and other collections empty unless specified above.
-Fixed affiliation and target references are assumptions of this fixture, not new production lifecycle rules.
+Immutable affiliation and target references are assumptions of this fixture, not new production lifecycle rules.
 Growing Participation history or Battle result collections does not permit rewriting retained historical elements.
 
 These relationships satisfy [DOM-001](#dom-001--campaign-boundary), [DOM-005](#dom-005--agent-lifecycle), [DOM-006](#dom-006--orders-and-task-phase), [DOM-007](#dom-007--current-versus-historical-teams), [DOM-008](#dom-008--attribute-bounds), and [DOM-009](#dom-009--leads-and-investigations), [DOM-011](#dom-011--mission-kind-and-provenance), [DOM-012](#dom-012--combat-and-consequences), [DOM-017](#dom-017--campaign-instance-identity-scope), and [MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](modeling-foundations.md#model-002--identity), and [MODEL-003](modeling-foundations.md#model-003--references).
