@@ -38,9 +38,9 @@ duplicating shared definitions.
 This Stub intends to refine Domain Model's lead and progression contract ([DOM-009](../foundation/domain-model.md#dom-009--lead-versus-attempt)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with prerequisite semantics,
 availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
 progression. Factions in turn uses this document's unlock effects. Initial Campaign Content supplies the actual lead
-graph and effect entries conforming to these rules. The expression and effect choices remain TODOs below.
+graph and effect Content entries conforming to these rules. The expression and effect choices remain TODOs below.
 
-TODO: Specify Lead content entry, prerequisites, discovery, availability, blocking, repeatability, completion count, and unlock effect.
+TODO: Specify Lead Content entry, prerequisites, discovery, availability, blocking, repeatability, completion count, and unlock effect.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -54,9 +54,9 @@ TODO: Specify prerequisite expression semantics, discovery, active/blocked/compl
 
 TODO: Define the supported effect kinds for information, agency/agent improvement, missions, faction progression, and campaign objectives. Reference the authoritative rules for each effect.
 
-## Progression content validation
+## Progression Content entries validation
 
-TODO: Define valid references, cycle/unreachable-content handling, repeatable chains, and when availability is recomputed.
+TODO: Define valid references, handling of cycles and unreachable Content entries, repeatable chains, and when availability is recomputed.
 
 TODO: Assign stable LEAD-NNN requirement IDs when concrete rules replace these placeholders.
 

@@ -46,7 +46,7 @@ appropriate to this document.
 
 ## Initialization
 
-TODO: Specify how the scenario and seed produce initial state, covering all of these required areas: roster, resources, progression, factions, and counters; link exact content values to INIT.
+TODO: Specify how the scenario and seed produce initial state, covering all of these required areas: roster, resources, progression, factions, and counters; link exact Content entry values to INIT.
 
 ## Panic and endings
 
@@ -54,7 +54,7 @@ TODO: Specify panic representation, clamping, contributing effects, victory and 
 
 ## Terminal behavior
 
-TODO: Define allowed observations and commands after an ending and how history restores an ongoing campaign.
+TODO: Define allowed Player observations and commands after an ending and how history restores an ongoing campaign.
 
 TODO: Assign stable CAMP-NNN requirement IDs when concrete rules replace these placeholders.
 

@@ -50,9 +50,9 @@ appropriate to this document.
 
 TODO: Specify eligibility, hidden-difficulty distribution and sampling time, agent contribution, sublinear team scaling, transit treatment, and when progress is added.
 
-TODO: Define InvestigationArchetype selection and allowed combinations with Lead content entries. Preserve the
+TODO: Define InvestigationArchetype selection and allowed combinations with Lead Content entries. Preserve the
 separate Archetype and fixed Lead reference established by Domain Model; apply the one-Active-attempt-per-Lead
-constraint across archetypes. The speculative kinds in Modeling Foundations are examples only, not selected mechanics.
+constraint across archetypes. The illustrative InvestigationArchetype Content entries in Modeling Foundations do not select mechanics.
 
 ## Completion probability
 

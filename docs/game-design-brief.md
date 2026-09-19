@@ -2,7 +2,7 @@
 
 ## 1. Purpose and core concepts
 
-This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, content, and interfaces. Adapt the strategic ideas from `game-ts`; exact formulas, balance, content, and framework choices remain open.
+This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, Content entries, and interfaces. Adapt the strategic ideas from `game-ts`; exact formulas, balance, Content entries, and framework choices remain open.
 
 The game is a **web-based, turn-based agency-management strategy game**, with presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
 
@@ -11,7 +11,7 @@ The game is a **web-based, turn-based agency-management strategy game**, with pr
 The main domain concepts are:
 
 - **Agency and campaign:** resources, capabilities, roster, progression, and current turn.
-- **Agents:** persistent individuals with skill, health, exhaustion, equipment, assignments, and career history. Orders and physical availability are distinct.
+- **Agents:** persistent individuals with skill, health, exhaustion, equipment, Current assignments, and career history. Orders and physical availability are distinct.
 - **Leads:** discoverable opportunities connected by prerequisites. They can be repeatable, one-time, blocked, or completed.
 - **Investigations:** individual attempts to complete leads, with assigned agents, accumulated progress, and uncertain completion.
 - **Initiative missions:** agency efforts to advance objectives, typically uncovered through investigations.
@@ -37,9 +37,9 @@ Each agent can primarily:
 - Fight.
 - Recover.
 
-Every assignment sacrifices alternatives. Training improves future effectiveness but produces neither immediate income nor investigative progress. Recovery restores useful capacity but temporarily removes an agent from productive work.
+Every Current assignment sacrifices alternatives. Training improves future effectiveness but produces neither immediate income nor investigative progress. Recovery restores useful capacity but temporarily removes an agent from productive work.
 
-Changing tasks often incurs **transit downtime**. Frequent reshuffling can leave a large roster unavailable and accomplish less than a smaller, consistently assigned team. Transit rules should make commitment meaningful without assuming every assignment transition has an identical delay.
+Changing tasks often incurs **transit downtime**. Frequent reshuffling can leave a large roster unavailable and accomplish less than a smaller, consistently assigned team. Transit rules should make commitment meaningful without assuming every Current assignment transition has an identical delay.
 
 A further choice is **working everyone versus holding a ready reserve**. Idle readiness has an opportunity cost, but it allows the agency to respond to unexpected missions without abandoning investigations or waiting for agents to return.
 
@@ -122,9 +122,9 @@ This reduces the value of retrying combat, but does not eliminate foreknowledge 
 
 The foundation is a **well-defined TypeScript API consisting of exposed functions and types**, not necessarily an HTTP service.
 
-Humans and AI players must be able to play completely through it. It provides observations, decision-relevant derived information, action discovery, constraints, commands, structured outcomes, and undo/redo.
+Humans and AI players must be able to play completely through it. It provides Player observations, decision-relevant information expressed as Derived values, action discovery, constraints, commands, structured outcomes, and undo/redo.
 
-The player receives **all information needed to play and only information they are entitled to know**. Visibility restrictions apply equally to queries, action descriptions, errors, and reports. A separate **dev-mode API** exposes full authoritative state.
+The player receives **all information needed to play and only information they are entitled to know**. Visibility restrictions apply equally to queries, action descriptions, errors, and reports. A separate **dev-mode API** exposes all Authoritative values in Campaign state.
 
 Supported interfaces develop progressively:
 
@@ -136,7 +136,7 @@ Supported interfaces develop progressively:
 
 Earlier interfaces remain supported. Graphics must not become necessary to access gameplay information or actions.
 
-The engine owns rules, validation, visibility, and consequences. Clients own presentation or player strategy. Content entries remain separate from campaign instances. Browser and terminal dependencies stay outside the engine.
+The engine owns rules, validation, visibility, and consequences. Clients own presentation or player strategy. Content entries remain separate from Campaign instances. Browser and terminal dependencies stay outside the engine.
 
 Only these interfaces are in scope. Dedicated native game engines such as Unity are excluded. Choose the web framework later, with grid and tree capabilities as major criteria.
 
@@ -145,7 +145,7 @@ Only these interfaces are in scope. Dedicated native game engines such as Unity 
 Management commands take immediate effect. **Advance turn** atomically resolves time-dependent activity and generates a report. Combat rounds remain internal to that resolution.
 
 - Under the same game revision, identical initial state and commands reproduce identical outcomes.
-- Random-generator state and deterministic ID counters belong to authoritative state.
+- Random-generator state and deterministic Instance ID counters belong to Authoritative values in Campaign state.
 - Processing order and rounding are explicit. Queries, rendering, and wall-clock time do not influence gameplay.
 - Every accepted command, including an entire turn advancement, is one history step.
 - Undo restores state, randomness, and reports. Redo restores the recorded result without rerolling.
@@ -157,7 +157,7 @@ Begin with snapshots; optimize history storage later.
 
 ## 5. Delivery and acceptance
 
-The immediate deliverable is the Markdown brief, not implementation. Exact formulas, content, balance, and partial-success calculations belong in subsequent specifications.
+The immediate deliverable is the Markdown brief, not implementation. Exact formulas, Content entries, balance, and partial-success calculations belong in subsequent specifications.
 
 Future validation should establish that:
 

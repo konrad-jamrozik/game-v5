@@ -34,7 +34,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 | Term    | Definition                                                                                                   |
 | ------- | ------------------------------------------------------------------------------------------------------------ |
-| Session | The owner of current campaign state, history navigation, and controller state that must follow that history. |
+| Session | The owner of current Campaign state, history navigation, and controller state that must follow that history. |
 
 TODO: Define remaining local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
@@ -45,11 +45,11 @@ duplicating shared definitions.
 
 The [Session definition](#glossary) was migrated from Domain Model and remains a draft. Controller state can include,
 for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved; this specification stays Stub.
-Storage and restoration must preserve [MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](modeling-foundations.md#model-002--identity), [MODEL-003](modeling-foundations.md#model-003--references), and [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
+Storage and restoration must preserve [MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](modeling-foundations.md#model-002--identity), [MODEL-003](modeling-foundations.md#model-003--references), and [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-value-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
 
-This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
+This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
 undo/redo and save/load procedures. It uses Modeling Foundations' identity, reference, and historical-preservation
-conventions; storage procedures do not refine those meanings. Domain Model supplies the campaign instances restored,
+conventions; storage procedures do not refine those meanings. Domain Model supplies the Campaign instances restored,
 and Numbers and Randomness supplies the numeric and generator-state contracts. The TODOs below retain the unresolved
 procedure and encoding choices.
 
@@ -76,7 +76,7 @@ TODO: Define save contents, encoding, load validation, and replay inputs for the
 
 ## Session-owned state
 
-TODO: Separate game state, UI preferences, debug operations, and AI memory. Define restoration or invalidation of strategy memory and cached observations.
+TODO: Separate Campaign state, UI preferences, debug operations, and AI memory. Define restoration or invalidation of strategy memory and cached Player observations.
 
 TODO: Assign stable HIST-NNN requirement IDs when concrete rules replace these placeholders.
 

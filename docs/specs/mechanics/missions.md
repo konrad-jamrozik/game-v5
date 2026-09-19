@@ -38,12 +38,12 @@ duplicating shared definitions.
 # Concepts and contract
 
 This Stub intends to refine Domain Model's mission contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)/[DOM-012](../foundation/domain-model.md#dom-012--combat-and-consequences)) with creation, deployment, deadlines,
-resolution, and campaign consequences. Agents supplies participant eligibility, Combat supplies battle results,
+resolution, and campaign consequences. Agents supplies participant eligibility, Combat supplies Battle results,
 Economy and Upgrades supplies capacities and resource effects, and Factions supplies operation provenance and
-suppression semantics. Initial Campaign Content supplies mission entries and numeric values under this contract.
+suppression semantics. Initial Campaign Content supplies mission Content entries and numeric values under this contract.
 The lifecycle and consequence choices remain TODOs below.
 
-TODO: Specify Initiative mission, Response mission, faction operation, deadline, deployment, battle result, mission outcome, and partial success.
+TODO: Specify Initiative mission, Response mission, Faction operation occurrence, deadline, deployment, Battle result, mission outcome, and partial success.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 

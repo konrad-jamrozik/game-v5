@@ -63,7 +63,7 @@ that truly fall outside this document's scope.
 
 # Acceptance examples
 
-TODO: Provide user journeys mapping controls to API calls and expected observations, including keyboard operation and timeline navigation.
+TODO: Provide user journeys mapping controls to API calls and expected Player observations, including keyboard operation and timeline navigation.
 Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 

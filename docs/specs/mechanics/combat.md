@@ -37,7 +37,7 @@ This Stub intends to refine Domain Model's combatant and battle-result contract 
 calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
 and draws. The combat decisions below remain TODOs; campaign consequences remain owned by Missions.
 
-TODO: Specify Combatant, weapon, effective skill, combat rating, round, attack, damage, incapacitation, retreat, and battle result.
+TODO: Specify Combatant, weapon, effective skill, combat rating, round, attack, damage, incapacitation, retreat, and Battle result.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -65,7 +65,7 @@ that truly fall outside this document's scope.
 
 # Acceptance examples
 
-TODO: Give deterministic round-by-round fixtures with attacks, draws, damage, experience, and expected battle results.
+TODO: Give deterministic round-by-round fixtures with attacks, draws, damage, experience, and expected Battle results.
 Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 

@@ -12,7 +12,7 @@
 # Purpose and boundaries
 
 Define how specifications, requirements, implementations, tests, and other artifacts describe their relationships.
-Every relationship runs from a Dependency to a Dependent and has one of five kinds: `follows`, `refines`, `uses`,
+Every relationship runs from a Dependency to a Dependent and has one of five Relationship kinds: `follows`, `refines`, `uses`,
 `implements`, or `verifies`.
 
 This specification owns the relationship model. Specification Conventions owns the required specification layout and
@@ -31,7 +31,7 @@ declare relationships for the named artifacts.
 | Term                  | Definition                                                                                                                                                                           |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Artifact              | An identified [specification](spec-conventions.md#glossary), [requirement](spec-conventions.md#glossary), implementation, test, or other item that can participate in a relationship |
-| Relationship          | A directional connection from one Dependency to one Dependent with a relationship kind                                                                                               |
+| Relationship          | A directional connection from one Dependency to one Dependent with a Relationship kind                                                                                               |
 | Dependency            | The artifact on which the Dependent relies; it appears on the left of `Dependency → Dependent`                                                                                       |
 | Dependent             | The artifact that relies on the Dependency; it appears on the right of `Dependency → Dependent`                                                                                      |
 | Relationship kind     | Exactly one of `follows`, `refines`, `uses`, `implements`, or `verifies`                                                                                                             |
@@ -54,7 +54,7 @@ are the only terms for the two participating artifacts in this model.
 
 ## Relationship kinds
 
-Each kind describes how the Dependent relates to the Dependency.
+Each Relationship kind describes how the Dependent relates to the Dependency.
 
 | Relationship kind | Meaning                                                                                                                   | Permitted artifacts                                                                                                         | Illustrative example                                                                                         |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -72,7 +72,7 @@ passes.
 
 For each proposed refinement, identify the parent contract and the additional detail about that same subject or
 behavior. Record both in the owning contract prose, using requirement IDs when available. Obeying an invariant,
-using a vocabulary, consuming a result, or supplying content values is insufficient by itself: those are uses.
+using a vocabulary, consuming a result, or supplying Content entry values is insufficient by itself: those are uses.
 Being more concrete or appearing later in an authoring sequence is also insufficient.
 
 Domain Model uses Modeling Foundations as a language for describing game concepts. The game concepts do not refine
@@ -82,7 +82,7 @@ identity conventions while refining deterministic execution. These classificatio
 meaning, not a prohibition on refinement between any document families.
 
 A refinement does not need an additional uses entry merely because it inherits the parent's constraints. Declare
-both kinds for a pair only when the prose identifies separate kinds of reliance. A document may refine multiple
+both Relationship kinds for a pair only when the prose identifies separate Relationship kinds. A document may refine multiple
 parents only when it identifies additional detail about each parent's subject.
 
 A Stub may declare an intended refinement when its prose names the parent contract and the detail its TODOs will
@@ -100,7 +100,7 @@ cycle, and refinements must not form a cycle of increasingly detailed definition
 
 The `uses` graph may contain cycles when the owning contracts identify distinct supplied meanings and no definition
 depends circularly on itself. The `implements` and `verifies` graphs are acyclic under their permitted-artifact rules.
-A graph combining different relationship kinds need not be acyclic.
+A graph combining different Relationship kinds need not be acyclic.
 
 Every retained cycle must be documented in the informative [Specification relationship cycles](../../spec-relationship-cycles.md)
 register. Review the combined explicit uses/refines graph, including cycles longer than two edges, and separately
@@ -139,12 +139,12 @@ Modeling Foundations contains the mirror:
 
 Both entries describe the same relationship. The first five phrases describe the current document as Dependent;
 the last five describe it as Dependency. Reverse-facing phrases are grammatical presentations of the canonical
-relationship kinds, not additional kinds or glossary synonyms.
+Relationship kinds, not additional Relationship kinds or glossary synonyms.
 
 List explicit relationships only. When there are none, write exactly **No explicit relationships.** as an unformatted
 paragraph. Do not repeat implicit relationships or the former implicit-only sentences. Every explicit relationship
-must have its mirror with the same Dependency, Dependent, and relationship kind. A document pair may have multiple
-kinds, but duplicate entries of the same kind and direction are invalid. Inventory lists are exhaustive, not example lists.
+must have its mirror with the same Dependency, Dependent, and Relationship kind. A document pair may have multiple
+Relationship kinds, but duplicate entries of the same Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
 
 Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
 contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
@@ -159,12 +159,12 @@ location does not create a relationship.
 
 Every relationship must use the canonical terms Artifact, Relationship, Dependency,
 Dependent, and Relationship kind as defined by the Glossary. Each relationship must use exactly one of the five
-relationship kinds and satisfy its permitted-artifact rules.
+Relationship kinds and satisfy its permitted-artifact rules.
 
 ## REL-002 — Identity
 
 Every explicit relationship must identify one Dependency, one Dependent, and one
-relationship kind. Exact duplicates are invalid. Relationship inventories have no Scope field. Substantive constraints
+Relationship kind. Exact duplicates are invalid. Relationship inventories have no Scope field. Substantive constraints
 and requirement references belong in the owning contract prose; an artifact link alone must not imply reliance on
 every rule in that artifact.
 
@@ -184,7 +184,7 @@ Tables, nested lists, annotations, and Dependencies/Dependents subsections are i
 ## REL-005 — Mirrored explicit relationships
 
 Every explicit entry must have one matching entry in the other artifact.
-The pair must resolve to the same Dependency, Dependent, and relationship kind, with the reverse-facing phrase in
+The pair must resolve to the same Dependency, Dependent, and Relationship kind, with the reverse-facing phrase in
 the mirror. Implicit relationships are defined centrally and are not listed.
 
 ## REL-006 — Relationship updates
@@ -195,9 +195,9 @@ traceability. Update the cycle register whenever a change introduces, alters, or
 
 ## REL-007 — Graph validity
 
-Validate each relationship-kind graph separately. Reject cycles in `follows` and
+Validate each Relationship kind graph separately. Reject cycles in `follows` and
 `refines`, invalid artifacts, and self-relationships. The owning contracts of a `uses` cycle must identify distinct supplied meanings and must
-not leave a circular definition unresolved. A cycle containing different relationship kinds is not by itself a defect.
+not leave a circular definition unresolved. A cycle containing different Relationship kinds is not by itself a defect.
 
 ## REL-008 — Status and evidence
 
@@ -214,18 +214,18 @@ check links, and validate the graphs. Do not invent implementation or test relat
 
 # Edge cases and failure behavior
 
-| Case                                          | Required result                                                                                  |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| A depends on B                                | Record `B → A`; B is the Dependency and A is the Dependent                                       |
-| Two kinds connect the same artifacts          | Keep both when they express distinct kinds of reliance                                           |
-| Only implicit relationships apply             | Write `No explicit relationships.`                                                               |
-| Explicit relationships exist                  | List all explicit relationships; omit implicit ones                                              |
-| No explicit relationships exist               | Write `No explicit relationships.`                                                               |
-| One mirrored entry is missing or disagrees    | Treat the inventory as defective and update both entries                                         |
-| No implementation or test has been identified | Do not invent an `implements` or `verifies` relationship                                         |
-| A requirement moves                           | Update both entries, links, and requirement references in contract prose                         |
-| A referenced specification remains a Stub     | Preserve its status and record concrete unresolved contract work without inferring missing rules |
-| A work-plan row orders reviews                | Treat it as process information, not an artifact relationship                                    |
+| Case                                              | Required result                                                                                  |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| A depends on B                                    | Record `B → A`; B is the Dependency and A is the Dependent                                       |
+| Two Relationship kinds connect the same artifacts | Keep both when they express distinct Relationship kinds                                          |
+| Only implicit relationships apply                 | Write `No explicit relationships.`                                                               |
+| Explicit relationships exist                      | List all explicit relationships; omit implicit ones                                              |
+| No explicit relationships exist                   | Write `No explicit relationships.`                                                               |
+| One mirrored entry is missing or disagrees        | Treat the inventory as defective and update both entries                                         |
+| No implementation or test has been identified     | Do not invent an `implements` or `verifies` relationship                                         |
+| A requirement moves                               | Update both entries, links, and requirement references in contract prose                         |
+| A referenced specification remains a Stub         | Preserve its status and record concrete unresolved contract work without inferring missing rules |
+| A work-plan row orders reviews                    | Treat it as process information, not an artifact relationship                                    |
 
 # Acceptance examples
 
@@ -244,9 +244,9 @@ The following table gives the complete expected classifications for this accepta
 | Terminal CLI maps commands to the player API                                                                                      | Uses TypeScript Player API; an adapter contract applies existing operations           |
 | A Stub names [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) and TODOs for exact exposed fields         | Intended refinement is permitted; the fields remain unspecified and status stays Stub |
 | A document merely says it must obey [MODEL-002](../foundation/modeling-foundations.md#model-002--identity)                        | Uses, not Refines; no added detail about the identity convention is identified        |
-| A refinement duplicates the same reliance as a Uses entry                                                                         | Keep only Refines; two kinds require distinct reliance                                |
+| A refinement duplicates the same reliance as a Uses entry                                                                         | Keep only Refines; two Relationship kinds require distinct reliance                   |
 
-## Complete coverage of relationship kinds
+## Complete coverage of Relationship kinds
 
 | Relationship kind | Dependency                                                                     | Dependent                        | Expected interpretation                                                                          |
 | ----------------- | ------------------------------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------ |
@@ -281,10 +281,10 @@ relationships still apply. It must not list implicit entries or use the former i
 - Two `uses` relationships in opposite directions are permitted only when their meanings are independently
   defined.
 - Specification Conventions → Artifact Relationships through implicit `follows`, combined with Artifact Relationships →
-  Specification Conventions through `uses`, is a permitted mixed-kind cycle.
+  Specification Conventions through `uses`, is a permitted cycle combining Relationship kinds.
 
 # Open decisions
 
-No unresolved terminology choices are hidden in this proposal. The direction, five relationship kinds, mirrored
+No unresolved terminology choices are hidden in this proposal. The direction, five Relationship kinds, mirrored
 inventories, implicit-relationship handling, graph rules, and adoption rules are proposed for review; this specification
 remains Draft.

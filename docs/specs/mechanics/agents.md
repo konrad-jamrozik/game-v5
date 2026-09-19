@@ -33,7 +33,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-Shared campaign-instance Type names are owned by the [Domain Model glossary](../foundation/domain-model.md#glossary).
+Shared Campaign instance Type names are owned by the [Domain Model glossary](../foundation/domain-model.md#glossary).
 
 | Term       | Definition                                                                                                                                                                     |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -45,7 +45,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's agent contract ([DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle), [DOM-006](../foundation/domain-model.md#dom-006--orders-and-task-phase), [DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams), and [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)) with eligibility, assignment,
+This Stub intends to refine Domain Model's agent contract ([DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle), [DOM-006](../foundation/domain-model.md#dom-006--orders-and-task-phase), [DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams), and [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)) with eligibility, Current assignment,
 travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
 Combat supplies battle-earned experience, Economy and Upgrades supplies economic effects on personnel and
 capabilities, and Initial Campaign Content supplies balance values. Those inputs are applied to agent transitions;
@@ -62,7 +62,7 @@ appropriate to this document.
 
 TODO: Specify effective-skill and readiness formulas with units, floors, caps, and exact thresholds. Define which attributes are individual versus agency-derived.
 
-## Assignments and transit
+## Current assignments and transit
 
 TODO: Provide a transition table for standby, contracting, training, investigation, mission, recovery, death, and dismissal. Specify eligibility and transit for each supported transition.
 
@@ -74,7 +74,7 @@ TODO: Assign stable AGENT-NNN requirement IDs when concrete rules replace these 
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for Exact readiness/exhaustion thresholds, zero health, recovery completion, destination disappearing during transit, and conflicting assignments.
+TODO: Define behavior for Exact readiness/exhaustion thresholds, zero health, recovery completion, destination disappearing during transit, and conflicting Current assignments.
 State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
 that truly fall outside this document's scope.
 

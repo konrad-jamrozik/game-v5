@@ -1,18 +1,18 @@
 # Developer API
 
-| Metadata    | Value                                                                                   |
-| ----------- | --------------------------------------------------------------------------------------- |
-| Spec ID     | DEV                                                                                     |
-| Family      | Interfaces                                                                              |
-| Status      | Stub                                                                                    |
-| Scope       | Expose full authoritative state for debugging through a separate, explicit API surface. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                          |
+| Metadata    | Value                                                                                                     |
+| ----------- | --------------------------------------------------------------------------------------------------------- |
+| Spec ID     | DEV                                                                                                       |
+| Family      | Interfaces                                                                                                |
+| Status      | Stub                                                                                                      |
+| Scope       | Expose all Authoritative values in Campaign state for debugging through a separate, explicit API surface. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                            |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
 # Purpose and boundaries
 
-Expose full authoritative state for debugging through a separate, explicit API surface.
+Expose all Authoritative values in Campaign state for debugging through a separate, explicit API surface.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -45,7 +45,7 @@ appropriate to this document.
 
 ## Inspection contract
 
-TODO: Specify full-state inspection (for example, hidden difficulty, RNG state, and IDs). Define read-only/copy behavior and separation from player observations.
+TODO: Specify full-state inspection (for example, hidden difficulty, RNG state, and Instance IDs). Define read-only/copy behavior and separation from Player observations.
 
 ## Optional debugging controls
 

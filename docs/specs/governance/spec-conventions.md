@@ -29,7 +29,7 @@ Do not prescribe internal classes, file organization, libraries, or algorithms u
 
 | Term               | Definition                                                                                                                                                                    |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, content, governance, or planned specification work.                                |
+| Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Content entries, governance, or planned specification work.                        |
 | Registered         | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                                            |
 | Family             | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                               |
 | Requirement        | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                           |
@@ -52,7 +52,7 @@ Use one of these statuses in the metadata table:
 
 Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Record the acceptance reference when a document is accepted. Do not infer approval from silence. Work may explore a draft when requested, but must not silently settle its open design decisions.
 
-Each specification has a stable Spec ID, Family, title, status, scope, and related-document links. The index registers IDs,
+Each specification has a stable Spec ID, Family, title, status, scope, and related-document links. The index registers Spec IDs,
 Families, and scopes.
 
 ## Specification families and paths
@@ -68,7 +68,7 @@ the exception of the root index, its file must be a direct child of the correspo
 | Governance | `governance/` | Specification conventions, relationship rules, and planning or process contracts               |
 | Foundation | `foundation/` | Cross-cutting domain, modeling, execution, numeric, timing, history, and persistence contracts |
 | Mechanics  | `mechanics/`  | Player-facing game-system rules, transitions, formulas, and effects                            |
-| Content    | `content/`    | Versioned content entries, named parameters, catalogs, and starting configurations             |
+| Content    | `content/`    | Versioned Content entries, named parameters, catalogs, and starting configurations             |
 | Interfaces | `interfaces/` | Observable player, developer, API, CLI, and UI contracts                                       |
 | Acceptance | `acceptance/` | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability              |
 
@@ -81,11 +81,11 @@ metadata, register entry, path, and links together.
 
 A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
 
-- Domain Model owns shared campaign-instance Types, their campaign instances, and invariants; subsystem specifications own their detailed transitions.
+- Domain Model owns shared Campaign instance Types, their Campaign instances, and invariants; subsystem specifications own their detailed transitions.
 - Numbers and Randomness owns units, numeric operations, and reproducibility conventions.
-- Mechanics own formulas. Initial Campaign Content owns named balance values and content rows.
+- Mechanics own formulas. Initial Campaign Content owns named balance values and Content entry rows.
 - Turn Resolution owns phase ordering and state-read timing, not subsystem formulas.
-- Combat produces battle results; Missions converts them into campaign effects.
+- Combat produces Battle results; Missions converts them into campaign effects.
 - Investigations owns probability and estimate calculations; Player Information owns which results and fields players see.
 - Interface specifications reference mechanical eligibility and effects rather than independently defining them.
 - Acceptance scenarios exercise rules; they cannot introduce new rules.
@@ -132,12 +132,12 @@ Modeling Foundations contains the mirror:
 
 Both entries describe the same relationship. The first five phrases describe the current document as Dependent;
 the last five describe it as Dependency. Reverse-facing phrases are grammatical presentations of the canonical
-relationship kinds, not additional kinds or glossary synonyms.
+Relationship kinds, not additional Relationship kinds or glossary synonyms.
 
 List explicit relationships only. When there are none, write exactly **No explicit relationships.** as an unformatted
 paragraph. Do not repeat implicit relationships or the former implicit-only sentences. Every explicit relationship
-must have its mirror with the same Dependency, Dependent, and relationship kind. A document pair may have multiple
-kinds, but duplicate entries of the same kind and direction are invalid. Inventory lists are exhaustive, not example lists.
+must have its mirror with the same Dependency, Dependent, and Relationship kind. A document pair may have multiple
+Relationship kinds, but duplicate entries of the same Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
 
 Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
 contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
@@ -146,7 +146,7 @@ acknowledgements do not create relationships.
 Classify relationships using [Choosing uses or refines](artifact-relationships.md#choosing-uses-or-refines).
 Each refinement must identify the parent contract and the added detail about the same subject or behavior in its
 owning prose. A scoped Stub may declare that intended detail without settling its TODOs. Applying vocabulary,
-obeying invariants, or supplying content values alone establishes uses. Do not hide substantive reliance behind
+obeying invariants, or supplying Content entry values alone establishes uses. Do not hide substantive reliance behind
 an informative citation or duplicate a refinement as uses for the same reliance.
 
 Maintain [Specification relationship cycles](../../spec-relationship-cycles.md) when changing relationships.
@@ -162,6 +162,18 @@ require glossary entries.
 
 One concept must have exactly one canonical term. Do not introduce synonyms, aliases, inverse labels, slash-separated alternatives, or interchangeable terms for the same concept.
 
+Use the full glossary term on every mention. Do not abbreviate it, drop words, split its words across a compound,
+or substitute a generic noun after introducing the full term. For example, use Content entry rather than "content"
+or "entry", Campaign instance rather than "instance", and Campaign instance constructor rather than "constructor"
+when referring to those modeling concepts. Grammatical plurals and possessives must retain every word of the term:
+Content entries and Campaign instance's are valid; entries and instance's are not substitutes.
+
+This rule applies throughout specifications and all other project documentation, including headings, tables, diagram
+labels, examples, and generated views. Update the owning sources and regenerate derived documentation. Document titles,
+file paths, literal code identifiers, and exact quotations retain their actual spelling. Ordinary words remain valid
+when they describe something else: a glossary entry is not a Content entry, and a language-level constructor is not
+necessarily a Campaign instance constructor. Review each use in context; do not infer compliance from text search alone.
+
 If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
 replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
 Glossary. If the concepts differ, make their distinct definitions explicit. Unresolved terminology blocks acceptance.
@@ -169,46 +181,58 @@ Glossary. If the concepts differ, make their distinct definitions explicit. Unre
 Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
 The modeling term [Type](../foundation/modeling-foundations.md#glossary) describes data independently of a programming
 language. Explicit TypeScript terminology remains valid for programming contracts and explanatory analogies;
-“relationship type” remains a prohibited substitute for “relationship kind.”
+“relationship type” remains a prohibited substitute for “Relationship kind.”
 
 ## Terminology replacements
 
 Use the following contextual replacements. This table records prohibited synonyms, not alternative accepted names.
 Canonical terms remain owned by their linked glossaries; this list does not redefine them.
 
-| INSTEAD OF                        | USE                                                                                                                                 | Context                                                                                                                                |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance kind            | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing a category of campaign instances.                                                                                           |
-| Schema                            | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing model data structure; ordinary API or serialization schema usage remains valid.                                             |
-| TypeScript type                   | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Naming a modeling concept; actual TypeScript API declarations and explanatory language analogies remain valid.                         |
-| Instance state (undifferentiated) | [MutableState](../foundation/modeling-foundations.md#glossary) and [ImmutableState](../foundation/modeling-foundations.md#glossary) | Separate changeable properties from fixed occurrence facts; do not put the latter in shared content.                                   |
-| EnemyType; EnemyKind              | EnemyArchetype                                                                                                                      | Naming the shared content structure, not the complete Enemy instance. See [Archetype](../foundation/modeling-foundations.md#glossary). |
-| Entity ID                         | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a campaign instance.                                                                                                       |
-| Content definition                | [Content entry](../foundation/modeling-foundations.md#glossary)                                                                     | Referring to concrete immutable game data rather than its Type.                                                                        |
-| Evolving campaign facts           | [Campaign state](../foundation/modeling-foundations.md#glossary)                                                                    | Describing the data of a particular campaign.                                                                                          |
-| Authoritative fact                | [Authoritative value](../foundation/modeling-foundations.md#glossary)                                                               | Naming the source-of-truth category.                                                                                                   |
-| Computed value; calculated value  | [Derived value](../foundation/modeling-foundations.md#glossary)                                                                     | Naming the formal category of values calculated from other values.                                                                     |
-| Archived; archival                | [Historical](../foundation/modeling-foundations.md#glossary)                                                                        | Describing retained past state or events.                                                                                              |
-| Deconstructed; destroyed          | [Became historical](../foundation/modeling-foundations.md#glossary)                                                                 | Describing a lifecycle transition that retains a campaign instance.                                                                    |
-| Fatigue                           | [Exhaustion](../mechanics/agents.md#glossary)                                                                                       | Naming the combatant attribute, its accumulation, or recovery.                                                                         |
-| Hit points; hit-point             | [Health](../mechanics/agents.md#glossary)                                                                                           | Naming the combatant health attribute.                                                                                                 |
-| Past participation                | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Naming retained participation facts.                                                                                                   |
+| INSTEAD OF                        | USE                                                                                                                                 | Context                                                                                                                                               |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Content; entry; entries           | [Content entry](../foundation/modeling-foundations.md#glossary)                                                                     | Naming immutable game data; preserve the complete term in plural and attributive uses. The Content Family and document titles retain their names.     |
+| Instance; occurrence              | [Campaign instance](../foundation/modeling-foundations.md#glossary)                                                                 | Referring to the modeled occurrence, rather than explaining what an occurrence means in a definition.                                                 |
+| Constructor                       | [Campaign instance constructor](../foundation/modeling-foundations.md#glossary)                                                     | Referring to the Rule that constructs a Campaign instance, rather than a programming-language constructor.                                            |
+| ID                                | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a Campaign instance; Content entry identifiers, Requirement identifiers, and other identifiers retain their own descriptions.             |
+| Relationship kind                 | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                           |
+| Assignment                        | [Current assignment](../foundation/domain-model.md#glossary)                                                                        | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                        |
+| Participation; agent history      | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Referring to retained participation records, rather than the act of participating or an Agent's broader career.                                       |
+| Campaign instance kind            | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing a category of Campaign instances.                                                                                                          |
+| Schema                            | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing model data structure; ordinary API or serialization schema usage remains valid.                                                            |
+| TypeScript type                   | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Naming a modeling concept; actual TypeScript API declarations and explanatory language analogies remain valid.                                        |
+| Instance state (undifferentiated) | [MutableState](../foundation/modeling-foundations.md#glossary) and [ImmutableState](../foundation/modeling-foundations.md#glossary) | Separate changeable properties from fixed occurrence facts; do not put the latter in shared Content entries.                                          |
+| EnemyType; EnemyKind              | EnemyArchetype                                                                                                                      | Naming the shared Content entry structure, not the complete Enemy Campaign instance. See [Archetype](../foundation/modeling-foundations.md#glossary). |
+| Entity ID                         | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a Campaign instance.                                                                                                                      |
+| Content definition                | [Content entry](../foundation/modeling-foundations.md#glossary)                                                                     | Referring to concrete immutable game data rather than its Type.                                                                                       |
+| Evolving campaign facts           | [Campaign state](../foundation/modeling-foundations.md#glossary)                                                                    | Describing the data of a particular campaign.                                                                                                         |
+| Authoritative fact                | [Authoritative value](../foundation/modeling-foundations.md#glossary)                                                               | Naming the source-of-truth category.                                                                                                                  |
+| Computed value; calculated value  | [Derived value](../foundation/modeling-foundations.md#glossary)                                                                     | Naming the formal category of values calculated from other values.                                                                                    |
+| Archived; archival                | [Historical](../foundation/modeling-foundations.md#glossary)                                                                        | Describing retained past state or events.                                                                                                             |
+| Deconstructed; destroyed          | [Became historical](../foundation/modeling-foundations.md#glossary)                                                                 | Describing a lifecycle transition that retains a Campaign instance.                                                                                   |
+| Fatigue                           | [Exhaustion](../mechanics/agents.md#glossary)                                                                                       | Naming the combatant attribute, its accumulation, or recovery.                                                                                        |
+| Hit points; hit-point             | [Health](../mechanics/agents.md#glossary)                                                                                           | Naming the combatant health attribute.                                                                                                                |
+| Past participation                | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Naming Participation history facts.                                                                                                                   |
 
 These are contextual replacements, not a ban on ordinary uses of “definition,” legitimate destruction mechanics,
-or unrelated uses of “configuration.” “Template” may describe the role of a content entry used to initialize a campaign
-instance, but it is not a synonym for every content entry or a separate formal modeling category. Historical does not
+or unrelated uses of “configuration.” “Template” may describe the role of a Content entry used to initialize a Campaign instance, but it is not a synonym for every Content entry or a separate formal modeling category. Historical does not
 replace named lifecycle states; for example, Killed and Completed.
 
-When specifying a game concept, state its applicable modeling role and mutability. A campaign instance's Type describes
+When specifying a game concept, state its applicable modeling role and mutability. A Campaign instance's Type describes
 its Archetype, MutableState, and ImmutableState, including its mandatory Instance ID.
-Distinguish structural constraints, constructor initialization, and ongoing gameplay invariants. Declare ID scopes;
-singleton occurrences are not exempt. Constructor contracts identify their result Type, inputs, dependencies,
+Distinguish structural constraints, Campaign instance constructor initialization, and ongoing gameplay invariants. Declare Instance ID scopes;
+singleton Campaign instances are not exempt. Campaign instance constructor contracts identify the Type of the returned Campaign instance, inputs, dependencies,
 and initialization of all three components. Structural compatibility does not establish domain validity. Use prose,
 property tables, and diagrams for conceptual descriptions; a programming-language declaration is not required. State
-multiplicity with an explicit scope, construction and historical transitions, authoritative versus derived values, and
+multiplicity with an explicit scope, construction and historical transitions, Authoritative values versus Derived values, and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
-these dimensions differ within one campaign instance. Link to the owning specification for details; explicitly retain
+these dimensions differ within one Campaign instance. Link to the owning specification for details; explicitly retain
 unresolved decisions rather than filling them with assumptions.
+
+Give illustrative Campaign instance constructors explicit function names, for example `constructEnemy`, and distinguish
+the returned Campaign instance from the caller's attachment operation. State that Campaign instance constructors return
+Campaign instances of a Type; never say they produce or return the Type itself. Gameplay functions must not receive or access
+the top-level Campaign instance; use specific inputs under
+[MODEL-007](../foundation/modeling-foundations.md#model-007--gameplay-dependency-direction).
 
 # Predictable layout and allowed variation
 
@@ -227,7 +251,7 @@ Use a metadata table immediately below the document-title H1. Major sections are
 nest from H2 through H6 when the hierarchy requires it, without skipping a heading level. Appendices follow Open
 decisions.
 
-Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both must use the universal Purpose and boundaries, Relationships, and Glossary sequence, but they may replace the remaining standard rule-spec sections with governance-specific H1 sections.
+Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both must use the universal Purpose and boundaries, Relationships, and Glossary sequence, but they may replace the remaining standard rule-specification sections with governance-specific H1 sections.
 
 Foundation specifications may embed illustrative examples beside the concepts they explain and omit the separate
 Acceptance examples section. If present, that section retains its standard position and content requirements.
@@ -264,10 +288,10 @@ changes. When removing a requirement, remove every reference to it and never reu
 the historical record.
 
 Every occurrence of a live requirement ID outside its declaration heading must be its own Markdown hyperlink to that
-exact heading. Write each ID in full. Do not use compact forms or ranges such as `PREFIX-nnn/mmm` or `PREFIX-nnn`
-through `PREFIX-mmm`; list and link every referenced ID individually.
+exact heading. Write each Requirement identifier in full. Do not use compact forms or ranges such as `PREFIX-nnn/mmm` or `PREFIX-nnn`
+through `PREFIX-mmm`; list and link every referenced Requirement identifier individually.
 
-Stubs do not invent requirement IDs for TODOs. Allocate IDs when actual rules are proposed.
+Stubs do not invent requirement IDs for TODOs. Allocate Requirement identifiers when actual rules are proposed.
 
 A rule should make its trigger, inputs, preconditions, outcome, and state changes clear. Use a transition table or pseudocode where prose would conceal ordering. Define:
 
@@ -285,11 +309,11 @@ For random rules, specify the distribution, draw timing and order, interval boun
 
 Include worked numerical examples for normal cases and boundaries. Equations, prose, pseudocode, and examples must agree. An unexplained "chance increases over time" or "diminishing returns" is not a complete rule.
 
-## Contracts and content
+## Contracts and Content entries
 
 Public API specifications define exact names, types, argument shapes, outputs, and errors when they are ready for acceptance. Conceptual domain specifications need not mirror implementation storage layouts.
 
-Content tables define stable IDs, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit content entry. Use parameter references instead of copying balance values throughout mechanics specifications.
+Content entry tables define stable Content entry identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit Content entry. Use parameter references instead of copying balance values throughout mechanics specifications.
 
 ## Illustrative and exhaustive enumerations
 
@@ -312,7 +336,7 @@ the concepts, linking to the applicable requirements. These illustrations introd
 need not be organized as test fixtures or command sequences. Every acceptance example must identify all applicable
 items in this checklist:
 
-- The requirement IDs exercised and, when needed for reproducibility, the game revision and content fixture.
+- The requirement IDs exercised and, when needed for reproducibility, the game revision and Content entry fixture.
 - Initial state and inputs, including the seed or random state for stochastic results.
 - The command or event sequence.
 - Expected state, output, visibility, history, and random behavior where relevant.
@@ -347,14 +371,14 @@ Use Open decisions to collect unresolved choices and identify affected sections 
 Before acceptance, verify:
 
 - Scope and ownership are clear and all references resolve.
-- Explicit and implicit relationships satisfy Artifact Relationships, including mirrored explicit entries.
-- Canonical terminology is consistent, necessary new formal terms are defined in their owning Glossary, and encountered synonyms are recorded in Terminology replacements.
+- Explicit relationships and Implicit relationships satisfy Artifact Relationships, including mirrored Explicit relationship rows.
+- Every mention uses the full canonical glossary term, including headings, tables, and diagrams. Necessary new formal terms are defined in their owning Glossary; encountered synonyms and mention shortcuts are recorded in Terminology replacements.
 - Every illustrative enumeration is explicitly labeled and contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
 - Worked examples and acceptance scenarios agree with the rules.
-- Related contracts and content tables are consistent.
+- Related contracts and Content entry tables are consistent.
 - Deferred features are explicitly out of scope, not holes in an allegedly complete contract.
 - The project owner has accepted the revision.
 

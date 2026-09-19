@@ -20,11 +20,11 @@ Most scenarios can exercise the game through the TypeScript Player API without a
 CLI or web UI to verify that equivalent actions produce equivalent results and respect the same information boundary.
 This document describes the test cases; the executable tests and their test framework belong to implementation work.
 
-Individual mechanics specs keep examples of their own rules. This document connects those rules across systems, for example, investigation completion creating a mission whose result changes agent health, agency resources, and progression.
+Individual mechanics specifications keep examples of their own rules. This document connects those rules across systems, for example, investigation completion creating a mission whose result changes agent health, agency resources, and progression.
 Expected results must reference the owning rules; scenarios cannot introduce new mechanics. Strategic playtesting
 assesses whether the game is interesting and balanced separately from these exact behavior checks.
 
-This is currently a stub: the concrete test cases await the detailed rules and content they will exercise.
+This is currently a stub: the concrete test cases await the detailed rules and Content entries they will exercise.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -43,9 +43,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 | Term             | Meaning in this document                                                                                                                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Test scenario    | A specified starting state, sequence of actions, and expected results                                                                                                          |
-| Fixture          | The content, campaign state, and random seed or RNG state needed to reproduce a scenario                                                                                       |
+| Fixture          | The Content entries, Campaign state, and random seed or RNG state needed to reproduce a scenario                                                                               |
 | Integration test | A test that exercises several game systems together, typically through the player API                                                                                          |
-| End-to-end test  | A test that exercises a player flow through an interface and checks its resulting observations and game effects                                                                |
+| End-to-end test  | A test that exercises a player flow through an interface and checks its resulting Player observations and game effects                                                         |
 | Acceptance test  | A test that checks whether behavior satisfies referenced specification [requirements](../governance/spec-conventions.md#glossary); it can be an integration or end-to-end test |
 
 # Concepts and contract
@@ -64,7 +64,7 @@ appropriate to this document.
 
 ## Deterministic fixtures
 
-TODO: Define scenario IDs, exact starting state, content fixture, seed, ordered commands, expected results, and references
+TODO: Define scenario IDs, exact starting state, Content entry fixture, seed, ordered commands, expected results, and references
 to owning requirements. Record the game revision when needed for reproducibility. Identify any test-only reduced scenario
 explicitly.
 

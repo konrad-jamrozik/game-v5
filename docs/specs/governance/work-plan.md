@@ -17,7 +17,7 @@ owns the accepted authoring sequence and work tracking; individual specification
 The specifications are the durable design artifacts. Code and tests will be derived from accepted contracts. This is a
 specification work plan, not an implementation schedule, and it does not select formulas, frameworks, or balance values.
 The [Game Design Brief](../../game-design-brief.md) supplies strategic intent and architectural constraints, while the
-[spec index](../README.md) registers document IDs, Families, and ownership.
+[specification index](../README.md) registers document IDs, Families, and ownership.
 
 **Current work:** [Domain Model](../foundation/domain-model.md), [Modeling Foundations](../foundation/modeling-foundations.md),
 and [Engine Contract](../foundation/engine-contract.md) are Draft and **In review** for batch 1. Review their proposed
@@ -87,44 +87,44 @@ removal approaches do not select new gameplay rules or change the accepted revie
 Use the following 10-batch sequence, starting with Domain Model, Modeling Foundations, and Engine Contract. If review reveals a better grouping,
 propose the change explicitly and update this table when agreed rather than silently changing the order.
 
-| Batch | Specifications                                                                                                                                                    | Review objective and reason for this order                                                                                                                                                                                                              | Work state |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| 1     | [Domain Model](../foundation/domain-model.md); [Modeling Foundations](../foundation/modeling-foundations.md); [Engine Contract](../foundation/engine-contract.md) | Agree on vocabulary, Types, three-component campaign instances, archetypes and other content entries, mandatory IDs, construction, relationships, authoritative state, and boundaries before specifying behavior. Review the three drafts as one batch. | In review  |
-| 2     | [Numbers and Randomness](../foundation/numbers-and-randomness.md); [History and Persistence](../foundation/history-and-persistence.md)                            | Establish exact calculations, reproducible randomness, reversible state, replay, and save/load contracts before relying on them in mechanics.                                                                                                           | Queued     |
-| 3     | [Agents](../mechanics/agents.md); [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                                                    | Define personnel availability, effectiveness, growth, resources, and purchases used by other mechanics.                                                                                                                                                 | Queued     |
-| 4     | [Leads and Progression](../mechanics/leads-and-progression.md); [Investigations](../mechanics/investigations.md)                                                  | Define the first major strategic subsystem, including precise progress, completion probabilities, player uncertainty, and commitment costs.                                                                                                             | Queued     |
-| 5     | [Combat](../mechanics/combat.md)                                                                                                                                  | Define automatic battle resolution and its outputs. Present this for review before drafting the mission-consequence contract.                                                                                                                           | Queued     |
-| 6     | [Missions](../mechanics/missions.md)                                                                                                                              | Translate battle results into deployment outcomes, expiration, rewards, and damage-related partial success. Hold a separate review.                                                                                                                     | Queued     |
-| 7     | [Factions](../mechanics/factions.md); [Campaign](../mechanics/campaign.md); [Turn Resolution](../foundation/turn-resolution.md)                                   | Connect escalation, operations, panic, endings, and precise phase ordering into a coherent campaign loop.                                                                                                                                               | Queued     |
-| 8     | [Player Information](../interfaces/player-information.md); [TypeScript API](../interfaces/typescript-api.md); [Developer API](../interfaces/developer-api.md)     | Finalize complete observation, command, and debugging contracts once the mechanics they expose are defined.                                                                                                                                             | Queued     |
-| 9     | [CLI](../interfaces/cli.md)                                                                                                                                       | Specify complete human and AI play through a thin terminal adapter over the API.                                                                                                                                                                        | Queued     |
-| 10    | [Web UI](../interfaces/web-ui.md)                                                                                                                                 | Specify grids, trees, charts, and interactions around the established player contract.                                                                                                                                                                  | Queued     |
+| Batch | Specifications                                                                                                                                                    | Review objective and reason for this order                                                                                                                                                                                                                                          | Work state |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 1     | [Domain Model](../foundation/domain-model.md); [Modeling Foundations](../foundation/modeling-foundations.md); [Engine Contract](../foundation/engine-contract.md) | Agree on vocabulary, Types, three-component Campaign instances, archetypes and other Content entries, mandatory Instance IDs, construction, relationships, Authoritative values in Campaign state, and boundaries before specifying behavior. Review the three drafts as one batch. | In review  |
+| 2     | [Numbers and Randomness](../foundation/numbers-and-randomness.md); [History and Persistence](../foundation/history-and-persistence.md)                            | Establish exact calculations, reproducible randomness, reversible state, replay, and save/load contracts before relying on them in mechanics.                                                                                                                                       | Queued     |
+| 3     | [Agents](../mechanics/agents.md); [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                                                    | Define personnel availability, effectiveness, growth, resources, and purchases used by other mechanics.                                                                                                                                                                             | Queued     |
+| 4     | [Leads and Progression](../mechanics/leads-and-progression.md); [Investigations](../mechanics/investigations.md)                                                  | Define the first major strategic subsystem, including precise progress, completion probabilities, player uncertainty, and commitment costs.                                                                                                                                         | Queued     |
+| 5     | [Combat](../mechanics/combat.md)                                                                                                                                  | Define automatic battle resolution and its outputs. Present this for review before drafting the mission-consequence contract.                                                                                                                                                       | Queued     |
+| 6     | [Missions](../mechanics/missions.md)                                                                                                                              | Translate Battle results into deployment outcomes, expiration, rewards, and damage-related partial success. Hold a separate review.                                                                                                                                                 | Queued     |
+| 7     | [Factions](../mechanics/factions.md); [Campaign](../mechanics/campaign.md); [Turn Resolution](../foundation/turn-resolution.md)                                   | Connect escalation, operations, panic, endings, and precise phase ordering into a coherent campaign loop.                                                                                                                                                                           | Queued     |
+| 8     | [Player Information](../interfaces/player-information.md); [TypeScript API](../interfaces/typescript-api.md); [Developer API](../interfaces/developer-api.md)     | Finalize complete Player observation, command, and debugging contracts once the mechanics they expose are defined.                                                                                                                                                                  | Queued     |
+| 9     | [CLI](../interfaces/cli.md)                                                                                                                                       | Specify complete human and AI play through a thin terminal adapter over the API.                                                                                                                                                                                                    | Queued     |
+| 10    | [Web UI](../interfaces/web-ui.md)                                                                                                                                 | Specify grids, trees, charts, and interactions around the established player contract.                                                                                                                                                                                              | Queued     |
 
-The table is an authoring sequence, not a declaration that every referenced spec is already accepted. Some dependencies
+The table is an authoring sequence, not a declaration that every referenced specification is already accepted. Some dependencies
 are mutual. Drafts must identify unresolved dependencies explicitly rather than borrowing unstated rules from stubs.
 
 ## Work that grows alongside the batches
 
-### PLAN-002 — Parallel content and acceptance work
+### PLAN-002 — Parallel Content entry and acceptance work
 
 Develop the following documents incrementally with the mechanics they support. They are part of the backlog,
 not work postponed until after the interfaces.
 
-Initial campaign scope and balance decisions belong to Initial Campaign Content. Propose parameter values and content
+Initial campaign scope and balance decisions belong to Initial Campaign Content. Propose parameter values and Content entries
 incrementally alongside each mechanic, then review the complete playable campaign after batch 7. Their later resolution
 is scheduled work in that specification, not an unresolved decision about this work plan.
 
-| Track      | Document                                                                                                | When and what to add                                                                                                                                              | Work state |
-| ---------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| Content    | [Initial Campaign Content](../content/initial-campaign.md)                                              | Add exact named parameters and small example content as each subsystem needs them. Complete the playable campaign content after batch 7 and review it explicitly. | Queued     |
-| Acceptance | [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | Add precise cross-system examples with each batch. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10.            | Queued     |
+| Track      | Document                                                                                                | When and what to add                                                                                                                                                              | Work state |
+| ---------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Content    | [Initial Campaign Content](../content/initial-campaign.md)                                              | Add exact named parameters and small example Content entries as each subsystem needs them. Complete the playable campaign Content entries after batch 7 and review it explicitly. | Queued     |
+| Acceptance | [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | Add precise cross-system examples with each batch. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10.                            | Queued     |
 
 ### PLAN-003 — Early information and API boundaries
 
 During batch 1, identify the player-information boundary and outline the API capabilities needed to support
 it. Refine these notes with each mechanic; do not defer their design influence until batch 8. Keep supporting notes
-explicitly preliminary in Engine Contract, alongside Domain Model and Modeling Foundations as the batch 1 deliverable. Exact observation fields and
-public signatures are finalized in their owning specs during batch 8.
+explicitly preliminary in Engine Contract, alongside Domain Model and Modeling Foundations as the batch 1 deliverable. Exact Player observation fields and
+public signatures are finalized in their owning specifications during batch 8.
 
 ### PLAN-004 — Incremental timing refinement
 
@@ -139,8 +139,8 @@ For each authorized batch:
 
 1. Inspect the brief, accepted dependencies, related drafts, and relevant game-ts code where useful.
 2. Draft the contract using the accepted conventions. Clearly distinguish proposed rules from inherited behavior.
-3. Add formulas, boundary cases, worked examples, and relevant content/scenario updates.
-4. Check internal consistency and cross-spec references. Identify unresolved dependencies and decisions.
+3. Add formulas, boundary cases, worked examples, and relevant updates to Content entries and scenarios.
+4. Check internal consistency and cross-specification references. Identify unresolved dependencies and decisions.
 5. Present a concise review summary: proposed behavior, departures from game-ts, trade-offs, open questions, and affected
    documents. Set the work state to In review; the specification remains Draft.
 6. Pause before advancing to the next batch so the user can review. Incorporate feedback or follow explicit instructions
@@ -163,16 +163,16 @@ deferred until those stages are requested.
 ### PLAN-011 — First implementation milestone assessment
 
 After the batch 4 review, assess whether the accepted contracts support a small headless playable slice.
-Propose its concrete scope and identify missing contracts, content, or acceptance scenarios before implementation is
+Propose its concrete scope and identify missing contracts, Content entries, or acceptance scenarios before implementation is
 authorized. Do not assume completing batch 4 guarantees readiness, or that all 21 subject specifications must be accepted
 before any implementation can begin. If contracts are missing, schedule their resolution before implementing the slice.
 
 # Edge cases and failure behavior
 
-## PLAN-008 — Earlier-spec gaps
+## PLAN-008 — Earlier-specification gaps
 
-If a later mechanic exposes a missing assumption in an earlier spec, identify the affected rule and propose a
-revision in its owning document. Do not silently change Accepted rules or duplicate a workaround in another spec.
+If a later mechanic exposes a missing assumption in an earlier specification, identify the affected rule and propose a
+revision in its owning document. Do not silently change Accepted rules or duplicate a workaround in another specification.
 
 ## PLAN-009 — Oversized batches
 
@@ -181,7 +181,7 @@ record it here. Partial acceptance does not accept the remaining documents or im
 
 ## PLAN-010 — Unresolved dependencies
 
-If a draft depends on unresolved content or rules, label the dependency and its impact. Explicitly scoped
+If a draft depends on unresolved Content entries or rules, label the dependency and its impact. Explicitly scoped
 example fixtures can illustrate a proposal, but must not masquerade as the final campaign configuration. An unresolved
 implementation-affecting dependency prevents acceptance of the affected contract.
 
@@ -195,14 +195,14 @@ These are workflow checks, not gameplay tests:
 - **First review ([PLAN-001](#plan-001--batch-sequence), [PLAN-003](#plan-003--early-information-and-api-boundaries), [PLAN-005](#plan-005--batch-workflow)):** Drafting the three batch 1 documents changes their statuses to
   Draft and batch 1 to In review when presented. Preliminary API/information notes do not imply those contracts are
   complete. The next batch does not begin without the review opportunity or an explicit instruction to continue.
-- **Requested revision ([PLAN-005](#plan-005--batch-workflow), [PLAN-006](#plan-006--backlog-updates)):** Feedback requests a different agent-assignment model. Batch 1 remains
+- **Requested revision ([PLAN-005](#plan-005--batch-workflow), [PLAN-006](#plan-006--backlog-updates)):** Feedback requests a different model for Agents and Current assignments. Batch 1 remains
   In review while affected notes and examples are updated. Domain Model remains Draft until explicitly accepted.
 - **Separate combat/mission checkpoints ([PLAN-001](#plan-001--batch-sequence), [PLAN-009](#plan-009--oversized-batches)):** Accepting Combat completes batch 5, not batch 6. The damage-related
   campaign benefit of a failed mission remains a Missions decision.
-- **Incremental content ([PLAN-002](#plan-002--parallel-content-and-acceptance-work), [PLAN-010](#plan-010--unresolved-dependencies)):** Drafting Investigations adds its parameters to Initial Campaign Content and
-  relevant multi-turn scenarios. This does not mark the entire content catalog or scenario suite Accepted.
-- **Later conflict ([PLAN-008](#plan-008--earlier-spec-gaps)):** A mission rule conflicts with an Accepted history rule. The discrepancy is documented and
-  a revision is proposed to the owner; neither implementation nor a second spec silently overrides the accepted rule.
+- **Incremental Content entries ([PLAN-002](#plan-002--parallel-content-entry-and-acceptance-work), [PLAN-010](#plan-010--unresolved-dependencies)):** Drafting Investigations adds its parameters to Initial Campaign Content and
+  relevant multi-turn scenarios. This does not mark the entire Content entry catalog or scenario suite Accepted.
+- **Later conflict ([PLAN-008](#plan-008--earlier-specification-gaps)):** A mission rule conflicts with an Accepted history rule. The discrepancy is documented and
+  a revision is proposed to the owner; neither implementation nor a second specification silently overrides the accepted rule.
 - **Milestone assessment ([PLAN-007](#plan-007--separate-implementation-authorization), [PLAN-011](#plan-011--first-implementation-milestone-assessment)):** After batch 4 is reviewed, assess the accepted contracts for a headless
   slice. If its required turn timing or API contract is unresolved, list the gap and propose the necessary specification
   work; do not invent the missing rule in code or treat the assessment as implementation authorization.

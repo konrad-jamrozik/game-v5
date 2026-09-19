@@ -36,9 +36,9 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Deterministic identity generation must preserve [MODEL-002](modeling-foundations.md#model-002--identity); calculations and continuation follow [ENG-001](engine-contract.md#eng-001--derived-consistency) and [ENG-002](engine-contract.md#eng-002--continuation-state).
+Deterministic identity generation must preserve [MODEL-002](modeling-foundations.md#model-002--identity); calculations and continuation follow [ENG-001](engine-contract.md#eng-001--derived-value-consistency) and [ENG-002](engine-contract.md#eng-002--continuation-state).
 
-This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
+This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
 draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [MODEL-002](modeling-foundations.md#model-002--identity);
 choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
 under [ENG-004](engine-contract.md#eng-004--committed-state-integrity); the existing no-op and algorithm TODOs remain unresolved.
