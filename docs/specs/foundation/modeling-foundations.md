@@ -58,31 +58,19 @@ These concepts build on Type and Campaign: Content entries supply immutable shar
 | Content entry  | Concrete game data supplied by a game build, conforming to a declared Type and immutable during gameplay. |
 | Campaign state | Data describing one Campaign; for example, its Campaign instances, resources, and retained history.       |
 
-## Archetype: a role of a Content entry
-
-An Archetype is a Content entry used to supply shared characteristics and construction defaults for Campaign instances.
-
-| Term      | Definition                                                                                                        |
-| --------- | ----------------------------------------------------------------------------------------------------------------- |
-| Archetype | A Content entry describing shared characteristics and construction defaults for a category of Campaign instances. |
-
 ## Campaign instances and their components
 
-A Campaign instance combines a declared Type and an Archetype with its own MutableState and ImmutableState. Instance ID distinguishes individual Campaign instances.
-
-| Term              | Definition                                                                                                                                             |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Campaign instance | A particular occurrence within a campaign of a declared Type, composed of an Archetype, MutableState, and ImmutableState.                              |
-| MutableState      | Campaign instance-specific data whose properties are permitted to evolve under their declared gameplay rules.                                          |
-| ImmutableState    | Campaign instance-specific data established during construction and preserved for the Campaign instance's lifetime, always including its Instance ID.  |
-| Instance ID       | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity). |
-
-## Construction
-
-A Campaign instance constructor specializes Rule to establish a Campaign instance and its components.
+A Campaign instance has a declared Type and three components: Archetype, MutableState, and ImmutableState.
+Archetype is the role of a Content entry within this composition. Instance ID distinguishes individual Campaign instances.
+A Campaign instance constructor is a Rule that constructs a Campaign instance and initializes its components.
 
 | Term                          | Definition                                                                                                                                                                                                                                  |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign instance             | A particular occurrence within a campaign of a declared Type, composed of an Archetype, MutableState, and ImmutableState.                                                                                                                   |
+| Archetype                     | A Content entry describing shared characteristics and construction defaults for a category of Campaign instances.                                                                                                                           |
+| MutableState                  | Campaign instance-specific data whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                               |
+| ImmutableState                | Campaign instance-specific data established during construction and preserved for the Campaign instance's lifetime, always including its Instance ID.                                                                                       |
+| Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity).                                                                                      |
 | Campaign instance constructor | A Rule that declares its inputs and dependencies, identifies the Type of the returned Campaign instance, and establishes a new Campaign instance's initial components. It need not be a language-level constructor or public API operation. |
 
 ## Value classification, history, and observation
