@@ -198,7 +198,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Instance; occurrence                        | [Campaign instance](../foundation/modeling-foundations.md#glossary)                                                                 | Referring to the modeled occurrence, rather than explaining what an occurrence means in a definition.                                                           |
 | Constructor                                 | [Campaign instance constructor](../foundation/modeling-foundations.md#glossary)                                                     | Referring to the Rule that constructs a Campaign instance, rather than a programming-language constructor.                                                      |
 | ID                                          | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a Campaign instance; Content entry identifiers, Requirement identifiers, and other identifiers retain their own descriptions.                       |
-| Relationship kind                           | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                     |
+| Relationship type                           | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                     |
 | Assignment                                  | [Current assignment](../foundation/domain-model.md#glossary)                                                                        | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                                  |
 | Participation; agent history                | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Referring to retained participation records, rather than the act of participating or an Agent's broader career.                                                 |
 | Campaign instance kind                      | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing a category of Campaign instances.                                                                                                                    |
@@ -247,7 +247,7 @@ Rule specifications use the following top-level headings in this order:
 2. `# Relationships`, containing the flat directional inventory
 3. `# Glossary`
 4. `# Concepts and contract`
-5. `# Requirements`
+5. `# Requirements` (optional)
 6. `# Edge cases and failure behavior`
 7. `# Acceptance examples`
 8. `# Open decisions`
@@ -258,6 +258,10 @@ decisions.
 
 Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both must use the universal Purpose and boundaries, Relationships, and Glossary sequence, but they may replace the remaining standard rule-specification sections with governance-specific H1 sections.
 
+All rule-specification families may interweave identified requirements into the narrative under Concepts and contract
+and omit the separate Requirements section. If present, Requirements retains its standard position and content requirements.
+Do not maintain a second statement of a contract merely to populate that section.
+
 Foundation specifications may embed illustrative examples beside the concepts they explain and omit the separate
 Acceptance examples section. If present, that section retains its standard position and content requirements.
 All other standard sections remain required. Whether embedded examples explain the contracts adequately is a semantic
@@ -265,7 +269,7 @@ review concern; the linter checks section presence, content, and order, not the 
 
 ## Handling sections that do not apply
 
-Retain the standard headings for navigation, except for the Foundation example-layout option above. If a required section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
+Retain the standard headings for navigation, except for the optional Requirements section and the Foundation example-layout option above. If a required section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
 
 A missing decision is not "not applicable." For example, a mechanics specification can have no public function signatures while still defining inputs, outputs, and state changes.
 
@@ -287,10 +291,19 @@ Use plain English by default. **Must** and **must not** express requirements; **
 
 Give each implementable requirement a permanent identifier; for example, **INVSTG-nnn**, where `nnn` is a three-digit
 number. The prefix comes from the index; the number increases without reuse. Declare each requirement with a heading in
-the form `ID — Descriptive title`, exactly one level below its containing non-requirement heading. If that container is
+the form `ID — Descriptive title`, exactly one level below its containing non-requirement heading. The container is the
+actual enclosing section in the heading hierarchy, not simply the most recently encountered heading: an H2 requirement
+may follow an ordinary H2 section as its sibling under the same H1. Do not nest requirement declarations directly under
+other requirement declarations. If the container is
 already H6, restructure the surrounding sections before adding the requirement. Preserve identifiers when wording
 changes. When removing a requirement, remove every reference to it and never reuse its identifier; Git history retains
 the historical record.
+
+A requirement heading names a coherent contract and gives readers a short summary of its subject. Its section may
+combine the complete obligations with explanation and clearly identified examples in a flowing narrative. State general
+constraints explicitly; example-specific choices must not silently become universal rules. Definitions and purely
+explanatory sections need no requirement label. Preserve IDs when moving contracts into the narrative; their numbers
+need not follow reading order. Keep each declaration unique and update links whenever a title change alters its anchor.
 
 Every occurrence of a live requirement ID outside its declaration heading must be its own Markdown hyperlink to that
 exact heading. Write each Requirement identifier in full. Do not use compact forms or ranges such as `PREFIX-nnn/mmm` or `PREFIX-nnn`

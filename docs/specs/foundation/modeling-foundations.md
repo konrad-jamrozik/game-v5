@@ -103,11 +103,6 @@ Content entries to create an individual Campaign instance. Later rules can chang
 preserving its identity and fixed facts. Not every use of Content entries creates a Campaign instance, and not every campaign value
 needs independent identity.
 
-Gameplay runs within one campaign, represented by one top-level Campaign instance. That Campaign instance owns the
-contained Campaign instances. Gameplay functions operate on the specific inputs they need; they do not receive or
-depend on the top-level Campaign instance. Containment establishes campaign membership without requiring a reverse
-reference to the top-level Campaign instance ([MODEL-007](#model-007--gameplay-dependency-direction)).
-
 Types describe the data on both sides of this distinction. A Type describes what a value contains; a Content entry
 provides concrete shared values; a Campaign instance represents one particular occurrence. An Archetype is the Content entry
 supplying a Campaign instance's shared characteristics. The following sections build up these relationships from direct
@@ -133,6 +128,19 @@ flowchart TB
     Rules -->|calculate, update, or retain| Values
     Archetypes -->|supply shared characteristics to| Instances
 ```
+
+## MODEL-007 — Gameplay dependency direction
+
+Within gameplay, the top-level Campaign instance must be the ownership root for the current campaign. Gameplay
+functions, including Campaign instance constructors, must not accept that top-level Campaign instance as an input or
+depend on access to it. A context object, global, or captured reference must not provide indirect access to the
+top-level Campaign instance. Contained Campaign instances must not hold reverse references to that top-level Campaign
+instance. Gameplay functions must receive only the specific values, Content entries, contained Campaign instances,
+or narrowly scoped dependencies needed for their operations, without exposing the top-level Campaign instance.
+
+A Campaign instance constructor must return the constructed Campaign instance; its caller establishes containment.
+These constraints apply inside gameplay after campaign creation. They do not prescribe external campaign creation,
+save/load, or engine interfaces.
 
 ## Types describe model data
 
@@ -188,15 +196,16 @@ mutable capacity to 4. If an upgrade later changes capacity to 5, reading capaci
 the Content entry again. This is initialization, whereas upkeep is an ongoing calculation. Neither illustrative value selects
 a production balance parameter.
 
-## Constructing Campaign instances from shared Content entries
+## MODEL-001 — Campaign instance composition
 
 An Archetype supplies shared characteristics for particular Campaign instances. Consider an illustrative Enemy Type and a
 Thug Content entry of EnemyArchetype whose base health is 10. Creating two enemies from Thug produces two Campaign instances
 of Enemy, not two new Types and not two mutable copies of Thug. Their Instance IDs are `enemy_1` and `enemy_2`;
 both Campaign instances have Type Enemy. The numbered names identify Campaign instances, not Types.
 
-Every Campaign instance has exactly three conceptual components. The complete composition of the first enemy in
-this example is:
+Every Campaign instance must have exactly three conceptual components: Archetype, MutableState, and ImmutableState,
+with structures described by its declared Type. Every Content entry must match its declared Type.
+The complete composition of the first enemy in this example is:
 
 | Component      | Purpose                                                     | Enemy enemy_1 at construction                              |
 | -------------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
@@ -226,6 +235,21 @@ flowchart LR
     enemy_2_archetype -->|resolves to| thug_content_entry
 ```
 
+The components describe meaning, not storage. They can be embedded or resolved through references. Sharing an
+archetype does not require inheritance or copies of Content entries, and Campaign instances must have independent Campaign instance-specific components; sharing an archetype must not cause them to share MutableState.
+Gameplay must not modify Content entries, replace a Campaign instance's archetype, or modify its ImmutableState, including owned nested data. MutableState properties must be permitted to change under
+their rules; they need not change in every playthrough or remain changeable after a terminal lifecycle transition.
+
+Immutable references belong in ImmutableState; following a reference does not transfer ownership of the target’s data
+([MODEL-003](#model-003--references)). Structural compatibility alone does not establish a valid Campaign instance or satisfy runtime invariants.
+
+## MODEL-006 — Campaign instance construction
+
+Each Campaign instance constructor must declare its input parameters and dependencies and identify the Type of the
+returned Campaign instance. Every new Campaign instance must initialize all three components, receive a fresh Instance ID
+within its declared scope, and satisfy its declared structure and initialization rules. Dependencies must include any
+Content entry selection, Instance ID allocation state, or randomness actually used by the constructor.
+
 The illustrative Campaign instance constructor `constructEnemy(archetype, instanceId)` receives an EnemyArchetype
 Content entry and a fresh Instance ID and returns an Enemy. It fixes Archetype to the supplied Content entry, records
 the supplied Instance ID in ImmutableState, and initializes current health in MutableState to the Content entry's base
@@ -243,38 +267,54 @@ append enemy to mission.enemies
 
 The caller changes the Mission's collection; `constructEnemy` only constructs and returns the Enemy. Before the
 enclosing operation publishes Committed state, the caller must establish ownership and any required relationships.
+That Committed state must satisfy all applicable invariants.
 The Instance ID allocation mechanism remains unspecified. Multiple Campaign instance constructors can return Campaign instances of the
-same Type, provided each declares its inputs, dependencies, and initialization rules
-([MODEL-006](#model-006--campaign-instance-construction)). Passing the top-level Campaign instance to `constructEnemy`
+same Type, provided each declares its inputs, dependencies, and initialization rules. Passing the top-level Campaign instance to `constructEnemy`
 instead of supplying the required inputs would violate [MODEL-007](#model-007--gameplay-dependency-direction).
+
+A constructor contract must distinguish initialization rules from structural constraints and gameplay invariants that
+continue to apply after creation. Concrete constructor behavior belongs in the gameplay specification responsible for
+the creation operation; consuming specifications must identify those owners.
 
 For this example, base health is a positive integer and current health must remain an integer between zero and base
 health, inclusive. Construction starts enemy_1 and enemy_2 at 10. Damage changes enemy_1's health to 7; enemy_2's health and Thug's base
 health remain 10. Both identities remain unchanged. Starting an enemy at 7 would satisfy the ongoing range but violate
 the initialization rule of `constructEnemy`; starting it at 11 would violate both.
 
-The components describe meaning, not storage. They can be embedded or resolved through references. Sharing an
-archetype does not require inheritance or copies of Content entries, and it must not cause Campaign instances to share MutableState.
-Gameplay cannot replace a Campaign instance's archetype or modify its ImmutableState, including owned nested data
-([MODEL-001](#model-001--campaign-instance-composition)). MutableState properties must be permitted to change under
-their rules; they need not change in every playthrough or remain changeable after a terminal lifecycle transition.
+## MODEL-002 — Identity
 
-## Identity and references
+Every Campaign instance must have an Instance ID in ImmutableState, unique within its declared identity scope and stable
+for its lifetime. Distinct Campaign instances in the same scope and timeline must have distinct IDs. The ID distinguishes
+the individual Campaign instance, and the shared Thug Content entry cannot supply a distinct identity for every enemy. In the example's
+campaign-wide scope, enemy_2 cannot reuse enemy_1's Instance ID. Each consuming specification must declare its identity scopes explicitly.
 
-The Instance ID distinguishes a Campaign instance from other Campaign instances within its declared identity scope. It belongs in ImmutableState:
-it must remain stable, and the shared Thug Content entry cannot supply a distinct identity for every enemy. In the example's
-campaign-wide scope, enemy_2 cannot reuse enemy_1's Instance ID. Other specifications must declare their own scopes explicitly
-([MODEL-002](#model-002--identity)).
+Content entry references must identify the expected Content entry Type and Content entry ID. Relationships must use
+explicit references; rules must not parse display names or identifier text to discover relationships. This specifies
+reference meaning, not a serialized discriminator field.
+
+Instance IDs are timeline-scoped: a discarded future is not another live campaign. Lookup and history restoration must
+preserve the restored Campaign instance’s identity rather than allocate a new one. This convention chooses neither an
+ID generation algorithm nor a restoration procedure.
+
+For example, undoing damage restores enemy_1's
+health to 10; redoing it restores 7, with the same identity and immutable facts. Undoing a Campaign instance's creation
+removes it and its references from that timeline; redo restores the same Campaign instance and fixed facts.
+
+## MODEL-003 — References
+
+All Committed state Campaign instance references must resolve to a Campaign instance of the expected Type in the same
+campaign. Content entry references must resolve to a Content entry of the expected Type supplied by the current game build.
+References to historical Campaign instances, including terminal lifecycle states, must remain resolvable. Storage may be
+compacted provided required facts and references remain available; full snapshots need not be retained forever.
 
 References identify particular Content entries or Campaign instances and their expected Types. Thug has a Content entry
 identity as an EnemyArchetype Content entry; enemy_1 has an Instance ID as an Enemy Campaign instance. A reference to a missing Content entry is
 invalid, as is resolving an EnemyArchetype reference to Content entries of another Type merely because some fields match.
-References must resolve explicitly; display names and the spelling of identifiers do not encode relationships
-([MODEL-003](#model-003--references)).
+Structural compatibility alone does not prove reference validity.
 
 For a reference stored in a Campaign instance, its placement depends on whether the reference itself can change.
-An immutable reference belongs in ImmutableState: construction establishes its target, and gameplay cannot replace or clear
-that reference. A mutable reference belongs in MutableState: gameplay rules may replace its target or clear the
+An immutable reference must belong in ImmutableState: construction establishes its target, and gameplay cannot replace or clear
+that reference. A mutable reference must belong in MutableState: gameplay rules may replace its target or clear the
 reference when permitted. This classification is independent of whether the referenced data can change.
 
 For example, an Investigation's immutable Lead reference belongs in the Investigation's ImmutableState. An illustrative
@@ -344,126 +384,41 @@ If investigation_2 later completes, Campaign state can retain a completion recor
 the record belongs to the campaign. The number of completions for lead_1 can then be derived from those records. Content entries
 can thus identify the subject of an activity and key campaign facts without becoming mutable itself.
 
-## Authoritative values and Derived values
+## MODEL-005 — Value classification
 
 An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values
 and current rules and Content entries. This classification is separate from mutability. Shared base health and a
 recorded Instance ID can be Authoritative values even though neither changes during gameplay.
 
+Each specification using these concepts must declare which of its values are Authoritative values and which are Derived
+values, using the glossary definitions. Caching a current calculation must not change its classification as a Derived value.
+Classification must be independent of player visibility: either kind may be hidden from the player. Retaining a past
+calculation as a historical fact follows [MODEL-004](#model-004--historical-fact-preservation).
+
 In the enemy example, declare each enemy's current health an Authoritative value and their total current health a Derived value.
 Initially the total is 20. After enemy_1 takes damage, it is 17. Caching the total does not make it an Authoritative value, and hiding
-either the individual health or the total from the player does not change the classification
-([MODEL-005](#model-005--value-classification)).
+either the individual health or the total from the player does not change the classification.
 
 Similarly, the recorded completion of investigation_2 is an Authoritative value recording a historical fact. The completion count for lead_1 is a Derived value:
 it is 1 after investigation_2 completes, and investigation_1's abandonment does not add a completion. Facts associated with Content entries belong to
 the campaign rather than being edits to those Content entries.
 
-## Historical values and restoration
+## MODEL-004 — Historical fact preservation
 
 A past value cannot always be recovered from its current replacement. For example, a report that needs enemy_1's original
 health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
-replacement for that historical fact. This obligation applies only when a rule or report needs the historical basis
-([MODEL-004](#model-004--historical-fact-preservation)).
+replacement for that historical fact. When a rule or report needs the historical basis, the original inputs or historical
+value must be preserved; required historical values must not be overwritten with current calculations. This does not
+require retaining every intermediate calculation or every possible chart.
 
 When a Campaign instance no longer participates in current gameplay, data required by rules, reports, or retained
-references remains in History rather than being deleted. For example, if enemy_1 no longer participates in a Mission,
+references must remain in History rather than being deleted. For example, if enemy_1 no longer participates in a Mission,
 a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
-name; the consuming specification defines its lifecycle and which data must remain available
-([MODEL-004](#model-004--historical-fact-preservation)). Storage can be compacted only if required facts and references remain available.
+name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
+changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
+retained references must be preserved under [MODEL-002](#model-002--identity) and [MODEL-003](#model-003--references).
 An evolving collection can contain immutable historical records: adding a completion record does not permit rewriting
 an earlier record.
-
-Lookup and restoration recover an existing Campaign instance rather than construct a new one. Undoing damage restores enemy_1's
-health to 10; redoing it restores 7, with the same identity and immutable facts. Undoing a Campaign instance's creation
-removes it and its references from that timeline; redo restores the same Campaign instance and fixed facts. A Campaign instance
-belonging only to a discarded future is not another live Campaign instance in the retained timeline. These distinctions preserve
-identity without selecting a restoration procedure.
-
-# Requirements
-
-## MODEL-001 — Campaign instance composition
-
-Every Campaign instance must have exactly three conceptual components: an Archetype, MutableState, and ImmutableState,
-with structures described by its declared Type. Every Content entry must match its declared Type.
-Gameplay must not modify Content entries, replace a Campaign instance's archetype, or modify its ImmutableState, including
-nested data. MutableState properties must be permitted to change under their declared gameplay rules. Campaign instances sharing
-an archetype must have independent Campaign instance-specific components; they must not thereby share MutableState.
-Immutable Campaign instance-specific references must belong to ImmutableState. An immutable reference cannot be replaced
-or cleared; the referenced Campaign instance's MutableState can change under its gameplay rules.
-Nested value data owned by ImmutableState remains immutable; following a reference does not transfer ownership.
-Structural compatibility alone does not establish a valid Campaign instance or satisfy runtime invariants.
-
-## MODEL-002 — Identity
-
-Every Campaign instance must have an Instance ID in ImmutableState. Each consuming specification must declare its
-identity scopes. Instance IDs must be unique within their declared scope and stable for each Campaign instance's lifetime.
-Content entry references must identify the expected Content entry Type and Content entry ID.
-Relationships must use explicit references; rules must not parse display names or identifier text to discover relationships.
-This specifies reference meaning, not a serialized discriminator field.
-
-Distinct Campaign instances within an identity scope must have distinct Instance IDs in the same timeline. Instance IDs are timeline-scoped:
-a discarded future is not another live campaign. Lookup and history restoration must preserve the identity of the
-Campaign instance restored rather than allocate a new identity. This convention does not choose an Instance ID generation algorithm
-or restoration procedure.
-
-## MODEL-003 — References
-
-All Committed state Campaign instance references must resolve to a Campaign instance of the expected Type in the
-same campaign; Content entry references must resolve to a Content entry of the expected Type supplied by the current
-game build. References to historical Campaign instances, including terminal lifecycle states, must remain resolvable.
-Storage can be compacted provided required facts remain available; this specification does not mandate full snapshots
-forever. Structural compatibility alone is insufficient to prove reference validity.
-
-Within a Campaign instance, an immutable reference must belong in ImmutableState, and a mutable reference must belong in
-MutableState. Gameplay may replace or clear a mutable reference under its declared rules. An immutable reference cannot
-be replaced or cleared; it does not make the referenced data immutable. Changes to the referenced
-Campaign instance's MutableState remain governed by that Campaign instance's rules. Content entries remain immutable
-regardless of the mutability of references to them.
-
-## MODEL-004 — Historical fact preservation
-
-Preserve the original inputs or historical value when a rule/report needs
-it. Required historical values must not be overwritten with current calculations. This does not require retaining
-every intermediate calculation or every possible chart.
-
-When a Campaign instance no longer participates in current gameplay, retain in History the data required by rules,
-reports, or retained references instead of deleting it. Preserve the Instance ID and relationships needed to resolve
-those references under [MODEL-002](#model-002--identity) and [MODEL-003](#model-003--references). Consuming specifications
-must declare which lifecycle changes require retention and which data must remain available. This obligation does not
-introduce a lifecycle state or require moving data into a separate storage location.
-
-## MODEL-005 — Value classification
-
-Each specification using these concepts must declare which of its values are
-Authoritative values and which are Derived values, using the glossary definitions. Caching a current calculation must not change its
-classification as a Derived value. Classification must be independent of player visibility: either kind of value may be hidden
-from the player. Retaining a past calculation as a historical fact is governed by [MODEL-004](#model-004--historical-fact-preservation).
-
-## MODEL-006 — Campaign instance construction
-
-Each Campaign instance constructor must declare its input parameters
-and dependencies and identify the Type of the returned Campaign instance. Every new Campaign instance must initialize all three required
-components, receive a fresh Instance ID within its declared scope, and satisfy its declared structure and initialization
-rules. The caller must establish ownership and required relationships before the enclosing operation publishes
-Committed state; that Committed state must satisfy all applicable invariants. Dependencies must include any Content
-entry selection, Instance ID allocation state, or randomness actually used by the Campaign instance constructor.
-A Campaign instance constructor contract must distinguish initialization rules from structural constraints and gameplay invariants that
-continue to apply after creation. Concrete Campaign instance constructor behavior belongs in the gameplay specification responsible for
-that creation operation; consuming specifications identify those owners.
-
-## MODEL-007 — Gameplay dependency direction
-
-Within gameplay, the top-level Campaign instance must be the ownership root for the current campaign. Gameplay
-functions, including Campaign instance constructors, must not accept that top-level Campaign instance as an input or
-depend on access to it. A context object, global, or captured reference must not provide indirect access to the
-top-level Campaign instance. Contained Campaign instances must not hold reverse references to that top-level Campaign
-instance. Gameplay functions must receive only the specific values, Content entries, contained Campaign instances,
-or narrowly scoped dependencies needed for their operations, without exposing the top-level Campaign instance.
-
-A Campaign instance constructor must return the constructed Campaign instance; its caller establishes containment.
-These constraints apply inside gameplay after campaign creation. They do not prescribe external campaign creation,
-save/load, or engine interfaces.
 
 # Edge cases and failure behavior
 

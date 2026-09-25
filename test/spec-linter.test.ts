@@ -177,6 +177,52 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files })).toEqual([])
   })
 
+  test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance'])(
+    'accepts narrative requirements without a dedicated section for %s',
+    (family) => {
+      const directory = family.toLowerCase()
+      const files = validCorpus().map((file) => ({
+        path: file.path.replace('foundation/alpha.md', directory + '/alpha.md'),
+        content: file.content
+          .replaceAll('Foundation', family)
+          .replaceAll('foundation/alpha.md', directory + '/alpha.md')
+          .replace('# Requirements\n\n', '## Explanation\n\nNarrative.\n\n'),
+      }))
+      expect(diagnosticCodes(files)).toEqual([])
+    },
+  )
+
+  test('rejects an empty optional Requirements section', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '# Edge cases and failure behavior',
+      '# Requirements\n\n# Edge cases and failure behavior',
+    )
+    const narrative = mutate(files, 'docs/specs/foundation/alpha.md', '# Requirements\n\n', '')
+    expect(diagnosticCodes(narrative)).toEqual(['SPEC204'])
+  })
+
+  test('rejects a misplaced optional Requirements section', () => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Requirements\n\n', '')
+    const misplaced = mutate(
+      files,
+      'docs/specs/foundation/alpha.md',
+      '# Open decisions',
+      '# Requirements\n\nSeparate contract.\n\n# Open decisions',
+    )
+    expect(diagnosticCodes(misplaced)).toEqual(['SPEC209'])
+  })
+
+  test.each(['Concepts and contract', 'Edge cases and failure behavior', 'Open decisions'])(
+    'still requires %s when requirements are interwoven',
+    (section) => {
+      const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Requirements\n\n', '')
+      const missing = mutate(files, 'docs/specs/foundation/alpha.md', '# ' + section, '# Other section')
+      expect(diagnosticCodes(missing)).toContain('SPEC209')
+    },
+  )
+
   test('accepts Foundation examples embedded beside concepts', () => {
     const files = mutate(
       mutate(
@@ -371,12 +417,44 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test('rejects a requirement that is not below its current topic heading', () => {
+  test('accepts a requirement after a sibling topic heading', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
       '## AAA-001 — Rule',
       lines(['## Topic', '', '## AAA-001 — Rule']),
+    )
+    expect(diagnosticCodes(files)).toEqual([])
+  })
+
+  test('accepts requirements after returning from nested explanatory sections', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '## AAA-001 — Rule',
+      lines([
+        '## Topic',
+        '',
+        '### Detail',
+        '',
+        '#### Explanation',
+        '',
+        '### AAA-002 — Nested rule',
+        '',
+        'Rule.',
+        '',
+        '## AAA-001 — Rule',
+      ]),
+    )
+    expect(diagnosticCodes(files)).toEqual([])
+  })
+
+  test('rejects a requirement directly nested under another requirement', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      'Alpha must be deterministic.',
+      'Alpha must be deterministic.\n\n### AAA-002 — Nested rule\n\nRule.',
     )
     expect(diagnosticCodes(files)).toContain('SPEC608')
   })

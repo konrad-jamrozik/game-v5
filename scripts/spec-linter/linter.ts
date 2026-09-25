@@ -643,7 +643,9 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
       const topLevel = h1s.slice(1)
       const actual = topLevel.map(headingText)
       const requiredHeadings = RULE_HEADINGS.filter(
-        (text) => text !== 'Acceptance examples' || specification.family !== 'Foundation' || actual.includes(text),
+        (text) =>
+          (text !== 'Requirements' || actual.includes(text)) &&
+          (text !== 'Acceptance examples' || specification.family !== 'Foundation' || actual.includes(text)),
       )
       const positions = requiredHeadings.map((text) => actual.indexOf(text))
       const valid = positions.every(
@@ -1071,12 +1073,14 @@ function declaredRequirements(
   diagnostics: Diagnostic[],
 ): readonly RequirementDeclaration[] {
   const declarations: RequirementDeclaration[] = []
-  let container: Heading | undefined
+  const ancestors: Heading[] = []
   for (const { heading, slug } of headingsWithSlugs(specification.document)) {
+    while ((ancestors[ancestors.length - 1]?.depth ?? 0) >= heading.depth) ancestors.pop()
+    const container = ancestors[ancestors.length - 1]
+    ancestors.push(heading)
     const text = headingText(heading)
     const start = /^([A-Z][A-Z0-9]*-\d{3})\b/.exec(text)
     if (!start?.[1]) {
-      container = heading
       continue
     }
     const match = /^([A-Z][A-Z0-9]*-\d{3})\s+—\s+(.+)$/.exec(text)
@@ -1100,7 +1104,12 @@ function declaredRequirements(
       )
     }
     const expectedDepth = container ? container.depth + 1 : 2
-    if (heading.depth === 1 || expectedDepth > 6 || heading.depth !== expectedDepth) {
+    if (
+      heading.depth === 1 ||
+      expectedDepth > 6 ||
+      heading.depth !== expectedDepth ||
+      (container && /^[A-Z][A-Z0-9]*-\d{3}\b/.test(headingText(container)))
+    ) {
       addDiagnostic(
         diagnostics,
         specification.path,
@@ -1108,7 +1117,7 @@ function declaredRequirements(
         'SPEC608',
         expectedDepth > 6
           ? `Requirement "${id}" cannot be nested below an H6 container; restructure the containing sections.`
-          : `Requirement "${id}" must be H${expectedDepth}, one level below its containing heading.`,
+          : `Requirement "${id}" must be H${expectedDepth}, one level below its containing non-requirement heading.`,
       )
     }
     if (match?.[1] && match[2])
