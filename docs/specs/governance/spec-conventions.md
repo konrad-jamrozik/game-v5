@@ -244,9 +244,7 @@ unresolved decisions rather than filling them with assumptions.
 
 Give illustrative Campaign instance constructors explicit function names, for example `constructEnemy`, and distinguish
 the returned Campaign instance from the caller's attachment operation. State that Campaign instance constructors return
-Campaign instances of a Type; never say they produce or return the Type itself. Gameplay functions must not receive or access
-the top-level Campaign instance; use specific inputs under
-[MODEL-007](../foundation/modeling-foundations.md#model-007--gameplay-dependency-direction).
+Campaign instances of a Type; never say they produce or return the Type itself.
 
 # Predictable layout and allowed variation
 

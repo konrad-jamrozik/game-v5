@@ -115,11 +115,7 @@ Production Campaign instance constructor details remain unresolved with those ow
 owns the archetype catalogs for all seven types. Required archetypes do not settle their fields or balance values.
 Types describe structure; gameplay validity and runtime constraints remain explicit contracts.
 
-The Campaign instance of Type Campaign is the top-level ownership root. Gameplay functions do not accept or access
-that Campaign instance, and contained Campaign instances do not refer back to it
-([MODEL-007](modeling-foundations.md#model-007--gameplay-dependency-direction)). A Campaign instance constructor returns
-the constructed Campaign instance; the caller attaches it to the appropriate collection. For example, the caller adds
-the Enemy returned by `constructEnemy` to a Mission's enemies collection. Campaign membership follows containment.
+The Campaign instance of Type Campaign is the top-level ownership root. Campaign membership follows containment.
 
 ## Mutability, authority, and gameplay relevance
 

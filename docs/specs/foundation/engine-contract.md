@@ -1,13 +1,13 @@
 # Engine Contract
 
-| Metadata    | Value                                                                                                   |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| Spec ID     | ENG                                                                                                     |
-| Family      | Foundation                                                                                              |
-| Status      | Draft                                                                                                   |
-| Scope       | Execution, continuation, compatibility, query and information boundaries, and Committed state integrity |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                          |
-| Review      | Batch 1; proposed rules awaiting user review                                                            |
+| Metadata    | Value                                                                                                                                  |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | ENG                                                                                                                                    |
+| Family      | Foundation                                                                                                                             |
+| Status      | Draft                                                                                                                                  |
+| Scope       | Execution, continuation, compatibility, gameplay dependency direction, query and information boundaries, and Committed state integrity |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                         |
+| Review      | Batch 1; proposed rules awaiting user review                                                                                           |
 
 # Purpose and boundaries
 
@@ -104,6 +104,13 @@ rules and GDRs without retaining support for them, and may reject or discard inc
 is not required. [ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-002--continuation-state) continuation guarantees apply to the rules and GDRs supplied by the current build.
 History and Persistence owns save validation and incompatible-save handling under this policy.
 
+## ENG-006 — Gameplay dependency direction
+
+During gameplay, functions, including Campaign instance constructors, must receive only the inputs and dependencies
+needed for their operation, without direct or indirect access to the top-level Campaign instance.
+Contained Campaign instances must not refer back to that root. These restrictions do not apply to campaign creation,
+save/load, or external engine interfaces.
+
 ## Preliminary API capabilities
 
 The following capabilities are all required planning coverage, not illustrative examples.
@@ -185,5 +192,6 @@ to History and Persistence; successful restoration must still satisfy [ENG-004](
 # Open decisions
 
 [ENG-001](#eng-001--derived-value-consistency), [ENG-002](#eng-002--continuation-state), [ENG-003](#eng-003--information-boundary), [ENG-004](#eng-004--committed-state-integrity), and [ENG-005](#eng-005--build-compatibility) remain proposed rules awaiting review.
+[ENG-006](#eng-006--gameplay-dependency-direction) records the required gameplay dependency boundary.
 RNG algorithms, turn phase order, save encoding, Player-visible information fields, reveal conditions, estimates, public signatures,
 and developer enablement remain scheduled work in their owning specifications, not implicit defaults in this contract.

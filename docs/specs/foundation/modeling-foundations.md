@@ -1,13 +1,13 @@
 # Modeling Foundations
 
-| Metadata    | Value                                                                                                                                                                           |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | MODEL                                                                                                                                                                           |
-| Family      | Foundation                                                                                                                                                                      |
-| Status      | Draft                                                                                                                                                                           |
-| Scope       | Types, campaigns, Game Data Records (GDRs), Campaign instance construction and composition, identity and references, gameplay dependency direction, and historical preservation |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                                                  |
-| Review      | Batch 1; proposed rules awaiting user review                                                                                                                                    |
+| Metadata    | Value                                                                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | MODEL                                                                                                                                            |
+| Family      | Foundation                                                                                                                                       |
+| Status      | Draft                                                                                                                                            |
+| Scope       | Types, campaigns, Game Data Records (GDRs), Campaign instance construction and composition, identity and references, and historical preservation |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                   |
+| Review      | Batch 1; proposed rules awaiting user review                                                                                                     |
 
 # Purpose and boundaries
 
@@ -113,19 +113,6 @@ To compute the next Committed state, the engine uses:
 The engine implementation ties these together while obeying the [Engine Contract](./engine-contract.md). Where required,
 it constructs new Campaign instances using the appropriate Archetype and other declared inputs.
 Supplying an Archetype is one possible GDR role.
-
-## MODEL-007 — Gameplay dependency direction
-
-Within gameplay, the top-level Campaign instance must be the ownership root for the current campaign. Gameplay
-functions, including Campaign instance constructors, must not accept that top-level Campaign instance as an input or
-depend on access to it. A context object, global, or captured reference must not provide indirect access to the
-top-level Campaign instance. Contained Campaign instances must not hold reverse references to that top-level Campaign
-instance. Gameplay functions must receive only the specific values, GDRs, contained Campaign instances,
-or narrowly scoped dependencies needed for their operations, without exposing the top-level Campaign instance.
-
-A Campaign instance constructor must return the constructed Campaign instance; its caller establishes containment.
-These constraints apply inside gameplay after campaign creation. They do not prescribe external campaign creation,
-save/load, or engine interfaces.
 
 ## Types describe model data
 
@@ -234,12 +221,13 @@ Each Campaign instance constructor must declare its input parameters and depende
 returned Campaign instance. Every new Campaign instance must initialize all three components, receive a fresh Instance ID
 within its declared scope, and satisfy its declared structure and initialization rules. Dependencies must include any
 GDR selection, Instance ID allocation state, or randomness actually used by the constructor.
+A Campaign instance constructor must return the constructed Campaign instance; its caller establishes containment.
 
 The illustrative Campaign instance constructor `constructEnemy(archetype, instanceId)` receives an EnemyArchetype
 GDR and a fresh Instance ID and returns an Enemy. It fixes Archetype to the supplied GDR, records
 the supplied Instance ID in ImmutableState, and initializes current health in MutableState to the GDR's base
 health. All inputs are supplied directly; `constructEnemy` uses no randomness, performs no GDR lookup, and
-does not allocate an Instance ID or access the top-level Campaign instance.
+does not allocate an Instance ID.
 
 The caller supplies an Instance ID that is fresh within this example's campaign-wide scope and attaches the returned
 Enemy to the owning Mission. In the following language-independent pseudocode, `mission` denotes a Mission already
@@ -254,8 +242,7 @@ The caller changes the Mission's collection; `constructEnemy` only constructs an
 enclosing operation publishes Committed state, the caller must establish ownership and any required relationships.
 That Committed state must satisfy all applicable invariants.
 The Instance ID allocation mechanism remains unspecified. Multiple Campaign instance constructors can return Campaign instances of the
-same Type, provided each declares its inputs, dependencies, and initialization rules. Passing the top-level Campaign instance to `constructEnemy`
-instead of supplying the required inputs would violate [MODEL-007](#model-007--gameplay-dependency-direction).
+same Type, provided each declares its inputs, dependencies, and initialization rules.
 
 A constructor contract must distinguish initialization rules from structural constraints and gameplay invariants that
 continue to apply after creation. Concrete constructor behavior belongs in the gameplay specification responsible for
@@ -407,10 +394,6 @@ an earlier record.
 
 # Edge cases and failure behavior
 
-Passing the top-level Campaign instance into gameplay, directly or through another dependency, violates
-[MODEL-007](#model-007--gameplay-dependency-direction). The same applies to a reverse reference from a contained
-Campaign instance to the top-level Campaign instance.
-
 | Case                                                                                                                     | Result / owner                                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Missing component, incorrect structure, or mutation of immutable data                                                    | Invalid data or Campaign state under [MODEL-001](#model-001--campaign-instance-composition).                                                           |
@@ -423,7 +406,6 @@ Campaign instance to the top-level Campaign instance.
 # Open decisions
 
 [MODEL-001](#model-001--campaign-instance-composition), [MODEL-002](#model-002--identity), [MODEL-003](#model-003--references), [MODEL-004](#model-004--historical-fact-preservation), [MODEL-005](#model-005--value-classification), and [MODEL-006](#model-006--campaign-instance-construction) remain proposed rules awaiting review.
-[MODEL-007](#model-007--gameplay-dependency-direction) records the required gameplay dependency boundary.
 Consuming specifications own their concrete game Types, identity scopes, Campaign instance constructor behavior, and gameplay rules.
 The illustrations here do not settle those decisions or select production GDR fields and allowed combinations.
 
