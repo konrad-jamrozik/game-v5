@@ -141,8 +141,8 @@ Consider an illustrative Agency construction with starting money:
 
 | Element                | Modeling role                 | Meaning in this example                                                                                             |
 | ---------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| StartingMoney          | Type                          | Describes a nonnegative integer amount of money.                                                                    |
-| Starting money         | GDR                           | Has Type StartingMoney and value 100.                                                                               |
+| Money                  | Type                          | Describes a nonnegative integer amount of money.                                                                    |
+| Starting money         | GDR                           | Has Type Money and value 100.                                                                                       |
 | Agency construction    | Campaign instance constructor | Specifies construction of an Agency Campaign instance with money in MutableState initialized to the supplied value. |
 | Agency                 | Campaign instance             | The new Agency Campaign instance returned by the constructor implementation, with money 100 in MutableState.        |
 | Agency money           | Authoritative value           | Initialized to 100 in the Agency Campaign instance’s MutableState.                                                  |
@@ -150,16 +150,17 @@ Consider an illustrative Agency construction with starting money:
 
 During campaign creation, the engine reads 100 from the starting-money GDR and passes it to the Agency constructor
 implementation. The implementation constructs an Agency Campaign instance and initializes its money in MutableState
-to 100. The engine includes that Agency Campaign instance in the initial Campaign state.
+to 100. The initial Campaign state contains that Agency Campaign instance.
+The engine publishes the initial Committed state when campaign creation completes.
 
 ```mermaid
 flowchart LR
-    Type["Type: StartingMoney"] -.->|describes| GDR["GDR: Starting money · value 100"]
+    Type["Type: Money"] -.->|describes| GDR["GDR: Starting money · value 100"]
     GDR -->|starting money 100| Engine["Engine invokes Agency constructor implementation"]
     Constructor["Campaign instance constructor:<br/>new Agency with money initialized to supplied value"] -->|specifies construction| Engine
     Engine -->|constructs| Agency["Agency Campaign instance"]
     Agency -->|MutableState contains| Money["Authoritative value:<br/>money 100"]
-    Agency -->|included when campaign creation completes| State["Initial Campaign state:<br/>Committed state"]
+    Agency -->|included in| State["Initial Campaign state:<br/>Committed state"]
 ```
 
 If an expense later reduces Agency money to 90, the engine reads 90 from the Agency Campaign instance’s MutableState.
@@ -194,44 +195,37 @@ flowchart LR
     Update -->|included when turn advancement completes| Committed["New Committed state"]
 ```
 
-## MODEL-001 — Campaign instance composition
+## GDR role: archetype
 
-An Archetype supplies shared characteristics for particular Campaign instances. Consider an illustrative Enemy Type and a
-Thug GDR of EnemyArchetype whose base health is 10. Creating two enemies from Thug produces two Campaign instances
-of Enemy, not two new Types and not two mutable copies of Thug. Their Instance IDs are `enemy_1` and `enemy_2`;
-both Campaign instances have Type Enemy. The numbered names identify Campaign instances, not Types.
+Consider an illustrative construction of two Enemy Campaign instances from the same Thug GDR:
 
-Every Campaign instance must have exactly three conceptual components: Archetype, MutableState, and ImmutableState,
-with structures described by its declared Type. Every GDR must match its declared Type.
-The complete composition of the first enemy in this example is:
+| Element             | Modeling role                 | Meaning in this example                                                                                              |
+| ------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Enemy               | Type                          | Describes the constructed Enemy Campaign instances.                                                                  |
+| EnemyArchetype      | Type                          | Describes the shared enemy characteristics and construction defaults.                                                |
+| Thug                | GDR in the Archetype role     | Has Type EnemyArchetype and base health 10.                                                                          |
+| Enemy construction  | Campaign instance constructor | Specifies construction of an Enemy Campaign instance using the supplied Archetype and a fresh Instance ID.           |
+| enemy_1 and enemy_2 | Campaign instances            | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent MutableState and ImmutableState. |
+| Current health      | Authoritative value           | Initialized to 10 in each Enemy Campaign instance’s MutableState.                                                    |
 
-| Component      | Purpose                                                     | Enemy enemy_1 at construction                    |
-| -------------- | ----------------------------------------------------------- | ------------------------------------------------ |
-| Archetype      | Shared immutable characteristics and construction defaults. | Thug, an EnemyArchetype GDR with base health 10. |
-| MutableState   | Campaign instance-specific properties permitted to change.  | Current health 10.                               |
-| ImmutableState | Campaign instance-specific facts fixed at construction.     | Instance ID enemy_1.                             |
+The engine passes the Thug GDR and a fresh Instance ID to the Enemy constructor implementation for each enemy.
+The implementation returns an Enemy Campaign instance with Archetype set to Thug, current health initialized to 10
+in MutableState, and its Instance ID in ImmutableState. The caller adds each Enemy Campaign instance to its owning Mission.
+Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes its health without changing enemy_2 or Thug.
 
 ```mermaid
 flowchart LR
-    enemy_type["Type: Enemy"]
-    enemy_archetype_type["Type: EnemyArchetype"]
-    thug_gdr["GDR: Thug · base health 10"]
-    thug_gdr -->|has Type| enemy_archetype_type
-    subgraph enemy_1["Campaign instance enemy_1"]
-        enemy_1_archetype["Archetype: Thug"]
-        enemy_1_mutable_state["MutableState: health 10"]
-        enemy_1_immutable_state["ImmutableState: Instance ID enemy_1"]
-    end
-    subgraph enemy_2["Campaign instance enemy_2"]
-        enemy_2_archetype["Archetype: Thug"]
-        enemy_2_mutable_state["MutableState: health 10"]
-        enemy_2_immutable_state["ImmutableState: Instance ID enemy_2"]
-    end
-    enemy_1 -->|has Type| enemy_type
-    enemy_2 -->|has Type| enemy_type
-    enemy_1_archetype -->|resolves to| thug_gdr
-    enemy_2_archetype -->|resolves to| thug_gdr
+    Thug["GDR: Thug · base health 10"] -->|Archetype input| Engine["Engine invokes Enemy constructor implementation twice"]
+    IDs["Fresh Instance IDs:<br/>enemy_1 and enemy_2"] -->|identity inputs| Engine
+    Constructor["Campaign instance constructor:<br/>Enemy construction"] -->|specifies construction| Engine
+    Engine -->|constructs| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>MutableState: health 10<br/>ImmutableState: Instance ID enemy_1"]
+    Engine -->|constructs| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>MutableState: health 10<br/>ImmutableState: Instance ID enemy_2"]
 ```
+
+### MODEL-001 — Campaign instance composition
+
+Every Campaign instance must have exactly three conceptual components: Archetype, MutableState, and ImmutableState,
+with structures described by its declared Type. Every GDR must match its declared Type.
 
 The components describe meaning, not storage. They can be embedded or resolved through references. Sharing an
 archetype does not require inheritance or copies of GDRs, and Campaign instances must have independent Campaign instance-specific components; sharing an archetype must not cause them to share MutableState.
