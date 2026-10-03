@@ -76,7 +76,7 @@ TODO: Define save contents, encoding, load validation, and replay inputs for the
 
 ## Session-owned state
 
-TODO: Separate Campaign state, UI preferences, debug operations, and AI memory. Define restoration or invalidation of strategy memory and cached Player observations.
+TODO: Separate Campaign state, UI preferences, debug operations, and AI memory. Define restoration or invalidation of strategy memory and cached Player-visible information.
 
 TODO: Assign stable HIST-NNN requirement IDs when concrete rules replace these placeholders.
 

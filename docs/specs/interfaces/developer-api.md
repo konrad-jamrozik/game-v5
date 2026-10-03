@@ -45,7 +45,7 @@ appropriate to this document.
 
 ## Inspection contract
 
-TODO: Specify full-state inspection (for example, hidden difficulty, RNG state, and Instance IDs). Define read-only/copy behavior and separation from Player observations.
+TODO: Specify full-state inspection (for example, hidden difficulty, RNG state, and Instance IDs). Define read-only/copy behavior and separation from Player-visible information.
 
 ## Optional debugging controls
 

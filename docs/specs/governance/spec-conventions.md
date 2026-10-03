@@ -167,6 +167,9 @@ or **Game Data Records (GDRs)** at the first relevant mention in a document; use
 afterward, including headings, tables, and diagram labels. The owning Glossary retains **Game Data Record (GDR)**
 as its term label. This abbreviation is an exception to the full-term rule below, not a separate modeling concept.
 
+Player-visible information names the information exposed to an ordinary player. **Player-visible** may be used
+as an adjective describing that exposure, for example, "this value is Player-visible"; it does not name a separate concept.
+
 Use the full glossary term on every mention. Do not abbreviate it, drop words, split its words across a compound,
 or substitute a generic noun after introducing the full term. For example, use GDR rather than "content"
 or "entry", Campaign instance rather than "instance", and Campaign instance constructor rather than "constructor"
@@ -195,6 +198,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 
 | INSTEAD OF                                  | USE                                                                                                                                 | Context                                                                                                                                                            |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Player observation; Player observations     | [Player-visible information](../foundation/modeling-foundations.md#glossary)                                                        | Referring to information deliberately exposed by the engine to an ordinary player.                                                                                 |
 | Opportunity                                 | [Lead](../foundation/domain-model.md#glossary)                                                                                      | Referring to a Lead; ordinary uses such as opportunity cost remain valid.                                                                                          |
 | Attempt                                     | [Investigation](../foundation/domain-model.md#glossary)                                                                             | Referring to an Investigation of a Lead; attempts to execute commands or undertake Missions remain distinct.                                                       |
 | Fixed reference                             | Immutable reference                                                                                                                 | A reference in [ImmutableState](../foundation/modeling-foundations.md#glossary); its target cannot be replaced or cleared.                                         |

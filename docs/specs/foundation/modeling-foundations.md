@@ -66,7 +66,7 @@ A Campaign instance constructor is a Rule that constructs a Campaign instance an
 | Term                          | Definition                                                                                                                                                                                                                                  |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Campaign instance             | A particular occurrence within a campaign of a declared Type, composed of an Archetype, MutableState, and ImmutableState.                                                                                                                   |
-| Archetype                     | A GDR describing shared characteristics and construction defaults for a category of Campaign instances.                                                                                                                                     |
+| Archetype                     | A GDR supplying shared characteristics and construction defaults for Campaign instances constructed from it.                                                                                                                                |
 | MutableState                  | Campaign instance-specific data whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                               |
 | ImmutableState                | Campaign instance-specific data established during construction and preserved for the Campaign instance's lifetime, always including its Instance ID.                                                                                       |
 | Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity).                                                                                      |
@@ -76,13 +76,13 @@ A Campaign instance constructor is a Rule that constructs a Campaign instance an
 
 These concepts describe how values are established, retained, and exposed within the preceding model.
 
-| Term                | Definition                                                                                     |
-| ------------------- | ---------------------------------------------------------------------------------------------- |
-| Authoritative value | A value treated as established truth rather than recomputed from other values.                 |
-| Derived value       | A value calculated deterministically from Authoritative values and the current rules and GDRs. |
-| History             | Retained data describing past Campaign state or events. Rules and reports may consult History. |
-| Committed state     | Complete Campaign state before or after an accepted command, not intermediate processing.      |
-| Player observation  | Information deliberately exposed by the engine to an ordinary player.                          |
+| Term                       | Definition                                                                                     |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| Authoritative value        | A value treated as established truth rather than recomputed from other values.                 |
+| Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs. |
+| History                    | Retained data describing past Campaign state or events. Rules and reports may consult History. |
+| Committed state            | Complete Campaign state before or after an accepted command, not intermediate processing.      |
+| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                          |
 
 ## Rejected terms and synonyms
 

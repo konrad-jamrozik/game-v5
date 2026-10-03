@@ -45,7 +45,7 @@ Controller-state restoration is outside this contract; its owner is
 
 ## Queries and information
 
-Player observations are deliberately exposed information, not writable campaign references. The engine supplies
+Player-visible information is deliberately exposed by the engine and contains no writable campaign references. The engine supplies
 permitted decision-support calculations. Human and AI control use the same information boundary, while separate developer
 capabilities expose all Authoritative values in Campaign state ([ENG-003](#eng-003--information-boundary)). Hidden facts remain part of the game domain.
 
@@ -53,7 +53,7 @@ capabilities expose all Authoritative values in Campaign state ([ENG-003](#eng-0
 
 Committed state is the complete state before or after an accepted command, as defined in Modeling Foundations. Runtime
 integrity covers domain invariants and modeling/reference conventions, including restoration; intermediate processing
-is not a Player observation of Committed state ([ENG-004](#eng-004--committed-state-integrity)).
+is not Player-visible information of Committed state ([ENG-004](#eng-004--committed-state-integrity)).
 Integrity includes three-component composition, valid typed references, and stable Instance IDs and immutable facts under
 [MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition),
 [MODEL-002](modeling-foundations.md#model-002--identity), and [MODEL-003](modeling-foundations.md#model-003--references).
@@ -88,7 +88,7 @@ the owner of a browser runtime. INFO/API/DEV own exact fields, reveal conditions
 
 The invariants in Domain Model, Modeling Foundations, and this contract must hold
 before and after successful commands, turn advancement, and history restoration. Intermediate battle/turn states must not
-be exposed as Player observations of Committed state. Invalid player requests must leave Campaign state, RNG state and Instance ID allocation state, reports, and
+be exposed as Player-visible information of Committed state. Invalid player requests must leave Campaign state, RNG state and Instance ID allocation state, reports, and
 history unchanged. Broken internal references/invariants
 must be reported as engine/data defects rather than silently repaired into different gameplay outcomes.
 
@@ -133,7 +133,7 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 | Invalid player request                              | Leave Campaign state, RNG/Instance ID allocation state, reports, and history unchanged ([ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                                                         |
 | Broken internal reference/invariant                 | Report an engine/data defect rather than silently repair gameplay ([ENG-004](#eng-004--committed-state-integrity); [MODEL-003](modeling-foundations.md#model-003--references))                                                                                                                                                  |
 | Undo removes a Campaign instance created later      | Restore earlier references consistently, with no dangling future-only links or stale cached Derived values ([ENG-001](#eng-001--derived-value-consistency)/[ENG-004](#eng-004--committed-state-integrity); [MODEL-002](modeling-foundations.md#model-002--identity)/[MODEL-003](modeling-foundations.md#model-003--references)) |
-| Intermediate battle/turn state                      | Do not expose it as a committed Player observation ([ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                                                                                             |
+| Intermediate battle/turn state                      | Do not expose it as committed Player-visible information ([ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                                                                                       |
 | Current calculation differs from historical value   | Refresh current calculations under [ENG-001](#eng-001--derived-value-consistency); preserve historical facts under [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation)                                                                                                                                 |
 
 # Acceptance examples
@@ -142,7 +142,7 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 
 Given hidden investigation difficulty H, opaque RNG state G, and opaque Instance ID generation state N:
 
-- Equal human/AI queries receive equal permitted Player observations without H or RNG state.
+- Equal human/AI queries receive equal permitted Player-visible information without H or RNG state.
 - Separate dev inspection can obtain H.
 - Mutating a returned player view cannot mutate the campaign.
 - Repeated queries leave G, N, progress, reports, and history unchanged.
@@ -170,7 +170,7 @@ those commands ([ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-00
 - Undo after creation restores the previous Instance ID generation state and references; a Campaign instance in the discarded
   future does not constrain uniqueness in the restored timeline ([ENG-004](#eng-004--committed-state-integrity); [MODEL-002](modeling-foundations.md#model-002--identity)/[MODEL-003](modeling-foundations.md#model-003--references)).
 - A successful command, turn advancement, or restoration exposes a state satisfying the domain and reference invariants.
-  Intermediate battle/turn states are not exposed as committed Player observations ([ENG-004](#eng-004--committed-state-integrity)).
+  Intermediate battle/turn states are not exposed as committed Player-visible information ([ENG-004](#eng-004--committed-state-integrity)).
 - A broken internal reference is reported as an engine/data defect, not silently reassigned to a similarly named Campaign instance
   ([ENG-004](#eng-004--committed-state-integrity); [MODEL-002](modeling-foundations.md#model-002--identity)/[MODEL-003](modeling-foundations.md#model-003--references)).
 
@@ -185,5 +185,5 @@ to History and Persistence; successful restoration must still satisfy [ENG-004](
 # Open decisions
 
 [ENG-001](#eng-001--derived-value-consistency), [ENG-002](#eng-002--continuation-state), [ENG-003](#eng-003--information-boundary), [ENG-004](#eng-004--committed-state-integrity), and [ENG-005](#eng-005--build-compatibility) remain proposed rules awaiting review.
-RNG algorithms, turn phase order, save encoding, Player observation fields, reveal conditions, estimates, public signatures,
+RNG algorithms, turn phase order, save encoding, Player-visible information fields, reveal conditions, estimates, public signatures,
 and developer enablement remain scheduled work in their owning specifications, not implicit defaults in this contract.

@@ -43,21 +43,21 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Player observations follow [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary); historical explanations preserve [MODEL-004](../foundation/modeling-foundations.md#model-004--historical-fact-preservation).
+Player-visible information follows [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary); historical explanations preserve [MODEL-004](../foundation/modeling-foundations.md#model-004--historical-fact-preservation).
 
 This Stub intends to refine [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) by specifying exposed fields, reveal conditions, and consistent human/AI views.
-It uses Modeling Foundations' Player observation and Historical meanings, Domain Model's concepts, and History and Persistence's
+It uses Modeling Foundations' Player-visible information and Historical meanings, Domain Model's concepts, and History and Persistence's
 history navigation. The mechanics dependencies supply the facts and calculated results to expose. In particular,
 Investigations owns estimate mathematics and permitted inputs; this document owns the exposed fields and reveal
 conditions. The exact field and reveal choices remain TODOs below.
 
-TODO: Specify Player observation, known/unknown field, estimate expressed as a Derived value, action explanation, report, history visibility, and dev-only information.
+TODO: Specify Player-visible information, known/unknown field, estimate expressed as a Derived value, action explanation, report, history visibility, and dev-only information.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
 # Requirements
 
-## Player observation schemas and visibility
+## Player-visible information schemas and visibility
 
 TODO: Specify field-by-field views for agency, agents, leads, investigations, missions, factions, progression, and history. State reveal conditions and distinguish unknown from zero/absent.
 
@@ -67,7 +67,7 @@ TODO: Specify decision-support values, graphs/relationships, estimates, turn rep
 
 ## Boundary consistency
 
-TODO: Apply visibility to queries, action discovery, validation errors, reports, exports, and historical Player observations. Exclude hidden difficulty, undiscovered information, RNG state, and mutable internal references from ordinary access.
+TODO: Apply visibility to queries, action discovery, validation errors, reports, exports, and historical Player-visible information. Exclude hidden difficulty, undiscovered information, RNG state, and mutable internal references from ordinary access.
 
 TODO: Assign stable INFO-NNN requirement IDs when concrete rules replace these placeholders.
 
@@ -85,6 +85,6 @@ fixtures instead of introducing implicit balance values.
 
 # Open decisions
 
-- TODO: Choose reveal rules, Player observation fields, uncertainty presentation, and history visibility behavior.
+- TODO: Choose reveal rules, Player-visible information fields, uncertainty presentation, and history visibility behavior.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

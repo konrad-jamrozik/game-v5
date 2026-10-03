@@ -54,7 +54,7 @@ TODO: Specify panic representation, clamping, contributing effects, victory and 
 
 ## Terminal behavior
 
-TODO: Define allowed Player observations and commands after an ending and how history restores an ongoing campaign.
+TODO: Define allowed Player-visible information and commands after an ending and how history restores an ongoing campaign.
 
 TODO: Assign stable CAMP-NNN requirement IDs when concrete rules replace these placeholders.
 
