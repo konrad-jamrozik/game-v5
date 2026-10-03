@@ -234,17 +234,17 @@ check links, and validate the graphs. Do not invent implementation or test relat
 The following table gives the complete expected classifications for this acceptance scenario. These cases exercise
 [REL-001](#rel-001--canonical-model), [REL-003](#rel-003--direction), and [REL-008](#rel-008--status-and-evidence); they do not add relationships to the named documents.
 
-| Case                                                                                                                              | Expected classification and reason                                                    |
-| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                     | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
-| Agents supplies transitions for the lifecycle described by [DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle)      | Refines Domain Model; it adds detail to the same lifecycle                            |
-| History specifies restoration steps for [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity)            | Refines Engine Contract; it details the restoration behavior                          |
-| History preserves references under [MODEL-003](../foundation/modeling-foundations.md#model-003--references) while restoring state | Uses Modeling Foundations; satisfying the reference invariant alone is not refinement |
-| Initial Campaign Content supplies prices under Economy's purchase rules                                                           | Uses Economy and Upgrades; data values do not elaborate purchase behavior             |
-| Terminal CLI maps commands to the player API                                                                                      | Uses TypeScript Player API; an adapter contract applies existing operations           |
-| A Stub names [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) and TODOs for exact exposed fields         | Intended refinement is permitted; the fields remain unspecified and status stays Stub |
-| A document merely says it must obey [MODEL-002](../foundation/modeling-foundations.md#model-002--identity)                        | Uses, not Refines; no added detail about the identity convention is identified        |
-| A refinement duplicates the same reliance as a Uses entry                                                                         | Keep only Refines; two Relationship kinds require distinct reliance                   |
+| Case                                                                                                                         | Expected classification and reason                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and GDR                                                                | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
+| Agents supplies transitions for the lifecycle described by [DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle) | Refines Domain Model; it adds detail to the same lifecycle                            |
+| History specifies restoration steps for [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity)       | Refines Engine Contract; it details the restoration behavior                          |
+| History preserves references under [References](../foundation/modeling-foundations.md#references) while restoring state      | Uses Modeling Foundations; satisfying the reference invariant alone is not refinement |
+| Initial Campaign Content supplies prices under Economy's purchase rules                                                      | Uses Economy and Upgrades; data values do not elaborate purchase behavior             |
+| Terminal CLI maps commands to the player API                                                                                 | Uses TypeScript Player API; an adapter contract applies existing operations           |
+| A Stub names [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) and TODOs for exact exposed fields    | Intended refinement is permitted; the fields remain unspecified and status stays Stub |
+| A document merely says it must obey [Campaign instances](../foundation/modeling-foundations.md#campaign-instances)           | Uses, not Refines; no added detail about the identity convention is identified        |
+| A refinement duplicates the same reliance as a Uses entry                                                                    | Keep only Refines; two Relationship kinds require distinct reliance                   |
 
 ## Complete coverage of Relationship kinds
 

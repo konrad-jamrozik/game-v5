@@ -45,7 +45,7 @@ duplicating shared definitions.
 
 The [Session definition](#glossary) was migrated from Domain Model and remains a draft. Controller state can include,
 for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved; this specification stays Stub.
-Storage and restoration must preserve [Campaign instance composition](modeling-foundations.md#campaign-instance-composition), [MODEL-002](modeling-foundations.md#model-002--identity), [MODEL-003](modeling-foundations.md#model-003--references), and [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-value-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
+Storage and restoration must preserve [Campaign instances](modeling-foundations.md#campaign-instances), [References](modeling-foundations.md#references), and [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-value-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
 
 This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
 undo/redo and save/load procedures. It uses Modeling Foundations' identity, reference, and historical-preservation

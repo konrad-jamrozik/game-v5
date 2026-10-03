@@ -43,7 +43,7 @@ TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Concepts and contract
 
-GDRs and their references follow [Campaign instance composition](../foundation/modeling-foundations.md#campaign-instance-composition), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), and [MODEL-003](../foundation/modeling-foundations.md#model-003--references).
+GDRs and their references follow [Campaign instances](../foundation/modeling-foundations.md#campaign-instances) and [References](../foundation/modeling-foundations.md#references).
 
 This document uses Domain Model's game concepts and Modeling Foundations' GDR and reference conventions. It uses
 Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and

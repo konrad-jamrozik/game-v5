@@ -55,8 +55,7 @@ Committed state is the complete state before or after an accepted command, as de
 integrity covers domain invariants and modeling/reference conventions, including restoration; intermediate processing
 is not Player-visible information of Committed state ([ENG-004](#eng-004--committed-state-integrity)).
 Integrity includes three-component composition, valid typed references, and stable Instance IDs and immutable facts under
-[Campaign instance composition](modeling-foundations.md#campaign-instance-composition),
-[MODEL-002](modeling-foundations.md#model-002--identity), and [MODEL-003](modeling-foundations.md#model-003--references).
+[Campaign instances](modeling-foundations.md#campaign-instances) and [References](modeling-foundations.md#references).
 Undo/redo restores Campaign instances rather than creating new identities or authorizing immutable-fact changes.
 
 # Requirements
@@ -93,7 +92,7 @@ history unchanged. Broken internal references/invariants
 must be reported as engine/data defects rather than silently repaired into different gameplay outcomes.
 
 History restoration must restore the previous Instance ID generation state along with campaign references. This operational
-guarantee preserves the timeline-scoped identity convention in [MODEL-002](modeling-foundations.md#model-002--identity); a discarded future is not another live
+guarantee preserves the timeline-scoped identity convention in [Campaign instances](modeling-foundations.md#campaign-instances); a discarded future is not another live
 campaign. History and Persistence specifies restoration procedures, Numbers and Randomness specifies generation,
 and TypeScript Player API specifies stale client-handle behavior.
 
@@ -134,14 +133,14 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 
 # Edge cases and failure behavior
 
-| Case                                                | Result / owner                                                                                                                                                                                                                                                                                                                  |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Query/command names an unknown or hidden identifier | Respect visibility and non-mutation; exact public error belongs to INFO/API ([ENG-003](#eng-003--information-boundary)/[ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                          |
-| Invalid player request                              | Leave Campaign state, RNG/Instance ID allocation state, reports, and history unchanged ([ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                                                         |
-| Broken internal reference/invariant                 | Report an engine/data defect rather than silently repair gameplay ([ENG-004](#eng-004--committed-state-integrity); [MODEL-003](modeling-foundations.md#model-003--references))                                                                                                                                                  |
-| Undo removes a Campaign instance created later      | Restore earlier references consistently, with no dangling future-only links or stale cached Derived values ([ENG-001](#eng-001--derived-value-consistency)/[ENG-004](#eng-004--committed-state-integrity); [MODEL-002](modeling-foundations.md#model-002--identity)/[MODEL-003](modeling-foundations.md#model-003--references)) |
-| Intermediate battle/turn state                      | Do not expose it as committed Player-visible information ([ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                                                                                       |
-| Current calculation differs from historical value   | Refresh current calculations under [ENG-001](#eng-001--derived-value-consistency); preserve historical facts under [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation)                                                                                                                                 |
+| Case                                                | Result / owner                                                                                                                                                                                                                                                                                                                |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Query/command names an unknown or hidden identifier | Respect visibility and non-mutation; exact public error belongs to INFO/API ([ENG-003](#eng-003--information-boundary)/[ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                        |
+| Invalid player request                              | Leave Campaign state, RNG/Instance ID allocation state, reports, and history unchanged ([ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                                                       |
+| Broken internal reference/invariant                 | Report an engine/data defect rather than silently repair gameplay ([ENG-004](#eng-004--committed-state-integrity); [References](modeling-foundations.md#references))                                                                                                                                                          |
+| Undo removes a Campaign instance created later      | Restore earlier references consistently, with no dangling future-only links or stale cached Derived values ([ENG-001](#eng-001--derived-value-consistency)/[ENG-004](#eng-004--committed-state-integrity); [Campaign instances](modeling-foundations.md#campaign-instances)/[References](modeling-foundations.md#references)) |
+| Intermediate battle/turn state                      | Do not expose it as committed Player-visible information ([ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                                                                                     |
+| Current calculation differs from historical value   | Refresh current calculations under [ENG-001](#eng-001--derived-value-consistency); preserve historical facts under [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation)                                                                                                                               |
 
 # Acceptance examples
 
@@ -167,7 +166,7 @@ those commands ([ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-00
 ## Restoration and integrity
 
 - Undo restores prior facts and corresponding Derived values, without future-only references or stale readiness values;
-  redo also updates or invalidates affected caches ([ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-002--continuation-state)/[ENG-004](#eng-004--committed-state-integrity); [MODEL-002](modeling-foundations.md#model-002--identity)/[MODEL-003](modeling-foundations.md#model-003--references)).
+  redo also updates or invalidates affected caches ([ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-002--continuation-state)/[ENG-004](#eng-004--committed-state-integrity); [Campaign instances](modeling-foundations.md#campaign-instances)/[References](modeling-foundations.md#references)).
 - A historical battle-start value remains preserved when current strength is recalculated ([MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation)).
 - Structural validation of [Domain Model fixture A](domain-model.md#a-valid-relationships) leaves facts, RNG state G,
   and Instance ID allocation state N unchanged ([ENG-001](#eng-001--derived-value-consistency)/[ENG-004](#eng-004--committed-state-integrity)). G and N are opaque engine bookkeeping added to that structural fixture.
@@ -175,11 +174,11 @@ those commands ([ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-00
   [invalid variants](domain-model.md#b-invalid-variants) is rejected without changing Campaign state, G, N, reports,
   or history ([ENG-004](#eng-004--committed-state-integrity)).
 - Undo after creation restores the previous Instance ID generation state and references; a Campaign instance in the discarded
-  future does not constrain uniqueness in the restored timeline ([ENG-004](#eng-004--committed-state-integrity); [MODEL-002](modeling-foundations.md#model-002--identity)/[MODEL-003](modeling-foundations.md#model-003--references)).
+  future does not constrain uniqueness in the restored timeline ([ENG-004](#eng-004--committed-state-integrity); [Campaign instances](modeling-foundations.md#campaign-instances)/[References](modeling-foundations.md#references)).
 - A successful command, turn advancement, or restoration exposes a state satisfying the domain and reference invariants.
   Intermediate battle/turn states are not exposed as committed Player-visible information ([ENG-004](#eng-004--committed-state-integrity)).
 - A broken internal reference is reported as an engine/data defect, not silently reassigned to a similarly named Campaign instance
-  ([ENG-004](#eng-004--committed-state-integrity); [MODEL-002](modeling-foundations.md#model-002--identity)/[MODEL-003](modeling-foundations.md#model-003--references)).
+  ([ENG-004](#eng-004--committed-state-integrity); [Campaign instances](modeling-foundations.md#campaign-instances)/[References](modeling-foundations.md#references)).
 
 Exact save/restore procedures and public errors remain owned by HIST/API/DEV.
 

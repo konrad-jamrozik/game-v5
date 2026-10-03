@@ -64,16 +64,16 @@ These concepts build on Type and Campaign: GDRs supply immutable shared data, wh
 
 A Campaign instance has a declared Type with three properties: an Archetype reference, ImmutableState, and MutableState.
 Archetype is the role of a GDR within this composition. Instance ID distinguishes individual Campaign instances.
-A Campaign instance constructor describes construction and initialization of a Campaign instance. It is a separate concept from Rule and GDR.
+A Campaign instance constructor creates and returns a new Campaign instance. It is a separate concept from Rule and GDR.
 
-| Term                          | Definition                                                                                                                                                                                                                                               |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance             | A particular occurrence within a Campaign of a declared Type, with an Archetype reference, ImmutableState, and MutableState.                                                                                                                             |
-| Archetype                     | A GDR referenced by a Campaign instance, supplying shared characteristics and construction defaults. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is fixed during construction.                          |
-| MutableState                  | Data specific to a given Campaign instance, never shared with another Campaign instance, whose properties are permitted to evolve under their declared gameplay rules.                                                                                   |
-| ImmutableState                | Data specific to a given Campaign instance, never shared with another Campaign instance, established during construction and immutable for its lifetime, including owned nested data and its Instance ID.                                                |
-| Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity).                                                                                                   |
-| Campaign instance constructor | A declared construction operation specifying its inputs and dependencies, the Type of the returned Campaign instance, and initialization of the new Campaign instance's components. It need not be a language-level constructor or public API operation. |
+| Term                          | Definition                                                                                                                                                                                                                                                                                                 |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign instance             | A particular occurrence within a Campaign of a declared Type, with an Archetype reference, ImmutableState, and MutableState.                                                                                                                                                                               |
+| Archetype                     | A GDR referenced by a Campaign instance, supplying shared characteristics and construction defaults. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is fixed during construction.                                                                            |
+| MutableState                  | Data specific to a given Campaign instance, never shared with another Campaign instance, whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                                     |
+| ImmutableState                | Data specific to a given Campaign instance, never shared with another Campaign instance, established during construction and immutable for its lifetime, including owned nested data and its Instance ID.                                                                                                  |
+| Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [Campaign instances](#campaign-instances).                                                                                                                                             |
+| Campaign instance constructor | An operation that creates and returns a new Campaign instance. Its signature specifies input parameters and the return Type; its behavioral specification defines dependencies and initialization, which its implementation performs. It need not be a language-level constructor or public API operation. |
 
 ## Value classification, history, and visibility
 
@@ -123,13 +123,36 @@ The engine implementation ties these together while obeying the [Engine Contract
 it constructs new Campaign instances using the appropriate Archetype and other declared inputs.
 Supplying an Archetype is one possible GDR role.
 
-## Campaign instance composition
+## Campaign instances
 
-The Campaign instance Type always has exactly three properties:
+### Campaign instance structure
 
-- The reference to its Archetype, which is a GDR.
-- The ImmutableState property.
-- The MutableState property.
+A Campaign instance Type always has exactly three properties: an Archetype reference, ImmutableState, and MutableState.
+
+### Campaign instance construction
+
+Each Campaign instance constructor has declared input parameters and a return Type, which is of the constructed Campaign instance. Its specification defines its
+dependencies and how the returned Campaign instance’s Archetype reference, ImmutableState, and MutableState are
+initialized, including assignment of a fresh Instance ID in ImmutableState. The implementation performs this initialization.
+A Campaign instance constructor implementation typically depends on:
+
+- One or more GDRs serving as Archetypes.
+- A random generator.
+- An ID generator.
+
+### Campaign instance identity
+
+Instance IDs are unique within their explicitly declared scope and stable for the Campaign instance’s lifetime.
+Restoration, including undo/redo, preserves identity and immutable facts; uniqueness applies within the retained timeline, excluding discarded futures.
+
+## References
+
+References identify a particular target and its expected Type. In Committed state, Campaign instance references must resolve
+within the same Campaign; GDR references identify the GDR ID and must resolve against the current game build.
+Required historical references remain resolvable. Relationships must not be inferred from display names or identifier text.
+
+References that can change belong in MutableState; fixed references belong in ImmutableState. The Archetype reference
+is the dedicated third property and remains fixed. Reference mutability is independent of the target’s mutability.
 
 ## Roles of GDRs
 
@@ -234,99 +257,6 @@ flowchart LR
 
 TODO: continue review from this point. Stuff above was reviewed.
 
-## MODEL-006 — Campaign instance construction
-
-Each Campaign instance constructor must declare its input parameters and dependencies and identify the Type of the
-returned Campaign instance. Every new Campaign instance must initialize all three components, receive a fresh Instance ID
-within its declared scope, and satisfy its declared structure and initialization requirements. Dependencies must include any
-GDR selection, Instance ID allocation state, or randomness actually used by the constructor.
-A Campaign instance constructor must return the constructed Campaign instance; its caller establishes containment.
-
-The illustrative Campaign instance constructor `constructEnemy(archetype, instanceId)` receives an EnemyArchetype
-GDR and a fresh Instance ID and returns an Enemy. It fixes Archetype to the supplied GDR, records
-the supplied Instance ID in ImmutableState, and initializes current health in MutableState to the GDR's base
-health. All inputs are supplied directly; `constructEnemy` uses no randomness, performs no GDR lookup, and
-does not allocate an Instance ID.
-
-The caller supplies an Instance ID that is fresh within this example's campaign-wide scope and attaches the returned
-Enemy to the owning Mission. In the following language-independent pseudocode, `mission` denotes a Mission already
-contained in the top-level Campaign instance, and `thug` denotes the Thug GDR:
-
-```text
-enemy = constructEnemy(thug, freshInstanceId)
-append enemy to mission.enemies
-```
-
-The caller changes the Mission's collection; `constructEnemy` only constructs and returns the Enemy. Before the
-enclosing operation publishes Committed state, the caller must establish ownership and any required relationships.
-That Committed state must satisfy all applicable invariants.
-The Instance ID allocation mechanism remains unspecified. Multiple Campaign instance constructors can return Campaign instances of the
-same Type, provided each declares its inputs, dependencies, and initialization requirements.
-
-A constructor contract must distinguish initialization requirements from structural constraints and gameplay invariants that
-continue to apply after creation. Concrete constructor behavior belongs in the gameplay specification responsible for
-the creation operation; consuming specifications must identify those owners.
-
-For this example, base health is a positive integer and current health must remain an integer between zero and base
-health, inclusive. Construction starts enemy_1 and enemy_2 at 10. Damage changes enemy_1's health to 7; enemy_2's health and Thug's base
-health remain 10. Both identities remain unchanged. Starting an enemy at 7 would satisfy the ongoing range but violate
-the initialization requirement of `constructEnemy`; starting it at 11 would violate both.
-
-## MODEL-002 — Identity
-
-Every Campaign instance must have an Instance ID in ImmutableState, unique within its declared identity scope and stable
-for its lifetime. Distinct Campaign instances in the same scope and timeline must have distinct IDs. The ID distinguishes
-the individual Campaign instance, and the shared Thug GDR cannot supply a distinct identity for every enemy. In the example's
-campaign-wide scope, enemy_2 cannot reuse enemy_1's Instance ID. Each consuming specification must declare its identity scopes explicitly.
-
-GDR references must identify the expected GDR Type and GDR ID. Relationships must use
-explicit references; rules must not parse display names or identifier text to discover relationships. This specifies
-reference meaning, not a serialized discriminator property.
-
-Instance IDs are timeline-scoped: a discarded future is not another live campaign. Lookup and history restoration must
-preserve the restored Campaign instance’s identity rather than allocate a new one. This convention chooses neither an
-ID generation algorithm nor a restoration procedure.
-
-For example, undoing damage restores enemy_1's
-health to 10; redoing it restores 7, with the same identity and immutable facts. Undoing a Campaign instance's creation
-removes it and its references from that timeline; redo restores the same Campaign instance and fixed facts.
-
-## MODEL-003 — References
-
-All Committed state Campaign instance references must resolve to a Campaign instance of the expected Type in the same
-campaign. GDR references must resolve to a GDR of the expected Type supplied by the current game build.
-References to historical Campaign instances, including terminal lifecycle states, must remain resolvable. Storage may be
-compacted provided required facts and references remain available; full snapshots need not be retained forever.
-
-References identify particular GDRs or Campaign instances and their expected Types. Thug has a GDR
-identity as an EnemyArchetype GDR; enemy_1 has an Instance ID as an Enemy Campaign instance. A reference to a missing GDR is
-invalid, as is resolving an EnemyArchetype reference to GDRs of another Type merely because some properties match.
-Structural compatibility alone does not prove reference validity.
-
-For a reference stored in a Campaign instance, its placement depends on whether the reference itself can change.
-An immutable reference must belong in ImmutableState: construction establishes its target, and gameplay cannot replace or clear
-that reference. A mutable reference must belong in MutableState: gameplay rules may replace its target or clear the
-reference when permitted. This classification is independent of whether the referenced data can change.
-
-For example, an Investigation's immutable Lead reference belongs in the Investigation's ImmutableState. An illustrative
-Agent's reference to the Mission to which the Agent is currently deployed belongs in the Agent's MutableState if
-gameplay permits deployment changes. Changing that reference changes which Mission the Agent references; it does not
-modify either Mission. This example establishes no deployment eligibility or timing rules.
-
-For example, consider a variant `constructEnemy(archetype, instanceId, missionReference)` whose additional input is a
-typed reference to a Mission mission_1 representing a task. The Campaign instance constructor initializes that immutable reference in enemy_1's
-ImmutableState at construction. Mission follows the same three-component contract
-and can have a mutable collection of participating enemies. Its membership can change while enemy_1's immutable Mission
-reference continues to resolve to mission_1. The immutable reference does not prevent changes to mission_1's
-MutableState; following a reference does not transfer ownership of the referenced Campaign instance's data.
-
-Lead is an immutable GDR in these examples. Its immutability follows from being a GDR, not from
-the Investigation's reference being immutable. Mutable campaign facts associated with a Lead belong in Campaign state,
-as illustrated by the completion records in the next section; changing those facts does not replace the Lead reference.
-
-Mutability of a reference does not depend on whether it is represented by an identifier. Ordinary nested values and retained records do not become
-Campaign instances simply because they are stored, immutable, or associated with an identifier.
-
 ## Archetypes and other referenced GDRs
 
 A Campaign instance can refer to GDRs for a purpose other than supplying its Archetype. Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
@@ -407,24 +337,24 @@ references must remain in History rather than being deleted. For example, if ene
 a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
 name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
 changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
-retained references must be preserved under [MODEL-002](#model-002--identity) and [MODEL-003](#model-003--references).
+retained references must be preserved under [Campaign instances](#campaign-instances) and [References](#references).
 An evolving collection can contain immutable historical records: adding a completion record does not permit rewriting
 an earlier record.
 
 # Edge cases and failure behavior
 
-| Case                                                                                                                            | Result / owner                                                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Missing component, incorrect structure, or mutation of immutable data                                                           | Invalid data or Campaign state under [Campaign instance composition](#campaign-instance-composition).                                                  |
-| Campaign instance constructor omits an input, dependency, Type of the returned Campaign instance, or initialization requirement | Incomplete Campaign instance constructor contract under [MODEL-006](#model-006--campaign-instance-construction).                                       |
-| Duplicate Instance ID, missing reference, or wrong expected Type                                                                | Invalid Campaign state under [MODEL-002](#model-002--identity)/[MODEL-003](#model-003--references); never infer a replacement by name.                 |
-| Campaign instance is historical, including terminal lifecycle states                                                            | Required historical references still resolve under [MODEL-003](#model-003--references); storage may be compacted without losing required facts.        |
-| A later Campaign instance belongs only to a discarded future                                                                    | Instance IDs are timeline-scoped under [MODEL-002](#model-002--identity); committed references must resolve under [MODEL-003](#model-003--references). |
-| A current value differs from the retained original value                                                                        | Retain the historical basis required by the result/report under [MODEL-004](#model-004--historical-fact-preservation).                                 |
+| Case                                                                                                                            | Result / owner                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Missing component, incorrect structure, or mutation of immutable data                                                           | Invalid data or Campaign state under [Campaign instances](#campaign-instances).                                                                      |
+| Campaign instance constructor omits an input, dependency, Type of the returned Campaign instance, or initialization requirement | Incomplete Campaign instance constructor contract under [Campaign instances](#campaign-instances).                                                   |
+| Duplicate Instance ID, missing reference, or wrong expected Type                                                                | Invalid Campaign state under [Campaign instances](#campaign-instances)/[References](#references); never infer a replacement by name.                 |
+| Campaign instance is historical, including terminal lifecycle states                                                            | Required historical references still resolve under [References](#references); storage may be compacted without losing required facts.                |
+| A later Campaign instance belongs only to a discarded future                                                                    | Instance IDs are timeline-scoped under [Campaign instances](#campaign-instances); committed references must resolve under [References](#references). |
+| A current value differs from the retained original value                                                                        | Retain the historical basis required by the result/report under [MODEL-004](#model-004--historical-fact-preservation).                               |
 
 # Open decisions
 
-[Campaign instance composition](#campaign-instance-composition), [MODEL-002](#model-002--identity), [MODEL-003](#model-003--references), [MODEL-004](#model-004--historical-fact-preservation), [MODEL-005](#model-005--value-classification), and [MODEL-006](#model-006--campaign-instance-construction) remain proposed rules awaiting review.
+[Campaign instances](#campaign-instances), [References](#references), [MODEL-004](#model-004--historical-fact-preservation), and [MODEL-005](#model-005--value-classification) remain proposed contracts awaiting review.
 Consuming specifications own their concrete game Types, identity scopes, Campaign instance constructor behavior, and gameplay rules.
 The illustrations here do not settle those decisions or select production GDR properties and allowed combinations.
 
