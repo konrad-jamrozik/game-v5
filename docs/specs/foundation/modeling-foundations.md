@@ -41,12 +41,14 @@ and the Campaign instances and operations built from them.
 ## Foundational concepts
 
 Type describes data, Campaign establishes the playthrough context, and Rule describes calculations and permitted behavior.
+Ruleset collects the Rules governing a Campaign.
 
 | Term     | Definition                                                                                                                                                               |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Type     | A named description of data structure and permitted values, including the Types of its constituent properties, collections, and references.                              |
 | Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                                      |
 | Rule     | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided. |
+| Ruleset  | The collection of Rules governing a Campaign.                                                                                                                            |
 
 ## Data within a Campaign
 
@@ -91,42 +93,26 @@ These concepts describe how values are established, retained, and exposed within
 
 # Concepts and contract
 
-## From GDRs to a running campaign
+## Campaign creation and progression
 
-A campaign separates shared game data from the facts of one playthrough. GDRs supply the shared data and
-remain unchanged during play. Campaign state records what is happening in that playthrough and what must be remembered
-about its past. Two campaigns can use the same GDRs while developing different Campaign state.
+When a player starts a new game, the engine creates a Campaign and constructs its initial Campaign state using
+the player’s setup inputs, GDRs, and Ruleset.
+The GDRs and starting configuration for the first playable campaign belong to
+[Initial Campaign Content](../content/initial-campaign.md).
 
-Rules connect the two. A calculation can read GDRs together with current campaign values. A Campaign instance constructor can use
-GDRs to create an individual Campaign instance. Later rules can change that Campaign instance's mutable properties while
-preserving its identity and fixed facts. Not every use of GDRs creates a Campaign instance, and not every campaign value
-needs independent identity.
+The Campaign progresses through player actions during the player turn and through “next turn” computation.
+Each successful action or turn advancement produces a new Committed state. Intermediate processing remains internal to the engine.
 
-Types describe the data on both sides of this distinction. A Type describes what a value contains; a GDR
-provides concrete shared values; a Campaign instance represents one particular occurrence. An Archetype is the GDR
-supplying a Campaign instance's shared characteristics. The following sections build up these relationships from direct
-GDR use to Campaign instances with multiple GDR references.
+To compute the next Committed state, the engine uses:
 
-```mermaid
-flowchart TB
-    Types["Types: descriptions of data"]
-    subgraph Content["GDRs: shared and immutable"]
-        Archetypes["Archetypes"]
-        OtherContent["Other GDRs"]
-    end
-    Rules["Rules: calculations, construction, and gameplay"]
-    subgraph Campaign["Campaign state: one playthrough"]
-        Instances["Campaign instances: individual occurrences"]
-        Values["Other values and retained history"]
-    end
-    Types -.->|describe| Content
-    Types -.->|describe| Campaign
-    Content -->|supplies inputs to| Rules
-    Campaign -->|supplies current values to| Rules
-    Rules -->|construct and govern changes to| Instances
-    Rules -->|calculate, update, or retain| Values
-    Archetypes -->|supply shared characteristics to| Instances
-```
+- **Player inputs:** The requested action and any supplied arguments.
+- **Current Campaign state:** The campaign’s existing facts, including the state needed for randomness and identity allocation.
+- **GDRs:** Shared, immutable game data.
+- **Ruleset:** The Rules governing calculations and permitted game behavior.
+
+The engine implementation ties these together while obeying the [Engine Contract](./engine-contract.md). Where required,
+it constructs new Campaign instances using the appropriate Archetype and other declared inputs.
+Supplying an Archetype is one possible GDR role.
 
 ## MODEL-007 — Gameplay dependency direction
 
@@ -172,7 +158,7 @@ and references.
 | Key for campaign facts | Campaign state associates facts with the identity of a GDR while the GDR remains immutable.             |
 
 A Rule describes the calculation or behavior; a GDR supplies data that the Rule reads. These roles do not
-require Rules to be stored as objects or grouped into a Ruleset Type.
+require Rules to be stored as objects or the Ruleset to have a formal representation.
 
 ## Using GDRs directly
 
