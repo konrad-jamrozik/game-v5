@@ -37,8 +37,7 @@ duplicating shared definitions.
 # Concepts and contract
 
 Public operations preserve [ENG-001](../foundation/engine-contract.md#eng-001--derived-value-consistency), [ENG-002](../foundation/engine-contract.md#eng-002--continuation-state), [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary), and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) and [Campaign instances](../foundation/modeling-foundations.md#campaign-instances), [References](../foundation/modeling-foundations.md#references), and [MODEL-004](../foundation/modeling-foundations.md#model-004--historical-fact-preservation). An operation that creates a
-Campaign instance must use a Campaign instance constructor contract satisfying [Campaign instances](../foundation/modeling-foundations.md#campaign-instances), with a declared Type for the returned Campaign instance and initialization of Archetype, MutableState, and ImmutableState containing
-Instance ID. These conceptual components do not prescribe public argument shapes or serialized layouts.
+Campaign instance must use a Campaign instance constructor contract satisfying [Campaign instances](../foundation/modeling-foundations.md#campaign-instances), with a declared Type for the returned Campaign instance and initialization of Instance ID, Archetype, Constants, and State. These conceptual components do not prescribe public argument shapes or serialized layouts.
 Returning an existing Campaign instance or restoring its earlier state does not itself create a new Campaign instance; restoration
 remains governed by History and Persistence and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity).
 

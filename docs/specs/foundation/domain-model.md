@@ -99,18 +99,18 @@ The following table enumerates the complete concept classifications declared by 
 | Combatant                                                                                          | Reusable Type-described structure for combat-related Agent and Enemy state; it is not a Campaign instance Type and has no Campaign instances.                                                                                                                                     | Combat operates on the participating Agent and Enemy Campaign instances ([DOM-012](#dom-012--combat-and-consequences)).                                                                                                                                                                                                                                                                          |
 | Archetypes for the seven declared Campaign instance types; lead, weapon, upgrade, and balance GDRs | Typed GDRs, not Campaign instances. Sharing a GDR does not constrain Campaign instance multiplicity.                                                                                                                                                                              | Supplied by the current game build; fields and values belong to Initial Campaign Content. Individual weapon inventory Campaign instances are outside this model; upgrade acquisitions belong to the Agency Campaign instance.                                                                                                                                                                    |
 
-Every Campaign instance of Type Campaign, Agency, Agent, Investigation, Mission, Enemy, or Faction has an Archetype,
-MutableState, and ImmutableState containing its Instance ID under
+Every Campaign instance of Type Campaign, Agency, Agent, Investigation, Mission, Enemy, or Faction has Instance ID, Archetype,
+Constants, and State properties under
 [Campaign instances](modeling-foundations.md#campaign-instances).
 All seven types share the explicit Instance ID scope in [DOM-017](#dom-017--campaign-instance-identity-scope), including the
 Campaign instance of Type Campaign itself. Singleton status does not exempt Campaign or Agency from an Instance ID or an archetype.
 
 Combatant supplies reusable Type-described structure, not a separate Campaign instance. A Faction operation occurrence's
-provenance is fixed Campaign instance data in its Response mission's ImmutableState, not a separate Campaign instance
+provenance is fixed Campaign instance data in its Response mission's Constants, not a separate Campaign instance
 ([DOM-011](#dom-011--mission-kind-and-provenance)). Nested values and historical records need not be Campaign instances.
 
 The creation owners named above specify Campaign instance constructor inputs, dependencies, Types of returned Campaign instances, and initialization
-of all three components under [Campaign instances](modeling-foundations.md#campaign-instances).
+of all four properties under [Campaign instances](modeling-foundations.md#campaign-instances).
 Production Campaign instance constructor details remain unresolved with those owners; [Initial Campaign Content](../content/initial-campaign.md)
 owns the archetype catalogs for all seven types. Required archetypes do not settle their fields or balance values.
 Types describe structure; gameplay validity and runtime constraints remain explicit contracts.
@@ -124,9 +124,9 @@ The following table states the required modeling classifications; example values
 | Values                                                                            | Mutability during gameplay                                                                                                                                                             | Authority and gameplay relevance                                                                                                                                                                                                         |
 | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | GDRs, including archetypes                                                        | Immutable during gameplay ([Campaign instances](modeling-foundations.md#campaign-instances)).                                                                                          | Types describe structure; GDRs supply Authoritative values used by rules. GDRs are not campaign history.                                                                                                                                 |
-| ImmutableState, including Instance IDs                                            | Fixed at construction, including nested data; stable for the lifetime of the Campaign instance within its timeline ([Campaign instances](modeling-foundations.md#campaign-instances)). | Identity recorded as an Authoritative value; historical references remain resolvable ([References](modeling-foundations.md#references)).                                                                                                 |
-| Retained origin references                                                        | Stored in ImmutableState; preserve the creation source required by [DOM-011](#dom-011--mission-kind-and-provenance).                                                                   | Provenance recorded as Authoritative values used by rules and historical explanations.                                                                                                                                                   |
-| MutableState; for example, money, orders, and health                              | Mutable under the owning mechanics; fixed Campaign instance facts belong in ImmutableState.                                                                                            | Authoritative values used to resolve current gameplay. See [Modeling Foundations](modeling-foundations.md#authoritative-and-derived-values) for the existing classification.                                                             |
+| Constants and Instance IDs                                                        | Fixed at construction, including nested data; stable for the lifetime of the Campaign instance within its timeline ([Campaign instances](modeling-foundations.md#campaign-instances)). | Identity recorded as an Authoritative value; historical references remain resolvable ([References](modeling-foundations.md#references)).                                                                                                 |
+| Retained origin references                                                        | Stored in Constants; preserve the creation source required by [DOM-011](#dom-011--mission-kind-and-provenance).                                                                        | Provenance recorded as Authoritative values used by rules and historical explanations.                                                                                                                                                   |
+| State; for example, money, orders, and health                                     | Mutable under the owning mechanics; fixed Campaign instance facts belong in Constants.                                                                                                 | Authoritative values used to resolve current gameplay. See [Modeling Foundations](modeling-foundations.md#authoritative-and-derived-values) for the existing classification.                                                             |
 | Derived values; for example, effective skill, availability, and completion counts | Calculated from Authoritative values and the current rules and GDRs.                                                                                                                   | Derived values under the Modeling Foundations glossary. Gameplay relevance depends on the owning rule or report.                                                                                                                         |
 | Completed investigations, mission wins, and earned unlocks                        | Retained outcomes must not be overwritten by current calculations ([MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation)).                                      | Historical Authoritative values can still affect current progression; [Leads and Progression](../mechanics/leads-and-progression.md) owns predicates and effects ([DOM-010](#dom-010--progression-facts)).                               |
 | Final attributes of Killed/Dismissed agents and Participation history             | Retained historical values; undo may restore earlier state ([DOM-005](#dom-005--agent-lifecycle)/[DOM-007](#dom-007--current-versus-historical-teams)).                                | Historical records treated as Authoritative values. These records do not constitute Current assignments or team membership.                                                                                                              |
@@ -149,8 +149,8 @@ A campaign uses the rules and GDRs supplied by the current game build. It contai
 panic and campaign outcome, progression facts, agents, factions, investigations, and missions.
 
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
-switching between human and AI control does not create another agency. Both campaign and agency have their own Instance IDs in
-ImmutableState and required archetypes, even though there is exactly one agency per campaign.
+switching between human and AI control does not create another agency. Both campaign and agency have their own Instance ID properties
+and required Archetype references, even though there is exactly one agency per campaign.
 Engine continuation bookkeeping belongs to [Engine Contract](engine-contract.md#concepts-and-contract).
 
 ## Agent
@@ -186,7 +186,7 @@ Restarting an abandoned investigation creates another Investigation. Leads and P
 Investigations owns progress, probability, uncertainty, team changes, and abandonment details.
 
 Lead is a referenced GDR, distinct from the InvestigationArchetype that supplies an Investigation's Archetype component.
-The Lead reference belongs to the Investigation's ImmutableState; current team references belong to MutableState.
+The Lead reference belongs to the Investigation's Constants; current team references belong to State.
 Different Investigations at the same Lead may use different InvestigationArchetypes where the owning rules permit them,
 while the constraint of at most one Active Investigation per Lead still applies across archetypes. Production archetype fields, selection, and
 allowed combinations remain open. The [modeling example](./modeling-foundations.md#archetypes-and-other-referenced-gdrs)
@@ -266,7 +266,7 @@ Multiplayer agencies and cross-campaign trading are outside this model.
 
 ### DOM-017 — Campaign instance identity scope
 
-Campaign, Agency, Agent, Investigation, Mission, Enemy, and Faction must each have an Instance ID in ImmutableState.
+Campaign, Agency, Agent, Investigation, Mission, Enemy, and Faction must each have an immutable Instance ID property.
 Instance IDs must be unique across all seven Types within one campaign's Committed state, including the Campaign instance of Type Campaign itself. Repeated mission and investigation Campaign instances must have
 identities distinct from earlier Campaign instances in the same timeline. Modeling Foundations owns the general identity and
 explicit-reference semantics ([Campaign instances](modeling-foundations.md#campaign-instances) and [References](modeling-foundations.md#references)); this requirement owns which Campaign instances share that identity scope.
@@ -308,7 +308,7 @@ Dismissal eligibility, exhaustion caps, rounding, and recovery formulas belong t
 
 ### DOM-009 — Leads and Investigations
 
-An investigation must retain its reference to one lead GDR in ImmutableState and distinguish Active, Completed,
+An investigation must retain its reference to one lead GDR in Constants and distinguish Active, Completed,
 and Abandoned lifecycle states. At most one Active investigation may exist for a lead in a campaign. Active Investigations
 must have at least one currently assigned agent in Committed state; terminal Investigations must have no current team.
 
@@ -323,7 +323,7 @@ lead affiliation must not depend on specially spelled identifiers. Their predica
 
 ### DOM-011 — Mission kind and provenance
 
-Mission ImmutableState must retain mission kind and provenance. Missions must explicitly distinguish Initiative (agency objective) and Response
+Mission Constants must retain mission kind and provenance. Missions must explicitly distinguish Initiative (agency objective) and Response
 (intervention against a Faction operation occurrence). Initiative missions must retain their creation source; for example, an investigation
 or scenario setup. Response missions must retain a Faction operation occurrence origin identifying its initiating faction.
 
@@ -388,19 +388,19 @@ Given the GDRs C supplied by the current game build and rules R, turn 3, and:
 - Other collections empty.
 
 Each Campaign instance has the following complete conceptual component allocation for this fixture. Archetypes are shared
-immutable GDRs; all Instance IDs and immutable references are in ImmutableState. MutableState fields below can evolve
+immutable GDRs; Instance ID is a separate immutable property, and other immutable references belong in Constants. State properties below can evolve
 under their owning mechanics; their concrete transitions remain deferred. The health bounds and other test values
 above still apply.
 
-| Campaign instance | Archetype | ImmutableState                                                                | MutableState                                                                                    |
-| ----------------- | --------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| c1                | C1        | Instance ID c1                                                                | Turn 3; campaign collections and progression facts                                              |
-| ag1               | G1        | Instance ID ag1                                                               | Resources, upgrades, roster {a1, a2}                                                            |
-| a1, a2            | A1        | Respective Instance ID; agency ag1                                            | Lifecycle, Current assignments, Task phase, combat attributes, career and Participation history |
-| i1                | I1        | Instance ID i1; lead L1                                                       | Active lifecycle, progress, current team {a1}, Participation history                            |
-| m1                | M1        | Instance ID m1; Initiative kind; scenario-setup provenance; target faction f1 | Current team {a2}, enemies {e1}, resolution status and retained Battle results                  |
-| e1                | E1        | Instance ID e1; mission m1                                                    | Combat attributes                                                                               |
-| f1                | F1        | Instance ID f1                                                                | Activity and progression                                                                        |
+| Campaign instance | Instance ID         | Archetype | Constants                                                     | State                                                                                           |
+| ----------------- | ------------------- | --------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| c1                | c1                  | C1        | Empty                                                         | Turn 3; campaign collections and progression facts                                              |
+| ag1               | ag1                 | G1        | Empty                                                         | Resources, upgrades, roster {a1, a2}                                                            |
+| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                    | Lifecycle, Current assignments, Task phase, combat attributes, career and Participation history |
+| i1                | i1                  | I1        | Lead L1                                                       | Active lifecycle, progress, current team {a1}, Participation history                            |
+| m1                | m1                  | M1        | Initiative kind; scenario-setup provenance; target faction f1 | Current team {a2}, enemies {e1}, resolution status and retained Battle results                  |
+| e1                | e1                  | E1        | Mission m1                                                    | Combat attributes                                                                               |
+| f1                | f1                  | F1        | Empty                                                         | Activity and progression                                                                        |
 
 Campaign collections contain agency ag1, agents a1/a2, investigation i1, mission m1, and faction f1; e1 is reached through
 m1. Required references resolve in c1. Resource scalars are zero and other collections empty unless specified above.

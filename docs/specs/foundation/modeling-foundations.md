@@ -62,16 +62,17 @@ These concepts build on Type and Campaign: GDRs supply immutable shared data, wh
 
 ## Campaign instances and their components
 
-A Campaign instance has a declared Type with three properties: an Archetype reference, ImmutableState, and MutableState.
-Archetype is the role of a GDR within this composition. Instance ID distinguishes individual Campaign instances.
+A Campaign instance has a declared Type with four properties: Instance ID, an Archetype reference, Constants, and State.
+Archetype is the role of a shared immutable GDR within this composition. Instance ID distinguishes individual Campaign instances.
+Constants and State are specific to each Campaign instance; Constants contains its additional fixed facts, while State contains its changeable values.
 A Campaign instance constructor creates and returns a new Campaign instance. It is a separate concept from Rule and GDR.
 
 | Term                          | Definition                                                                                                                                                                                                                                                                                                 |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance             | A particular occurrence within a Campaign of a declared Type, with an Archetype reference, ImmutableState, and MutableState.                                                                                                                                                                               |
+| Campaign instance             | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                                                                              |
 | Archetype                     | A GDR referenced by a Campaign instance, supplying shared characteristics and construction defaults. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is fixed during construction.                                                                            |
-| MutableState                  | Data specific to a given Campaign instance, never shared with another Campaign instance, whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                                     |
-| ImmutableState                | Data specific to a given Campaign instance, never shared with another Campaign instance, established during construction and immutable for its lifetime, including owned nested data and its Instance ID.                                                                                                  |
+| State                         | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                                                                       |
+| Constants                     | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                                                                     |
 | Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [Campaign instances](#campaign-instances).                                                                                                                                             |
 | Campaign instance constructor | An operation that creates and returns a new Campaign instance. Its signature specifies input parameters and the return Type; its behavioral specification defines dependencies and initialization, which its implementation performs. It need not be a language-level constructor or public API operation. |
 
@@ -127,13 +128,13 @@ Supplying an Archetype is one possible GDR role.
 
 ### Campaign instance structure
 
-A Campaign instance Type always has exactly three properties: an Archetype reference, ImmutableState, and MutableState.
+A Campaign instance Type always has exactly four properties: Instance ID, an Archetype reference, Constants, and State.
 
 ### Campaign instance construction
 
 Each Campaign instance constructor has declared input parameters and a return Type, which is of the constructed Campaign instance. Its specification defines its
-dependencies and how the returned Campaign instance’s Archetype reference, ImmutableState, and MutableState are
-initialized, including assignment of a fresh Instance ID in ImmutableState. The implementation performs this initialization.
+dependencies and how the returned Campaign instance’s Instance ID, Archetype reference, Constants, and State are
+initialized, including assignment of a fresh Instance ID. The implementation performs this initialization.
 A Campaign instance constructor implementation typically depends on:
 
 - One or more GDRs serving as Archetypes.
@@ -151,8 +152,8 @@ References identify a particular target and its expected Type. In Committed stat
 within the same Campaign; GDR references identify the GDR ID and must resolve against the current game build.
 Required historical references remain resolvable. Relationships must not be inferred from display names or identifier text.
 
-References that can change belong in MutableState; fixed references belong in ImmutableState. The Archetype reference
-is the dedicated third property and remains fixed. Reference mutability is independent of the target’s mutability.
+References that can change belong in State; fixed references belong in Constants. Instance ID and the Archetype reference
+are separate immutable properties. Reference mutability is independent of the target’s mutability.
 
 ## Roles of GDRs
 
@@ -172,17 +173,17 @@ and references.
 
 Consider an illustrative Agency construction with starting money:
 
-| Element                | Modeling role                 | Meaning in this example                                                                                             |
-| ---------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Money                  | Type                          | Describes a nonnegative integer amount of money.                                                                    |
-| Starting money         | GDR                           | Has Type Money and value 100.                                                                                       |
-| Agency construction    | Campaign instance constructor | Specifies construction of an Agency Campaign instance with money in MutableState initialized to the supplied value. |
-| Agency                 | Campaign instance             | The new Agency Campaign instance returned by the constructor implementation, with money 100 in MutableState.        |
-| Agency money           | Authoritative value           | Initialized to 100 in the Agency Campaign instance’s MutableState.                                                  |
-| Initial Campaign state | Committed state               | Contains the Agency Campaign instance when campaign creation completes.                                             |
+| Element                | Modeling role                 | Meaning in this example                                                                                      |
+| ---------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Money                  | Type                          | Describes a nonnegative integer amount of money.                                                             |
+| Starting money         | GDR                           | Has Type Money and value 100.                                                                                |
+| Agency construction    | Campaign instance constructor | Specifies construction of an Agency Campaign instance with money in State initialized to the supplied value. |
+| Agency                 | Campaign instance             | The new Agency Campaign instance returned by the constructor implementation, with money 100 in State.        |
+| Agency money           | Authoritative value           | Initialized to 100 in the Agency Campaign instance’s State.                                                  |
+| Initial Campaign state | Committed state               | Contains the Agency Campaign instance when campaign creation completes.                                      |
 
 During campaign creation, the engine reads 100 from the starting-money GDR and passes it to the Agency constructor
-implementation. The implementation constructs an Agency Campaign instance and initializes its money in MutableState
+implementation. The implementation constructs an Agency Campaign instance and initializes its money in State
 to 100. The initial Campaign state contains that Agency Campaign instance.
 The engine publishes the initial Committed state when campaign creation completes.
 
@@ -192,11 +193,11 @@ flowchart LR
     GDR -->|starting money 100| Engine["Engine invokes Agency constructor implementation"]
     Constructor["Campaign instance constructor:<br/>new Agency with money initialized to supplied value"] -->|specifies construction| Engine
     Engine -->|constructs| Agency["Agency Campaign instance"]
-    Agency -->|MutableState contains| Money["Authoritative value:<br/>money 100"]
+    Agency -->|State contains| Money["Authoritative value:<br/>money 100"]
     Agency -->|included in| State["Initial Campaign state:<br/>Committed state"]
 ```
 
-If an expense later reduces Agency money to 90, the engine reads 90 from the Agency Campaign instance’s MutableState.
+If an expense later reduces Agency money to 90, the engine reads 90 from the Agency Campaign instance’s State.
 The starting-money GDR still contains the construction input of 100.
 
 ## GDR role: calculation parameter
@@ -232,18 +233,18 @@ flowchart LR
 
 Consider an illustrative construction of two Enemy Campaign instances from the same Thug GDR:
 
-| Element             | Modeling role                 | Meaning in this example                                                                                              |
-| ------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Enemy               | Type                          | Describes the constructed Enemy Campaign instances.                                                                  |
-| EnemyArchetype      | Type                          | Describes the shared enemy characteristics and construction defaults.                                                |
-| Thug                | GDR in the Archetype role     | Has Type EnemyArchetype and base health 10.                                                                          |
-| Enemy construction  | Campaign instance constructor | Specifies construction of an Enemy Campaign instance using the supplied Archetype and a fresh Instance ID.           |
-| enemy_1 and enemy_2 | Campaign instances            | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent MutableState and ImmutableState. |
-| Current health      | Authoritative value           | Initialized to 10 in each Enemy Campaign instance’s MutableState.                                                    |
+| Element             | Modeling role                 | Meaning in this example                                                                                    |
+| ------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Enemy               | Type                          | Describes the constructed Enemy Campaign instances.                                                        |
+| EnemyArchetype      | Type                          | Describes the shared enemy characteristics and construction defaults.                                      |
+| Thug                | GDR in the Archetype role     | Has Type EnemyArchetype and base health 10.                                                                |
+| Enemy construction  | Campaign instance constructor | Specifies construction of an Enemy Campaign instance using the supplied Archetype and a fresh Instance ID. |
+| enemy_1 and enemy_2 | Campaign instances            | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.   |
+| Current health      | Authoritative value           | Initialized to 10 in each Enemy Campaign instance’s State.                                                 |
 
 The engine passes the Thug GDR and a fresh Instance ID to the Enemy constructor implementation for each enemy.
 The implementation returns an Enemy Campaign instance with Archetype set to Thug, current health initialized to 10
-in MutableState, and its Instance ID in ImmutableState. The caller adds each Enemy Campaign instance to its owning Mission.
+in State, and its Instance ID set to the supplied identifier. The caller adds each Enemy Campaign instance to its owning Mission.
 Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes its health without changing enemy_2 or Thug.
 
 ```mermaid
@@ -251,23 +252,23 @@ flowchart LR
     Thug["GDR: Thug · base health 10"] -->|Archetype input| Engine["Engine invokes Enemy constructor implementation twice"]
     IDs["Fresh Instance IDs:<br/>enemy_1 and enemy_2"] -->|identity inputs| Engine
     Constructor["Campaign instance constructor:<br/>Enemy construction"] -->|specifies construction| Engine
-    Engine -->|constructs| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>MutableState: health 10<br/>ImmutableState: Instance ID enemy_1"]
-    Engine -->|constructs| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>MutableState: health 10<br/>ImmutableState: Instance ID enemy_2"]
+    Engine -->|constructs| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>Instance ID: enemy_1<br/>Constants: empty<br/>State: health 10"]
+    Engine -->|constructs| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: health 10"]
 ```
 
 ## Archetypes and other referenced GDRs
 
 A Campaign instance can refer to GDRs for a purpose other than supplying its Archetype. Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
 
-| Example concept        | Modeling role                                                                                                                                              | Question it answers                                                               |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Lead                   | GDR representing a Lead to pursue.                                                                                                                         | Which Lead can be pursued?                                                        |
-| Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in MutableState, and a immutable Lead reference in ImmutableState. | Which Investigation concerns that Lead, and how has it progressed?                |
-| InvestigationArchetype | GDR used as an Investigation's Archetype, supplying shared characteristics and construction defaults independently of the referenced Lead.                 | What shared characteristics and construction defaults does the Investigation use? |
+| Example concept        | Modeling role                                                                                                                                   | Question it answers                                                               |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Lead                   | GDR representing a Lead to pursue.                                                                                                              | Which Lead can be pursued?                                                        |
+| Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in State, and an immutable Lead reference in Constants. | Which Investigation concerns that Lead, and how has it progressed?                |
+| InvestigationArchetype | GDR used as an Investigation's Archetype, supplying shared characteristics and construction defaults independently of the referenced Lead.      | What shared characteristics and construction defaults does the Investigation use? |
 
-Suppose Lead lead_1 is referenced by Investigation investigation_1, constructed with InvestigationArchetype investigation_archetype_1. Its ImmutableState contains its
-Instance ID and immutable Lead reference; its MutableState contains lifecycle initialized to active and progress initialized to 0. The archetype remains the separate shared
-component. Adding the Lead reference does not create a fourth component or make lead_1 the Investigation's archetype.
+Suppose Lead lead_1 is referenced by Investigation investigation_1, constructed with InvestigationArchetype investigation_archetype_1. Its Instance ID is investigation_1; its Constants contains the
+immutable Lead reference, and its State contains lifecycle initialized to active and progress initialized to 0. The archetype remains the separate shared
+component. Adding the Lead reference does not create a fifth property or make lead_1 the Investigation's archetype.
 
 For this example, investigation_1 reaches progress 2 and is abandoned. A new Investigation investigation_2 at lead_1 starts at progress 0 with its own Instance ID.
 Use archetype investigation_archetype_2 for investigation_2 to show that the Investigation's Lead reference and Archetype are independent relationships. These
@@ -281,18 +282,20 @@ flowchart LR
     investigation_archetype_2["InvestigationArchetype investigation_archetype_2"]
     subgraph investigation_1["Investigation investigation_1"]
         investigation_1_archetype["Archetype: investigation_archetype_1"]
-        investigation_1_immutable_state["ImmutableState: Instance ID investigation_1, Lead lead_1"]
-        investigation_1_mutable_state["MutableState: abandoned, progress 2"]
+        investigation_1_identity["Instance ID: investigation_1"]
+        investigation_1_constants["Constants: Lead lead_1"]
+        investigation_1_state["State: abandoned, progress 2"]
     end
     subgraph investigation_2["Investigation investigation_2"]
         investigation_2_archetype["Archetype: investigation_archetype_2"]
-        investigation_2_immutable_state["ImmutableState: Instance ID investigation_2, Lead lead_1"]
-        investigation_2_mutable_state["MutableState: active, progress 0"]
+        investigation_2_identity["Instance ID: investigation_2"]
+        investigation_2_constants["Constants: Lead lead_1"]
+        investigation_2_state["State: active, progress 0"]
     end
     investigation_1_archetype -->|resolves to| investigation_archetype_1
     investigation_2_archetype -->|resolves to| investigation_archetype_2
-    investigation_1_immutable_state -->|immutable reference| lead_1
-    investigation_2_immutable_state -->|immutable reference| lead_1
+    investigation_1_constants -->|immutable reference| lead_1
+    investigation_2_constants -->|immutable reference| lead_1
 ```
 
 Both Investigations can share lead_1 without sharing progress. Retargeting investigation_1 to another Lead or replacing investigation_archetype_1 after construction

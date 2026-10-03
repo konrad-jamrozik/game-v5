@@ -301,6 +301,19 @@ describe('specification linter', () => {
     },
   )
 
+  test.each(['', ' A target artifact is also described.'])(
+    'distinguishes Constants reference targets from artifact terminology: %s',
+    (extra) => {
+      const files = mutate(
+        validCorpus(),
+        'docs/specs/foundation/alpha.md',
+        '# Glossary\n\nNone.',
+        `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Constants | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.${extra} |`,
+      )
+      expect(diagnosticCodes(files)).toEqual(extra === '' ? [] : ['SPEC501'])
+    },
+  )
+
   test.each([
     'relationship type',
     'relationship Types',
@@ -309,6 +322,8 @@ describe('specification linter', () => {
     'Type and relationship type',
     'TypeScript type and relationship type',
     'TypeScript type and target',
+    'fixed target',
+    'target’s State',
   ])('still rejects competing formal relationship terminology: %s', (term) => {
     const files = mutate(
       validCorpus(),

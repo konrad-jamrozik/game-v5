@@ -88,7 +88,7 @@ that truly fall outside this document's scope.
 
 # Acceptance examples
 
-TODO: Include the required archetypes, all three Campaign instance components, and Instance IDs for every Campaign instance, including Campaign
+TODO: Include the required archetypes, all four properties, and Instance IDs for every Campaign instance, including Campaign
 and Agency, in initial-state validation. Provide one fully specified scenario that acceptance fixtures can reference without inventing missing values.
 Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
 fixtures instead of introducing implicit balance values.

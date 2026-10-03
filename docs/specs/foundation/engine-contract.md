@@ -54,7 +54,7 @@ capabilities expose all Authoritative values in Campaign state ([ENG-003](#eng-0
 Committed state is the complete state before or after an accepted command, as defined in Modeling Foundations. Runtime
 integrity covers domain invariants and modeling/reference conventions, including restoration; intermediate processing
 is not Player-visible information of Committed state ([ENG-004](#eng-004--committed-state-integrity)).
-Integrity includes three-component composition, valid typed references, and stable Instance IDs and immutable facts under
+Integrity includes four-property composition, valid typed references, and stable Instance IDs and immutable facts under
 [Campaign instances](modeling-foundations.md#campaign-instances) and [References](modeling-foundations.md#references).
 Undo/redo restores Campaign instances rather than creating new identities or authorizing immutable-fact changes.
 

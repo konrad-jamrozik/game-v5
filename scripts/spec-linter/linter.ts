@@ -1013,7 +1013,11 @@ function validateTerminology(
             return
           }
           // Modeling Types and programming types are distinct from relationship kinds.
-          const relationshipText = descendant.value.replace(/\bTypeScript\s+types?\b/gi, '')
+          let relationshipText = descendant.value.replace(/\bTypeScript\s+types?\b/gi, '')
+          // These phrases describe model references, not specification relationships.
+          if (sectionName === 'Glossary' && /\breference stored in Constants\b/.test(relationshipText)) {
+            relationshipText = relationshipText.replace(/\bfixed target\b|\btarget[’']s State\b/g, '')
+          }
           const match = PROHIBITED_RELATIONSHIP_TERMS.exec(relationshipText)
           if (match) {
             addDiagnostic(

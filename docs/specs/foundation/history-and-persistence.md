@@ -53,8 +53,8 @@ conventions; storage procedures do not refine those meanings. Domain Model suppl
 and Numbers and Randomness supplies the numeric and generator-state contracts. The TODOs below retain the unresolved
 procedure and encoding choices.
 
-Restoring history is not constructing a new occurrence. Undo may remove an occurrence or restore earlier MutableState;
-redo restores that occurrence’s ID, archetype, and ImmutableState unchanged. Required historical records remain immutable
+Restoring history is not constructing a new occurrence. Undo may remove an occurrence or restore earlier State;
+redo restores that occurrence’s ID, archetype, and Constants unchanged. Required historical records remain immutable
 even in an evolving collection. These obligations do not select snapshots, reference encoding, or a save format.
 
 ## Remaining contract details
