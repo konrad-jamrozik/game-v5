@@ -72,7 +72,7 @@ passes.
 
 For each proposed refinement, identify the parent contract and the additional detail about that same subject or
 behavior. Record both in the owning contract prose, using requirement IDs when available. Obeying an invariant,
-using a vocabulary, consuming a result, or supplying Content entry values is insufficient by itself: those are uses.
+using a vocabulary, consuming a result, or supplying Game Data Record (GDR) values is insufficient by itself: those are uses.
 Being more concrete or appearing later in an authoring sequence is also insufficient.
 
 Domain Model uses Modeling Foundations as a language for describing game concepts. The game concepts do not refine
@@ -236,7 +236,7 @@ The following table gives the complete expected classifications for this accepta
 
 | Case                                                                                                                              | Expected classification and reason                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and Content entry                                                           | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
+| Domain Model describes agents using Campaign instance and GDR                                                                     | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
 | Agents supplies transitions for the lifecycle described by [DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle)      | Refines Domain Model; it adds detail to the same lifecycle                            |
 | History specifies restoration steps for [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity)            | Refines Engine Contract; it details the restoration behavior                          |
 | History preserves references under [MODEL-003](../foundation/modeling-foundations.md#model-003--references) while restoring state | Uses Modeling Foundations; satisfying the reference invariant alone is not refinement |

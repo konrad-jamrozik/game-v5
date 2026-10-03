@@ -1,18 +1,18 @@
 # Initial Campaign Content
 
-| Metadata    | Value                                                                                             |
-| ----------- | ------------------------------------------------------------------------------------------------- |
-| Spec ID     | INIT                                                                                              |
-| Family      | Content                                                                                           |
-| Status      | Stub                                                                                              |
-| Scope       | Provide the complete, versioned numeric and Content entry inputs for the first playable campaign. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                    |
+| Metadata    | Value                                                                                                      |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| Spec ID     | INIT                                                                                                       |
+| Family      | Content                                                                                                    |
+| Status      | Stub                                                                                                       |
+| Scope       | Provide the complete, versioned numeric and Game Data Record (GDR) inputs for the first playable campaign. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                             |
 
 > This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
 
 # Purpose and boundaries
 
-Provide the complete, versioned numeric and Content entry inputs for the first playable campaign.
+Provide the complete, versioned numeric and GDR inputs for the first playable campaign.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -36,22 +36,22 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-Shared modeling terms, for example Content entry and Campaign instance, are owned by the
+Shared modeling terms, for example GDR and Campaign instance, are owned by the
 [Modeling Foundations glossary](../foundation/modeling-foundations.md#glossary).
 
 TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Concepts and contract
 
-Content entries and their references follow [MODEL-001](../foundation/modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), and [MODEL-003](../foundation/modeling-foundations.md#model-003--references).
+GDRs and their references follow [MODEL-001](../foundation/modeling-foundations.md#model-001--campaign-instance-composition), [MODEL-002](../foundation/modeling-foundations.md#model-002--identity), and [MODEL-003](../foundation/modeling-foundations.md#model-003--references).
 
-This document uses Domain Model's game concepts and Modeling Foundations' Content entry and reference conventions. It uses
+This document uses Domain Model's game concepts and Modeling Foundations' GDR and reference conventions. It uses
 Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and
-Progression's prerequisites/effects, and Missions' catalog requirements to supply valid Content entries. Supplying those data
+Progression's prerequisites/effects, and Missions' catalog requirements to supply valid GDRs. Supplying those data
 values does not refine the mechanical behavior. The mechanics consume this document's exact values and catalogs;
 formulas and transitions remain owned by the mechanics. Values and catalogs remain TODOs below.
 
-TODO: Specify Scenario ID/version, named balance parameter, Content entry ID, starting state, lead graph, enemy, weapon, faction, and mission Content entry.
+TODO: Specify Scenario ID/version, named balance parameter, GDR ID, starting state, lead graph, enemy, weapon, faction, and mission GDR.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -61,28 +61,28 @@ appropriate to this document.
 
 TODO: List exact initial resources, roster, capabilities, faction setup, and all named balance parameters with units and valid ranges. Mechanics own formulas; this document owns values.
 
-## Content entry catalogs
+## GDR catalogs
 
 TODO: Supply archetype catalogs for every Campaign instance Type declared in
 [Domain Model](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including singleton Campaign and Agency.
-Declare each archetype’s Content entry ID, shared characteristics, and construction defaults. Keep non-archetype balance
+Declare each archetype’s GDR ID, shared characteristics, and construction defaults. Keep non-archetype balance
 parameters distinct. Mechanics retain ownership of Campaign instance constructor behavior; catalog details and balance values remain open.
 
-InvestigationArchetype Content entries and Lead Content entries are separate catalogs. Their references and allowed combinations
-must follow the owning mechanics; the illustrative InvestigationArchetype Content entries in Modeling Foundations do not select production
-Content entries. A Lead is not automatically an InvestigationArchetype.
+InvestigationArchetype GDRs and Lead GDRs are separate catalogs. Their references and allowed combinations
+must follow the owning mechanics; the illustrative InvestigationArchetype GDRs in Modeling Foundations do not select production
+GDRs. A Lead is not automatically an InvestigationArchetype.
 
-TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, deadlines, all eight upgrade categories, lead prerequisites, and completion effects using explicit Content entry identifiers.
+TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, deadlines, all eight upgrade categories, lead prerequisites, and completion effects using explicit GDR identifiers.
 
 ## Completeness and validation
 
-TODO: Ensure every formula parameter and Content entry reference resolves, progression reaches its intended ending, and required operation pools exist. Distinguish source-game examples from chosen v5 Content entries.
+TODO: Ensure every formula parameter and GDR reference resolves, progression reaches its intended ending, and required operation pools exist. Distinguish source-game examples from chosen v5 GDRs.
 
 TODO: Assign stable INIT-NNN requirement IDs when concrete rules replace these placeholders.
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for missing Content entry identifiers or parameters, duplicate Content entries, impossible prerequisites, invalid weights, and incomplete mission or faction catalogs.
+TODO: Define behavior for missing GDR identifiers or parameters, duplicate GDRs, impossible prerequisites, invalid weights, and incomplete mission or faction catalogs.
 State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
 that truly fall outside this document's scope.
 

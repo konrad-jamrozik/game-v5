@@ -37,7 +37,7 @@ None.
 ## Continuation and control
 
 Campaign continuation requires gameplay facts and deterministic bookkeeping; for example, RNG state, Instance ID generation state,
-and sampled hidden values. The current game build supplies rules and Content entries. [ENG-002](#eng-002--continuation-state) defines completeness.
+and sampled hidden values. The current game build supplies rules and Game Data Records (GDRs). [ENG-002](#eng-002--continuation-state) defines completeness.
 
 AI memory, UI selections, browser state, and CLI preferences are outside Campaign state ([DOM-001](domain-model.md#dom-001--campaign-boundary)).
 Controller-state restoration is outside this contract; its owner is
@@ -63,13 +63,13 @@ Undo/redo restores Campaign instances rather than creating new identities or aut
 
 ## ENG-001 — Derived value consistency
 
-Derived values must be reproducible from Authoritative values and the current rules and Content entries
+Derived values must be reproducible from Authoritative values and the current rules and GDRs
 without consuming gameplay randomness or mutating state. Caches must be updated or invalidated when inputs change,
 including after undo/redo.
 
 ## ENG-002 — Continuation state
 
-Campaign state and the rules and Content entries supplied by the current game build must contain
+Campaign state and the rules and GDRs supplied by the current game build must contain
 everything required to resolve a given future command sequence: sampled hidden values, RNG state, Instance ID generation state,
 and gameplay facts. Outcomes must not depend on a previous UI render or particular AI implementation. This does not
 require AI to choose identical commands after every restart.
@@ -78,7 +78,7 @@ require AI to choose identical commands after every restart.
 
 Ordinary human and AI callers must receive the same permitted information for equal
 state and queries. They must not receive writable campaign references, hidden investigation difficulty, RNG state, or
-unrevealed Content entries merely because they use TypeScript directly. Discovery, errors, and reports obey the same boundary.
+unrevealed GDRs merely because they use TypeScript directly. Discovery, errors, and reports obey the same boundary.
 The engine supplies permitted decision-support calculations; normal play must not require dev access.
 
 A separate dev capability exposes all Authoritative values in Campaign state. This is an API contract, not cryptographic concealment from
@@ -100,8 +100,8 @@ and TypeScript Player API specifies stale client-handle behavior.
 ## ENG-005 — Build compatibility
 
 Backward compatibility across game builds is out of scope. A build may replace earlier
-rules and Content entries without retaining support for them, and may reject or discard incompatible saved campaigns; migration
-is not required. [ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-002--continuation-state) continuation guarantees apply to the rules and Content entries supplied by the current build.
+rules and GDRs without retaining support for them, and may reject or discard incompatible saved campaigns; migration
+is not required. [ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-002--continuation-state) continuation guarantees apply to the rules and GDRs supplied by the current build.
 History and Persistence owns save validation and incompatible-save handling under this policy.
 
 ## Preliminary API capabilities
@@ -153,7 +153,7 @@ These cover [DOM-001](domain-model.md#dom-001--campaign-boundary) and [ENG-001](
 
 ## Reproducible calculations and continuation
 
-Given equal Campaign state at a Committed state (including RNG state and Instance ID allocation state), the same current rules and Content entries, and the same future
+Given equal Campaign state at a Committed state (including RNG state and Instance ID allocation state), the same current rules and GDRs, and the same future
 command sequence, continuation has the same outcomes regardless of earlier UI renders or which controller supplied
 those commands ([ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-002--continuation-state)). This does not require AI controllers to choose identical commands.
 
@@ -178,8 +178,8 @@ Exact save/restore procedures and public errors remain owned by HIST/API/DEV.
 
 ## Build compatibility
 
-Given a save from build A that references Content entries removed in build B, rejecting that save in build B is permitted
-under [ENG-005](#eng-005--build-compatibility). The build need not restore the removed Content entries or migrate the save. Exact rejection behavior belongs
+Given a save from build A that references GDRs removed in build B, rejecting that save in build B is permitted
+under [ENG-005](#eng-005--build-compatibility). The build need not restore the removed GDRs or migrate the save. Exact rejection behavior belongs
 to History and Persistence; successful restoration must still satisfy [ENG-004](#eng-004--committed-state-integrity).
 
 # Open decisions

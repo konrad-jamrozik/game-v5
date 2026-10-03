@@ -29,7 +29,7 @@ Do not prescribe internal classes, file organization, libraries, or algorithms u
 
 | Term               | Definition                                                                                                                                                                    |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Content entries, governance, or planned specification work.                        |
+| Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records (GDRs), governance, or planned specification work.               |
 | Registered         | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                                            |
 | Family             | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                               |
 | Requirement        | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                           |
@@ -68,7 +68,7 @@ the exception of the root index, its file must be a direct child of the correspo
 | Governance | `governance/` | Specification conventions, relationship rules, and planning or process contracts               |
 | Foundation | `foundation/` | Cross-cutting domain, modeling, execution, numeric, timing, history, and persistence contracts |
 | Mechanics  | `mechanics/`  | Player-facing game-system rules, transitions, formulas, and effects                            |
-| Content    | `content/`    | Versioned Content entries, named parameters, catalogs, and starting configurations             |
+| Content    | `content/`    | Versioned GDRs, named parameters, catalogs, and starting configurations                        |
 | Interfaces | `interfaces/` | Observable player, developer, API, CLI, and UI contracts                                       |
 | Acceptance | `acceptance/` | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability              |
 
@@ -83,7 +83,7 @@ A rule, formula, parameter value, or API field has one authoritative owner. Othe
 
 - Domain Model owns shared Campaign instance Types, their Campaign instances, and invariants; subsystem specifications own their detailed transitions.
 - Numbers and Randomness owns units, numeric operations, and reproducibility conventions.
-- Mechanics own formulas. Initial Campaign Content owns named balance values and Content entry rows.
+- Mechanics own formulas. Initial Campaign Content owns named balance values and GDR rows.
 - Turn Resolution owns phase ordering and state-read timing, not subsystem formulas.
 - Combat produces Battle results; Missions converts them into campaign effects.
 - Investigations owns probability and estimate calculations; Player Information owns which results and fields players see.
@@ -146,7 +146,7 @@ acknowledgements do not create relationships.
 Classify relationships using [Choosing uses or refines](artifact-relationships.md#choosing-uses-or-refines).
 Each refinement must identify the parent contract and the added detail about the same subject or behavior in its
 owning prose. A scoped Stub may declare that intended detail without settling its TODOs. Applying vocabulary,
-obeying invariants, or supplying Content entry values alone establishes uses. Do not hide substantive reliance behind
+obeying invariants, or supplying GDR values alone establishes uses. Do not hide substantive reliance behind
 an informative citation or duplicate a refinement as uses for the same reliance.
 
 Maintain [Specification relationship cycles](../../spec-relationship-cycles.md) when changing relationships.
@@ -162,16 +162,21 @@ require glossary entries.
 
 One concept must have exactly one canonical term. Do not introduce synonyms, aliases, inverse labels, slash-separated alternatives, or interchangeable terms for the same concept.
 
+Game Data Record has the approved abbreviation **GDR**. Introduce it as **Game Data Record (GDR)**
+or **Game Data Records (GDRs)** at the first relevant mention in a document; use **GDR** or **GDRs**
+afterward, including headings, tables, and diagram labels. The owning Glossary retains **Game Data Record (GDR)**
+as its term label. This abbreviation is an exception to the full-term rule below, not a separate modeling concept.
+
 Use the full glossary term on every mention. Do not abbreviate it, drop words, split its words across a compound,
-or substitute a generic noun after introducing the full term. For example, use Content entry rather than "content"
+or substitute a generic noun after introducing the full term. For example, use GDR rather than "content"
 or "entry", Campaign instance rather than "instance", and Campaign instance constructor rather than "constructor"
 when referring to those modeling concepts. Grammatical plurals and possessives must retain every word of the term:
-Content entries and Campaign instance's are valid; entries and instance's are not substitutes.
+GDRs (under the approved abbreviation exception) and Campaign instance's are valid; entries and instance's are not substitutes.
 
 This rule applies throughout specifications and all other project documentation, including headings, tables, diagram
 labels, examples, and generated views. Update the owning sources and regenerate derived documentation. Document titles,
 file paths, literal code identifiers, and exact quotations retain their actual spelling. Ordinary words remain valid
-when they describe something else: a glossary entry is not a Content entry, and a language-level constructor is not
+when they describe something else: a glossary entry is not a GDR, and a language-level constructor is not
 necessarily a Campaign instance constructor. Review each use in context; do not infer compliance from text search alone.
 
 If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
@@ -188,37 +193,37 @@ language. Explicit TypeScript terminology remains valid for programming contract
 Use the following contextual replacements. This table records prohibited synonyms, not alternative accepted names.
 Canonical terms remain owned by their linked glossaries; this list does not redefine them.
 
-| INSTEAD OF                                  | USE                                                                                                                                 | Context                                                                                                                                                         |
-| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Opportunity                                 | [Lead](../foundation/domain-model.md#glossary)                                                                                      | Referring to a Lead; ordinary uses such as opportunity cost remain valid.                                                                                       |
-| Attempt                                     | [Investigation](../foundation/domain-model.md#glossary)                                                                             | Referring to an Investigation of a Lead; attempts to execute commands or undertake Missions remain distinct.                                                    |
-| Fixed reference                             | Immutable reference                                                                                                                 | A reference in [ImmutableState](../foundation/modeling-foundations.md#glossary); its target cannot be replaced or cleared.                                      |
-| Changeable reference                        | Mutable reference                                                                                                                   | A reference in [MutableState](../foundation/modeling-foundations.md#glossary); gameplay rules govern replacing or clearing its target.                          |
-| Content; entry; entries                     | [Content entry](../foundation/modeling-foundations.md#glossary)                                                                     | Naming immutable game data; preserve the complete term in plural and attributive uses. The Content Family and document titles retain their names.               |
-| Instance; occurrence                        | [Campaign instance](../foundation/modeling-foundations.md#glossary)                                                                 | Referring to the modeled occurrence, rather than explaining what an occurrence means in a definition.                                                           |
-| Constructor                                 | [Campaign instance constructor](../foundation/modeling-foundations.md#glossary)                                                     | Referring to the Rule that constructs a Campaign instance, rather than a programming-language constructor.                                                      |
-| ID                                          | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a Campaign instance; Content entry identifiers, Requirement identifiers, and other identifiers retain their own descriptions.                       |
-| Relationship type                           | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                     |
-| Assignment                                  | [Current assignment](../foundation/domain-model.md#glossary)                                                                        | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                                  |
-| Participation; agent history                | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Referring to retained participation records, rather than the act of participating or an Agent's broader career.                                                 |
-| Campaign instance kind                      | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing a category of Campaign instances.                                                                                                                    |
-| Schema                                      | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing model data structure; ordinary API or serialization schema usage remains valid.                                                                      |
-| TypeScript type                             | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Naming a modeling concept; actual TypeScript API declarations and explanatory language analogies remain valid.                                                  |
-| Instance state (undifferentiated)           | [MutableState](../foundation/modeling-foundations.md#glossary) and [ImmutableState](../foundation/modeling-foundations.md#glossary) | Separate changeable properties from fixed occurrence facts; do not put the latter in shared Content entries.                                                    |
-| EnemyType; EnemyKind                        | EnemyArchetype                                                                                                                      | Naming the shared Content entry structure, not the complete Enemy Campaign instance. See [Archetype](../foundation/modeling-foundations.md#glossary).           |
-| Entity ID                                   | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a Campaign instance.                                                                                                                                |
-| Content definition                          | [Content entry](../foundation/modeling-foundations.md#glossary)                                                                     | Referring to concrete immutable game data rather than its Type.                                                                                                 |
-| Evolving campaign facts                     | [Campaign state](../foundation/modeling-foundations.md#glossary)                                                                    | Describing the data of a particular campaign.                                                                                                                   |
-| Authoritative fact                          | [Authoritative value](../foundation/modeling-foundations.md#glossary)                                                               | Naming the source-of-truth category.                                                                                                                            |
-| Computed value; calculated value            | [Derived value](../foundation/modeling-foundations.md#glossary)                                                                     | Naming the formal category of values calculated from other values.                                                                                              |
-| Archived; archival                          | Retained in [History](../foundation/modeling-foundations.md#glossary)                                                               | Describing retained past data; this phrase does not name a lifecycle state.                                                                                     |
-| Became historical; deconstructed; destroyed | Retained in [History](../foundation/modeling-foundations.md#glossary)                                                               | Describing retention of Campaign instance data, rather than an actual destruction mechanic. Specify retention as a requirement, not a separate transition term. |
-| Fatigue                                     | [Exhaustion](../mechanics/agents.md#glossary)                                                                                       | Naming the combatant attribute, its accumulation, or recovery.                                                                                                  |
-| Hit points; hit-point                       | [Health](../mechanics/agents.md#glossary)                                                                                           | Naming the combatant health attribute.                                                                                                                          |
-| Past participation                          | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Naming Participation history facts.                                                                                                                             |
+| INSTEAD OF                                  | USE                                                                                                                                 | Context                                                                                                                                                            |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Opportunity                                 | [Lead](../foundation/domain-model.md#glossary)                                                                                      | Referring to a Lead; ordinary uses such as opportunity cost remain valid.                                                                                          |
+| Attempt                                     | [Investigation](../foundation/domain-model.md#glossary)                                                                             | Referring to an Investigation of a Lead; attempts to execute commands or undertake Missions remain distinct.                                                       |
+| Fixed reference                             | Immutable reference                                                                                                                 | A reference in [ImmutableState](../foundation/modeling-foundations.md#glossary); its target cannot be replaced or cleared.                                         |
+| Changeable reference                        | Mutable reference                                                                                                                   | A reference in [MutableState](../foundation/modeling-foundations.md#glossary); gameplay rules govern replacing or clearing its target.                             |
+| Content entry; Content; entry; entries      | [GDR](../foundation/modeling-foundations.md#glossary)                                                                               | Naming immutable game data; use GDR, GDRs, and GDR in attributive uses after introducing the full name. The Content Family and document titles retain their names. |
+| Instance; occurrence                        | [Campaign instance](../foundation/modeling-foundations.md#glossary)                                                                 | Referring to the modeled occurrence, rather than explaining what an occurrence means in a definition.                                                              |
+| Constructor                                 | [Campaign instance constructor](../foundation/modeling-foundations.md#glossary)                                                     | Referring to the Rule that constructs a Campaign instance, rather than a programming-language constructor.                                                         |
+| ID                                          | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a Campaign instance; GDR identifiers, Requirement identifiers, and other identifiers retain their own descriptions.                                    |
+| Relationship type                           | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                        |
+| Assignment                                  | [Current assignment](../foundation/domain-model.md#glossary)                                                                        | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                                     |
+| Participation; agent history                | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Referring to retained participation records, rather than the act of participating or an Agent's broader career.                                                    |
+| Campaign instance kind                      | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing a category of Campaign instances.                                                                                                                       |
+| Schema                                      | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Describing model data structure; ordinary API or serialization schema usage remains valid.                                                                         |
+| TypeScript type                             | [Type](../foundation/modeling-foundations.md#glossary)                                                                              | Naming a modeling concept; actual TypeScript API declarations and explanatory language analogies remain valid.                                                     |
+| Instance state (undifferentiated)           | [MutableState](../foundation/modeling-foundations.md#glossary) and [ImmutableState](../foundation/modeling-foundations.md#glossary) | Separate changeable properties from fixed occurrence facts; do not put the latter in shared GDRs.                                                                  |
+| EnemyType; EnemyKind                        | EnemyArchetype                                                                                                                      | Naming the shared GDR structure, not the complete Enemy Campaign instance. See [Archetype](../foundation/modeling-foundations.md#glossary).                        |
+| Entity ID                                   | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a Campaign instance.                                                                                                                                   |
+| Content definition                          | [GDR](../foundation/modeling-foundations.md#glossary)                                                                               | Referring to concrete immutable game data rather than its Type.                                                                                                    |
+| Evolving campaign facts                     | [Campaign state](../foundation/modeling-foundations.md#glossary)                                                                    | Describing the data of a particular campaign.                                                                                                                      |
+| Authoritative fact                          | [Authoritative value](../foundation/modeling-foundations.md#glossary)                                                               | Naming the source-of-truth category.                                                                                                                               |
+| Computed value; calculated value            | [Derived value](../foundation/modeling-foundations.md#glossary)                                                                     | Naming the formal category of values calculated from other values.                                                                                                 |
+| Archived; archival                          | Retained in [History](../foundation/modeling-foundations.md#glossary)                                                               | Describing retained past data; this phrase does not name a lifecycle state.                                                                                        |
+| Became historical; deconstructed; destroyed | Retained in [History](../foundation/modeling-foundations.md#glossary)                                                               | Describing retention of Campaign instance data, rather than an actual destruction mechanic. Specify retention as a requirement, not a separate transition term.    |
+| Fatigue                                     | [Exhaustion](../mechanics/agents.md#glossary)                                                                                       | Naming the combatant attribute, its accumulation, or recovery.                                                                                                     |
+| Hit points; hit-point                       | [Health](../mechanics/agents.md#glossary)                                                                                           | Naming the combatant health attribute.                                                                                                                             |
+| Past participation                          | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Naming Participation history facts.                                                                                                                                |
 
 These are contextual replacements, not a ban on ordinary uses of “definition,” legitimate destruction mechanics,
-or unrelated uses of “configuration.” Use Content entry or Archetype rather than “Template” for modeling concepts, as
+or unrelated uses of “configuration.” Use GDR or Archetype rather than “Template” for modeling concepts, as
 explained in [Rejected terms and synonyms](../foundation/modeling-foundations.md#rejected-terms-and-synonyms).
 Retention in History does not replace named lifecycle states; for example, Killed and Completed.
 
@@ -327,11 +332,11 @@ For random rules, specify the distribution, draw timing and order, interval boun
 
 Include worked numerical examples for normal cases and boundaries. Equations, prose, pseudocode, and examples must agree. An unexplained "chance increases over time" or "diminishing returns" is not a complete rule.
 
-## Contracts and Content entries
+## Contracts and GDRs
 
 Public API specifications define exact names, types, argument shapes, outputs, and errors when they are ready for acceptance. Conceptual domain specifications need not mirror implementation storage layouts.
 
-Content entry tables define stable Content entry identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit Content entry. Use parameter references instead of copying balance values throughout mechanics specifications.
+GDR tables define stable GDR identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit GDR. Use parameter references instead of copying balance values throughout mechanics specifications.
 
 ## Illustrative and exhaustive enumerations
 
@@ -354,7 +359,7 @@ the concepts, linking to the applicable requirements. These illustrations introd
 need not be organized as test fixtures or command sequences. Every acceptance example must identify all applicable
 items in this checklist:
 
-- The requirement IDs exercised and, when needed for reproducibility, the game revision and Content entry fixture.
+- The requirement IDs exercised and, when needed for reproducibility, the game revision and GDR fixture.
 - Initial state and inputs, including the seed or random state for stochastic results.
 - The command or event sequence.
 - Expected state, output, visibility, history, and random behavior where relevant.
@@ -396,7 +401,7 @@ Before acceptance, verify:
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
 - Worked examples and acceptance scenarios agree with the rules.
-- Related contracts and Content entry tables are consistent.
+- Related contracts and GDR tables are consistent.
 - Deferred features are explicitly out of scope, not holes in an allegedly complete contract.
 - The project owner has accepted the revision.
 

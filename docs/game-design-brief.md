@@ -2,7 +2,7 @@
 
 ## 1. Purpose and core concepts
 
-This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, Content entries, and interfaces. Adapt the strategic ideas from `game-ts`; exact formulas, balance, Content entries, and framework choices remain open.
+This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, Game Data Records (GDRs), and interfaces. Adapt the strategic ideas from `game-ts`; exact formulas, balance, GDRs, and framework choices remain open.
 
 The game is a **web-based, turn-based agency-management strategy game**, with presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
 
@@ -136,7 +136,7 @@ Supported interfaces develop progressively:
 
 Earlier interfaces remain supported. Graphics must not become necessary to access gameplay information or actions.
 
-The engine owns rules, validation, visibility, and consequences. Clients own presentation or player strategy. Content entries remain separate from Campaign instances. Browser and terminal dependencies stay outside the engine.
+The engine owns rules, validation, visibility, and consequences. Clients own presentation or player strategy. GDRs remain separate from Campaign instances. Browser and terminal dependencies stay outside the engine.
 
 Only these interfaces are in scope. Dedicated native game engines such as Unity are excluded. Choose the web framework later, with grid and tree capabilities as major criteria.
 
@@ -157,7 +157,7 @@ Begin with snapshots; optimize history storage later.
 
 ## 5. Delivery and acceptance
 
-The immediate deliverable is the Markdown brief, not implementation. Exact formulas, Content entries, balance, and partial-success calculations belong in subsequent specifications.
+The immediate deliverable is the Markdown brief, not implementation. Exact formulas, GDRs, balance, and partial-success calculations belong in subsequent specifications.
 
 Future validation should establish that:
 

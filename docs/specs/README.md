@@ -33,7 +33,7 @@ None.
 [Domain Model](foundation/domain-model.md), [Modeling Foundations](foundation/modeling-foundations.md), and
 [Engine Contract](foundation/engine-contract.md) are **Draft**, in review for batch 1. The other 18 subject documents remain
 **Stub** documents. No subject specification has been accepted yet.
-The conventions are **Accepted**; their acceptance reference is recorded in that document. Exact formulas, Content entry values,
+The conventions are **Accepted**; their acceptance reference is recorded in that document. Exact formulas, Game Data Record (GDR) values,
 public signatures, and frameworks have not been chosen.
 Artifact Relationships is a separate governance Draft. The flat directional inventory rules and implicit relationships are
 recorded in the conventions; the completed inventory migration is recorded in the work plan.
@@ -61,7 +61,7 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 | COMBAT  | Mechanics  | [Combat](mechanics/combat.md)                                                                        | Define fully automatic battles and their reproducible results independently of campaign rewards.                                                                           |
 | MISSION | Mechanics  | [Missions](mechanics/missions.md)                                                                    | Define mission commitments and translate combat results into campaign consequences.                                                                                        |
 | FACTION | Mechanics  | [Factions](mechanics/factions.md)                                                                    | Define escalating faction pressure, operation generation, suppression, and permanent defeat.                                                                               |
-| INIT    | Content    | [Initial Campaign Content](content/initial-campaign.md)                                              | Provide the complete, versioned numeric and Content entry inputs for the first playable campaign.                                                                          |
+| INIT    | Content    | [Initial Campaign Content](content/initial-campaign.md)                                              | Provide the complete, versioned numeric and GDR inputs for the first playable campaign.                                                                                    |
 | INFO    | Interfaces | [Player Information](interfaces/player-information.md)                                               | Define complete player-facing knowledge and a consistent boundary around hidden state.                                                                                     |
 | API     | Interfaces | [TypeScript Player API](interfaces/typescript-api.md)                                                | Define the callable TypeScript contract through which humans and AI can fully play the game.                                                                               |
 | DEV     | Interfaces | [Developer API](interfaces/developer-api.md)                                                         | Expose all Authoritative values in Campaign state for debugging through a separate, explicit API surface.                                                                  |
@@ -72,7 +72,7 @@ The work plan is **Accepted**; its acceptance reference is recorded in that docu
 # Work plan
 
 The [work plan and backlog](governance/work-plan.md) owns the accepted authoring sequence and review checkpoints. Start with
-the three batch 1 drafts; grow Content entries and acceptance scenarios alongside the reviewed mechanics. See that document for
+the three batch 1 drafts; grow GDRs and acceptance scenarios alongside the reviewed mechanics. See that document for
 the full sequence, current work states, and treatment of cross-specification dependencies.
 
 # Index completion TODOs

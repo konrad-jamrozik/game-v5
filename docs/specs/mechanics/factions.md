@@ -38,7 +38,7 @@ duplicating shared definitions.
 
 This Stub intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)) with escalation,
 Faction operation occurrence generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
-Initial Campaign Content supplies catalogs of Content entries for Faction operation occurrences and parameter values. Leads and Progression supplies earned
+Initial Campaign Content supplies catalogs of Game Data Records (GDRs) for Faction operation occurrences and parameter values. Leads and Progression supplies earned
 unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.
 Exact thresholds and transitions remain TODOs below.
 
@@ -54,7 +54,7 @@ TODO: Specify starting activity, progression thresholds/distributions, update or
 
 ## Faction operation occurrence generation
 
-TODO: Specify countdown timing, severity distribution, mission Content entry selection, repeat rules, and behavior with existing active Faction operation occurrences. Link tables to INIT.
+TODO: Specify countdown timing, severity distribution, mission GDR selection, repeat rules, and behavior with existing active Faction operation occurrences. Link tables to INIT.
 
 ## Suppression and defeat
 
@@ -64,7 +64,7 @@ TODO: Assign stable FACTION-NNN requirement IDs when concrete rules replace thes
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for Suppression gained on a spawn turn, maximum activity, no eligible Content entries for Faction operation occurrences, repeated Faction operation occurrences, and defeat concurrent with a Faction operation occurrence.
+TODO: Define behavior for Suppression gained on a spawn turn, maximum activity, no eligible GDRs for Faction operation occurrences, repeated Faction operation occurrences, and defeat concurrent with a Faction operation occurrence.
 State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
 that truly fall outside this document's scope.
 

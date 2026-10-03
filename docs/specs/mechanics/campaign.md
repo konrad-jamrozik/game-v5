@@ -46,7 +46,7 @@ appropriate to this document.
 
 ## Initialization
 
-TODO: Specify how the scenario and seed produce initial state, covering all of these required areas: roster, resources, progression, factions, and counters; link exact Content entry values to INIT.
+TODO: Specify how the scenario and seed produce initial state, covering all of these required areas: roster, resources, progression, factions, and counters; link exact Game Data Record (GDR) values to INIT.
 
 ## Panic and endings
 
