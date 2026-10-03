@@ -255,8 +255,6 @@ flowchart LR
     Engine -->|constructs| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>MutableState: health 10<br/>ImmutableState: Instance ID enemy_2"]
 ```
 
-TODO: continue review from this point. Stuff above was reviewed.
-
 ## Archetypes and other referenced GDRs
 
 A Campaign instance can refer to GDRs for a purpose other than supplying its Archetype. Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
@@ -305,7 +303,7 @@ If investigation_2 later completes, Campaign state can retain a completion recor
 the record belongs to the campaign. The number of completions for lead_1 can then be derived from those records. GDRs
 can thus identify the subject of an activity and key campaign facts without becoming mutable itself.
 
-## MODEL-005 — Value classification
+## Authoritative and Derived values
 
 An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values
 and current rules and GDRs. This classification is separate from mutability. Shared base health and a
@@ -354,7 +352,7 @@ an earlier record.
 
 # Open decisions
 
-[Campaign instances](#campaign-instances), [References](#references), [MODEL-004](#model-004--historical-fact-preservation), and [MODEL-005](#model-005--value-classification) remain proposed contracts awaiting review.
+[Campaign instances](#campaign-instances), [References](#references), [MODEL-004](#model-004--historical-fact-preservation), and [Authoritative and Derived values](#authoritative-and-derived-values) remain proposed contracts awaiting review.
 Consuming specifications own their concrete game Types, identity scopes, Campaign instance constructor behavior, and gameplay rules.
 The illustrations here do not settle those decisions or select production GDR properties and allowed combinations.
 
