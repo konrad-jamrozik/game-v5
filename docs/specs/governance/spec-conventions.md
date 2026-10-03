@@ -205,7 +205,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Changeable reference                        | Mutable reference                                                                                                                   | A reference in [MutableState](../foundation/modeling-foundations.md#glossary); gameplay rules govern replacing or clearing its target.                             |
 | Content entry; Content; entry; entries      | [GDR](../foundation/modeling-foundations.md#glossary)                                                                               | Naming immutable game data; use GDR, GDRs, and GDR in attributive uses after introducing the full name. The Content Family and document titles retain their names. |
 | Instance; occurrence                        | [Campaign instance](../foundation/modeling-foundations.md#glossary)                                                                 | Referring to the modeled occurrence, rather than explaining what an occurrence means in a definition.                                                              |
-| Constructor                                 | [Campaign instance constructor](../foundation/modeling-foundations.md#glossary)                                                     | Referring to the Rule that constructs a Campaign instance, rather than a programming-language constructor.                                                         |
+| Constructor                                 | [Campaign instance constructor](../foundation/modeling-foundations.md#glossary)                                                     | Referring to the declared Campaign instance construction operation, which is distinct from a Rule or a programming-language constructor.                           |
 | ID                                          | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                                       | Identifying a Campaign instance; GDR identifiers, Requirement identifiers, and other identifiers retain their own descriptions.                                    |
 | Relationship type                           | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                        |
 | Assignment                                  | [Current assignment](../foundation/domain-model.md#glossary)                                                                        | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                                     |
@@ -230,6 +230,11 @@ These are contextual replacements, not a ban on ordinary uses of “definition,�
 or unrelated uses of “configuration.” Use GDR or Archetype rather than “Template” for modeling concepts, as
 explained in [Rejected terms and synonyms](../foundation/modeling-foundations.md#rejected-terms-and-synonyms).
 Retention in History does not replace named lifecycle states; for example, Killed and Completed.
+
+Treat GDRs, Rules, and Campaign instance constructors as distinct concepts; neither a GDR nor a Campaign instance constructor is a Rule.
+Attribute execution to the engine or an implementation. Rules specify behavior; GDRs supply input data.
+Avoid wording that makes Rules or GDRs perform operations. Execution statements about named functions refer to
+their implementations. Follow [Data, Rules, and execution](../foundation/modeling-foundations.md#data-rules-and-execution).
 
 When specifying a game concept, state its applicable modeling role and mutability. A Campaign instance's Type describes
 its Archetype, MutableState, and ImmutableState, including its mandatory Instance ID.

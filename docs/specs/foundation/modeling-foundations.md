@@ -43,12 +43,12 @@ and the Campaign instances and operations built from them.
 Type describes data, Campaign establishes the playthrough context, and Rule describes calculations and permitted behavior.
 Ruleset collects the Rules governing a Campaign.
 
-| Term     | Definition                                                                                                                                                               |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Type     | A named description of data structure and permitted values, including the Types of its constituent properties, collections, and references.                              |
-| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                                      |
-| Rule     | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided. |
-| Ruleset  | The collection of Rules governing a Campaign.                                                                                                                            |
+| Term     | Definition                                                                                                                                                                              |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type     | A named description of data structure and permitted values, including the Types of its constituent properties, collections, and references. Similar to a TypeScript `type` declaration. |
+| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                     |
+| Rule     | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided.                |
+| Ruleset  | The collection of Rules governing a Campaign.                                                                                                                                           |
 
 ## Data within a Campaign
 
@@ -63,16 +63,16 @@ These concepts build on Type and Campaign: GDRs supply immutable shared data, wh
 
 A Campaign instance has a declared Type and three components: Archetype, MutableState, and ImmutableState.
 Archetype is the role of a GDR within this composition. Instance ID distinguishes individual Campaign instances.
-A Campaign instance constructor is a Rule that constructs a Campaign instance and initializes its components.
+A Campaign instance constructor describes construction and initialization of a Campaign instance. It is a separate concept from Rule and GDR.
 
-| Term                          | Definition                                                                                                                                                                                                                                  |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance             | A particular occurrence within a campaign of a declared Type, composed of an Archetype, MutableState, and ImmutableState.                                                                                                                   |
-| Archetype                     | A GDR supplying shared characteristics and construction defaults for Campaign instances constructed from it.                                                                                                                                |
-| MutableState                  | Campaign instance-specific data whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                               |
-| ImmutableState                | Campaign instance-specific data established during construction and preserved for the Campaign instance's lifetime, always including its Instance ID.                                                                                       |
-| Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity).                                                                                      |
-| Campaign instance constructor | A Rule that declares its inputs and dependencies, identifies the Type of the returned Campaign instance, and establishes a new Campaign instance's initial components. It need not be a language-level constructor or public API operation. |
+| Term                          | Definition                                                                                                                                                                                                                                               |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign instance             | A particular occurrence within a campaign of a declared Type, composed of an Archetype, MutableState, and ImmutableState.                                                                                                                                |
+| Archetype                     | A GDR supplying shared characteristics and construction defaults for Campaign instances constructed from it.                                                                                                                                             |
+| MutableState                  | Campaign instance-specific data whose properties are permitted to evolve under their declared gameplay rules.                                                                                                                                            |
+| ImmutableState                | Campaign instance-specific data established during construction and preserved for the Campaign instance's lifetime, always including its Instance ID.                                                                                                    |
+| Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [MODEL-002](#model-002--identity).                                                                                                   |
+| Campaign instance constructor | A declared construction operation specifying its inputs and dependencies, the Type of the returned Campaign instance, and initialization of the new Campaign instance's components. It need not be a language-level constructor or public API operation. |
 
 ## Value classification, history, and observation
 
@@ -92,6 +92,13 @@ These concepts describe how values are established, retained, and exposed within
 - **Definition:** not a modeling category or a substitute for Type or GDR. Use Type for a named data description and GDR for concrete shared immutable data. The ordinary word remains valid when discussing a term’s definition.
 
 # Concepts and contract
+
+## Data, Rules, and execution
+
+GDRs supply data, Rules specify calculations and permitted behavior, and Campaign instance constructors describe
+construction and initialization. These are three distinct concepts; neither a GDR nor a Campaign instance constructor is a Rule.
+The engine implementation reads GDRs, applies Rules, and invokes Campaign instance constructor implementations
+to construct Campaign instances and update Campaign state. Execution statements about named functions refer to their implementations.
 
 ## Campaign creation and progression
 
@@ -114,40 +121,51 @@ The engine implementation ties these together while obeying the [Engine Contract
 it constructs new Campaign instances using the appropriate Archetype and other declared inputs.
 Supplying an Archetype is one possible GDR role.
 
-## Types describe model data
-
-A Type names a data description rather than a particular value. It can describe a simple value, a collection, or a
-structured set of properties. Each property has a declared Type, and a reference identifies the Type of data it
-expects to resolve. Types describe GDRs and Campaign instances as well as their constituent values;
-having a Type does not itself give a value independent identity.
-
-For readers familiar with TypeScript, its `type` declarations offer an intuition for naming and composing data
-descriptions. Here, Type is an independently defined modeling concept; these contracts do not use TypeScript syntax
-or rely on its type system.
-
-Structure, initialization, and ongoing validity answer different questions. A health property can be an integer;
-a Campaign instance constructor can initialize it from shared GDRs; gameplay rules can constrain its later range. Matching the
-structure alone does not establish campaign membership, resolve references, or prove that initialization was valid.
-Likewise, matching fields do not make a GDR valid for every reference: references name the expected Type.
-
 ## Roles of GDRs
 
 GDRs can serve the following five roles. The roles can overlap; they do not define separate Types or required
-implementation interfaces. The following sections illustrate these roles, beginning with direct use and then construction
+implementation interfaces. The following sections illustrate these roles, beginning with initialization, then calculation, construction,
 and references.
 
-| Role                   | Relationship to Rules and Campaign state                                                                |
-| ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| Calculation parameter  | A Rule reads a GDR when calculating a value.                                                            |
-| Initialization source  | A Rule uses a GDR to establish an initial value in Campaign state; later changes follow gameplay rules. |
-| Archetype              | A GDR supplies shared characteristics and construction defaults for Campaign instances.                 |
-| Referenced GDR         | A Campaign instance references a GDR for a purpose other than supplying its Archetype.                  |
-| Key for campaign facts | Campaign state associates facts with the identity of a GDR while the GDR remains immutable.             |
+| Role                   | Relationship to Rules and Campaign state                                                                                | Example                                                                     |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Initialization source  | The engine passes a GDR’s values to a constructor implementation to initialize Campaign state.                          | The engine passes starting-money GDR value 100 to initialize Agency money.  |
+| Calculation parameter  | The engine reads a GDR when applying a calculation Rule.                                                                | The engine reads the rate from the Standard upkeep GDR to calculate upkeep. |
+| Archetype              | A GDR supplies shared characteristics and construction defaults used by a Campaign instance constructor implementation. | The engine constructs an Enemy using base health 10 from the Thug GDR.      |
+| Referenced GDR         | A Campaign instance holds a reference to a GDR for a purpose other than supplying its Archetype.                        | An Investigation holds a reference to the Lead GDR it pursues.              |
+| Key for campaign facts | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                   | The engine records completions against a Lead GDR’s identity.               |
 
-A Rule describes the calculation or behavior; a GDR supplies data that the Rule reads. These roles do not
-require Rules to be stored as objects or the Ruleset to have a formal representation.
+## GDR role: initialization source
 
-## Using GDRs directly
+Consider an illustrative Agency construction with starting money:
+
+| Element                | Modeling role                 | Meaning in this example                                                                                             |
+| ---------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| StartingMoney          | Type                          | Describes a nonnegative integer amount of money.                                                                    |
+| Starting money         | GDR                           | Has Type StartingMoney and value 100.                                                                               |
+| Agency construction    | Campaign instance constructor | Specifies construction of an Agency Campaign instance with money in MutableState initialized to the supplied value. |
+| Agency                 | Campaign instance             | The new Agency Campaign instance returned by the constructor implementation, with money 100 in MutableState.        |
+| Agency money           | Authoritative value           | Initialized to 100 in the Agency Campaign instance’s MutableState.                                                  |
+| Initial Campaign state | Committed state               | Contains the Agency Campaign instance when campaign creation completes.                                             |
+
+During campaign creation, the engine reads 100 from the starting-money GDR and passes it to the Agency constructor
+implementation. The implementation constructs an Agency Campaign instance and initializes its money in MutableState
+to 100. The engine includes that Agency Campaign instance in the initial Campaign state.
+
+```mermaid
+flowchart LR
+    Type["Type: StartingMoney"] -.->|describes| GDR["GDR: Starting money · value 100"]
+    GDR -->|starting money 100| Engine["Engine invokes Agency constructor implementation"]
+    Constructor["Campaign instance constructor:<br/>new Agency with money initialized to supplied value"] -->|specifies construction| Engine
+    Engine -->|constructs| Agency["Agency Campaign instance"]
+    Agency -->|MutableState contains| Money["Authoritative value:<br/>money 100"]
+    Agency -->|included when campaign creation completes| State["Initial Campaign state:<br/>Committed state"]
+```
+
+If an expense later reduces Agency money to 90, the engine reads 90 from the Agency Campaign instance’s MutableState.
+The starting-money GDR still contains the construction input of 100.
+
+## GDR role: calculation parameter
 
 Consider an illustrative upkeep calculation for agents serving in a campaign. Its complete local setup is:
 
@@ -159,14 +177,22 @@ Consider an illustrative upkeep calculation for agents serving in a campaign. It
 | Upkeep calculation  | Rule                | Upkeep for one turn equals the rate multiplied by the serving-agent count.  |
 | Total upkeep        | Derived value       | 2 × 3 = 6 money for this turn.                                              |
 
-The rule reads the GDR directly. Applying the upkeep charge changes campaign money without constructing an upkeep
-Campaign instance. The rate remains 2 when the serving-agent count changes. The formula and its input GDR are
-distinct: a Rule is not automatically a GDR or an object stored in Campaign state.
+During "advance turn" computation, the engine reads the rate of 2 from the Standard upkeep GDR, which conforms to
+Type UpkeepRate, and the serving-agent count of 3, an Authoritative value in Campaign state. The engine applies the
+upkeep calculation Rule to these inputs, producing total upkeep of 6, a Derived value. The engine deducts 6 from the campaign's current money; the updated
+money becomes part of the new Committed state, which is the result of turn advancement completion.
 
-GDRs can also supply an initial value. For example, an initial-capacity GDR of 4 can initialize a campaign's
-mutable capacity to 4. If an upgrade later changes capacity to 5, reading capacity returns 5; it does not copy 4 from
-the GDR again. This is initialization, whereas upkeep is an ongoing calculation. Neither illustrative value selects
-a production balance parameter.
+```mermaid
+flowchart LR
+    Type["Type: UpkeepRate"] -.->|describes| GDR["GDR: Standard upkeep · rate 2"]
+    GDR -->|rate 2| Engine["Engine applies upkeep calculation Rule"]
+    State["Campaign state"] -->|Authoritative value: serving-agent count 3| Engine
+    Rule["Rule: rate × serving-agent count"] -->|specifies calculation| Engine
+    Engine -->|calculates| Total["Derived value: total upkeep 6"]
+    Total -->|amount to deduct| Update["Engine updates campaign money"]
+    State -->|current money| Update
+    Update -->|included when turn advancement completes| Committed["New Committed state"]
+```
 
 ## MODEL-001 — Campaign instance composition
 
@@ -219,7 +245,7 @@ Immutable references belong in ImmutableState; following a reference does not tr
 
 Each Campaign instance constructor must declare its input parameters and dependencies and identify the Type of the
 returned Campaign instance. Every new Campaign instance must initialize all three components, receive a fresh Instance ID
-within its declared scope, and satisfy its declared structure and initialization rules. Dependencies must include any
+within its declared scope, and satisfy its declared structure and initialization requirements. Dependencies must include any
 GDR selection, Instance ID allocation state, or randomness actually used by the constructor.
 A Campaign instance constructor must return the constructed Campaign instance; its caller establishes containment.
 
@@ -242,16 +268,16 @@ The caller changes the Mission's collection; `constructEnemy` only constructs an
 enclosing operation publishes Committed state, the caller must establish ownership and any required relationships.
 That Committed state must satisfy all applicable invariants.
 The Instance ID allocation mechanism remains unspecified. Multiple Campaign instance constructors can return Campaign instances of the
-same Type, provided each declares its inputs, dependencies, and initialization rules.
+same Type, provided each declares its inputs, dependencies, and initialization requirements.
 
-A constructor contract must distinguish initialization rules from structural constraints and gameplay invariants that
+A constructor contract must distinguish initialization requirements from structural constraints and gameplay invariants that
 continue to apply after creation. Concrete constructor behavior belongs in the gameplay specification responsible for
 the creation operation; consuming specifications must identify those owners.
 
 For this example, base health is a positive integer and current health must remain an integer between zero and base
 health, inclusive. Construction starts enemy_1 and enemy_2 at 10. Damage changes enemy_1's health to 7; enemy_2's health and Thug's base
 health remain 10. Both identities remain unchanged. Starting an enemy at 7 would satisfy the ongoing range but violate
-the initialization rule of `constructEnemy`; starting it at 11 would violate both.
+the initialization requirement of `constructEnemy`; starting it at 11 would violate both.
 
 ## MODEL-002 — Identity
 
@@ -394,14 +420,14 @@ an earlier record.
 
 # Edge cases and failure behavior
 
-| Case                                                                                                                     | Result / owner                                                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Missing component, incorrect structure, or mutation of immutable data                                                    | Invalid data or Campaign state under [MODEL-001](#model-001--campaign-instance-composition).                                                           |
-| Campaign instance constructor omits an input, dependency, Type of the returned Campaign instance, or initialization rule | Incomplete Campaign instance constructor contract under [MODEL-006](#model-006--campaign-instance-construction).                                       |
-| Duplicate Instance ID, missing reference, or wrong expected Type                                                         | Invalid Campaign state under [MODEL-002](#model-002--identity)/[MODEL-003](#model-003--references); never infer a replacement by name.                 |
-| Campaign instance is historical, including terminal lifecycle states                                                     | Required historical references still resolve under [MODEL-003](#model-003--references); storage may be compacted without losing required facts.        |
-| A later Campaign instance belongs only to a discarded future                                                             | Instance IDs are timeline-scoped under [MODEL-002](#model-002--identity); committed references must resolve under [MODEL-003](#model-003--references). |
-| A current value differs from the retained original value                                                                 | Retain the historical basis required by the result/report under [MODEL-004](#model-004--historical-fact-preservation).                                 |
+| Case                                                                                                                            | Result / owner                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Missing component, incorrect structure, or mutation of immutable data                                                           | Invalid data or Campaign state under [MODEL-001](#model-001--campaign-instance-composition).                                                           |
+| Campaign instance constructor omits an input, dependency, Type of the returned Campaign instance, or initialization requirement | Incomplete Campaign instance constructor contract under [MODEL-006](#model-006--campaign-instance-construction).                                       |
+| Duplicate Instance ID, missing reference, or wrong expected Type                                                                | Invalid Campaign state under [MODEL-002](#model-002--identity)/[MODEL-003](#model-003--references); never infer a replacement by name.                 |
+| Campaign instance is historical, including terminal lifecycle states                                                            | Required historical references still resolve under [MODEL-003](#model-003--references); storage may be compacted without losing required facts.        |
+| A later Campaign instance belongs only to a discarded future                                                                    | Instance IDs are timeline-scoped under [MODEL-002](#model-002--identity); committed references must resolve under [MODEL-003](#model-003--references). |
+| A current value differs from the retained original value                                                                        | Retain the historical basis required by the result/report under [MODEL-004](#model-004--historical-fact-preservation).                                 |
 
 # Open decisions
 
