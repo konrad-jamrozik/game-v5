@@ -55,7 +55,7 @@ Committed state is the complete state before or after an accepted command, as de
 integrity covers domain invariants and modeling/reference conventions, including restoration; intermediate processing
 is not Player-visible information of Committed state ([ENG-004](#eng-004--committed-state-integrity)).
 Integrity includes three-component composition, valid typed references, and stable Instance IDs and immutable facts under
-[MODEL-001](modeling-foundations.md#model-001--campaign-instance-composition),
+[Campaign instance composition](modeling-foundations.md#campaign-instance-composition),
 [MODEL-002](modeling-foundations.md#model-002--identity), and [MODEL-003](modeling-foundations.md#model-003--references).
 Undo/redo restores Campaign instances rather than creating new identities or authorizing immutable-fact changes.
 
