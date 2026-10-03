@@ -12,29 +12,16 @@
 # Purpose and boundaries
 
 Modeling Foundations defines the common language and basic contracts used to describe the game's data and behavior.
-It explains how shared game data becomes part of an individual playthrough, how rules construct and change that
-playthrough's state, and how identity and historical facts survive those changes. These concepts give the rest of the
-specifications a consistent way to express what exists, what can change, and what must be preserved.
 
-In this sense, the document is the game's **abstraction root**: it establishes the general modeling concepts on which
-more concrete game specifications build. The [Game Design Brief](../../game-design-brief.md) supplies the game's intent
-and strategic direction. Here, that work gains a modeling vocabulary. [Domain Model](./domain-model.md) applies this
-vocabulary to the game's concepts and their structural relationships; the mechanics specifications develop their
-detailed behavior. [Engine Contract](./engine-contract.md) uses these foundations to state execution guarantees, while
-[Initial Campaign Content](../content/initial-campaign.md) supplies concrete game data within the model.
-
-Read this document before designing, reviewing, or implementing a game concept when you need to decide which facts
-are shared, which belong to one playthrough, and which must remain stable over time. It provides the reasoning behind
-those distinctions so that later specifications can use them consistently. The glossary introduces the vocabulary;
-the concepts and examples then build from direct use of shared data to the construction and composition of individual
-Campaign instances, with contracts for their identity, references, and history.
-
-The model is independent of storage layout and programming language. Its examples are self-contained illustrations;
-production game definitions and balance decisions belong to the specifications that use these foundations.
-
-**Draft proposal:** the requirements remain proposed contracts. Concrete game structures and gameplay rules are
-specified by documents that use these foundations. This document does not select Instance ID generation algorithms,
-serialization, implementation classes, validation libraries, or cache implementations.
+- **Game Design Brief** supplies the intent and strategic direction that these foundations give a modeling vocabulary.
+- **Domain Model** applies that vocabulary to concrete game concepts and their structural relationships.
+- **Mechanics specifications** define the detailed gameplay behavior of those concepts.
+- **Engine Contract** defines execution guarantees built on these foundations.
+- **History and Persistence** defines how campaign state and historical facts are retained.
+- **Initial Campaign Content** supplies concrete game data within the model.
+- **Numbers and Randomness** defines numerical and random behavior within the model.
+- **Player Information** defines which campaign facts players can observe.
+- **TypeScript Player API** exposes the model through a concrete programming interface.
 
 # Relationships
 
@@ -49,7 +36,7 @@ serialization, implementation classes, validation libraries, or cache implementa
 # Glossary
 
 The subsections expose conceptual layers: foundational concepts, data described by those concepts, roles of that data,
-and the Campaign instances and operations built from them. Component definitions refer to the whole they describe.
+and the Campaign instances and operations built from them.
 
 ## Foundational concepts
 
