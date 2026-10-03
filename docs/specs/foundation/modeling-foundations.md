@@ -222,6 +222,8 @@ flowchart LR
     Engine -->|constructs| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>MutableState: health 10<br/>ImmutableState: Instance ID enemy_2"]
 ```
 
+TODO: continue review from this point. Stuff above was reviewed.
+
 ### MODEL-001 — Campaign instance composition
 
 Every Campaign instance must have exactly three conceptual components: Archetype, MutableState, and ImmutableState,
