@@ -1,12 +1,11 @@
 # Artifact Relationships
 
-| Metadata    | Value                                                                  |
-| ----------- | ---------------------------------------------------------------------- |
-| Scope       | Relationship terminology, direction, inventories, and graph validation |
-| Spec ID     | REL                                                                    |
-| Family      | Governance                                                             |
-| Status      | Draft                                                                  |
-| Conventions | [Specification Conventions](spec-conventions.md)                       |
+| Metadata    | Value                                            |
+| ----------- | ------------------------------------------------ |
+| Spec ID     | REL                                              |
+| Family      | Governance                                       |
+| Status      | Draft                                            |
+| Conventions | [Specification Conventions](spec-conventions.md) |
 
 # Purpose and boundaries
 

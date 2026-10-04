@@ -1,12 +1,11 @@
 # Factions
 
-| Metadata    | Value                                                                                                           |
-| ----------- | --------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | FACTION                                                                                                         |
-| Family      | Mechanics                                                                                                       |
-| Status      | Stub                                                                                                            |
-| Scope       | Define escalating faction pressure, Faction operation occurrence generation, suppression, and permanent defeat. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                  |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | FACTION                                                        |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

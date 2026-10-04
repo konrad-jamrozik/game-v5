@@ -1,12 +1,11 @@
 # Campaign Integration and Acceptance Tests
 
-| Metadata    | Value                                                             |
-| ----------- | ----------------------------------------------------------------- |
-| Spec ID     | SCEN                                                              |
-| Family      | Acceptance                                                        |
-| Status      | Stub                                                              |
-| Scope       | Define test scenarios that verify how game systems work together. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)    |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | SCEN                                                           |
+| Family      | Acceptance                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

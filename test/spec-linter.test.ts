@@ -23,7 +23,7 @@ function validCorpus(): SourceFile[] {
         '| Spec ID | INDEX |',
         '| Family | Governance |',
         '| Status | Draft |',
-        '| Scope | Registry |',
+
         '',
         '# Purpose and boundaries',
         '',
@@ -56,7 +56,7 @@ function validCorpus(): SourceFile[] {
         '| Spec ID | CONV |',
         '| Family | Governance |',
         '| Status | Draft |',
-        '| Scope | Conventions |',
+
         '',
         '# Purpose and boundaries',
         '',
@@ -87,7 +87,7 @@ function validCorpus(): SourceFile[] {
         '| Spec ID | AAA |',
         '| Family | Foundation |',
         '| Status | Draft |',
-        '| Scope | Alpha rules |',
+
         '',
         '# Purpose and boundaries',
         '',
@@ -591,6 +591,17 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(files, 'docs/specs/foundation/alpha.md', '| Status | Draft |', '| Status | Final |'),
       'SPEC105',
+    ],
+    [
+      'redundant Scope metadata',
+      (files: SourceFile[]) =>
+        mutate(
+          files,
+          'docs/specs/foundation/alpha.md',
+          '| Status | Draft |',
+          '| Status | Draft |\n| Scope | Alpha rules |',
+        ),
+      'SPEC111',
     ],
     [
       'invalid register family',

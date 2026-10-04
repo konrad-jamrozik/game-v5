@@ -1,11 +1,10 @@
 # Game Specification Index
 
-| Metadata | Value                                                               |
-| -------- | ------------------------------------------------------------------- |
-| Spec ID  | INDEX                                                               |
-| Family   | Governance                                                          |
-| Status   | Draft                                                               |
-| Scope    | Navigation, document ownership, and specification-development order |
+| Metadata | Value      |
+| -------- | ---------- |
+| Spec ID  | INDEX      |
+| Family   | Governance |
+| Status   | Draft      |
 
 # Purpose and boundaries
 

@@ -481,13 +481,13 @@ function validateRegistryAndMetadata(
         )
       }
     }
-    if (!specification.metadata.values.get('Scope')) {
+    if (specification.metadata.values.has('Scope')) {
       addDiagnostic(
         diagnostics,
         specification.path,
         specification.metadata.table,
-        'SPEC106',
-        'Metadata must define a nonempty Scope.',
+        'SPEC111',
+        'Scope belongs in Purpose and boundaries, not in metadata.',
       )
     }
     if (specification.status === 'Accepted' && !specification.metadata.values.get('Acceptance reference')) {
@@ -1344,13 +1344,11 @@ function buildCorpus(
   const specifications: SpecificationRecord[] = []
   for (const specification of parsed.specifications) {
     const entry = entriesByPath.get(specification.path)
-    const scope = specification.metadata.values.get('Scope')
     if (
       !entry ||
       !specification.id ||
       !isSpecificationFamily(specification.family) ||
-      !isSpecificationStatus(specification.status) ||
-      !scope
+      !isSpecificationStatus(specification.status)
     ) {
       continue
     }
@@ -1359,7 +1357,6 @@ function buildCorpus(
       family: specification.family,
       title: specification.title,
       status: specification.status,
-      scope,
       owns: entry.owns,
       path: specification.path,
     })

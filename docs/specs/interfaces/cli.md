@@ -1,12 +1,11 @@
 # Terminal CLI
 
-| Metadata    | Value                                                                                 |
-| ----------- | ------------------------------------------------------------------------------------- |
-| Spec ID     | CLI                                                                                   |
-| Family      | Interfaces                                                                            |
-| Status      | Stub                                                                                  |
-| Scope       | Provide a complete terminal adapter usable by humans and AI over the same player API. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                        |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | CLI                                                            |
+| Family      | Interfaces                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

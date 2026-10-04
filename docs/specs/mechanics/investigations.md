@@ -1,12 +1,11 @@
 # Investigations
 
-| Metadata    | Value                                                                                                 |
-| ----------- | ----------------------------------------------------------------------------------------------------- |
-| Spec ID     | INVSTG                                                                                                |
-| Family      | Mechanics                                                                                             |
-| Status      | Stub                                                                                                  |
-| Scope       | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                        |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | INVSTG                                                         |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

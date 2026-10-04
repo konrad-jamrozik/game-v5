@@ -1,12 +1,11 @@
 # History and Persistence
 
-| Metadata    | Value                                                                            |
-| ----------- | -------------------------------------------------------------------------------- |
-| Spec ID     | HIST                                                                             |
-| Family      | Foundation                                                                       |
-| Status      | Stub                                                                             |
-| Scope       | Define reversible sessions, reproducible replay, and durable save/load behavior. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                   |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | HIST                                                           |
+| Family      | Foundation                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

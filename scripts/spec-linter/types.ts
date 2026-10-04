@@ -28,7 +28,6 @@ export interface SpecificationRecord {
   readonly family: SpecificationFamily
   readonly title: string
   readonly status: SpecificationStatus
-  readonly scope: string
   readonly owns: string
   readonly path: string
 }

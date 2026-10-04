@@ -125,12 +125,11 @@ function renderCatalog(corpus: SpecificationCorpus): string {
       `## ${family}`,
       '',
       markdownTable(
-        ['ID', 'Document', 'Status', 'Scope', 'Owns'],
+        ['ID', 'Document', 'Status', 'Owns'],
         members.map((specification) => [
           specification.id,
           `[${escapeLinkText(specification.title)}](${relativeLink(outputPath, specification.path)})`,
           specification.status,
-          specification.scope,
           specification.owns,
         ]),
       ),

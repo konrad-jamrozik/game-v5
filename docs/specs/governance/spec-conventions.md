@@ -6,7 +6,6 @@
 | Family                | Governance                                                                                                                  |
 | Status                | Accepted                                                                                                                    |
 | Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                   |
-| Scope                 | Writing, reviewing, and maintaining game-v5 specifications                                                                  |
 | Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                 |
 | Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology.              |
 | Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                        |
@@ -59,8 +58,9 @@ record batch progress; lifecycle rules and worked review scenarios may discuss s
 Open decisions contains only substantive unresolved design choices and their affected contracts. Do not list already
 stated rules merely to request acceptance. Omit the section when no substantive unresolved choices remain.
 
-Each specification has a stable Spec ID, Family, title, status, scope, and related-document links. The index registers Spec IDs,
-Families, and scopes.
+Each specification has a stable Spec ID, Family, title, status, and related-document links. Purpose and boundaries
+defines the specification’s scope, ownership, and exclusions; do not add a Scope row to metadata. The specification
+register’s Owns column supplies concise ownership summaries for navigation and the generated catalog.
 
 ## Specification families and paths
 

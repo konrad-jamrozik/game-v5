@@ -6,7 +6,6 @@
 | Family               | Governance                                                                                                                |
 | Status               | Accepted                                                                                                                  |
 | Acceptance reference | Project owner approval in this task: "change work plan status to Accepted and propose commit message for pending changes" |
-| Scope                | Specification authoring order, review checkpoints, and backlog tracking                                                   |
 | Conventions          | [Specification conventions](spec-conventions.md)                                                                          |
 
 # Purpose and boundaries

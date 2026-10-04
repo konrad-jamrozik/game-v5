@@ -1,12 +1,11 @@
 # Engine Contract
 
-| Metadata    | Value                                                                                                                                  |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | ENG                                                                                                                                    |
-| Family      | Foundation                                                                                                                             |
-| Status      | Draft                                                                                                                                  |
-| Scope       | Execution, continuation, compatibility, gameplay dependency direction, query and information boundaries, and Committed state integrity |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                         |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | ENG                                                            |
+| Family      | Foundation                                                     |
+| Status      | Draft                                                          |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

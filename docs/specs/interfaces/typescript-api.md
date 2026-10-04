@@ -1,12 +1,11 @@
 # TypeScript Player API
 
-| Metadata    | Value                                                                                        |
-| ----------- | -------------------------------------------------------------------------------------------- |
-| Spec ID     | API                                                                                          |
-| Family      | Interfaces                                                                                   |
-| Status      | Stub                                                                                         |
-| Scope       | Define the callable TypeScript contract through which humans and AI can fully play the game. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                               |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | API                                                            |
+| Family      | Interfaces                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

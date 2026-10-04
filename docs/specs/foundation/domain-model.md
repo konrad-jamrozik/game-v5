@@ -1,12 +1,11 @@
 # Domain Model
 
-| Metadata    | Value                                                                               |
-| ----------- | ----------------------------------------------------------------------------------- |
-| Spec ID     | DOM                                                                                 |
-| Family      | Foundation                                                                          |
-| Status      | Draft                                                                               |
-| Scope       | Game concepts, their properties and relationships, and structural domain invariants |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                      |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | DOM                                                            |
+| Family      | Foundation                                                     |
+| Status      | Draft                                                          |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

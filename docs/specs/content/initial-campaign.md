@@ -1,12 +1,11 @@
 # Initial Campaign Content
 
-| Metadata    | Value                                                                                                      |
-| ----------- | ---------------------------------------------------------------------------------------------------------- |
-| Spec ID     | INIT                                                                                                       |
-| Family      | Content                                                                                                    |
-| Status      | Stub                                                                                                       |
-| Scope       | Provide the complete, versioned numeric and Game Data Record (GDR) inputs for the first playable campaign. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                             |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | INIT                                                           |
+| Family      | Content                                                        |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

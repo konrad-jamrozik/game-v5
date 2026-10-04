@@ -1,12 +1,11 @@
 # Player Information
 
-| Metadata    | Value                                                                                  |
-| ----------- | -------------------------------------------------------------------------------------- |
-| Spec ID     | INFO                                                                                   |
-| Family      | Interfaces                                                                             |
-| Status      | Stub                                                                                   |
-| Scope       | Define complete player-facing knowledge and a consistent boundary around hidden state. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                         |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | INFO                                                           |
+| Family      | Interfaces                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

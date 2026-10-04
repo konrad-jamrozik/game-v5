@@ -1,12 +1,11 @@
 # Agents
 
-| Metadata    | Value                                                                              |
-| ----------- | ---------------------------------------------------------------------------------- |
-| Spec ID     | AGENT                                                                              |
-| Family      | Mechanics                                                                          |
-| Status      | Stub                                                                               |
-| Scope       | Define agent capability, task availability, development, exhaustion, and recovery. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                     |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | AGENT                                                          |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

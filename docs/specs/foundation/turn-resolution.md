@@ -1,12 +1,11 @@
 # Turn Resolution
 
-| Metadata    | Value                                                                     |
-| ----------- | ------------------------------------------------------------------------- |
-| Spec ID     | TURN                                                                      |
-| Family      | Foundation                                                                |
-| Status      | Stub                                                                      |
-| Scope       | Define exactly when subsystem rules run and which state each phase reads. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)            |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | TURN                                                           |
+| Family      | Foundation                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

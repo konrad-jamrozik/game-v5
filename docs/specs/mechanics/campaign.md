@@ -1,12 +1,11 @@
 # Campaign
 
-| Metadata    | Value                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------------- |
-| Spec ID     | CAMP                                                                                      |
-| Family      | Mechanics                                                                                 |
-| Status      | Stub                                                                                      |
-| Scope       | Define campaign initialization, global panic, and the conditions that start and end play. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                            |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | CAMP                                                           |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

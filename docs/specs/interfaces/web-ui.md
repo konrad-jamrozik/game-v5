@@ -1,12 +1,11 @@
 # Web UI
 
-| Metadata    | Value                                                                                    |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| Spec ID     | WEB                                                                                      |
-| Family      | Interfaces                                                                               |
-| Status      | Stub                                                                                     |
-| Scope       | Specify the first functional browser interface while keeping gameplay in the shared API. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | WEB                                                            |
+| Family      | Interfaces                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

@@ -1,12 +1,11 @@
 # Leads and Progression
 
-| Metadata    | Value                                                                                    |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| Spec ID     | LEAD                                                                                     |
-| Family      | Mechanics                                                                                |
-| Status      | Stub                                                                                     |
-| Scope       | Define the progression graph and the lifecycle of Leads, separately from Investigations. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | LEAD                                                           |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

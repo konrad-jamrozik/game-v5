@@ -26,7 +26,7 @@ function sampleCorpus(): SpecificationCorpus {
         family: 'Mechanics',
         title: 'Zulu',
         status: 'Stub',
-        scope: 'Zulu scope',
+
         owns: 'Zulu rules.',
         path: 'docs/specs/mechanics/zulu.md',
       },
@@ -35,7 +35,7 @@ function sampleCorpus(): SpecificationCorpus {
         family: 'Governance',
         title: 'Specification Index',
         status: 'Draft',
-        scope: 'Navigation',
+
         owns: 'Registration.',
         path: 'docs/specs/README.md',
       },
@@ -44,7 +44,7 @@ function sampleCorpus(): SpecificationCorpus {
         family: 'Foundation',
         title: 'Alpha "Quoted" & More',
         status: 'Draft',
-        scope: 'Alpha scope',
+
         owns: 'Alpha rules.',
         path: 'docs/specs/foundation/alpha.md',
       },
@@ -53,7 +53,7 @@ function sampleCorpus(): SpecificationCorpus {
         family: 'Governance',
         title: 'Conventions',
         status: 'Accepted',
-        scope: 'Writing rules',
+
         owns: 'Writing conventions.',
         path: 'docs/specs/governance/spec-conventions.md',
       },
@@ -131,10 +131,9 @@ describe('derived specification renderer', () => {
     const catalog = outputs.get('docs/derived/README.md') ?? ''
     expect(catalog).toContain('| Accepted   | 1              |')
     expect(catalog).toContain('| Governance | 2              |')
-    expect(catalog).toContain(
-      '| AAA | [Alpha "Quoted" & More](../specs/foundation/alpha.md) | Draft  | Alpha scope | Alpha rules. |',
-    )
+    expect(catalog).toContain('| AAA | [Alpha "Quoted" & More](../specs/foundation/alpha.md) | Draft  | Alpha rules. |')
     expect(catalog.indexOf('| CONV')).toBeLessThan(catalog.indexOf('| INDEX'))
+    expect(catalog).not.toContain('Scope')
     expect(catalog.indexOf('## Governance')).toBeLessThan(catalog.indexOf('## Foundation'))
   })
 
@@ -185,7 +184,7 @@ describe('derived specification renderer', () => {
             family: 'Foundation',
             title: 'Engine Contract',
             status: 'Draft',
-            scope: 'Engine behavior',
+
             owns: 'Engine behavior.',
             path: 'docs/specs/foundation/engine-contract.md',
           },
@@ -225,7 +224,7 @@ describe('derived specification renderer', () => {
             family: 'Foundation',
             title: 'Domain Model',
             status: 'Draft',
-            scope: 'Shared domain',
+
             owns: 'Shared domain.',
             path: 'docs/specs/foundation/domain-model.md',
           },
@@ -234,7 +233,7 @@ describe('derived specification renderer', () => {
             family: 'Governance',
             title: 'Artifact Relationships',
             status: 'Draft',
-            scope: 'Relationship rules',
+
             owns: 'Relationship rules.',
             path: 'docs/specs/governance/artifact-relationships.md',
           },

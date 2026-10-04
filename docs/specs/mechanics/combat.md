@@ -1,12 +1,11 @@
 # Combat
 
-| Metadata    | Value                                                                                            |
-| ----------- | ------------------------------------------------------------------------------------------------ |
-| Spec ID     | COMBAT                                                                                           |
-| Family      | Mechanics                                                                                        |
-| Status      | Stub                                                                                             |
-| Scope       | Define fully automatic battles and their reproducible results independently of campaign rewards. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                   |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | COMBAT                                                         |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

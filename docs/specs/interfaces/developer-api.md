@@ -1,12 +1,11 @@
 # Developer API
 
-| Metadata    | Value                                                                                                     |
-| ----------- | --------------------------------------------------------------------------------------------------------- |
-| Spec ID     | DEV                                                                                                       |
-| Family      | Interfaces                                                                                                |
-| Status      | Stub                                                                                                      |
-| Scope       | Expose all Authoritative values in Campaign state for debugging through a separate, explicit API surface. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                            |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | DEV                                                            |
+| Family      | Interfaces                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

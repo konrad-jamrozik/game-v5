@@ -1,12 +1,11 @@
 # Missions
 
-| Metadata    | Value                                                                               |
-| ----------- | ----------------------------------------------------------------------------------- |
-| Spec ID     | MISSION                                                                             |
-| Family      | Mechanics                                                                           |
-| Status      | Stub                                                                                |
-| Scope       | Define mission commitments and translate combat results into campaign consequences. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                      |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | MISSION                                                        |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

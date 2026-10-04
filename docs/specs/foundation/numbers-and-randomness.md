@@ -1,12 +1,11 @@
 # Numbers and Randomness
 
-| Metadata    | Value                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------------- |
-| Spec ID     | NUMRNG                                                                                    |
-| Family      | Foundation                                                                                |
-| Status      | Stub                                                                                      |
-| Scope       | Make every numeric calculation and random outcome reproducible across supported runtimes. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                            |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | NUMRNG                                                         |
+| Family      | Foundation                                                     |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

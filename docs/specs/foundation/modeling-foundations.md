@@ -1,12 +1,11 @@
 # Modeling Foundations
 
-| Metadata    | Value                                                                                                                                            |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Spec ID     | MODEL                                                                                                                                            |
-| Family      | Foundation                                                                                                                                       |
-| Status      | Draft                                                                                                                                            |
-| Scope       | Types, campaigns, Game Data Records (GDRs), Campaign instance construction and composition, identity and references, and historical preservation |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                   |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | MODEL                                                          |
+| Family      | Foundation                                                     |
+| Status      | Draft                                                          |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 

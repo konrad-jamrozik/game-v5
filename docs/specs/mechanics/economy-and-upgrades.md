@@ -1,12 +1,11 @@
 # Economy and Upgrades
 
-| Metadata    | Value                                                                |
-| ----------- | -------------------------------------------------------------------- |
-| Spec ID     | ECON                                                                 |
-| Family      | Mechanics                                                            |
-| Status      | Stub                                                                 |
-| Scope       | Define resource flows, personnel purchases, and agency improvements. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)       |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | ECON                                                           |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 
