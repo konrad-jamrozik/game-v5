@@ -8,8 +8,6 @@
 | Scope       | Define complete player-facing knowledge and a consistent boundary around hidden state. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                         |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define complete player-facing knowledge and a consistent boundary around hidden state.
@@ -45,7 +43,7 @@ duplicating shared definitions.
 
 Player-visible information follows [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary); historical explanations preserve [Historical fact preservation](../foundation/modeling-foundations.md#historical-fact-preservation).
 
-This Stub intends to refine [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) by specifying exposed fields, reveal conditions, and consistent human/AI views.
+This specification intends to refine [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) by specifying exposed fields, reveal conditions, and consistent human/AI views.
 It uses Modeling Foundations' Player-visible information and Historical meanings, Domain Model's concepts, and History and Persistence's
 history navigation. The mechanics dependencies supply the facts and calculated results to expose. In particular,
 Investigations owns estimate mathematics and permitted inputs; this document owns the exposed fields and reveal

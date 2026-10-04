@@ -7,15 +7,13 @@
 | Status      | Draft                                                                                                                                  |
 | Scope       | Execution, continuation, compatibility, gameplay dependency direction, query and information boundaries, and Committed state integrity |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                         |
-| Review      | Batch 1; proposed rules awaiting user review                                                                                           |
 
 # Purpose and boundaries
 
 Define the guarantees the engine provides when running the game, exposing information, and restoring history.
 
-**Draft proposal:** requirements were extracted from Domain Model and remain proposed contracts. This document owns
-observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
-RNG algorithm, save encoding, or subsystem mechanics. Accepting it alone does not make those details implementable.
+This document owns observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
+RNG algorithm, save encoding, or subsystem mechanics.
 
 # Relationships
 
@@ -118,8 +116,7 @@ The following capabilities are all required planning coverage, not illustrative 
 action discovery/explanations, structured management commands, Advance turn, results/reports, and undo/redo. Campaign
 save/load supports continuation without adding an ordinary full-state inspection function. Dev inspection is separate.
 
-This is not a finalized function list, wire schema, or error vocabulary. It constrains later API/INFO drafts while keeping
-the three foundation drafts as the batch 1 review deliverable.
+Exact function lists, wire schemas, and error vocabulary belong to TypeScript Player API and Player Information.
 
 ## Evidence basis (informative)
 
@@ -187,10 +184,3 @@ Exact save/restore procedures and public errors remain owned by HIST/API/DEV.
 Given a save from build A that references GDRs removed in build B, rejecting that save in build B is permitted
 under [ENG-005](#eng-005--build-compatibility). The build need not restore the removed GDRs or migrate the save. Exact rejection behavior belongs
 to History and Persistence; successful restoration must still satisfy [ENG-004](#eng-004--committed-state-integrity).
-
-# Open decisions
-
-[ENG-001](#eng-001--derived-value-consistency), [ENG-002](#eng-002--continuation-state), [ENG-003](#eng-003--information-boundary), [ENG-004](#eng-004--committed-state-integrity), and [ENG-005](#eng-005--build-compatibility) remain proposed rules awaiting review.
-[ENG-006](#eng-006--gameplay-dependency-direction) records the required gameplay dependency boundary.
-RNG algorithms, turn phase order, save encoding, Player-visible information fields, reveal conditions, estimates, public signatures,
-and developer enablement remain scheduled work in their owning specifications, not implicit defaults in this contract.

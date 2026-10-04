@@ -8,8 +8,6 @@
 | Scope       | Make every numeric calculation and random outcome reproducible across supported runtimes. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                            |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Make every numeric calculation and random outcome reproducible across supported runtimes.
@@ -38,7 +36,7 @@ duplicating shared definitions.
 
 Deterministic identity generation must preserve [Campaign instances](modeling-foundations.md#campaign-instances); calculations and continuation follow [ENG-001](engine-contract.md#eng-001--derived-value-consistency) and [ENG-002](engine-contract.md#eng-002--continuation-state).
 
-This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
+This specification intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
 draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [Campaign instances](modeling-foundations.md#campaign-instances);
 choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
 under [ENG-004](engine-contract.md#eng-004--committed-state-integrity); the existing no-op and algorithm TODOs remain unresolved.

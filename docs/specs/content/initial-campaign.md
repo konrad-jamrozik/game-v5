@@ -8,8 +8,6 @@
 | Scope       | Provide the complete, versioned numeric and Game Data Record (GDR) inputs for the first playable campaign. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                             |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Provide the complete, versioned numeric and GDR inputs for the first playable campaign.

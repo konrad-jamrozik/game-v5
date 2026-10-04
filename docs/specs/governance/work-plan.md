@@ -20,12 +20,12 @@ The [Game Design Brief](../../game-design-brief.md) supplies strategic intent an
 [specification index](../README.md) registers document IDs, Families, and ownership.
 
 **Current work:** [Domain Model](../foundation/domain-model.md), [Modeling Foundations](../foundation/modeling-foundations.md),
-and [Engine Contract](../foundation/engine-contract.md) are Draft and **In review** for batch 1. Review their proposed
-contracts and Open decisions before advancing. Later batches have not started.
+and [Engine Contract](../foundation/engine-contract.md) are **In review** for batch 1. Review their
+contracts and unresolved design questions before advancing. Later batches have not started.
 
 **Approved organization revision:** the project owner approved splitting the former Domain Model into these three
 documents with "I love it. Do it." after the three-document proposal. [PLAN-001](#plan-001--batch-sequence) and [PLAN-003](#plan-003--early-information-and-api-boundaries) now reflect that grouping;
-the ten-batch order is unchanged. This approval does not accept the subject rules.
+the ten-batch order is unchanged.
 
 # Relationships
 
@@ -56,24 +56,23 @@ instead of marking the whole batch Complete.
 
 ## Current baseline
 
-- Specification Conventions is Accepted.
-- Domain Model, Modeling Foundations, and Engine Contract are Draft and In review for batch 1; the other 18 subject specifications remain Stub documents.
-- This work plan is Accepted; the 10-batch sequence has been selected and later changes must be explicit.
+- Batch 1 is In review; later batches are Queued.
+- The 10-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
 ## Relationship inventory migration
 
-[Artifact Relationships](artifact-relationships.md) is Draft and In review as a separately requested governance
+[Artifact Relationships](artifact-relationships.md) is In review as a separately requested governance
 specification. The project owner requested two directional inventories, centrally defined implicit relationships,
 mirrored explicit relationships, and canonical relationship terminology. This work does not advance mechanics review
-batches or accept the REL contract.
+batches.
 
 Inventory migration is **Complete** for the current specification set. Explicit relationships use mirrored flat
 directional lists; implicit relationships are omitted from those lists. Substantive reliance is explained in owning
 contract prose. The project owner requested sharper uses/refines definitions and removal of the three foundation
 documents' cycles. Domain Model uses Modeling Foundations, and Engine Contract uses both. Domain Model retains the
 game-specific identity scope; Engine Contract retains execution guarantees. Operational specifications use modeling
-conventions and refine the corresponding engine behavior. These changes preserve proposed gameplay and review status.
+conventions and refine the corresponding engine behavior.
 
 The [cycle register](../../spec-relationship-cycles.md) records retained cycles and prospective removal work. Its
 removal approaches do not select new gameplay rules or change the accepted review sequence.
@@ -196,7 +195,7 @@ These are workflow checks, not gameplay tests:
   Draft and batch 1 to In review when presented. Preliminary API/information notes do not imply those contracts are
   complete. The next batch does not begin without the review opportunity or an explicit instruction to continue.
 - **Requested revision ([PLAN-005](#plan-005--batch-workflow), [PLAN-006](#plan-006--backlog-updates)):** Feedback requests a different model for Agents and Current assignments. Batch 1 remains
-  In review while affected notes and examples are updated. Domain Model remains Draft until explicitly accepted.
+  In review while affected notes and examples are updated.
 - **Separate combat/mission checkpoints ([PLAN-001](#plan-001--batch-sequence), [PLAN-009](#plan-009--oversized-batches)):** Accepting Combat completes batch 5, not batch 6. The damage-related
   campaign benefit of a failed mission remains a Missions decision.
 - **Incremental GDRs ([PLAN-002](#plan-002--parallel-gdr-and-acceptance-work), [PLAN-010](#plan-010--unresolved-dependencies)):** Drafting Investigations adds its parameters to Initial Campaign Content and
@@ -206,7 +205,3 @@ These are workflow checks, not gameplay tests:
 - **Milestone assessment ([PLAN-007](#plan-007--separate-implementation-authorization), [PLAN-011](#plan-011--first-implementation-milestone-assessment)):** After batch 4 is reviewed, assess the accepted contracts for a headless
   slice. If its required turn timing or API contract is unresolved, list the gap and propose the necessary specification
   work; do not invent the missing rule in code or treat the assessment as implementation authorization.
-
-# Open decisions
-
-None.

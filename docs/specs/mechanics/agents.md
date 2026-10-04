@@ -8,8 +8,6 @@
 | Scope       | Define agent capability, task availability, development, exhaustion, and recovery. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                     |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define agent capability, task availability, development, exhaustion, and recovery.
@@ -45,7 +43,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's agent contract ([DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle), [DOM-006](../foundation/domain-model.md#dom-006--orders-and-task-phase), [DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams), and [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)) with eligibility, Current assignment,
+This specification intends to refine Domain Model's agent contract ([DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle), [DOM-006](../foundation/domain-model.md#dom-006--orders-and-task-phase), [DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams), and [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)) with eligibility, Current assignment,
 travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
 Combat supplies battle-earned experience, Economy and Upgrades supplies economic effects on personnel and
 capabilities, and Initial Campaign Content supplies balance values. Those inputs are applied to agent transitions;

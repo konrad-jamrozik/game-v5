@@ -8,8 +8,6 @@
 | Scope       | Expose all Authoritative values in Campaign state for debugging through a separate, explicit API surface. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                            |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Expose all Authoritative values in Campaign state for debugging through a separate, explicit API surface.

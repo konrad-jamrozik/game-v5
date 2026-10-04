@@ -7,7 +7,6 @@
 | Family      | Governance                                                             |
 | Status      | Draft                                                                  |
 | Conventions | [Specification Conventions](spec-conventions.md)                       |
-| Review      | Proposed contract; terminology and examples awaiting review            |
 
 # Purpose and boundaries
 
@@ -19,8 +18,7 @@ This specification owns the relationship model. Specification Conventions owns t
 the implicit relationships that apply to registered specifications. A relationship does not change an artifact's
 status, accept a proposed rule, prove that an implementation is correct, or report a passing test run.
 
-**Draft proposal:** the numbered requirements are proposed rules. Examples explain the model; they do not
-declare relationships for the named artifacts.
+Examples explain the model; they do not declare relationships for the named artifacts.
 
 # Relationships
 
@@ -282,9 +280,3 @@ relationships still apply. It must not list implicit entries or use the former i
   defined.
 - Specification Conventions → Artifact Relationships through implicit `follows`, combined with Artifact Relationships →
   Specification Conventions through `uses`, is a permitted cycle combining Relationship kinds.
-
-# Open decisions
-
-No unresolved terminology choices are hidden in this proposal. The direction, five Relationship kinds, mirrored
-inventories, implicit-relationship handling, graph rules, and adoption rules are proposed for review; this specification
-remains Draft.

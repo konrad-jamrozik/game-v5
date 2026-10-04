@@ -8,8 +8,6 @@
 | Scope       | Define resource flows, personnel purchases, and agency improvements. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)       |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define resource flows, personnel purchases, and agency improvements.
@@ -37,7 +35,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds))
+This specification intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds))
 with resource flows, purchase eligibility, and upgrade effects. Agents supplies personnel state and capabilities;
 Numbers and Randomness supplies arithmetic. Initial Campaign Content supplies prices and increments, while this
 document supplies their meanings and formulas. Turn Resolution supplies evaluation timing. These rules remain TODOs.

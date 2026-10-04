@@ -8,8 +8,6 @@
 | Scope       | Define the callable TypeScript contract through which humans and AI can fully play the game. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                               |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define the callable TypeScript contract through which humans and AI can fully play the game.
@@ -41,7 +39,7 @@ Campaign instance must use a Campaign instance constructor contract satisfying [
 Returning an existing Campaign instance or restoring its earlier state does not itself create a new Campaign instance; restoration
 remains governed by History and Persistence and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity).
 
-This Stub intends to refine [ENG-001](../foundation/engine-contract.md#eng-001--derived-value-consistency), [ENG-002](../foundation/engine-contract.md#eng-002--continuation-state), [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary), and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) with exact callable queries and commands, rejection behavior,
+This specification intends to refine [ENG-001](../foundation/engine-contract.md#eng-001--derived-value-consistency), [ENG-002](../foundation/engine-contract.md#eng-002--continuation-state), [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary), and [ENG-004](../foundation/engine-contract.md#eng-004--committed-state-integrity) with exact callable queries and commands, rejection behavior,
 Player-visible information isolation, and continuation operations. It uses Modeling Foundations' meanings, Domain Model's game
 concepts, Player Information's permitted views, and History and Persistence's restoration contract. The signatures
 and error choices below remain TODOs rather than an already specified API.

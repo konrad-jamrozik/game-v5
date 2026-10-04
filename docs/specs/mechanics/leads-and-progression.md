@@ -8,8 +8,6 @@
 | Scope       | Define the progression graph and the lifecycle of Leads, separately from Investigations. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define the progression graph and the lifecycle of Leads, separately from Investigations.
@@ -35,7 +33,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's lead and progression contract ([DOM-009](../foundation/domain-model.md#dom-009--leads-and-investigations)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with prerequisite semantics,
+This specification intends to refine Domain Model's lead and progression contract ([DOM-009](../foundation/domain-model.md#dom-009--leads-and-investigations)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with prerequisite semantics,
 availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
 progression. Factions in turn uses this document's unlock effects. Initial Campaign Content supplies the actual lead
 graph and effect Game Data Records (GDRs) conforming to these rules. The expression and effect choices remain TODOs below.

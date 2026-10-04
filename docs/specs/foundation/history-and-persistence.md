@@ -8,8 +8,6 @@
 | Scope       | Define reversible sessions, reproducible replay, and durable save/load behavior. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                   |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define reversible sessions, reproducible replay, and durable save/load behavior.
@@ -43,11 +41,10 @@ duplicating shared definitions.
 
 ## Session
 
-The [Session definition](#glossary) was migrated from Domain Model and remains a draft. Controller state can include,
-for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved; this specification stays Stub.
+Controller state can include, for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved.
 Storage and restoration must preserve [Campaign instances](modeling-foundations.md#campaign-instances), [References](modeling-foundations.md#references), and [Historical fact preservation](modeling-foundations.md#historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-value-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
 
-This Stub intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
+This specification intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
 undo/redo and save/load procedures. It uses Modeling Foundations' identity, reference, and historical-preservation
 conventions; storage procedures do not refine those meanings. Domain Model supplies the Campaign instances restored,
 and Numbers and Randomness supplies the numeric and generator-state contracts. The TODOs below retain the unresolved

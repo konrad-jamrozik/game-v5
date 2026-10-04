@@ -8,8 +8,6 @@
 | Scope       | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                        |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs.
@@ -34,7 +32,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's investigation contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-009](../foundation/domain-model.md#dom-009--leads-and-investigations)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with start, progress, completion,
+This specification intends to refine Domain Model's investigation contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-009](../foundation/domain-model.md#dom-009--leads-and-investigations)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with start, progress, completion,
 team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
 and Numbers and Randomness's arithmetic/draws. Player Information supplies exposed field shapes and reveal conditions;
 this document supplies estimate mathematics and the information those estimates condition on. The exact mathematics

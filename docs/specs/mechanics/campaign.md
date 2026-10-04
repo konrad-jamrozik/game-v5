@@ -8,8 +8,6 @@
 | Scope       | Define campaign initialization, global panic, and the conditions that start and end play. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                            |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define campaign initialization, global panic, and the conditions that start and end play.
@@ -33,7 +31,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's campaign boundary ([DOM-001](../foundation/domain-model.md#dom-001--campaign-boundary) and its Campaign and agency section) with
+This specification intends to refine Domain Model's campaign boundary ([DOM-001](../foundation/domain-model.md#dom-001--campaign-boundary) and its Campaign and agency section) with
 initialization and ending behavior. Initial Campaign Content supplies the exact starting values and catalogs;
 this document supplies their initialization meaning. Turn Resolution supplies state-read timing and the phase in
 which campaign predicates are checked; this document supplies the predicates. The exact rules remain TODOs below.

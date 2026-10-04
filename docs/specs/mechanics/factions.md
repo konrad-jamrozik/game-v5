@@ -8,8 +8,6 @@
 | Scope       | Define escalating faction pressure, Faction operation occurrence generation, suppression, and permanent defeat. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                  |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define escalating faction pressure, Faction operation occurrence generation, suppression, and permanent defeat.
@@ -36,7 +34,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)) with escalation,
+This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)) with escalation,
 Faction operation occurrence generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
 Initial Campaign Content supplies catalogs of Game Data Records (GDRs) for Faction operation occurrences and parameter values. Leads and Progression supplies earned
 unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.

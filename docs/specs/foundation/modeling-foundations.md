@@ -7,7 +7,6 @@
 | Status      | Draft                                                                                                                                            |
 | Scope       | Types, campaigns, Game Data Records (GDRs), Campaign instance construction and composition, identity and references, and historical preservation |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                   |
-| Review      | Batch 1; proposed rules awaiting user review                                                                                                     |
 
 # Purpose and boundaries
 
@@ -48,7 +47,7 @@ Ruleset collects the Rules governing a Campaign.
 | Type     | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration. |
 | Property | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                        |
 | Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                                        |
-| Rule     | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint. Further forms and any formal representation remain undecided.                                   |
+| Rule     | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint.                                                                                                 |
 | Ruleset  | The collection of Rules governing a Campaign.                                                                                                                                                              |
 
 ## Data within a Campaign
@@ -365,12 +364,3 @@ How to determine the Derived value of the completion count for the Lead GDR lead
 
 The Lead reference and lifecycle property values read in steps 2 and 3 are Authoritative values. Caching the resulting
 completion count does not change its classification as a Derived value.
-
-# Open decisions
-
-[Campaign instances](#campaign-instances), [References](#references), [Historical fact preservation](#historical-fact-preservation), and [Authoritative and Derived values](#authoritative-and-derived-values) remain proposed contracts awaiting review.
-Consuming specifications own their concrete game Types, identity scopes, Campaign instance constructor behavior, and gameplay rules.
-The illustrations here do not settle those decisions or select production GDR properties and allowed combinations.
-
-Further Rule forms and any formal representation remain undecided. The five GDR roles are explanatory, not a
-new implementation taxonomy.

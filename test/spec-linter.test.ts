@@ -214,7 +214,7 @@ describe('specification linter', () => {
     expect(diagnosticCodes(misplaced)).toEqual(['SPEC209'])
   })
 
-  test.each(['Concepts and contract', 'Edge cases and failure behavior', 'Open decisions'])(
+  test.each(['Concepts and contract', 'Edge cases and failure behavior'])(
     'still requires %s when requirements are interwoven',
     (section) => {
       const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Requirements\n\n', '')
@@ -222,6 +222,22 @@ describe('specification linter', () => {
       expect(diagnosticCodes(missing)).toContain('SPEC209')
     },
   )
+
+  test('allows omission of Open decisions when no unresolved choices remain', () => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Open decisions\n\nNone.', '')
+    expect(lintSpecifications({ files })).toEqual([])
+  })
+
+  test('rejects a misplaced optional Open decisions section', () => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Open decisions\n\nNone.', '')
+    const misplaced = mutate(
+      files,
+      'docs/specs/foundation/alpha.md',
+      '# Concepts and contract',
+      '# Open decisions\n\nChoose the numeric representation.\n\n# Concepts and contract',
+    )
+    expect(diagnosticCodes(misplaced)).toContain('SPEC209')
+  })
 
   test('accepts Foundation examples embedded beside concepts', () => {
     const files = mutate(

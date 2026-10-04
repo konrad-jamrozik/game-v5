@@ -52,6 +52,13 @@ Use one of these statuses in the metadata table:
 
 Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Record the acceptance reference when a document is accepted. Do not infer approval from silence. Work may explore a draft when requested, but must not silently settle its open design decisions.
 
+Record document status only in the metadata Status row. Do not repeat that a document is Draft, Stub, unaccepted,
+proposed, or awaiting review in body paragraphs, notices, Review metadata rows, or Open decisions. Work tracking may
+record batch progress; lifecycle rules and worked review scenarios may discuss status changes.
+
+Open decisions contains only substantive unresolved design choices and their affected contracts. Do not list already
+stated rules merely to request acceptance. Omit the section when no substantive unresolved choices remain.
+
 Each specification has a stable Spec ID, Family, title, status, scope, and related-document links. The index registers Spec IDs,
 Families, and scopes.
 
@@ -265,7 +272,7 @@ Rule specifications use the following top-level headings in this order:
 5. `# Requirements` (optional)
 6. `# Edge cases and failure behavior`
 7. `# Acceptance examples`
-8. `# Open decisions`
+8. `# Open decisions` (optional; include only for substantive unresolved design choices)
 
 Use a metadata table immediately below the document-title H1. Major sections are unnumbered H1 headings. Subsections may
 nest from H2 through H6 when the hierarchy requires it, without skipping a heading level. Appendices follow Open
@@ -286,7 +293,7 @@ review concern; the linter checks section presence, content, and order, not the 
 
 ## Handling sections that do not apply
 
-Retain the standard headings for navigation, except for the optional Requirements section and the Foundation example-layout option above. If a required section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
+Retain the standard headings for navigation, except for the optional sections explicitly permitted above. If a required section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
 
 A missing decision is not "not applicable." For example, a mechanics specification can have no public function signatures while still defining inputs, outputs, and state changes.
 

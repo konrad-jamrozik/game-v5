@@ -7,21 +7,18 @@
 | Status      | Draft                                                                               |
 | Scope       | Game concepts, their properties and relationships, and structural domain invariants |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                      |
-| Review      | Batch 1; proposed rules awaiting user review                                        |
 
 # Purpose and boundaries
 
 Define what exists in the game and how those concepts relate. A campaign contains one player-controlled agency that
 allocates agents, pursues leads, undertakes missions, and opposes factions.
 
-**Draft proposal:** the numbered requirements are proposed contracts, not accepted rules. Conceptual records may be
-embedded, separately stored, or reconstructed provided their identity and meaning are preserved. This document does
+Conceptual records may be embedded, separately stored, or reconstructed provided their identity and meaning are preserved. This document does
 not prescribe classes, database tables, a UI framework, or source-file layout.
 
 [Modeling Foundations](modeling-foundations.md) owns the underpinning vocabulary and identity/reference conventions.
 [Engine Contract](engine-contract.md) owns runtime guarantees. This document owns the game concepts and structural
-relationships; mechanics own formulas and detailed transitions. Accepting this model alone does not make those mechanics
-implementable. Numeric representation, RNG algorithms, phase order, Game Data Record (GDR) values, API/report schemas, and save encoding
+relationships; mechanics own formulas and detailed transitions. Numeric representation, RNG algorithms, phase order, Game Data Record (GDR) values, API/report schemas, and save encoding
 remain in their owning specifications.
 
 # Relationships
@@ -86,7 +83,7 @@ than separately identified Campaign instances.
 
 ## Types, multiplicity, and lifecycle
 
-The following table enumerates the complete concept classifications declared by this draft.
+The following table enumerates the complete concept classifications declared by this specification.
 
 | Concept                                                                                            | Modeling role and multiplicity                                                                                                                                                                                                                                                    | Construction and historical transition / owner                                                                                                                                                                                                                                                                                                                                                   |
 | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -447,19 +444,3 @@ Given i1 concludes and m1 resolves under their owning rules, a structurally vali
 This satisfies [References](modeling-foundations.md#references); [DOM-005](#dom-005--agent-lifecycle)/[DOM-007](#dom-007--current-versus-historical-teams)/[DOM-009](#dom-009--leads-and-investigations)/[DOM-010](#dom-010--progression-facts)/[DOM-012](#dom-012--combat-and-consequences). Assigning a1 to another investigation does not rewrite i1's Participation history. If i1
 were Abandoned instead, restarting creates a new identity and does not resume i1's progress ([Campaign instances](modeling-foundations.md#campaign-instances); [DOM-009](#dom-009--leads-and-investigations)).
 This fixture does not choose the replacement orders or turn timing.
-
-# Open decisions
-
-These have explicit proposed answers, not hidden implementation defaults. Review can accept them or request changes.
-
-| Review decision                                                   | Proposed answer                                                                                                                                                                  | Affected specifications |
-| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| Separate terminal lifecycle from tasks?                           | Serving/Killed/Dismissed plus Current assignment and Task phase; death/dismissal are not jobs ([DOM-005](#dom-005--agent-lifecycle)/[DOM-006](#dom-006--orders-and-task-phase)). | AGENT, API, HIST        |
-| Unique Instance IDs across all seven Campaign instance Types?     | Yes; [DOM-017](#dom-017--campaign-instance-identity-scope) declares the shared scope using [Campaign instances](modeling-foundations.md#campaign-instances).                     | NUMRNG, HIST, API       |
-| Independent Campaign instances for Faction operation occurrences? | Initially embed each Faction operation occurrence in its single Response mission ([DOM-011](#dom-011--mission-kind-and-provenance)).                                             | FACTION, MISSION, INFO  |
-| Individually tracked equipment/inventory?                         | No; GDRs plus combatant-owned values for initial scope.                                                                                                                          | AGENT, ECON, COMBAT     |
-| Full health on dismissal as a structural invariant?               | No; require positive health and let AGENT/ECON determine eligibility ([DOM-008](#dom-008--attribute-bounds)).                                                                    | AGENT, ECON             |
-
-Formulas, transitions, reveal conditions, and signatures assigned to other specifications remain scheduled work outside
-this contract. They must be specified before their features are implemented, but do not require invented answers in
-this model.

@@ -8,8 +8,6 @@
 | Scope       | Provide a complete terminal adapter usable by humans and AI over the same player API. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                        |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Provide a complete terminal adapter usable by humans and AI over the same player API.

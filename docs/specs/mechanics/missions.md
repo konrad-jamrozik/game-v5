@@ -8,8 +8,6 @@
 | Scope       | Define mission commitments and translate combat results into campaign consequences. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                      |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define mission commitments and translate combat results into campaign consequences.
@@ -37,7 +35,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's mission contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)/[DOM-012](../foundation/domain-model.md#dom-012--combat-and-consequences)) with creation, deployment, deadlines,
+This specification intends to refine Domain Model's mission contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)/[DOM-012](../foundation/domain-model.md#dom-012--combat-and-consequences)) with creation, deployment, deadlines,
 resolution, and campaign consequences. Agents supplies participant eligibility, Combat supplies Battle results,
 Economy and Upgrades supplies capacities and resource effects, and Factions supplies operation provenance and
 suppression semantics. Initial Campaign Content supplies mission Game Data Records (GDRs) and numeric values under this contract.

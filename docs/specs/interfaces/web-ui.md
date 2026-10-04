@@ -8,8 +8,6 @@
 | Scope       | Specify the first functional browser interface while keeping gameplay in the shared API. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Specify the first functional browser interface while keeping gameplay in the shared API.

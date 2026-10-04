@@ -8,8 +8,6 @@
 | Scope       | Define test scenarios that verify how game systems work together. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)    |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 This document defines test scenarios that verify how game systems work together. Each scenario specifies a starting
@@ -50,7 +48,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Concepts and contract
 
-This Stub uses Initial Campaign Content for reproducible inputs, Turn Resolution for effect timing, and History and
+This specification uses Initial Campaign Content for reproducible inputs, Turn Resolution for effect timing, and History and
 Persistence for continuation scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
 under test. Specific checked requirements acquire implicit verifies relationships when scenarios identify them;
 these document-level uses entries do not claim that tests already exist or pass.

@@ -25,10 +25,9 @@ deterministic specification lint alone does not establish the semantic justifica
 
 ## Game component: coupled mechanics, Game Data Records (GDRs), timing, and Player-visible information
 
-All 11 documents in this component are Stub. The justifications describe declared ownership and intended contract
-detail, not completed rules. Exact formulas, values, timing, and reveal decisions remain unresolved. Each input has a
+The justifications describe declared ownership and intended contract detail. Exact formulas, values, timing, and reveal decisions remain unresolved. Each input has a
 distinct owner, so the dependencies express cooperation between contracts rather than definitions that explain only
-each other. Reassess these provisional justifications as the stubs become concrete.
+each other. Reassess these justifications as the contracts become concrete.
 
 Every arrow below means **supplier is used by consumer**. All arrows are uses. The table that follows lists the complete
 41-edge inventory and supplies linked evidence for the meaning of each edge.
@@ -139,8 +138,7 @@ This is the complete internal-edge inventory:
 | Artifact Relationships → Specification Conventions | Uses             | [Artifact Relationships](specs/governance/artifact-relationships.md#concepts-and-contract) supplies relationship meanings used by the [conventions](specs/governance/spec-conventions.md#relationship-inventories). |
 
 The meanings are independently stated: writing rules govern a document that defines the relationship vocabulary.
-The relationship definition does not need a missing definition supplied only by the writing rule. REL remains Draft;
-CONV's Accepted status does not accept REL or complete its review.
+The relationship definition does not need a missing definition supplied only by the writing rule.
 
 A future removal could consolidate the relationship language and inventory rules into Specification Conventions and
 retire the separate REL contract with explicit requirement migration. That would require a separately reviewed

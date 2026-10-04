@@ -8,8 +8,6 @@
 | Scope       | Define fully automatic battles and their reproducible results independently of campaign rewards. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                   |
 
-> This is a scoped outline, not an accepted implementation contract. TODOs must be resolved before acceptance.
-
 # Purpose and boundaries
 
 Define fully automatic battles and their reproducible results independently of campaign rewards.
@@ -33,7 +31,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This Stub intends to refine Domain Model's combatant and battle-result contract ([DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)/[DOM-012](../foundation/domain-model.md#dom-012--combat-and-consequences)) with battle transitions,
+This specification intends to refine Domain Model's combatant and battle-result contract ([DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)/[DOM-012](../foundation/domain-model.md#dom-012--combat-and-consequences)) with battle transitions,
 calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
 and draws. The combat decisions below remain TODOs; campaign consequences remain owned by Missions.
 
