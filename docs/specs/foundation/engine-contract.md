@@ -140,7 +140,7 @@ lacks RNG state. The brief requires reproducible continuation and separate playe
 | Broken internal reference/invariant                 | Report an engine/data defect rather than silently repair gameplay ([ENG-004](#eng-004--committed-state-integrity); [References](modeling-foundations.md#references))                                                                                                                                                          |
 | Undo removes a Campaign instance created later      | Restore earlier references consistently, with no dangling future-only links or stale cached Derived values ([ENG-001](#eng-001--derived-value-consistency)/[ENG-004](#eng-004--committed-state-integrity); [Campaign instances](modeling-foundations.md#campaign-instances)/[References](modeling-foundations.md#references)) |
 | Intermediate battle/turn state                      | Do not expose it as committed Player-visible information ([ENG-004](#eng-004--committed-state-integrity))                                                                                                                                                                                                                     |
-| Current calculation differs from historical value   | Refresh current calculations under [ENG-001](#eng-001--derived-value-consistency); preserve historical facts under [MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation)                                                                                                                               |
+| Current calculation differs from historical value   | Refresh current calculations under [ENG-001](#eng-001--derived-value-consistency); preserve historical facts under [Historical fact preservation](modeling-foundations.md#historical-fact-preservation)                                                                                                                       |
 
 # Acceptance examples
 
@@ -167,7 +167,7 @@ those commands ([ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-00
 
 - Undo restores prior facts and corresponding Derived values, without future-only references or stale readiness values;
   redo also updates or invalidates affected caches ([ENG-001](#eng-001--derived-value-consistency)/[ENG-002](#eng-002--continuation-state)/[ENG-004](#eng-004--committed-state-integrity); [Campaign instances](modeling-foundations.md#campaign-instances)/[References](modeling-foundations.md#references)).
-- A historical battle-start value remains preserved when current strength is recalculated ([MODEL-004](modeling-foundations.md#model-004--historical-fact-preservation)).
+- A historical battle-start value remains preserved when current strength is recalculated ([Historical fact preservation](modeling-foundations.md#historical-fact-preservation)).
 - Structural validation of [Domain Model fixture A](domain-model.md#a-valid-relationships) leaves facts, RNG state G,
   and Instance ID allocation state N unchanged ([ENG-001](#eng-001--derived-value-consistency)/[ENG-004](#eng-004--committed-state-integrity)). G and N are opaque engine bookkeeping added to that structural fixture.
 - Starting from fixture A, any player command that would produce one of its

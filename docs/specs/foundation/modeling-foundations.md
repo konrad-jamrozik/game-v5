@@ -155,6 +155,42 @@ Required historical references remain resolvable. Relationships must not be infe
 References that can change belong in State; fixed references belong in Constants. Instance ID and the Archetype reference
 are separate immutable properties. Reference mutability is independent of the target’s mutability.
 
+## Authoritative and Derived values
+
+An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values
+and current rules and GDRs. This classification is separate from mutability. Shared base health and a
+recorded Instance ID can be Authoritative values even though neither changes during gameplay.
+
+Each specification using these concepts must declare which of its values are Authoritative values and which are Derived
+values, using the glossary definitions. Caching a current calculation must not change its classification as a Derived value.
+Classification must be independent of player visibility: either kind may be hidden from the player. Retaining a past
+calculation as a historical fact follows [Historical fact preservation](#historical-fact-preservation).
+
+In the enemy example, declare each enemy's current health an Authoritative value and their total current health a Derived value.
+Initially the total is 20. After enemy_1 takes damage, it is 17. Caching the total does not make it an Authoritative value, and hiding
+either the individual health or the total from the player does not change the classification.
+
+Similarly, the recorded completion of investigation_2 is an Authoritative value recording a historical fact. The completion count for lead_1 is a Derived value:
+it is 1 after investigation_2 completes, and investigation_1's abandonment does not add a completion. Facts associated with GDRs belong to
+the campaign rather than being edits to those GDRs.
+
+## Historical fact preservation
+
+A past value cannot always be recovered from its current replacement. For example, a report that needs enemy_1's original
+health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
+replacement for that historical fact. When a rule or report needs the historical basis, the original inputs or historical
+value must be preserved; required historical values must not be overwritten with current calculations. This does not
+require retaining every intermediate calculation or every possible chart.
+
+When a Campaign instance no longer participates in current gameplay, data required by rules, reports, or retained
+references must remain in History rather than being deleted. For example, if enemy_1 no longer participates in a Mission,
+a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
+name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
+changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
+retained references must be preserved under [Campaign instances](#campaign-instances) and [References](#references).
+An evolving collection can contain immutable historical records: adding a completion record does not permit rewriting
+an earlier record.
+
 ## Roles of GDRs
 
 GDRs can serve the following five roles. The roles can overlap; they do not define separate Types or required
@@ -306,42 +342,6 @@ If investigation_2 later completes, Campaign state can retain a completion recor
 the record belongs to the campaign. The number of completions for lead_1 can then be derived from those records. GDRs
 can thus identify the subject of an activity and key campaign facts without becoming mutable itself.
 
-## Authoritative and Derived values
-
-An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values
-and current rules and GDRs. This classification is separate from mutability. Shared base health and a
-recorded Instance ID can be Authoritative values even though neither changes during gameplay.
-
-Each specification using these concepts must declare which of its values are Authoritative values and which are Derived
-values, using the glossary definitions. Caching a current calculation must not change its classification as a Derived value.
-Classification must be independent of player visibility: either kind may be hidden from the player. Retaining a past
-calculation as a historical fact follows [MODEL-004](#model-004--historical-fact-preservation).
-
-In the enemy example, declare each enemy's current health an Authoritative value and their total current health a Derived value.
-Initially the total is 20. After enemy_1 takes damage, it is 17. Caching the total does not make it an Authoritative value, and hiding
-either the individual health or the total from the player does not change the classification.
-
-Similarly, the recorded completion of investigation_2 is an Authoritative value recording a historical fact. The completion count for lead_1 is a Derived value:
-it is 1 after investigation_2 completes, and investigation_1's abandonment does not add a completion. Facts associated with GDRs belong to
-the campaign rather than being edits to those GDRs.
-
-## MODEL-004 — Historical fact preservation
-
-A past value cannot always be recovered from its current replacement. For example, a report that needs enemy_1's original
-health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
-replacement for that historical fact. When a rule or report needs the historical basis, the original inputs or historical
-value must be preserved; required historical values must not be overwritten with current calculations. This does not
-require retaining every intermediate calculation or every possible chart.
-
-When a Campaign instance no longer participates in current gameplay, data required by rules, reports, or retained
-references must remain in History rather than being deleted. For example, if enemy_1 no longer participates in a Mission,
-a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
-name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
-changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
-retained references must be preserved under [Campaign instances](#campaign-instances) and [References](#references).
-An evolving collection can contain immutable historical records: adding a completion record does not permit rewriting
-an earlier record.
-
 # Edge cases and failure behavior
 
 | Case                                                                                                                            | Result / owner                                                                                                                                       |
@@ -351,11 +351,11 @@ an earlier record.
 | Duplicate Instance ID, missing reference, or wrong expected Type                                                                | Invalid Campaign state under [Campaign instances](#campaign-instances)/[References](#references); never infer a replacement by name.                 |
 | Campaign instance is historical, including terminal lifecycle states                                                            | Required historical references still resolve under [References](#references); storage may be compacted without losing required facts.                |
 | A later Campaign instance belongs only to a discarded future                                                                    | Instance IDs are timeline-scoped under [Campaign instances](#campaign-instances); committed references must resolve under [References](#references). |
-| A current value differs from the retained original value                                                                        | Retain the historical basis required by the result/report under [MODEL-004](#model-004--historical-fact-preservation).                               |
+| A current value differs from the retained original value                                                                        | Retain the historical basis required by the result/report under [Historical fact preservation](#historical-fact-preservation).                       |
 
 # Open decisions
 
-[Campaign instances](#campaign-instances), [References](#references), [MODEL-004](#model-004--historical-fact-preservation), and [Authoritative and Derived values](#authoritative-and-derived-values) remain proposed contracts awaiting review.
+[Campaign instances](#campaign-instances), [References](#references), [Historical fact preservation](#historical-fact-preservation), and [Authoritative and Derived values](#authoritative-and-derived-values) remain proposed contracts awaiting review.
 Consuming specifications own their concrete game Types, identity scopes, Campaign instance constructor behavior, and gameplay rules.
 The illustrations here do not settle those decisions or select production GDR properties and allowed combinations.
 

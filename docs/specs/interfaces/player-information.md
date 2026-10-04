@@ -43,7 +43,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Player-visible information follows [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary); historical explanations preserve [MODEL-004](../foundation/modeling-foundations.md#model-004--historical-fact-preservation).
+Player-visible information follows [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary); historical explanations preserve [Historical fact preservation](../foundation/modeling-foundations.md#historical-fact-preservation).
 
 This Stub intends to refine [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary) by specifying exposed fields, reveal conditions, and consistent human/AI views.
 It uses Modeling Foundations' Player-visible information and Historical meanings, Domain Model's concepts, and History and Persistence's
