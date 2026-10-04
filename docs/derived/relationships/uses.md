@@ -28,7 +28,7 @@ flowchart TD
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
-  MODEL["MODEL — Modeling Foundations (Draft)"]
+  MODEL["MODEL — Modeling Foundations (Accepted)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
   TURN["TURN — Turn Resolution (Stub)"]

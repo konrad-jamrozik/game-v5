@@ -1,11 +1,12 @@
 # Modeling Foundations
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | MODEL                                                          |
-| Family      | Foundation                                                     |
-| Status      | Draft                                                          |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata             | Value                                                                                                      |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Spec ID              | MODEL                                                                                                      |
+| Family               | Foundation                                                                                                 |
+| Status               | Accepted                                                                                                   |
+| Acceptance reference | Project owner approval in this task: "OK mark the mf as Accepted and update any other docs as appropriate" |
+| Conventions          | [Specification conventions](../governance/spec-conventions.md)                                             |
 
 # Purpose and boundaries
 

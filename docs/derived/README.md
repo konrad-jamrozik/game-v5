@@ -12,8 +12,8 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 18             |
-| Draft      | 5              |
-| Accepted   | 2              |
+| Draft      | 4              |
+| Accepted   | 3              |
 | Superseded | 0              |
 
 ## Counts by family
@@ -38,14 +38,14 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Foundation
 
-| ID     | Document                                                                  | Status | Owns                                                                                                                                      |
-| ------ | ------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| DOM    | [Domain Model](../specs/foundation/domain-model.md)                       | Draft  | Game concepts, their properties and relationships, and structural domain invariants.                                                      |
-| ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                 | Draft  | Calculation, continuation, build compatibility, information access, and Committed state guarantees.                                       |
-| HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md) | Stub   | Define reversible sessions, reproducible replay, and durable save/load behavior.                                                          |
-| MODEL  | [Modeling Foundations](../specs/foundation/modeling-foundations.md)       | Draft  | Modeling vocabulary, Types, archetypes, four-property Campaign instances, construction, identity/references, and historical preservation. |
-| NUMRNG | [Numbers and Randomness](../specs/foundation/numbers-and-randomness.md)   | Stub   | Make every numeric calculation and random outcome reproducible across supported runtimes.                                                 |
-| TURN   | [Turn Resolution](../specs/foundation/turn-resolution.md)                 | Stub   | Define exactly when subsystem rules run and which state each phase reads.                                                                 |
+| ID     | Document                                                                  | Status   | Owns                                                                                                                                      |
+| ------ | ------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| DOM    | [Domain Model](../specs/foundation/domain-model.md)                       | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                                      |
+| ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                 | Draft    | Calculation, continuation, build compatibility, information access, and Committed state guarantees.                                       |
+| HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md) | Stub     | Define reversible sessions, reproducible replay, and durable save/load behavior.                                                          |
+| MODEL  | [Modeling Foundations](../specs/foundation/modeling-foundations.md)       | Accepted | Modeling vocabulary, Types, archetypes, four-property Campaign instances, construction, identity/references, and historical preservation. |
+| NUMRNG | [Numbers and Randomness](../specs/foundation/numbers-and-randomness.md)   | Stub     | Make every numeric calculation and random outcome reproducible across supported runtimes.                                                 |
+| TURN   | [Turn Resolution](../specs/foundation/turn-resolution.md)                 | Stub     | Define exactly when subsystem rules run and which state each phase reads.                                                                 |
 
 ## Mechanics
 
