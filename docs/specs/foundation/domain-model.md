@@ -318,9 +318,9 @@ prior progress is historical, not resumable. LEAD/INVSTG own eligibility and num
 ### DOM-010 — Progression facts
 
 Wins and earned unlocks must be explicit Authoritative values in Campaign state with source references where applicable.
-Each retained Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle
-property within its State property; the stored values of these properties are Authoritative values. A Lead’s completion count
-is a Derived value calculated by counting retained Investigation Campaign instances whose Lead reference property identifies
+Each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle
+property within its State property; the values of these properties are Authoritative values. A Lead’s completion count
+is a Derived value calculated by counting Investigation Campaign instances whose Lead reference property identifies
 that Lead GDR and whose lifecycle property has value Completed. Faction defeat and
 lead affiliation must not depend on specially spelled identifiers. Their predicates and effects belong to mechanics owners.
 

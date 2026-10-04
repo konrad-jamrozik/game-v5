@@ -80,13 +80,14 @@ A Campaign instance constructor creates and returns a new Campaign instance. It 
 
 These concepts describe how values are established, retained, and exposed within the preceding model.
 
-| Term                       | Definition                                                                                     |
-| -------------------------- | ---------------------------------------------------------------------------------------------- |
-| Authoritative value        | A value treated as established truth rather than recomputed from other values.                 |
-| Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs. |
-| History                    | Retained data describing past Campaign state or events. Rules and reports may consult History. |
-| Committed state            | Complete Campaign state before or after an accepted command, not intermediate processing.      |
-| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                          |
+| Term                       | Definition                                                                                                                                                                                                                                               |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authoritative value        | A value treated as established truth rather than recomputed from other values.                                                                                                                                                                           |
+| Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs.                                                                                                                                                           |
+| History                    | Retained data describing past Campaign state or events. Rules and reports may consult History.                                                                                                                                                           |
+| Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
+| Committed state            | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                                                                                                |
+| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
 
 ## Rejected terms and synonyms
 
@@ -144,7 +145,7 @@ A Campaign instance constructor implementation typically depends on:
 ### Campaign instance identity
 
 Instance IDs are unique within their explicitly declared scope and stable for the Campaign instance’s lifetime.
-Restoration, including undo/redo, preserves identity and immutable facts; uniqueness applies within the retained timeline, excluding discarded futures.
+Restoration, including undo/redo, preserves identity and immutable facts; uniqueness applies within the Campaign’s current timeline, excluding discarded futures.
 
 ## References
 
@@ -171,8 +172,8 @@ Initially the total is 20. After enemy_1 takes damage, it is 17. Caching the tot
 either the individual health or the total from the player does not change the classification.
 
 Each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle property
-within its State property. The stored values of these two properties are Authoritative values. The completion count for a
-Lead is a Derived value: count the retained Investigation Campaign instances whose Lead reference property identifies
+within its State property. The values of these two properties are Authoritative values. The completion count for a
+Lead is a Derived value: count the Investigation Campaign instances whose Lead reference property identifies
 that Lead GDR and whose lifecycle property has the value Completed. The count for lead_1 is 1 after investigation_2 completes; investigation_1’s Abandoned lifecycle
 excludes it. No separate completion record or stored Authoritative completion count is required.
 
@@ -342,25 +343,28 @@ regardless of whether some properties match.
 
 ## GDR role: key for campaign facts
 
-In this role, a GDR’s identity associates campaign-specific facts with that GDR. The facts belong to Campaign state;
+In the Key for campaign facts role, a GDR’s identity associates campaign-specific facts with that GDR. The facts belong to Campaign state;
 the GDR remains shared and immutable.
 
 Continuing the illustrative Investigation example, suppose investigation_2 completes after investigation_1 was abandoned.
 Campaign state retains both Investigation Campaign instances, including the values of the Lead reference property
 within each Campaign instance’s Constants property and the lifecycle property within its State property.
 
-| Element                                                                        | Modeling role                          | Meaning in this example                                                                                                                                            |
-| ------------------------------------------------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| lead_1                                                                         | GDR in the Key for campaign facts role | Its identity selects the Investigations concerning this Lead; the GDR remains unchanged.                                                                           |
-| Properties of completed investigations that denote to which leads they pertain | Authoritative values                   | The Lead reference property within the Constants property of the Completed Investigation Campaign instance investigation_2 identifies lead_1.                      |
-| Completion count for lead_1                                                    | Derived value                          | Count retained Investigation Campaign instances whose Lead reference property identifies lead_1 and whose lifecycle property has value Completed. The result is 1. |
+| Element                                                                        | Modeling role                          | Meaning in this example                                                                                                                                   |
+| ------------------------------------------------------------------------------ | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| lead_1                                                                         | GDR in the Key for campaign facts role | Its identity selects the Investigations concerning this Lead; the GDR remains unchanged.                                                                  |
+| Properties of completed investigations that denote to which leads they pertain | Authoritative values                   | The Lead reference property within the Constants property of the Completed Investigation Campaign instance investigation_2 identifies lead_1.             |
+| Completion count for lead_1                                                    | Derived value                          | Count Investigation Campaign instances whose Lead reference property identifies lead_1 and whose lifecycle property has value Completed. The result is 1. |
 
-The Lead’s identity is the selection criterion for this calculation.
-The stored values of each retained Investigation Campaign instance’s Lead reference property within its Constants property
-and lifecycle property within its State property are Authoritative values.
-The completion count is computed from the stored values of the Lead reference and lifecycle properties,
-without a separate completion-record entity or stored Authoritative completion count. Caching the count does not change
-its classification as a Derived value.
+How to determine the Derived value of the completion count for the Lead GDR lead_1 from Authoritative values:
+
+1. **Collect Investigations:** Start with all Investigation Campaign instances in the Campaign state.
+2. **Filter by Lead reference:** For each Investigation Campaign instance, read the value of the Lead reference property within its Constants property. Keep only Campaign instances whose Lead reference identifies lead_1.
+3. **Filter by Completed lifecycle:** For each remaining Investigation Campaign instance, read the value of the lifecycle property within its State property. Keep only Campaign instances whose lifecycle property has the value Completed.
+4. **Count matching Investigations:** Count the remaining Investigation Campaign instances. The result is the Derived value of the completion count for lead_1. In this example, investigation_1 is excluded because its lifecycle property has the value Abandoned; investigation_2 is counted, so the result is 1.
+
+The Lead reference and lifecycle property values read in steps 2 and 3 are Authoritative values. Caching the resulting
+completion count does not change its classification as a Derived value.
 
 # Open decisions
 
