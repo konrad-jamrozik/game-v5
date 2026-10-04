@@ -189,7 +189,7 @@ Lead is a referenced GDR, distinct from the InvestigationArchetype that supplies
 The Lead reference belongs to the Investigation's Constants; current team references belong to State.
 Different Investigations at the same Lead may use different InvestigationArchetypes where the owning rules permit them,
 while the constraint of at most one Active Investigation per Lead still applies across archetypes. Production archetype fields, selection, and
-allowed combinations remain open. The [modeling example](./modeling-foundations.md#archetypes-and-other-referenced-gdrs)
+allowed combinations remain open. The [modeling example](./modeling-foundations.md#gdr-role-referenced-gdr)
 illustrates this separation without selecting investigation kinds as gameplay features.
 
 ## Mission and combat
@@ -317,8 +317,11 @@ prior progress is historical, not resumable. LEAD/INVSTG own eligibility and num
 
 ### DOM-010 — Progression facts
 
-Wins, completed investigations, and earned unlocks must be explicit Authoritative values in Campaign state with
-source references where applicable. Completion counts classified as Derived values must agree with supporting records. Faction defeat and
+Wins and earned unlocks must be explicit Authoritative values in Campaign state with source references where applicable.
+Each retained Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle
+property within its State property; the stored values of these properties are Authoritative values. A Lead’s completion count
+is a Derived value calculated by counting retained Investigation Campaign instances whose Lead reference property identifies
+that Lead GDR and whose lifecycle property has value Completed. Faction defeat and
 lead affiliation must not depend on specially spelled identifiers. Their predicates and effects belong to mechanics owners.
 
 ### DOM-011 — Mission kind and provenance

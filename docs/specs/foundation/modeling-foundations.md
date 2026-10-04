@@ -170,9 +170,11 @@ In the enemy example, declare each enemy's current health an Authoritative value
 Initially the total is 20. After enemy_1 takes damage, it is 17. Caching the total does not make it an Authoritative value, and hiding
 either the individual health or the total from the player does not change the classification.
 
-Similarly, the recorded completion of investigation_2 is an Authoritative value recording a historical fact. The completion count for lead_1 is a Derived value:
-it is 1 after investigation_2 completes, and investigation_1's abandonment does not add a completion. Facts associated with GDRs belong to
-the campaign rather than being edits to those GDRs.
+Each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle property
+within its State property. The stored values of these two properties are Authoritative values. The completion count for a
+Lead is a Derived value: count the retained Investigation Campaign instances whose Lead reference property identifies
+that Lead GDR and whose lifecycle property has the value Completed. The count for lead_1 is 1 after investigation_2 completes; investigation_1’s Abandoned lifecycle
+excludes it. No separate completion record or stored Authoritative completion count is required.
 
 ## Historical fact preservation
 
@@ -188,14 +190,13 @@ a retained reference to enemy_1 must still resolve. Retention does not introduce
 name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
 changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
 retained references must be preserved under [Campaign instances](#campaign-instances) and [References](#references).
-An evolving collection can contain immutable historical records: adding a completion record does not permit rewriting
-an earlier record.
+An evolving collection can contain immutable historical records: adding a Battle result does not permit rewriting
+an earlier retained Battle result.
 
 ## Roles of GDRs
 
 GDRs can serve the following five roles. The roles can overlap; they do not define separate Types or required
-implementation interfaces. The following sections illustrate these roles, beginning with initialization, then calculation, construction,
-and references.
+implementation interfaces. The following sections illustrate each role.
 
 | Role                   | Relationship to Rules and Campaign state                                                                                | Example                                                                     |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
@@ -292,13 +293,14 @@ flowchart LR
     Engine -->|constructs| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: health 10"]
 ```
 
-## Archetypes and other referenced GDRs
+## GDR role: referenced GDR
 
-A Campaign instance can refer to GDRs for a purpose other than supplying its Archetype. Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
+In the Referenced GDR role, a GDR is referenced by a Campaign instance for a purpose other than supplying its Archetype.
+Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
 
 | Example concept        | Modeling role                                                                                                                                   | Question it answers                                                               |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Lead                   | GDR representing a Lead to pursue.                                                                                                              | Which Lead can be pursued?                                                        |
+| Lead                   | GDR in the Referenced GDR role, representing a Lead to pursue.                                                                                  | Which Lead can be pursued?                                                        |
 | Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in State, and an immutable Lead reference in Constants. | Which Investigation concerns that Lead, and how has it progressed?                |
 | InvestigationArchetype | GDR used as an Investigation's Archetype, supplying shared characteristics and construction defaults independently of the referenced Lead.      | What shared characteristics and construction defaults does the Investigation use? |
 
@@ -338,20 +340,27 @@ Both Investigations can share lead_1 without sharing progress. Retargeting inves
 would violate its fixed facts. Using lead_1 as its archetype would fail the expected InvestigationArchetype reference,
 regardless of whether some properties match.
 
-If investigation_2 later completes, Campaign state can retain a completion record associated with lead_1 and investigation_2. lead_1 remains unchanged;
-the record belongs to the campaign. The number of completions for lead_1 can then be derived from those records. GDRs
-can thus identify the subject of an activity and key campaign facts without becoming mutable itself.
+## GDR role: key for campaign facts
 
-# Edge cases and failure behavior
+In this role, a GDR’s identity associates campaign-specific facts with that GDR. The facts belong to Campaign state;
+the GDR remains shared and immutable.
 
-| Case                                                                                                                            | Result / owner                                                                                                                                       |
-| ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Missing component, incorrect structure, or mutation of immutable data                                                           | Invalid data or Campaign state under [Campaign instances](#campaign-instances).                                                                      |
-| Campaign instance constructor omits an input, dependency, Type of the returned Campaign instance, or initialization requirement | Incomplete Campaign instance constructor contract under [Campaign instances](#campaign-instances).                                                   |
-| Duplicate Instance ID, missing reference, or wrong expected Type                                                                | Invalid Campaign state under [Campaign instances](#campaign-instances)/[References](#references); never infer a replacement by name.                 |
-| Campaign instance is historical, including terminal lifecycle states                                                            | Required historical references still resolve under [References](#references); storage may be compacted without losing required facts.                |
-| A later Campaign instance belongs only to a discarded future                                                                    | Instance IDs are timeline-scoped under [Campaign instances](#campaign-instances); committed references must resolve under [References](#references). |
-| A current value differs from the retained original value                                                                        | Retain the historical basis required by the result/report under [Historical fact preservation](#historical-fact-preservation).                       |
+Continuing the illustrative Investigation example, suppose investigation_2 completes after investigation_1 was abandoned.
+Campaign state retains both Investigation Campaign instances, including the values of the Lead reference property
+within each Campaign instance’s Constants property and the lifecycle property within its State property.
+
+| Element                                                                        | Modeling role                          | Meaning in this example                                                                                                                                            |
+| ------------------------------------------------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| lead_1                                                                         | GDR in the Key for campaign facts role | Its identity selects the Investigations concerning this Lead; the GDR remains unchanged.                                                                           |
+| Properties of completed investigations that denote to which leads they pertain | Authoritative values                   | The Lead reference property within the Constants property of the Completed Investigation Campaign instance investigation_2 identifies lead_1.                      |
+| Completion count for lead_1                                                    | Derived value                          | Count retained Investigation Campaign instances whose Lead reference property identifies lead_1 and whose lifecycle property has value Completed. The result is 1. |
+
+The Lead’s identity is the selection criterion for this calculation.
+The stored values of each retained Investigation Campaign instance’s Lead reference property within its Constants property
+and lifecycle property within its State property are Authoritative values.
+The completion count is computed from the stored values of the Lead reference and lifecycle properties,
+without a separate completion-record entity or stored Authoritative completion count. Caching the count does not change
+its classification as a Derived value.
 
 # Open decisions
 

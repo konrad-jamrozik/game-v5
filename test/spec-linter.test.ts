@@ -288,6 +288,19 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toEqual(['SPEC209'])
   })
 
+  test('allows Modeling Foundations to omit the separate failure behavior section', () => {
+    const files = mutate(
+      validCorpus().map((file) => ({
+        ...file,
+        content: file.content.replaceAll('AAA', 'MODEL').replaceAll('aaa-', 'model-'),
+      })),
+      'docs/specs/foundation/alpha.md',
+      '# Edge cases and failure behavior\n\nFailures are defined.\n\n',
+      '',
+    )
+    expect(lintSpecifications({ files })).toEqual([])
+  })
+
   test.each(['TypeScript type', 'TypeScript types', '`TypeScript type`', '**TypeScript type**'])(
     'allows explicit programming terminology: %s',
     (term) => {

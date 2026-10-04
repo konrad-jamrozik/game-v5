@@ -2,7 +2,7 @@
 
 ## 1. Purpose and core concepts
 
-This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, Game Data Records (GDRs), and interfaces. Adapt the strategic ideas from `game-ts`; exact formulas, balance, GDRs, and framework choices remain open.
+This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, Game Data Records (GDRs), and interfaces. Adapt the strategic ideas from [game-ts](https://github.com/konrad-jamrozik/game-ts/); exact formulas, balance, GDRs, and framework choices remain open.
 
 The game is a **web-based, turn-based agency-management strategy game**, with presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
 

@@ -279,6 +279,8 @@ Do not maintain a second statement of a contract merely to populate that section
 
 Foundation specifications may embed illustrative examples beside the concepts they explain and omit the separate
 Acceptance examples section. If present, that section retains its standard position and content requirements.
+Modeling Foundations (`MODEL`) may also omit the separate Edge cases and failure behavior section; its conceptual contracts
+define validity directly. If present, that section retains its standard position and content requirements.
 All other standard sections remain required. Whether embedded examples explain the contracts adequately is a semantic
 review concern; the linter checks section presence, content, and order, not the examples' explanatory quality.
 

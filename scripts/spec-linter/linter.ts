@@ -645,6 +645,7 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
       const requiredHeadings = RULE_HEADINGS.filter(
         (text) =>
           (text !== 'Requirements' || actual.includes(text)) &&
+          (text !== 'Edge cases and failure behavior' || specification.id !== 'MODEL' || actual.includes(text)) &&
           (text !== 'Acceptance examples' || specification.family !== 'Foundation' || actual.includes(text)),
       )
       const positions = requiredHeadings.map((text) => actual.indexOf(text))
