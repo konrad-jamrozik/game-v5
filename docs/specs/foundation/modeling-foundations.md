@@ -364,3 +364,18 @@ How to determine the Derived value of the completion count for the Lead GDR lead
 
 The Lead reference and lifecycle property values read in steps 2 and 3 are Authoritative values. Caching the resulting
 completion count does not change its classification as a Derived value.
+
+```mermaid
+flowchart LR
+    Lead["Lead GDR: lead_1<br/>Shared immutable data"]
+    subgraph CampaignState["Campaign state: Authoritative property values"]
+        Investigation1["Investigation Campaign instance investigation_1<br/>Constants property: Lead reference property = lead_1<br/>State property: lifecycle property = Abandoned"]
+        Investigation2["Investigation Campaign instance investigation_2<br/>Constants property: Lead reference property = lead_1<br/>State property: lifecycle property = Completed"]
+    end
+    Lead -->|GDR identity to match| SelectLead["Engine filters by Lead reference<br/>Both Investigations match lead_1"]
+    Investigation1 -->|Lead reference and lifecycle values| SelectLead
+    Investigation2 -->|Lead reference and lifecycle values| SelectLead
+    SelectLead --> SelectCompleted["Engine filters by Completed lifecycle<br/>Only investigation_2 matches"]
+    SelectCompleted --> Count["Engine counts matching Investigation Campaign instances"]
+    Count --> Result["Derived value:<br/>Completion count for lead_1 = 1"]
+```
