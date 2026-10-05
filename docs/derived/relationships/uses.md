@@ -50,6 +50,8 @@ flowchart TD
   COMBAT --> AGENT
   COMBAT --> INFO
   COMBAT --> MISSION
+  DEV --> API
+  DEV --> HIST
   DOM --> API
   DOM --> DEV
   DOM --> ENG

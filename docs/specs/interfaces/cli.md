@@ -9,7 +9,7 @@
 
 # Purpose and boundaries
 
-Provide a complete terminal adapter usable by humans and AI over the same player API.
+Provide convenient terminal access to the engine API through a complete adapter usable by humans and AI.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -37,6 +37,10 @@ This adapter uses TypeScript Player API operations, Player Information's permitt
 save/load and history semantics. CLI syntax and output formatting describe an interface using those contracts;
 they do not refine the API's gameplay behavior. Exact adapter choices remain TODOs below.
 
+The CLI maps commands to all three API groups specified in [Functions and types](typescript-api.md#functions-and-types):
+Campaign bootstrap API, Player action API, and Campaign control API. Reset or load establishes the Current campaign;
+subsequent action and control commands operate on it. State output follows the API's Dev mode setting.
+
 TODO: Specify Command, argument, identifier, session, save path, readable output, JSON result, standard streams, and exit status.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
@@ -45,11 +49,14 @@ appropriate to this document.
 
 ## Commands and sessions
 
-TODO: Specify command grammar, argument parsing, help/discovery, session creation/loading, persistence, and mappings to API operations. Cover the complete gameplay surface.
+TODO: Specify command grammar, argument parsing, help/discovery, persistence, and mappings to all three API groups.
+Cover all required Campaign control API commands, AI delegation and its "done" signal, and ordinary and full-state
+inspection under the active Dev mode setting.
 
 ## Output contract
 
-TODO: Specify human-readable and machine-readable output, stable JSON shapes, errors, exit codes, and stdout/stderr separation. Both modes must respect INFO.
+TODO: Specify human-readable and machine-readable output, stable JSON shapes, errors, exit codes, and stdout/stderr
+separation. Both output formats must preserve the API's ordinary visibility boundary and Dev mode full-state access.
 
 ## Interaction behavior
 

@@ -52,6 +52,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
+Player action API and Dev mode are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
+
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
@@ -59,7 +61,11 @@ duplicating shared definitions.
 
 Player-visible information follows [Information boundary](../foundation/engine-contract.md#information-boundary); historical explanations preserve [Historical fact preservation](../foundation/modeling-foundations.md#historical-fact-preservation).
 
-This specification intends to refine [Information boundary](../foundation/engine-contract.md#information-boundary) by specifying exposed fields, reveal conditions, and consistent human/AI views.
+This document defines the ordinary Player action API views. With Dev mode enabled, that API also exposes full Campaign
+state under [Information boundary](../foundation/engine-contract.md#information-boundary); enabling inspection does not
+change gameplay reveal conditions. Developer API owns the full-state inspection representation.
+
+This specification intends to refine [Information boundary](../foundation/engine-contract.md#information-boundary) by specifying exposed fields and reveal conditions. This document also owns human/AI view consistency.
 It uses Modeling Foundations' Player-visible information and Historical meanings, Domain Model's concepts, and History and Persistence's
 history navigation. The mechanics dependencies supply the facts and calculated results to expose. In particular,
 Investigations owns estimate mathematics and permitted inputs; this document owns the exposed fields and reveal
@@ -81,7 +87,13 @@ TODO: Specify decision-support values, graphs/relationships, estimates, turn rep
 
 ## Boundary consistency
 
-TODO: Apply visibility to queries, action discovery, validation errors, reports, exports, and historical Player-visible information. Exclude hidden difficulty, undiscovered information, RNG state, and mutable internal references from ordinary access.
+Human and AI players must receive the same Player-visible information for equal Campaign state, equal Dev mode
+settings, and equivalent queries. An AI executing the Player action API during delegation uses the same state-access
+mode as the player who delegated execution.
+
+TODO: Apply visibility to queries, action discovery, validation errors, reports, exports, and historical Player-visible
+information with Dev mode disabled. Exclude hidden difficulty, undiscovered information, RNG state, and mutable
+internal references from ordinary access; full Campaign state inspection with Dev mode enabled is specified by Developer API.
 
 TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 

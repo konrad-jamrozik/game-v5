@@ -14,6 +14,7 @@ Define reversible sessions, reproducible replay, and durable save/load behavior.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Developer API](../interfaces/developer-api.md) for the policy governing Dev mode retention during reset, load, and history navigation.
 - Uses [Domain Model](./domain-model.md) for the game structures and identity/reference relationships preserved during restoration.
 - Uses [Modeling Foundations](./modeling-foundations.md) for Campaign state, History, Retained data, and identity/reference contracts in restoration and replay.
 - Uses [Numbers and Randomness](./numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
@@ -27,6 +28,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
+- Uses [Developer API](../interfaces/developer-api.md)
 - Uses [Domain Model](./domain-model.md)
 - Uses [Modeling Foundations](./modeling-foundations.md)
 - Uses [Numbers and Randomness](./numbers-and-randomness.md)
@@ -40,9 +42,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-| Term    | Definition                                                                                                   |
-| ------- | ------------------------------------------------------------------------------------------------------------ |
-| Session | The owner of current Campaign state, history navigation, and controller state that must follow that history. |
+| Term    | Definition                                                                                                                           |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Session | The owner of Current campaign selection, its Campaign state, history navigation, and controller state that must follow that history. |
 
 TODO: Define remaining local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
@@ -50,6 +52,11 @@ duplicating shared definitions.
 # Concepts and contract
 
 ## Session
+
+The Campaign bootstrap API and Campaign control API select the Current campaign through Reset campaign or Load
+campaign state under [Campaign bootstrap and selection](engine-contract.md#campaign-bootstrap-and-selection).
+Revert turn in [Campaign control commands](engine-contract.md#campaign-control-commands) restores an earlier Committed
+state at a turn boundary; this document owns the exact boundary and which state must be restored.
 
 Controller state can include, for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved.
 Storage and restoration must preserve [Campaign instances](modeling-foundations.md#campaign-instances), [References](modeling-foundations.md#references), and [Historical fact preservation](modeling-foundations.md#historical-fact-preservation) and [Derived value consistency](engine-contract.md#derived-value-consistency), [Continuation state](engine-contract.md#continuation-state), and [Committed state integrity](engine-contract.md#committed-state-integrity).
@@ -76,6 +83,9 @@ appropriate to this document.
 
 TODO: Specify atomic history boundaries, restored fields including RNG/IDs/reports, new-command branching, rejected/no-op actions, and history limits. Preserve the brief's absence of an additional rewind penalty.
 
+TODO: Define the Revert turn target when actions have occurred since the most recent Advance turn, the earliest
+available target, and its relation to action-level undo/redo. Do not assume every gameplay command is a turn boundary.
+
 ## Replay and persistence
 
 TODO: Define save contents, encoding, load validation, and replay inputs for the current Game build under
@@ -83,7 +93,9 @@ TODO: Define save contents, encoding, load validation, and replay inputs for the
 
 ## Session-owned state
 
-TODO: Separate Campaign state, UI preferences, debug operations, and AI memory. Define restoration or invalidation of strategy memory and cached Player-visible information.
+TODO: Separate Current campaign selection and Campaign state from UI preferences, Dev mode, and AI controller
+memory. Define how reset/load and history navigation restore or invalidate AI delegation, strategy memory, and cached
+views. Developer API owns the policy for retaining Dev mode across these operations.
 
 TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 

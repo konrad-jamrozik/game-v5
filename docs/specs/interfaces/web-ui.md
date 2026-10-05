@@ -33,6 +33,11 @@ duplicating shared definitions.
 
 # Concepts and contract
 
+Web UI provides a richer human-facing presentation over TypeScript Player API. It adapts the Campaign bootstrap API,
+Player action API, and Campaign control API described in [Functions and types](typescript-api.md#functions-and-types).
+Its controls select and operate on the same Current campaign as the underlying API; ordinary and full-state views
+follow the active Dev mode setting.
+
 This adapter uses TypeScript Player API operations, Player Information's permitted views, and History and Persistence's
 history semantics. Screens and interactions apply those contracts without refining their gameplay behavior.
 Exact presentation choices remain TODOs below.

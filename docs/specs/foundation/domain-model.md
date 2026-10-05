@@ -164,7 +164,7 @@ panic and campaign outcome, progression facts, agents, factions, investigations,
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
 switching between human and AI control does not create another agency. Both campaign and agency have their own Instance ID properties
 and required Archetype references, even though there is exactly one agency per campaign.
-Engine continuation bookkeeping belongs to [Concepts and contract](engine-contract.md#concepts-and-contract).
+State needed for reproducible command execution belongs to [Continuation state](engine-contract.md#continuation-state).
 
 ## Agent
 

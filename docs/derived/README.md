@@ -41,7 +41,7 @@ These informative views are derived from the registered Markdown specifications.
 | ID     | Document                                                                  | Status   | Owns                                                                                                                                      |
 | ------ | ------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | DOM    | [Domain Model](../specs/foundation/domain-model.md)                       | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                                      |
-| ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                 | Draft    | Calculation, continuation, Game build compatibility, information access, and Committed state guarantees.                                  |
+| ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                 | Draft    | API hierarchy, Current campaign selection, AI delegation, execution guarantees, and Dev mode access boundaries.                           |
 | HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md) | Stub     | Define reversible sessions, reproducible replay, and durable save/load behavior.                                                          |
 | MODEL  | [Modeling Foundations](../specs/foundation/modeling-foundations.md)       | Accepted | Modeling vocabulary, Types, archetypes, four-property Campaign instances, construction, identity/references, and historical preservation. |
 | NUMRNG | [Numbers and Randomness](../specs/foundation/numbers-and-randomness.md)   | Stub     | Make every numeric calculation and random outcome reproducible across supported runtimes.                                                 |
@@ -68,13 +68,13 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Interfaces
 
-| ID   | Document                                                        | Status | Owns                                                                                                      |
-| ---- | --------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------- |
-| API  | [TypeScript Player API](../specs/interfaces/typescript-api.md)  | Stub   | Define the callable TypeScript contract through which humans and AI can fully play the game.              |
-| CLI  | [Terminal CLI](../specs/interfaces/cli.md)                      | Stub   | Provide a complete terminal adapter usable by humans and AI over the same player API.                     |
-| DEV  | [Developer API](../specs/interfaces/developer-api.md)           | Stub   | Expose all Authoritative values in Campaign state for debugging through a separate, explicit API surface. |
-| INFO | [Player Information](../specs/interfaces/player-information.md) | Stub   | Define complete player-facing knowledge and a consistent boundary around hidden state.                    |
-| WEB  | [Web UI](../specs/interfaces/web-ui.md)                         | Stub   | Specify the first functional browser interface while keeping gameplay in the shared API.                  |
+| ID   | Document                                                        | Status | Owns                                                                                                          |
+| ---- | --------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| API  | [TypeScript Player API](../specs/interfaces/typescript-api.md)  | Stub   | Exact TypeScript signatures for Campaign bootstrap API, Player action API, and Campaign control API.          |
+| CLI  | [Terminal CLI](../specs/interfaces/cli.md)                      | Stub   | Terminal access to all three engine API groups, including control commands and Dev mode state queries.        |
+| DEV  | [Developer API](../specs/interfaces/developer-api.md)           | Stub   | Dev mode behavior, full Campaign state inspection through Player action API, and optional debugging controls. |
+| INFO | [Player Information](../specs/interfaces/player-information.md) | Stub   | Define complete player-facing knowledge and a consistent boundary around hidden state.                        |
+| WEB  | [Web UI](../specs/interfaces/web-ui.md)                         | Stub   | Specify the first functional browser interface while keeping gameplay in the shared API.                      |
 
 ## Acceptance
 
