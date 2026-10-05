@@ -28,56 +28,52 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
-duplicating shared definitions.
+API surface and execution-role terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
+
+TODO: Define CLI-specific terms without duplicating shared definitions.
 
 # Concepts and contract
 
-This adapter uses TypeScript Player API operations, Player Information's permitted views, and History and Persistence's
-save/load and history semantics. CLI syntax and output formatting describe an interface using those contracts;
-they do not refine the API's gameplay behavior. Exact adapter choices remain TODOs below.
+Terminal CLI is a required adapter over all four engine API namespaces. TypeScript Player API supplies signatures,
+Player Information supplies permitted views, and History and Persistence supplies storage and restoration semantics.
+CLI syntax and output apply those contracts without independently implementing gameplay behavior.
 
-The CLI maps commands to all three API groups specified in [Functions and types](typescript-api.md#functions-and-types):
-Campaign bootstrap API, Player action API, and Campaign control API. Reset or load establishes the Current campaign;
-subsequent action and control commands operate on it. State output follows the API's Dev mode setting.
-
-TODO: Specify Command, argument, identifier, session, save path, readable output, JSON result, standard streams, and exit status.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
+Creation or load selects the Current campaign. Session controller commands manage persistence, history, Dev mode,
+and delegation. Player API output always shows Player-visible information. Full-state inspection and cheats use
+separately authorized Developer API commands. Delegated AI access remains restricted when adapted through CLI;
+a Delegated AI must not receive an unrestricted command channel.
 
 # Requirements
 
 ## Commands and sessions
 
-TODO: Specify command grammar, argument parsing, help/discovery, persistence, and mappings to all three API groups.
-Cover all required Campaign control API commands, AI delegation and its "done" signal, and ordinary and full-state
-inspection under the active Dev mode setting.
+TODO: Specify grammar, parsing, help/discovery, persistence, and mappings to Engine Contract's required starter
+operations. Cover campaign lifecycle, action-level and turn-level history navigation, all delegation scopes and
+terminal results, and separate developer inspection and cheats. Expose Delegated AI memory only in its restricted
+execution context; it is not a human gameplay command.
 
 ## Output contract
 
-TODO: Specify human-readable and machine-readable output, stable JSON shapes, errors, exit codes, and stdout/stderr
-separation. Both output formats must preserve the API's ordinary visibility boundary and Dev mode full-state access.
+TODO: Specify human-readable and machine-readable output, stable JSON shapes, errors, standard streams, and exit
+codes. Both formats preserve Player API visibility and separately authorized Developer API access. Delegation
+progress must distinguish scope completion from early termination.
 
 ## Interaction behavior
 
-TODO: Specify noninteractive automation, any interactive mode, invalid input, history commands, and process interruption behavior. Keep business rules in the engine.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
+TODO: Specify interactive and noninteractive Session controller workflows, restricted Delegated AI execution,
+and interruption behavior. Keep gameplay, visibility, history, and scope enforcement in the engine.
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for Quoting/escaping identifiers, malformed arguments, missing saves, failed commands, no interactive terminal, and interruption while saving.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+TODO: Specify malformed input, unavailable storage, stale access, and process interruption. CLI errors must
+preserve the underlying API information boundary.
 
 # Acceptance examples
 
-TODO: Provide matching human and JSON play transcripts including an invalid command and undo/redo.
-Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
-fixtures instead of introducing implicit balance values.
+TODO: Provide equivalent readable and JSON workflows for creation, gameplay, history navigation, developer access,
+and delegation. Verify that a Delegated AI cannot reach Session API or Developer API through CLI commands.
+Identify each exercised requirement section.
 
 # Open decisions
 
-- TODO: Choose CLI syntax, process/session model, and output versioning before implementation.
-- TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
-  deferred features as out of scope rather than leaving ambiguous gaps.
+- TODO: Choose CLI grammar, process/Session model, and output versioning.

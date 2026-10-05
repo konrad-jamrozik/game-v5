@@ -9,7 +9,7 @@
 
 # Purpose and boundaries
 
-Define Dev mode and full Campaign state inspection through the Player action API, plus any optional debugging controls.
+Define full Campaign state inspection and cheat-command details through Developer API, refining Engine Contract access and replay guarantees.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -17,8 +17,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and identities exposed for debugging.
 - Uses [History and Persistence](../foundation/history-and-persistence.md) for the retained Campaign state and restoration behavior available for debugging.
 - Uses [TypeScript Player API](./typescript-api.md) for Dev mode controls and full Campaign state queries exposed by the player interfaces.
-- Refines [Engine Contract](../foundation/engine-contract.md) by specifying Dev mode, full Campaign state inspection, and optional debugging operations.
-- Used by [History and Persistence](../foundation/history-and-persistence.md) for the policy governing Dev mode retention during reset, load, and history navigation.
+- Refines [Engine Contract](../foundation/engine-contract.md) by specifying Dev mode, full Campaign state inspection, and validated cheat operations.
+- Used by [History and Persistence](../foundation/history-and-persistence.md) for the detailed isolation and replay behavior of Developer API commands during restoration.
 - Used by [TypeScript Player API](./typescript-api.md) for full Campaign state inspection fields and Dev mode transition behavior.
 
 # Relationships
@@ -32,63 +32,53 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-Dev mode, Player action API, Campaign control API, and Current campaign are owned by the
-[Engine Contract glossary](../foundation/engine-contract.md#glossary).
+API surface and execution-role terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
 
-TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
-duplicating shared definitions.
+TODO: Define inspection-specific terms without duplicating shared definitions.
 
 # Concepts and contract
 
-This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) by detailing
-Dev mode inspection. Enable dev mode and Disable dev mode are Campaign control API commands. With Dev mode enabled,
-the Player action API exposes full Campaign state, including all Authoritative values; full-state inspection remains
-read-only. With Dev mode disabled, it exposes only Player-visible information.
+This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) and
+[Dev mode and developer operations](../foundation/engine-contract.md#dev-mode-and-developer-operations) with inspection
+schemas and cheat-command details. Session API controls Dev mode. Developer API exposes full Campaign state,
+including all Authoritative values, only to an authorized Session controller with Dev mode enabled and no active
+Delegation run. Player API always exposes only Player-visible information; Delegated AI never receives developer access.
 
-The high-level access behavior is defined by Engine Contract. The TODOs below detail the full-state representation,
-mode transitions, and any optional debugging controls. Domain Model supplies the inspected state; History and
-Persistence supplies restoration semantics; TypeScript Player API supplies the callable controls and query surface.
-
-TODO: Specify Dev mode transition results, full-state inspection, hidden state, debugging operation, snapshot, and validation.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
+Engine Contract owns access transitions and high-level replay guarantees. Domain Model supplies inspected Campaign
+state and invariants. History and Persistence supplies restoration procedures, and TypeScript Player API supplies
+callable signatures and authorization results.
 
 # Requirements
 
 ## Inspection contract
 
-TODO: Specify the complete Campaign state query schema and read-only/copy behavior through the Player action API.
-Include the hidden state required for continuation and define how this full-state result relates to ordinary
-Player-visible information without treating hidden values as revealed through gameplay.
+TODO: Specify the complete detached, read-only Campaign state query schema through `developer.queries.getCampaignState()`.
+Include all continuation inputs and distinguish full-state inspection from gameplay reveal conditions. Inspection
+must not expose mutable Campaign references or consume gameplay randomness.
 
-## Optional debugging controls
+## Cheat command details
 
-TODO: Decide which mutation, scenario setup, random override, or stepping controls are supported, if any. Do not treat their existence as already approved gameplay features.
+TODO: Specify `developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)`, with exact input Types,
+allowed ranges, initialization, validation, and effects. These required starter operations preserve model invariants
+and commit replayable action-history entries. Additional cheat operations use the same namespace and guarantees.
 
 ## Isolation and history
 
-TODO: Specify enable/disable behavior and how any optional debugging command affects invariants, history, saves, and
-replay guarantees. Inspection must never permit direct mutation through returned Campaign references.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
+TODO: Specify authorization failures and access revocation under Engine Contract. Recorded cheat restoration uses
+history authority and does not require Dev mode. Detailed restoration must preserve deterministic continuation
+without making internal replay operations callable by Delegated AI.
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for full-state queries with Dev mode disabled, malformed debug state, inspection during
-resolution, mode changes during AI delegation, and any optional debug changes followed by undo/replay.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+TODO: Specify inspection and cheat errors with Dev mode disabled, during a Delegation run, or with stale access.
+Invalid cheat inputs preserve Campaign state, RNG state, generated Instance IDs, reports, and history.
 
 # Acceptance examples
 
-TODO: Provide examples proving that the Player action API exposes full Campaign state only with Dev mode enabled,
-that disabling Dev mode restores ordinary query visibility, and that inspecting either view leaves Campaign state unchanged.
-Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
-fixtures instead of introducing implicit balance values.
+TODO: Provide scenarios proving separate Developer API access, unchanged Player API visibility, Delegated AI exclusion,
+and cheat-command undo/redo and save/load round trips. Identify the requirement sections each scenario verifies.
 
 # Open decisions
 
-- TODO: Decide whether Dev mode persists across reset, load, or history navigation, and whether any state-mutating
-  debugging commands are needed.
-- TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
-  deferred features as out of scope rather than leaving ambiguous gaps.
+- TODO: Choose full-state result Types and precise cheat-command validation and effects.
+- TODO: Decide which additional developer operations are needed beyond the required starter inventory.

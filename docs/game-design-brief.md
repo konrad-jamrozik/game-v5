@@ -124,7 +124,7 @@ The foundation is a **well-defined TypeScript API consisting of exposed function
 
 Humans and AI players must be able to play completely through it. It provides Player-visible information, decision-relevant information expressed as Derived values, action discovery, constraints, commands, structured outcomes, and undo/redo.
 
-With Dev mode disabled, the player receives **all information needed to play and only information they are entitled to know**. Visibility restrictions apply equally to queries, action descriptions, errors, and reports. The Campaign control API enables or disables Dev mode; when enabled, the Player action API also exposes full Campaign state through read-only inspection.
+Player API always exposes **all information needed to play and only information the player is entitled to know**. Visibility restrictions apply equally to queries, action descriptions, errors, and reports. Session API allows the Session controller to enable Dev mode, granting separate Developer API inspection and cheat operations. Delegated AI always receives only Player-visible information, regardless of Dev mode. Engine Contract owns the API hierarchy and access rules.
 
 Supported interfaces develop progressively:
 

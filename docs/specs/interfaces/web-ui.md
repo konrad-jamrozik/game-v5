@@ -28,54 +28,52 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
-duplicating shared definitions.
+API surface and execution-role terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
+
+TODO: Define presentation-specific terms without duplicating shared definitions.
 
 # Concepts and contract
 
-Web UI provides a richer human-facing presentation over TypeScript Player API. It adapts the Campaign bootstrap API,
-Player action API, and Campaign control API described in [Functions and types](typescript-api.md#functions-and-types).
-Its controls select and operate on the same Current campaign as the underlying API; ordinary and full-state views
-follow the active Dev mode setting.
+Web UI is a required human-facing adapter over the engine API hierarchy implemented by TypeScript Player API.
+Its main menu represents a Session without a Current campaign; creation or load selects the Current campaign.
+Player API views always show Player-visible information. Separate developer controls expose inspection and cheats
+only under authorized Dev mode access. Delegation controls select one of the three scopes, show progress, and
+permit cancellation without passing developer information to Delegated AI.
 
-This adapter uses TypeScript Player API operations, Player Information's permitted views, and History and Persistence's
-history semantics. Screens and interactions apply those contracts without refining their gameplay behavior.
-Exact presentation choices remain TODOs below.
-
-TODO: Specify Screen, grid, tree, chart, detail view, selection, action control, notification, and local UI state.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
+TypeScript Player API supplies operation results, Player Information supplies permitted views, and History and
+Persistence supplies save/load and navigation semantics. Screens and interactions apply those contracts without
+independently implementing gameplay behavior.
 
 # Requirements
 
 ## Screens and data exploration
 
-TODO: Specify agency, agent, lead/progression, investigation, mission, faction, and history/report views. Define columns, tree relationships, sorting, filtering, and detail panels using INFO fields.
+TODO: Specify main-menu and campaign screens using Player Information schemas. For example, provide Agent tables,
+Lead progression trees, and report details. Define sorting, filtering, and selection without adding exclusive information.
+Developer inspection must use a distinct authorized view rather than widening ordinary Player API results.
 
 ## Interaction and accessibility
 
-TODO: Specify selection/batch actions, action availability, error presentation, turn advancement, undo/redo, keyboard access, and focus behavior. Define state refresh after commands and history navigation.
+TODO: Specify creation/load/save, gameplay actions, Advance turn, action-level and turn-level history navigation,
+Dev mode controls, and delegation scope/progress/cancellation. Define keyboard access, focus behavior, and refresh
+after commits or restoration. Controller mutation controls follow Engine Contract delegation restrictions.
 
 ## Presentation boundaries
 
-TODO: Prioritize readable colors and layouts over decorative graphics. Record grid/tree requirements for later framework selection; future art/animations/3D must not add exclusive gameplay information.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
+TODO: Prioritize readable colors and layouts over decorative graphics. Future graphics must not add exclusive
+gameplay information. Developer views and external AI integration must not leak hidden facts into Delegated AI context.
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for Empty/large lists, stale selection after undo, hidden data, unavailable actions, loading/error states, and long reports.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+TODO: Define empty states, stale selection after restoration, and load failures. Failed operations leave the engine's
+prior committed view intact; presentation must not imply an uncommitted gameplay result.
 
 # Acceptance examples
 
-TODO: Provide user journeys mapping controls to API calls and expected Player-visible information, including keyboard operation and timeline navigation.
-Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
-fixtures instead of introducing implicit balance values.
+TODO: Provide keyboard-accessible journeys mapping main menu, gameplay, history, developer controls, and delegation
+to exact API operations. Verify unchanged Player API visibility with Dev mode enabled and matching results with CLI.
+Identify each exercised requirement section.
 
 # Open decisions
 
-- TODO: Choose first-release screen layouts and grid/tree capabilities; graphics and 3D remain deferred.
-- TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
-  deferred features as out of scope rather than leaving ambiguous gaps.
+- TODO: Choose first-release layouts and grid/tree capabilities; graphics and 3D remain deferred.

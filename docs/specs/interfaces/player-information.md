@@ -52,65 +52,58 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-Player action API and Dev mode are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
+Player API, Dev mode, Session controller, and Delegated AI are owned by the
+[Engine Contract glossary](../foundation/engine-contract.md#glossary).
 
-TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
-duplicating shared definitions.
+TODO: Define information-schema terms without duplicating shared definitions.
 
 # Concepts and contract
 
-Player-visible information follows [Information boundary](../foundation/engine-contract.md#information-boundary); historical explanations preserve [Historical fact preservation](../foundation/modeling-foundations.md#historical-fact-preservation).
+This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) with exposed
+Properties, reveal conditions, and human/AI query consistency. Player API always exposes only Player-visible
+information, independent of Dev mode. Separate full-state inspection is specified by Developer API; developer
+inspection never changes gameplay reveal conditions or information supplied to Delegated AI.
 
-This document defines the ordinary Player action API views. With Dev mode enabled, that API also exposes full Campaign
-state under [Information boundary](../foundation/engine-contract.md#information-boundary); enabling inspection does not
-change gameplay reveal conditions. Developer API owns the full-state inspection representation.
-
-This specification intends to refine [Information boundary](../foundation/engine-contract.md#information-boundary) by specifying exposed fields and reveal conditions. This document also owns human/AI view consistency.
-It uses Modeling Foundations' Player-visible information and Historical meanings, Domain Model's concepts, and History and Persistence's
-history navigation. The mechanics dependencies supply the facts and calculated results to expose. In particular,
-Investigations owns estimate mathematics and permitted inputs; this document owns the exposed fields and reveal
-conditions. The exact field and reveal choices remain TODOs below.
-
-TODO: Specify Player-visible information, known/unknown field, estimate expressed as a Derived value, action explanation, report, history visibility, and dev-only information.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
+Modeling Foundations supplies Player-visible information, Authoritative value, Derived value, and historical meanings.
+Domain Model supplies represented concepts, and History and Persistence supplies restored facts and history positions.
+Mechanics supply facts and calculations to expose. Investigations owns estimate mathematics and permitted inputs;
+this specification owns the exposed Properties and reveal conditions, without duplicating formulas.
+Historical explanations preserve [Historical fact preservation](../foundation/modeling-foundations.md#historical-fact-preservation).
 
 # Requirements
 
 ## Player-visible information schemas and visibility
 
-TODO: Specify field-by-field views for agency, agents, leads, investigations, missions, factions, progression, and history. State reveal conditions and distinguish unknown from zero/absent.
+TODO: Specify the complete Player API query schemas using owning mechanics. State reveal conditions and distinguish
+unknown information from zero or absence. For example, cover Agent capabilities, Investigation estimates, and
+Mission outcomes without exposing hidden inputs through ordinary queries.
 
 ## Derived values and reports
 
-TODO: Specify decision-support values, graphs/relationships, estimates, turn reports, combat records, and action explanations. Reference owning mechanics for formulas; do not duplicate them.
+TODO: Specify complete query and report inventories, including historical Player-visible information at the current
+cursor. Reference owning mechanics for calculations. Restored views and reports must not reveal discarded-future facts.
 
 ## Boundary consistency
 
-Human and AI players must receive the same Player-visible information for equal Campaign state, equal Dev mode
-settings, and equivalent queries. An AI executing the Player action API during delegation uses the same state-access
-mode as the player who delegated execution.
+Session controller and Delegated AI receive the same Player-visible information for equal Campaign state and
+equivalent Player API queries, independent of Dev mode. Delegated AI never receives Developer API inspection,
+unrestricted saves, hidden command logs, or the Session controller's unrestricted conversation.
 
-TODO: Apply visibility to queries, action discovery, validation errors, reports, exports, and historical Player-visible
-information with Dev mode disabled. Exclude hidden difficulty, undiscovered information, RNG state, and mutable
-internal references from ordinary access; full Campaign state inspection with Dev mode enabled is specified by Developer API.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
+TODO: Define schema-level visibility for every Player API result path and history metadata. For example, validate
+queries, action discovery, and errors against the same hidden-state boundary. Exclude gameplay RNG state and mutable
+Campaign references. Engine Contract owns Delegated AI context and memory restoration guarantees.
 
 # Edge cases and failure behavior
 
-TODO: Define behavior for Information newly revealed or undone, queries about unknown IDs, empty results, estimates after failures, and historical reports containing formerly/future-known facts.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+TODO: Define unknown-identifier results, information revealed and then undone, and formerly known historical facts.
+Player API errors and action availability must preserve the information boundary in every Dev mode setting.
 
 # Acceptance examples
 
-TODO: Provide matched full-state/player-view fixtures and visibility tests for human and AI callers.
-Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
-fixtures instead of introducing implicit balance values.
+TODO: Provide paired full-state and Player API fixtures proving visibility for Session controller and Delegated AI,
+including after Dev mode changes and history navigation. Identify each exercised requirement section.
 
 # Open decisions
 
-- TODO: Choose reveal rules, Player-visible information fields, uncertainty presentation, and history visibility behavior.
-- TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
-  deferred features as out of scope rather than leaving ambiguous gaps.
+- TODO: Choose complete Player API query schemas, reveal conditions, and uncertainty presentation.
+- TODO: Choose historical-report visibility consistent with the restored history cursor.
