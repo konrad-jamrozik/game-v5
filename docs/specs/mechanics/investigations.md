@@ -14,6 +14,14 @@ Define exact investigation progress, stochastic completion, player uncertainty, 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Agents](./agents.md) for Agent capabilities and task availability when assigning Investigation participants.
+- Uses [Leads and Progression](./leads-and-progression.md) for the Lead prerequisites and completion effects pursued through Investigations.
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
+- Uses [Player Information](../interfaces/player-information.md) for the visibility and estimate constraints on reporting uncertain Investigation outcomes.
+- Refines [Domain Model](../foundation/domain-model.md) by specifying Investigation progress, stochastic completion, uncertainty, and commitment rules.
+- Used by [Player Information](../interfaces/player-information.md) for Investigation progress, completion, and commitment costs.
+- Used by [Turn Resolution](../foundation/turn-resolution.md) for the Investigation progress and completion transitions scheduled within a turn.
+
 # Relationships
 
 - Uses [Agents](./agents.md)
@@ -31,7 +39,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This specification intends to refine Domain Model's investigation contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-009](../foundation/domain-model.md#dom-009--leads-and-investigations)/[DOM-010](../foundation/domain-model.md#dom-010--progression-facts)) with start, progress, completion,
+This specification intends to refine Domain Model's investigation contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with start, progress, completion,
 team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
 and Numbers and Randomness's arithmetic/draws. Player Information supplies exposed field shapes and reveal conditions;
 this document supplies estimate mathematics and the information those estimates condition on. The exact mathematics
@@ -63,7 +71,7 @@ TODO: Define the mathematical meaning of displayed estimates/ranges, information
 
 TODO: Specify effective-skill-weighted progress loss on removal, the weighting snapshot, exhaustion-driven removal, and abandonment when everyone leaves. Adding agents preserves progress; a new Investigation starts from zero.
 
-TODO: Assign stable INVSTG-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -74,7 +82,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Provide numerical worked examples and exact tests for progress, hidden difficulty, true versus estimated probability, team changes, and guaranteed completion.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

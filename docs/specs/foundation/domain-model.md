@@ -20,6 +20,23 @@ not prescribe classes, database tables, a UI framework, or source-file layout.
 relationships; mechanics own formulas and detailed transitions. Numeric representation, RNG algorithms, phase order, Game Data Record (GDR) values, API/report schemas, and save encoding
 remain in their owning specifications.
 
+- Uses [Modeling Foundations](./modeling-foundations.md) for the Type and Campaign instance composition, identity, and reference contracts applied to game concepts.
+- Used by [Developer API](../interfaces/developer-api.md) for the game concepts and identities exposed for debugging.
+- Used by [Engine Contract](./engine-contract.md) for the Campaign state structures and identities to which execution guarantees apply.
+- Used by [History and Persistence](./history-and-persistence.md) for the game structures and identity/reference relationships preserved during restoration.
+- Used by [Initial Campaign Content](../content/initial-campaign.md) for the game concepts and structural constraints that concrete GDRs must satisfy.
+- Used by [Player Information](../interfaces/player-information.md) for the game concepts and relationships represented in player reports.
+- Used by [Turn Resolution](./turn-resolution.md) for the game structures and references read and changed by turn phases.
+- Used by [TypeScript Player API](../interfaces/typescript-api.md) for the game concepts and identifiers represented in commands and reports.
+- Refined by [Agents](../mechanics/agents.md), which specifies Agent capability, task availability, development, exhaustion, and recovery rules.
+- Refined by [Campaign](../mechanics/campaign.md), which specifies Campaign initialization, global panic, and victory and defeat rules.
+- Refined by [Combat](../mechanics/combat.md), which specifies Combatant behavior and automatic battle resolution rules.
+- Refined by [Economy and Upgrades](../mechanics/economy-and-upgrades.md), which specifies Agency resource flows, personnel purchases, and upgrade rules.
+- Refined by [Factions](../mechanics/factions.md), which specifies Faction pressure, operation occurrence generation, suppression, and defeat rules.
+- Refined by [Investigations](../mechanics/investigations.md), which specifies Investigation progress, stochastic completion, uncertainty, and commitment rules.
+- Refined by [Leads and Progression](../mechanics/leads-and-progression.md), which specifies Lead progression and lifecycle rules.
+- Refined by [Missions](../mechanics/missions.md), which specifies Mission commitments and the translation of Battle result facts into Campaign consequences.
+
 # Relationships
 
 - Uses [Modeling Foundations](./modeling-foundations.md)
@@ -84,26 +101,26 @@ than separately identified Campaign instances.
 
 The following table enumerates the complete concept classifications declared by this specification.
 
-| Concept                                                                                            | Modeling role and multiplicity                                                                                                                                                                                                                                                    | Construction and historical transition / owner                                                                                                                                                                                                                                                                                                                                                   |
-| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Campaign; Agency                                                                                   | Campaign instance Types. Exactly one Agency Campaign instance per Campaign instance ([DOM-001](#dom-001--campaign-boundary)); each has its own Instance ID and archetype.                                                                                                         | Campaign initialization and ongoing/won/lost transitions belong to [Campaign](../mechanics/campaign.md); detailed construction and historical retention rules remain unresolved there and in [History and Persistence](history-and-persistence.md).                                                                                                                                              |
-| Agent                                                                                              | Campaign instance Type. Multiple Campaign instances can belong to a campaign; roster limits belong to [Economy and Upgrades](../mechanics/economy-and-upgrades.md).                                                                                                               | Initial roster and recruitment details belong to [Initial Campaign Content](../content/initial-campaign.md) and Economy and Upgrades. Serving, Killed, and Dismissed are distinct states; Killed/Dismissed Campaign instances retain final attributes and career without Current assignments ([DOM-005](#dom-005--agent-lifecycle)). [Agents](../mechanics/agents.md) owns detailed transitions. |
-| Investigation                                                                                      | Campaign instance Type. At most one Active Campaign instance per lead GDR per campaign; repeated Investigations of a Lead have distinct Campaign instances ([DOM-009](#dom-009--leads-and-investigations)/[DOM-017](#dom-017--campaign-instance-identity-scope)).                 | Starting an Investigation constructs a Campaign instance; restarting after abandonment constructs another. Completed/Abandoned Campaign instances retain identity and Participation history without a current team. [Investigations](../mechanics/investigations.md) owns eligibility and transition details.                                                                                    |
-| Mission                                                                                            | Campaign instance Type. A campaign can contain multiple Campaign instances with distinct identities; each Faction operation occurrence has exactly one Response mission ([DOM-011](#dom-011--mission-kind-and-provenance)/[DOM-017](#dom-017--campaign-instance-identity-scope)). | Initiative construction retains its investigation or scenario source; Response construction retains its Faction operation occurrence origin. Exact construction timing, lifecycle, reattempt, and historical-transition rules remain with [Missions](../mechanics/missions.md).                                                                                                                  |
-| Enemy                                                                                              | Campaign instance Type. Each Campaign instance belongs to exactly one mission; multiple Campaign instances may share an enemy GDR ([DOM-012](#dom-012--combat-and-consequences)).                                                                                                 | Construction and combat transitions belong to Missions and [Combat](../mechanics/combat.md); exact timing and historical retention details remain unresolved with those owners and History and Persistence.                                                                                                                                                                                      |
-| Faction                                                                                            | Campaign instance Type. Campaign instances refer to faction GDRs; the allowed count per GDR is unresolved.                                                                                                                                                                        | Initial setup belongs to Initial Campaign Content; activity, suppression, defeat, and lifecycle details belong to [Factions](../mechanics/factions.md). Historical-transition details remain unresolved.                                                                                                                                                                                         |
-| Combatant                                                                                          | Reusable Type-described structure for combat-related Agent and Enemy state; it is not a Campaign instance Type and has no Campaign instances.                                                                                                                                     | Combat operates on the participating Agent and Enemy Campaign instances ([DOM-012](#dom-012--combat-and-consequences)).                                                                                                                                                                                                                                                                          |
-| Archetypes for the seven declared Campaign instance types; lead, weapon, upgrade, and balance GDRs | Typed GDRs, not Campaign instances. Sharing a GDR does not constrain Campaign instance multiplicity.                                                                                                                                                                              | Supplied by the current game build; fields and values belong to Initial Campaign Content. Individual weapon inventory Campaign instances are outside this model; upgrade acquisitions belong to the Agency Campaign instance.                                                                                                                                                                    |
+| Concept                                                                                            | Modeling role and multiplicity                                                                                                                                                                                                                                                                               | Construction and historical transition / owner                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign; Agency                                                                                   | Campaign instance Types. Exactly one Agency Campaign instance per Campaign instance ([Campaign boundary](#campaign-boundary-1)); each has its own Instance ID and archetype.                                                                                                                                 | Campaign initialization and ongoing/won/lost transitions belong to [Campaign](../mechanics/campaign.md); detailed construction and historical retention rules remain unresolved there and in [History and Persistence](history-and-persistence.md).                                                                                                                                             |
+| Agent                                                                                              | Campaign instance Type. Multiple Campaign instances can belong to a campaign; roster limits belong to [Economy and Upgrades](../mechanics/economy-and-upgrades.md).                                                                                                                                          | Initial roster and recruitment details belong to [Initial Campaign Content](../content/initial-campaign.md) and Economy and Upgrades. Serving, Killed, and Dismissed are distinct states; Killed/Dismissed Campaign instances retain final attributes and career without Current assignments ([Agent lifecycle](#agent-lifecycle)). [Agents](../mechanics/agents.md) owns detailed transitions. |
+| Investigation                                                                                      | Campaign instance Type. At most one Active Campaign instance per lead GDR per campaign; repeated Investigations of a Lead have distinct Campaign instances ([Leads and Investigations](#leads-and-investigations)/[Campaign instance identity scope](#campaign-instance-identity-scope)).                    | Starting an Investigation constructs a Campaign instance; restarting after abandonment constructs another. Completed/Abandoned Campaign instances retain identity and Participation history without a current team. [Investigations](../mechanics/investigations.md) owns eligibility and transition details.                                                                                   |
+| Mission                                                                                            | Campaign instance Type. A campaign can contain multiple Campaign instances with distinct identities; each Faction operation occurrence has exactly one Response mission ([Mission kind and provenance](#mission-kind-and-provenance)/[Campaign instance identity scope](#campaign-instance-identity-scope)). | Initiative construction retains its investigation or scenario source; Response construction retains its Faction operation occurrence origin. Exact construction timing, lifecycle, reattempt, and historical-transition rules remain with [Missions](../mechanics/missions.md).                                                                                                                 |
+| Enemy                                                                                              | Campaign instance Type. Each Campaign instance belongs to exactly one mission; multiple Campaign instances may share an enemy GDR ([Combat and consequences](#combat-and-consequences)).                                                                                                                     | Construction and combat transitions belong to Missions and [Combat](../mechanics/combat.md); exact timing and historical retention details remain unresolved with those owners and History and Persistence.                                                                                                                                                                                     |
+| Faction                                                                                            | Campaign instance Type. Campaign instances refer to faction GDRs; the allowed count per GDR is unresolved.                                                                                                                                                                                                   | Initial setup belongs to Initial Campaign Content; activity, suppression, defeat, and lifecycle details belong to [Factions](../mechanics/factions.md). Historical-transition details remain unresolved.                                                                                                                                                                                        |
+| Combatant                                                                                          | Reusable Type-described structure for combat-related Agent and Enemy state; it is not a Campaign instance Type and has no Campaign instances.                                                                                                                                                                | Combat operates on the participating Agent and Enemy Campaign instances ([Combat and consequences](#combat-and-consequences)).                                                                                                                                                                                                                                                                  |
+| Archetypes for the seven declared Campaign instance types; lead, weapon, upgrade, and balance GDRs | Typed GDRs, not Campaign instances. Sharing a GDR does not constrain Campaign instance multiplicity.                                                                                                                                                                                                         | Supplied by the current Game build; fields and values belong to Initial Campaign Content. Individual weapon inventory Campaign instances are outside this model; upgrade acquisitions belong to the Agency Campaign instance.                                                                                                                                                                   |
 
 Every Campaign instance of Type Campaign, Agency, Agent, Investigation, Mission, Enemy, or Faction has Instance ID, Archetype,
 Constants, and State properties under
 [Campaign instances](modeling-foundations.md#campaign-instances).
-All seven types share the explicit Instance ID scope in [DOM-017](#dom-017--campaign-instance-identity-scope), including the
+All seven types share the explicit Instance ID scope in [Campaign instance identity scope](#campaign-instance-identity-scope), including the
 Campaign instance of Type Campaign itself. Singleton status does not exempt Campaign or Agency from an Instance ID or an archetype.
 
 Combatant supplies reusable Type-described structure, not a separate Campaign instance. A Faction operation occurrence's
 provenance is fixed Campaign instance data in its Response mission's Constants, not a separate Campaign instance
-([DOM-011](#dom-011--mission-kind-and-provenance)). Nested values and historical records need not be Campaign instances.
+([Mission kind and provenance](#mission-kind-and-provenance)). Nested values and historical records need not be Campaign instances.
 
 The creation owners named above specify Campaign instance constructor inputs, dependencies, Types of returned Campaign instances, and initialization
 of all four properties under [Campaign instances](modeling-foundations.md#campaign-instances).
@@ -121,11 +138,11 @@ The following table states the required modeling classifications; example values
 | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | GDRs, including archetypes                                                        | Immutable during gameplay ([Campaign instances](modeling-foundations.md#campaign-instances)).                                                                                          | Types describe structure; GDRs supply Authoritative values used by rules. GDRs are not campaign history.                                                                                                                                 |
 | Constants and Instance IDs                                                        | Fixed at construction, including nested data; stable for the lifetime of the Campaign instance within its timeline ([Campaign instances](modeling-foundations.md#campaign-instances)). | Identity recorded as an Authoritative value; historical references remain resolvable ([References](modeling-foundations.md#references)).                                                                                                 |
-| Retained origin references                                                        | Stored in Constants; preserve the creation source required by [DOM-011](#dom-011--mission-kind-and-provenance).                                                                        | Provenance recorded as Authoritative values used by rules and historical explanations.                                                                                                                                                   |
-| State; for example, money, orders, and health                                     | Mutable under the owning mechanics; fixed Campaign instance facts belong in Constants.                                                                                                 | Authoritative values used to resolve current gameplay. See [Modeling Foundations](modeling-foundations.md#authoritative-and-derived-values) for the existing classification.                                                             |
+| Retained origin references                                                        | Stored in Constants; preserve the creation source required by [Mission kind and provenance](#mission-kind-and-provenance).                                                             | Provenance recorded as Authoritative values used by rules and historical explanations.                                                                                                                                                   |
+| State; for example, money, orders, and health                                     | Mutable under the owning mechanics; fixed Campaign instance facts belong in Constants.                                                                                                 | Authoritative values used to resolve current gameplay. See [Authoritative and Derived values](modeling-foundations.md#authoritative-and-derived-values) for the existing classification.                                                 |
 | Derived values; for example, effective skill, availability, and completion counts | Calculated from Authoritative values and the current rules and GDRs.                                                                                                                   | Derived values under the Modeling Foundations glossary. Gameplay relevance depends on the owning rule or report.                                                                                                                         |
-| Completed investigations, mission wins, and earned unlocks                        | Retained outcomes must not be overwritten by current calculations ([Historical fact preservation](modeling-foundations.md#historical-fact-preservation)).                              | Historical Authoritative values can still affect current progression; [Leads and Progression](../mechanics/leads-and-progression.md) owns predicates and effects ([DOM-010](#dom-010--progression-facts)).                               |
-| Final attributes of Killed/Dismissed agents and Participation history             | Retained historical values; undo may restore earlier state ([DOM-005](#dom-005--agent-lifecycle)/[DOM-007](#dom-007--current-versus-historical-teams)).                                | Historical records treated as Authoritative values. These records do not constitute Current assignments or team membership.                                                                                                              |
+| Completed investigations, mission wins, and earned unlocks                        | Retained outcomes must not be overwritten by current calculations ([Historical fact preservation](modeling-foundations.md#historical-fact-preservation)).                              | Historical Authoritative values can still affect current progression; [Leads and Progression](../mechanics/leads-and-progression.md) owns predicates and effects ([Progression facts](#progression-facts)).                              |
+| Final attributes of Killed/Dismissed agents and Participation history             | Retained historical values; undo may restore earlier state ([Agent lifecycle](#agent-lifecycle)/[Current versus historical teams](#current-versus-historical-teams)).                  | Historical records treated as Authoritative values. These records do not constitute Current assignments or team membership.                                                                                                              |
 | Original inputs or values retained only to explain a past result                  | Preserve the historical basis ([Historical fact preservation](modeling-foundations.md#historical-fact-preservation)).                                                                  | Used for historical explanation; retaining such values does not make them current combat inputs. Retention details belong to History and Persistence and report visibility to [Player Information](../interfaces/player-information.md). |
 
 Examples of Authoritative values versus Derived values (not a complete state inventory):
@@ -141,13 +158,13 @@ Historical status and current gameplay relevance are independent; each owning me
 
 ## Campaign and agency
 
-A campaign uses the rules and GDRs supplied by the current game build. It contains one agency, the current turn,
+A Campaign uses the Ruleset and GDRs supplied by the current Game build. It contains one agency, the current turn,
 panic and campaign outcome, progression facts, agents, factions, investigations, and missions.
 
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
 switching between human and AI control does not create another agency. Both campaign and agency have their own Instance ID properties
 and required Archetype references, even though there is exactly one agency per campaign.
-Engine continuation bookkeeping belongs to [Engine Contract](engine-contract.md#concepts-and-contract).
+Engine continuation bookkeeping belongs to [Concepts and contract](engine-contract.md#concepts-and-contract).
 
 ## Agent
 
@@ -166,7 +183,7 @@ facts. Being an aspect of Agent does not determine whether information is an Aut
 
 The [Participation history definition](#glossary) governs Participation history. The agent's Participation history and an activity's past
 participants describe the same relationship from opposite sides; this model does not require duplicate stored records.
-Current teams follow Current assignments ([DOM-007](#dom-007--current-versus-historical-teams)). Agents owns detailed eligibility, transitions, transit, development,
+Current teams follow Current assignments ([Current versus historical teams](#current-versus-historical-teams)). Agents owns detailed eligibility, transitions, transit, development,
 exhaustion, and recovery rules.
 
 ## Lead and investigation
@@ -185,7 +202,7 @@ Lead is a referenced GDR, distinct from the InvestigationArchetype that supplies
 The Lead reference belongs to the Investigation's Constants; current team references belong to State.
 Different Investigations at the same Lead may use different InvestigationArchetypes where the owning rules permit them,
 while the constraint of at most one Active Investigation per Lead still applies across archetypes. Production archetype fields, selection, and
-allowed combinations remain open. The [modeling example](./modeling-foundations.md#gdr-role-referenced-gdr)
+allowed combinations remain open. The [GDR role: referenced GDR](./modeling-foundations.md#gdr-role-referenced-gdr)
 illustrates this separation without selecting investigation kinds as gameplay features.
 
 ## Mission and combat
@@ -253,14 +270,14 @@ Arrows show relationships, not inheritance or storage layout.
 
 ## Campaign boundary
 
-### DOM-001 — Campaign boundary
+### Campaign boundary
 
 A Campaign instance of Type Campaign must have exactly one player-controlled agency. Every other
 Campaign instance in that campaign must belong to that Campaign instance of Type Campaign. AI memory, UI selections, browser
 state, and CLI preferences are not Campaign state.
 Multiplayer agencies and cross-campaign trading are outside this model.
 
-### DOM-017 — Campaign instance identity scope
+### Campaign instance identity scope
 
 Campaign, Agency, Agent, Investigation, Mission, Enemy, and Faction must each have an immutable Instance ID property.
 Instance IDs must be unique across all seven Types within one campaign's Committed state, including the Campaign instance of Type Campaign itself. Repeated mission and investigation Campaign instances must have
@@ -269,13 +286,13 @@ explicit-reference semantics ([Campaign instances](modeling-foundations.md#campa
 
 ## Agents, Current assignments, and Participation history
 
-### DOM-005 — Agent lifecycle
+### Agent lifecycle
 
 An agent's lifecycle must distinguish Serving, Killed, and Dismissed. A Serving agent must
 have exactly one Current assignment and Task phase. Killed/Dismissed agents must have neither; their final attributes and career
 remain historical facts. Death and dismissal are not jobs. Undo can restore an earlier lifecycle.
 
-### DOM-006 — Orders and Task phase
+### Orders and Task phase
 
 Serving-agent Current assignments must distinguish Standby, Contracting, Training,
 Investigation with a reference, Mission with a reference, and Recovery. Task phase must distinguish At assignment from
@@ -284,7 +301,7 @@ In transit. Transit retains destination orders and timing facts required by Agen
 At assignment does not itself imply readiness. Agents will define which transitions/phase combinations are allowed,
 which tasks require transit, and travel duration. This specification does not select a one-turn or two-turn transit rule.
 
-### DOM-007 — Current versus historical teams
+### Current versus historical teams
 
 Current investigation/mission membership must agree with Current assignments.
 An agent assigned to investigation I belongs to its current team even while travelling; contribution eligibility is an
@@ -293,7 +310,7 @@ Agents/Investigations rule. An agent cannot be assigned to multiple investigatio
 If both agent-side and team-side links are stored, they must agree in Committed state. Agents recorded in Participation history are not
 current team members: a concluded mission can retain an agent's Participation history after that agent is assigned elsewhere.
 
-### DOM-008 — Attribute bounds
+### Attribute bounds
 
 For agents and enemies, maximum health must be positive; current health must be between
 zero and maximum health inclusive; skill and exhaustion must be nonnegative. Serving agents must have positive health,
@@ -302,7 +319,7 @@ Dismissal eligibility, exhaustion caps, rounding, and recovery formulas belong t
 
 ## Leads, Investigations, and opponents
 
-### DOM-009 — Leads and Investigations
+### Leads and Investigations
 
 An investigation must retain its reference to one lead GDR in Constants and distinguish Active, Completed,
 and Abandoned lifecycle states. At most one Active investigation may exist for a lead in a campaign. Active Investigations
@@ -311,7 +328,7 @@ must have at least one currently assigned agent in Committed state; terminal Inv
 Terminal Investigations retain identity and Participation history. Restarting after abandonment creates another Investigation;
 prior progress is historical, not resumable. LEAD/INVSTG own eligibility and numerical progress-loss rules.
 
-### DOM-010 — Progression facts
+### Progression facts
 
 Wins and earned unlocks must be explicit Authoritative values in Campaign state with source references where applicable.
 Each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle
@@ -320,7 +337,7 @@ is a Derived value calculated by counting Investigation Campaign instances whose
 that Lead GDR and whose lifecycle property has value Completed. Faction defeat and
 lead affiliation must not depend on specially spelled identifiers. Their predicates and effects belong to mechanics owners.
 
-### DOM-011 — Mission kind and provenance
+### Mission kind and provenance
 
 Mission Constants must retain mission kind and provenance. Missions must explicitly distinguish Initiative (agency objective) and Response
 (intervention against a Faction operation occurrence). Initiative missions must retain their creation source; for example, an investigation
@@ -331,7 +348,7 @@ rather than managed as a separately scheduled Campaign instance. Two Response mi
 Campaign instances. Faction operation occurrences spanning multiple missions or lacking a Response mission are outside this proposal. Target
 faction and initiating faction are explicit references, not inferences from a mission's name.
 
-### DOM-012 — Combat and consequences
+### Combat and consequences
 
 An enemy Campaign instance must belong to exactly one mission. Reusing its GDR must
 not reuse its identity or mutable health. Agent combat changes must affect the same identity that returns to the agency.
@@ -344,23 +361,23 @@ The model must retain the facts required by the eventual partial-success formula
 Inspected game-ts revision: f1835a29af3678b4b7a4d17017b0ad737c3ec81a. The cited model/validation files were unmodified in
 the source working tree.
 
-| Basis                                       | Source and interpretation                                                                                                                                                                                                                                                                        |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Inherited concept / proposed simplification | [Agent model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/agentModel.ts) separates orders and state. [DOM-005](#dom-005--agent-lifecycle)/[DOM-006](#dom-006--orders-and-task-phase) separates lifecycle from both.               |
-| Inherited concept                           | [Lead model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/leadModel.ts) distinguishes GDRs and Investigations.                                                                                                                     |
-| Proposed clarification                      | [Mission model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/missionModel.ts) stores Faction operation occurrence severity on missions. [DOM-011](#dom-011--mission-kind-and-provenance) explicitly names mission kind and origin. |
-| Proposed scope choice                       | Weapon GDRs and combatant-owned values suffice initially; individual inventory, trading, and transfers are not introduced.                                                                                                                                                                       |
+| Basis                                       | Source and interpretation                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Inherited concept / proposed simplification | [Agent model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/agentModel.ts) separates orders and state. [Agent lifecycle](#agent-lifecycle)/[Orders and Task phase](#orders-and-task-phase) separates lifecycle from both.                      |
+| Inherited concept                           | [Lead model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/leadModel.ts) distinguishes GDRs and Investigations.                                                                                                                                |
+| Proposed clarification                      | [Mission model](https://github.com/konrad-jamrozik/game-ts/blob/f1835a29af3678b4b7a4d17017b0ad737c3ec81a/web/src/lib/model/missionModel.ts) stores Faction operation occurrence severity on missions. [Mission kind and provenance](#mission-kind-and-provenance) explicitly names mission kind and origin. |
+| Proposed scope choice                       | Weapon GDRs and combatant-owned values suffice initially; individual inventory, trading, and transfers are not introduced.                                                                                                                                                                                  |
 
 # Edge cases and failure behavior
 
-| Case                                                            | Result / owner                                                                                                                              |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Agent travels toward an investigation                           | Remains assigned; arrival/progress timing belongs to AGENT/INVSTG                                                                           |
-| Last investigator removed                                       | No Active Investigation in Committed state with an empty team; numerical effects belong to INVSTG                                           |
-| Investigation concludes while members travel                    | Remove current links to the terminal Investigation before publication; replacement orders/transit belong to AGENT/INVSTG                    |
-| Concluded mission retains an agent in its Participation history | Does not reserve Current assignment; [References](modeling-foundations.md#references); [DOM-007](#dom-007--current-versus-historical-teams) |
-| Empty roster or no missions/investigations                      | Structurally valid; CAMP owns initialization and defeat conditions                                                                          |
-| Faction defeated with outstanding missions/leads                | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                                               |
+| Case                                                            | Result / owner                                                                                                                                             |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agent travels toward an investigation                           | Remains assigned; arrival/progress timing belongs to AGENT/INVSTG                                                                                          |
+| Last investigator removed                                       | No Active Investigation in Committed state with an empty team; numerical effects belong to INVSTG                                                          |
+| Investigation concludes while members travel                    | Remove current links to the terminal Investigation before publication; replacement orders/transit belong to AGENT/INVSTG                                   |
+| Concluded mission retains an agent in its Participation history | Does not reserve Current assignment; [References](modeling-foundations.md#references); [Current versus historical teams](#current-versus-historical-teams) |
+| Empty roster or no missions/investigations                      | Structurally valid; CAMP owns initialization and defeat conditions                                                                                         |
+| Faction defeated with outstanding missions/leads                | Preserve references; FACTION/LEAD/MISSION own resulting availability/outcomes                                                                              |
 
 # Acceptance examples
 
@@ -370,10 +387,10 @@ for purposes of these structural checks. Runtime validation behavior is tested b
 
 ## A. Valid relationships
 
-Given the GDRs C supplied by the current game build and rules R, turn 3, and:
+Given the GDRs C and Ruleset R supplied by the current Game build, turn 3, and:
 
 - Campaign c1 and its single agency ag1, with all seven declared Campaign instance types sharing the Instance ID scope.
-- Current-build archetypes C1 (Campaign), G1 (Agency), A1 (Agent), I1 (Investigation), M1 (Mission),
+- Archetypes supplied by the current Game build: C1 (Campaign), G1 (Agency), A1 (Agent), I1 (Investigation), M1 (Mission),
   F1 (Faction), and E1 (Enemy), plus non-archetype GDRs L1 (lead) and W1 (weapon).
   These are explicit test GDRs with the names shown, unique GDR IDs within their expected types, and no other
   required fields in this fixture; rule-owned production defaults remain deferred.
@@ -406,7 +423,7 @@ m1. Required references resolve in c1. Resource scalars are zero and other colle
 Immutable affiliation and target references are assumptions of this fixture, not new production lifecycle rules.
 Growing Participation history or Battle result collections does not permit rewriting retained historical elements.
 
-These relationships satisfy [DOM-001](#dom-001--campaign-boundary), [DOM-005](#dom-005--agent-lifecycle), [DOM-006](#dom-006--orders-and-task-phase), [DOM-007](#dom-007--current-versus-historical-teams), [DOM-008](#dom-008--attribute-bounds), and [DOM-009](#dom-009--leads-and-investigations), [DOM-011](#dom-011--mission-kind-and-provenance), [DOM-012](#dom-012--combat-and-consequences), [DOM-017](#dom-017--campaign-instance-identity-scope), and [Campaign instances](modeling-foundations.md#campaign-instances), and [References](modeling-foundations.md#references).
+These relationships satisfy [Campaign boundary](#campaign-boundary-1), [Agent lifecycle](#agent-lifecycle), [Orders and Task phase](#orders-and-task-phase), [Current versus historical teams](#current-versus-historical-teams), [Attribute bounds](#attribute-bounds), and [Leads and Investigations](#leads-and-investigations), [Mission kind and provenance](#mission-kind-and-provenance), [Combat and consequences](#combat-and-consequences), [Campaign instance identity scope](#campaign-instance-identity-scope), and [Campaign instances](modeling-foundations.md#campaign-instances), and [References](modeling-foundations.md#references).
 Team membership does not assert that a1 makes progress while travelling. Full mechanics validation requires the later
 owning specifications.
 
@@ -414,22 +431,22 @@ owning specifications.
 
 Each row independently changes fixture A and describes a structurally invalid state.
 
-| Change                                                                           | Violation                                                                                                               |
-| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Omit a component from c1 or ag1                                                  | [Campaign instances](modeling-foundations.md#campaign-instances)                                                        |
-| Omit c1's or ag1's Instance ID                                                   | [Campaign instances](modeling-foundations.md#campaign-instances); [DOM-017](#dom-017--campaign-instance-identity-scope) |
-| Give ag1 Instance ID c1, or e1 Instance ID ag1                                   | [DOM-017](#dom-017--campaign-instance-identity-scope)                                                                   |
-| Resolve e1's archetype as M1 instead of E1                                       | [References](modeling-foundations.md#references)                                                                        |
-| Mutate A1 or m1's retained provenance                                            | [Campaign instances](modeling-foundations.md#campaign-instances)                                                        |
-| Add a second player agency                                                       | [DOM-001](#dom-001--campaign-boundary)                                                                                  |
-| Mark a1 Killed while keeping its Current assignment/Task phase                   | [DOM-005](#dom-005--agent-lifecycle)                                                                                    |
-| Give a1 both Training and Investigation Current assignments                      | [DOM-005](#dom-005--agent-lifecycle)/[DOM-006](#dom-006--orders-and-task-phase)                                         |
-| List a1 in m1's current team while assigned to i1                                | [DOM-007](#dom-007--current-versus-historical-teams)                                                                    |
-| Set health to 11 with maximum health 10, or set a Serving agent's health to zero | [DOM-008](#dom-008--attribute-bounds)                                                                                   |
-| Add another Active Investigation for L1, or leave i1 Active with no members      | [DOM-009](#dom-009--leads-and-investigations)                                                                           |
-| Mark m1 Response without Faction operation occurrence provenance                 | [DOM-011](#dom-011--mission-kind-and-provenance)                                                                        |
-| Assign e1 a second owning mission                                                | [DOM-012](#dom-012--combat-and-consequences)                                                                            |
-| Give e1 the same Instance ID as a1                                               | [DOM-017](#dom-017--campaign-instance-identity-scope); [Campaign instances](modeling-foundations.md#campaign-instances) |
+| Change                                                                           | Violation                                                                                                                               |
+| -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Omit a component from c1 or ag1                                                  | [Campaign instances](modeling-foundations.md#campaign-instances)                                                                        |
+| Omit c1's or ag1's Instance ID                                                   | [Campaign instances](modeling-foundations.md#campaign-instances); [Campaign instance identity scope](#campaign-instance-identity-scope) |
+| Give ag1 Instance ID c1, or e1 Instance ID ag1                                   | [Campaign instance identity scope](#campaign-instance-identity-scope)                                                                   |
+| Resolve e1's archetype as M1 instead of E1                                       | [References](modeling-foundations.md#references)                                                                                        |
+| Mutate A1 or m1's retained provenance                                            | [Campaign instances](modeling-foundations.md#campaign-instances)                                                                        |
+| Add a second player agency                                                       | [Campaign boundary](#campaign-boundary-1)                                                                                               |
+| Mark a1 Killed while keeping its Current assignment/Task phase                   | [Agent lifecycle](#agent-lifecycle)                                                                                                     |
+| Give a1 both Training and Investigation Current assignments                      | [Agent lifecycle](#agent-lifecycle)/[Orders and Task phase](#orders-and-task-phase)                                                     |
+| List a1 in m1's current team while assigned to i1                                | [Current versus historical teams](#current-versus-historical-teams)                                                                     |
+| Set health to 11 with maximum health 10, or set a Serving agent's health to zero | [Attribute bounds](#attribute-bounds)                                                                                                   |
+| Add another Active Investigation for L1, or leave i1 Active with no members      | [Leads and Investigations](#leads-and-investigations)                                                                                   |
+| Mark m1 Response without Faction operation occurrence provenance                 | [Mission kind and provenance](#mission-kind-and-provenance)                                                                             |
+| Assign e1 a second owning mission                                                | [Combat and consequences](#combat-and-consequences)                                                                                     |
+| Give e1 the same Instance ID as a1                                               | [Campaign instance identity scope](#campaign-instance-identity-scope); [Campaign instances](modeling-foundations.md#campaign-instances) |
 
 ## C. Completion and later Participation history
 
@@ -440,6 +457,6 @@ Given i1 concludes and m1 resolves under their owning rules, a structurally vali
 - a1 and a2 Serving with one new valid Current assignment and Task phase each.
 - Explicit progression facts for i1's completion and any win of m1.
 
-This satisfies [References](modeling-foundations.md#references); [DOM-005](#dom-005--agent-lifecycle)/[DOM-007](#dom-007--current-versus-historical-teams)/[DOM-009](#dom-009--leads-and-investigations)/[DOM-010](#dom-010--progression-facts)/[DOM-012](#dom-012--combat-and-consequences). Assigning a1 to another investigation does not rewrite i1's Participation history. If i1
-were Abandoned instead, restarting creates a new identity and does not resume i1's progress ([Campaign instances](modeling-foundations.md#campaign-instances); [DOM-009](#dom-009--leads-and-investigations)).
+This satisfies [References](modeling-foundations.md#references); [Agent lifecycle](#agent-lifecycle)/[Current versus historical teams](#current-versus-historical-teams)/[Leads and Investigations](#leads-and-investigations)/[Progression facts](#progression-facts)/[Combat and consequences](#combat-and-consequences). Assigning a1 to another investigation does not rewrite i1's Participation history. If i1
+were Abandoned instead, restarting creates a new identity and does not resume i1's progress ([Campaign instances](modeling-foundations.md#campaign-instances); [Leads and Investigations](#leads-and-investigations)).
 This fixture does not choose the replacement orders or turn timing.

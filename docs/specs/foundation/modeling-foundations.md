@@ -12,15 +12,15 @@
 
 Modeling Foundations defines the common language and basic contracts used to describe the game's data and behavior.
 
-- **Game Design Brief** supplies the intent and strategic direction that these foundations give a modeling vocabulary.
-- **Domain Model** applies that vocabulary to concrete game concepts and their structural relationships.
-- **Mechanics specifications** define the detailed gameplay behavior of those concepts.
-- **Engine Contract** defines execution guarantees built on these foundations.
-- **History and Persistence** defines how campaign state and historical facts are retained.
-- **Initial Campaign Content** supplies concrete game data within the model.
-- **Numbers and Randomness** defines numerical and random behavior within the model.
-- **Player Information** defines which campaign facts players can observe.
-- **TypeScript Player API** exposes the model through a concrete programming interface.
+The Game Design Brief supplies strategic intent; mechanics specifications own detailed gameplay behavior.
+
+- Used by [Domain Model](./domain-model.md) for the Type and Campaign instance composition, identity, and reference contracts applied to game concepts.
+- Used by [Engine Contract](./engine-contract.md) for Game build, Campaign state, Committed state, and Authoritative value terminology in execution guarantees.
+- Used by [History and Persistence](./history-and-persistence.md) for Campaign state, History, Retained data, and identity/reference contracts in restoration and replay.
+- Used by [Initial Campaign Content](../content/initial-campaign.md) for GDR immutability and reference conventions for concrete game data.
+- Used by [Numbers and Randomness](./numbers-and-randomness.md) for Rule, Authoritative value, and Derived value terminology in numeric contracts.
+- Used by [Player Information](../interfaces/player-information.md) for Player-visible information, Authoritative value, and Derived value terminology in visibility rules.
+- Used by [TypeScript Player API](../interfaces/typescript-api.md) for shared Types, Instance IDs, and Campaign instance references in the public interface.
 
 # Relationships
 
@@ -40,15 +40,16 @@ and the Campaign instances and operations built from them.
 ## Foundational concepts
 
 Type describes data, Campaign establishes the playthrough context, and Rule describes calculations and permitted behavior.
-Ruleset collects the Rules governing a Campaign.
+Ruleset collects the Rules governing a Campaign. A Game build supplies the game's data, Ruleset, and executable logic.
 
-| Term     | Definition                                                                                                                                                                                                 |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Type     | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration. |
-| Property | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                        |
-| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                                        |
-| Rule     | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint.                                                                                                 |
-| Ruleset  | The collection of Rules governing a Campaign.                                                                                                                                                              |
+| Term       | Definition                                                                                                                                                                                                                                                                                      |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type       | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration.                                                                                      |
+| Property   | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                                                                                                             |
+| Campaign   | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                                                                                                                             |
+| Rule       | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint.                                                                                                                                                                                      |
+| Ruleset    | The collection of Rules governing a Campaign.                                                                                                                                                                                                                                                   |
+| Game build | A particular version of the game's data and executable implementation. It provides the GDRs, the Ruleset and code implementing its Rules, the Campaign instance constructor implementations, and the overall engine logic whose execution must satisfy [Engine Contract](./engine-contract.md). |
 
 ## Data within a Campaign
 
@@ -56,7 +57,7 @@ These concepts build on Type and Campaign: GDRs supply immutable shared data, wh
 
 | Term                   | Definition                                                                                                                                                                                       |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Game Data Record (GDR) | Concrete game data supplied by a game build, conforming to a declared Type and immutable during gameplay. A GDR is never instantiated; Campaign instances reference it as shared immutable data. |
+| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay. A GDR is never instantiated; Campaign instances reference it as shared immutable data. |
 | Campaign state         | Data describing one Campaign; for example, its Campaign instances, resources, and retained history.                                                                                              |
 
 ## Campaign instances and their components
@@ -102,6 +103,10 @@ GDRs supply data, Rules specify calculations and permitted behavior, and Campaig
 construction and initialization. These are three distinct concepts; neither a GDR nor a Campaign instance constructor is a Rule.
 The engine implementation reads GDRs, applies Rules, and invokes Campaign instance constructor implementations
 to construct Campaign instances and update Campaign state. Execution statements about named functions refer to their implementations.
+
+The current Game build supplies those GDRs, the Ruleset, and the Campaign instance constructor and engine implementations together.
+[Engine Contract](./engine-contract.md) defines the guarantees that this executable logic must provide when calculating
+values, executing commands, exposing information, and restoring Campaign state.
 
 ## Campaign creation and progression
 
@@ -149,7 +154,7 @@ Restoration, including undo/redo, preserves identity and immutable facts; unique
 ## References
 
 References identify a particular target and its expected Type. In Committed state, Campaign instance references must resolve
-within the same Campaign; GDR references identify the GDR ID and must resolve against the current game build.
+within the same Campaign; GDR references identify the GDR ID and must resolve against the current Game build.
 Required historical references remain resolvable. Relationships must not be inferred from display names or identifier text.
 
 References that can change belong in State; fixed references belong in Constants. Instance ID and the Archetype reference

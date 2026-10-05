@@ -14,6 +14,11 @@ Provide a complete terminal adapter usable by humans and AI over the same player
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [History and Persistence](../foundation/history-and-persistence.md) for the session and save/load behavior exposed through terminal commands.
+- Uses [Player Information](./player-information.md) for Player-visible information and the boundary around hidden Campaign state.
+- Uses [TypeScript Player API](./typescript-api.md) for the player commands, reports, and errors adapted for terminal interaction.
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for terminal player flows and their observable results.
+
 # Relationships
 
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
@@ -50,7 +55,7 @@ TODO: Specify human-readable and machine-readable output, stable JSON shapes, er
 
 TODO: Specify noninteractive automation, any interactive mode, invalid input, history commands, and process interruption behavior. Keep business rules in the engine.
 
-TODO: Assign stable CLI-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -61,7 +66,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Provide matching human and JSON play transcripts including an invalid command and undo/redo.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

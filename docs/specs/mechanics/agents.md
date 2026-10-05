@@ -14,6 +14,18 @@ Define agent capability, task availability, development, exhaustion, and recover
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Combat](./combat.md) for the Battle result facts that affect Agent development and recovery.
+- Uses [Economy and Upgrades](./economy-and-upgrades.md) for the purchases and upgrade effects that affect Agent availability and capability.
+- Uses [Initial Campaign Content](../content/initial-campaign.md) for Agent archetypes and development and recovery parameters.
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
+- Refines [Domain Model](../foundation/domain-model.md) by specifying Agent capability, task availability, development, exhaustion, and recovery rules.
+- Used by [Combat](./combat.md) for Agent capabilities and exhaustion when resolving a battle.
+- Used by [Economy and Upgrades](./economy-and-upgrades.md) for Agent capability and availability rules affected by personnel purchases and upgrades.
+- Used by [Investigations](./investigations.md) for Agent capabilities and task availability when assigning Investigation participants.
+- Used by [Missions](./missions.md) for Agent capabilities and availability when committing Mission participants.
+- Used by [Player Information](../interfaces/player-information.md) for Agent capabilities, Current assignments, exhaustion, and recovery.
+- Used by [Turn Resolution](../foundation/turn-resolution.md) for Agent assignment, exhaustion, and recovery transitions scheduled within a turn.
+
 # Relationships
 
 - Uses [Combat](./combat.md)
@@ -34,15 +46,15 @@ Shared Campaign instance Type names are owned by the [Domain Model glossary](../
 
 | Term       | Definition                                                                                                                                                                     |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Health     | The combatant attribute bounded by zero and maximum health under [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds).                                           |
-| Exhaustion | The nonnegative combatant attribute governed by [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds); accumulation, caps, and recovery await this specification. |
+| Health     | The combatant attribute bounded by zero and maximum health under [Attribute bounds](../foundation/domain-model.md#attribute-bounds).                                           |
+| Exhaustion | The nonnegative combatant attribute governed by [Attribute bounds](../foundation/domain-model.md#attribute-bounds); accumulation, caps, and recovery await this specification. |
 
 TODO: Define remaining local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
 # Concepts and contract
 
-This specification intends to refine Domain Model's agent contract ([DOM-005](../foundation/domain-model.md#dom-005--agent-lifecycle), [DOM-006](../foundation/domain-model.md#dom-006--orders-and-task-phase), [DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams), and [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)) with eligibility, Current assignment,
+This specification intends to refine Domain Model's agent contract ([Agent lifecycle](../foundation/domain-model.md#agent-lifecycle), [Orders and Task phase](../foundation/domain-model.md#orders-and-task-phase), [Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams), and [Attribute bounds](../foundation/domain-model.md#attribute-bounds)) with eligibility, Current assignment,
 travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
 Combat supplies battle-earned experience, Economy and Upgrades supplies economic effects on personnel and
 capabilities, and Initial Campaign Content supplies balance values. Those inputs are applied to agent transitions;
@@ -67,7 +79,7 @@ TODO: Provide a transition table for standby, contracting, training, investigati
 
 TODO: Specify training, task exhaustion, exhaustion recovery, injury recovery, forced withdrawal, and career tracking. Link combat experience rules to COMBAT and economic effects to ECON.
 
-TODO: Assign stable AGENT-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -78,7 +90,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Provide effective-skill calculations and multi-turn transition examples including transit and forced withdrawal.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

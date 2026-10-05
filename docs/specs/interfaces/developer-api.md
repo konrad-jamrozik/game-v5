@@ -14,6 +14,11 @@ Expose all Authoritative values in Campaign state for debugging through a separa
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Domain Model](../foundation/domain-model.md) for the game concepts and identities exposed for debugging.
+- Uses [History and Persistence](../foundation/history-and-persistence.md) for the retained Campaign state and restoration behavior available for debugging.
+- Uses [TypeScript Player API](./typescript-api.md) for the player-facing contract alongside which the separate debugging surface operates.
+- Refines [Engine Contract](../foundation/engine-contract.md) by specifying the separate debugging API contract for access to all Authoritative values in Campaign state.
+
 # Relationships
 
 - Uses [Domain Model](../foundation/domain-model.md)
@@ -28,7 +33,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Developer inspection and enablement refine the separate capability boundary in [ENG-003](../foundation/engine-contract.md#eng-003--information-boundary).
+Developer inspection and enablement refine the separate capability boundary in [Information boundary](../foundation/engine-contract.md#information-boundary).
 
 This is an intended Stub refinement: the TODOs below will detail acquisition of that capability and its inspection
 surface. Domain Model supplies the inspected state; History and Persistence supplies restoration semantics;
@@ -52,7 +57,7 @@ TODO: Decide which mutation, scenario setup, random override, or stepping contro
 
 TODO: Specify how dev access is obtained, how ordinary callers remain independent of it, and how any debug mutation affects invariants, history, saves, and replay guarantees.
 
-TODO: Assign stable DEV-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -63,7 +68,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Provide separate player/dev access examples and tests proving the player API does not expose dev fields.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

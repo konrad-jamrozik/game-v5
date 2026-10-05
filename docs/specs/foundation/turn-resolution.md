@@ -14,6 +14,19 @@ Define exactly when subsystem rules run and which state each phase reads.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Agents](../mechanics/agents.md) for Agent assignment, exhaustion, and recovery transitions scheduled within a turn.
+- Uses [Campaign](../mechanics/campaign.md) for the Campaign update and end-condition rules scheduled within turn phases.
+- Uses [Domain Model](./domain-model.md) for the game structures and references read and changed by turn phases.
+- Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for the resource and upgrade transitions scheduled within a turn.
+- Uses [Factions](../mechanics/factions.md) for the Faction pressure and operation occurrence transitions scheduled within a turn.
+- Uses [Investigations](../mechanics/investigations.md) for the Investigation progress and completion transitions scheduled within a turn.
+- Uses [Missions](../mechanics/missions.md) for the Mission transitions and Campaign consequences scheduled within a turn.
+- Uses [Numbers and Randomness](./numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
+- Refines [Engine Contract](./engine-contract.md) by specifying the precise phase order and snapshot rules for executing a turn.
+- Used by [Campaign](../mechanics/campaign.md) for the timing of Campaign updates and checks for end conditions.
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for effect timing and state snapshots in cross-system scenarios.
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for the timing and snapshots used for resource flows and upgrade effects.
+
 # Relationships
 
 - Uses [Agents](../mechanics/agents.md)
@@ -36,9 +49,9 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Phase ordering and state-read timing must preserve [ENG-001](engine-contract.md#eng-001--derived-value-consistency) and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
+Phase ordering and state-read timing must preserve [Derived value consistency](engine-contract.md#derived-value-consistency) and [Committed state integrity](engine-contract.md#committed-state-integrity).
 
-This specification intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying calculation snapshots, ordered phases, and the atomic publication
+This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Committed state integrity](engine-contract.md#committed-state-integrity) by specifying calculation snapshots, ordered phases, and the atomic publication
 boundary. It uses Domain Model's valid-state constraints and Numbers and Randomness's arithmetic and draw ordering.
 Agents, Investigations, Missions, Factions, Economy and Upgrades, and Campaign supply the subsystem transitions and
 effects to schedule. Campaign supplies ending predicates; this document supplies when those predicates are evaluated.
@@ -62,7 +75,7 @@ TODO: Define when arrivals can work, investigation-created missions begin aging,
 
 TODO: Define when reports and campaign outcomes finalize, how simultaneous effects are ordered, and what happens if resolution encounters an invariant violation.
 
-TODO: Assign stable TURN-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -73,7 +86,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Provide turn timelines with before/after state for arrival, completion, expiration, rewards, suppression, and terminal outcomes.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

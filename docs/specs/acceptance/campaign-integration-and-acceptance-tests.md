@@ -26,6 +26,13 @@ This is currently a stub: the concrete test cases await the detailed rules and G
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [History and Persistence](../foundation/history-and-persistence.md) for restoration, replay, and continuation contracts exercised by scenarios.
+- Uses [Initial Campaign Content](../content/initial-campaign.md) for reproducible GDRs and numeric inputs for scenario fixtures.
+- Uses [Terminal CLI](../interfaces/cli.md) for terminal player flows and their observable results.
+- Uses [Turn Resolution](../foundation/turn-resolution.md) for effect timing and state snapshots in cross-system scenarios.
+- Uses [TypeScript Player API](../interfaces/typescript-api.md) for the command and report surface exercised by integration scenarios.
+- Uses [Web UI](../interfaces/web-ui.md) for browser player flows and their observable results.
+
 # Relationships
 
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
@@ -75,7 +82,7 @@ TODO: Cover equivalent API/CLI/web actions, player/dev visibility, invalid-actio
 and branching. Identify which cases run through the API and which need CLI or browser interaction. Keep strategic
 playtesting observations separate from exact expected-result checks.
 
-TODO: Assign stable SCEN-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -87,7 +94,7 @@ instead of choosing behavior in a test scenario.
 # Acceptance examples
 
 TODO: Write complete expected outcomes, not just test names; scenarios must reference rules rather than introduce new mechanics.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

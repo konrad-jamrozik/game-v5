@@ -14,6 +14,17 @@ Define reversible sessions, reproducible replay, and durable save/load behavior.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Domain Model](./domain-model.md) for the game structures and identity/reference relationships preserved during restoration.
+- Uses [Modeling Foundations](./modeling-foundations.md) for Campaign state, History, Retained data, and identity/reference contracts in restoration and replay.
+- Uses [Numbers and Randomness](./numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
+- Refines [Engine Contract](./engine-contract.md) by specifying the reversible session, replay, and save/load guarantees.
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for restoration, replay, and continuation contracts exercised by scenarios.
+- Used by [Developer API](../interfaces/developer-api.md) for the retained Campaign state and restoration behavior available for debugging.
+- Used by [Player Information](../interfaces/player-information.md) for the retained facts and restored session state available for player reports.
+- Used by [Terminal CLI](../interfaces/cli.md) for the session and save/load behavior exposed through terminal commands.
+- Used by [TypeScript Player API](../interfaces/typescript-api.md) for the session, restoration, and save/load operations exposed by the player API.
+- Used by [Web UI](../interfaces/web-ui.md) for the session and save/load behavior exposed through browser controls.
+
 # Relationships
 
 - Uses [Domain Model](./domain-model.md)
@@ -41,9 +52,9 @@ duplicating shared definitions.
 ## Session
 
 Controller state can include, for example, persistent AI strategy memory. Storage/restoration decisions remain unresolved.
-Storage and restoration must preserve [Campaign instances](modeling-foundations.md#campaign-instances), [References](modeling-foundations.md#references), and [Historical fact preservation](modeling-foundations.md#historical-fact-preservation) and [ENG-001](engine-contract.md#eng-001--derived-value-consistency), [ENG-002](engine-contract.md#eng-002--continuation-state), and [ENG-004](engine-contract.md#eng-004--committed-state-integrity).
+Storage and restoration must preserve [Campaign instances](modeling-foundations.md#campaign-instances), [References](modeling-foundations.md#references), and [Historical fact preservation](modeling-foundations.md#historical-fact-preservation) and [Derived value consistency](engine-contract.md#derived-value-consistency), [Continuation state](engine-contract.md#continuation-state), and [Committed state integrity](engine-contract.md#committed-state-integrity).
 
-This specification intends to refine [ENG-001](engine-contract.md#eng-001--derived-value-consistency)/[ENG-002](engine-contract.md#eng-002--continuation-state)/[ENG-004](engine-contract.md#eng-004--committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
+This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Continuation state](engine-contract.md#continuation-state)/[Committed state integrity](engine-contract.md#committed-state-integrity) by specifying cache restoration or invalidation, complete continuation state, and atomic
 undo/redo and save/load procedures. It uses Modeling Foundations' identity, reference, and historical-preservation
 conventions; storage procedures do not refine those meanings. Domain Model supplies the Campaign instances restored,
 and Numbers and Randomness supplies the numeric and generator-state contracts. The TODOs below retain the unresolved
@@ -67,14 +78,14 @@ TODO: Specify atomic history boundaries, restored fields including RNG/IDs/repor
 
 ## Replay and persistence
 
-TODO: Define save contents, encoding, load validation, and replay inputs for the current game build under
-[Engine Contract](engine-contract.md#requirements), [ENG-005](engine-contract.md#eng-005--build-compatibility). Decide whether saves retain undo and redo history.
+TODO: Define save contents, encoding, load validation, and replay inputs for the current Game build under
+[Requirements](engine-contract.md#requirements), [Game build compatibility](engine-contract.md#game-build-compatibility). Decide whether saves retain undo and redo history.
 
 ## Session-owned state
 
 TODO: Separate Campaign state, UI preferences, debug operations, and AI memory. Define restoration or invalidation of strategy memory and cached Player-visible information.
 
-TODO: Assign stable HIST-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -85,11 +96,11 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Specify command/undo/redo and save/load round trips, including generated IDs, hidden state, and reports.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions
 
-- TODO: Choose history retention, serialization, incompatible-save handling under [ENG-005](engine-contract.md#eng-005--build-compatibility), and how debug changes affect replay.
+- TODO: Choose history retention, serialization, incompatible-save handling under [Game build compatibility](engine-contract.md#game-build-compatibility), and how debug changes affect replay.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

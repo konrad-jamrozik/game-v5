@@ -4,7 +4,7 @@ import { relative, resolve } from 'node:path'
 import { describe, expect, test } from 'vitest'
 
 import { runSpecificationLint } from '../scripts/lint-specs.ts'
-import { analyzeSpecifications, lintRequirementReferences, lintSpecifications } from '../scripts/spec-linter/linter.ts'
+import { analyzeSpecifications, lintSectionReferences, lintSpecifications } from '../scripts/spec-linter/linter.ts'
 import type { SourceFile } from '../scripts/spec-linter/types.ts'
 
 function lines(values: readonly string[]): string {
@@ -91,7 +91,7 @@ function validCorpus(): SourceFile[] {
         '',
         '# Purpose and boundaries',
         '',
-        'Alpha purpose. See [conventions](../governance/spec-conventions.md#implicit-relationships).',
+        'Alpha purpose. See [Implicit relationships](../governance/spec-conventions.md#implicit-relationships).',
         '',
         '# Relationships',
         '',
@@ -107,7 +107,7 @@ function validCorpus(): SourceFile[] {
         '',
         '# Requirements',
         '',
-        '## AAA-001 — Rule',
+        '## Rule',
         '',
         'Alpha must be deterministic.',
         '',
@@ -117,7 +117,7 @@ function validCorpus(): SourceFile[] {
         '',
         '# Acceptance examples',
         '',
-        '[AAA-001](#aaa-001--rule): the same input has the same result.',
+        '[Rule](#rule): the same input has the same result.',
         '',
         '# Open decisions',
         '',
@@ -129,6 +129,21 @@ function validCorpus(): SourceFile[] {
 
 function diagnosticCodes(files: readonly SourceFile[]): readonly string[] {
   return lintSpecifications({ files }).map((diagnostic) => diagnostic.code)
+}
+
+function withRelationshipDescriptions(files: readonly SourceFile[]): SourceFile[] {
+  return files.map((file) => {
+    const inventory = /# Relationships\n\n([\s\S]*?)\n# Glossary/.exec(file.content)?.[1] ?? ''
+    const descriptions = [...inventory.matchAll(/^- ([^\n]+)$/gm)].map(
+      (match) => '- ' + match[1] + ' for the shared contract.',
+    )
+    return {
+      ...file,
+      content: descriptions.length
+        ? file.content.replace('\n# Relationships', '\n' + descriptions.join('\n') + '\n\n# Relationships')
+        : file.content,
+    }
+  })
 }
 
 function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
@@ -148,7 +163,7 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
     '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
     '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |\n| BBB | Foundation | [Beta](foundation/beta.md) | Beta rules. |',
   )
-  return [
+  return withRelationshipDescriptions([
     ...mutate(
       withBeta,
       alpha.path,
@@ -156,7 +171,7 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
       '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)',
     ),
     { path: 'docs/specs/foundation/beta.md', content: betaContent },
-  ]
+  ])
 }
 
 function mutate(files: readonly SourceFile[], path: string, find: string, replacement: string): SourceFile[] {
@@ -245,10 +260,10 @@ describe('specification linter', () => {
         validCorpus(),
         'docs/specs/foundation/alpha.md',
         'Contract.',
-        'Contract. For example, [AAA-001](#aaa-001--rule): the same input has the same result.',
+        'Contract. For example, [Rule](#rule): the same input has the same result.',
       ),
       'docs/specs/foundation/alpha.md',
-      '# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.\n\n',
+      '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
       '',
     )
     expect(lintSpecifications({ files })).toEqual([])
@@ -263,7 +278,7 @@ describe('specification linter', () => {
         content: file.content
           .replaceAll('Foundation', family)
           .replaceAll('foundation/alpha.md', `${directory}/alpha.md`)
-          .replace('# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.\n\n', ''),
+          .replace('# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n', ''),
       }))
       expect(diagnosticCodes(files)).toEqual(['SPEC209'])
     },
@@ -273,8 +288,8 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '# Edge cases and failure behavior\n\nFailures are defined.\n\n# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.',
-      '# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.\n\n# Edge cases and failure behavior\n\nFailures are defined.',
+      '# Edge cases and failure behavior\n\nFailures are defined.\n\n# Acceptance examples\n\n[Rule](#rule): the same input has the same result.',
+      '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n# Edge cases and failure behavior\n\nFailures are defined.',
     )
     expect(diagnosticCodes(files)).toEqual(['SPEC209'])
   })
@@ -283,7 +298,7 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '[AAA-001](#aaa-001--rule): the same input has the same result.',
+      '[Rule](#rule): the same input has the same result.',
       '',
     )
     expect(diagnosticCodes(files)).toEqual(['SPEC204'])
@@ -294,7 +309,7 @@ describe('specification linter', () => {
       mutate(
         validCorpus(),
         'docs/specs/foundation/alpha.md',
-        '# Acceptance examples\n\n[AAA-001](#aaa-001--rule): the same input has the same result.\n\n',
+        '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
         '',
       ),
       'docs/specs/foundation/alpha.md',
@@ -381,7 +396,7 @@ describe('specification linter', () => {
       'No explicit relationships.',
       `- ${passive} [Alpha](foundation/alpha.md)`,
     )
-    const result = analyzeSpecifications({ files })
+    const result = analyzeSpecifications({ files: withRelationshipDescriptions(files) })
     expect(result.diagnostics).toEqual([])
     expect(result.corpus.relationships.filter((edge) => edge.origin === 'explicit')).toEqual([
       expect.objectContaining({ dependencyId: 'INDEX', dependentId: 'AAA', kind }),
@@ -451,23 +466,76 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files: validCorpus() })).toEqual([])
   })
 
+  test.each([
+    ['', 'missing'],
+    ['Uses [Beta](beta.md) for the shared contract.', 'prose outside a bullet'],
+    ['1. Uses [Beta](beta.md) for the shared contract.', 'ordered list'],
+    ['- Uses [Beta](beta.md)', 'missing explanation'],
+    ['- Uses [Beta](beta.md) .', 'punctuation-only explanation'],
+    ['- Uses [Beta](beta.md#glossary) for the shared contract.', 'fragment link'],
+    ['- Uses [Other](beta.md) for the shared contract.', 'incorrect title'],
+    ['- Used by [Beta](beta.md) for the shared contract.', 'wrong direction'],
+    ['- Uses [Beta](beta.md) for the shared contract.\n  - Nested detail.', 'nested list'],
+    [
+      '- Uses [Beta](beta.md) for the shared contract.\n- Uses [Beta](./beta.md) for another contract.',
+      'duplicate description',
+    ],
+  ])('rejects a relationship description with %s (%s)', (replacement, reason) => {
+    const files = mutate(
+      cycleCorpus('uses'),
+      'docs/specs/foundation/alpha.md',
+      '- Uses [Beta](beta.md) for the shared contract.',
+      replacement,
+    )
+    expect(diagnosticCodes(files)).toEqual(reason === 'wrong direction' ? ['SPEC416', 'SPEC416'] : ['SPEC416'])
+  })
+
+  test('accepts a wrapped description with an equivalent relative document path', () => {
+    const files = mutate(
+      cycleCorpus('uses'),
+      'docs/specs/foundation/alpha.md',
+      '- Uses [Beta](beta.md) for the shared contract.',
+      '- Uses [Beta](./beta.md) for the shared\n  contract.',
+    )
+    expect(diagnosticCodes(files)).toEqual([])
+  })
+
+  test('requires separate descriptions for different relationship kinds with the same document', () => {
+    const files = withRelationshipDescriptions(
+      mutate(
+        mutate(
+          validCorpus(),
+          'docs/specs/foundation/alpha.md',
+          'No explicit relationships.',
+          '- Uses [Game Specification Index](../README.md)\n- Refines [Game Specification Index](../README.md)',
+        ),
+        'docs/specs/README.md',
+        'No explicit relationships.',
+        '- Used by [Alpha](foundation/alpha.md)\n- Refined by [Alpha](foundation/alpha.md)',
+      ),
+    )
+    expect(diagnosticCodes(files)).toEqual([])
+    const missing = mutate(
+      files,
+      'docs/specs/foundation/alpha.md',
+      '- Refines [Game Specification Index](../README.md) for the shared contract.\n',
+      '',
+    )
+    expect(diagnosticCodes(missing)).toEqual(['SPEC416'])
+  })
+
   test('accepts requirements nested below H2 and H3 topic headings', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '## AAA-001 — Rule',
-      lines(['## Topic', '', '### Detail', '', '#### AAA-001 — Rule']),
+      '## Rule',
+      lines(['## Topic', '', '### Detail', '', '#### Rule']),
     )
     expect(lintSpecifications({ files })).toEqual([])
   })
 
   test('accepts a requirement after a sibling topic heading', () => {
-    const files = mutate(
-      validCorpus(),
-      'docs/specs/foundation/alpha.md',
-      '## AAA-001 — Rule',
-      lines(['## Topic', '', '## AAA-001 — Rule']),
-    )
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '## Rule', lines(['## Topic', '', '## Rule']))
     expect(diagnosticCodes(files)).toEqual([])
   })
 
@@ -475,100 +543,57 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '## AAA-001 — Rule',
-      lines([
-        '## Topic',
-        '',
-        '### Detail',
-        '',
-        '#### Explanation',
-        '',
-        '### AAA-002 — Nested rule',
-        '',
-        'Rule.',
-        '',
-        '## AAA-001 — Rule',
-      ]),
+      '## Rule',
+      lines(['## Topic', '', '### Detail', '', '#### Explanation', '', '### Nested rule', '', 'Rule.', '', '## Rule']),
     )
     expect(diagnosticCodes(files)).toEqual([])
   })
 
-  test('rejects a requirement directly nested under another requirement', () => {
-    const files = mutate(
-      validCorpus(),
-      'docs/specs/foundation/alpha.md',
-      'Alpha must be deterministic.',
-      'Alpha must be deterministic.\n\n### AAA-002 — Nested rule\n\nRule.',
-    )
-    expect(diagnosticCodes(files)).toContain('SPEC608')
-  })
-
   test('rejects skipped heading levels', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '## AAA-001 — Rule', '#### AAA-001 — Rule')
-    const codes = diagnosticCodes(files)
-    expect(codes).toContain('SPEC211')
-    expect(codes).toContain('SPEC608')
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '## Rule', '#### Rule')
+    expect(diagnosticCodes(files)).toContain('SPEC211')
   })
 
-  test('rejects missing requirement titles and duplicate declarations', () => {
-    let files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '## AAA-001 — Rule', '## AAA-001')
-    expect(diagnosticCodes(files)).toContain('SPEC607')
-    files = mutate(
-      validCorpus(),
-      'docs/specs/foundation/alpha.md',
-      'Alpha must be deterministic.',
-      lines(['Alpha must be deterministic.', '', '## AAA-001 — Duplicate', '', 'Duplicate rule.']),
-    )
-    expect(diagnosticCodes(files)).toContain('SPEC602')
+  test.each(['AAA-001', 'AAA-NNN', 'AAA-nnn'])('rejects numbered labels in headings: %s', (label) => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '## Rule', '## ' + label + ' — Rule')
+    expect(diagnosticCodes(files)).toContain('SPEC612')
   })
 
-  test('requires individual links to the exact requirement destination', () => {
-    const unlinked = mutate(
-      validCorpus(),
-      'docs/specs/foundation/alpha.md',
-      '[AAA-001](#aaa-001--rule): the same',
-      'AAA-001: the same',
-    )
-    expect(diagnosticCodes(unlinked)).toContain('SPEC609')
-    const wrongTarget = mutate(
-      validCorpus(),
-      'docs/specs/foundation/alpha.md',
-      '[AAA-001](#aaa-001--rule): the same',
-      '[AAA-001](#requirements): the same',
-    )
-    expect(diagnosticCodes(wrongTarget)).toContain('SPEC611')
+  test('requires the exact section title as hyperlink text', () => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '[Rule](#rule)', '[Other title](#rule)')
+    expect(diagnosticCodes(files)).toEqual(['SPEC611'])
   })
 
-  test('rejects a range even when its visible endpoints are linked', () => {
-    const files = mutate(
-      validCorpus(),
-      'docs/specs/foundation/alpha.md',
-      '[AAA-001](#aaa-001--rule): the same',
-      '[AAA-001](#aaa-001--rule) through [AAA-001](#aaa-001--rule): the same',
-    )
-    expect(diagnosticCodes(files)).toContain('SPEC610')
+  test('preserves game-data identifiers that are not specification labels', () => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', 'Contract.', 'Contract uses GDR WEAPON-001.')
+    expect(diagnosticCodes(files)).toEqual([])
+  })
+
+  test('rejects stale section anchors', () => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '[Rule](#rule)', '[Rule](#removed-rule)')
+    expect(diagnosticCodes(files)).toContain('SPEC606')
   })
 
   test('validates requirement links in prose, lists, tables, and authored non-spec docs', () => {
     let files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '[AAA-001](#aaa-001--rule): the same input has the same result.',
+      '[Rule](#rule): the same input has the same result.',
       lines([
-        '[AAA-001](#aaa-001--rule): the same input has the same result.',
+        '[Rule](#rule): the same input has the same result.',
         '',
-        '- [AAA-001](#aaa-001--rule)',
+        '- [Rule](#rule)',
         '',
         '| Requirement |',
         '| --- |',
-        '| [AAA-001](#aaa-001--rule) |',
+        '| [Rule](#rule) |',
       ]),
     )
     files = [
       ...files,
       {
         path: 'docs/notes.md',
-        content: '[AAA-001](specs/foundation/alpha.md#aaa-001--rule)\n',
+        content: '[Rule](specs/foundation/alpha.md#rule)\n',
       },
     ]
     expect(lintSpecifications({ files })).toEqual([])
@@ -577,7 +602,7 @@ describe('specification linter', () => {
   test('checks generated requirement references only when requested', () => {
     const files = [...validCorpus(), { path: 'docs/derived/glossary.md', content: 'AAA-001\n' }]
     expect(lintSpecifications({ files })).toEqual([])
-    expect(lintRequirementReferences({ files }, true).map((diagnostic) => diagnostic.code)).toContain('SPEC609')
+    expect(lintSectionReferences({ files }, true).map((diagnostic) => diagnostic.code)).toContain('SPEC612')
   })
 
   test.each([
@@ -704,14 +729,14 @@ describe('specification linter', () => {
       'SPEC501',
     ],
     [
-      'requirement prefix',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', 'AAA-001 — Rule', 'BBB-001 — Rule'),
-      'SPEC601',
+      'numbered requirement label',
+      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '## Rule', '## AAA-001 — Rule'),
+      'SPEC612',
     ],
     [
       'unresolved requirement reference',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '[AAA-001](#aaa-001--rule): the same', 'AAA-999: the same'),
+        mutate(files, 'docs/specs/foundation/alpha.md', '[Rule](#rule): the same', '[Rule](#removed-rule): the same'),
       'SPEC606',
     ],
     [
@@ -795,12 +820,11 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '[AAA-001](#aaa-001--rule): the same input',
+      '[Rule](#rule): the same input',
       'AAA-001–002: the same input',
     )
     const codes = diagnosticCodes(files)
-    expect(codes).toContain('SPEC606')
-    expect(codes).toContain('SPEC610')
+    expect(codes).toContain('SPEC612')
   })
 
   test('returns stable CLI exit classes', () => {

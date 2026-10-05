@@ -14,6 +14,13 @@ Define fully automatic battles and their reproducible results independently of c
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Agents](./agents.md) for Agent capabilities and exhaustion when resolving a battle.
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
+- Refines [Domain Model](../foundation/domain-model.md) by specifying Combatant behavior and automatic battle resolution rules.
+- Used by [Agents](./agents.md) for the Battle result facts that affect Agent development and recovery.
+- Used by [Missions](./missions.md) for automatic battle resolution and Battle result facts used to calculate Mission consequences.
+- Used by [Player Information](../interfaces/player-information.md) for automatic battle resolution and retained Battle result facts.
+
 # Relationships
 
 - Uses [Agents](./agents.md)
@@ -30,7 +37,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This specification intends to refine Domain Model's combatant and battle-result contract ([DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds)/[DOM-012](../foundation/domain-model.md#dom-012--combat-and-consequences)) with battle transitions,
+This specification intends to refine Domain Model's combatant and battle-result contract ([Attribute bounds](../foundation/domain-model.md#attribute-bounds)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with battle transitions,
 calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
 and draws. The combat decisions below remain TODOs; campaign consequences remain owned by Missions.
 
@@ -52,7 +59,7 @@ TODO: Specify combat-rating, hit/contest, damage, exhaustion, experience, and ca
 
 TODO: Specify victory, retreat, wipe, non-progress/stalemate handling, final injuries and experience, and output needed for partial-success calculation. Campaign rewards belong to MISSION.
 
-TODO: Assign stable COMBAT-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -63,7 +70,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Give deterministic round-by-round fixtures with attacks, draws, damage, experience, and expected Battle results.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

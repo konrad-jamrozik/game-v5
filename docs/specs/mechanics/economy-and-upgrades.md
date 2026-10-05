@@ -14,6 +14,17 @@ Define resource flows, personnel purchases, and agency improvements.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Agents](./agents.md) for Agent capability and availability rules affected by personnel purchases and upgrades.
+- Uses [Initial Campaign Content](../content/initial-campaign.md) for resource, personnel, and upgrade values and catalogs.
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
+- Uses [Turn Resolution](../foundation/turn-resolution.md) for the timing and snapshots used for resource flows and upgrade effects.
+- Refines [Domain Model](../foundation/domain-model.md) by specifying Agency resource flows, personnel purchases, and upgrade rules.
+- Used by [Agents](./agents.md) for the purchases and upgrade effects that affect Agent availability and capability.
+- Used by [Initial Campaign Content](../content/initial-campaign.md) for the parameter meanings and catalog requirements for resource flows, purchases, and upgrades.
+- Used by [Missions](./missions.md) for the resource and upgrade rules applied to Mission rewards and costs.
+- Used by [Player Information](../interfaces/player-information.md) for resource flows, purchases, and Agency upgrades.
+- Used by [Turn Resolution](../foundation/turn-resolution.md) for the resource and upgrade transitions scheduled within a turn.
+
 # Relationships
 
 - Uses [Agents](./agents.md)
@@ -34,7 +45,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This specification intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including [DOM-008](../foundation/domain-model.md#dom-008--attribute-bounds))
+This specification intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including [Attribute bounds](../foundation/domain-model.md#attribute-bounds))
 with resource flows, purchase eligibility, and upgrade effects. Agents supplies personnel state and capabilities;
 Numbers and Randomness supplies arithmetic. Initial Campaign Content supplies prices and increments, while this
 document supplies their meanings and formulas. Turn Resolution supplies evaluation timing. These rules remain TODOs.
@@ -57,7 +68,7 @@ TODO: Specify all eight categories: agent capacity, transport capacity, training
 
 TODO: Specify affordability, purchase atomicity, capacity accounting/reservation/release, and whether an upgrade changes current allocations. Link prices and increments to INIT.
 
-TODO: Assign stable ECON-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -68,7 +79,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Provide money/funding breakdowns, purchase rejection examples, and exact before/after upgrade calculations.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

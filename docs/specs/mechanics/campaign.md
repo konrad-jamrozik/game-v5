@@ -14,6 +14,13 @@ Define campaign initialization, global panic, and the conditions that start and 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Initial Campaign Content](../content/initial-campaign.md) for the starting GDRs and values needed to initialize a playable Campaign.
+- Uses [Turn Resolution](../foundation/turn-resolution.md) for the timing of Campaign updates and checks for end conditions.
+- Refines [Domain Model](../foundation/domain-model.md) by specifying Campaign initialization, global panic, and victory and defeat rules.
+- Used by [Initial Campaign Content](../content/initial-campaign.md) for the initialization contract that starting Campaign data must satisfy.
+- Used by [Player Information](../interfaces/player-information.md) for Campaign initialization and global start and end conditions.
+- Used by [Turn Resolution](../foundation/turn-resolution.md) for the Campaign update and end-condition rules scheduled within turn phases.
+
 # Relationships
 
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
@@ -30,7 +37,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This specification intends to refine Domain Model's campaign boundary ([DOM-001](../foundation/domain-model.md#dom-001--campaign-boundary) and its Campaign and agency section) with
+This specification intends to refine Domain Model's campaign boundary ([Campaign boundary](../foundation/domain-model.md#campaign-boundary-1) and its Campaign and agency section) with
 initialization and ending behavior. Initial Campaign Content supplies the exact starting values and catalogs;
 this document supplies their initialization meaning. Turn Resolution supplies state-read timing and the phase in
 which campaign predicates are checked; this document supplies the predicates. The exact rules remain TODOs below.
@@ -53,7 +60,7 @@ TODO: Specify panic representation, clamping, contributing effects, victory and 
 
 TODO: Define allowed Player-visible information and commands after an ending and how history restores an ongoing campaign.
 
-TODO: Assign stable CAMP-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -64,7 +71,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Give initialization and ending scenarios with exact expected state and outcome reasons.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

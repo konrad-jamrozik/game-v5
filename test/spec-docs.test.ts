@@ -69,7 +69,7 @@ function sampleCorpus(): SpecificationCorpus {
       {
         term: 'alpha term',
         definitionMarkdown:
-          'Uses **strong rules** from [Conventions](../governance/spec-conventions.md#glossary) and [AAA-001](#aaa-001--rule).',
+          'Uses **strong rules** from [Conventions](../governance/spec-conventions.md#glossary) and [Rule](#rule).',
         ownerId: 'AAA',
         ownerPath: 'docs/specs/foundation/alpha.md',
         ownerStatus: 'Draft',
@@ -142,7 +142,7 @@ describe('derived specification renderer', () => {
     const glossary = outputs.get('docs/derived/glossary.md') ?? ''
     expect(glossary.indexOf('| alpha term')).toBeLessThan(glossary.indexOf('| Zulu term'))
     expect(glossary).toContain('[Conventions](../specs/governance/spec-conventions.md#glossary)')
-    expect(glossary).toContain('[AAA-001](../specs/foundation/alpha.md#aaa-001--rule)')
+    expect(glossary).toContain('[Rule](../specs/foundation/alpha.md#rule)')
     expect(glossary).toContain('[AAA — Alpha "Quoted" & More](../specs/foundation/alpha.md#glossary)')
   })
 

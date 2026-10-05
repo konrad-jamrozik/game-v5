@@ -23,7 +23,7 @@ and [Engine Contract](../foundation/engine-contract.md) are **In review** for ba
 contracts and unresolved design questions before advancing. Later batches have not started.
 
 **Approved organization revision:** the project owner approved splitting the former Domain Model into these three
-documents with "I love it. Do it." after the three-document proposal. [PLAN-001](#plan-001--batch-sequence) and [PLAN-003](#plan-003--early-information-and-api-boundaries) now reflect that grouping;
+documents with "I love it. Do it." after the three-document proposal. [Batch sequence](#batch-sequence) and [Early information and API boundaries](#early-information-and-api-boundaries) now reflect that grouping;
 the ten-batch order is unchanged.
 
 # Relationships
@@ -80,7 +80,7 @@ removal approaches do not select new gameplay rules or change the accepted revie
 
 ## Review sequence and backlog
 
-### PLAN-001 — Batch sequence
+### Batch sequence
 
 Use the following 10-batch sequence, starting with Domain Model, Modeling Foundations, and Engine Contract. If review reveals a better grouping,
 propose the change explicitly and update this table when agreed rather than silently changing the order.
@@ -103,7 +103,7 @@ are mutual. Drafts must identify unresolved dependencies explicitly rather than 
 
 ## Work that grows alongside the batches
 
-### PLAN-002 — Parallel GDR and acceptance work
+### Parallel GDR and acceptance work
 
 Develop the following documents incrementally with the mechanics they support. They are part of the backlog,
 not work postponed until after the interfaces.
@@ -117,21 +117,21 @@ is scheduled work in that specification, not an unresolved decision about this w
 | Content    | [Initial Campaign Content](../content/initial-campaign.md)                                              | Add exact named parameters and small example GDRs as each subsystem needs them. Complete the playable campaign GDRs after batch 7 and review it explicitly. | Queued     |
 | Acceptance | [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | Add precise cross-system examples with each batch. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10.      | Queued     |
 
-### PLAN-003 — Early information and API boundaries
+### Early information and API boundaries
 
 During batch 1, identify the player-information boundary and outline the API capabilities needed to support
 it. Refine these notes with each mechanic; do not defer their design influence until batch 8. Keep supporting notes
 explicitly preliminary in Engine Contract, alongside Domain Model and Modeling Foundations as the batch 1 deliverable. Exact Player-visible information fields and
 public signatures are finalized in their owning specifications during batch 8.
 
-### PLAN-004 — Incremental timing refinement
+### Incremental timing refinement
 
 Refine turn timing and shared contracts as mechanics are drafted. Batch 7 reconciles the complete turn
 schedule; earlier drafts must still state their local timing requirements and any unresolved cross-system ordering.
 
 ## Review and completion workflow
 
-### PLAN-005 — Batch workflow
+### Batch workflow
 
 For each authorized batch:
 
@@ -144,13 +144,13 @@ For each authorized batch:
 6. Pause before advancing to the next batch so the user can review. Incorporate feedback or follow explicit instructions
    to continue. Record acceptance only when it is explicitly given.
 
-### PLAN-006 — Backlog updates
+### Backlog updates
 
 Update this backlog when drafting begins, a draft enters review, feedback requires revision, or acceptance is
 recorded. Link the accepted document's approval reference rather than duplicating its approval text here. Keep current
 status summaries consistent with document metadata.
 
-### PLAN-007 — Separate implementation authorization
+### Separate implementation authorization
 
 Do not treat the completion of a draft or batch as authorization to implement game code. Implementation
 scope and milestones are selected separately. Graphics, animation, and possible browser-based 3D specifications remain
@@ -158,7 +158,7 @@ deferred until those stages are requested.
 
 ## First implementation milestone assessment
 
-### PLAN-011 — First implementation milestone assessment
+### First implementation milestone assessment
 
 After the batch 4 review, assess whether the accepted contracts support a small headless playable slice.
 Propose its concrete scope and identify missing contracts, GDRs, or acceptance scenarios before implementation is
@@ -167,17 +167,17 @@ before any implementation can begin. If contracts are missing, schedule their re
 
 # Edge cases and failure behavior
 
-## PLAN-008 — Earlier-specification gaps
+## Earlier-specification gaps
 
 If a later mechanic exposes a missing assumption in an earlier specification, identify the affected rule and propose a
 revision in its owning document. Do not silently change Accepted rules or duplicate a workaround in another specification.
 
-## PLAN-009 — Oversized batches
+## Oversized batches
 
 If a batch becomes too large to review comfortably, propose a split at a coherent contract boundary and
 record it here. Partial acceptance does not accept the remaining documents or implicitly resolve their open decisions.
 
-## PLAN-010 — Unresolved dependencies
+## Unresolved dependencies
 
 If a draft depends on unresolved GDRs or rules, label the dependency and its impact. Explicitly scoped
 example fixtures can illustrate a proposal, but must not masquerade as the final campaign configuration. An unresolved
@@ -190,17 +190,17 @@ available for revision; a change in order alone does not invalidate their conten
 
 These are workflow checks, not gameplay tests:
 
-- **First review ([PLAN-001](#plan-001--batch-sequence), [PLAN-003](#plan-003--early-information-and-api-boundaries), [PLAN-005](#plan-005--batch-workflow)):** Drafting the three batch 1 documents changes their statuses to
+- **First review ([Batch sequence](#batch-sequence), [Early information and API boundaries](#early-information-and-api-boundaries), [Batch workflow](#batch-workflow)):** Drafting the three batch 1 documents changes their statuses to
   Draft and batch 1 to In review when presented. Preliminary API/information notes do not imply those contracts are
   complete. The next batch does not begin without the review opportunity or an explicit instruction to continue.
-- **Requested revision ([PLAN-005](#plan-005--batch-workflow), [PLAN-006](#plan-006--backlog-updates)):** Feedback requests a different model for Agents and Current assignments. Batch 1 remains
+- **Requested revision ([Batch workflow](#batch-workflow), [Backlog updates](#backlog-updates)):** Feedback requests a different model for Agents and Current assignments. Batch 1 remains
   In review while affected notes and examples are updated.
-- **Separate combat/mission checkpoints ([PLAN-001](#plan-001--batch-sequence), [PLAN-009](#plan-009--oversized-batches)):** Accepting Combat completes batch 5, not batch 6. The damage-related
+- **Separate combat/mission checkpoints ([Batch sequence](#batch-sequence), [Oversized batches](#oversized-batches)):** Accepting Combat completes batch 5, not batch 6. The damage-related
   campaign benefit of a failed mission remains a Missions decision.
-- **Incremental GDRs ([PLAN-002](#plan-002--parallel-gdr-and-acceptance-work), [PLAN-010](#plan-010--unresolved-dependencies)):** Drafting Investigations adds its parameters to Initial Campaign Content and
+- **Incremental GDRs ([Parallel GDR and acceptance work](#parallel-gdr-and-acceptance-work), [Unresolved dependencies](#unresolved-dependencies)):** Drafting Investigations adds its parameters to Initial Campaign Content and
   relevant multi-turn scenarios. This does not mark the entire GDR catalog or scenario suite Accepted.
-- **Later conflict ([PLAN-008](#plan-008--earlier-specification-gaps)):** A mission rule conflicts with an Accepted history rule. The discrepancy is documented and
+- **Later conflict ([Earlier-specification gaps](#earlier-specification-gaps)):** A mission rule conflicts with an Accepted history rule. The discrepancy is documented and
   a revision is proposed to the owner; neither implementation nor a second specification silently overrides the accepted rule.
-- **Milestone assessment ([PLAN-007](#plan-007--separate-implementation-authorization), [PLAN-011](#plan-011--first-implementation-milestone-assessment)):** After batch 4 is reviewed, assess the accepted contracts for a headless
+- **Milestone assessment ([Separate implementation authorization](#separate-implementation-authorization), [First implementation milestone assessment](#first-implementation-milestone-assessment-1)):** After batch 4 is reviewed, assess the accepted contracts for a headless
   slice. If its required turn timing or API contract is unresolved, list the gap and propose the necessary specification
   work; do not invent the missing rule in code or treat the assessment as implementation authorization.

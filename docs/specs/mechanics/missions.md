@@ -14,6 +14,17 @@ Define mission commitments and translate combat results into campaign consequenc
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Agents](./agents.md) for Agent capabilities and availability when committing Mission participants.
+- Uses [Combat](./combat.md) for automatic battle resolution and Battle result facts used to calculate Mission consequences.
+- Uses [Economy and Upgrades](./economy-and-upgrades.md) for the resource and upgrade rules applied to Mission rewards and costs.
+- Uses [Factions](./factions.md) for the Faction operation occurrence and suppression rules associated with Response missions.
+- Uses [Initial Campaign Content](../content/initial-campaign.md) for Mission and Enemy catalogs and concrete reward inputs.
+- Refines [Domain Model](../foundation/domain-model.md) by specifying Mission commitments and the translation of Battle result facts into Campaign consequences.
+- Used by [Initial Campaign Content](../content/initial-campaign.md) for the catalog requirements that Mission and Enemy GDRs must satisfy.
+- Used by [Leads and Progression](./leads-and-progression.md) for the Mission outcomes that establish Lead completion and progression facts.
+- Used by [Player Information](../interfaces/player-information.md) for Mission commitments, results, and Campaign consequences.
+- Used by [Turn Resolution](../foundation/turn-resolution.md) for the Mission transitions and Campaign consequences scheduled within a turn.
+
 # Relationships
 
 - Uses [Agents](./agents.md)
@@ -34,7 +45,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This specification intends to refine Domain Model's mission contract ([DOM-007](../foundation/domain-model.md#dom-007--current-versus-historical-teams)/[DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)/[DOM-012](../foundation/domain-model.md#dom-012--combat-and-consequences)) with creation, deployment, deadlines,
+This specification intends to refine Domain Model's mission contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with creation, deployment, deadlines,
 resolution, and campaign consequences. Agents supplies participant eligibility, Combat supplies Battle results,
 Economy and Upgrades supplies capacities and resource effects, and Factions supplies operation provenance and
 suppression semantics. Initial Campaign Content supplies mission Game Data Records (GDRs) and numeric values under this contract.
@@ -58,7 +69,7 @@ TODO: Provide exact rewards and penalties for victory, retreat, wipe, and expira
 
 TODO: Specify survivor return, casualty effects, resource changes, suppression, unlocks, and reports. Reference owning rules to prevent duplicate application.
 
-TODO: Assign stable MISSION-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -69,7 +80,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Compare ignored, failed-with-damage, and successful versions of the same mission; include shared-transport contention.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

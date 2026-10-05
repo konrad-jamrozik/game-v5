@@ -20,6 +20,8 @@ These conventions are the accepted working agreement. A stub uses the standard l
 
 Do not prescribe internal classes, file organization, libraries, or algorithms unless they affect an observable contract, determinism, compatibility, or an explicit architectural constraint. For example, exact public TypeScript signatures and the chosen random algorithm belong in specifications.
 
+- Uses [Artifact Relationships](./artifact-relationships.md) for the canonical relationship model and directional inventory meanings.
+
 # Relationships
 
 - Uses [Artifact Relationships](./artifact-relationships.md)
@@ -150,6 +152,23 @@ Relationship entries have no Scope field. Keep substantive constraints and requi
 contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
 acknowledgements do not create relationships.
 
+For every entry in Relationships, Purpose and boundaries must contain exactly one corresponding flat unordered
+bullet with a concise description of how the documents relate. Start the bullet with the same directional phrase
+and document hyperlink as the inventory entry, then explain the vocabulary, data, behavior, or contract involved
+from the current document's perspective. Keep each description to one sentence; Markdown line wrapping is allowed.
+Repeat neither whole contracts nor requirement details in these summaries. Different Relationship kinds or
+directions involving the same document require separate bullets. These bullets cover the complete explicit inventory
+and are not an illustrative enumeration. Implicit relationships and ordinary contextual references do not require
+such bullets. Specifications with no explicit relationships need no relationship-description bullets.
+
+For example, Engine Contract's Purpose and boundaries includes:
+
+- Uses [Modeling Foundations](../foundation/modeling-foundations.md) for Game build, Campaign state, Committed state, and Authoritative value terminology in execution guarantees.
+
+This relationship-description revision was requested by the project owner and applies to every registered
+specification, including Stubs and governance-layout exceptions. Deterministic lint checks correspondence and
+nonempty descriptions; semantic review checks whether each explanation accurately describes the relationship.
+
 Classify relationships using [Choosing uses or refines](artifact-relationships.md#choosing-uses-or-refines).
 Each refinement must identify the parent contract and the added detail about the same subject or behavior in its
 owning prose. A scoped Stub may declare that intended detail without settling its TODOs. Applying vocabulary,
@@ -214,7 +233,8 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Content entry; Content; entry; entries      | [GDR](../foundation/modeling-foundations.md#glossary)                                                                   | Naming immutable game data; use GDR, GDRs, and GDR in attributive uses after introducing the full name. The Content Family and document titles retain their names. |
 | Instance; occurrence                        | [Campaign instance](../foundation/modeling-foundations.md#glossary)                                                     | Referring to the modeled occurrence, rather than explaining what an occurrence means in a definition.                                                              |
 | Constructor                                 | [Campaign instance constructor](../foundation/modeling-foundations.md#glossary)                                         | Referring to the declared Campaign instance construction operation, which is distinct from a Rule or a programming-language constructor.                           |
-| ID                                          | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                           | Identifying a Campaign instance; GDR identifiers, Requirement identifiers, and other identifiers retain their own descriptions.                                    |
+| Build                                       | [Game build](../foundation/modeling-foundations.md#glossary)                                                            | Naming the version of the game's supplied data and executable logic; ordinary build-tool operations retain their meaning.                                          |
+| ID                                          | [Instance ID](../foundation/modeling-foundations.md#glossary)                                                           | Identifying a Campaign instance; GDR identifiers, document Spec IDs, and other identifiers retain their own descriptions.                                          |
 | Relationship type                           | [Relationship kind](artifact-relationships.md#glossary)                                                                 | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                        |
 | Assignment                                  | [Current assignment](../foundation/domain-model.md#glossary)                                                            | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                                     |
 | Participation; agent history                | [Participation history](../foundation/domain-model.md#glossary)                                                         | Referring to retained participation records, rather than the act of participating or an Agent's broader career.                                                    |
@@ -313,27 +333,26 @@ Long supporting tables may use descriptive appendices after Open decisions. Stat
 
 Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative. Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
 
-Give each implementable requirement a permanent identifier; for example, **INVSTG-nnn**, where `nnn` is a three-digit
-number. The prefix comes from the index; the number increases without reuse. Declare each requirement with a heading in
-the form `ID — Descriptive title`, exactly one level below its containing non-requirement heading. The container is the
-actual enclosing section in the heading hierarchy, not simply the most recently encountered heading: an H2 requirement
-may follow an ordinary H2 section as its sibling under the same H1. Do not nest requirement declarations directly under
-other requirement declarations. If the container is
-already H6, restructure the surrounding sections before adding the requirement. Preserve identifiers when wording
-changes. When removing a requirement, remove every reference to it and never reuse its identifier; Git history retains
-the historical record.
+Name each coherent requirement or contract with a descriptive section title, without a numbered requirement label or
+Spec ID prefix. For example, Engine Contract uses the heading **Derived value consistency**. Section titles replace
+the former numbered labels throughout specifications, examples, TODOs, and other authored documents. This revision
+was explicitly requested by the project owner. Document-level Spec IDs remain registry and metadata identifiers;
+they are not requirement-reference labels.
 
-A requirement heading names a coherent contract and gives readers a short summary of its subject. Its section may
-combine the complete obligations with explanation and clearly identified examples in a flowing narrative. State general
-constraints explicitly; example-specific choices must not silently become universal rules. Definitions and purely
-explanatory sections need no requirement label. Preserve IDs when moving contracts into the narrative; their numbers
-need not follow reading order. Keep each declaration unique and update links whenever a title change alters its anchor.
+A section may combine complete obligations with explanation and clearly identified examples in a flowing narrative.
+State general constraints explicitly; example-specific choices must not silently become universal rules. Requirements
+may be embedded in the narrative or grouped under Requirements. Follow the normal heading hierarchy and give sections
+distinct, descriptive titles within their document so references are unambiguous.
 
-Every occurrence of a live requirement ID outside its declaration heading must be its own Markdown hyperlink to that
-exact heading. Write each Requirement identifier in full. Do not use compact forms or ranges such as `PREFIX-nnn/mmm` or `PREFIX-nnn`
-through `PREFIX-mmm`; list and link every referenced Requirement identifier individually.
+Reference a requirement or other specification section with a Markdown hyperlink whose visible text is the exact
+section title and whose destination is that section's heading anchor. For example, use
+[Derived value consistency](../foundation/engine-contract.md#derived-value-consistency). Link each relevant section
+individually rather than using numbered labels, ranges, or a document-only link when a specific contract is meant.
+When a title changes or a section moves, update every reference and anchor together. When removing a section, remove
+or revise its references; Git history retains the historical record. Glossary-term links may use the canonical term
+as their visible text when linking to its owning Glossary.
 
-Stubs do not invent requirement IDs for TODOs. Allocate Requirement identifiers when actual rules are proposed.
+Stubs keep descriptive TODOs until concrete requirements can be written; do not reserve numbered labels for them.
 
 A rule should make its trigger, inputs, preconditions, outcome, and state changes clear. Use a transition table or pseudocode where prose would conceal ordering. Define:
 
@@ -378,7 +397,7 @@ the concepts, linking to the applicable requirements. These illustrations introd
 need not be organized as test fixtures or command sequences. Every acceptance example must identify all applicable
 items in this checklist:
 
-- The requirement IDs exercised and, when needed for reproducibility, the game revision and GDR fixture.
+- Hyperlinks to the requirement sections exercised and, when needed for reproducibility, the game revision and GDR fixture.
 - Initial state and inputs, including the seed or random state for stochastic results.
 - The command or event sequence.
 - Expected state, output, visibility, history, and random behavior where relevant.
@@ -398,7 +417,7 @@ Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Pro
 
 ## Deterministic validation
 
-Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for registry and metadata agreement, required layout, local links and anchors, relationship inventories and mirrors, acyclic `follows` and `refines` graphs, objectively prohibited terminology, requirement identifiers and references, and status-specific TODO and Open decisions rules. It performs no network access and offers no automatic fixes.
+Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for registry and metadata agreement, required layout, local links and anchors, relationship inventories and mirrors, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, and status-specific TODO and Open decisions rules. It performs no network access and offers no automatic fixes.
 
 A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
 
@@ -424,7 +443,7 @@ Before acceptance, verify:
 - Deferred features are explicitly out of scope, not holes in an allegedly complete contract.
 - The project owner has accepted the revision.
 
-When accepted behavior changes, identify affected requirement IDs and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.
+When accepted behavior changes, link to affected requirement sections by title and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.
 
 # Acceptance
 

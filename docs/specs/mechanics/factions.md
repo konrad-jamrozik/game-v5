@@ -14,6 +14,16 @@ Define escalating faction pressure, Faction operation occurrence generation, sup
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Initial Campaign Content](../content/initial-campaign.md) for Faction archetypes and operation occurrence parameters.
+- Uses [Leads and Progression](./leads-and-progression.md) for the progression facts and effects that govern Faction activity and defeat.
+- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
+- Refines [Domain Model](../foundation/domain-model.md) by specifying Faction pressure, operation occurrence generation, suppression, and defeat rules.
+- Used by [Initial Campaign Content](../content/initial-campaign.md) for the operation occurrence rules that Faction GDRs must support.
+- Used by [Leads and Progression](./leads-and-progression.md) for the Faction activity and defeat rules affected by Lead progression.
+- Used by [Missions](./missions.md) for the Faction operation occurrence and suppression rules associated with Response missions.
+- Used by [Player Information](../interfaces/player-information.md) for Faction activity, operation occurrence rules, and defeat conditions.
+- Used by [Turn Resolution](../foundation/turn-resolution.md) for the Faction pressure and operation occurrence transitions scheduled within a turn.
+
 # Relationships
 
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
@@ -33,7 +43,7 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([DOM-011](../foundation/domain-model.md#dom-011--mission-kind-and-provenance)) with escalation,
+This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with escalation,
 Faction operation occurrence generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
 Initial Campaign Content supplies catalogs of Game Data Records (GDRs) for Faction operation occurrences and parameter values. Leads and Progression supplies earned
 unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.
@@ -57,7 +67,7 @@ TODO: Specify countdown timing, severity distribution, mission GDR selection, re
 
 TODO: Specify stacking, countdown effects, continued escalation during suppression, defeat predicates, and treatment of pending Faction operation occurrences/missions/leads after defeat.
 
-TODO: Assign stable FACTION-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -68,7 +78,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Give seeded escalation/spawn timelines and compare temporary suppression with permanent defeat.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

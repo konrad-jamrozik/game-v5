@@ -14,6 +14,21 @@ Provide the complete, versioned numeric and GDR inputs for the first playable ca
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Campaign](../mechanics/campaign.md) for the initialization contract that starting Campaign data must satisfy.
+- Uses [Domain Model](../foundation/domain-model.md) for the game concepts and structural constraints that concrete GDRs must satisfy.
+- Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for the parameter meanings and catalog requirements for resource flows, purchases, and upgrades.
+- Uses [Factions](../mechanics/factions.md) for the operation occurrence rules that Faction GDRs must support.
+- Uses [Leads and Progression](../mechanics/leads-and-progression.md) for the progression prerequisites and effects that Lead GDRs must encode.
+- Uses [Missions](../mechanics/missions.md) for the catalog requirements that Mission and Enemy GDRs must satisfy.
+- Uses [Modeling Foundations](../foundation/modeling-foundations.md) for GDR immutability and reference conventions for concrete game data.
+- Used by [Agents](../mechanics/agents.md) for Agent archetypes and development and recovery parameters.
+- Used by [Campaign](../mechanics/campaign.md) for the starting GDRs and values needed to initialize a playable Campaign.
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for reproducible GDRs and numeric inputs for scenario fixtures.
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for resource, personnel, and upgrade values and catalogs.
+- Used by [Factions](../mechanics/factions.md) for Faction archetypes and operation occurrence parameters.
+- Used by [Leads and Progression](../mechanics/leads-and-progression.md) for the Lead catalog and its concrete progression prerequisites and effects.
+- Used by [Missions](../mechanics/missions.md) for Mission and Enemy catalogs and concrete reward inputs.
+
 # Relationships
 
 - Uses [Campaign](../mechanics/campaign.md)
@@ -61,7 +76,7 @@ TODO: List exact initial resources, roster, capabilities, faction setup, and all
 ## GDR catalogs
 
 TODO: Supply archetype catalogs for every Campaign instance Type declared in
-[Domain Model](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including singleton Campaign and Agency.
+[Types, multiplicity, and lifecycle](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including singleton Campaign and Agency.
 Declare each archetype’s GDR ID, shared characteristics, and construction defaults. Keep non-archetype balance
 parameters distinct. Mechanics retain ownership of Campaign instance constructor behavior; catalog details and balance values remain open.
 
@@ -75,7 +90,7 @@ TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, 
 
 TODO: Ensure every formula parameter and GDR reference resolves, progression reaches its intended ending, and required operation pools exist. Distinguish source-game examples from chosen v5 GDRs.
 
-TODO: Assign stable INIT-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -87,7 +102,7 @@ that truly fall outside this document's scope.
 
 TODO: Include the required archetypes, all four properties, and Instance IDs for every Campaign instance, including Campaign
 and Agency, in initial-state validation. Provide one fully specified scenario that acceptance fixtures can reference without inventing missing values.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions

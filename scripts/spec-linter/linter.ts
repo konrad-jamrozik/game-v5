@@ -1,4 +1,4 @@
-import type { Blockquote, Heading, Link, ListItem, Paragraph, Table } from 'mdast'
+import type { Blockquote, Heading, ListItem, Paragraph, Table } from 'mdast'
 import type { Node } from 'unist'
 
 import {
@@ -109,14 +109,6 @@ function isSpecificationStatus(value: string | undefined): value is Specificatio
 interface GlossaryTerm {
   readonly term: string
   readonly definitionMarkdown: string
-  readonly specification: Specification
-  readonly node: Node
-}
-
-interface RequirementDeclaration {
-  readonly id: string
-  readonly anchor: string
-  readonly depth: number
   readonly specification: Specification
   readonly node: Node
 }
@@ -861,6 +853,48 @@ function relationshipPair(row: RelationshipRow): {
     : { dependency: row.owner, dependent: row.destination }
 }
 
+function validateRelationshipDescriptions(rows: readonly RelationshipRow[], diagnostics: Diagnostic[]): void {
+  for (const row of rows) {
+    const purpose = findHeading(row.owner.document, 1, 'Purpose and boundaries')
+    if (!purpose) continue // The layout validator reports the missing section.
+    const phrase = RELATIONSHIP_PHRASES.find(
+      (entry) => entry.kind === row.kind && entry.inventory === row.inventory,
+    )?.phrase
+    const bullets = sectionNodes(row.owner.document, purpose).flatMap((node) =>
+      node.type === 'list' && !node.ordered ? node.children : [],
+    )
+    const descriptions = bullets.filter((item) => {
+      const paragraph = item.children[0]
+      if (item.children.length !== 1 || paragraph?.type !== 'paragraph' || item.checked != null) return false
+      const prefix = paragraph.children[0]
+      const link = paragraph.children[1]
+      if (prefix?.type !== 'text' || prefix.value !== phrase + ' ' || link?.type !== 'link') return false
+      const parts = splitUrl(link.url)
+      const linkPath = decodeUrlPart(parts.path)
+      return (
+        !isExternalUrl(link.url) &&
+        !parts.fragment &&
+        linkPath !== undefined &&
+        linkPath !== '' &&
+        resolvePath(row.owner.path, linkPath) === row.destination.path &&
+        textOf(link) === row.destination.title &&
+        link.title == null &&
+        link.children.every((child) => child.type === 'text') &&
+        /[\p{L}\p{N}]/u.test(paragraph.children.slice(2).map(textOf).join(''))
+      )
+    })
+    if (descriptions.length !== 1) {
+      addDiagnostic(
+        diagnostics,
+        row.owner.path,
+        row.node,
+        'SPEC416',
+        `Purpose and boundaries must contain exactly one flat bullet starting with "${phrase} [${row.destination.title}]" and a nonempty relationship description; found ${descriptions.length}.`,
+      )
+    }
+  }
+}
+
 function relationshipKey(row: RelationshipRow): string {
   const pair = relationshipPair(row)
   return [pair.dependency.path, pair.dependent.path, row.kind].join('\u0000')
@@ -905,6 +939,7 @@ function validateRelationships(
 ): readonly RelationshipRow[] {
   const byPath = new Map(specifications.map((specification) => [specification.path, specification]))
   const rows = specifications.flatMap((specification) => parseInventory(specification, byPath, diagnostics))
+  validateRelationshipDescriptions(rows, diagnostics)
   const seen = new Set<string>()
   for (const row of rows) {
     const pair = relationshipPair(row)
@@ -1074,208 +1109,62 @@ function todoNodes(specification: Specification): readonly Node[] {
   return todos
 }
 
-function declaredRequirements(
-  specification: Specification,
-  diagnostics: Diagnostic[],
-): readonly RequirementDeclaration[] {
-  const declarations: RequirementDeclaration[] = []
-  const ancestors: Heading[] = []
-  for (const { heading, slug } of headingsWithSlugs(specification.document)) {
-    while ((ancestors[ancestors.length - 1]?.depth ?? 0) >= heading.depth) ancestors.pop()
-    const container = ancestors[ancestors.length - 1]
-    ancestors.push(heading)
-    const text = headingText(heading)
-    const start = /^([A-Z][A-Z0-9]*-\d{3})\b/.exec(text)
-    if (!start?.[1]) {
-      continue
-    }
-    const match = /^([A-Z][A-Z0-9]*-\d{3})\s+—\s+(.+)$/.exec(text)
-    if (!match?.[1] || !match[2] || match[2].endsWith('.')) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        heading,
-        'SPEC607',
-        'Requirement headings must use "ID — Descriptive title" without a trailing period.',
-      )
-    }
-    const id = start[1]
-    if (specification.id && !id.startsWith(`${specification.id}-`)) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        heading,
-        'SPEC601',
-        `Requirement "${id}" must use the ${specification.id} prefix.`,
-      )
-    }
-    const expectedDepth = container ? container.depth + 1 : 2
-    if (
-      heading.depth === 1 ||
-      expectedDepth > 6 ||
-      heading.depth !== expectedDepth ||
-      (container && /^[A-Z][A-Z0-9]*-\d{3}\b/.test(headingText(container)))
-    ) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        heading,
-        'SPEC608',
-        expectedDepth > 6
-          ? `Requirement "${id}" cannot be nested below an H6 container; restructure the containing sections.`
-          : `Requirement "${id}" must be H${expectedDepth}, one level below its containing non-requirement heading.`,
-      )
-    }
-    if (match?.[1] && match[2])
-      declarations.push({ id, anchor: slug, depth: heading.depth, specification, node: heading })
-  }
-  return declarations
-}
-
-function expandRequirementReferences(text: string): readonly string[] {
-  const references = new Set<string>()
-  const pattern =
-    /\b([A-Z][A-Z0-9]*)-(\d{3})(?:(?:–|-)(\d{3})|\s+through\s+(?:([A-Z][A-Z0-9]*)-)?(\d{3})|((?:\/(?:[A-Z][A-Z0-9]*-)?\d{3})+))?/g
-  for (const match of text.matchAll(pattern)) {
-    const prefix = match[1]
-    const startText = match[2]
-    if (!prefix || !startText) continue
-    references.add(`${prefix}-${startText}`)
-    const endText = match[3] ?? match[5]
-    if (endText) {
-      const start = Number(startText)
-      const end = Number(endText)
-      const endPrefix = match[4] ?? prefix
-      if (endPrefix === prefix && end >= start && end - start <= 999) {
-        for (let value = start + 1; value <= end; value += 1) {
-          references.add(`${prefix}-${String(value).padStart(3, '0')}`)
-        }
-      } else {
-        references.add(`${endPrefix}-${endText}`)
-      }
-    }
-    const compact = match[6]
-    if (compact) {
-      for (const part of compact.slice(1).split('/')) {
-        references.add(part.includes('-') ? part : `${prefix}-${part}`)
-      }
-    }
-  }
-  return [...references]
-}
-
-function validateRequirementReferences(
-  parsed: ParsedInput,
-  declarations: readonly RequirementDeclaration[],
-  diagnostics: Diagnostic[],
-  includeDerived: boolean,
-): void {
-  const byId = new Map<string, RequirementDeclaration[]>()
-  for (const declaration of declarations) {
-    const matches = byId.get(declaration.id) ?? []
-    matches.push(declaration)
-    byId.set(declaration.id, matches)
-  }
-  const declarationNodes = new Set(declarations.map((declaration) => declaration.node))
-  const compactPattern =
-    /\b[A-Z][A-Z0-9]*-\d{3}(?:(?:\/\d{3})+|(?:–|-)(?:[A-Z][A-Z0-9]*-)?\d{3}|\s+through\s+[A-Z][A-Z0-9]*-\d{3})\b/g
-
+function validateSectionReferences(parsed: ParsedInput, diagnostics: Diagnostic[], includeDerived: boolean): void {
+  const specificationIds = new Set(parsed.specifications.map((specification) => specification.id))
+  const sectionsByPath = new Map(
+    parsed.specifications.map((specification) => [
+      specification.path,
+      new Map(headingsWithSlugs(specification.document).map(({ heading, slug }) => [slug, headingText(heading)])),
+    ]),
+  )
   for (const [path, document] of parsed.allDocuments) {
     if (!includeDerived && path.startsWith('docs/derived/')) continue
-    const walk = (node: Node, activeLink: Link | undefined): void => {
-      if (declarationNodes.has(node)) return
-      const link = isLink(node) ? node : activeLink
-      if (node.type === 'paragraph' || node.type === 'tableCell' || node.type === 'heading') {
-        for (const match of textOf(node).matchAll(compactPattern)) {
+    visit(document.tree, (node) => {
+      if ('value' in node && typeof node.value === 'string') {
+        for (const match of node.value.matchAll(/\b([A-Z][A-Z0-9]*)-(?:\d{3}|NNN|nnn)\b/g)) {
+          if (!specificationIds.has(match[1])) continue
           addDiagnostic(
             diagnostics,
             path,
             node,
-            'SPEC610',
-            `Requirement reference "${match[0]}" must be expanded into individually linked full IDs.`,
+            'SPEC612',
+            'Numbered requirement label "' +
+              match[0] +
+              '" is prohibited; use a descriptive section title and hyperlink.',
           )
         }
       }
-      if ('value' in node && typeof node.value === 'string') {
-        for (const reference of expandRequirementReferences(node.value)) {
-          const candidates = byId.get(reference) ?? []
-          if (candidates.length === 0) {
-            addDiagnostic(
-              diagnostics,
-              path,
-              node,
-              'SPEC606',
-              `Requirement reference "${reference}" does not resolve to a live requirement heading.`,
-            )
-            continue
-          }
-          if (candidates.length !== 1) continue
-          if (!link) {
-            addDiagnostic(
-              diagnostics,
-              path,
-              node,
-              'SPEC609',
-              `Requirement reference "${reference}" must be a hyperlink to its declaration.`,
-            )
-            continue
-          }
-          const expected = candidates[0]
-          if (!expected) continue
-          const parts = splitUrl(link.url)
-          const decodedPath = decodeUrlPart(parts.path)
-          const decodedFragment = parts.fragment === undefined ? undefined : decodeUrlPart(parts.fragment)
-          const destinationPath =
-            decodedPath === undefined ? undefined : decodedPath ? resolvePath(path, decodedPath) : path
-          if (
-            textOf(link).trim() !== reference ||
-            isExternalUrl(link.url) ||
-            destinationPath !== expected.specification.path ||
-            decodedFragment !== expected.anchor
-          ) {
-            addDiagnostic(
-              diagnostics,
-              path,
-              link,
-              'SPEC611',
-              `Requirement reference "${reference}" must be its own link to "${expected.specification.path}#${expected.anchor}".`,
-            )
-          }
-        }
+      if (!isLink(node) || isExternalUrl(node.url)) return
+      const parts = splitUrl(node.url)
+      const decodedPath = decodeUrlPart(parts.path)
+      const fragment = parts.fragment === undefined ? undefined : decodeUrlPart(parts.fragment)
+      if (decodedPath === undefined || !fragment) return
+      const destinationPath = decodedPath ? resolvePath(path, decodedPath) : path
+      const sections = sectionsByPath.get(destinationPath)
+      if (!sections) return
+      const title = sections.get(fragment)
+      if (title === undefined) {
+        addDiagnostic(
+          diagnostics,
+          path,
+          node,
+          'SPEC606',
+          'Section reference "' + node.url + '" does not resolve to a specification heading.',
+        )
+      } else if (title !== 'Glossary' && textOf(node) !== title) {
+        addDiagnostic(
+          diagnostics,
+          path,
+          node,
+          'SPEC611',
+          'Section reference must use the exact heading title "' + title + '" as its visible text.',
+        )
       }
-      if (!isParent(node)) return
-      for (const child of node.children) walk(child, link)
-    }
-    walk(document.tree, undefined)
+    })
   }
 }
 
-function validateLifecycleAndRequirements(
-  parsed: ParsedInput,
-  diagnostics: Diagnostic[],
-  includeDerived = false,
-): void {
-  const declarations = parsed.specifications.flatMap((specification) =>
-    declaredRequirements(specification, diagnostics),
-  )
-  const byId = new Map<string, RequirementDeclaration[]>()
-  for (const declaration of declarations) {
-    const matches = byId.get(declaration.id) ?? []
-    matches.push(declaration)
-    byId.set(declaration.id, matches)
-  }
-  for (const [id, duplicates] of byId) {
-    if (duplicates.length < 2) continue
-    for (const duplicate of duplicates) {
-      addDiagnostic(
-        diagnostics,
-        duplicate.specification.path,
-        duplicate.node,
-        'SPEC602',
-        `Requirement "${id}" is declared more than once.`,
-      )
-    }
-  }
+function validateLifecycleAndSections(parsed: ParsedInput, diagnostics: Diagnostic[], includeDerived = false): void {
   for (const specification of parsed.specifications) {
     const todos = todoNodes(specification)
     if (specification.status === 'Stub' && todos.length === 0) {
@@ -1317,7 +1206,7 @@ function validateLifecycleAndRequirements(
       }
     }
   }
-  validateRequirementReferences(parsed, declarations, diagnostics, includeDerived)
+  validateSectionReferences(parsed, diagnostics, includeDerived)
 }
 
 function compareDiagnostics(left: Diagnostic, right: Diagnostic): number {
@@ -1437,7 +1326,7 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   validateLinks(parsed, diagnostics)
   const relationships = validateRelationships(parsed.specifications, diagnostics)
   const glossary = validateTerminology(parsed.specifications, diagnostics)
-  validateLifecycleAndRequirements(parsed, diagnostics)
+  validateLifecycleAndSections(parsed, diagnostics)
   return {
     diagnostics: diagnostics.toSorted(compareDiagnostics),
     corpus: buildCorpus(parsed, entries, glossary, relationships),
@@ -1448,10 +1337,10 @@ export function lintSpecifications(input: LintInput): readonly Diagnostic[] {
   return analyzeSpecifications(input).diagnostics
 }
 
-export function lintRequirementReferences(input: LintInput, includeDerived = false): readonly Diagnostic[] {
+export function lintSectionReferences(input: LintInput, includeDerived = false): readonly Diagnostic[] {
   const diagnostics: Diagnostic[] = []
   const parsed = parseInput(input, diagnostics)
-  validateLifecycleAndRequirements(parsed, diagnostics, includeDerived)
+  validateLifecycleAndSections(parsed, diagnostics, includeDerived)
   return diagnostics.toSorted(compareDiagnostics)
 }
 

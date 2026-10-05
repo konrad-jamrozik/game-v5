@@ -14,6 +14,11 @@ Specify the first functional browser interface while keeping gameplay in the sha
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [History and Persistence](../foundation/history-and-persistence.md) for the session and save/load behavior exposed through browser controls.
+- Uses [Player Information](./player-information.md) for Player-visible information and the boundary around hidden Campaign state.
+- Uses [TypeScript Player API](./typescript-api.md) for the player commands, reports, and errors adapted for browser interaction.
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for browser player flows and their observable results.
+
 # Relationships
 
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
@@ -50,7 +55,7 @@ TODO: Specify selection/batch actions, action availability, error presentation, 
 
 TODO: Prioritize readable colors and layouts over decorative graphics. Record grid/tree requirements for later framework selection; future art/animations/3D must not add exclusive gameplay information.
 
-TODO: Assign stable WEB-NNN requirement IDs when concrete rules replace these placeholders.
+TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
@@ -61,7 +66,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Provide user journeys mapping controls to API calls and expected Player-visible information, including keyboard operation and timeline navigation.
-Identify initial conditions, inputs/actions, expected results, and the requirement IDs exercised. Reference shared
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions
