@@ -14,6 +14,7 @@ Define full Campaign state inspection and cheat-command details through Develope
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Core Concepts](../foundation/core-concepts.md) for Campaign state and Authoritative value meanings in full-state inspection.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and identities exposed for debugging.
 - Uses [History and Persistence](../foundation/history-and-persistence.md) for the retained Campaign state and restoration behavior available for debugging.
 - Uses [TypeScript Player API](./typescript-api.md) for Dev mode controls and full Campaign state queries exposed by the player interfaces.
@@ -23,6 +24,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Domain Model](../foundation/domain-model.md)
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
 - Uses [TypeScript Player API](./typescript-api.md)

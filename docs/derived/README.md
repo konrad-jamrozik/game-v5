@@ -12,7 +12,7 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 18             |
-| Draft      | 4              |
+| Draft      | 5              |
 | Accepted   | 3              |
 | Superseded | 0              |
 
@@ -21,7 +21,7 @@ These informative views are derived from the registered Markdown specifications.
 | Family     | Specifications |
 | ---------- | -------------- |
 | Governance | 4              |
-| Foundation | 6              |
+| Foundation | 7              |
 | Mechanics  | 8              |
 | Content    | 1              |
 | Interfaces | 5              |
@@ -38,14 +38,15 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Foundation
 
-| ID     | Document                                                                  | Status   | Owns                                                                                                                                      |
-| ------ | ------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| DOM    | [Domain Model](../specs/foundation/domain-model.md)                       | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                                      |
-| ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                 | Draft    | API hierarchy, role authority, campaign lifecycle, bounded Delegated AI execution, memory, and deterministic history guarantees.          |
-| HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md) | Stub     | Define reversible sessions, reproducible replay, and durable save/load behavior.                                                          |
-| MODEL  | [Modeling Foundations](../specs/foundation/modeling-foundations.md)       | Accepted | Modeling vocabulary, Types, archetypes, four-property Campaign instances, construction, identity/references, and historical preservation. |
-| NUMRNG | [Numbers and Randomness](../specs/foundation/numbers-and-randomness.md)   | Stub     | Make every numeric calculation and random outcome reproducible across supported runtimes.                                                 |
-| TURN   | [Turn Resolution](../specs/foundation/turn-resolution.md)                 | Stub     | Define exactly when subsystem rules run and which state each phase reads.                                                                 |
+| ID     | Document                                                                        | Status   | Owns                                                                                                                             |
+| ------ | ------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| CORE   | [Core Concepts](../specs/foundation/core-concepts.md)                           | Draft    | Shared vocabulary for modeling and engine execution, including Campaign, Session, Game build, and committed data.                |
+| DOM    | [Domain Model](../specs/foundation/domain-model.md)                             | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                             |
+| ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                       | Draft    | API hierarchy, role authority, campaign lifecycle, bounded Delegated AI execution, memory, and deterministic history guarantees. |
+| HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md)       | Stub     | Define reversible sessions, reproducible replay, and durable save/load behavior.                                                 |
+| MODEL  | [Campaign Modeling Contract](../specs/foundation/campaign-modeling-contract.md) | Accepted | Campaign-data composition, construction, identity/reference integrity, value classification, and historical preservation.        |
+| NUMRNG | [Numbers and Randomness](../specs/foundation/numbers-and-randomness.md)         | Stub     | Make every numeric calculation and random outcome reproducible across supported runtimes.                                        |
+| TURN   | [Turn Resolution](../specs/foundation/turn-resolution.md)                       | Stub     | Define exactly when subsystem rules run and which state each phase reads.                                                        |
 
 ## Mechanics
 

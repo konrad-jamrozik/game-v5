@@ -14,7 +14,8 @@ Make every numeric calculation and random outcome reproducible across supported 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Modeling Foundations](./modeling-foundations.md) for Rule, Authoritative value, and Derived value terminology in numeric contracts.
+- Uses [Campaign Modeling Contract](./campaign-modeling-contract.md) for campaign identity and value-classification constraints preserved by numeric and random execution.
+- Uses [Core Concepts](./core-concepts.md) for Rule, Authoritative value, Derived value, and Instance ID meanings in numeric and random contracts.
 - Refines [Engine Contract](./engine-contract.md) by specifying the numeric and random behavior required for reproducible execution.
 - Used by [Agents](../mechanics/agents.md) for numeric representation, rounding, and reproducible random draws.
 - Used by [Combat](../mechanics/combat.md) for numeric representation, rounding, and reproducible random draws.
@@ -26,7 +27,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
-- Uses [Modeling Foundations](./modeling-foundations.md)
+- Uses [Campaign Modeling Contract](./campaign-modeling-contract.md)
+- Uses [Core Concepts](./core-concepts.md)
 - Refines [Engine Contract](./engine-contract.md)
 - Used by [Agents](../mechanics/agents.md)
 - Used by [Combat](../mechanics/combat.md)
@@ -43,10 +45,10 @@ duplicating shared definitions.
 
 # Concepts and contract
 
-Deterministic identity generation must preserve [Campaign instances](modeling-foundations.md#campaign-instances); calculations and continuation follow [Derived value consistency](engine-contract.md#derived-value-consistency) and [Continuation state](engine-contract.md#continuation-state).
+Deterministic identity generation must preserve [Campaign instances](campaign-modeling-contract.md#campaign-instances); calculations and continuation follow [Derived value consistency](engine-contract.md#derived-value-consistency) and [Continuation state](engine-contract.md#continuation-state).
 
 This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Continuation state](engine-contract.md#continuation-state)/[Committed state integrity](engine-contract.md#committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
-draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [Campaign instances](modeling-foundations.md#campaign-instances);
+draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [Campaign instances](campaign-modeling-contract.md#campaign-instances);
 choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
 under [Committed state integrity](engine-contract.md#committed-state-integrity); the existing no-op and algorithm TODOs remain unresolved.
 

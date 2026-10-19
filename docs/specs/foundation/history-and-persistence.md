@@ -14,9 +14,10 @@ Define reversible sessions, reproducible replay, and durable save/load behavior.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Campaign Modeling Contract](./campaign-modeling-contract.md) for campaign identity, reference resolution, and historical-preservation constraints that restoration must preserve.
+- Uses [Core Concepts](./core-concepts.md) for Session, Campaign state, History, and committed-data meanings applied to restoration and storage.
 - Uses [Developer API](../interfaces/developer-api.md) for the detailed isolation and replay behavior of Developer API commands during restoration.
 - Uses [Domain Model](./domain-model.md) for the game structures and identity/reference relationships preserved during restoration.
-- Uses [Modeling Foundations](./modeling-foundations.md) for Campaign state, History, Retained data, and identity/reference contracts in restoration and replay.
 - Uses [Numbers and Randomness](./numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
 - Refines [Engine Contract](./engine-contract.md) by specifying the reversible session, replay, and save/load guarantees.
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for restoration, replay, and continuation contracts exercised by scenarios.
@@ -28,9 +29,10 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
+- Uses [Campaign Modeling Contract](./campaign-modeling-contract.md)
+- Uses [Core Concepts](./core-concepts.md)
 - Uses [Developer API](../interfaces/developer-api.md)
 - Uses [Domain Model](./domain-model.md)
-- Uses [Modeling Foundations](./modeling-foundations.md)
 - Uses [Numbers and Randomness](./numbers-and-randomness.md)
 - Refines [Engine Contract](./engine-contract.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
@@ -42,9 +44,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-| Term    | Definition                                                                                                                           |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Session | The owner of Current campaign selection, its Campaign state, history navigation, and controller state that must follow that history. |
+Session is defined by [Core Concepts](core-concepts.md#glossary).
 
 API surface and execution-role terms and Turn-start checkpoint are owned by the
 [Engine Contract glossary](engine-contract.md#glossary).
@@ -68,9 +68,9 @@ complete continuation state, and atomic undo/redo and load procedures. Domain Mo
 restored; Numbers and Randomness supplies numeric and generator-state contracts. Developer API supplies the
 inspection and cheat-command isolation details used during restoration.
 
-Restoration must preserve [Campaign instances](modeling-foundations.md#campaign-instances),
-[References](modeling-foundations.md#references), and
-[Historical fact preservation](modeling-foundations.md#historical-fact-preservation). Undo may remove a Campaign
+Restoration must preserve [Campaign instances](campaign-modeling-contract.md#campaign-instances),
+[References](campaign-modeling-contract.md#references), and
+[Historical fact preservation](campaign-modeling-contract.md#historical-fact-preservation). Undo may remove a Campaign
 instance or restore earlier State; redo restores its Instance ID, Archetype, and Constants unchanged. Required
 historical records remain immutable even in an evolving collection. Restoration is not creation of a new occurrence.
 

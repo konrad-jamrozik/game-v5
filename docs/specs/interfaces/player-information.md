@@ -16,7 +16,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 - Uses [Agents](../mechanics/agents.md) for Agent capabilities, Current assignments, exhaustion, and recovery.
 - Uses [Campaign](../mechanics/campaign.md) for Campaign initialization and global start and end conditions.
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for campaign value-classification and historical-preservation constraints applied to exposed facts.
 - Uses [Combat](../mechanics/combat.md) for automatic battle resolution and retained Battle result facts.
+- Uses [Core Concepts](../foundation/core-concepts.md) for Player-visible information, Authoritative value, Derived value, and historical-data meanings in query schemas.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and relationships represented in player reports.
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for resource flows, purchases, and Agency upgrades.
 - Uses [Factions](../mechanics/factions.md) for Faction activity, operation occurrence rules, and defeat conditions.
@@ -24,7 +26,6 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Investigations](../mechanics/investigations.md) for Investigation progress, completion, and commitment costs.
 - Uses [Leads and Progression](../mechanics/leads-and-progression.md) for Lead prerequisites, completion facts, and progression effects.
 - Uses [Missions](../mechanics/missions.md) for Mission commitments, results, and Campaign consequences.
-- Uses [Modeling Foundations](../foundation/modeling-foundations.md) for Player-visible information, Authoritative value, and Derived value terminology in visibility rules.
 - Refines [Engine Contract](../foundation/engine-contract.md) by specifying the complete player knowledge contract and hidden-state boundary.
 - Used by [Investigations](../mechanics/investigations.md) for the visibility and estimate constraints on reporting uncertain Investigation outcomes.
 - Used by [Terminal CLI](./cli.md) for Player-visible information and the boundary around hidden Campaign state.
@@ -35,7 +36,9 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 - Uses [Agents](../mechanics/agents.md)
 - Uses [Campaign](../mechanics/campaign.md)
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
 - Uses [Combat](../mechanics/combat.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Domain Model](../foundation/domain-model.md)
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Uses [Factions](../mechanics/factions.md)
@@ -43,7 +46,6 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Investigations](../mechanics/investigations.md)
 - Uses [Leads and Progression](../mechanics/leads-and-progression.md)
 - Uses [Missions](../mechanics/missions.md)
-- Uses [Modeling Foundations](../foundation/modeling-foundations.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
 - Used by [Investigations](../mechanics/investigations.md)
 - Used by [Terminal CLI](./cli.md)
@@ -64,11 +66,12 @@ Properties, reveal conditions, and human/AI query consistency. Player API always
 information, independent of Dev mode. Separate full-state inspection is specified by Developer API; developer
 inspection never changes gameplay reveal conditions or information supplied to Delegated AI.
 
-Modeling Foundations supplies Player-visible information, Authoritative value, Derived value, and historical meanings.
+Core Concepts supplies Player-visible information, Authoritative value, Derived value, and historical meanings.
+Campaign Modeling Contract supplies value-classification and historical-preservation constraints.
 Domain Model supplies represented concepts, and History and Persistence supplies restored facts and history positions.
 Mechanics supply facts and calculations to expose. Investigations owns estimate mathematics and permitted inputs;
 this specification owns the exposed Properties and reveal conditions, without duplicating formulas.
-Historical explanations preserve [Historical fact preservation](../foundation/modeling-foundations.md#historical-fact-preservation).
+Historical explanations preserve [Historical fact preservation](../foundation/campaign-modeling-contract.md#historical-fact-preservation).
 
 # Requirements
 

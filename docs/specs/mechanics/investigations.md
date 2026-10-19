@@ -57,7 +57,7 @@ TODO: Specify eligibility, hidden-difficulty distribution and sampling time, age
 
 TODO: Define InvestigationArchetype selection and allowed combinations with Lead Game Data Records (GDRs). Preserve the
 separate Archetype and immutable Lead reference established by Domain Model; apply the at-most-one-Active-Investigation-per-Lead
-constraint across archetypes. The illustrative InvestigationArchetype GDRs in Modeling Foundations do not select mechanics.
+constraint across archetypes. The illustrative InvestigationArchetype GDRs in Campaign Modeling Contract do not select mechanics.
 
 ## Completion probability
 

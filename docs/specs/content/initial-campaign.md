@@ -15,12 +15,13 @@ TODO: Confirm the precise included/excluded scope and rule ownership using the [
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 - Uses [Campaign](../mechanics/campaign.md) for the initialization contract that starting Campaign data must satisfy.
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for campaign composition and GDR modeling roles used by concrete starting data.
+- Uses [Core Concepts](../foundation/core-concepts.md) for Types, immutable GDRs, and Game build vocabulary used to describe supplied starting data.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and structural constraints that concrete GDRs must satisfy.
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for the parameter meanings and catalog requirements for resource flows, purchases, and upgrades.
 - Uses [Factions](../mechanics/factions.md) for the operation occurrence rules that Faction GDRs must support.
 - Uses [Leads and Progression](../mechanics/leads-and-progression.md) for the progression prerequisites and effects that Lead GDRs must encode.
 - Uses [Missions](../mechanics/missions.md) for the catalog requirements that Mission and Enemy GDRs must satisfy.
-- Uses [Modeling Foundations](../foundation/modeling-foundations.md) for GDR immutability and reference conventions for concrete game data.
 - Used by [Agents](../mechanics/agents.md) for Agent archetypes and development and recovery parameters.
 - Used by [Campaign](../mechanics/campaign.md) for the starting GDRs and values needed to initialize a playable Campaign.
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for reproducible GDRs and numeric inputs for scenario fixtures.
@@ -32,12 +33,13 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 # Relationships
 
 - Uses [Campaign](../mechanics/campaign.md)
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Domain Model](../foundation/domain-model.md)
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Uses [Factions](../mechanics/factions.md)
 - Uses [Leads and Progression](../mechanics/leads-and-progression.md)
 - Uses [Missions](../mechanics/missions.md)
-- Uses [Modeling Foundations](../foundation/modeling-foundations.md)
 - Used by [Agents](../mechanics/agents.md)
 - Used by [Campaign](../mechanics/campaign.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
@@ -48,16 +50,16 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-Shared modeling terms, for example GDR and Campaign instance, are owned by the
-[Modeling Foundations glossary](../foundation/modeling-foundations.md#glossary).
+Shared terms, for example GDR and Type, are owned by [Core Concepts](../foundation/core-concepts.md#glossary).
+Campaign-specific composition terms are owned by [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md#glossary).
 
 TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Concepts and contract
 
-GDRs and their references follow [Campaign instances](../foundation/modeling-foundations.md#campaign-instances) and [References](../foundation/modeling-foundations.md#references).
+GDRs and their references follow [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances) and [References](../foundation/campaign-modeling-contract.md#references).
 
-This document uses Domain Model's game concepts and Modeling Foundations' GDR and reference conventions. It uses
+This document uses Domain Model's game concepts and Core Concepts' GDR meanings and Campaign Modeling Contract's composition and reference constraints. It uses
 Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and
 Progression's prerequisites/effects, and Missions' catalog requirements to supply valid GDRs. Supplying those data
 values does not refine the mechanical behavior. The mechanics consume this document's exact values and catalogs;
@@ -81,7 +83,7 @@ Declare each archetype’s GDR ID, shared characteristics, and construction defa
 parameters distinct. Mechanics retain ownership of Campaign instance constructor behavior; catalog details and balance values remain open.
 
 InvestigationArchetype GDRs and Lead GDRs are separate catalogs. Their references and allowed combinations
-must follow the owning mechanics; the illustrative InvestigationArchetype GDRs in Modeling Foundations do not select production
+must follow the owning mechanics; the illustrative InvestigationArchetype GDRs in Campaign Modeling Contract do not select production
 GDRs. A Lead is not automatically an InvestigationArchetype.
 
 TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, deadlines, all eight upgrade categories, lead prerequisites, and completion effects using explicit GDR identifiers.

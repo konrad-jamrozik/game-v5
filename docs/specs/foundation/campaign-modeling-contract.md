@@ -1,31 +1,34 @@
-# Modeling Foundations
+# Campaign Modeling Contract
 
-| Metadata             | Value                                                                                                      |
-| -------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Spec ID              | MODEL                                                                                                      |
-| Family               | Foundation                                                                                                 |
-| Status               | Accepted                                                                                                   |
-| Acceptance reference | Project owner approval in this task: "OK mark the mf as Accepted and update any other docs as appropriate" |
-| Conventions          | [Specification conventions](../governance/spec-conventions.md)                                             |
+| Metadata                 | Value                                                                                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID                  | MODEL                                                                                                                                                        |
+| Family                   | Foundation                                                                                                                                                   |
+| Status                   | Accepted                                                                                                                                                     |
+| Acceptance reference     | Project owner approval in this task: "OK mark the mf as Accepted and update any other docs as appropriate"                                                   |
+| Reorganization reference | Project owner requested the Core Concepts split and relocation of Session in this chat; retained campaign modeling rules preserve their recorded acceptance. |
+| Conventions              | [Specification conventions](../governance/spec-conventions.md)                                                                                               |
 
 # Purpose and boundaries
 
-Modeling Foundations defines the common language and basic contracts used to describe the game's data and behavior.
+Define campaign-data composition, construction, identity, reference integrity, value classification, and historical preservation. These constraints apply to Campaign state, not the complete engine API hierarchy. Session authority, delegation orchestration, API signatures, and interface behavior belong to their owning contracts.
 
 The Game Design Brief supplies strategic intent; mechanics specifications own detailed gameplay behavior.
 
-- Used by [Domain Model](./domain-model.md) for the Type and Campaign instance composition, identity, and reference contracts applied to game concepts.
-- Used by [Engine Contract](./engine-contract.md) for Game build, Campaign state, Committed state, and Authoritative value terminology in execution guarantees.
-- Used by [History and Persistence](./history-and-persistence.md) for Campaign state, History, Retained data, and identity/reference contracts in restoration and replay.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for GDR immutability and reference conventions for concrete game data.
-- Used by [Numbers and Randomness](./numbers-and-randomness.md) for Rule, Authoritative value, and Derived value terminology in numeric contracts.
-- Used by [Player Information](../interfaces/player-information.md) for Player-visible information, Authoritative value, and Derived value terminology in visibility rules.
-- Used by [TypeScript Player API](../interfaces/typescript-api.md) for shared Types, Instance IDs, and Campaign instance references in the public interface.
+- Uses [Core Concepts](./core-concepts.md) for shared modeling vocabulary and value meanings applied to campaign-data constraints.
+- Refines [Engine Contract](./engine-contract.md) by specifying campaign-data composition, construction, identity, reference, and historical-preservation constraints for campaign integrity and continuation guarantees.
+- Used by [Domain Model](./domain-model.md) for Campaign instance composition, construction, and identity/reference constraints applied to game concepts.
+- Used by [History and Persistence](./history-and-persistence.md) for identity, reference resolution, and historical-preservation constraints applied to restoration.
+- Used by [Initial Campaign Content](../content/initial-campaign.md) for campaign composition and GDR modeling roles used by starting data.
+- Used by [Numbers and Randomness](./numbers-and-randomness.md) for campaign identity and value-classification constraints preserved by numeric execution.
+- Used by [Player Information](../interfaces/player-information.md) for value-classification and historical-preservation constraints applied to exposed facts.
+- Used by [TypeScript Player API](../interfaces/typescript-api.md) for Campaign instance construction, composition, and identity/reference constraints preserved by public operations.
 
 # Relationships
 
+- Uses [Core Concepts](./core-concepts.md)
+- Refines [Engine Contract](./engine-contract.md)
 - Used by [Domain Model](./domain-model.md)
-- Used by [Engine Contract](./engine-contract.md)
 - Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Numbers and Randomness](./numbers-and-randomness.md)
@@ -34,38 +37,9 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 
 # Glossary
 
-The subsections expose conceptual layers: foundational concepts, data described by those concepts, roles of that data,
-and the Campaign instances and operations built from them.
-
-## Foundational concepts
-
-Type describes data, Campaign establishes the playthrough context, and Rule describes calculations and permitted behavior.
-Ruleset collects the Rules governing a Campaign. A Game build supplies the game's data, Ruleset, and executable logic.
-
-| Term       | Definition                                                                                                                                                                                                                                                                                      |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Type       | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration.                                                                                      |
-| Property   | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                                                                                                             |
-| Campaign   | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                                                                                                                             |
-| Rule       | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint.                                                                                                                                                                                      |
-| Ruleset    | The collection of Rules governing a Campaign.                                                                                                                                                                                                                                                   |
-| Game build | A particular version of the game's data and executable implementation. It provides the GDRs, the Ruleset and code implementing its Rules, the Campaign instance constructor implementations, and the overall engine logic whose execution must satisfy [Engine Contract](./engine-contract.md). |
-
-## Data within a Campaign
-
-These concepts build on Type and Campaign: GDRs supply immutable shared data, while Campaign state describes one playthrough.
-
-| Term                   | Definition                                                                                                                                                                                       |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay. A GDR is never instantiated; Campaign instances reference it as shared immutable data. |
-| Campaign state         | Data describing one Campaign; for example, its Campaign instances, resources, and retained history.                                                                                              |
-
-## Campaign instances and their components
-
-A Campaign instance has a declared Type with four properties: Instance ID, an Archetype reference, Constants, and State.
-Archetype is the role of a shared immutable GDR within this composition. Instance ID distinguishes individual Campaign instances.
-Constants and State are specific to each Campaign instance; Constants contains its additional fixed facts, while State contains its changeable values.
-A Campaign instance constructor creates and returns a new Campaign instance. It is a separate concept from Rule and GDR.
+Shared modeling and execution vocabulary is owned by [Core Concepts](core-concepts.md#glossary).
+The terms below add campaign-specific composition; Instance ID is defined by Core Concepts and its campaign identity
+constraints are specified under [Campaign instances](#campaign-instances).
 
 | Term                          | Definition                                                                                                                                                                                                                                                                                                 |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,61 +47,32 @@ A Campaign instance constructor creates and returns a new Campaign instance. It 
 | Archetype                     | A GDR referenced by a Campaign instance, supplying shared characteristics and construction defaults. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is fixed during construction.                                                                            |
 | State                         | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                                                                       |
 | Constants                     | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                                                                     |
-| Instance ID                   | An identifier for a Campaign instance, unique within a declared identity scope and stable during its lifetime under [Campaign instances](#campaign-instances).                                                                                                                                             |
 | Campaign instance constructor | An operation that creates and returns a new Campaign instance. Its signature specifies input parameters and the return Type; its behavioral specification defines dependencies and initialization, which its implementation performs. It need not be a language-level constructor or public API operation. |
-
-## Value classification, history, and visibility
-
-These concepts describe how values are established, retained, and exposed within the preceding model.
-
-| Term                       | Definition                                                                                                                                                                                                                                               |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Authoritative value        | A value treated as established truth rather than recomputed from other values.                                                                                                                                                                           |
-| Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs.                                                                                                                                                           |
-| History                    | Retained data describing past Campaign state or events. Rules and reports may consult History.                                                                                                                                                           |
-| Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
-| Committed state            | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                                                                                                |
-| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
 
 ## Rejected terms and synonyms
 
-- **Field, member, key:** use Property for a named component of a structured Type. These terms are not synonyms used by the model; unrelated uses, such as a lookup key, retain their ordinary meaning.
-- **Template:** not a modeling term or a synonym for GDR or Archetype. Use GDR when naming shared immutable data, and Archetype when naming its role in Campaign instance composition. Describe initialization directly.
-- **Definition:** not a modeling category or a substitute for Type or GDR. Use Type for a named data description and GDR for concrete shared immutable data. The ordinary word remains valid when discussing a term’s definition.
+- **Field, member, key:** use Property from Core Concepts for a named component of a structured Type; unrelated uses retain their ordinary meaning.
+- **Template:** use GDR when naming immutable game data, and Archetype when naming its campaign composition role. Describe initialization directly.
+- **Definition:** this is not a modeling category or a synonym for Type or GDR. Ordinary prose may discuss a term's definition.
 
 # Concepts and contract
 
-## Data, Rules, and execution
+## Campaign data integrity refinement
 
-GDRs supply data, Rules specify calculations and permitted behavior, and Campaign instance constructors describe
-construction and initialization. These are three distinct concepts; neither a GDR nor a Campaign instance constructor is a Rule.
-The engine implementation reads GDRs, applies Rules, and invokes Campaign instance constructor implementations
-to construct Campaign instances and update Campaign state. Execution statements about named functions refer to their implementations.
+This document refines [Campaign data integrity](engine-contract.md#campaign-data-integrity),
+[Continuation state](engine-contract.md#continuation-state), and
+[Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract by specifying the
+composition, initialization, identity, reference, and historical-preservation constraints that campaign creation,
+committed mutations, and restoration must preserve. It supplies campaign modeling detail without defining API authority
+or execution sequencing. Core Concepts supplies the shared vocabulary used to express these constraints.
 
-The current Game build supplies those GDRs, the Ruleset, and the Campaign instance constructor and engine implementations together.
-[Engine Contract](./engine-contract.md) defines the guarantees that this executable logic must provide when calculating
-values, executing commands, exposing information, and restoring Campaign state.
+## Campaign initialization
 
-## Campaign creation and progression
-
-When a player starts a new game, the engine creates a Campaign and constructs its initial Campaign state using
-the player’s setup inputs, GDRs, and Ruleset.
-The GDRs and starting configuration for the first playable campaign belong to
-[Initial Campaign Content](../content/initial-campaign.md).
-
-The Campaign progresses through player actions during the player turn and through “next turn” computation.
-Each successful action or turn advancement produces a new Committed state. Intermediate processing remains internal to the engine.
-
-To compute the next Committed state, the engine uses:
-
-- **Player inputs:** The requested action and any supplied arguments.
-- **Current Campaign state:** The campaign’s existing facts, including the state needed for randomness and identity allocation.
-- **GDRs:** Shared, immutable game data.
-- **Ruleset:** The Rules governing calculations and permitted game behavior.
-
-The engine implementation ties these together while obeying the [Engine Contract](./engine-contract.md). Where required,
-it constructs new Campaign instances using the appropriate Archetype and other declared inputs.
-Supplying an Archetype is one possible GDR role.
+Campaign initialization receives setup inputs, immutable Game Data Records (GDRs), and the Ruleset supplied by the
+Game build. Campaign instance constructors initialize the campaign-specific data from those inputs. GDRs supply data,
+Rules specify calculations and permitted behavior, and Campaign instance constructors specify construction and
+initialization. Neither a GDR nor a Campaign instance constructor is itself a Rule. Exact starting data and balance
+values are outside this document's ownership. Session lifecycle and publication of Committed state belong to Engine Contract.
 
 ## Campaign instances
 
@@ -140,11 +85,18 @@ A Campaign instance Type always has exactly four properties: Instance ID, an Arc
 Each Campaign instance constructor has declared input parameters and a return Type, which is of the constructed Campaign instance. Its specification defines its
 dependencies and how the returned Campaign instance’s Instance ID, Archetype reference, Constants, and State are
 initialized, including assignment of a fresh Instance ID. The implementation performs this initialization.
-A Campaign instance constructor implementation typically depends on:
+For example, a Campaign instance constructor implementation can depend on:
 
 - One or more GDRs serving as Archetypes.
 - A random generator.
 - An ID generator.
+
+### Gameplay dependency direction
+
+Gameplay functions, including Campaign instance constructors, must receive only necessary inputs and dependencies,
+without direct or indirect access to the top-level Campaign instance. Contained Campaign instances must not refer
+back to that root. These restrictions exclude campaign creation, save/load, and external engine interfaces.
+This specifies the isolation requirement in Engine Contract's [Campaign data integrity](engine-contract.md#campaign-data-integrity).
 
 ### Campaign instance identity
 

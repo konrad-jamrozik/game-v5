@@ -319,7 +319,7 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toEqual(['SPEC209'])
   })
 
-  test('allows Modeling Foundations to omit the separate failure behavior section', () => {
+  test('allows Campaign Modeling Contract to omit the separate failure behavior section', () => {
     const files = mutate(
       validCorpus().map((file) => ({
         ...file,

@@ -14,8 +14,8 @@ Define the engine's API hierarchy and the guarantees it provides when running th
 This document owns observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
 RNG algorithm, save encoding, or subsystem mechanics.
 
-- Uses [Domain Model](./domain-model.md) for the Campaign state structures and identities to which execution guarantees apply.
-- Uses [Modeling Foundations](./modeling-foundations.md) for Game build, Campaign state, Committed state, and Authoritative value terminology in execution guarantees.
+- Uses [Core Concepts](./core-concepts.md) for shared Campaign, Session, Game build, committed-data, identity, and information vocabulary in execution guarantees.
+- Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md), which specifies campaign composition, identity, references, and historical preservation under engine integrity guarantees.
 - Refined by [Developer API](../interfaces/developer-api.md), which specifies Dev mode, full Campaign state inspection, and validated cheat operations.
 - Refined by [History and Persistence](./history-and-persistence.md), which specifies the reversible session, replay, and save/load guarantees.
 - Refined by [Numbers and Randomness](./numbers-and-randomness.md), which specifies the numeric and random behavior required for reproducible execution.
@@ -25,8 +25,8 @@ RNG algorithm, save encoding, or subsystem mechanics.
 
 # Relationships
 
-- Uses [Domain Model](./domain-model.md)
-- Uses [Modeling Foundations](./modeling-foundations.md)
+- Uses [Core Concepts](./core-concepts.md)
+- Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md)
 - Refined by [Developer API](../interfaces/developer-api.md)
 - Refined by [History and Persistence](./history-and-persistence.md)
 - Refined by [Numbers and Randomness](./numbers-and-randomness.md)
@@ -49,8 +49,8 @@ RNG algorithm, save encoding, or subsystem mechanics.
 | Dev mode              | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Delegated AI authority.                                                        |
 | Turn-start checkpoint | A history position immediately after campaign creation or a committed Advance turn action, before subsequent actions.                                                                                     |
 
-Session is defined by [History and Persistence](history-and-persistence.md#glossary). Agent is a game-domain
-concept owned by Domain Model; it must not name a Delegated AI.
+Shared vocabulary, including Session, is defined by [Core Concepts](core-concepts.md#glossary).
+The name Delegated AI avoids using Agent for an execution role.
 
 # Concepts and contract
 
@@ -149,6 +149,14 @@ and fresh Delegated AI memory; loading restores the saved timeline and applicabl
 when no Current campaign exists. Creation, load, and closure invalidate prior campaign access. Failure to create or
 load preserves the existing Session. Saving captures the Current campaign at a committed action boundary, even
 before the player advances the turn. Closing or replacing the Current campaign does not implicitly save it.
+
+## Campaign data integrity
+
+Campaign creation, committed Player API and Developer API actions, and restoration must preserve the declared
+campaign-data composition, identity, reference, and historical-fact invariants. Gameplay calculations receive only
+their declared necessary inputs and dependencies; they must not gain unrestricted access to the complete Campaign
+state through those dependencies. Campaign initialization and external engine operations may access complete Campaign state.
+Detailed campaign-data structures and the constraints preserving them belong to refining specifications.
 
 ## Player queries and actions
 
@@ -318,12 +326,6 @@ Backward compatibility and save migration across Game builds are not required. A
 saves. History and Persistence owns validation and incompatible-save handling. An unsuccessful load does not discard
 the Current campaign; successful restoration satisfies all continuation and integrity guarantees above.
 
-## Gameplay dependency direction
-
-Gameplay functions, including Campaign instance constructors, must receive only necessary inputs and dependencies,
-without direct or indirect access to the top-level Campaign instance. Contained Campaign instances must not refer
-back to that root. These restrictions exclude campaign creation, save/load, and external engine interfaces.
-
 # Edge cases and failure behavior
 
 No Current campaign, unavailable history targets, invalid scopes, stale access, and unauthorized calls reject without
@@ -364,6 +366,7 @@ human's memory; engine-supplied Delegated AI context nevertheless follows [Deleg
   without effects; earlier committed actions remain. A broken internal reference reports an engine defect without
   publishing intermediate Campaign state. Returned inspection data cannot mutate the engine
   ([Delegation lifecycle and concurrency](#delegation-lifecycle-and-concurrency), [Committed state integrity](#committed-state-integrity)).
-- **Gameplay dependencies:** A Campaign instance constructor receives only its necessary inputs and dependencies,
-  none leading to the top-level Campaign instance, and returns no back-reference to that root
-  ([Gameplay dependency direction](#gameplay-dependency-direction)).
+- **Campaign integrity:** A committed action and its undo/redo preserve declared campaign-data composition and identity,
+  and required historical references remain resolvable. A gameplay calculation receives only its necessary inputs and
+  cannot access the complete Campaign state through an undeclared dependency
+  ([Campaign data integrity](#campaign-data-integrity)).

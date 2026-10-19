@@ -16,6 +16,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 - Uses [Agents](../mechanics/agents.md) for Agent assignment, exhaustion, and recovery transitions scheduled within a turn.
 - Uses [Campaign](../mechanics/campaign.md) for the Campaign update and end-condition rules scheduled within turn phases.
+- Uses [Core Concepts](./core-concepts.md) for Rule, Campaign state, and Committed state meanings in phase scheduling.
 - Uses [Domain Model](./domain-model.md) for the game structures and references read and changed by turn phases.
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for the resource and upgrade transitions scheduled within a turn.
 - Uses [Factions](../mechanics/factions.md) for the Faction pressure and operation occurrence transitions scheduled within a turn.
@@ -31,6 +32,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 - Uses [Agents](../mechanics/agents.md)
 - Uses [Campaign](../mechanics/campaign.md)
+- Uses [Core Concepts](./core-concepts.md)
 - Uses [Domain Model](./domain-model.md)
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Uses [Factions](../mechanics/factions.md)

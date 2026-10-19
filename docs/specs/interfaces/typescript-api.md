@@ -14,10 +14,11 @@ Define exact callable TypeScript signatures for Session API, Player API, Develop
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for Campaign instance construction, composition, and identity/reference constraints preserved by public operations.
+- Uses [Core Concepts](../foundation/core-concepts.md) for Types, Instance IDs, Session, and committed-data meanings in exact public signatures.
 - Uses [Developer API](./developer-api.md) for full Campaign state inspection fields and Dev mode transition behavior.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and identifiers represented in commands and reports.
 - Uses [History and Persistence](../foundation/history-and-persistence.md) for the session, restoration, and save/load operations exposed by the player API.
-- Uses [Modeling Foundations](../foundation/modeling-foundations.md) for shared Types, Instance IDs, and Campaign instance references in the public interface.
 - Uses [Player Information](./player-information.md) for Player-visible information and the boundary around hidden Campaign state.
 - Refines [Engine Contract](../foundation/engine-contract.md) by specifying the exact TypeScript player command, report, and error signatures.
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for the command and report surface exercised by integration scenarios.
@@ -27,10 +28,11 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Developer API](./developer-api.md)
 - Uses [Domain Model](../foundation/domain-model.md)
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
-- Uses [Modeling Foundations](../foundation/modeling-foundations.md)
 - Uses [Player Information](./player-information.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
@@ -41,7 +43,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 # Glossary
 
 API surface and execution-role terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
-Shared modeling terms are owned by Modeling Foundations.
+Shared modeling and Session terms are owned by [Core Concepts](../foundation/core-concepts.md#glossary).
+Campaign-specific composition terms are owned by [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md#glossary).
 
 TODO: Define signature-specific terms here without duplicating shared definitions.
 
@@ -62,14 +65,14 @@ Public operations preserve [Derived value consistency](../foundation/engine-cont
 This specification refines those guarantees with exact query results, rejection behavior, and restoration-operation
 results. Domain Model supplies represented game concepts, Player Information supplies permitted views, Developer API
 supplies detailed full-state inspection and cheat-command contracts, and History and Persistence supplies storage
-and restoration procedures. Modeling Foundations supplies identity, reference, and Campaign instance contracts.
+and restoration procedures. Campaign Modeling Contract supplies identity, reference, and Campaign instance contracts.
 
 An operation creating a Campaign instance must satisfy
-[Campaign instances](../foundation/modeling-foundations.md#campaign-instances), with a declared return Type and
+[Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances), with a declared return Type and
 initialization of Instance ID, Archetype, Constants, and State. Returning an existing Campaign instance or restoring
 its earlier State does not itself create a new Campaign instance. Public restoration preserves
-[References](../foundation/modeling-foundations.md#references) and
-[Historical fact preservation](../foundation/modeling-foundations.md#historical-fact-preservation).
+[References](../foundation/campaign-modeling-contract.md#references) and
+[Historical fact preservation](../foundation/campaign-modeling-contract.md#historical-fact-preservation).
 
 # Requirements
 

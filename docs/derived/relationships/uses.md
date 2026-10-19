@@ -18,6 +18,7 @@ flowchart TD
   CAMP["CAMP — Campaign (Stub)"]
   CLI["CLI — Terminal CLI (Stub)"]
   COMBAT["COMBAT — Combat (Stub)"]
+  CORE["CORE — Core Concepts (Draft)"]
   DEV["DEV — Developer API (Stub)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
   ENG["ENG — Engine Contract (Draft)"]
@@ -28,7 +29,7 @@ flowchart TD
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
-  MODEL["MODEL — Modeling Foundations (Accepted)"]
+  MODEL["MODEL — Campaign Modeling Contract (Accepted)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
   TURN["TURN — Turn Resolution (Stub)"]
@@ -50,11 +51,22 @@ flowchart TD
   COMBAT --> AGENT
   COMBAT --> INFO
   COMBAT --> MISSION
+  CORE --> API
+  CORE --> CLI
+  CORE --> DEV
+  CORE --> DOM
+  CORE --> ENG
+  CORE --> HIST
+  CORE --> INFO
+  CORE --> INIT
+  CORE --> MODEL
+  CORE --> NUMRNG
+  CORE --> TURN
+  CORE --> WEB
   DEV --> API
   DEV --> HIST
   DOM --> API
   DOM --> DEV
-  DOM --> ENG
   DOM --> HIST
   DOM --> INFO
   DOM --> INIT
@@ -98,7 +110,6 @@ flowchart TD
   MISSION --> TURN
   MODEL --> API
   MODEL --> DOM
-  MODEL --> ENG
   MODEL --> HIST
   MODEL --> INFO
   MODEL --> INIT

@@ -59,7 +59,7 @@ Each Relationship kind describes how the Dependent relates to the Dependency.
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules                                | Document → document governed by those rules                                                                                 | Specification Conventions → Agents                                                                                    |
 | `refines`         | The Dependent adds detail to the same subject or behavior already specified by the Dependency, preserving its constraints | Specification or requirement → refining specification                                                                       | Domain Model → Agents                                                                                                 |
-| `uses`            | The Dependent applies the Dependency's concepts, constraints, data, or results to describe its own subject                | Any suitable artifacts                                                                                                      | Modeling Foundations → Domain Model                                                                                   |
+| `uses`            | The Dependent applies the Dependency's concepts, constraints, data, or results to describe its own subject                | Any suitable artifacts                                                                                                      | Core Concepts → Engine Contract                                                                                       |
 | `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency                                    | Specification or requirement → implementation                                                                               | Engine Contract → identified engine implementation                                                                    |
 | `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency                                             | Specification or requirement → [test scenario](../acceptance/campaign-integration-and-acceptance-tests.md#glossary) or test | [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) → identified restoration test |
 
@@ -74,8 +74,8 @@ behavior. Record both in the owning contract prose, linking to the relevant sect
 using a vocabulary, consuming a result, or supplying Game Data Record (GDR) values is insufficient by itself: those are uses.
 Being more concrete or appearing later in an authoring sequence is also insufficient.
 
-Domain Model uses Modeling Foundations as a language for describing game concepts. The game concepts do not refine
-that language. History and Persistence uses the modeling identity and historical-preservation conventions, while
+Domain Model uses Core Concepts vocabulary and Campaign Modeling Contract composition constraints to describe game concepts.
+Campaign Modeling Contract refines Engine Contract campaign-data integrity; vocabulary use alone is not refinement. History and Persistence uses the modeling identity and historical-preservation conventions, while
 its restoration procedures refine Engine Contract's restoration guarantees. Numbers and Randomness similarly uses
 identity conventions while refining deterministic execution. These classifications concern the particular contract
 meaning, not a prohibition on refinement between any document families.
@@ -130,9 +130,9 @@ Use this complete phrase order; omit groups with no entries and sort document ti
 
 Groups are contiguous entries, not headings. For example, Engine Contract contains:
 
-- Uses [Modeling Foundations](../foundation/modeling-foundations.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
 
-Modeling Foundations contains the mirror:
+Core Concepts contains the mirror:
 
 - Used by [Engine Contract](../foundation/engine-contract.md)
 
@@ -233,17 +233,17 @@ check links, and validate the graphs. Do not invent implementation or test relat
 The following table gives the complete expected classifications for this acceptance scenario. These cases exercise
 [Canonical model](#canonical-model), [Direction](#direction-1), and [Status and evidence](#status-and-evidence); they do not add relationships to the named documents.
 
-| Case                                                                                                                            | Expected classification and reason                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                   | Uses Modeling Foundations; it applies the language without elaborating its meanings   |
-| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)     | Refines Domain Model; it adds detail to the same lifecycle                            |
-| History specifies restoration steps for [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) | Refines Engine Contract; it details the restoration behavior                          |
-| History preserves references under [References](../foundation/modeling-foundations.md#references) while restoring state         | Uses Modeling Foundations; satisfying the reference invariant alone is not refinement |
-| Initial Campaign Content supplies prices under Economy's purchase rules                                                         | Uses Economy and Upgrades; data values do not elaborate purchase behavior             |
-| Terminal CLI maps commands to the player API                                                                                    | Uses TypeScript Player API; an adapter contract applies existing operations           |
-| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields   | Intended refinement is permitted; the fields remain unspecified and status stays Stub |
-| A document merely says it must obey [Campaign instances](../foundation/modeling-foundations.md#campaign-instances)              | Uses, not Refines; no added detail about the identity convention is identified        |
-| A refinement duplicates the same reliance as a Uses entry                                                                       | Keep only Refines; two Relationship kinds require distinct reliance                   |
+| Case                                                                                                                            | Expected classification and reason                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and GDR                                                                   | Uses Campaign Modeling Contract; it applies campaign composition constraints without elaborating their meanings |
+| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)     | Refines Domain Model; it adds detail to the same lifecycle                                                      |
+| History specifies restoration steps for [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) | Refines Engine Contract; it details the restoration behavior                                                    |
+| History preserves references under [References](../foundation/campaign-modeling-contract.md#references) while restoring state   | Uses Campaign Modeling Contract; satisfying the reference invariant alone is not refinement                     |
+| Initial Campaign Content supplies prices under Economy's purchase rules                                                         | Uses Economy and Upgrades; data values do not elaborate purchase behavior                                       |
+| Terminal CLI maps commands to the player API                                                                                    | Uses TypeScript Player API; an adapter contract applies existing operations                                     |
+| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields   | Intended refinement is permitted; the fields remain unspecified and status stays Stub                           |
+| A document merely says it must obey [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances)        | Uses, not Refines; no added detail about the identity convention is identified                                  |
+| A refinement duplicates the same reliance as a Uses entry                                                                       | Keep only Refines; two Relationship kinds require distinct reliance                                             |
 
 ## Complete coverage of Relationship kinds
 
@@ -251,7 +251,7 @@ The following table gives the complete expected classifications for this accepta
 | ----------------- | --------------------------------------------------------------------------------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | `follows`         | Specification Conventions                                                               | Agents                           | Agents follows Specification Conventions                                                                  |
 | `refines`         | Domain Model                                                                            | Agents                           | Agents refines Domain Model                                                                               |
-| `uses`            | Modeling Foundations                                                                    | Engine Contract                  | Engine Contract uses Modeling Foundations                                                                 |
+| `uses`            | Core Concepts                                                                           | Engine Contract                  | Engine Contract uses Core Concepts                                                                        |
 | `implements`      | Engine Contract                                                                         | Identified engine implementation | The implementation implements Engine Contract                                                             |
 | `verifies`        | [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) | Identified restoration test      | The test verifies [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) |
 
