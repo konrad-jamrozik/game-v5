@@ -13,6 +13,7 @@ Define the shared language for the complete game contract, spanning campaign dat
 owns the meanings of its glossary terms independently of the contracts that use them. It does not define API authority,
 campaign-data composition, gameplay mechanics, persistence procedures, or interface behavior.
 
+- Used by [Campaign](../mechanics/campaign.md) for Campaign state, World state, and Campaign configuration meanings applied to adjustable campaign parameters.
 - Used by [Campaign Modeling Contract](./campaign-modeling-contract.md) for shared modeling vocabulary and value meanings applied to campaign-data constraints.
 - Used by [Developer API](../interfaces/developer-api.md) for Campaign state and Authoritative value meanings used in full-state inspection.
 - Used by [Domain Model](./domain-model.md) for Type, Campaign state, Instance ID, and immutable-data meanings used to describe game concepts.
@@ -28,6 +29,7 @@ campaign-data composition, gameplay mechanics, persistence procedures, or interf
 
 # Relationships
 
+- Used by [Campaign](../mechanics/campaign.md)
 - Used by [Campaign Modeling Contract](./campaign-modeling-contract.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
@@ -53,11 +55,13 @@ campaign-data composition, gameplay mechanics, persistence procedures, or interf
 | Ruleset                    | The collection of Rules governing a Campaign.                                                                                                                                                                                                            |
 | Game build                 | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                                                                                                                                       |
 | Game Data Record (GDR)     | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated.                                                                                                                   |
-| Campaign state             | Data describing one Campaign; for example, its resources, generated identities, and retained history.                                                                                                                                                    |
+| Campaign state             | Data describing one Campaign, including World state and Campaign configuration. History is a subcomponent of World state.                                                                                                                                |
+| World state                | The component of Campaign state describing the simulated world and its progression, including History as a subcomponent, distinct from Campaign configuration.                                                                                           |
+| Campaign configuration     | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                                                             |
 | Instance ID                | An identifier for one occurrence within a Campaign, unique within a declared identity scope and stable for its lifetime.                                                                                                                                 |
 | Authoritative value        | A value treated as established truth rather than recomputed from other values.                                                                                                                                                                           |
 | Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs.                                                                                                                                                           |
-| History                    | Retained data describing past Campaign state or events. Rules and reports may consult History.                                                                                                                                                           |
+| History                    | The subcomponent of World state containing retained data describing past Campaign state or events. Rules and reports may consult History.                                                                                                                |
 | Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
 | Committed state            | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                                                                                                |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
@@ -79,6 +83,19 @@ Campaign. Campaign state excludes interface preferences and controller continuat
 consult. Session access settings are not gameplay Campaign state. This distinction does not prescribe an internal class
 layout or save encoding.
 
+## World state and Campaign configuration
+
+Campaign state includes both World state and Campaign configuration. For example, an Investigation's progress is
+World state, while a campaign-wide investigation difficulty multiplier is Campaign configuration. Both belong to
+the particular Campaign, regardless of which Session selects it. Campaign configuration supplies inputs to Rules;
+changing it does not modify the Game build's Ruleset or immutable GDRs.
+
+History is a subcomponent of World state, including when it records past Campaign configuration values or changes.
+Current Campaign configuration belongs to its own component of Campaign state; historical records about it belong
+to History within World state. This conceptual hierarchy does not require a particular storage layout.
+Interface preferences that gameplay Rules do not consult remain
+outside Campaign state. Mechanics specify permitted configuration changes and when their effects apply.
+
 ## Committed state and information
 
 Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing.
@@ -93,6 +110,11 @@ restoration, and storage failures belong to the contracts that specify those ope
 
 # Acceptance examples
 
+- **Configuration and world:** A Campaign's investigation difficulty multiplier is Campaign configuration; its
+  Investigation progress is World state. Both are Campaign state ([World state and Campaign configuration](#world-state-and-campaign-configuration)).
+- **History within world:** A retained record of a past difficulty change belongs to History within World state;
+  the current difficulty value belongs to Campaign configuration. Both are Campaign state
+  ([World state and Campaign configuration](#world-state-and-campaign-configuration)).
 - **Session without a Campaign:** Open an execution context before selecting a playthrough. It is a Session with no
   selected Campaign, not an empty Campaign ([Campaign and Session](#campaign-and-session)).
 - **Data and visibility:** An established resource amount is an Authoritative value, while its calculated total is a

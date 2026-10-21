@@ -100,6 +100,16 @@ prior Session; successful load has no active Delegation run and Dev mode disable
 
 ## Session-owned state
 
+Campaign configuration is Campaign state under [World state and Campaign configuration](core-concepts.md#world-state-and-campaign-configuration).
+Saving must retain its committed values together with World state. Successful load restores the selected Campaign's
+configuration from the save, rather than retaining configuration from the previously selected Campaign or replacing
+saved values with creation defaults.
+
+Undo and redo restore the configuration at the target history position together with the corresponding World state.
+Reproduction of later actions uses the configuration applicable at their original positions, not the configuration
+at the time replay is requested. A configuration change after undo follows the existing timeline-branch rules.
+These requirements do not determine the persistence scope of UI preferences or make Dev mode Campaign state.
+
 TODO: Specify storage separation for Current campaign selection, Campaign state, UI preferences, Dev mode, and
 Delegated AI memory. History navigation leaves Dev mode unchanged and restores only applicable memory checkpoints.
 Detail checkpoint replacement at the same position, discarded-future removal across AI controllers, late-result
@@ -111,6 +121,13 @@ TODO: Specify errors and atomic restoration behavior for unavailable targets, co
 Define representation of partially retained futures without changing Engine Contract navigation targets.
 
 # Acceptance examples
+
+- **Campaign configuration isolation:** Save Campaign A, then load a save of Campaign B with different Campaign
+  configuration. B's saved values apply. Loading A's save restores A's saved values
+  ([Session-owned state](#session-owned-state)).
+- **Configuration history:** Commit a configuration change. Undo restores the preceding configuration and World
+  state; redo restores the committed configuration and World state, including any explicitly specified effects
+  ([Session-owned state](#session-owned-state)).
 
 TODO: Specify action-level and turn-level restoration and save/load scenarios comparing complete Campaign state,
 generated Instance IDs, RNG state, reports, and applicable Delegated AI memory. Verify developer-command replay

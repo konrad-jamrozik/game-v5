@@ -29,7 +29,7 @@ remain in their owning specifications.
 - Used by [Turn Resolution](./turn-resolution.md) for the game structures and references read and changed by turn phases.
 - Used by [TypeScript Player API](../interfaces/typescript-api.md) for the game concepts and identifiers represented in commands and reports.
 - Refined by [Agents](../mechanics/agents.md), which specifies Agent capability, task availability, development, exhaustion, and recovery rules.
-- Refined by [Campaign](../mechanics/campaign.md), which specifies Campaign initialization, global panic, and victory and defeat rules.
+- Refined by [Campaign](../mechanics/campaign.md), which specifies Campaign initialization, Campaign configuration changes, global panic, and victory and defeat rules.
 - Refined by [Combat](../mechanics/combat.md), which specifies Combatant behavior and automatic battle resolution rules.
 - Refined by [Economy and Upgrades](../mechanics/economy-and-upgrades.md), which specifies Agency resource flows, personnel purchases, and upgrade rules.
 - Refined by [Factions](../mechanics/factions.md), which specifies Faction pressure, operation occurrence generation, suppression, and defeat rules.
@@ -271,6 +271,12 @@ Arrows show relationships, not inheritance or storage layout.
 # Requirements
 
 ## Campaign boundary
+
+### Campaign configuration ownership
+
+The Campaign Type includes Campaign configuration in its State, allowing configuration values to change during
+play. GDRs may supply initial values during construction. Shared meanings are defined in
+[World state and Campaign configuration](core-concepts.md#world-state-and-campaign-configuration).
 
 ### Campaign boundary
 

@@ -15,6 +15,7 @@ This document owns observable execution guarantees, not a UI framework, internal
 RNG algorithm, save encoding, or subsystem mechanics.
 
 - Uses [Core Concepts](./core-concepts.md) for shared Campaign, Session, Game build, committed-data, identity, and information vocabulary in execution guarantees.
+- Used by [Campaign](../mechanics/campaign.md) for atomic command commitment and action-history guarantees applied to Campaign configuration changes.
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md), which specifies campaign composition, identity, references, and historical preservation under engine integrity guarantees.
 - Refined by [Developer API](../interfaces/developer-api.md), which specifies Dev mode, full Campaign state inspection, and validated cheat operations.
 - Refined by [History and Persistence](./history-and-persistence.md), which specifies the reversible session, replay, and save/load guarantees.
@@ -26,6 +27,7 @@ RNG algorithm, save encoding, or subsystem mechanics.
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
+- Used by [Campaign](../mechanics/campaign.md)
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md)
 - Refined by [Developer API](../interfaces/developer-api.md)
 - Refined by [History and Persistence](./history-and-persistence.md)

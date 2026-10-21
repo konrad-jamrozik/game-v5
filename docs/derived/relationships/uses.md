@@ -52,6 +52,7 @@ flowchart TD
   COMBAT --> INFO
   COMBAT --> MISSION
   CORE --> API
+  CORE --> CAMP
   CORE --> CLI
   CORE --> DEV
   CORE --> DOM
@@ -76,6 +77,7 @@ flowchart TD
   ECON --> INIT
   ECON --> MISSION
   ECON --> TURN
+  ENG --> CAMP
   FACTION --> INFO
   FACTION --> INIT
   FACTION --> LEAD
