@@ -3,6 +3,15 @@
 A fresh, framework-neutral browser game repository. It currently displays a placeholder and has no runtime dependencies.
 The UI framework, renderer, game mechanics, state management, and persistence are deliberately undecided.
 
+## Design and continuation
+
+The [Game Design Brief](docs/game-design-brief.md) records gameplay intent. The
+[specification index](docs/specs/README.md) links the detailed contracts, and the
+[work plan](docs/specs/governance/work-plan.md) tracks review progress.
+
+For continuation after an account transfer, start with the
+[handoff note](docs/account-transfer-handoff.md), including the pending, unaccepted persistence and global-settings proposal.
+
 ## Getting started
 
 Use Node **24.21.0** (see `.node-version`) and its bundled npm **11.19.0**. A Node version manager can install that version.
