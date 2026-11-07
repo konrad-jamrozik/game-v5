@@ -68,6 +68,11 @@ The reported versions should satisfy the `engines` field in `package.json`. Then
 | `npm run hooks:install` | Enable the tracked Git hooks for this checkout       |
 | `npm run check`         | Run the same validation used in CI                   |
 
+## Verification
+
+The [verification guide](docs/verification.md) explains which checks to run for each kind of change, how the targeted,
+commit, full, and CI layers relate, and what a clean result does and does not prove.
+
 ## Derived specification views
 
 The [derived specification catalog](docs/derived/README.md) links an alphabetical glossary and specification relationship
@@ -102,7 +107,7 @@ Enable the repository's tracked hooks once per checkout or worktree:
 npm run hooks:install
 ```
 
-The pre-commit hook runs specification linting first, followed by formatting and code linting. The pre-push hook runs the
+The pre-commit hook runs specification linting first, followed by the derived-view check, formatting, and code linting. The pre-push hook runs the
 same validation pipeline as `npm run check` and CI: specification linting, formatting, code linting, tests, type checking,
 and the production build. The hooks invoke the installed project tools directly so Git clients and agents do not depend on
 shell-specific npm initialization. A failing command aborts the Git operation. Git's `--no-verify` option can bypass
