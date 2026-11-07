@@ -17,3 +17,9 @@ The Claude desktop app opens such links in its local Markdown preview pane at th
 repository-root paths with a leading slash, plain `path:line` text, or GitHub URLs; these were tried and do not give
 the user a working anchored preview link. Anchors are the lowercase, hyphenated heading text; verify the heading exists
 with `grep -n` first.
+
+## Committing and publishing changes
+
+Commit and push repository changes directly to `main`; do not use feature or session branches unless the user asks.
+After pushing, give the user a link to the commit's diff view so they can see exactly what was committed, in the form
+`https://github.com/konrad-jamrozik/game-v5/commit/<full-sha>`.
