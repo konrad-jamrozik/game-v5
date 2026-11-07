@@ -7,3 +7,13 @@ in `README.md` when the toolchain is unavailable.
 Before declaring repository changes complete, run `npm run check` and report any failures. Do not treat a clean deterministic specification lint as proof of semantic or gameplay correctness.
 
 Use `npm run lint:specs` first when checking specifications or artifact relationships.
+
+## Linking to documents in chat
+
+When pointing the user at a repository document or section, use a Markdown link whose target is the file's absolute local
+path followed by a heading anchor, for example `[Campaign and Session](/abs/path/to/repo/docs/specs/foundation/core-concepts.md#campaign-and-session)`.
+Build the absolute path from the current working directory (the repository root), not from a remembered location.
+The Claude desktop app opens such links in its local Markdown preview pane at that anchor. Do not use relative paths,
+repository-root paths with a leading slash, plain `path:line` text, or GitHub URLs; these were tried and do not give
+the user a working anchored preview link. Anchors are the lowercase, hyphenated heading text; verify the heading exists
+with `grep -n` first.
