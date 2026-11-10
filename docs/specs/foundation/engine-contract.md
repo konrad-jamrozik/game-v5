@@ -310,9 +310,10 @@ earlier save is unchanged. Forking a timeline uses `saveAsNew()`: there is no se
 keeps the Campaign's identity.
 
 A save captures complete continuation state, the action-history cursor, retained undo/redo
-continuation, and Autopilot memory checkpoints associated with that timeline. A successful load restores those
+continuation, and Autopilot memory checkpoints associated with that timeline, unless the save size limit in History
+and Persistence requires dropping that history; such a save reports the loss and restores only its saved position. A successful load restores those
 contents atomically with no active Autopilot engagement and Dev mode disabled. Saves contain hidden Campaign state and
-must never be exposed to Autopilot AI as readable gameplay information. Encoding, retention limits, validation,
+must never be exposed to Autopilot AI as readable gameplay information. Encoding, the save size limit, validation,
 and storage failure procedures belong to History and Persistence.
 
 ## Derived value consistency
