@@ -44,7 +44,7 @@ This specification refines [Information boundary](../foundation/engine-contract.
 [Dev mode and developer operations](../foundation/engine-contract.md#dev-mode-and-developer-operations) with inspection
 schemas and cheat-command details. Session API controls Dev mode. Developer API exposes full Campaign state,
 including all Authoritative values, only to an authorized Session controller with Dev mode enabled and no active
-Delegation run. Player API always exposes only Player-visible information; Delegated AI never receives developer access.
+Autopilot engagement. Player API always exposes only Player-visible information; Autopilot AI never receives developer access.
 
 Engine Contract owns access transitions and high-level replay guarantees. Domain Model supplies inspected Campaign
 state and invariants. History and Persistence supplies restoration procedures, and TypeScript Player API supplies
@@ -68,16 +68,16 @@ and commit replayable action-history entries. Additional cheat operations use th
 
 TODO: Specify authorization failures and access revocation under Engine Contract. Recorded cheat restoration uses
 history authority and does not require Dev mode. Detailed restoration must preserve deterministic continuation
-without making internal replay operations callable by Delegated AI.
+without making internal replay operations callable by Autopilot AI.
 
 # Edge cases and failure behavior
 
-TODO: Specify inspection and cheat errors with Dev mode disabled, during a Delegation run, or with stale access.
+TODO: Specify inspection and cheat errors with Dev mode disabled, during an Autopilot engagement, or with stale access.
 Invalid cheat inputs preserve Campaign state, RNG state, generated Instance IDs, reports, and history.
 
 # Acceptance examples
 
-TODO: Provide scenarios proving separate Developer API access, unchanged Player API visibility, Delegated AI exclusion,
+TODO: Provide scenarios proving separate Developer API access, unchanged Player API visibility, Autopilot AI exclusion,
 and cheat-command undo/redo and save/load round trips. Identify the requirement sections each scenario verifies.
 
 # Open decisions

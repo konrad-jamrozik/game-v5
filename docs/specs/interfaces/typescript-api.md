@@ -9,7 +9,7 @@
 
 # Purpose and boundaries
 
-Define exact callable TypeScript signatures for Session API, Player API, Developer API, and Delegated AI API, preserving Engine Contract authority and execution guarantees.
+Define exact callable TypeScript signatures for Session API, Player API, Developer API, and Autopilot memory API, preserving Engine Contract authority and execution guarantees.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -52,11 +52,11 @@ TODO: Define signature-specific terms here without duplicating shared definition
 
 This specification refines [API hierarchy](../foundation/engine-contract.md#api-hierarchy),
 [Campaign lifecycle](../foundation/engine-contract.md#campaign-lifecycle),
-[Delegation scopes](../foundation/engine-contract.md#delegation-scopes), and
-[Delegation lifecycle and concurrency](../foundation/engine-contract.md#delegation-lifecycle-and-concurrency)
-with exact callable signatures, argument Types, scoped access, progress, and terminal result Types. Player API always
+[Autopilot limits](../foundation/engine-contract.md#autopilot-limits), and
+[Autopilot lifecycle and concurrency](../foundation/engine-contract.md#autopilot-lifecycle-and-concurrency)
+with exact callable signatures, argument Types, scoped access, Autopilot progress, and disengagement result Types. Player API always
 exposes Player-visible information and includes Advance turn. Session API is restricted to the Session controller;
-Developer API is separately gated by Dev mode. Delegated AI API supplies continuation memory for the active Delegated AI.
+Developer API is separately gated by Dev mode. Autopilot memory API supplies Autopilot memory for the active Autopilot AI.
 
 Public operations preserve [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency),
 [Continuation state](../foundation/engine-contract.md#continuation-state),
@@ -80,7 +80,7 @@ its earlier State does not itself create a new Campaign instance. Public restora
 
 TODO: Specify exact signatures for Engine Contract's required starter operations in all four namespaces. Define
 argument Types, return Types, structured errors, and scoped access validity. Cover action-level and turn-level
-history navigation, all three delegation scopes, engine-enforced terminal results, and memory read/write.
+history navigation, all three Autopilot limits, engine-enforced disengagement reasons, and memory read/write.
 Define operation availability without a Current campaign and handle invalidation after creation or load.
 Clarify sync/async behavior; this API does not inherently require HTTP.
 
@@ -90,9 +90,9 @@ TODO: Specify eligibility, atomic batch behavior, stale-input handling, and retu
 mechanics and Engine Contract. Rejected actions and actions with no effect follow Engine Contract history and
 randomness rules. Define whether eligibility can be queried independently without exposing hidden information.
 
-TODO: Define Delegation run start, progress, cancellation, terminal results, and finite execution budgets. Reject
+TODO: Define Autopilot engagement, progress, disengagement, disengagement reasons, and finite execution budgets. Reject
 stale action submissions and memory writes after termination. Failure must not silently advance a turn or replace
-the Current campaign. Define AI controller identity and how a configured AI controller is selected without coupling
+the Current campaign. Define Autopilot AI identity and how a configured Autopilot AI is selected without coupling
 gameplay resolution to model providers.
 
 ## Client boundaries
@@ -109,11 +109,11 @@ calls. Define concurrent submissions and process interruption without exposing i
 
 # Acceptance examples
 
-TODO: Provide typed sequences exercising Engine Contract acceptance scenarios, including all delegation scopes,
-Developer API isolation, deterministic action replay, cancellation, and timeline-correct Delegated AI memory.
+TODO: Provide typed sequences exercising Engine Contract acceptance scenarios, including all Autopilot limits,
+Developer API isolation, deterministic action replay, disengagement, and timeline-correct Autopilot memory.
 Each scenario must identify the requirement sections it verifies.
 
 # Open decisions
 
 - TODO: Choose exact signatures, error codes, revision handling, and sync/async operation results.
-- TODO: Choose finite delegation execution budgets and AI controller selection inputs.
+- TODO: Choose finite Autopilot execution budgets and Autopilot AI selection inputs.

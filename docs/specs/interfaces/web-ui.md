@@ -39,8 +39,8 @@ TODO: Define presentation-specific terms without duplicating shared definitions.
 Web UI is a required human-facing adapter over the engine API hierarchy implemented by TypeScript Player API.
 Its main menu represents a Session without a Current campaign; creation or load selects the Current campaign.
 Player API views always show Player-visible information. Separate developer controls expose inspection and cheats
-only under authorized Dev mode access. Delegation controls select one of the three scopes, show progress, and
-permit cancellation without passing developer information to Delegated AI.
+only under authorized Dev mode access. Autopilot controls select one of the three Autopilot limits, show progress, and
+permit disengagement without passing developer information to Autopilot AI.
 
 TypeScript Player API supplies operation results, Player Information supplies permitted views, and History and
 Persistence supplies save/load and navigation semantics. Screens and interactions apply those contracts without
@@ -57,13 +57,13 @@ Developer inspection must use a distinct authorized view rather than widening or
 ## Interaction and accessibility
 
 TODO: Specify creation/load/save, gameplay actions, Advance turn, action-level and turn-level history navigation,
-Dev mode controls, and delegation scope/progress/cancellation. Define keyboard access, focus behavior, and refresh
-after commits or restoration. Controller mutation controls follow Engine Contract delegation restrictions.
+Dev mode controls, and Autopilot limit/progress/disengagement. Define keyboard access, focus behavior, and refresh
+after commits or restoration. Controller mutation controls follow Engine Contract Autopilot restrictions.
 
 ## Presentation boundaries
 
 TODO: Prioritize readable colors and layouts over decorative graphics. Future graphics must not add exclusive
-gameplay information. Developer views and external AI integration must not leak hidden facts into Delegated AI context.
+gameplay information. Developer views and external AI integration must not leak hidden facts into Autopilot AI context.
 
 # Edge cases and failure behavior
 
@@ -72,7 +72,7 @@ prior committed view intact; presentation must not imply an uncommitted gameplay
 
 # Acceptance examples
 
-TODO: Provide keyboard-accessible journeys mapping main menu, gameplay, history, developer controls, and delegation
+TODO: Provide keyboard-accessible journeys mapping main menu, gameplay, history, developer controls, and Autopilot
 to exact API operations. Verify unchanged Player API visibility with Dev mode enabled and matching results with CLI.
 Identify each exercised requirement section.
 

@@ -1,17 +1,18 @@
 # Specification Conventions
 
-| Metadata              | Value                                                                                                                       |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID               | CONV                                                                                                                        |
-| Family                | Governance                                                                                                                  |
-| Status                | Accepted                                                                                                                    |
-| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                   |
-| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                 |
-| Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology.              |
-| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                        |
-| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                       |
-| Modeling revision     | Project owner requested language-independent Types, foundation-owned Campaign vocabulary, and embedded Foundation examples. |
-| Precedent revision    | Project owner requested that Draft documents never serve as an argument for a design choice.                                |
+| Metadata              | Value                                                                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID               | CONV                                                                                                                           |
+| Family                | Governance                                                                                                                     |
+| Status                | Accepted                                                                                                                       |
+| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                      |
+| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                    |
+| Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology.                 |
+| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                           |
+| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                          |
+| Modeling revision     | Project owner requested language-independent Types, foundation-owned Campaign vocabulary, and embedded Foundation examples.    |
+| Precedent revision    | Project owner requested that Draft documents never serve as an argument for a design choice.                                   |
+| Autopilot revision    | Project owner requested Autopilot terminology in place of delegation and a Session controller role independent of caller kind. |
 
 # Purpose and boundaries
 
@@ -230,8 +231,10 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 
 | INSTEAD OF                                  | USE                                                                                                                                 | Context                                                                                                                                                            |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Delegated agent; scoped AI                  | [Delegated AI](../foundation/engine-contract.md#glossary)                                                                           | Referring to AI executing a bounded Delegation run; Agent remains the game-domain concept.                                                                         |
-| Holistic AI                                 | [Session controller](../foundation/engine-contract.md#glossary)                                                                     | Referring to an overarching AI with Session management authority.                                                                                                  |
+| Delegated AI; Delegated agent; scoped AI    | [Autopilot AI](../foundation/engine-contract.md#glossary)                                                                           | Referring to the AI that plays while Autopilot is engaged; Agent remains the game-domain concept.                                                                  |
+| Delegation; Delegation run                  | [Autopilot](../foundation/engine-contract.md#glossary) or [Autopilot engagement](../foundation/engine-contract.md#glossary)         | Referring to lending Player API control to an Autopilot AI, or to one such period.                                                                                 |
+| Delegation scope                            | [Autopilot limit](../foundation/engine-contract.md#glossary)                                                                        | Referring to the bound on an Autopilot engagement.                                                                                                                 |
+| Holistic AI; overarching AI                 | [Session controller](../foundation/engine-contract.md#glossary)                                                                     | Referring to the caller holding Session authority; the role does not depend on what kind of caller holds it.                                                       |
 | Field; member; key                          | [Property](../foundation/core-concepts.md#glossary)                                                                                 | Naming a component of a structured Type; unrelated uses, such as a lookup key, retain their ordinary meaning.                                                      |
 | Player observation; Player observations     | [Player-visible information](../foundation/core-concepts.md#glossary)                                                               | Referring to information deliberately exposed by the engine to an ordinary player.                                                                                 |
 | Opportunity                                 | [Lead](../foundation/domain-model.md#glossary)                                                                                      | Referring to a Lead; ordinary uses such as opportunity cost remain valid.                                                                                          |

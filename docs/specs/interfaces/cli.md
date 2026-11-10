@@ -41,29 +41,29 @@ Player Information supplies permitted views, and History and Persistence supplie
 CLI syntax and output apply those contracts without independently implementing gameplay behavior.
 
 Creation or load selects the Current campaign. Session controller commands manage persistence, history, Dev mode,
-and delegation. Player API output always shows Player-visible information. Full-state inspection and cheats use
-separately authorized Developer API commands. Delegated AI access remains restricted when adapted through CLI;
-a Delegated AI must not receive an unrestricted command channel.
+and Autopilot. Player API output always shows Player-visible information. Full-state inspection and cheats use
+separately authorized Developer API commands. Autopilot AI access remains restricted when adapted through CLI;
+an Autopilot AI must not receive an unrestricted command channel.
 
 # Requirements
 
 ## Commands and sessions
 
 TODO: Specify grammar, parsing, help/discovery, persistence, and mappings to Engine Contract's required starter
-operations. Cover campaign lifecycle, action-level and turn-level history navigation, all delegation scopes and
-terminal results, and separate developer inspection and cheats. Expose Delegated AI memory only in its restricted
+operations. Cover campaign lifecycle, action-level and turn-level history navigation, all Autopilot limits and
+disengagement reasons, and separate developer inspection and cheats. Expose Autopilot memory only in its restricted
 execution context; it is not a human gameplay command.
 
 ## Output contract
 
 TODO: Specify human-readable and machine-readable output, stable JSON shapes, errors, standard streams, and exit
-codes. Both formats preserve Player API visibility and separately authorized Developer API access. Delegation
-progress must distinguish scope completion from early termination.
+codes. Both formats preserve Player API visibility and separately authorized Developer API access. Autopilot
+status must distinguish limit reached from the other disengagement reasons.
 
 ## Interaction behavior
 
-TODO: Specify interactive and noninteractive Session controller workflows, restricted Delegated AI execution,
-and interruption behavior. Keep gameplay, visibility, history, and scope enforcement in the engine.
+TODO: Specify interactive and noninteractive Session controller workflows, restricted Autopilot AI execution,
+and interruption behavior. Keep gameplay, visibility, history, and Autopilot limit enforcement in the engine.
 
 # Edge cases and failure behavior
 
@@ -73,7 +73,7 @@ preserve the underlying API information boundary.
 # Acceptance examples
 
 TODO: Provide equivalent readable and JSON workflows for creation, gameplay, history navigation, developer access,
-and delegation. Verify that a Delegated AI cannot reach Session API or Developer API through CLI commands.
+and Autopilot. Verify that an Autopilot AI cannot reach Session API or Developer API through CLI commands.
 Identify each exercised requirement section.
 
 # Open decisions

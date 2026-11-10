@@ -54,7 +54,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-Player API, Dev mode, Session controller, and Delegated AI are owned by the
+Player API, Dev mode, Session controller, and Autopilot AI are owned by the
 [Engine Contract glossary](../foundation/engine-contract.md#glossary).
 
 TODO: Define information-schema terms without duplicating shared definitions.
@@ -64,7 +64,7 @@ TODO: Define information-schema terms without duplicating shared definitions.
 This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) with exposed
 Properties, reveal conditions, and human/AI query consistency. Player API always exposes only Player-visible
 information, independent of Dev mode. Separate full-state inspection is specified by Developer API; developer
-inspection never changes gameplay reveal conditions or information supplied to Delegated AI.
+inspection never changes gameplay reveal conditions or information supplied to Autopilot AI.
 
 Core Concepts supplies Player-visible information, Authoritative value, Derived value, and historical meanings.
 Campaign Modeling Contract supplies value-classification and historical-preservation constraints.
@@ -88,13 +88,13 @@ cursor. Reference owning mechanics for calculations. Restored views and reports 
 
 ## Boundary consistency
 
-Session controller and Delegated AI receive the same Player-visible information for equal Campaign state and
-equivalent Player API queries, independent of Dev mode. Delegated AI never receives Developer API inspection,
+Session controller and Autopilot AI receive the same Player-visible information for equal Campaign state and
+equivalent Player API queries, independent of Dev mode. Autopilot AI never receives Developer API inspection,
 unrestricted saves, hidden command logs, or the Session controller's unrestricted conversation.
 
 TODO: Define schema-level visibility for every Player API result path and history metadata. For example, validate
 queries, action discovery, and errors against the same hidden-state boundary. Exclude gameplay RNG state and mutable
-Campaign references. Engine Contract owns Delegated AI context and memory restoration guarantees.
+Campaign references. Engine Contract owns Autopilot AI context and memory restoration guarantees.
 
 # Edge cases and failure behavior
 
@@ -103,7 +103,7 @@ Player API errors and action availability must preserve the information boundary
 
 # Acceptance examples
 
-TODO: Provide paired full-state and Player API fixtures proving visibility for Session controller and Delegated AI,
+TODO: Provide paired full-state and Player API fixtures proving visibility for Session controller and Autopilot AI,
 including after Dev mode changes and history navigation. Identify each exercised requirement section.
 
 # Open decisions

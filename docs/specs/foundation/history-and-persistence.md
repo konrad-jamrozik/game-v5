@@ -57,7 +57,7 @@ TODO: Define storage-specific terms without duplicating shared definitions.
 
 Session API selects the Current campaign under [Campaign lifecycle](engine-contract.md#campaign-lifecycle).
 This specification refines [Action history and turn navigation](engine-contract.md#action-history-and-turn-navigation),
-[Delegated AI memory](engine-contract.md#delegated-ai-memory), and [Save and load](engine-contract.md#save-and-load)
+[Autopilot memory](engine-contract.md#autopilot-memory), and [Save and load](engine-contract.md#save-and-load)
 with restoration procedures, checkpoint storage, retention limits, and encoding. Navigation targets, retained save
 contents, and Dev mode lifecycle are defined by Engine Contract, not open decisions here.
 
@@ -76,7 +76,7 @@ historical records remain immutable even in an evolving collection. Restoration 
 
 ## Controller state
 
-Delegated AI continuation memory is isolated by Campaign, AI controller identity, history position, and timeline
+Autopilot memory is isolated by Campaign, Autopilot AI identity, history position, and timeline
 branch. Restoration must not supply memory or external conversation from an undone future. Developer API commands
 follow the same deterministic replay guarantees as Player API commands. Dev mode is Session authority and must not
 be restored from action history or saves.
@@ -88,15 +88,15 @@ be restored from action history or saves.
 TODO: Specify storage and restoration procedures for atomic Player API and Developer API action-history entries,
 complete continuation state, memory checkpoints, and retained redo continuation under Engine Contract.
 Define history retention limits without an additional rewind penalty. Represent Turn-start checkpoints using
-Engine Contract navigation targets; individual actions remain separate history entries within a Delegation run.
+Engine Contract navigation targets; individual actions remain separate history entries within an Autopilot engagement.
 
 ## Replay and persistence
 
 TODO: Specify save encoding, load validation, and replay procedures under
 [Save and load](engine-contract.md#save-and-load) and
 [Game build compatibility](engine-contract.md#game-build-compatibility). Saves retain complete continuation state,
-the history cursor, retained undo/redo continuation, and Delegated AI memory checkpoints. Failed load preserves the
-prior Session; successful load has no active Delegation run and Dev mode disabled.
+the history cursor, retained undo/redo continuation, and Autopilot memory checkpoints. Failed load preserves the
+prior Session; successful load has no active Autopilot engagement and Dev mode disabled.
 
 ## Session-owned state
 
@@ -111,8 +111,8 @@ at the time replay is requested. A configuration change after undo follows the e
 These requirements do not determine the persistence scope of UI preferences or make Dev mode Campaign state.
 
 TODO: Specify storage separation for Current campaign selection, Campaign state, UI preferences, Dev mode, and
-Delegated AI memory. History navigation leaves Dev mode unchanged and restores only applicable memory checkpoints.
-Detail checkpoint replacement at the same position, discarded-future removal across AI controllers, late-result
+Autopilot memory. History navigation leaves Dev mode unchanged and restores only applicable memory checkpoints.
+Detail checkpoint replacement at the same position, discarded-future removal across Autopilot AIs, late-result
 rejection, and cache invalidation. External model conversations must not bypass restored memory boundaries.
 
 # Edge cases and failure behavior
@@ -130,7 +130,7 @@ Define representation of partially retained futures without changing Engine Cont
   ([Session-owned state](#session-owned-state)).
 
 TODO: Specify action-level and turn-level restoration and save/load scenarios comparing complete Campaign state,
-generated Instance IDs, RNG state, reports, and applicable Delegated AI memory. Verify developer-command replay
+generated Instance IDs, RNG state, reports, and applicable Autopilot memory. Verify developer-command replay
 with Dev mode disabled and removal of discarded-future memory. Identify each exercised requirement section.
 
 # Open decisions
