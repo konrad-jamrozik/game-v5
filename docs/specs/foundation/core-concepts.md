@@ -45,25 +45,57 @@ campaign-data composition, gameplay mechanics, persistence procedures, or interf
 
 # Glossary
 
+## Data modeling
+
+Language-independent vocabulary for describing and identifying model data.
+
+| Term        | Definition                                                                                                                                                                                                 |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type        | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration. |
+| Property    | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                        |
+| Instance ID | An identifier for one occurrence within a Campaign, unique within a declared identity scope and stable for its lifetime.                                                                                   |
+
+## Game build and Rules
+
+What a version of the game supplies: shared by every Campaign and unchanged during play.
+
+| Term                   | Definition                                                                                                                             |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Rule                   | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint.                             |
+| Ruleset                | The collection of Rules governing a Campaign.                                                                                          |
+| Game build             | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                     |
+| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated. |
+
+## Campaign and Session contexts
+
+A playthrough, and the execution context that selects it.
+
+| Term     | Definition                                                                                                                                                     |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                            |
+| Session  | An execution context that owns selection of a Campaign, its Campaign state, history navigation, and controller continuation data associated with that history. |
+
+## Campaign state composition
+
+How one Campaign's data divides into components, and which snapshots of it are authoritative.
+
+| Term                   | Definition                                                                                                                                                                   |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign state         | Data describing one Campaign, including World state and Campaign configuration. History is a subcomponent of World state.                                                    |
+| World state            | The component of Campaign state describing the simulated world and its progression, including History as a subcomponent, distinct from Campaign configuration.               |
+| Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play. |
+| History                | The subcomponent of World state containing retained data describing past Campaign state or events. Rules and reports may consult History.                                    |
+| Committed state        | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                    |
+
+## Data and information qualities
+
+Classifications of a value or piece of information, independent of where it lives in Campaign state.
+
 | Term                       | Definition                                                                                                                                                                                                                                               |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Type                       | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration.                                               |
-| Property                   | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                                                                      |
-| Campaign                   | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                                                                                      |
-| Session                    | An execution context that owns selection of a Campaign, its Campaign state, history navigation, and controller continuation data associated with that history.                                                                                           |
-| Rule                       | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint.                                                                                                                                               |
-| Ruleset                    | The collection of Rules governing a Campaign.                                                                                                                                                                                                            |
-| Game build                 | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                                                                                                                                       |
-| Game Data Record (GDR)     | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated.                                                                                                                   |
-| Campaign state             | Data describing one Campaign, including World state and Campaign configuration. History is a subcomponent of World state.                                                                                                                                |
-| World state                | The component of Campaign state describing the simulated world and its progression, including History as a subcomponent, distinct from Campaign configuration.                                                                                           |
-| Campaign configuration     | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                                                             |
-| Instance ID                | An identifier for one occurrence within a Campaign, unique within a declared identity scope and stable for its lifetime.                                                                                                                                 |
 | Authoritative value        | A value treated as established truth rather than recomputed from other values.                                                                                                                                                                           |
 | Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs.                                                                                                                                                           |
-| History                    | The subcomponent of World state containing retained data describing past Campaign state or events. Rules and reports may consult History.                                                                                                                |
 | Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
-| Committed state            | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                                                                                                |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
 
 # Concepts and contract
