@@ -40,11 +40,11 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID     | Document                                                                        | Status   | Owns                                                                                                                             |
 | ------ | ------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| CMC    | [Campaign Modeling Contract](../specs/foundation/campaign-modeling-contract.md) | Accepted | Campaign-data composition, construction, identity/reference integrity, value classification, and historical preservation.        |
 | CORE   | [Core Concepts](../specs/foundation/core-concepts.md)                           | Draft    | Shared vocabulary for modeling and engine execution, including Campaign, Session, Game build, and committed data.                |
 | DOM    | [Domain Model](../specs/foundation/domain-model.md)                             | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                             |
 | ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                       | Draft    | API hierarchy, role authority, campaign lifecycle, bounded Autopilot AI execution, memory, and deterministic history guarantees. |
-| HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md)       | Stub     | Define reversible sessions, reproducible replay, and durable save/load behavior.                                                 |
-| MODEL  | [Campaign Modeling Contract](../specs/foundation/campaign-modeling-contract.md) | Accepted | Campaign-data composition, construction, identity/reference integrity, value classification, and historical preservation.        |
+| HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md)       | Stub     | Define reversible campaign history, reproducible replay, and durable save/load behavior.                                         |
 | NUMRNG | [Numbers and Randomness](../specs/foundation/numbers-and-randomness.md)         | Stub     | Make every numeric calculation and random outcome reproducible across supported runtimes.                                        |
 | TURN   | [Turn Resolution](../specs/foundation/turn-resolution.md)                       | Stub     | Define exactly when subsystem rules run and which state each phase reads.                                                        |
 

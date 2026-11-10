@@ -22,7 +22,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and relationships represented in player reports.
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for resource flows, purchases, and Agency upgrades.
 - Uses [Factions](../mechanics/factions.md) for Faction activity, operation occurrence rules, and defeat conditions.
-- Uses [History and Persistence](../foundation/history-and-persistence.md) for the retained facts and restored session state available for player reports.
+- Uses [History and Persistence](../foundation/history-and-persistence.md) for the retained facts and restored campaign state available for player reports.
 - Uses [Investigations](../mechanics/investigations.md) for Investigation progress, completion, and commitment costs.
 - Uses [Leads and Progression](../mechanics/leads-and-progression.md) for Lead prerequisites, completion facts, and progression effects.
 - Uses [Missions](../mechanics/missions.md) for Mission commitments, results, and Campaign consequences.

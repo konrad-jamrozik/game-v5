@@ -323,7 +323,7 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus().map((file) => ({
         ...file,
-        content: file.content.replaceAll('AAA', 'MODEL').replaceAll('aaa-', 'model-'),
+        content: file.content.replaceAll('AAA', 'CMC').replaceAll('aaa-', 'cmc-'),
       })),
       'docs/specs/foundation/alpha.md',
       '# Edge cases and failure behavior\n\nFailures are defined.\n\n',

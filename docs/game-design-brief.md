@@ -151,7 +151,7 @@ Management commands take immediate effect. **Advance turn** atomically resolves 
 - Undo restores state, randomness, and reports. Redo restores the recorded result without rerolling.
 - A new command after undo replaces the redo continuation.
 - Rejected commands change neither state nor history.
-- UI preferences remain outside gameplay history. Persistent AI memory is restored with the session timeline when needed for automated continuation.
+- UI preferences remain outside gameplay history. Persistent AI memory is restored with the campaign timeline when needed for automated continuation.
 
 Begin with snapshots; optimize history storage later.
 

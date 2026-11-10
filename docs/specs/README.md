@@ -38,10 +38,10 @@ Domain Model applies the shared vocabulary and campaign modeling rules to concre
 ```mermaid
 flowchart TD
     CORE[Core Concepts] -->|used by| ENG[Engine Contract]
-    CORE -->|used by| MODEL[Campaign Modeling Contract]
+    CORE -->|used by| CMC[Campaign Modeling Contract]
     CORE -->|used by| DOM[Domain Model]
-    ENG -->|refined by| MODEL
-    MODEL -->|used by| DOM
+    ENG -->|refined by| CMC
+    CMC -->|used by| DOM
 ```
 
 Arrows run from Dependency to Dependent; this diagram shows the complete explicit relationships among these four documents.
@@ -56,11 +56,11 @@ Arrows run from Dependency to Dependent; this diagram shows the complete explici
 | PLAN    | Governance | [Specification Work Plan and Backlog](governance/work-plan.md)                                       | Specification authoring order, review checkpoints, and work tracking.                                                            |
 | DOM     | Foundation | [Domain Model](foundation/domain-model.md)                                                           | Game concepts, their properties and relationships, and structural domain invariants.                                             |
 | CORE    | Foundation | [Core Concepts](foundation/core-concepts.md)                                                         | Shared vocabulary for modeling and engine execution, including Campaign, Session, Game build, and committed data.                |
-| MODEL   | Foundation | [Campaign Modeling Contract](foundation/campaign-modeling-contract.md)                               | Campaign-data composition, construction, identity/reference integrity, value classification, and historical preservation.        |
+| CMC     | Foundation | [Campaign Modeling Contract](foundation/campaign-modeling-contract.md)                               | Campaign-data composition, construction, identity/reference integrity, value classification, and historical preservation.        |
 | ENG     | Foundation | [Engine Contract](foundation/engine-contract.md)                                                     | API hierarchy, role authority, campaign lifecycle, bounded Autopilot AI execution, memory, and deterministic history guarantees. |
 | NUMRNG  | Foundation | [Numbers and Randomness](foundation/numbers-and-randomness.md)                                       | Make every numeric calculation and random outcome reproducible across supported runtimes.                                        |
 | TURN    | Foundation | [Turn Resolution](foundation/turn-resolution.md)                                                     | Define exactly when subsystem rules run and which state each phase reads.                                                        |
-| HIST    | Foundation | [History and Persistence](foundation/history-and-persistence.md)                                     | Define reversible sessions, reproducible replay, and durable save/load behavior.                                                 |
+| HIST    | Foundation | [History and Persistence](foundation/history-and-persistence.md)                                     | Define reversible campaign history, reproducible replay, and durable save/load behavior.                                         |
 | CAMP    | Mechanics  | [Campaign](mechanics/campaign.md)                                                                    | Define campaign initialization, global panic, and the conditions that start and end play.                                        |
 | AGENT   | Mechanics  | [Agents](mechanics/agents.md)                                                                        | Define agent capability, task availability, development, exhaustion, and recovery.                                               |
 | ECON    | Mechanics  | [Economy and Upgrades](mechanics/economy-and-upgrades.md)                                            | Define resource flows, personnel purchases, and agency improvements.                                                             |

@@ -18,7 +18,7 @@ RNG algorithm, save encoding, or subsystem mechanics.
 - Used by [Campaign](../mechanics/campaign.md) for atomic command commitment and action-history guarantees applied to Campaign configuration changes.
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md), which specifies campaign composition, identity, references, and historical preservation under engine integrity guarantees.
 - Refined by [Developer API](../interfaces/developer-api.md), which specifies Dev mode, full Campaign state inspection, and validated cheat operations.
-- Refined by [History and Persistence](./history-and-persistence.md), which specifies the reversible session, replay, and save/load guarantees.
+- Refined by [History and Persistence](./history-and-persistence.md), which specifies the reversible campaign history, replay, and save/load guarantees.
 - Refined by [Numbers and Randomness](./numbers-and-randomness.md), which specifies the numeric and random behavior required for reproducible execution.
 - Refined by [Player Information](../interfaces/player-information.md), which specifies the complete player knowledge contract and hidden-state boundary.
 - Refined by [Turn Resolution](./turn-resolution.md), which specifies the precise phase order and snapshot rules for executing a turn.
@@ -143,10 +143,12 @@ or Developer API operations.
 
 ## Campaign lifecycle
 
-A newly opened Session has no Current campaign and Dev mode is disabled. This is the main-menu state in Web UI.
+The Session holds the Current campaign selection, Dev mode, and the active Autopilot engagement, if any; none of these
+is persisted. A newly opened Session has no Current campaign and Dev mode is disabled. This is the main-menu state in
+Web UI.
 `session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status.
 `session.campaigns.create(options)` creates a Campaign using the current Game build, with explicit initialization
-inputs sufficient for reproducibility. `session.campaigns.load(save)` restores a saved Session's campaign timeline.
+inputs sufficient for reproducibility. `session.campaigns.load(save)` restores a saved campaign timeline and selects it as the Current campaign.
 Successful creation or load selects the Current campaign and disables Dev mode. Creation starts a fresh timeline
 and fresh Autopilot memory; loading restores the saved timeline and applicable memory.
 

@@ -68,24 +68,25 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 
 ## Campaign and Session contexts
 
-A playthrough, and the execution context that selects it.
+A playthrough, and the runtime context that selects it.
 
-| Term     | Definition                                                                                                                                                     |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                            |
-| Session  | An execution context that owns selection of a Campaign, its Campaign state, history navigation, and controller continuation data associated with that history. |
+| Term     | Definition                                                                                                                                                                                 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                        |
+| Session  | The runtime context of one running game, from start to exit, holding the selection of at most one Campaign and runtime-only access and execution state. Nothing in a Session is persisted. |
 
 ## Campaign state composition
 
 How one Campaign's data divides into components, and which snapshots of it are authoritative.
 
-| Term                   | Definition                                                                                                                                                                   |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign state         | Data describing one Campaign, including World state and Campaign configuration. History is a subcomponent of World state.                                                    |
-| World state            | The component of Campaign state describing the simulated world and its progression, including History as a subcomponent, distinct from Campaign configuration.               |
-| Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play. |
-| History                | The subcomponent of World state containing retained data describing past Campaign state or events. Rules and reports may consult History.                                    |
-| Committed state        | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                    |
+| Term                   | Definition                                                                                                                                                                                                      |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign state         | Data describing one Campaign, including World state and Campaign configuration. History is a subcomponent of World state.                                                                                       |
+| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and History, distinct from Campaign configuration.                                          |
+| Current world state    | The subcomponent of World state other than History: the simulated world as it stands at the selected history position. After undo, it is the state at that earlier position, not the furthest position reached. |
+| Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                    |
+| History                | The subcomponent of World state containing retained data describing past Campaign state or events. Rules and reports may consult History.                                                                       |
+| Committed state        | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                                                       |
 
 ## Data and information qualities
 
@@ -109,11 +110,16 @@ More detailed constraints belong to the specifications using that vocabulary.
 
 ## Campaign and Session
 
-Campaign identifies a playthrough; Campaign state describes its data. Session identifies the execution context that
-selects a Campaign and retains the continuation data associated with its history. A Session can exist with no selected
-Campaign. Campaign state excludes interface preferences and controller continuation data that gameplay Rules do not
-consult. Session access settings are not gameplay Campaign state. This distinction does not prescribe an internal class
-layout or save encoding.
+Campaign identifies a playthrough; Campaign state describes its data. Session is the runtime context of one running
+game: it starts with no selected Campaign when the game starts and ends when the game exits. A Session selects at most
+one Campaign at a time and holds runtime-only access and execution state. Nothing in a Session is persisted, and
+loading saved data never restores a Session.
+
+Continuation data associated with a Campaign's history, such as its undo and redo positions, belongs with that
+Campaign's saved data rather than with the Session. Campaign state excludes interface preferences and controller
+continuation data that gameplay Rules do not consult. Session access settings are not gameplay Campaign state.
+Specifications using this vocabulary define the Session's exact contents and the storage of continuation data. This
+distinction does not prescribe an internal class layout or save encoding.
 
 ## World state and Campaign configuration
 
@@ -122,7 +128,9 @@ World state, while a campaign-wide investigation difficulty multiplier is Campai
 the particular Campaign, regardless of which Session selects it. Campaign configuration supplies inputs to Rules;
 changing it does not modify the Game build's Ruleset or immutable GDRs.
 
-History is a subcomponent of World state, including when it records past Campaign configuration values or changes.
+World state divides into Current world state and History. For example, an Agent's current health is Current world
+state, while a record of the missions that Agent took part in is History. History is a subcomponent of World state,
+including when it records past Campaign configuration values or changes.
 Current Campaign configuration belongs to its own component of Campaign state; historical records about it belong
 to History within World state. This conceptual hierarchy does not require a particular storage layout.
 Interface preferences that gameplay Rules do not consult remain
@@ -132,8 +140,20 @@ outside Campaign state. Mechanics specify permitted configuration changes and wh
 
 Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing.
 Player-visible information describes deliberate ordinary-player exposure. Neither term specifies a particular command,
-query schema, or reveal condition. Authoritative value and Derived value distinguish established facts from calculations;
-that distinction is independent of mutability and visibility.
+query schema, or reveal condition.
+
+## Authoritative and Derived values
+
+An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values and
+the current Rules and GDRs. This classification is independent of mutability: shared base health and a recorded
+Instance ID can be Authoritative values even though neither changes during gameplay. It is also independent of player
+visibility: either kind may be hidden from the player. Caching a current calculation does not change its
+classification as a Derived value.
+
+For example, each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
+value. With two enemies at health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Caching the total does
+not make it an Authoritative value, and hiding either the individual health or the total from the player does not
+change either classification.
 
 # Edge cases and failure behavior
 
@@ -147,7 +167,10 @@ restoration, and storage failures belong to the contracts that specify those ope
 - **History within world:** A retained record of a past difficulty change belongs to History within World state;
   the current difficulty value belongs to Campaign configuration. Both are Campaign state
   ([World state and Campaign configuration](#world-state-and-campaign-configuration)).
-- **Session without a Campaign:** Open an execution context before selecting a playthrough. It is a Session with no
-  selected Campaign, not an empty Campaign ([Campaign and Session](#campaign-and-session)).
+- **Session without a Campaign:** Start the game before selecting a playthrough. It is a Session with no selected
+  Campaign, not an empty Campaign ([Campaign and Session](#campaign-and-session)).
+- **Session not persisted:** Select a Campaign, save it, exit, and start the game again. The new Session has no
+  selected Campaign until the save is loaded, and loading restores the Campaign's saved data but none of the earlier
+  Session's runtime state ([Campaign and Session](#campaign-and-session)).
 - **Data and visibility:** An established resource amount is an Authoritative value, while its calculated total is a
-  Derived value. Hiding either does not change its classification ([Committed state and information](#committed-state-and-information)).
+  Derived value. Hiding either does not change its classification ([Authoritative and Derived values](#authoritative-and-derived-values)).

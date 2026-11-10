@@ -638,7 +638,7 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
         (text) =>
           (text !== 'Requirements' || actual.includes(text)) &&
           (text !== 'Open decisions' || actual.includes(text)) &&
-          (text !== 'Edge cases and failure behavior' || specification.id !== 'MODEL' || actual.includes(text)) &&
+          (text !== 'Edge cases and failure behavior' || specification.id !== 'CMC' || actual.includes(text)) &&
           (text !== 'Acceptance examples' || specification.family !== 'Foundation' || actual.includes(text)),
       )
       const positions = requiredHeadings.map((text) => actual.indexOf(text))

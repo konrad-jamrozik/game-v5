@@ -36,18 +36,18 @@ flowchart LR
 ```mermaid
 flowchart LR
   API["API — TypeScript Player API (Stub)"]
+  CMC["CMC — Campaign Modeling Contract (Accepted)"]
   DEV["DEV — Developer API (Stub)"]
   ENG["ENG — Engine Contract (Draft)"]
   HIST["HIST — History and Persistence (Stub)"]
   INFO["INFO — Player Information (Stub)"]
-  MODEL["MODEL — Campaign Modeling Contract (Accepted)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   TURN["TURN — Turn Resolution (Stub)"]
   ENG --> API
+  ENG --> CMC
   ENG --> DEV
   ENG --> HIST
   ENG --> INFO
-  ENG --> MODEL
   ENG --> NUMRNG
   ENG --> TURN
 ```

@@ -9,7 +9,7 @@
 
 # Purpose and boundaries
 
-Define reversible sessions, reproducible replay, and durable save/load behavior.
+Define reversible campaign history, reproducible replay, and durable save/load behavior.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -19,10 +19,10 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 - Uses [Developer API](../interfaces/developer-api.md) for the detailed isolation and replay behavior of Developer API commands during restoration.
 - Uses [Domain Model](./domain-model.md) for the game structures and identity/reference relationships preserved during restoration.
 - Uses [Numbers and Randomness](./numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
-- Refines [Engine Contract](./engine-contract.md) by specifying the reversible session, replay, and save/load guarantees.
+- Refines [Engine Contract](./engine-contract.md) by specifying the reversible campaign history, replay, and save/load guarantees.
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for restoration, replay, and continuation contracts exercised by scenarios.
 - Used by [Developer API](../interfaces/developer-api.md) for the retained Campaign state and restoration behavior available for debugging.
-- Used by [Player Information](../interfaces/player-information.md) for the retained facts and restored session state available for player reports.
+- Used by [Player Information](../interfaces/player-information.md) for the retained facts and restored campaign state available for player reports.
 - Used by [Terminal CLI](../interfaces/cli.md) for the session and save/load behavior exposed through terminal commands.
 - Used by [TypeScript Player API](../interfaces/typescript-api.md) for the session, restoration, and save/load operations exposed by the player API.
 - Used by [Web UI](../interfaces/web-ui.md) for the session and save/load behavior exposed through browser controls.
@@ -49,11 +49,16 @@ Session is defined by [Core Concepts](core-concepts.md#glossary).
 API surface and execution-role terms and Turn-start checkpoint are owned by the
 [Engine Contract glossary](engine-contract.md#glossary).
 
-TODO: Define storage-specific terms without duplicating shared definitions.
+| Term                         | Definition                                                                                                                                                                                               |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Game storage                 | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                             |
+| Global configuration         | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It contains preferences and defaults for new Campaigns, never Campaign state. |
+| Campaign save                | A persisted snapshot of one Campaign's timeline: its Campaign state at the saved history position and its Controller continuation data.                                                                  |
+| Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.             |
 
 # Concepts and contract
 
-## Session
+## Refined Engine Contract guarantees
 
 Session API selects the Current campaign under [Campaign lifecycle](engine-contract.md#campaign-lifecycle).
 This specification refines [Action history and turn navigation](engine-contract.md#action-history-and-turn-navigation),
@@ -73,6 +78,40 @@ Restoration must preserve [Campaign instances](campaign-modeling-contract.md#cam
 [Historical fact preservation](campaign-modeling-contract.md#historical-fact-preservation). Undo may remove a Campaign
 instance or restore earlier State; redo restores its Instance ID, Archetype, and Constants unchanged. Required
 historical records remain immutable even in an evolving collection. Restoration is not creation of a new occurrence.
+
+## Storage containers
+
+The following conceptual hierarchy shows ownership of persisted and runtime data. It is not a database schema, file
+format, or required class layout.
+
+```text
+Game storage (persisted)
+├── Global configuration (one set)
+└── Campaign saves (zero or more)
+    └── Campaign save
+        ├── Campaign state (at the saved history position)
+        │   ├── Campaign configuration
+        │   └── World state
+        │       ├── Current world state
+        │       └── History
+        └── Controller continuation data
+            ├── Action history (past and retained redo entries) and history cursor
+            └── Autopilot memory checkpoints
+
+Session (runtime, never persisted)
+    Current campaign selection · Dev mode · active Autopilot engagement
+```
+
+A Campaign save contains more than Campaign state because continuing a Campaign also requires Controller continuation
+data. Action history and History are distinct: History is part of World state and Rules may consult it, while action
+history is the undo and redo record of committed commands and Rules never consult it.
+
+Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is
+selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and Campaign saves do not
+contain it. Interface preferences such as volume, language, and tutorial popups belong to Global configuration.
+
+TODO: Specify the configuration cascade between Game build defaults, Global configuration, explicit creation choices,
+and Campaign configuration. Specify whether one Campaign may have more than one Campaign save.
 
 ## Controller state
 
@@ -98,7 +137,7 @@ TODO: Specify save encoding, load validation, and replay procedures under
 the history cursor, retained undo/redo continuation, and Autopilot memory checkpoints. Failed load preserves the
 prior Session; successful load has no active Autopilot engagement and Dev mode disabled.
 
-## Session-owned state
+## Campaign configuration persistence
 
 Campaign configuration is Campaign state under [World state and Campaign configuration](core-concepts.md#world-state-and-campaign-configuration).
 Saving must retain its committed values together with World state. Successful load restores the selected Campaign's
@@ -108,10 +147,12 @@ saved values with creation defaults.
 Undo and redo restore the configuration at the target history position together with the corresponding World state.
 Reproduction of later actions uses the configuration applicable at their original positions, not the configuration
 at the time replay is requested. A configuration change after undo follows the existing timeline-branch rules.
-These requirements do not determine the persistence scope of UI preferences or make Dev mode Campaign state.
+Interface preferences belong to Global configuration, not Campaign state, and Dev mode is never Campaign state.
 
-TODO: Specify storage separation for Current campaign selection, Campaign state, UI preferences, Dev mode, and
-Autopilot memory. History navigation leaves Dev mode unchanged and restores only applicable memory checkpoints.
+Session contents, namely the Current campaign selection, Dev mode, and the active Autopilot engagement, are never
+persisted. Continuation data associated with a Campaign's history is saved with that Campaign, not with the Session.
+
+TODO: Specify storage separation between Campaign state and Controller continuation data within a Campaign save. History navigation leaves Dev mode unchanged and restores only applicable memory checkpoints.
 Detail checkpoint replacement at the same position, discarded-future removal across Autopilot AIs, late-result
 rejection, and cache invalidation. External model conversations must not bypass restored memory boundaries.
 
@@ -124,10 +165,10 @@ Define representation of partially retained futures without changing Engine Cont
 
 - **Campaign configuration isolation:** Save Campaign A, then load a save of Campaign B with different Campaign
   configuration. B's saved values apply. Loading A's save restores A's saved values
-  ([Session-owned state](#session-owned-state)).
+  ([Campaign configuration persistence](#campaign-configuration-persistence)).
 - **Configuration history:** Commit a configuration change. Undo restores the preceding configuration and World
   state; redo restores the committed configuration and World state, including any explicitly specified effects
-  ([Session-owned state](#session-owned-state)).
+  ([Campaign configuration persistence](#campaign-configuration-persistence)).
 
 TODO: Specify action-level and turn-level restoration and save/load scenarios comparing complete Campaign state,
 generated Instance IDs, RNG state, reports, and applicable Autopilot memory. Verify developer-command replay
@@ -135,5 +176,6 @@ with Dev mode disabled and removal of discarded-future memory. Identify each exe
 
 # Open decisions
 
+- TODO: Decide whether one Campaign may have more than one Campaign save, and how saves are identified.
 - TODO: Choose history retention limits, checkpoint storage, save encoding, and storage versioning.
 - TODO: Choose validation and incompatible-save diagnostics under Engine Contract compatibility rules.

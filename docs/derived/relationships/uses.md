@@ -17,6 +17,7 @@ flowchart TD
   API["API — TypeScript Player API (Stub)"]
   CAMP["CAMP — Campaign (Stub)"]
   CLI["CLI — Terminal CLI (Stub)"]
+  CMC["CMC — Campaign Modeling Contract (Accepted)"]
   COMBAT["COMBAT — Combat (Stub)"]
   CORE["CORE — Core Concepts (Draft)"]
   DEV["DEV — Developer API (Stub)"]
@@ -29,7 +30,6 @@ flowchart TD
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
-  MODEL["MODEL — Campaign Modeling Contract (Accepted)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
   TURN["TURN — Turn Resolution (Stub)"]
@@ -48,19 +48,25 @@ flowchart TD
   CAMP --> INIT
   CAMP --> TURN
   CLI --> SCEN
+  CMC --> API
+  CMC --> DOM
+  CMC --> HIST
+  CMC --> INFO
+  CMC --> INIT
+  CMC --> NUMRNG
   COMBAT --> AGENT
   COMBAT --> INFO
   COMBAT --> MISSION
   CORE --> API
   CORE --> CAMP
   CORE --> CLI
+  CORE --> CMC
   CORE --> DEV
   CORE --> DOM
   CORE --> ENG
   CORE --> HIST
   CORE --> INFO
   CORE --> INIT
-  CORE --> MODEL
   CORE --> NUMRNG
   CORE --> TURN
   CORE --> WEB
@@ -110,12 +116,6 @@ flowchart TD
   MISSION --> INIT
   MISSION --> LEAD
   MISSION --> TURN
-  MODEL --> API
-  MODEL --> DOM
-  MODEL --> HIST
-  MODEL --> INFO
-  MODEL --> INIT
-  MODEL --> NUMRNG
   NUMRNG --> AGENT
   NUMRNG --> COMBAT
   NUMRNG --> ECON

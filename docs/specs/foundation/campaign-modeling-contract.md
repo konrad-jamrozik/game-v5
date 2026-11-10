@@ -1,13 +1,13 @@
 # Campaign Modeling Contract
 
-| Metadata                 | Value                                                                                                                                                        |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Spec ID                  | MODEL                                                                                                                                                        |
-| Family                   | Foundation                                                                                                                                                   |
-| Status                   | Accepted                                                                                                                                                     |
-| Acceptance reference     | Project owner approval in this task: "OK mark the mf as Accepted and update any other docs as appropriate"                                                   |
-| Reorganization reference | Project owner requested the Core Concepts split and relocation of Session in this chat; retained campaign modeling rules preserve their recorded acceptance. |
-| Conventions              | [Specification conventions](../governance/spec-conventions.md)                                                                                               |
+| Metadata                 | Value                                                                                                                                                                                                                                                                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID                  | CMC                                                                                                                                                                                                                                                                                                                                         |
+| Family                   | Foundation                                                                                                                                                                                                                                                                                                                                  |
+| Status                   | Accepted                                                                                                                                                                                                                                                                                                                                    |
+| Acceptance reference     | Project owner approval in this task: "OK mark the mf as Accepted and update any other docs as appropriate"                                                                                                                                                                                                                                  |
+| Reorganization reference | Project owner requested the Core Concepts split and relocation of Session in this chat; retained campaign modeling rules preserve their recorded acceptance. Project owner later requested moving the meanings of Authoritative and Derived values to Core Concepts and renaming Spec ID MODEL to CMC to avoid confusion with Domain Model. |
+| Conventions              | [Specification conventions](../governance/spec-conventions.md)                                                                                                                                                                                                                                                                              |
 
 # Purpose and boundaries
 
@@ -112,20 +112,12 @@ Required historical references remain resolvable. Relationships must not be infe
 References that can change belong in State; fixed references belong in Constants. Instance ID and the Archetype reference
 are separate immutable properties. Reference mutability is independent of the target’s mutability.
 
-## Authoritative and Derived values
+## Value classification
 
-An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values
-and current rules and GDRs. This classification is separate from mutability. Shared base health and a
-recorded Instance ID can be Authoritative values even though neither changes during gameplay.
-
-Each specification using these concepts must declare which of its values are Authoritative values and which are Derived
-values, using the glossary definitions. Caching a current calculation must not change its classification as a Derived value.
-Classification must be independent of player visibility: either kind may be hidden from the player. Retaining a past
+Authoritative value and Derived value, including their independence from mutability, caching, and player visibility,
+are defined in [Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. Each specification using these
+concepts must declare which of its values are Authoritative values and which are Derived values. Retaining a past
 calculation as a historical fact follows [Historical fact preservation](#historical-fact-preservation).
-
-In the enemy example, declare each enemy's current health an Authoritative value and their total current health a Derived value.
-Initially the total is 20. After enemy_1 takes damage, it is 17. Caching the total does not make it an Authoritative value, and hiding
-either the individual health or the total from the player does not change the classification.
 
 Each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle property
 within its State property. The values of these two properties are Authoritative values. The completion count for a
