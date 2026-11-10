@@ -162,7 +162,9 @@ history never removes History within World state.
 After such a save is loaded, the Baseline is the earliest position: undo before it is unavailable, and replay of
 later actions starts from it.
 
-TODO: Choose the Save size limit value and specify whether a save whose Campaign state alone exceeds the limit fails.
+The Save size limit is 100 MiB. If a Campaign save would exceed the limit even without action history, the save
+operation fails: no Campaign save is written or changed, the Current save is unchanged, and the Session keeps its
+Current campaign and history.
 
 ## Replay and persistence
 
@@ -207,6 +209,8 @@ Define representation of partially retained futures without changing Engine Cont
 - **History dropped at the size limit:** At turn 40, save a Campaign whose action history would exceed the Save size
   limit. The save reports dropped history. Load it: the turn 40 position is the Baseline, `undoAction()` and
   `undoTurn()` are unavailable, and new actions replay from it ([Save size limit](#save-size-limit)).
+- **Save too large without history:** Save a Campaign whose Campaign state alone exceeds 100 MiB. The save fails,
+  every existing Campaign save is unchanged, and undo and redo in the Session still work ([Save size limit](#save-size-limit)).
 
 TODO: Specify action-level and turn-level restoration and save/load scenarios comparing complete Campaign state,
 generated Instance IDs, RNG state, reports, and applicable Autopilot memory. Verify developer-command replay
@@ -214,6 +218,5 @@ with Dev mode disabled and removal of discarded-future memory. Identify each exe
 
 # Open decisions
 
-- TODO: Choose the Save size limit value.
 - TODO: Choose checkpoint storage, save encoding, and storage versioning.
 - TODO: Choose validation and incompatible-save diagnostics under Engine Contract compatibility rules.
