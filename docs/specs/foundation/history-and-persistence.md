@@ -49,12 +49,14 @@ Session is defined by [Core Concepts](core-concepts.md#glossary).
 API surface and execution-role terms and Turn-start checkpoint are owned by the
 [Engine Contract glossary](engine-contract.md#glossary).
 
-| Term                         | Definition                                                                                                                                                                                               |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Game storage                 | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                             |
-| Global configuration         | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It contains preferences and defaults for new Campaigns, never Campaign state. |
-| Campaign save                | A persisted snapshot of one Campaign's timeline: its Campaign state at the saved history position and its Controller continuation data.                                                                  |
-| Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.             |
+| Term                         | Definition                                                                                                                                                                                                                                               |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Game storage                 | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                                                                             |
+| Global configuration         | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It contains preferences and defaults for new Campaigns, never Campaign state.                                                 |
+| Campaign save                | A persisted snapshot of one Campaign's timeline, identified by its Campaign save ID and recording its Campaign ID, its Campaign state at the saved history position, and its Controller continuation data. One Campaign may have several Campaign saves. |
+| Campaign ID                  | The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that Campaign. It is not Campaign state, Rules never consult it, and it is distinct from the Instance ID of the Campaign instance.       |
+| Campaign save ID             | The ULID identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                                     |
+| Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.                                                             |
 
 # Concepts and contract
 
@@ -89,6 +91,7 @@ Game storage (persisted)
 ├── Global configuration (one set)
 └── Campaign saves (zero or more)
     └── Campaign save
+        ├── Campaign save ID and Campaign ID
         ├── Campaign state (at the saved history position)
         │   ├── Campaign configuration
         │   └── World state
@@ -106,12 +109,19 @@ A Campaign save contains more than Campaign state because continuing a Campaign 
 data. Action history and History are distinct: History is part of World state and Rules may consult it, while action
 history is the undo and redo record of committed commands and Rules never consult it.
 
+One Campaign may have several Campaign saves. For example, a player may keep a timeline branch that a new action
+after undo would otherwise discard, or keep an earlier position if history retention limits truncate a timeline.
+Campaign saves of one Campaign share its Campaign ID and have distinct Campaign save IDs. Two Campaigns created with
+equal Campaign configuration and seed and given equal commands have equal Campaign state but distinct Campaign IDs;
+each may be saved. Identifier format follows [Unique identifiers](../governance/spec-conventions.md#unique-identifiers).
+
 Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is
 selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and Campaign saves do not
 contain it. Interface preferences such as volume, language, and tutorial popups belong to Global configuration.
 
 TODO: Specify the configuration cascade between Game build defaults, Global configuration, explicit creation choices,
-and Campaign configuration. Specify whether one Campaign may have more than one Campaign save.
+and Campaign configuration. Specify saving as a new Campaign save versus overwriting an existing one, forking a
+timeline branch, and how history truncation interacts with existing Campaign saves.
 
 ## Controller state
 
@@ -176,6 +186,6 @@ with Dev mode disabled and removal of discarded-future memory. Identify each exe
 
 # Open decisions
 
-- TODO: Decide whether one Campaign may have more than one Campaign save, and how saves are identified.
+- TODO: Choose save-overwrite, fork, and history-truncation behavior for multiple Campaign saves of one Campaign.
 - TODO: Choose history retention limits, checkpoint storage, save encoding, and storage versioning.
 - TODO: Choose validation and incompatible-save diagnostics under Engine Contract compatibility rules.

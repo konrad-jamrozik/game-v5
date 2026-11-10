@@ -12,6 +12,7 @@
 | Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                          |
 | Modeling revision     | Project owner requested language-independent Types, foundation-owned Campaign vocabulary, and embedded Foundation examples.    |
 | Precedent revision    | Project owner requested that Draft documents never serve as an argument for a design choice.                                   |
+| Identifier revision   | Project owner requested ULIDs for unique identifiers unless a stated technical requirement rules them out.                     |
 | Autopilot revision    | Project owner requested Autopilot terminology in place of delegation and a Session controller role independent of caller kind. |
 
 # Purpose and boundaries
@@ -386,6 +387,17 @@ Include worked numerical examples for normal cases and boundaries. Equations, pr
 Public API specifications define exact names, types, argument shapes, outputs, and errors when they are ready for acceptance. Conceptual domain specifications need not mirror implementation storage layouts.
 
 GDR tables define stable GDR identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit GDR. Use parameter references instead of copying balance values throughout mechanics specifications.
+
+## Unique identifiers
+
+When a specification requires a unique identifier for a record, it must specify a
+[ULID](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifier). Do not specify a GUID,
+UUID, or other unique-identifier format unless a ULID cannot satisfy a stated technical requirement; the specification
+must then state that requirement. For example, Campaign IDs and Campaign save IDs are ULIDs.
+
+Identifiers generated within Campaign state, for example Instance IDs, are not ULIDs. A ULID embeds wall-clock time
+and fresh randomness, so generating one during gameplay would break deterministic replay. Those identifiers follow
+their owning contracts.
 
 ## Illustrative and exhaustive enumerations
 
