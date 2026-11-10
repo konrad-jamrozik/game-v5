@@ -11,6 +11,7 @@
 | Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                        |
 | Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                       |
 | Modeling revision     | Project owner requested language-independent Types, foundation-owned Campaign vocabulary, and embedded Foundation examples. |
+| Precedent revision    | Project owner requested that Draft documents never serve as an argument for a design choice.                                |
 
 # Purpose and boundaries
 
@@ -52,6 +53,11 @@ Use one of these statuses in the metadata table:
 | Superseded | A replacement is linked; the document is retained only for historical context.                            |
 
 Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Record the acceptance reference when a document is accepted. Do not infer approval from silence. Work may explore a draft when requested, but must not silently settle its open design decisions.
+
+Only Accepted content constrains design decisions. Stub and Draft content may be revised or rewritten entirely, so
+its current wording, terms, API names, or the effort of changing it is never a reason to keep a design choice. Justify
+proposals on their merits and on Accepted contracts. Draft content may be cited to identify what a proposal would
+change.
 
 Record document status only in the metadata Status row. Do not repeat that a document is Draft, Stub, unaccepted,
 proposed, or awaiting review in body paragraphs, notices, Review metadata rows, or Open decisions. Work tracking may
