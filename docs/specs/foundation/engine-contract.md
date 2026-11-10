@@ -52,6 +52,7 @@ RNG algorithm, save encoding, or subsystem mechanics.
 | Developer API         | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled.                                                                                                                                                                                    |
 | Autopilot memory API  | The API surface through which the active Autopilot AI reads and writes its Autopilot memory.                                                                                                                                                                                                                                                    |
 | Current campaign      | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                                                                                     |
+| Current save          | The save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                                                                                                     |
 | Dev mode              | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                              |
 | Turn-start checkpoint | A history position immediately after campaign creation or a committed Advance turn action, before subsequent actions.                                                                                                                                                                                                                           |
 
@@ -80,6 +81,7 @@ Engine API
 │   │   ├── create(options)
 │   │   ├── load(save)
 │   │   ├── save()
+│   │   ├── saveAsNew()
 │   │   └── close()
 │   ├── history
 │   │   ├── getStatus()
@@ -143,8 +145,8 @@ or Developer API operations.
 
 ## Campaign lifecycle
 
-The Session holds the Current campaign selection, Dev mode, and the active Autopilot engagement, if any; none of these
-is persisted. A newly opened Session has no Current campaign and Dev mode is disabled. This is the main-menu state in
+The Session holds the Current campaign selection, its Current save, Dev mode, and the active Autopilot engagement, if
+any; none of these is persisted. A newly opened Session has no Current campaign and Dev mode is disabled. This is the main-menu state in
 Web UI.
 `session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status.
 `session.campaigns.create(options)` creates a Campaign using the current Game build, with explicit initialization
@@ -301,7 +303,13 @@ stale external conversation from an undone future must not accompany a new Autop
 
 ## Save and load
 
-`session.campaigns.save()` captures complete continuation state, the action-history cursor, retained undo/redo
+`session.campaigns.save()` writes the Current campaign to its Current save, replacing that save's contents. When the
+Current campaign has no Current save, it creates a new save and makes that the Current save.
+`session.campaigns.saveAsNew()` always creates a new save of the same Campaign and makes that the Current save; every
+earlier save is unchanged. Forking a timeline uses `saveAsNew()`: there is no separate fork operation, and a fork
+keeps the Campaign's identity.
+
+A save captures complete continuation state, the action-history cursor, retained undo/redo
 continuation, and Autopilot memory checkpoints associated with that timeline. A successful load restores those
 contents atomically with no active Autopilot engagement and Dev mode disabled. Saves contain hidden Campaign state and
 must never be exposed to Autopilot AI as readable gameplay information. Encoding, retention limits, validation,
@@ -350,6 +358,9 @@ human's memory; engine-supplied Autopilot AI context nevertheless follows [Autop
   save after a gameplay action before Advance turn, then create Campaign B. Load the saved Campaign A and obtain the
   exact saved continuation with Dev mode disabled and no active Autopilot engagement. A corrupt load leaves Campaign A
   unchanged ([Campaign lifecycle](#campaign-lifecycle), [Save and load](#save-and-load)).
+- **Fork by saving as new:** Load save S1 and commit actions. `saveAsNew()` creates S2 and makes it the Current save.
+  Undo two actions and commit a different action, then `save()`. S2 contains the new branch; S1 still contains the
+  original future. Both belong to the same Campaign ([Save and load](#save-and-load)).
 - **Developer isolation:** Enable Dev mode and inspect hidden difficulty H through Developer API. Player API still
   hides H. Engage Autopilot with `untilTurnAdvanced`; its queries and errors hide H, its developer calls fail, and
   its first committed Advance turn ends execution. A late action fails. Disable Dev mode after disengagement and

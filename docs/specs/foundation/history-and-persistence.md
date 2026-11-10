@@ -57,6 +57,7 @@ API surface and execution-role terms and Turn-start checkpoint are owned by the
 | Campaign ID                  | The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that Campaign. It is not Campaign state, Rules never consult it, and it is distinct from the Instance ID of the Campaign instance.       |
 | Campaign save ID             | The ULID identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                                     |
 | Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.                                                             |
+| History retention limit      | The maximum number of turns of action history a timeline retains; older Turn-start checkpoints and their entries are discarded as play advances.                                                                                                         |
 
 # Concepts and contract
 
@@ -102,7 +103,7 @@ Game storage (persisted)
             └── Autopilot memory checkpoints
 
 Session (runtime, never persisted)
-    Current campaign selection · Dev mode · active Autopilot engagement
+    Current campaign selection · Current save · Dev mode · active Autopilot engagement
 ```
 
 A Campaign save contains more than Campaign state because continuing a Campaign also requires Controller continuation
@@ -115,13 +116,16 @@ Campaign saves of one Campaign share its Campaign ID and have distinct Campaign 
 equal Campaign configuration and seed and given equal commands have equal Campaign state but distinct Campaign IDs;
 each may be saved. Identifier format follows [Unique identifiers](../governance/spec-conventions.md#unique-identifiers).
 
+Saving overwrites the Current save, and saving as new creates another Campaign save of the same Campaign, under
+[Save and load](engine-contract.md#save-and-load). A fork is a Campaign save created by saving as new; it keeps the
+Campaign ID and receives a new Campaign save ID.
+
 Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is
 selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and Campaign saves do not
 contain it. Interface preferences such as volume, language, and tutorial popups belong to Global configuration.
 
 TODO: Specify the configuration cascade between Game build defaults, Global configuration, explicit creation choices,
-and Campaign configuration. Specify saving as a new Campaign save versus overwriting an existing one, forking a
-timeline branch, and how history truncation interacts with existing Campaign saves.
+and Campaign configuration.
 
 ## Controller state
 
@@ -136,8 +140,24 @@ be restored from action history or saves.
 
 TODO: Specify storage and restoration procedures for atomic Player API and Developer API action-history entries,
 complete continuation state, memory checkpoints, and retained redo continuation under Engine Contract.
-Define history retention limits without an additional rewind penalty. Represent Turn-start checkpoints using
+Represent Turn-start checkpoints using
 Engine Contract navigation targets; individual actions remain separate history entries within an Autopilot engagement.
+
+### History retention limit
+
+The History retention limit bounds how many turns of action history a timeline retains, as a safety measure against
+unbounded storage growth rather than a gameplay rule; no rewind penalty is added. The proposed value is 1000 turns.
+When a committed Advance turn would make the retained timeline exceed the limit, the oldest Turn-start checkpoint is
+discarded together with the action-history entries and Autopilot memory checkpoints before the new earliest retained
+Turn-start checkpoint. For example, with a limit of 1000 turns, after advancing to turn 1001 the earliest undo target
+is the start of turn 2; after advancing to turn 1002 it is the start of turn 3.
+
+Truncation applies to the timeline in the Session and reaches a Campaign save only when that save is next written.
+Other Campaign saves of the same Campaign keep their own retained history. Truncation never removes History within
+World state, and restoring the earliest retained position must not depend on replay from campaign creation.
+
+TODO: Decide whether retained redo entries count toward the History retention limit, confirm the limit value, and
+specify how the earliest retained position is stored.
 
 ## Replay and persistence
 
@@ -186,6 +206,6 @@ with Dev mode disabled and removal of discarded-future memory. Identify each exe
 
 # Open decisions
 
-- TODO: Choose save-overwrite, fork, and history-truncation behavior for multiple Campaign saves of one Campaign.
-- TODO: Choose history retention limits, checkpoint storage, save encoding, and storage versioning.
+- TODO: Decide whether retained redo entries count toward the History retention limit, and confirm its value.
+- TODO: Choose checkpoint storage, save encoding, and storage versioning.
 - TODO: Choose validation and incompatible-save diagnostics under Engine Contract compatibility rules.
