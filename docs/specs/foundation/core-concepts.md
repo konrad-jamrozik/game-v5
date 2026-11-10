@@ -86,7 +86,14 @@ How one Campaign's data divides into components, and which snapshots of it are a
 | Current world state    | The subcomponent of World state other than History: the simulated world as it stands at the selected history position. After undo, it is the state at that earlier position, not the furthest position reached. |
 | Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                    |
 | History                | The subcomponent of World state containing retained data describing past Campaign state or events. Rules and reports may consult History.                                                                       |
-| Committed state        | Complete Campaign state before or after an accepted command, not intermediate processing.                                                                                                                       |
+
+## Campaign state timing
+
+Terms describing when Campaign state is observed, not which part of it.
+
+| Term            | Definition                                                                                                                                                                                                                                                                 |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Committed state | Complete Campaign state, including Campaign configuration and all of World state, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a component; every retained history position is a Committed state. |
 
 ## Data and information qualities
 
@@ -139,7 +146,9 @@ outside Campaign state. Mechanics specify permitted configuration changes and wh
 
 ## Committed state and information
 
-Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing.
+Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing. For
+example, the position restored by undo is a Committed state, while values computed partway through Advance turn
+processing are not.
 Player-visible information describes deliberate ordinary-player exposure. Neither term specifies a particular command,
 query schema, or reveal condition.
 
