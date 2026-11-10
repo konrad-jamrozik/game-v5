@@ -1,19 +1,19 @@
 # Specification Conventions
 
-| Metadata              | Value                                                                                                                          |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Spec ID               | CONV                                                                                                                           |
-| Family                | Governance                                                                                                                     |
-| Status                | Accepted                                                                                                                       |
-| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                      |
-| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                    |
-| Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology.                 |
-| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                           |
-| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                          |
-| Modeling revision     | Project owner requested language-independent Types, foundation-owned Campaign vocabulary, and embedded Foundation examples.    |
-| Precedent revision    | Project owner requested that Draft documents never serve as an argument for a design choice.                                   |
-| Identifier revision   | Project owner requested ULIDs for unique identifiers unless a stated technical requirement rules them out.                     |
-| Autopilot revision    | Project owner requested Autopilot terminology in place of delegation and a Session controller role independent of caller kind. |
+| Metadata              | Value                                                                                                                                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID               | CONV                                                                                                                                                     |
+| Family                | Governance                                                                                                                                               |
+| Status                | Accepted                                                                                                                                                 |
+| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                                                |
+| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                                              |
+| Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology.                                           |
+| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                                                     |
+| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                                                    |
+| Modeling revision     | Project owner requested language-independent Types, foundation-owned Campaign vocabulary, and embedded Foundation examples.                              |
+| Precedent revision    | Project owner requested that Draft documents never serve as an argument for a design choice.                                                             |
+| Identifier revision   | Project owner requested ULIDs for Replay-independent identifiers, distinguished from Replay-scoped identifiers that deterministic replay must reproduce. |
+| Autopilot revision    | Project owner requested Autopilot terminology in place of delegation and a Session controller role independent of caller kind.                           |
 
 # Purpose and boundaries
 
@@ -31,15 +31,17 @@ Do not prescribe internal classes, file organization, libraries, or algorithms u
 
 # Glossary
 
-| Term               | Definition                                                                                                                                                                    |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records (GDRs), governance, or planned specification work.               |
-| Registered         | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                                            |
-| Family             | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                               |
-| Requirement        | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                           |
-| Canonical term     | The sole term assigned to one concept within the specification set.                                                                                                           |
-| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                             |
-| Evidence basis     | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships. |
+| Term                          | Definition                                                                                                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Specification                 | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records (GDRs), governance, or planned specification work.               |
+| Registered                    | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                                            |
+| Family                        | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                               |
+| Requirement                   | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                           |
+| Canonical term                | The sole term assigned to one concept within the specification set.                                                                                                           |
+| Acceptance example            | A worked example that identifies the requirements it checks and states testable expected results.                                                                             |
+| Evidence basis                | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships. |
+| Replay-scoped identifier      | A unique identifier that replaying the same committed commands from the same Campaign state must reproduce exactly.                                                           |
+| Replay-independent identifier | A unique identifier outside deterministic replay, for example one identifying a stored record or a runtime operation.                                                         |
 
 # Document lifecycle and ownership
 
@@ -390,14 +392,18 @@ GDR tables define stable GDR identifiers, units, values, references, and their o
 
 ## Unique identifiers
 
-When a specification requires a unique identifier for a record, it must specify a
-[ULID](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifier). Do not specify a GUID,
-UUID, or other unique-identifier format unless a ULID cannot satisfy a stated technical requirement; the specification
-must then state that requirement. For example, Campaign IDs and Campaign save IDs are ULIDs.
+Every specification that introduces a unique identifier must classify it as a Replay-scoped identifier or a
+Replay-independent identifier. The test is whether replaying the same committed commands from the same Campaign state,
+including through undo and redo, must reproduce the same identifier.
 
-Identifiers generated within Campaign state, for example Instance IDs, are not ULIDs. A ULID embeds wall-clock time
-and fresh randomness, so generating one during gameplay would break deterministic replay. Those identifiers follow
-their owning contracts.
+| Kind                          | Required format                                                                                                                                                | Examples                                         |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Replay-scoped identifier      | Generated deterministically from Campaign state under its owning contract; never a ULID or any other format that consults wall-clock time or fresh randomness. | For example, Instance IDs.                       |
+| Replay-independent identifier | A [ULID](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifier).                                                             | For example, Campaign IDs and Campaign save IDs. |
+
+A ULID embeds wall-clock time and fresh randomness, so generating one during replayed gameplay would break
+deterministic replay. Do not specify a GUID, UUID, or other format for a Replay-independent identifier unless a ULID
+cannot satisfy a stated technical requirement; the specification must then state that requirement.
 
 ## Illustrative and exhaustive enumerations
 
