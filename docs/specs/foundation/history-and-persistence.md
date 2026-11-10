@@ -156,8 +156,11 @@ Truncation applies to the timeline in the Session and reaches a Campaign save on
 Other Campaign saves of the same Campaign keep their own retained history. Truncation never removes History within
 World state, and restoring the earliest retained position must not depend on replay from campaign creation.
 
-TODO: Decide whether retained redo entries count toward the History retention limit, confirm the limit value, and
-specify how the earliest retained position is stored.
+The limit applies to the whole retained timeline, including any redo future. Only a committed Advance turn can extend
+the timeline, and any commit after undo discards the redo future first, so the window slides only when the history
+cursor is at the latest retained position.
+
+TODO: Confirm the limit value and specify how the earliest retained position is stored.
 
 ## Replay and persistence
 
@@ -206,6 +209,6 @@ with Dev mode disabled and removal of discarded-future memory. Identify each exe
 
 # Open decisions
 
-- TODO: Decide whether retained redo entries count toward the History retention limit, and confirm its value.
+- TODO: Confirm the History retention limit value.
 - TODO: Choose checkpoint storage, save encoding, and storage versioning.
 - TODO: Choose validation and incompatible-save diagnostics under Engine Contract compatibility rules.
