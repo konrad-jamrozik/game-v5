@@ -49,16 +49,16 @@ Session is defined by [Core Concepts](core-concepts.md#glossary).
 API surface and execution-role terms and Turn-start checkpoint are owned by the
 [Engine Contract glossary](engine-contract.md#glossary).
 
-| Term                         | Definition                                                                                                                                                                                                                                               |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Game storage                 | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                                                                             |
-| Global configuration         | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It contains preferences and defaults for new Campaigns, never Campaign state.                                                 |
-| Campaign save                | A persisted snapshot of one Campaign's timeline, identified by its Campaign save ID and recording its Campaign ID, its Campaign state at the saved history position, and its Controller continuation data. One Campaign may have several Campaign saves. |
-| Campaign ID                  | The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that Campaign. It is not Campaign state, Rules never consult it, and it is distinct from the Instance ID of the Campaign instance.       |
-| Campaign save ID             | The ULID identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                                     |
-| Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.                                                             |
-| Save size limit              | The maximum size of one Campaign save on disk, fixed by the Game build.                                                                                                                                                                                  |
-| Baseline                     | The complete Campaign state at the earliest position a Campaign save can restore: the initial Campaign state, or the saved Campaign state when the save's action history was dropped.                                                                    |
+| Term                         | Definition                                                                                                                                                                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Game storage                 | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                                                                                 |
+| Global configuration         | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It contains preferences and defaults for new Campaigns, stores only values the player has set, and never contains Campaign state. |
+| Campaign save                | A persisted snapshot of one Campaign's timeline, identified by its Campaign save ID and recording its Campaign ID, its Campaign state at the saved history position, and its Controller continuation data. One Campaign may have several Campaign saves.     |
+| Campaign ID                  | The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that Campaign. It is not Campaign state, Rules never consult it, and it is distinct from the Instance ID of the Campaign instance.           |
+| Campaign save ID             | The ULID identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                                         |
+| Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.                                                                 |
+| Save size limit              | The maximum size of one Campaign save on disk, fixed by the Game build.                                                                                                                                                                                      |
+| Baseline                     | The complete Campaign state at the earliest position a Campaign save can restore: the initial Campaign state, or the saved Campaign state when the save's action history was dropped.                                                                        |
 
 # Concepts and contract
 
@@ -125,8 +125,36 @@ Global configuration is read when a Session starts, so its settings apply at the
 selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and Campaign saves do not
 contain it. Interface preferences such as volume, language, and tutorial popups belong to Global configuration.
 
-TODO: Specify the configuration cascade between Game build defaults, Global configuration, explicit creation choices,
-and Campaign configuration.
+### Configuration cascade
+
+Three kinds of setting are distinct. Only the last two take part in the configuration cascade.
+
+| Kind                   | For example                             | Where it lives                            | Persisted         |
+| ---------------------- | --------------------------------------- | ----------------------------------------- | ----------------- |
+| Session access setting | Dev mode                                | Session                                   | Never             |
+| Global configuration   | Volume, language, new-Campaign defaults | Game storage                              | Yes, one set      |
+| Campaign configuration | Investigation difficulty multiplier     | Campaign state, within each Campaign save | Yes, per Campaign |
+
+The effective value of each setting follows this complete rule set:
+
+| Setting scope     | Effective value                                                                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Global preference | A value stored in Global configuration overrides the Game build default.                                                             |
+| New Campaign      | An explicit creation choice overrides a new-Campaign default stored in Global configuration, which overrides the Game build default. |
+| Existing Campaign | Its own Campaign configuration applies, including changes committed during play and restored by undo, redo, and load.                |
+
+Campaign creation resolves every Campaign configuration value through this cascade and records the complete result in
+the initial Campaign state; no Campaign configuration value is left to be resolved later. Values are copied at
+creation, not inherited: changing a new-Campaign default or a Game build default never changes an existing Campaign,
+and loading a Campaign save restores its Campaign configuration regardless of the current Global configuration.
+
+Global configuration stores only values the player has set. A setting the player has not set follows the current
+Game build default, so a later Game build's changed default reaches it; resetting a setting removes its stored value.
+If a stored value is invalid in the current Game build, the Game build default applies and the problem is reported;
+starting the game never fails because of an invalid stored value.
+
+Creating a Campaign does not change the stored new-Campaign defaults. The player changes them only through a separate,
+explicit action. Campaign-specific overrides of global preferences are out of scope.
 
 ## Controller state
 
@@ -206,6 +234,9 @@ Define representation of partially retained futures without changing Engine Cont
 - **Configuration history:** Commit a configuration change. Undo restores the preceding configuration and World
   state; redo restores the committed configuration and World state, including any explicitly specified effects
   ([Campaign configuration persistence](#campaign-configuration-persistence)).
+- **Defaults copied at creation:** With a stored new-Campaign default difficulty of hard, create Campaign A without an
+  explicit choice and Campaign B choosing easy. A records hard and B records easy. Changing the stored default to
+  normal changes neither A nor B, and loading either save restores its own value ([Configuration cascade](#configuration-cascade)).
 - **History dropped at the size limit:** At turn 40, save a Campaign whose action history would exceed the Save size
   limit. The save reports dropped history. Load it: the turn 40 position is the Baseline, `undoAction()` and
   `undoTurn()` are unavailable, and new actions replay from it ([Save size limit](#save-size-limit)).

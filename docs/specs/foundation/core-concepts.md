@@ -117,7 +117,8 @@ loading saved data never restores a Session.
 
 Continuation data associated with a Campaign's history, such as its undo and redo positions, belongs with that
 Campaign's saved data rather than with the Session. Campaign state excludes interface preferences and controller
-continuation data that gameplay Rules do not consult. Session access settings are not gameplay Campaign state.
+continuation data that gameplay Rules do not consult. Session access settings are not gameplay Campaign state: they are runtime-only, while Campaign configuration belongs
+to one Campaign and application-wide preferences belong to neither.
 Specifications using this vocabulary define the Session's exact contents and the storage of continuation data. This
 distinction does not prescribe an internal class layout or save encoding.
 
