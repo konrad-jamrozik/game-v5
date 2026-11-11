@@ -14,10 +14,10 @@ owns the meanings of its glossary terms independently of the contracts that use 
 campaign-data composition, gameplay mechanics, persistence procedures, or interface behavior.
 
 - Used by [Campaign](../mechanics/campaign.md) for Campaign state, World state, and Campaign configuration meanings applied to adjustable campaign parameters.
-- Used by [Campaign Modeling Contract](./campaign-modeling-contract.md) for shared modeling vocabulary and value meanings applied to campaign-data constraints.
+- Used by [Campaign Modeling Contract](./campaign-modeling-contract.md) for shared modeling vocabulary, Rule kind, and value meanings applied to campaign-data constraints.
 - Used by [Developer API](../interfaces/developer-api.md) for Campaign state and Authoritative value meanings used in full-state inspection.
-- Used by [Domain Model](./domain-model.md) for Type, Campaign state, Instance ID, and immutable-data meanings used to describe game concepts.
-- Used by [Engine Contract](./engine-contract.md) for Campaign, Session, Game build, identity, and information meanings used in execution guarantees.
+- Used by [Domain Model](./domain-model.md) for Type, Campaign state, Rule kind, Instance ID, and immutable-data meanings used to describe game concepts.
+- Used by [Engine Contract](./engine-contract.md) for Campaign, Session, Game build, Rule kind, identity, and information meanings used in execution guarantees.
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for Campaign state and Rule meanings used to bound what gameplay code may read.
 - Used by [History and Persistence](./history-and-persistence.md) for Session, Campaign state, History, and Committed state meanings used in storage and restoration.
 - Used by [Initial Campaign Content](../content/initial-campaign.md) for Type, GDR, and Game build meanings used to describe starting data.
@@ -61,12 +61,13 @@ Language-independent vocabulary for describing and identifying model data.
 
 What a version of the game supplies: shared by every Campaign and unchanged during play.
 
-| Term                   | Definition                                                                                                                                                                                          |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Rule                   | A declared statement governing a calculation or valid game behavior; for example, a formula, a constraint, or a statement of when something is created in a Campaign and with which initial values. |
-| Ruleset                | The collection of Rules governing a Campaign.                                                                                                                                                       |
-| Game build             | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                                                                                  |
-| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated.                                                              |
+| Term                   | Definition                                                                                                                                                                                                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rule                   | A declared statement governing game behavior, belonging to exactly one Rule kind; for example, a formula producing a Derived value, a condition permitting a player action, or a statement of when new data is created in a Campaign and with which initial values. |
+| Rule kind              | The classification of a Rule by its relationship to Campaign state, determining what a specification stating that Rule must state. The exhaustive Rule kinds are Calculation, Eligibility, Effect, Creation, and Invariant.                                         |
+| Ruleset                | The collection of Rules governing a Campaign.                                                                                                                                                                                                                       |
+| Game build             | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                                                                                                                                                  |
+| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated.                                                                                                                              |
 
 ## Campaign and Session contexts
 
@@ -116,6 +117,56 @@ Type and Property describe data independently of a programming language. Rule an
 Game build supplies shared data and executable implementation. These meanings apply across the complete game contract.
 Glossary definitions establish vocabulary without choosing an API, storage representation, or campaign-data composition.
 More detailed constraints belong to the specifications using that vocabulary.
+
+## Rule kinds
+
+Every Rule has exactly one Rule kind. Rule kinds exist only because each carries a different contract: the kind
+determines what a specification stating the Rule must state. The following table is the exhaustive set of Rule kinds.
+
+| Rule kind   | Relationship to Campaign state                                                | What a specification must state                                                                                                                                | Example                                                                                            |
+| ----------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Calculation | Changes nothing; produces a Derived value from Authoritative values and GDRs. | Its inputs and formula. A Calculation Rule never changes Campaign state and never consumes gameplay randomness.                                                | Upkeep for one turn equals the rate multiplied by the serving-agent count.                         |
+| Eligibility | Changes nothing; decides whether a player action is permitted.                | The condition, and what the player observes when it fails. A rejected action changes nothing.                                                                  | Illustratively, not a selected gameplay rule: an Agent In transit cannot be assigned to a Mission. |
+| Effect      | Changes existing Campaign state.                                              | When it applies, which values change, and by how much.                                                                                                         | Deduct upkeep from Agency money.                                                                   |
+| Creation    | Adds new data to Campaign state, identified by a fresh Instance ID.           | When it applies, the Type of the new data, the initial value of each of its properties and the source of each value, and that it receives a fresh Instance ID. | Starting an Investigation creates one with progress 0.                                             |
+| Invariant   | Changes nothing; constrains every Committed state.                            | The condition and its scope. A violation is an engine or data defect, not a gameplay outcome.                                                                  | At most one Active Investigation per Lead.                                                         |
+
+A Rule is named after its kind, for example a Calculation Rule or a Creation Rule. One mechanic usually combines
+several Rules of different kinds. For example, starting an Investigation combines an Eligibility Rule deciding whether
+it may start, a Creation Rule adding the Investigation, and an Effect Rule changing the participating agents' Current
+assignments.
+
+Creating data also changes Campaign state, but Creation is separate from Effect because a Creation Rule carries
+obligations an Effect Rule does not: a fresh Instance ID, and an initial value with its source for every property of
+the new data. [Campaign instance creation](./campaign-modeling-contract.md#campaign-instance-creation) in Campaign
+Modeling Contract applies these obligations to all four properties of each new Campaign instance.
+
+### Properties that are not Rule kinds
+
+The following are properties that a Rule of any kind can have, or concerns owned elsewhere. Making any of them a Rule
+kind would break the classification of each Rule into exactly one kind. This list is exhaustive for the concerns
+deliberately excluded from Rule kinds:
+
+- **Randomness:** whether a Rule consumes gameplay randomness. It is a property, not a kind: only Effect Rules and
+  Creation Rules may consume gameplay randomness; Calculation, Eligibility, and Invariant Rules never do.
+  [Numbers and Randomness](./numbers-and-randomness.md) owns numeric and random behavior.
+- **Timing:** when a Rule applies within a turn. [Turn Resolution](./turn-resolution.md) owns it; a Rule keeps its
+  kind whichever phase applies it.
+- **Visibility:** what the player may observe about a Rule's inputs and results. [Player Information](../interfaces/player-information.md)
+  owns it; it cuts across all kinds.
+- **Retention:** which past values must be kept. It is a requirement on data, not a kind of Rule, and is covered by
+  [Historical fact preservation](./campaign-modeling-contract.md#historical-fact-preservation) in Campaign Modeling
+  Contract.
+
+These links identify owners only; the meanings in this document do not depend on them.
+
+The classification is also deliberately limited in two ways:
+
+- **No finer subdivision:** the five kinds are not subdivided further, for example into random and non-random
+  Effects, because a kind exists only where the statements a specification must make differ.
+- **No implementation prescription:** Rule kinds do not imply functions, classes, modules, or call order, as
+  required by [What belongs in a specification](../governance/spec-conventions.md#what-belongs-in-a-specification).
+  They classify what the game designer writes down.
 
 ## Campaign and Session
 
@@ -184,5 +235,8 @@ restoration, and storage failures belong to the contracts that specify those ope
 - **Session not persisted:** Select a Campaign, save it, exit, and start the game again. The new Session has no
   selected Campaign until the save is loaded, and loading restores the Campaign's saved data but none of the earlier
   Session's runtime state ([Campaign and Session](#campaign-and-session)).
+- **One mechanic, several Rule kinds:** Starting an Investigation is specified by an Eligibility Rule, a Creation
+  Rule, and an Effect Rule on the participating agents' Current assignments; each of these Rules has exactly one Rule
+  kind ([Rule kinds](#rule-kinds)).
 - **Data and visibility:** An established resource amount is an Authoritative value, while its calculated total is a
   Derived value. Hiding either does not change its classification ([Authoritative and Derived values](#authoritative-and-derived-values)).

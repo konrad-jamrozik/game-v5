@@ -14,7 +14,7 @@ Define the engine's API hierarchy and the guarantees it provides when running th
 This document owns observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
 RNG algorithm, save encoding, or subsystem mechanics.
 
-- Uses [Core Concepts](./core-concepts.md) for shared Campaign, Session, Game build, committed-data, identity, and information vocabulary in execution guarantees.
+- Uses [Core Concepts](./core-concepts.md) for shared Campaign, Session, Game build, Rule kind, committed-data, identity, and information vocabulary in execution guarantees.
 - Used by [Campaign](../mechanics/campaign.md) for atomic command commitment and action-history guarantees applied to Campaign configuration changes.
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for the continuation-state guarantee that its non-behavioural guidance helps implementations satisfy.
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md), which specifies campaign composition, identity, references, and historical preservation under engine integrity guarantees.
@@ -179,7 +179,8 @@ phases are not separately exposed action-history entries. Each successful state-
 one action-history entry. Rejected actions and actions with no effect commit no action-history entry and consume
 no gameplay randomness or generated Instance IDs.
 
-Mechanics specifications own eligibility and gameplay effects for `assignAgents(...)` and `purchaseUpgrade(...)`.
+Mechanics specifications own the Eligibility Rules and Effect Rules, under [Rule kinds](core-concepts.md#rule-kinds),
+for `assignAgents(...)` and `purchaseUpgrade(...)`.
 These are examples of the extensible gameplay action inventory; future gameplay actions follow the same atomicity,
 visibility, and replay contract.
 
@@ -324,7 +325,8 @@ and storage failure procedures belong to History and Persistence.
 
 ## Derived value consistency
 
-Queries and Derived value calculations must neither mutate Campaign state nor consume gameplay randomness.
+Queries, Derived value calculations under Calculation Rules, and evaluation of Eligibility Rules must neither mutate
+Campaign state nor consume gameplay randomness.
 Caches must be updated or invalidated when their inputs change, including after restoration. Restored reports and
 Player-visible information must correspond to the restored cursor rather than a discarded future.
 

@@ -277,6 +277,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Build                                                   | [Game build](../foundation/core-concepts.md#glossary)                                                                               | Naming the version of the game's supplied data and executable logic; ordinary build-tool operations retain their meaning.                                                  |
 | ID                                                      | [Instance ID](../foundation/core-concepts.md#glossary)                                                                              | Identifying a Campaign instance; GDR identifiers, document Spec IDs, and other identifiers retain their own descriptions.                                                  |
 | Relationship type                                       | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                                |
+| Rule role; Rule type; Rule category                     | [Rule kind](../foundation/core-concepts.md#glossary)                                                                                | Classifying a Rule; the roles of GDRs in Campaign Modeling Contract keep their name, and one GDR may serve several roles.                                                  |
 | Assignment                                              | [Current assignment](../foundation/domain-model.md#glossary)                                                                        | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                                             |
 | Participation; agent history                            | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Referring to retained participation records, rather than the act of participating or an Agent's broader career.                                                            |
 | Campaign instance kind                                  | [Type](../foundation/core-concepts.md#glossary)                                                                                     | Describing a category of Campaign instances.                                                                                                                               |
@@ -307,7 +308,10 @@ Treat GDRs and Rules as distinct concepts; a GDR is not a Rule. Attribute execut
 behavior; GDRs supply input data. Avoid wording that makes Rules or GDRs perform operations. Follow
 [Campaign initialization](../foundation/campaign-modeling-contract.md#campaign-initialization).
 
-Specify creation of a Campaign instance as a Rule that states when the Campaign instance is created, the initial
+A specification stating a Rule must identify its Rule kind and state every item that Rule kind requires, as defined
+in [Rule kinds](../foundation/core-concepts.md#rule-kinds) in Core Concepts.
+
+Specify creation of a Campaign instance as a Creation Rule that states when the Campaign instance is created, the initial
 values of its properties and the source of each value, and that it receives a fresh Instance ID, as required by
 [Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation). Do not specify
 which code creates it or that code's signature or dependencies; state the resulting facts instead, for example which
@@ -495,6 +499,7 @@ Before acceptance, verify:
 - Every mention uses the full canonical glossary term, including headings, tables, and diagrams. Necessary new formal terms are defined in their owning Glossary; encountered synonyms and mention shortcuts are recorded in Terminology replacements.
 - Every illustrative enumeration is explicitly labeled and contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
+- Every stated Rule identifies its Rule kind and states every item that Rule kind requires.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
 - Worked examples and acceptance scenarios agree with the rules.

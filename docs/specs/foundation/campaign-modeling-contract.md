@@ -13,7 +13,7 @@ Define campaign-data composition, Campaign instance creation, identity, referenc
 
 The Game Design Brief supplies strategic intent; mechanics specifications own detailed gameplay behavior.
 
-- Uses [Core Concepts](./core-concepts.md) for shared modeling vocabulary and value meanings applied to campaign-data constraints.
+- Uses [Core Concepts](./core-concepts.md) for shared modeling vocabulary, Rule kind, and value meanings applied to campaign-data constraints.
 - Refines [Engine Contract](./engine-contract.md) by specifying campaign-data composition, Campaign instance creation, identity, reference, and historical-preservation constraints for campaign integrity and continuation guarantees.
 - Used by [Developer API](../interfaces/developer-api.md) for the four-property Campaign instance structure in which full Campaign state inspection presents each Campaign instance.
 - Used by [Domain Model](./domain-model.md) for Campaign instance composition, creation, and identity/reference constraints applied to game concepts.
@@ -70,8 +70,8 @@ or execution sequencing. Core Concepts supplies the shared vocabulary used to ex
 ## Campaign initialization
 
 Campaign initialization receives setup inputs, immutable Game Data Records (GDRs), and the Ruleset supplied by the
-Game build, and produces the initial Campaign state from them. GDRs supply data; Rules specify calculations,
-permitted behavior, and which Campaign instances the initial Campaign state contains, under
+Game build, and produces the initial Campaign state from them. GDRs supply data; Rules specify calculations and
+permitted behavior, and Creation Rules specify which Campaign instances the initial Campaign state contains, under
 [Campaign instance creation](#campaign-instance-creation). A GDR is not a Rule. Exact starting data and balance
 values are outside this document's ownership. Session lifecycle and publication of Committed state belong to Engine Contract.
 
@@ -94,11 +94,12 @@ Constants, and State. How an implementation stores Campaign instances internally
 
 ### Campaign instance creation
 
-Creation of a Campaign instance, during campaign initialization or gameplay, is specified by a Rule owned by the
-specification that owns the creating behavior. The Rule states when the Campaign instance is created, its Type, and
-the initial values of its Archetype reference, Constants, and State, together with the source of each value; for
-example, a named GDR or a value in Campaign state. The initial values need not all come from the Campaign instance's
-Archetype: a creation Rule may take some of them from another GDR, such as one in the Initialization source role or a
+Creation of a Campaign instance, during campaign initialization or gameplay, is specified by a Creation Rule, under
+[Rule kinds](core-concepts.md#rule-kinds) in Core Concepts, owned by the specification that owns the creating
+behavior. The Creation Rule states when the Campaign instance is created, its Type, and the initial values of its
+Archetype reference, Constants, and State, together with the source of each value; for example, a named GDR or a
+value in Campaign state. The initial values need not all come from the Campaign instance's Archetype: a Creation Rule
+may take some of them from another GDR, such as one in the Initialization source role or a
 Referenced GDR (for example, the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign
 state. Every newly created Campaign instance has a fresh Instance ID under
 [Campaign instance identity](#campaign-instance-identity). Which code creates Campaign instances, and what that code
@@ -155,21 +156,21 @@ implementation interfaces. The following sections illustrate each role.
 
 | Role                   | Relationship to Rules and Campaign state                                                                                                     | Example                                                                                      |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Initialization source  | A creation Rule takes a GDR’s value as the initial value of a property of a new Campaign instance.                                           | A newly created Agency has money 100, the value of the starting-money GDR.                   |
-| Calculation parameter  | The engine reads a GDR when applying a calculation Rule.                                                                                     | The engine reads the rate from the Standard upkeep GDR to calculate upkeep.                  |
-| Archetype              | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by creation Rules. | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID. |
+| Initialization source  | A Creation Rule takes a GDR’s value as the initial value of a property of a new Campaign instance.                                           | A newly created Agency has money 100, the value of the starting-money GDR.                   |
+| Calculation parameter  | The engine reads a GDR when applying a Calculation Rule.                                                                                     | The engine reads the rate from the Standard upkeep GDR to calculate upkeep.                  |
+| Archetype              | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by Creation Rules. | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID. |
 | Referenced GDR         | A Campaign instance holds a reference to a GDR for a purpose other than supplying its Archetype.                                             | An Investigation holds a reference to the Lead GDR it pursues.                               |
 | Key for campaign facts | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                        | The engine records completions against a Lead GDR’s identity.                                |
 
 ## GDR role: initialization source
 
-Consider an illustrative creation Rule for the Agency with starting money:
+Consider an illustrative Creation Rule for the Agency with starting money:
 
 | Element                | Modeling role       | Meaning in this example                                                                                                                   |
 | ---------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Money                  | Type                | Describes a nonnegative integer amount of money.                                                                                          |
 | Starting money         | GDR                 | Has Type Money and value 100.                                                                                                             |
-| Agency creation        | Rule                | Campaign creation creates one Agency Campaign instance with a fresh Instance ID and money in State equal to the starting-money GDR value. |
+| Agency creation        | Creation Rule       | Campaign creation creates one Agency Campaign instance with a fresh Instance ID and money in State equal to the starting-money GDR value. |
 | Agency                 | Campaign instance   | The newly created Agency Campaign instance, with money 100 in State.                                                                      |
 | Agency money           | Authoritative value | Initially 100 in the Agency Campaign instance’s State.                                                                                    |
 | Initial Campaign state | Committed state     | Contains the Agency Campaign instance when campaign creation completes.                                                                   |
@@ -177,7 +178,7 @@ Consider an illustrative creation Rule for the Agency with starting money:
 Starting money is an Initialization source distinct from the Agency's Archetype so that a campaign can vary that one
 value through a separate GDR while the Archetype stays the same.
 
-The example shows only the money initial value; the Agency creation Rule also states the Agency's other initial
+The example shows only the money initial value; the Agency Creation Rule also states the Agency's other initial
 values. When campaign creation completes, the initial Campaign state contains an Agency Campaign instance with a fresh
 Instance ID and money 100 in State, the value of the starting-money GDR. The engine publishes the initial Committed
 state when campaign creation completes.
@@ -185,7 +186,7 @@ state when campaign creation completes.
 ```mermaid
 flowchart LR
     Type["Type: Money"] -.->|describes| GDR["GDR: Starting money · value 100"]
-    Rule["Rule: Agency creation<br/>money starts at the starting-money value"] -->|specifies| Agency["Agency Campaign instance<br/>fresh Instance ID"]
+    Rule["Creation Rule: Agency creation<br/>money starts at the starting-money value"] -->|specifies| Agency["Agency Campaign instance<br/>fresh Instance ID"]
     GDR -->|initial money 100| Agency
     Agency -->|State contains| Money["Authoritative value:<br/>money 100"]
     Agency -->|included in| State["Initial Campaign state:<br/>Committed state"]
@@ -203,18 +204,19 @@ Consider an illustrative upkeep calculation for agents serving in a campaign. It
 | UpkeepRate          | Type                | Describes a nonnegative integer amount of money per serving agent per turn. |
 | Standard upkeep     | GDR                 | Has Type UpkeepRate and value 2 money per serving agent per turn.           |
 | Serving-agent count | Authoritative value | Value in Campaign state, currently 3.                                       |
-| Upkeep calculation  | Rule                | Upkeep for one turn equals the rate multiplied by the serving-agent count.  |
+| Upkeep calculation  | Calculation Rule    | Upkeep for one turn equals the rate multiplied by the serving-agent count.  |
 | Total upkeep        | Derived value       | 2 × 3 = 6 money for this turn.                                              |
+| Upkeep deduction    | Effect Rule         | Deduct total upkeep from Agency money.                                      |
 
 During "advance turn" computation, the engine reads the rate of 2 from the Standard upkeep GDR, which conforms to
 Type UpkeepRate, and the serving-agent count of 3, an Authoritative value in Campaign state. The engine applies the
-upkeep calculation Rule to these inputs, producing total upkeep of 6, a Derived value. The engine deducts 6 from the campaign's current money; the updated
+upkeep Calculation Rule to these inputs, producing total upkeep of 6, a Derived value. Applying the upkeep deduction Effect Rule, the engine deducts 6 from the campaign's current money; the updated
 money becomes part of the new Committed state, which is the result of turn advancement completion.
 
 ```mermaid
 flowchart LR
     Type["Type: UpkeepRate"] -.->|describes| GDR["GDR: Standard upkeep · rate 2"]
-    GDR -->|rate 2| Engine["Engine applies upkeep calculation Rule"]
+    GDR -->|rate 2| Engine["Engine applies upkeep Calculation Rule"]
     State["Campaign state"] -->|Authoritative value: serving-agent count 3| Engine
     Rule["Rule: rate × serving-agent count"] -->|specifies calculation| Engine
     Engine -->|calculates| Total["Derived value: total upkeep 6"]
@@ -232,7 +234,7 @@ Consider an illustrative creation of two Enemy Campaign instances whose Archetyp
 | Enemy               | Type                      | Describes the Enemy Campaign instances.                                                                                                                                                  |
 | EnemyArchetype      | Type                      | Describes the shared enemy characteristics and initial values.                                                                                                                           |
 | Thug                | GDR in the Archetype role | Has Type EnemyArchetype and base health 10.                                                                                                                                              |
-| Enemy creation      | Rule                      | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty Constants, and current health in State equal to the Archetype's base health. |
+| Enemy creation      | Creation Rule             | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty Constants, and current health in State equal to the Archetype's base health. |
 | enemy_1 and enemy_2 | Campaign instances        | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                                 |
 | Current health      | Authoritative value       | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                                    |
 
@@ -242,7 +244,7 @@ Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes it
 
 ```mermaid
 flowchart LR
-    Rule["Rule: Enemy creation"] -->|specifies| Enemy1
+    Rule["Creation Rule: Enemy creation"] -->|specifies| Enemy1
     Rule -->|specifies| Enemy2
     Thug["GDR: Thug · base health 10"] -->|Archetype and initial health| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>Instance ID: enemy_1<br/>Constants: empty<br/>State: health 10"]
     Thug -->|Archetype and initial health| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: health 10"]
@@ -260,13 +262,13 @@ Consider an illustrative Lead and an Investigation of that Lead. The complete co
 | InvestigationArchetype | GDR used as an Investigation's Archetype, supplying shared characteristics and initial values independently of the referenced Lead.             | What shared characteristics and initial values does the Investigation use? |
 
 Suppose Lead lead_1 is referenced by Investigation investigation_1, created with InvestigationArchetype investigation_archetype_1. Its Instance ID is investigation_1; its Constants contains the
-immutable Lead reference, and its State contains lifecycle initialized to active and progress initialized to 0. The archetype remains the separate shared
+immutable Lead reference, and its State contains lifecycle initialized to active and progress initialized to 0, as an illustrative Investigation Creation Rule would state. The archetype remains the separate shared
 component. Adding the Lead reference does not create a fifth property or make lead_1 the Investigation's archetype.
 
 For this example, investigation_1 reaches progress 2 and is abandoned. A new Investigation investigation_2 at lead_1 starts at progress 0 with its own Instance ID.
 Use archetype investigation_archetype_2 for investigation_2 to show that the Investigation's Lead reference and Archetype are independent relationships. These
 are symbolic GDRs without selected production properties or mechanics. The example assumes both combinations are
-permitted; it does not define eligibility or concurrency rules.
+permitted; it does not define Eligibility Rules or Invariant Rules governing them.
 
 ```mermaid
 flowchart LR

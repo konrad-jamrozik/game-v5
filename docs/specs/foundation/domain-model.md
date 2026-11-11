@@ -21,7 +21,7 @@ relationships; mechanics own formulas and detailed transitions. Numeric represen
 remain in their owning specifications.
 
 - Uses [Campaign Modeling Contract](./campaign-modeling-contract.md) for Campaign instance composition, creation, and identity/reference constraints applied to game concepts.
-- Uses [Core Concepts](./core-concepts.md) for shared Types, Campaign state, identity, and immutable-data vocabulary used to describe game concepts.
+- Uses [Core Concepts](./core-concepts.md) for shared Types, Campaign state, Rule kind, identity, and immutable-data vocabulary used to describe game concepts.
 - Used by [Developer API](../interfaces/developer-api.md) for the game concepts and identities exposed for debugging.
 - Used by [History and Persistence](./history-and-persistence.md) for the game structures and identity/reference relationships preserved during restoration.
 - Used by [Initial Campaign Content](../content/initial-campaign.md) for the game concepts and structural constraints that concrete GDRs must satisfy.
@@ -124,10 +124,10 @@ Combatant supplies reusable Type-described structure, not a separate Campaign in
 provenance is fixed Campaign instance data in its Response mission's Constants, not a separate Campaign instance
 ([Mission kind and provenance](#mission-kind-and-provenance)). Nested values and historical records need not be Campaign instances.
 
-The creation owners named above specify, as Rules under [Campaign instance creation](campaign-modeling-contract.md#campaign-instance-creation),
+The creation owners named above specify, as Creation Rules under [Campaign instance creation](campaign-modeling-contract.md#campaign-instance-creation),
 when each Campaign instance is created and the initial values of its Archetype reference, Constants, and State, with
 their sources; every new Campaign instance also has a fresh Instance ID.
-Production creation Rules remain unresolved with those owners; [Initial Campaign Content](../content/initial-campaign.md)
+Production Creation Rules remain unresolved with those owners; [Initial Campaign Content](../content/initial-campaign.md)
 owns the starting-configuration GDRs and the archetype catalogs for all six types. Required archetypes do not settle their fields or balance values.
 Types describe structure; gameplay validity and runtime constraints remain explicit contracts.
 
