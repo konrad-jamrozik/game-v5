@@ -97,7 +97,10 @@ Constants, and State. How an implementation stores Campaign instances internally
 Creation of a Campaign instance, during campaign initialization or gameplay, is specified by a Rule owned by the
 specification that owns the creating behavior. The Rule states when the Campaign instance is created, its Type, and
 the initial values of its Archetype reference, Constants, and State, together with the source of each value; for
-example, a named GDR or a value in Campaign state. Every newly created Campaign instance has a fresh Instance ID under
+example, a named GDR or a value in Campaign state. The initial values need not all come from the Campaign instance's
+Archetype: a creation Rule may take some of them from another GDR, such as one in the Initialization source role or a
+Referenced GDR (for example, the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign
+state. Every newly created Campaign instance has a fresh Instance ID under
 [Campaign instance identity](#campaign-instance-identity). Which code creates Campaign instances, and what that code
 receives, is left to the implementer.
 
@@ -170,6 +173,9 @@ Consider an illustrative creation Rule for the Agency with starting money:
 | Agency                 | Campaign instance   | The newly created Agency Campaign instance, with money 100 in State.                                                                      |
 | Agency money           | Authoritative value | Initially 100 in the Agency Campaign instance’s State.                                                                                    |
 | Initial Campaign state | Committed state     | Contains the Agency Campaign instance when campaign creation completes.                                                                   |
+
+Starting money is an Initialization source distinct from the Agency's Archetype so that a campaign can vary that one
+value through a separate GDR while the Archetype stays the same.
 
 The example shows only the money initial value; the Agency creation Rule also states the Agency's other initial
 values. When campaign creation completes, the initial Campaign state contains an Agency Campaign instance with a fresh
