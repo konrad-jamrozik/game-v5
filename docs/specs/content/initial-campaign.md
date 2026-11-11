@@ -78,7 +78,7 @@ TODO: List exact initial resources, roster, capabilities, faction setup, and all
 ## GDR catalogs
 
 TODO: Supply archetype catalogs for every Campaign instance Type declared in
-[Types, multiplicity, and lifecycle](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including singleton Campaign and Agency.
+[Types, multiplicity, and lifecycle](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including the singleton Agency.
 Declare each archetype’s GDR ID, shared characteristics, and initial values. Keep non-archetype balance
 parameters distinct. Mechanics retain ownership of the Rules that create Campaign instances; catalog details and balance values remain open.
 
