@@ -65,7 +65,7 @@ Progression's prerequisites/effects, and Missions' catalog requirements to suppl
 values does not refine the mechanical behavior. The mechanics consume this document's exact values and catalogs;
 formulas and transitions remain owned by the mechanics. Values and catalogs remain TODOs below.
 
-TODO: Specify Scenario ID/version, named balance parameter, GDR ID, starting state, lead graph, enemy, weapon, faction, and mission GDR.
+TODO: Specify starting-configuration GDR IDs, named balance parameter, GDR ID, starting state, lead graph, enemy, weapon, faction, and mission GDR.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -103,7 +103,7 @@ that truly fall outside this document's scope.
 # Acceptance examples
 
 TODO: Include the required archetypes, all four properties, and Instance IDs for every Campaign instance, including Campaign
-and Agency, in initial-state validation. Provide one fully specified scenario that acceptance fixtures can reference without inventing missing values.
+and Agency, in initial-state validation. Provide one fully specified starting Campaign configuration that acceptance fixtures can reference without inventing missing values.
 Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 

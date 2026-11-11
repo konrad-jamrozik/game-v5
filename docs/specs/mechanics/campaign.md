@@ -76,7 +76,7 @@ must expose the mechanical contract rather than introduce different validation o
 
 ## Initialization
 
-TODO: Specify how the scenario and seed produce initial state, covering all of these required areas: roster, resources, progression, factions, and counters; link exact Game Data Record (GDR) values to INIT.
+TODO: Specify how setup inputs, the selected starting-configuration GDRs ([Campaign configuration ownership](../foundation/domain-model.md#campaign-configuration-ownership)), and the seed produce the initial Campaign configuration and initial Campaign state, covering all of these required areas: roster, resources, progression, factions, and counters; link exact Game Data Record (GDR) values to INIT.
 
 ## Panic and endings
 
