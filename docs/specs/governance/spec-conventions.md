@@ -453,7 +453,8 @@ need not be organized as test fixtures or command sequences. Every acceptance ex
 items in this checklist:
 
 - Hyperlinks to the requirement sections exercised and, when needed for reproducibility, the game revision and GDR fixture.
-- Initial state and inputs, including the seed or random state for stochastic results.
+- Initial state and inputs, including fixed injected random outcomes for stochastic results; never assert outcomes
+  that depend on a particular seed, and otherwise compare replayed results for equality.
 - The command or event sequence.
 - Expected state, output, visibility, history, and random behavior where relevant.
 - Exact comparisons or explicitly specified numeric tolerances.

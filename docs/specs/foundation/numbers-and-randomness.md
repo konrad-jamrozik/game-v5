@@ -64,14 +64,18 @@ TODO: Choose precision/representation, allowed ranges, rounding operations and t
 
 ## Randomness contract
 
-TODO: Specify the PRNG algorithm, seed encoding, initial state, distributions, interval endpoints, integer sampling, and consumption rules. Decide shared versus separated random streams and collection ordering.
+Determinism is required only within one implementation and Game build under
+[Continuation state](engine-contract.md#continuation-state). The generator algorithm and the order of random draws are
+therefore the implementer's choice, and acceptance tests must assert replay equality or use fixed injected random
+outcomes, never outcomes that depend on a particular seed.
+
+TODO: Specify distributions, interval endpoints, integer sampling, and the remaining randomness consumption rules.
 
 ## Deterministic boundaries
 
 TODO: Specify behavior across supported runtimes and runtime versions under the Game build compatibility policy in
 [Requirements](engine-contract.md#requirements), [Game build compatibility](engine-contract.md#game-build-compatibility); exclude ambient randomness and wall-clock time from game results.
-Detail preservation of RNG state on rejection under [Committed state integrity](engine-contract.md#committed-state-integrity). Decide whether no-op commands consume draws and how ID
-generation relates to RNG.
+Detail preservation of RNG state on rejection under [Committed state integrity](engine-contract.md#committed-state-integrity). Decide whether no-op commands consume draws.
 
 TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
@@ -83,12 +87,12 @@ that truly fall outside this document's scope.
 
 # Acceptance examples
 
-TODO: Provide exact arithmetic and PRNG test vectors, including seed-to-output sequences and boundary sampling cases.
+TODO: Provide exact arithmetic test vectors and boundary sampling cases that use fixed injected random outcomes rather than seed-to-output sequences.
 Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 
 # Open decisions
 
-- TODO: Choose numeric representation, PRNG, draw ordering, and supported-runtime guarantees; do not silently inherit Math.random().
+- TODO: Choose numeric representation and supported-runtime guarantees; gameplay randomness must still come from preserved generator state rather than Math.random().
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

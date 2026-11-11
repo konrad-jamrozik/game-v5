@@ -47,7 +47,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 | Term             | Meaning in this document                                                                                                                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Test scenario    | A specified starting state, sequence of actions, and expected results                                                                                                          |
-| Fixture          | The GDRs, Campaign state, and random seed or RNG state needed to reproduce a scenario                                                                                          |
+| Fixture          | The GDRs, Campaign state, and fixed injected random outcomes or RNG state needed to reproduce a scenario                                                                       |
 | Integration test | A test that exercises several game systems together, typically through the player API                                                                                          |
 | End-to-end test  | A test that exercises a player flow through an interface and checks its resulting Player-visible information and game effects                                                  |
 | Acceptance test  | A test that checks whether behavior satisfies referenced specification [requirements](../governance/spec-conventions.md#glossary); it can be an integration or end-to-end test |
@@ -68,7 +68,11 @@ appropriate to this document.
 
 ## Deterministic fixtures
 
-TODO: Define scenario IDs, exact starting state, GDR fixture, seed, ordered commands, expected results, and references
+Determinism is required only within one implementation and Game build under
+[Continuation state](../foundation/engine-contract.md#continuation-state). Acceptance tests therefore assert replay
+equality or use fixed injected random outcomes; they never assert outcomes that depend on a particular seed.
+
+TODO: Define scenario IDs, exact starting state, GDR fixture, injected random outcomes or replay baseline, ordered commands, expected results, and references
 to owning requirements. Record the game revision when needed for reproducibility. Identify any test-only reduced scenario
 explicitly.
 

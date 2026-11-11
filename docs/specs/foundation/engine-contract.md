@@ -278,6 +278,12 @@ state must preserve every input consulted by Rules, including relevant History, 
 generation state. An initial random seed alone is insufficient unless it determines the complete restored generator
 position. Gameplay must not depend on wall-clock time, UI rendering, model responses, or Autopilot memory.
 
+Determinism is required within one implementation and Game build, not across different implementations of the
+specification. Consequently, the order of random draws, the order in which Campaign instances are created within one
+command, and the sequence and format of generated Instance IDs are the implementer's choice, provided the equality
+guarantee above holds. Two implementations may therefore produce different outcomes from the same initial Campaign
+state and commands; each must reproduce its own outcomes exactly.
+
 Undo/redo and replay restore or reproduce committed commands without invoking AI strategy again. Recorded Developer
 API commands are restored under history authority without granting Developer API access or requiring Dev mode.
 Internal restoration may use snapshots or replay, provided observable results are equal. Engine internals for
