@@ -15,6 +15,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 
 - Uses [Core Concepts](./core-concepts.md) for shared modeling vocabulary and value meanings applied to campaign-data constraints.
 - Refines [Engine Contract](./engine-contract.md) by specifying campaign-data composition, Campaign instance creation, identity, reference, and historical-preservation constraints for campaign integrity and continuation guarantees.
+- Used by [Developer API](../interfaces/developer-api.md) for the four-property Campaign instance structure in which full Campaign state inspection presents each Campaign instance.
 - Used by [Domain Model](./domain-model.md) for Campaign instance composition, creation, and identity/reference constraints applied to game concepts.
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for the Campaign instance vocabulary in which its non-behavioural dependency guidance is stated.
 - Used by [History and Persistence](./history-and-persistence.md) for identity, reference resolution, and historical-preservation constraints applied to restoration.
@@ -27,6 +28,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 
 - Uses [Core Concepts](./core-concepts.md)
 - Refines [Engine Contract](./engine-contract.md)
+- Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
 - Used by [History and Persistence](./history-and-persistence.md)
@@ -78,6 +80,17 @@ values are outside this document's ownership. Session lifecycle and publication 
 ### Campaign instance structure
 
 A Campaign instance Type always has exactly four properties: Instance ID, an Archetype reference, Constants, and State.
+Every Campaign instance has exactly these four properties. The singleton Agency is not exempt: its Archetype reference
+is required like that of any other Campaign instance.
+
+The four-property shape is the ubiquitous language for Campaign instances. It is chosen for uniformity and ease of
+reasoning: every Campaign instance is described, compared, and inspected in the same terms. The shape therefore
+belongs in this specification under the vocabulary criterion of
+[What belongs in a specification](../governance/spec-conventions.md#what-belongs-in-a-specification) and must not be
+removed or weakened as an implementation detail.
+
+Developer API full Campaign state inspection presents each Campaign instance as its Instance ID, Archetype reference,
+Constants, and State. How an implementation stores Campaign instances internally is the implementer's choice.
 
 ### Campaign instance creation
 

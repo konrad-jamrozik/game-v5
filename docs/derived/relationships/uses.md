@@ -51,6 +51,7 @@ flowchart TD
   CLI --> SCEN
   CMC --> API
   CMC --> DEPDIR
+  CMC --> DEV
   CMC --> DOM
   CMC --> HIST
   CMC --> INFO

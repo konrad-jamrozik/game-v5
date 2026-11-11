@@ -14,6 +14,7 @@ Define full Campaign state inspection and cheat-command details through Develope
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for the four-property Campaign instance structure presented by full Campaign state inspection.
 - Uses [Core Concepts](../foundation/core-concepts.md) for Campaign state and Authoritative value meanings in full-state inspection.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and identities exposed for debugging.
 - Uses [History and Persistence](../foundation/history-and-persistence.md) for the retained Campaign state and restoration behavior available for debugging.
@@ -24,6 +25,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Relationships
 
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Domain Model](../foundation/domain-model.md)
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
@@ -53,6 +55,11 @@ callable signatures and authorization results.
 # Requirements
 
 ## Inspection contract
+
+Full Campaign state inspection presents each Campaign instance as its four properties, Instance ID, Archetype
+reference, Constants, and State, as required by
+[Campaign instance structure](../foundation/campaign-modeling-contract.md#campaign-instance-structure). How an
+implementation stores Campaign instances internally is the implementer's choice.
 
 TODO: Specify the complete detached, read-only Campaign state query schema through `developer.queries.getCampaignState()`.
 Include all continuation inputs and distinguish full-state inspection from gameplay reveal conditions. Inspection
