@@ -19,6 +19,8 @@ with `grep -n` first.
 
 ## Committing and publishing changes
 
-Commit and push repository changes directly to `main`; do not use feature or session branches unless the user asks.
+This section is standing authorization: once repository changes are complete and `npm run check` passes, commit and
+push them without asking the user for confirmation first. Commit and push directly to `main`; do not use feature or
+session branches unless the user asks.
 After pushing, give the user a link to the commit's diff view so they can see exactly what was committed, in the form
 `https://github.com/konrad-jamrozik/game-v5/commit/<full-sha>`.
