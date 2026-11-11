@@ -13,7 +13,9 @@ Specifications are the durable authority for intended behavior. Code and tests i
 
 These conventions are the accepted working agreement. A stub uses the standard layout, but neither its presence nor its formatting makes unresolved rules accepted.
 
-Do not prescribe internal classes, file organization, libraries, or algorithms unless they affect an observable contract, determinism, compatibility, or an explicit architectural constraint. For example, exact public TypeScript signatures and the chosen random algorithm belong in specifications.
+Specifications state only what satisfies [What belongs in a specification](#what-belongs-in-a-specification). Do not
+prescribe internal classes, file organization, libraries, or algorithms. For example, exact public TypeScript
+signatures belong in specifications because API callers observe them.
 
 - Uses [Artifact Relationships](./artifact-relationships.md) for the canonical relationship model and directional inventory meanings.
 
@@ -34,6 +36,28 @@ Do not prescribe internal classes, file organization, libraries, or algorithms u
 | Evidence basis             | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships. |
 | Campaign-scoped identifier | A unique identifier that replaying the same committed commands from the same Campaign state must reproduce exactly.                                                           |
 | Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, for example one identifying a stored record or a runtime operation.                           |
+
+# What belongs in a specification
+
+Specifications describe the design of the game; any implementation that obeys them is acceptable. A statement belongs
+in a specification only if it meets at least one of the following criteria. This list is exhaustive:
+
+1. **Observable:** a black-box test through the engine API, a save, or a replay could fail when the statement is
+   violated.
+2. **Designer-authored:** the statement is a GDR, Rule, or formula that the game designer must write down.
+3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
+
+Everything else is left to the implementer's discretion and must not be specified. For example, the following are out
+of scope:
+
+- Internal ordering, for example call order and the order of random draws.
+- Code structure, for example which code creates which objects, internal function signatures, and dependency injection.
+- Internal storage layout.
+
+A statement about one of these matters belongs in a specification only when it states an observable consequence, and
+then the specification states the consequence rather than the mechanism. Non-observable steering for implementers,
+for example architecture or code-quality advice, is never a requirement. Record it, when it is worth recording, only in
+clearly non-behavioural guidance that no acceptance test depends on.
 
 # Document lifecycle and ownership
 
@@ -457,6 +481,8 @@ Use Open decisions to collect unresolved choices and identify affected sections 
 Before acceptance, verify:
 
 - Scope and ownership are clear and all references resolve.
+- Every statement is observable, designer-authored, or vocabulary needed for those statements, as defined in
+  [What belongs in a specification](#what-belongs-in-a-specification); implementer-discretion matters are not specified.
 - Explicit relationships and Implicit relationships satisfy Artifact Relationships, including mirrored Explicit relationship rows.
 - Every mention uses the full canonical glossary term, including headings, tables, and diagrams. Necessary new formal terms are defined in their owning Glossary; encountered synonyms and mention shortcuts are recorded in Terminology replacements.
 - Every illustrative enumeration is explicitly labeled and contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
