@@ -1,19 +1,11 @@
 # Specification Conventions
 
-| Metadata              | Value                                                                                                                                               |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID               | CONV                                                                                                                                                |
-| Family                | Governance                                                                                                                                          |
-| Status                | Accepted                                                                                                                                            |
-| Acceptance reference  | Project owner approval in this task: "OK I like what you wrote in Spec conventions. Mark it as Accepted."                                           |
-| Related documents     | [Spec index](../README.md), [game design brief](../../game-design-brief.md)                                                                         |
-| Relationship revision | Project owner requested flat directional relationship lists without Scope and glossary-controlled terminology.                                      |
-| Validation revision   | Requested by the project owner: add deterministic repository linting and a correctness-review skill.                                                |
-| Organization revision | Project owner approval in this task: "OK apply the proposed changes."                                                                               |
-| Modeling revision     | Project owner requested language-independent Types, foundation-owned Campaign vocabulary, and embedded Foundation examples.                         |
-| Precedent revision    | Project owner requested that Draft documents never serve as an argument for a design choice.                                                        |
-| Identifier revision   | Project owner requested ULIDs for Independent identifiers, distinguished from Campaign-scoped identifiers that deterministic replay must reproduce. |
-| Autopilot revision    | Project owner requested Autopilot terminology in place of delegation and a Session controller role independent of caller kind.                      |
+| Metadata          | Value                                                                       |
+| ----------------- | --------------------------------------------------------------------------- |
+| Spec ID           | CONV                                                                        |
+| Family            | Governance                                                                  |
+| Status            | Accepted                                                                    |
+| Related documents | [Spec index](../README.md), [game design brief](../../game-design-brief.md) |
 
 # Purpose and boundaries
 
@@ -56,7 +48,12 @@ Use one of these statuses in the metadata table:
 | Accepted   | The user or designated project owner has explicitly accepted the document as the implementation contract. |
 | Superseded | A replacement is linked; the document is retained only for historical context.                            |
 
-Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Record the acceptance reference when a document is accepted. Do not infer approval from silence. Work may explore a draft when requested, but must not silently settle its open design decisions.
+Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Set Status to Accepted only when the project owner explicitly accepts the document. Do not infer approval from silence. Work may explore a draft when requested, but must not silently settle its open design decisions.
+
+The Status row is the only approval record a specification keeps, and it must stay accurate. Do not record who
+requested or approved a change, or when: add no acceptance or revision metadata rows, approval notices, or prose
+describing a change's request or approval history. Git history records changes; specifications state the current
+contract only.
 
 Only Accepted content constrains design decisions. Stub and Draft content may be revised or rewritten entirely, so
 its current wording, terms, API names, or the effort of changing it is never a reason to keep a design choice. Justify
@@ -175,7 +172,7 @@ For example, Engine Contract's Purpose and boundaries includes:
 
 - Uses [Core Concepts](../foundation/core-concepts.md) for shared Campaign, Session, Game build, and committed-data vocabulary in execution guarantees.
 
-This relationship-description revision was requested by the project owner and applies to every registered
+This relationship-description rule applies to every registered
 specification, including Stubs and governance-layout exceptions. Deterministic lint checks correspondence and
 nonempty descriptions; semantic review checks whether each explanation accurately describes the relationship.
 
@@ -349,8 +346,7 @@ Use plain English by default. **Must** and **must not** express requirements; **
 
 Name each coherent requirement or contract with a descriptive section title, without a numbered requirement label or
 Spec ID prefix. For example, Engine Contract uses the heading **Derived value consistency**. Section titles replace
-the former numbered labels throughout specifications, examples, TODOs, and other authored documents. This revision
-was explicitly requested by the project owner. Document-level Spec IDs remain registry and metadata identifiers;
+numbered labels throughout specifications, examples, TODOs, and other authored documents. Document-level Spec IDs remain registry and metadata identifiers;
 they are not requirement-reference labels.
 
 A section may combine complete obligations with explanation and clearly identified examples in a flowing narrative.
@@ -470,10 +466,10 @@ Before acceptance, verify:
 - Worked examples and acceptance scenarios agree with the rules.
 - Related contracts and GDR tables are consistent.
 - Deferred features are explicitly out of scope, not holes in an allegedly complete contract.
-- The project owner has accepted the revision.
+- The project owner has explicitly accepted the document.
 
 When accepted behavior changes, link to affected requirement sections by title and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.
 
 # Acceptance
 
-Accepted by the project owner through the explicit approval recorded above. This acceptance applies to the conventions only; subject specifications retain their own statuses. The relationship, canonical-terminology, and illustrative-enumeration revisions were explicitly requested by the project owner. Future changes must be presented as revisions rather than silently changing the accepted agreement.
+This acceptance applies to the conventions only; subject specifications retain their own statuses. Future changes must be presented as revisions rather than silently changing the accepted agreement.

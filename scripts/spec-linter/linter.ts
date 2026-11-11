@@ -482,15 +482,6 @@ function validateRegistryAndMetadata(
         'Scope belongs in Purpose and boundaries, not in metadata.',
       )
     }
-    if (specification.status === 'Accepted' && !specification.metadata.values.get('Acceptance reference')) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        specification.metadata.table,
-        'SPEC107',
-        'Accepted specifications must record an Acceptance reference.',
-      )
-    }
   }
   for (const [id, duplicates] of metadataIds) {
     if (duplicates.length < 2) continue

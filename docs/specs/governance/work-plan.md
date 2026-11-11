@@ -1,12 +1,11 @@
 # Specification Work Plan and Backlog
 
-| Metadata             | Value                                                                                                                     |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID              | PLAN                                                                                                                      |
-| Family               | Governance                                                                                                                |
-| Status               | Accepted                                                                                                                  |
-| Acceptance reference | Project owner approval in this task: "change work plan status to Accepted and propose commit message for pending changes" |
-| Conventions          | [Specification conventions](spec-conventions.md)                                                                          |
+| Metadata    | Value                                            |
+| ----------- | ------------------------------------------------ |
+| Spec ID     | PLAN                                             |
+| Family      | Governance                                       |
+| Status      | Accepted                                         |
+| Conventions | [Specification conventions](spec-conventions.md) |
 
 # Purpose and boundaries
 
@@ -21,11 +20,6 @@ The [Game Design Brief](../../game-design-brief.md) supplies strategic intent an
 **Current work:** [Core Concepts](../foundation/core-concepts.md), [Domain Model](../foundation/domain-model.md), [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md),
 and [Engine Contract](../foundation/engine-contract.md) are **In review** for batch 1. Review their
 contracts and unresolved design questions before advancing. Later batches have not started.
-
-**Approved organization revision:** the project owner approved splitting the former Domain Model into these three
-documents with "I love it. Do it." after the three-document proposal. [Batch sequence](#batch-sequence) and [Early information and API boundaries](#early-information-and-api-boundaries) now reflect that grouping;
-A subsequent project-owner request introduced Core Concepts and renamed the retained modeling contract;
-batch 1 now includes four documents, while the ten-batch order is unchanged.
 
 # Relationships
 
@@ -43,12 +37,12 @@ No explicit relationships.
 
 Track work separately from document status:
 
-| Work state | Meaning                                                                                      |
-| ---------- | -------------------------------------------------------------------------------------------- |
-| Queued     | Planned, but substantive drafting has not started.                                           |
-| Drafting   | A draft is being written; do not imply acceptance.                                           |
-| In review  | Drafts have been presented; feedback and any resulting revisions are being handled.          |
-| Complete   | The listed deliverable has been explicitly accepted, with its acceptance reference recorded. |
+| Work state | Meaning                                                                             |
+| ---------- | ----------------------------------------------------------------------------------- |
+| Queued     | Planned, but substantive drafting has not started.                                  |
+| Drafting   | A draft is being written; do not imply acceptance.                                  |
+| In review  | Drafts have been presented; feedback and any resulting revisions are being handled. |
+| Complete   | The listed deliverable has been explicitly accepted by the project owner.           |
 
 Document metadata remains authoritative for Stub, Draft, Accepted, and Superseded status. Work remains In review while
 feedback is incorporated and revised drafts are reviewed. For a multi-document batch, record partial completion explicitly
@@ -62,15 +56,15 @@ instead of marking the whole batch Complete.
 
 ## Relationship inventory migration
 
-[Artifact Relationships](artifact-relationships.md) is In review as a separately requested governance
-specification. The project owner requested two directional inventories, centrally defined implicit relationships,
-mirrored explicit relationships, and canonical relationship terminology. This work does not advance mechanics review
+[Artifact Relationships](artifact-relationships.md) is In review as a separate governance
+specification. It defines two directional inventories, centrally defined implicit relationships, mirrored explicit
+relationships, and canonical relationship terminology. This work does not advance mechanics review
 batches.
 
 Inventory migration is **Complete** for the current specification set. Explicit relationships use mirrored flat
 directional lists; implicit relationships are omitted from those lists. Substantive reliance is explained in owning
-contract prose. The project owner requested sharper uses/refines definitions and removal of the three foundation
-documents' cycles. Core Concepts supplies shared vocabulary; Engine Contract uses Core Concepts, and Campaign Modeling Contract refines Engine Contract. Domain Model uses Core Concepts and Campaign Modeling Contract. Domain Model retains the
+contract prose. The three foundation documents' relationships form no
+cycle. Core Concepts supplies shared vocabulary; Engine Contract uses Core Concepts, and Campaign Modeling Contract refines Engine Contract. Domain Model uses Core Concepts and Campaign Modeling Contract. Domain Model retains the
 game-specific identity scope; Engine Contract retains execution guarantees. Operational specifications use modeling
 conventions and refine the corresponding engine behavior.
 
@@ -88,7 +82,7 @@ propose the change explicitly and update this table when agreed rather than sile
 
 | Batch | Specifications                                                                                                                                                                                                                 | Review objective and reason for this order                                                                                                                                                                                                                                                                                                              | Work state |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| 1     | [Core Concepts](../foundation/core-concepts.md); [Domain Model](../foundation/domain-model.md); [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md); [Engine Contract](../foundation/engine-contract.md) | Agree on vocabulary, Types, four-property Campaign instances, archetypes and other Game Data Records (GDRs), mandatory Instance IDs, construction, relationships, Authoritative values in Campaign state, and boundaries before specifying behavior. Review the four documents as one batch, preserving recorded acceptance of retained modeling rules. | In review  |
+| 1     | [Core Concepts](../foundation/core-concepts.md); [Domain Model](../foundation/domain-model.md); [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md); [Engine Contract](../foundation/engine-contract.md) | Agree on vocabulary, Types, four-property Campaign instances, archetypes and other Game Data Records (GDRs), mandatory Instance IDs, construction, relationships, Authoritative values in Campaign state, and boundaries before specifying behavior. Review the four documents as one batch, preserving the Accepted status of retained modeling rules. | In review  |
 | 2     | [Numbers and Randomness](../foundation/numbers-and-randomness.md); [History and Persistence](../foundation/history-and-persistence.md)                                                                                         | Establish exact calculations, reproducible randomness, reversible state, replay, and save/load contracts before relying on them in mechanics.                                                                                                                                                                                                           | Queued     |
 | 3     | [Agents](../mechanics/agents.md); [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                                                                                                                 | Define personnel availability, effectiveness, growth, resources, and purchases used by other mechanics.                                                                                                                                                                                                                                                 | Queued     |
 | 4     | [Leads and Progression](../mechanics/leads-and-progression.md); [Investigations](../mechanics/investigations.md)                                                                                                               | Define the first major strategic subsystem, including precise progress, completion probabilities, player uncertainty, and commitment costs.                                                                                                                                                                                                             | Queued     |
@@ -147,8 +141,8 @@ For each authorized batch:
 
 ### Backlog updates
 
-Update this backlog when drafting begins, a draft enters review, feedback requires revision, or acceptance is
-recorded. Link the accepted document's approval reference rather than duplicating its approval text here. Keep current
+Update this backlog when drafting begins, a draft enters review, feedback requires revision, or a document is
+accepted. Keep current
 status summaries consistent with document metadata.
 
 ### Separate implementation authorization
@@ -192,7 +186,7 @@ available for revision; a change in order alone does not invalidate their conten
 These are workflow checks, not gameplay tests:
 
 - **First review ([Batch sequence](#batch-sequence), [Early information and API boundaries](#early-information-and-api-boundaries), [Batch workflow](#batch-workflow)):** Presenting newly drafted batch 1 material sets that material to
-  Draft and batch 1 to In review; reorganizing an existing Accepted contract preserves its recorded acceptance. Preliminary API/information notes do not imply those contracts are
+  Draft and batch 1 to In review; reorganizing an existing Accepted contract preserves its Accepted status. Preliminary API/information notes do not imply those contracts are
   complete. The next batch does not begin without the review opportunity or an explicit instruction to continue.
 - **Requested revision ([Batch workflow](#batch-workflow), [Backlog updates](#backlog-updates)):** Feedback requests a different model for Agents and Current assignments. Batch 1 remains
   In review while affected notes and examples are updated.

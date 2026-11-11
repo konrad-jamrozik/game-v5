@@ -743,12 +743,7 @@ describe('specification linter', () => {
       'accepted unresolved TODO',
       (files: SourceFile[]) =>
         mutate(
-          mutate(
-            files,
-            'docs/specs/foundation/alpha.md',
-            '| Status | Draft |',
-            '| Status | Accepted |\n| Acceptance reference | Owner approval |',
-          ),
+          mutate(files, 'docs/specs/foundation/alpha.md', '| Status | Draft |', '| Status | Accepted |'),
           'docs/specs/foundation/alpha.md',
           'Contract.',
           'TODO: Complete the contract.',

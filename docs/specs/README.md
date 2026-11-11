@@ -86,5 +86,5 @@ the full sequence, current work states, and treatment of cross-specification dep
 # Index completion TODOs
 
 - TODO: Link separately agreed implementation milestones once the first playable slice is selected; authoring order is tracked in the work plan.
-- TODO: Track acceptance references and update this register if a document is split, renamed, or superseded.
+- TODO: Update this register if a document is split, renamed, or superseded.
 - TODO: Maintain links to the final requirement owners and integration scenarios as draft rules replace placeholders.

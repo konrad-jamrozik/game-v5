@@ -81,7 +81,7 @@ constraints; it does not add detail to the modeling language itself.
 
 Campaign and other shared modeling terms are owned by the [Core Concepts glossary](core-concepts.md#glossary).
 Campaign-specific composition terms are owned by [Campaign Modeling Contract](campaign-modeling-contract.md#glossary).
-This document describes the concrete Campaign Type and its game-specific composition; it does not redefine Campaign.
+This document describes the game-specific composition of Campaign state; it does not redefine Campaign.
 
 # Concepts and contract
 
@@ -103,22 +103,22 @@ than separately identified Campaign instances.
 
 The following table enumerates the complete concept classifications declared by this specification.
 
-| Concept                                                                                            | Modeling role and multiplicity                                                                                                                                                                                                                                                                               | Construction and historical transition / owner                                                                                                                                                                                                                                                                                                                                                  |
-| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign; Agency                                                                                   | Campaign instance Types. Exactly one Agency Campaign instance per Campaign instance ([Campaign boundary](#campaign-boundary-1)); each has its own Instance ID and archetype.                                                                                                                                 | Campaign initialization and ongoing/won/lost transitions belong to [Campaign](../mechanics/campaign.md); detailed construction and historical retention rules remain unresolved there and in [History and Persistence](history-and-persistence.md).                                                                                                                                             |
-| Agent                                                                                              | Campaign instance Type. Multiple Campaign instances can belong to a campaign; roster limits belong to [Economy and Upgrades](../mechanics/economy-and-upgrades.md).                                                                                                                                          | Initial roster and recruitment details belong to [Initial Campaign Content](../content/initial-campaign.md) and Economy and Upgrades. Serving, Killed, and Dismissed are distinct states; Killed/Dismissed Campaign instances retain final attributes and career without Current assignments ([Agent lifecycle](#agent-lifecycle)). [Agents](../mechanics/agents.md) owns detailed transitions. |
-| Investigation                                                                                      | Campaign instance Type. At most one Active Campaign instance per lead GDR per campaign; repeated Investigations of a Lead have distinct Campaign instances ([Leads and Investigations](#leads-and-investigations)/[Campaign instance identity scope](#campaign-instance-identity-scope)).                    | Starting an Investigation constructs a Campaign instance; restarting after abandonment constructs another. Completed/Abandoned Campaign instances retain identity and Participation history without a current team. [Investigations](../mechanics/investigations.md) owns eligibility and transition details.                                                                                   |
-| Mission                                                                                            | Campaign instance Type. A campaign can contain multiple Campaign instances with distinct identities; each Faction operation occurrence has exactly one Response mission ([Mission kind and provenance](#mission-kind-and-provenance)/[Campaign instance identity scope](#campaign-instance-identity-scope)). | Initiative construction retains its investigation or scenario source; Response construction retains its Faction operation occurrence origin. Exact construction timing, lifecycle, reattempt, and historical-transition rules remain with [Missions](../mechanics/missions.md).                                                                                                                 |
-| Enemy                                                                                              | Campaign instance Type. Each Campaign instance belongs to exactly one mission; multiple Campaign instances may share an enemy GDR ([Combat and consequences](#combat-and-consequences)).                                                                                                                     | Construction and combat transitions belong to Missions and [Combat](../mechanics/combat.md); exact timing and historical retention details remain unresolved with those owners and History and Persistence.                                                                                                                                                                                     |
-| Faction                                                                                            | Campaign instance Type. Campaign instances refer to faction GDRs; the allowed count per GDR is unresolved.                                                                                                                                                                                                   | Initial setup belongs to Initial Campaign Content; activity, suppression, defeat, and lifecycle details belong to [Factions](../mechanics/factions.md). Historical-transition details remain unresolved.                                                                                                                                                                                        |
-| Combatant                                                                                          | Reusable Type-described structure for combat-related Agent and Enemy state; it is not a Campaign instance Type and has no Campaign instances.                                                                                                                                                                | Combat operates on the participating Agent and Enemy Campaign instances ([Combat and consequences](#combat-and-consequences)).                                                                                                                                                                                                                                                                  |
-| Archetypes for the seven declared Campaign instance types; lead, weapon, upgrade, and balance GDRs | Typed GDRs, not Campaign instances. Sharing a GDR does not constrain Campaign instance multiplicity.                                                                                                                                                                                                         | Supplied by the current Game build; fields and values belong to Initial Campaign Content. Individual weapon inventory Campaign instances are outside this model; upgrade acquisitions belong to the Agency Campaign instance.                                                                                                                                                                   |
+| Concept                                                                                                    | Modeling role and multiplicity                                                                                                                                                                                                                                                                               | Construction and historical transition / owner                                                                                                                                                                                                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign state; Agency                                                                                     | Campaign state is the top-level container of one Campaign, not a Campaign instance. Agency is a Campaign instance Type with exactly one Campaign instance per Campaign ([Campaign boundary](#campaign-boundary-1)); it has its own Instance ID and archetype.                                                | Campaign initialization and ongoing/won/lost transitions belong to [Campaign](../mechanics/campaign.md); detailed construction and historical retention rules remain unresolved there and in [History and Persistence](history-and-persistence.md).                                                                                                                                             |
+| Agent                                                                                                      | Campaign instance Type. Multiple Campaign instances can belong to a campaign; roster limits belong to [Economy and Upgrades](../mechanics/economy-and-upgrades.md).                                                                                                                                          | Initial roster and recruitment details belong to [Initial Campaign Content](../content/initial-campaign.md) and Economy and Upgrades. Serving, Killed, and Dismissed are distinct states; Killed/Dismissed Campaign instances retain final attributes and career without Current assignments ([Agent lifecycle](#agent-lifecycle)). [Agents](../mechanics/agents.md) owns detailed transitions. |
+| Investigation                                                                                              | Campaign instance Type. At most one Active Campaign instance per lead GDR per campaign; repeated Investigations of a Lead have distinct Campaign instances ([Leads and Investigations](#leads-and-investigations)/[Campaign instance identity scope](#campaign-instance-identity-scope)).                    | Starting an Investigation constructs a Campaign instance; restarting after abandonment constructs another. Completed/Abandoned Campaign instances retain identity and Participation history without a current team. [Investigations](../mechanics/investigations.md) owns eligibility and transition details.                                                                                   |
+| Mission                                                                                                    | Campaign instance Type. A campaign can contain multiple Campaign instances with distinct identities; each Faction operation occurrence has exactly one Response mission ([Mission kind and provenance](#mission-kind-and-provenance)/[Campaign instance identity scope](#campaign-instance-identity-scope)). | Initiative construction retains its investigation or scenario source; Response construction retains its Faction operation occurrence origin. Exact construction timing, lifecycle, reattempt, and historical-transition rules remain with [Missions](../mechanics/missions.md).                                                                                                                 |
+| Enemy                                                                                                      | Campaign instance Type. Each Campaign instance belongs to exactly one mission; multiple Campaign instances may share an enemy GDR ([Combat and consequences](#combat-and-consequences)).                                                                                                                     | Construction and combat transitions belong to Missions and [Combat](../mechanics/combat.md); exact timing and historical retention details remain unresolved with those owners and History and Persistence.                                                                                                                                                                                     |
+| Faction                                                                                                    | Campaign instance Type. Campaign instances refer to faction GDRs; the allowed count per GDR is unresolved.                                                                                                                                                                                                   | Initial setup belongs to Initial Campaign Content; activity, suppression, defeat, and lifecycle details belong to [Factions](../mechanics/factions.md). Historical-transition details remain unresolved.                                                                                                                                                                                        |
+| Combatant                                                                                                  | Reusable Type-described structure for combat-related Agent and Enemy state; it is not a Campaign instance Type and has no Campaign instances.                                                                                                                                                                | Combat operates on the participating Agent and Enemy Campaign instances ([Combat and consequences](#combat-and-consequences)).                                                                                                                                                                                                                                                                  |
+| Archetypes for the six declared Campaign instance types; scenario, lead, weapon, upgrade, and balance GDRs | Typed GDRs, not Campaign instances. Sharing a GDR does not constrain Campaign instance multiplicity.                                                                                                                                                                                                         | Supplied by the current Game build; fields and values belong to Initial Campaign Content. Individual weapon inventory Campaign instances are outside this model; upgrade acquisitions belong to the Agency Campaign instance.                                                                                                                                                                   |
 
-Every Campaign instance of Type Campaign, Agency, Agent, Investigation, Mission, Enemy, or Faction has Instance ID, Archetype,
+Every Campaign instance of Type Agency, Agent, Investigation, Mission, Enemy, or Faction has Instance ID, Archetype,
 Constants, and State properties under
 [Campaign instances](campaign-modeling-contract.md#campaign-instances).
-All seven types share the explicit Instance ID scope in [Campaign instance identity scope](#campaign-instance-identity-scope), including the
-Campaign instance of Type Campaign itself. Singleton status does not exempt Campaign or Agency from an Instance ID or an archetype.
+All six types share the explicit Instance ID scope in [Campaign instance identity scope](#campaign-instance-identity-scope).
+Singleton status does not exempt Agency from an Instance ID or an archetype.
 
 Combatant supplies reusable Type-described structure, not a separate Campaign instance. A Faction operation occurrence's
 provenance is fixed Campaign instance data in its Response mission's Constants, not a separate Campaign instance
@@ -127,10 +127,11 @@ provenance is fixed Campaign instance data in its Response mission's Constants, 
 The creation owners named above specify Campaign instance constructor inputs, dependencies, Types of returned Campaign instances, and initialization
 of all four properties under [Campaign instances](campaign-modeling-contract.md#campaign-instances).
 Production Campaign instance constructor details remain unresolved with those owners; [Initial Campaign Content](../content/initial-campaign.md)
-owns the archetype catalogs for all seven types. Required archetypes do not settle their fields or balance values.
+owns the scenario GDRs and the archetype catalogs for all six types. Required archetypes do not settle their fields or balance values.
 Types describe structure; gameplay validity and runtime constraints remain explicit contracts.
 
-The Campaign instance of Type Campaign is the top-level ownership root. Campaign membership follows containment.
+Campaign state is the top-level ownership root; it is not a Campaign instance and has no Instance ID or Archetype.
+Campaign membership follows containment.
 
 ## Mutability, authority, and gameplay relevance
 
@@ -164,8 +165,9 @@ A Campaign uses the Ruleset and GDRs supplied by the current Game build. It cont
 panic and campaign outcome, progression facts, agents, factions, investigations, and missions.
 
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
-switching between human and AI control does not create another agency. Both campaign and agency have their own Instance ID properties
-and required Archetype references, even though there is exactly one agency per campaign.
+switching between human and AI control does not create another agency. The agency has its own Instance ID property and
+required Archetype reference, even though there is exactly one agency per campaign. The campaign-wide properties,
+for example the scenario GDR reference, current turn, and panic, belong directly to Campaign state.
 State needed for reproducible command execution belongs to [Continuation state](engine-contract.md#continuation-state).
 
 ## Agent
@@ -248,12 +250,12 @@ historical values with current calculations.
 
 ```mermaid
 flowchart TD
-    Campaign --> Agency
+    CampaignState["Campaign state"] --> Agency
     Agency --> Agents
-    Campaign --> Factions
-    Campaign --> Progression["Lead progression facts"]
-    Campaign --> Investigations
-    Campaign --> Missions
+    CampaignState --> Factions
+    CampaignState --> Progression["Lead progression facts"]
+    CampaignState --> Investigations
+    CampaignState --> Missions
     Investigations --> Lead["One lead GDR"]
     Agents --> Assignment["Current assignment and Task phase"]
     Assignment --> Investigations
@@ -274,21 +276,21 @@ Arrows show relationships, not inheritance or storage layout.
 
 ### Campaign configuration ownership
 
-The Campaign Type includes Campaign configuration in its State, allowing configuration values to change during
-play. GDRs may supply initial values during construction. Shared meanings are defined in
+Campaign configuration is a component of Campaign state, and its values may change during play. GDRs may supply
+initial values during campaign creation. Shared meanings are defined in
 [World state and Campaign configuration](core-concepts.md#world-state-and-campaign-configuration).
 
 ### Campaign boundary
 
-A Campaign instance of Type Campaign must have exactly one player-controlled agency. Every other
-Campaign instance in that campaign must belong to that Campaign instance of Type Campaign. AI memory, UI selections, browser
+Campaign state must contain exactly one player-controlled agency. Every Campaign instance in that campaign
+must belong to its Campaign state. AI memory, UI selections, browser
 state, and CLI preferences are not Campaign state.
 Multiplayer agencies and cross-campaign trading are outside this model.
 
 ### Campaign instance identity scope
 
-Campaign, Agency, Agent, Investigation, Mission, Enemy, and Faction must each have an immutable Instance ID property.
-Instance IDs must be unique across all seven Types within one campaign's Committed state, including the Campaign instance of Type Campaign itself. Repeated mission and investigation Campaign instances must have
+Agency, Agent, Investigation, Mission, Enemy, and Faction must each have an immutable Instance ID property.
+Instance IDs must be unique across all six Types within one campaign's Committed state. Repeated mission and investigation Campaign instances must have
 identities distinct from earlier Campaign instances in the same timeline. Campaign Modeling Contract owns the general identity and
 explicit-reference semantics ([Campaign instances](campaign-modeling-contract.md#campaign-instances) and [References](campaign-modeling-contract.md#references)); this requirement owns which Campaign instances share that identity scope.
 
@@ -397,9 +399,10 @@ for purposes of these structural checks. Runtime validation behavior is tested b
 
 Given the GDRs C and Ruleset R supplied by the current Game build, turn 3, and:
 
-- Campaign c1 and its single agency ag1, with all seven declared Campaign instance types sharing the Instance ID scope.
-- Archetypes supplied by the current Game build: C1 (Campaign), G1 (Agency), A1 (Agent), I1 (Investigation), M1 (Mission),
-  F1 (Faction), and E1 (Enemy), plus non-archetype GDRs L1 (lead) and W1 (weapon).
+- Campaign state c1, referring to scenario GDR C1, and its single agency ag1, with all six declared Campaign instance
+  types sharing the Instance ID scope.
+- Archetypes supplied by the current Game build: G1 (Agency), A1 (Agent), I1 (Investigation), M1 (Mission),
+  F1 (Faction), and E1 (Enemy), plus non-archetype GDRs C1 (scenario), L1 (lead), and W1 (weapon).
   These are explicit test GDRs with the names shown, unique GDR IDs within their expected types, and no other
   required fields in this fixture; rule-owned production defaults remain deferred.
 - Faction f1 referring to F1.
@@ -418,7 +421,6 @@ above still apply.
 
 | Campaign instance | Instance ID         | Archetype | Constants                                                     | State                                                                                           |
 | ----------------- | ------------------- | --------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| c1                | c1                  | C1        | Empty                                                         | Turn 3; campaign collections and progression facts                                              |
 | ag1               | ag1                 | G1        | Empty                                                         | Resources, upgrades, roster {a1, a2}                                                            |
 | a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                    | Lifecycle, Current assignments, Task phase, combat attributes, career and Participation history |
 | i1                | i1                  | I1        | Lead L1                                                       | Active lifecycle, progress, current team {a1}, Participation history                            |
@@ -426,7 +428,7 @@ above still apply.
 | e1                | e1                  | E1        | Mission m1                                                    | Combat attributes                                                                               |
 | f1                | f1                  | F1        | Empty                                                         | Activity and progression                                                                        |
 
-Campaign collections contain agency ag1, agents a1/a2, investigation i1, mission m1, and faction f1; e1 is reached through
+Campaign state c1 holds turn 3, progression facts, and collections containing agency ag1, agents a1/a2, investigation i1, mission m1, and faction f1; e1 is reached through
 m1. Required references resolve in c1. Resource scalars are zero and other collections empty unless specified above.
 Immutable affiliation and target references are assumptions of this fixture, not new production lifecycle rules.
 Growing Participation history or Battle result collections does not permit rewriting retained historical elements.
@@ -441,9 +443,9 @@ Each row independently changes fixture A and describes a structurally invalid st
 
 | Change                                                                           | Violation                                                                                                                                     |
 | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Omit a component from c1 or ag1                                                  | [Campaign instances](campaign-modeling-contract.md#campaign-instances)                                                                        |
-| Omit c1's or ag1's Instance ID                                                   | [Campaign instances](campaign-modeling-contract.md#campaign-instances); [Campaign instance identity scope](#campaign-instance-identity-scope) |
-| Give ag1 Instance ID c1, or e1 Instance ID ag1                                   | [Campaign instance identity scope](#campaign-instance-identity-scope)                                                                         |
+| Omit a component from ag1                                                        | [Campaign instances](campaign-modeling-contract.md#campaign-instances)                                                                        |
+| Omit ag1's Instance ID                                                           | [Campaign instances](campaign-modeling-contract.md#campaign-instances); [Campaign instance identity scope](#campaign-instance-identity-scope) |
+| Give e1 Instance ID ag1                                                          | [Campaign instance identity scope](#campaign-instance-identity-scope)                                                                         |
 | Resolve e1's archetype as M1 instead of E1                                       | [References](campaign-modeling-contract.md#references)                                                                                        |
 | Mutate A1 or m1's retained provenance                                            | [Campaign instances](campaign-modeling-contract.md#campaign-instances)                                                                        |
 | Add a second player agency                                                       | [Campaign boundary](#campaign-boundary-1)                                                                                                     |

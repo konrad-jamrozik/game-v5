@@ -1,13 +1,11 @@
 # Campaign Modeling Contract
 
-| Metadata                 | Value                                                                                                                                                                                                                                                                                                                                       |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID                  | CMC                                                                                                                                                                                                                                                                                                                                         |
-| Family                   | Foundation                                                                                                                                                                                                                                                                                                                                  |
-| Status                   | Accepted                                                                                                                                                                                                                                                                                                                                    |
-| Acceptance reference     | Project owner approval in this task: "OK mark the mf as Accepted and update any other docs as appropriate"                                                                                                                                                                                                                                  |
-| Reorganization reference | Project owner requested the Core Concepts split and relocation of Session in this chat; retained campaign modeling rules preserve their recorded acceptance. Project owner later requested moving the meanings of Authoritative and Derived values to Core Concepts and renaming Spec ID MODEL to CMC to avoid confusion with Domain Model. |
-| Conventions              | [Specification conventions](../governance/spec-conventions.md)                                                                                                                                                                                                                                                                              |
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | CMC                                                            |
+| Family      | Foundation                                                     |
+| Status      | Accepted                                                       |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Purpose and boundaries
 
@@ -93,9 +91,9 @@ For example, a Campaign instance constructor implementation can depend on:
 
 ### Gameplay dependency direction
 
-Gameplay functions, including Campaign instance constructors, must receive only necessary inputs and dependencies,
-without direct or indirect access to the top-level Campaign instance. Contained Campaign instances must not refer
-back to that root. These restrictions exclude campaign creation, save/load, and external engine interfaces.
+Gameplay functions, including Campaign instance constructors, must receive only necessary inputs and dependencies;
+they must not reach any part of Campaign state beyond those inputs, directly or indirectly. Campaign instances must
+not hold references to the Campaign state that contains them. These restrictions exclude campaign creation, save/load, and external engine interfaces.
 This specifies the isolation requirement in Engine Contract's [Campaign data integrity](engine-contract.md#campaign-data-integrity).
 
 ### Campaign instance identity
