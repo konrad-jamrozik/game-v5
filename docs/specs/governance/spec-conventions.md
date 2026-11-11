@@ -238,15 +238,13 @@ as an adjective describing that exposure, for example, "this value is Player-vis
 
 Use the full glossary term on every mention. Do not abbreviate it, drop words, split its words across a compound,
 or substitute a generic noun after introducing the full term. For example, use GDR rather than "content"
-or "entry", Campaign instance rather than "instance", and Campaign instance constructor rather than "constructor"
-when referring to those modeling concepts. Grammatical plurals and possessives must retain every word of the term:
+or "entry", and Campaign instance rather than "instance", when referring to those modeling concepts. Grammatical plurals and possessives must retain every word of the term:
 GDRs (under the approved abbreviation exception) and Campaign instance's are valid; entries and instance's are not substitutes.
 
 This rule applies throughout specifications and all other project documentation, including headings, tables, diagram
 labels, examples, and generated views. Update the owning sources and regenerate derived documentation. Document titles,
 file paths, literal code identifiers, and exact quotations retain their actual spelling. Ordinary words remain valid
-when they describe something else: a glossary entry is not a GDR, and a language-level constructor is not
-necessarily a Campaign instance constructor. Review each use in context; do not infer compliance from text search alone.
+when they describe something else: a glossary entry is not a GDR. Review each use in context; do not infer compliance from text search alone.
 
 If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
 replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
@@ -276,7 +274,6 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Changeable reference                        | Mutable reference                                                                                                                   | A reference in [State](../foundation/campaign-modeling-contract.md#glossary); gameplay rules govern replacing or clearing its target.                              |
 | Content entry; Content; entry; entries      | [GDR](../foundation/core-concepts.md#glossary)                                                                                      | Naming immutable game data; use GDR, GDRs, and GDR in attributive uses after introducing the full name. The Content Family and document titles retain their names. |
 | Instance; occurrence                        | [Campaign instance](../foundation/campaign-modeling-contract.md#glossary)                                                           | Referring to the modeled occurrence, rather than explaining what an occurrence means in a definition.                                                              |
-| Constructor                                 | [Campaign instance constructor](../foundation/campaign-modeling-contract.md#glossary)                                               | Referring to the declared Campaign instance construction operation, which is distinct from a Rule or a programming-language constructor.                           |
 | Build                                       | [Game build](../foundation/core-concepts.md#glossary)                                                                               | Naming the version of the game's supplied data and executable logic; ordinary build-tool operations retain their meaning.                                          |
 | ID                                          | [Instance ID](../foundation/core-concepts.md#glossary)                                                                              | Identifying a Campaign instance; GDR identifiers, document Spec IDs, and other identifiers retain their own descriptions.                                          |
 | Relationship type                           | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                        |
@@ -305,25 +302,25 @@ or unrelated uses of “configuration.” Use GDR or Archetype rather than “Te
 explained in [Rejected terms and synonyms](../foundation/campaign-modeling-contract.md#rejected-terms-and-synonyms).
 Retention in History does not replace named lifecycle states; for example, Killed and Completed.
 
-Treat GDRs, Rules, and Campaign instance constructors as distinct concepts; neither a GDR nor a Campaign instance constructor is a Rule.
-Attribute execution to the engine or an implementation. Rules specify behavior; GDRs supply input data.
-Avoid wording that makes Rules or GDRs perform operations. Execution statements about named functions refer to
-their implementations. Follow [Campaign initialization](../foundation/campaign-modeling-contract.md#campaign-initialization).
+Treat GDRs and Rules as distinct concepts; a GDR is not a Rule. Attribute execution to the engine. Rules specify
+behavior; GDRs supply input data. Avoid wording that makes Rules or GDRs perform operations. Follow
+[Campaign initialization](../foundation/campaign-modeling-contract.md#campaign-initialization).
+
+Specify creation of a Campaign instance as a Rule that states when the Campaign instance is created, the initial
+values of its properties and the source of each value, and that it receives a fresh Instance ID, as required by
+[Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation). Do not specify
+which code creates it or that code's signature or dependencies; state the resulting facts instead, for example which
+Campaign instance owns the new one.
 
 When specifying a game concept, state its applicable modeling role and mutability. A Campaign instance's Type describes
 its four properties: Instance ID, Archetype, Constants, and State.
-Distinguish structural constraints, Campaign instance constructor initialization, and ongoing gameplay invariants. Declare Instance ID scopes;
-singleton Campaign instances are not exempt. Campaign instance constructor contracts identify the Type of the returned Campaign instance, inputs, dependencies,
-and initialization of all four properties. Structural compatibility does not establish domain validity. Use prose,
+Distinguish structural constraints, initial values on creation, and ongoing gameplay invariants. Declare Instance ID scopes;
+singleton Campaign instances are not exempt. Structural compatibility does not establish domain validity. Use prose,
 property tables, and diagrams for conceptual descriptions; a programming-language declaration is not required. State
-multiplicity with an explicit scope, construction and historical transitions, Authoritative values versus Derived values, and
+multiplicity with an explicit scope, creation and historical transitions, Authoritative values versus Derived values, and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
 these dimensions differ within one Campaign instance. Link to the owning specification for details; explicitly retain
 unresolved decisions rather than filling them with assumptions.
-
-Give illustrative Campaign instance constructors explicit function names, for example `constructEnemy`, and distinguish
-the returned Campaign instance from the caller's attachment operation. State that Campaign instance constructors return
-Campaign instances of a Type; never say they produce or return the Type itself.
 
 # Predictable layout and allowed variation
 

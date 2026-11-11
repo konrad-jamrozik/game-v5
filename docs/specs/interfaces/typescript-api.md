@@ -14,7 +14,7 @@ Define exact callable TypeScript signatures for Session API, Player API, Develop
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for Campaign instance construction, composition, and identity/reference constraints preserved by public operations.
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for Campaign instance creation, composition, and identity/reference constraints preserved by public operations.
 - Uses [Core Concepts](../foundation/core-concepts.md) for Types, Instance IDs, Session, and committed-data meanings in exact public signatures.
 - Uses [Developer API](./developer-api.md) for full Campaign state inspection fields and Dev mode transition behavior.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and identifiers represented in commands and reports.

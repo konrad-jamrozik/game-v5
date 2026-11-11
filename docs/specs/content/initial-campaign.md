@@ -79,8 +79,8 @@ TODO: List exact initial resources, roster, capabilities, faction setup, and all
 
 TODO: Supply archetype catalogs for every Campaign instance Type declared in
 [Types, multiplicity, and lifecycle](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including singleton Campaign and Agency.
-Declare each archetype’s GDR ID, shared characteristics, and construction defaults. Keep non-archetype balance
-parameters distinct. Mechanics retain ownership of Campaign instance constructor behavior; catalog details and balance values remain open.
+Declare each archetype’s GDR ID, shared characteristics, and initial values. Keep non-archetype balance
+parameters distinct. Mechanics retain ownership of the Rules that create Campaign instances; catalog details and balance values remain open.
 
 InvestigationArchetype GDRs and Lead GDRs are separate catalogs. Their references and allowed combinations
 must follow the owning mechanics; the illustrative InvestigationArchetype GDRs in Campaign Modeling Contract do not select production
