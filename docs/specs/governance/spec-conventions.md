@@ -44,7 +44,7 @@ in a specification only if it meets at least one of the following criteria. This
 
 1. **Observable:** a black-box test through the engine API, a save, or a replay could fail when the statement is
    violated.
-2. **Designer-authored:** the statement is a GDR, Rule, or formula that the game designer must write down.
+2. **Designer-authored:** the statement is a GDR or Rule that the game designer must write down.
 3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
 
 Everything else is left to the implementer's discretion and must not be specified. For example, the following are out
