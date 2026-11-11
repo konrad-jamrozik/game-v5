@@ -30,6 +30,7 @@ const FAMILY_ORDER: readonly SpecificationFamily[] = [
   'Content',
   'Interfaces',
   'Acceptance',
+  'Guidance',
 ]
 const STATUS_ORDER: readonly SpecificationStatus[] = ['Stub', 'Draft', 'Accepted', 'Superseded']
 const RELATIONSHIP_ORDER: readonly RelationshipKind[] = ['follows', 'refines', 'uses', 'implements', 'verifies']

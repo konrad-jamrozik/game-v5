@@ -18,6 +18,7 @@ campaign-data composition, gameplay mechanics, persistence procedures, or interf
 - Used by [Developer API](../interfaces/developer-api.md) for Campaign state and Authoritative value meanings used in full-state inspection.
 - Used by [Domain Model](./domain-model.md) for Type, Campaign state, Instance ID, and immutable-data meanings used to describe game concepts.
 - Used by [Engine Contract](./engine-contract.md) for Campaign, Session, Game build, identity, and information meanings used in execution guarantees.
+- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for Campaign state and Rule meanings used to bound what gameplay code may read.
 - Used by [History and Persistence](./history-and-persistence.md) for Session, Campaign state, History, and Committed state meanings used in storage and restoration.
 - Used by [Initial Campaign Content](../content/initial-campaign.md) for Type, GDR, and Game build meanings used to describe starting data.
 - Used by [Numbers and Randomness](./numbers-and-randomness.md) for Rule, numeric value classification, and Instance ID meanings used in numeric contracts.
@@ -34,6 +35,7 @@ campaign-data composition, gameplay mechanics, persistence procedures, or interf
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Engine Contract](./engine-contract.md)
+- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
 - Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Numbers and Randomness](./numbers-and-randomness.md)

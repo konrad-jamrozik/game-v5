@@ -20,6 +20,7 @@ flowchart TD
   CMC["CMC — Campaign Modeling Contract (Accepted)"]
   COMBAT["COMBAT — Combat (Stub)"]
   CORE["CORE — Core Concepts (Draft)"]
+  DEPDIR["DEPDIR — Gameplay Dependency Direction (Draft)"]
   DEV["DEV — Developer API (Stub)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
   ENG["ENG — Engine Contract (Draft)"]
@@ -49,6 +50,7 @@ flowchart TD
   CAMP --> TURN
   CLI --> SCEN
   CMC --> API
+  CMC --> DEPDIR
   CMC --> DOM
   CMC --> HIST
   CMC --> INFO
@@ -61,6 +63,7 @@ flowchart TD
   CORE --> CAMP
   CORE --> CLI
   CORE --> CMC
+  CORE --> DEPDIR
   CORE --> DEV
   CORE --> DOM
   CORE --> ENG
@@ -84,6 +87,7 @@ flowchart TD
   ECON --> MISSION
   ECON --> TURN
   ENG --> CAMP
+  ENG --> DEPDIR
   FACTION --> INFO
   FACTION --> INIT
   FACTION --> LEAD

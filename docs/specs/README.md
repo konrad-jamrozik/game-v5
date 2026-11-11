@@ -76,6 +76,7 @@ Arrows run from Dependency to Dependent; this diagram shows the complete explici
 | CLI     | Interfaces | [Terminal CLI](interfaces/cli.md)                                                                    | Terminal adapter for the four engine API namespaces with role-restricted commands and output.                                    |
 | WEB     | Interfaces | [Web UI](interfaces/web-ui.md)                                                                       | Specify the first functional browser interface while keeping gameplay in the shared API.                                         |
 | SCEN    | Acceptance | [Campaign Integration and Acceptance Tests](acceptance/campaign-integration-and-acceptance-tests.md) | Define test scenarios that verify how game systems work together.                                                                |
+| DEPDIR  | Guidance   | [Gameplay Dependency Direction](guidance/gameplay-dependency-direction.md)                           | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs.                         |
 
 # Work plan
 

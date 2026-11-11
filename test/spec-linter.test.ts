@@ -192,7 +192,7 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance'])(
+  test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance', 'Guidance'])(
     'accepts narrative requirements without a dedicated section for %s',
     (family) => {
       const directory = family.toLowerCase()
@@ -269,7 +269,7 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test.each(['Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance'])(
+  test.each(['Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance', 'Guidance'])(
     'still requires the separate acceptance section for standard %s specifications',
     (family) => {
       const directory = family.toLowerCase()

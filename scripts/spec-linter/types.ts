@@ -17,7 +17,8 @@ export interface LintInput {
   readonly indexPath?: string
 }
 
-export type SpecificationFamily = 'Governance' | 'Foundation' | 'Mechanics' | 'Content' | 'Interfaces' | 'Acceptance'
+export type SpecificationFamily =
+  'Governance' | 'Foundation' | 'Mechanics' | 'Content' | 'Interfaces' | 'Acceptance' | 'Guidance'
 
 export type SpecificationStatus = 'Stub' | 'Draft' | 'Accepted' | 'Superseded'
 

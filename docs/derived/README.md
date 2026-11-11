@@ -12,7 +12,7 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 18             |
-| Draft      | 5              |
+| Draft      | 6              |
 | Accepted   | 3              |
 | Superseded | 0              |
 
@@ -26,6 +26,7 @@ These informative views are derived from the registered Markdown specifications.
 | Content    | 1              |
 | Interfaces | 5              |
 | Acceptance | 1              |
+| Guidance   | 1              |
 
 ## Governance
 
@@ -82,3 +83,9 @@ These informative views are derived from the registered Markdown specifications.
 | ID   | Document                                                                                                      | Status | Owns                                                              |
 | ---- | ------------------------------------------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------- |
 | SCEN | [Campaign Integration and Acceptance Tests](../specs/acceptance/campaign-integration-and-acceptance-tests.md) | Stub   | Define test scenarios that verify how game systems work together. |
+
+## Guidance
+
+| ID     | Document                                                                            | Status | Owns                                                                                                     |
+| ------ | ----------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| DEPDIR | [Gameplay Dependency Direction](../specs/guidance/gameplay-dependency-direction.md) | Draft  | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |

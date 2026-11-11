@@ -16,6 +16,7 @@ RNG algorithm, save encoding, or subsystem mechanics.
 
 - Uses [Core Concepts](./core-concepts.md) for shared Campaign, Session, Game build, committed-data, identity, and information vocabulary in execution guarantees.
 - Used by [Campaign](../mechanics/campaign.md) for atomic command commitment and action-history guarantees applied to Campaign configuration changes.
+- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for the continuation-state guarantee that its non-behavioural guidance helps implementations satisfy.
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md), which specifies campaign composition, identity, references, and historical preservation under engine integrity guarantees.
 - Refined by [Developer API](../interfaces/developer-api.md), which specifies Dev mode, full Campaign state inspection, and validated cheat operations.
 - Refined by [History and Persistence](./history-and-persistence.md), which specifies the reversible campaign history, replay, and save/load guarantees.
@@ -28,6 +29,7 @@ RNG algorithm, save encoding, or subsystem mechanics.
 
 - Uses [Core Concepts](./core-concepts.md)
 - Used by [Campaign](../mechanics/campaign.md)
+- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md)
 - Refined by [Developer API](../interfaces/developer-api.md)
 - Refined by [History and Persistence](./history-and-persistence.md)
@@ -162,9 +164,7 @@ before the player advances the turn. Closing or replacing the Current campaign d
 ## Campaign data integrity
 
 Campaign creation, committed Player API and Developer API actions, and restoration must preserve the declared
-campaign-data composition, identity, reference, and historical-fact invariants. Gameplay calculations receive only
-their declared necessary inputs and dependencies; they must not gain unrestricted access to the complete Campaign
-state through those dependencies. Campaign initialization and external engine operations may access complete Campaign state.
+campaign-data composition, identity, reference, and historical-fact invariants.
 Detailed campaign-data structures and the constraints preserving them belong to refining specifications.
 
 ## Player queries and actions
@@ -388,6 +388,4 @@ human's memory; engine-supplied Autopilot AI context nevertheless follows [Autop
   publishing intermediate Campaign state. Returned inspection data cannot mutate the engine
   ([Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency), [Committed state integrity](#committed-state-integrity)).
 - **Campaign integrity:** A committed action and its undo/redo preserve declared campaign-data composition and identity,
-  and required historical references remain resolvable. A gameplay calculation receives only its necessary inputs and
-  cannot access the complete Campaign state through an undeclared dependency
-  ([Campaign data integrity](#campaign-data-integrity)).
+  and required historical references remain resolvable ([Campaign data integrity](#campaign-data-integrity)).

@@ -16,6 +16,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 - Uses [Core Concepts](./core-concepts.md) for shared modeling vocabulary and value meanings applied to campaign-data constraints.
 - Refines [Engine Contract](./engine-contract.md) by specifying campaign-data composition, construction, identity, reference, and historical-preservation constraints for campaign integrity and continuation guarantees.
 - Used by [Domain Model](./domain-model.md) for Campaign instance composition, construction, and identity/reference constraints applied to game concepts.
+- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for the Campaign instance vocabulary in which its non-behavioural dependency guidance is stated.
 - Used by [History and Persistence](./history-and-persistence.md) for identity, reference resolution, and historical-preservation constraints applied to restoration.
 - Used by [Initial Campaign Content](../content/initial-campaign.md) for campaign composition and GDR modeling roles used by starting data.
 - Used by [Numbers and Randomness](./numbers-and-randomness.md) for campaign identity and value-classification constraints preserved by numeric execution.
@@ -27,6 +28,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 - Uses [Core Concepts](./core-concepts.md)
 - Refines [Engine Contract](./engine-contract.md)
 - Used by [Domain Model](./domain-model.md)
+- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
 - Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Numbers and Randomness](./numbers-and-randomness.md)
@@ -88,13 +90,6 @@ For example, a Campaign instance constructor implementation can depend on:
 - One or more GDRs serving as Archetypes.
 - A random generator.
 - An ID generator.
-
-### Gameplay dependency direction
-
-Gameplay functions, including Campaign instance constructors, must receive only necessary inputs and dependencies;
-they must not reach any part of Campaign state beyond those inputs, directly or indirectly. Campaign instances must
-not hold references to the Campaign state that contains them. These restrictions exclude campaign creation, save/load, and external engine interfaces.
-This specifies the isolation requirement in Engine Contract's [Campaign data integrity](engine-contract.md#campaign-data-integrity).
 
 ### Campaign instance identity
 

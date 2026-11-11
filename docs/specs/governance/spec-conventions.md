@@ -56,8 +56,8 @@ of scope:
 
 A statement about one of these matters belongs in a specification only when it states an observable consequence, and
 then the specification states the consequence rather than the mechanism. Non-observable steering for implementers,
-for example architecture or code-quality advice, is never a requirement. Record it, when it is worth recording, only in
-clearly non-behavioural guidance that no acceptance test depends on.
+for example architecture or code-quality advice, is never a requirement. Record it, when it is worth recording, only in a
+Guidance Family document, as described in [Specification families and paths](#specification-families-and-paths).
 
 # Document lifecycle and ownership
 
@@ -111,6 +111,14 @@ the exception of the root index, its file must be a direct child of the correspo
 | Content    | `content/`    | Versioned GDRs, named parameters, catalogs, and starting configurations                        |
 | Interfaces | `interfaces/` | Observable player, developer, API, CLI, and UI contracts                                       |
 | Acceptance | `acceptance/` | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability              |
+| Guidance   | `guidance/`   | Non-behavioural steering for implementers, for example architecture or code-quality guidance   |
+
+Guidance documents are non-behavioural. They steer implementers toward code that is easier to maintain and to check
+against the other specifications, but they own no Rule, observable contract, or GDR, and no acceptance test depends on
+them. An implementation that ignores a Guidance document can still satisfy every other specification. A Guidance
+document may explain which observable contract its guidance supports; that contract remains owned and guaranteed by
+its own specification. Guidance documents are registered so that they participate in relationship inventories,
+generated views, and graph validation like every other specification.
 
 The Game Specification Index has Family Governance and remains at `docs/specs/README.md` as the navigation entry point.
 Family describes ownership, not dependencies: a Foundation specification may depend on Mechanics specifications without
@@ -129,6 +137,7 @@ A rule, formula, parameter value, or API field has one authoritative owner. Othe
 - Investigations owns probability and estimate calculations; Player Information owns which results and fields players see.
 - Interface specifications reference mechanical eligibility and effects rather than independently defining them.
 - Acceptance scenarios exercise rules; they cannot introduce new rules.
+- Guidance documents steer implementers; they cannot introduce or change rules.
 
 ## Implicit relationships
 
