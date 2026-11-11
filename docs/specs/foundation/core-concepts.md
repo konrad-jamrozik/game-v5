@@ -61,12 +61,12 @@ Language-independent vocabulary for describing and identifying model data.
 
 What a version of the game supplies: shared by every Campaign and unchanged during play.
 
-| Term                   | Definition                                                                                                                             |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Rule                   | A declared statement governing a calculation or valid game behavior; for example, a formula or constraint.                             |
-| Ruleset                | The collection of Rules governing a Campaign.                                                                                          |
-| Game build             | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                     |
-| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated. |
+| Term                   | Definition                                                                                                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rule                   | A declared statement governing a calculation or valid game behavior; for example, a formula, a constraint, or a statement of when something comes to exist in a Campaign and with which initial values. |
+| Ruleset                | The collection of Rules governing a Campaign.                                                                                                                                                           |
+| Game build             | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                                                                                      |
+| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated.                                                                  |
 
 ## Campaign and Session contexts
 
