@@ -13,21 +13,6 @@ Define the shared language for the complete game contract, spanning campaign dat
 owns the meanings of its glossary terms independently of the contracts that use them. It does not define API authority,
 campaign-data composition, gameplay mechanics, persistence procedures, or interface behavior.
 
-- Used by [Campaign](../mechanics/campaign.md) for Campaign state, World state, and Campaign configuration meanings applied to adjustable campaign parameters.
-- Used by [Campaign Modeling Contract](./campaign-modeling-contract.md) for shared modeling vocabulary, Rule kind, and value meanings applied to campaign-data constraints.
-- Used by [Developer API](../interfaces/developer-api.md) for Campaign state and Authoritative value meanings used in full-state inspection.
-- Used by [Domain Model](./domain-model.md) for Type, Campaign state, Rule kind, Instance ID, and immutable-data meanings used to describe game concepts.
-- Used by [Engine Contract](./engine-contract.md) for Campaign, Session, Game build, Rule kind, identity, and information meanings used in execution guarantees.
-- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for Campaign state and Rule meanings used to bound what gameplay code may read.
-- Used by [History and Persistence](./history-and-persistence.md) for Session, Campaign state, History, and Committed state meanings used in storage and restoration.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for Type, GDR, and Game build meanings used to describe starting data.
-- Used by [Numbers and Randomness](./numbers-and-randomness.md) for Rule, numeric value classification, and Instance ID meanings used in numeric contracts.
-- Used by [Player Information](../interfaces/player-information.md) for Player-visible information and value meanings used in query schemas.
-- Used by [Terminal CLI](../interfaces/cli.md) for Session and shared execution meanings used in terminal workflows.
-- Used by [Turn Resolution](./turn-resolution.md) for Rule, Campaign state, and Committed state meanings used in phase scheduling.
-- Used by [TypeScript Player API](../interfaces/typescript-api.md) for Type, Instance ID, Session, and committed-data meanings used in public signatures.
-- Used by [Web UI](../interfaces/web-ui.md) for Session and shared execution meanings used in browser workflows.
-
 # Relationships
 
 - Used by [Campaign](../mechanics/campaign.md)

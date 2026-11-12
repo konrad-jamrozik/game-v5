@@ -14,16 +14,6 @@ Define escalating faction pressure, Faction operation occurrence generation, sup
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Initial Campaign Content](../content/initial-campaign.md) for Faction archetypes and operation occurrence parameters.
-- Uses [Leads and Progression](./leads-and-progression.md) for the progression facts and effects that govern Faction activity and defeat.
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
-- Refines [Domain Model](../foundation/domain-model.md) by specifying Faction pressure, operation occurrence generation, suppression, and defeat rules.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for the operation occurrence rules that Faction GDRs must support.
-- Used by [Leads and Progression](./leads-and-progression.md) for the Faction activity and defeat rules affected by Lead progression.
-- Used by [Missions](./missions.md) for the Faction operation occurrence and suppression rules associated with Response missions.
-- Used by [Player Information](../interfaces/player-information.md) for Faction activity, operation occurrence rules, and defeat conditions.
-- Used by [Turn Resolution](../foundation/turn-resolution.md) for the Faction pressure and operation occurrence transitions scheduled within a turn.
-
 # Relationships
 
 - Uses [Initial Campaign Content](../content/initial-campaign.md)

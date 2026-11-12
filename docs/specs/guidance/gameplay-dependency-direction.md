@@ -13,10 +13,6 @@ Steer implementers to keep gameplay code isolated from the Campaign state that c
 non-behavioural Guidance: it owns no Rule, observable contract, or GDR, and no acceptance test depends on it.
 Campaign data integrity and continuation guarantees remain owned by Engine Contract and Campaign Modeling Contract.
 
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for the Campaign instance vocabulary in which the dependency direction is stated.
-- Uses [Core Concepts](../foundation/core-concepts.md) for the Campaign state and Rule vocabulary that bounds what gameplay functions may read.
-- Uses [Engine Contract](../foundation/engine-contract.md) for the continuation-state guarantee that this guidance helps implementations satisfy.
-
 # Relationships
 
 - Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)

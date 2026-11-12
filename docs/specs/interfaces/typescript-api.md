@@ -14,18 +14,6 @@ Define exact callable TypeScript signatures for Session API, Player API, Develop
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for Campaign instance creation, composition, and identity/reference constraints preserved by public operations.
-- Uses [Core Concepts](../foundation/core-concepts.md) for Types, Instance IDs, Session, and committed-data meanings in exact public signatures.
-- Uses [Developer API](./developer-api.md) for full Campaign state inspection fields and Dev mode transition behavior.
-- Uses [Domain Model](../foundation/domain-model.md) for the game concepts and identifiers represented in commands and reports.
-- Uses [History and Persistence](../foundation/history-and-persistence.md) for the session, restoration, and save/load operations exposed by the player API.
-- Uses [Player Information](./player-information.md) for Player-visible information and the boundary around hidden Campaign state.
-- Refines [Engine Contract](../foundation/engine-contract.md) by specifying the exact TypeScript player command, report, and error signatures.
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for the command and report surface exercised by integration scenarios.
-- Used by [Developer API](./developer-api.md) for Dev mode controls and full Campaign state access through Developer API.
-- Used by [Terminal CLI](./cli.md) for the player commands, reports, and errors adapted for terminal interaction.
-- Used by [Web UI](./web-ui.md) for the player commands, reports, and errors adapted for browser interaction.
-
 # Relationships
 
 - Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)

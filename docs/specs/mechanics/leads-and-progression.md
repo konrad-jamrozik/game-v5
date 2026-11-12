@@ -14,15 +14,6 @@ Define the progression graph and the lifecycle of Leads, separately from Investi
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Factions](./factions.md) for the Faction activity and defeat rules affected by Lead progression.
-- Uses [Initial Campaign Content](../content/initial-campaign.md) for the Lead catalog and its concrete progression prerequisites and effects.
-- Uses [Missions](./missions.md) for the Mission outcomes that establish Lead completion and progression facts.
-- Refines [Domain Model](../foundation/domain-model.md) by specifying Lead progression and lifecycle rules.
-- Used by [Factions](./factions.md) for the progression facts and effects that govern Faction activity and defeat.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for the progression prerequisites and effects that Lead GDRs must encode.
-- Used by [Investigations](./investigations.md) for the Lead prerequisites and completion effects pursued through Investigations.
-- Used by [Player Information](../interfaces/player-information.md) for Lead prerequisites, completion facts, and progression effects.
-
 # Relationships
 
 - Uses [Factions](./factions.md)

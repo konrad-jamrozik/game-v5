@@ -17,8 +17,6 @@ Specifications state only what satisfies [What belongs in a specification](#what
 prescribe internal classes, file organization, libraries, or algorithms. For example, exact public TypeScript
 signatures belong in specifications because API callers observe them.
 
-- Uses [Artifact Relationships](./artifact-relationships.md) for the canonical relationship model and directional inventory meanings.
-
 # Relationships
 
 - Uses [Artifact Relationships](./artifact-relationships.md)
@@ -205,22 +203,8 @@ Relationship entries have no Scope field. Keep substantive constraints and requi
 contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
 acknowledgements do not create relationships.
 
-For every entry in Relationships, Purpose and boundaries must contain exactly one corresponding flat unordered
-bullet with a concise description of how the documents relate. Start the bullet with the same directional phrase
-and document hyperlink as the inventory entry, then explain the vocabulary, data, behavior, or contract involved
-from the current document's perspective. Keep each description to one sentence; Markdown line wrapping is allowed.
-Repeat neither whole contracts nor requirement details in these summaries. Different Relationship kinds or
-directions involving the same document require separate bullets. These bullets cover the complete explicit inventory
-and are not an illustrative enumeration. Implicit relationships and ordinary contextual references do not require
-such bullets. Specifications with no explicit relationships need no relationship-description bullets.
-
-For example, Engine Contract's Purpose and boundaries includes:
-
-- Uses [Core Concepts](../foundation/core-concepts.md) for shared Campaign, Session, Game build, and committed-data vocabulary in execution guarantees.
-
-This relationship-description rule applies to every registered
-specification, including Stubs and governance-layout exceptions. Deterministic lint checks correspondence and
-nonempty descriptions; semantic review checks whether each explanation accurately describes the relationship.
+Relationships is the only inventory of explicit relationships. Purpose and boundaries must not repeat it as
+directional-phrase bullets; where a reliance matters, the owning contract prose states it.
 
 Classify relationships using [Choosing uses or refines](artifact-relationships.md#choosing-uses-or-refines).
 Each refinement must identify the parent contract and the added detail about the same subject or behavior in its
@@ -263,7 +247,7 @@ If two similar terms are retained, they must represent distinct concepts and hav
 replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
 Glossary. If the concepts differ, make their distinct definitions explicit. Unresolved terminology blocks acceptance.
 
-Relationship descriptions use `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
+Relationship content uses `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
 The modeling term [Type](../foundation/core-concepts.md#glossary) describes data independently of a programming
 language. Explicit TypeScript terminology remains valid for programming contracts and explanatory analogies;
 “relationship type” remains a prohibited substitute for “Relationship kind.”

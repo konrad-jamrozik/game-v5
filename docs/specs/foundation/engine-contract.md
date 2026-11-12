@@ -14,17 +14,6 @@ Define the engine's API hierarchy and the guarantees it provides when running th
 This document owns observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
 RNG algorithm, save encoding, or subsystem mechanics.
 
-- Uses [Core Concepts](./core-concepts.md) for shared Campaign, Session, Game build, Rule kind, committed-data, identity, and information vocabulary in execution guarantees.
-- Used by [Campaign](../mechanics/campaign.md) for atomic command commitment and action-history guarantees applied to Campaign configuration changes.
-- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for the continuation-state guarantee that its non-behavioural guidance helps implementations satisfy.
-- Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md), which specifies campaign composition, identity, references, and historical preservation under engine integrity guarantees.
-- Refined by [Developer API](../interfaces/developer-api.md), which specifies Dev mode, full Campaign state inspection, and validated cheat operations.
-- Refined by [History and Persistence](./history-and-persistence.md), which specifies the reversible campaign history, replay, and save/load guarantees.
-- Refined by [Numbers and Randomness](./numbers-and-randomness.md), which specifies the numeric and random behavior required for reproducible execution.
-- Refined by [Player Information](../interfaces/player-information.md), which specifies the complete player knowledge contract and hidden-state boundary.
-- Refined by [Turn Resolution](./turn-resolution.md), which specifies the precise phase order and snapshot rules for executing a turn.
-- Refined by [TypeScript Player API](../interfaces/typescript-api.md), which specifies the exact TypeScript signatures for all engine API surfaces and Principal-restricted results.
-
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)

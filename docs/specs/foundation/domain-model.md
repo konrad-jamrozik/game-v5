@@ -20,23 +20,6 @@ not prescribe classes, database tables, a UI framework, or source-file layout.
 relationships; mechanics own formulas and detailed transitions. Numeric representation, RNG algorithms, phase order, Game Data Record (GDR) values, API/report schemas, and save encoding
 remain in their owning specifications.
 
-- Uses [Campaign Modeling Contract](./campaign-modeling-contract.md) for Campaign instance composition, creation, and identity/reference constraints applied to game concepts.
-- Uses [Core Concepts](./core-concepts.md) for shared Types, Campaign state, Rule kind, identity, and immutable-data vocabulary used to describe game concepts.
-- Used by [Developer API](../interfaces/developer-api.md) for the game concepts and identities exposed for debugging.
-- Used by [History and Persistence](./history-and-persistence.md) for the game structures and identity/reference relationships preserved during restoration.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for the game concepts and structural constraints that concrete GDRs must satisfy.
-- Used by [Player Information](../interfaces/player-information.md) for the game concepts and relationships represented in player reports.
-- Used by [Turn Resolution](./turn-resolution.md) for the game structures and references read and changed by turn phases.
-- Used by [TypeScript Player API](../interfaces/typescript-api.md) for the game concepts and identifiers represented in commands and reports.
-- Refined by [Agents](../mechanics/agents.md), which specifies Agent capability, task availability, development, exhaustion, and recovery rules.
-- Refined by [Campaign](../mechanics/campaign.md), which specifies Campaign initialization, Campaign configuration changes, global panic, and victory and defeat rules.
-- Refined by [Combat](../mechanics/combat.md), which specifies Combatant behavior and automatic battle resolution rules.
-- Refined by [Economy and Upgrades](../mechanics/economy-and-upgrades.md), which specifies Agency resource flows, personnel purchases, and upgrade rules.
-- Refined by [Factions](../mechanics/factions.md), which specifies Faction pressure, operation occurrence generation, suppression, and defeat rules.
-- Refined by [Investigations](../mechanics/investigations.md), which specifies Investigation progress, stochastic completion, uncertainty, and commitment rules.
-- Refined by [Leads and Progression](../mechanics/leads-and-progression.md), which specifies Lead progression and lifecycle rules.
-- Refined by [Missions](../mechanics/missions.md), which specifies Mission commitments and the translation of Battle result facts into Campaign consequences.
-
 # Relationships
 
 - Uses [Campaign Modeling Contract](./campaign-modeling-contract.md)

@@ -14,24 +14,6 @@ Define complete player-facing knowledge and a consistent boundary around hidden 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Agents](../mechanics/agents.md) for Agent capabilities, Current assignments, exhaustion, and recovery.
-- Uses [Campaign](../mechanics/campaign.md) for Campaign initialization and global start and end conditions.
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for campaign value-classification and historical-preservation constraints applied to exposed facts.
-- Uses [Combat](../mechanics/combat.md) for automatic battle resolution and retained Battle result facts.
-- Uses [Core Concepts](../foundation/core-concepts.md) for Player-visible information, Authoritative value, Derived value, and historical-data meanings in query schemas.
-- Uses [Domain Model](../foundation/domain-model.md) for the game concepts and relationships represented in player reports.
-- Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for resource flows, purchases, and Agency upgrades.
-- Uses [Factions](../mechanics/factions.md) for Faction activity, operation occurrence rules, and defeat conditions.
-- Uses [History and Persistence](../foundation/history-and-persistence.md) for the retained facts and restored campaign state available for player reports.
-- Uses [Investigations](../mechanics/investigations.md) for Investigation progress, completion, and commitment costs.
-- Uses [Leads and Progression](../mechanics/leads-and-progression.md) for Lead prerequisites, completion facts, and progression effects.
-- Uses [Missions](../mechanics/missions.md) for Mission commitments, results, and Campaign consequences.
-- Refines [Engine Contract](../foundation/engine-contract.md) by specifying the complete player knowledge contract and hidden-state boundary.
-- Used by [Investigations](../mechanics/investigations.md) for the visibility and estimate constraints on reporting uncertain Investigation outcomes.
-- Used by [Terminal CLI](./cli.md) for Player-visible information and the boundary around hidden Campaign state.
-- Used by [TypeScript Player API](./typescript-api.md) for Player-visible information and the boundary around hidden Campaign state.
-- Used by [Web UI](./web-ui.md) for Player-visible information and the boundary around hidden Campaign state.
-
 # Relationships
 
 - Uses [Agents](../mechanics/agents.md)

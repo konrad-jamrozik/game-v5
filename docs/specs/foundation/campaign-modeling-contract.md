@@ -13,17 +13,6 @@ Define campaign-data composition, Campaign instance creation, identity, referenc
 
 The Game Design Brief supplies strategic intent; mechanics specifications own detailed gameplay behavior.
 
-- Uses [Core Concepts](./core-concepts.md) for shared modeling vocabulary, Rule kind, and value meanings applied to campaign-data constraints.
-- Refines [Engine Contract](./engine-contract.md) by specifying campaign-data composition, Campaign instance creation, identity, reference, and historical-preservation constraints for campaign integrity and continuation guarantees.
-- Used by [Developer API](../interfaces/developer-api.md) for the four-property Campaign instance structure in which full Campaign state inspection presents each Campaign instance.
-- Used by [Domain Model](./domain-model.md) for Campaign instance composition, creation, and identity/reference constraints applied to game concepts.
-- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for the Campaign instance vocabulary in which its non-behavioural dependency guidance is stated.
-- Used by [History and Persistence](./history-and-persistence.md) for identity, reference resolution, and historical-preservation constraints applied to restoration.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for campaign composition and GDR purposes used by starting data.
-- Used by [Numbers and Randomness](./numbers-and-randomness.md) for campaign identity and value-classification constraints preserved by numeric execution.
-- Used by [Player Information](../interfaces/player-information.md) for value-classification and historical-preservation constraints applied to exposed facts.
-- Used by [TypeScript Player API](../interfaces/typescript-api.md) for Campaign instance creation, composition, and identity/reference constraints preserved by public operations.
-
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)

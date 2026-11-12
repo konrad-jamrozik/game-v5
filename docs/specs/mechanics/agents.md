@@ -14,18 +14,6 @@ Define agent capability, task availability, development, exhaustion, and recover
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Combat](./combat.md) for the Battle result facts that affect Agent development and recovery.
-- Uses [Economy and Upgrades](./economy-and-upgrades.md) for the purchases and upgrade effects that affect Agent availability and capability.
-- Uses [Initial Campaign Content](../content/initial-campaign.md) for Agent archetypes and development and recovery parameters.
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
-- Refines [Domain Model](../foundation/domain-model.md) by specifying Agent capability, task availability, development, exhaustion, and recovery rules.
-- Used by [Combat](./combat.md) for Agent capabilities and exhaustion when resolving a battle.
-- Used by [Economy and Upgrades](./economy-and-upgrades.md) for Agent capability and availability rules affected by personnel purchases and upgrades.
-- Used by [Investigations](./investigations.md) for Agent capabilities and task availability when assigning Investigation participants.
-- Used by [Missions](./missions.md) for Agent capabilities and availability when committing Mission participants.
-- Used by [Player Information](../interfaces/player-information.md) for Agent capabilities, Current assignments, exhaustion, and recovery.
-- Used by [Turn Resolution](../foundation/turn-resolution.md) for Agent assignment, exhaustion, and recovery transitions scheduled within a turn.
-
 # Relationships
 
 - Uses [Combat](./combat.md)

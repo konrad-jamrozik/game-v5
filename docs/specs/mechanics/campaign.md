@@ -14,15 +14,6 @@ Define campaign initialization, adjustable Campaign configuration, global panic,
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Core Concepts](../foundation/core-concepts.md) for Campaign state, World state, and Campaign configuration meanings applied to adjustable campaign parameters.
-- Uses [Engine Contract](../foundation/engine-contract.md) for atomic command commitment and action-history guarantees applied to Campaign configuration changes.
-- Uses [Initial Campaign Content](../content/initial-campaign.md) for the starting GDRs and values needed to initialize a playable Campaign.
-- Uses [Turn Resolution](../foundation/turn-resolution.md) for the timing of Campaign updates and checks for end conditions.
-- Refines [Domain Model](../foundation/domain-model.md) by specifying Campaign initialization, Campaign configuration changes, global panic, and victory and defeat rules.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for the initialization contract that starting Campaign data must satisfy.
-- Used by [Player Information](../interfaces/player-information.md) for Campaign initialization and global start and end conditions.
-- Used by [Turn Resolution](../foundation/turn-resolution.md) for the Campaign update and end-condition rules scheduled within turn phases.
-
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)

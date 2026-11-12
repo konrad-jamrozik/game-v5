@@ -845,43 +845,26 @@ function relationshipPair(row: RelationshipRow): {
     : { dependency: row.owner, dependent: row.destination }
 }
 
-function validateRelationshipDescriptions(rows: readonly RelationshipRow[], diagnostics: Diagnostic[]): void {
-  for (const row of rows) {
-    const purpose = findHeading(row.owner.document, 1, 'Purpose and boundaries')
+function validatePurposeHasNoInventory(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
+  for (const specification of specifications) {
+    const purpose = findHeading(specification.document, 1, 'Purpose and boundaries')
     if (!purpose) continue // The layout validator reports the missing section.
-    const phrase = RELATIONSHIP_PHRASES.find(
-      (entry) => entry.kind === row.kind && entry.inventory === row.inventory,
-    )?.phrase
-    const bullets = sectionNodes(row.owner.document, purpose).flatMap((node) =>
+    const bullets = sectionNodes(specification.document, purpose).flatMap((node) =>
       node.type === 'list' && !node.ordered ? node.children : [],
     )
-    const descriptions = bullets.filter((item) => {
+    for (const item of bullets) {
       const paragraph = item.children[0]
-      if (item.children.length !== 1 || paragraph?.type !== 'paragraph' || item.checked != null) return false
+      if (paragraph?.type !== 'paragraph') continue
       const prefix = paragraph.children[0]
       const link = paragraph.children[1]
-      if (prefix?.type !== 'text' || prefix.value !== phrase + ' ' || link?.type !== 'link') return false
-      const parts = splitUrl(link.url)
-      const linkPath = decodeUrlPart(parts.path)
-      return (
-        !isExternalUrl(link.url) &&
-        !parts.fragment &&
-        linkPath !== undefined &&
-        linkPath !== '' &&
-        resolvePath(row.owner.path, linkPath) === row.destination.path &&
-        textOf(link) === row.destination.title &&
-        link.title == null &&
-        link.children.every((child) => child.type === 'text') &&
-        /[\p{L}\p{N}]/u.test(paragraph.children.slice(2).map(textOf).join(''))
-      )
-    })
-    if (descriptions.length !== 1) {
+      if (prefix?.type !== 'text' || link?.type !== 'link') continue
+      if (!RELATIONSHIP_PHRASES.some((entry) => prefix.value === entry.phrase + ' ')) continue
       addDiagnostic(
         diagnostics,
-        row.owner.path,
-        row.node,
-        'SPEC416',
-        `Purpose and boundaries must contain exactly one flat bullet starting with "${phrase} [${row.destination.title}]" and a nonempty relationship description; found ${descriptions.length}.`,
+        specification.path,
+        item,
+        'SPEC417',
+        'Purpose and boundaries must not repeat the Relationships inventory as directional-phrase bullets.',
       )
     }
   }
@@ -931,7 +914,7 @@ function validateRelationships(
 ): readonly RelationshipRow[] {
   const byPath = new Map(specifications.map((specification) => [specification.path, specification]))
   const rows = specifications.flatMap((specification) => parseInventory(specification, byPath, diagnostics))
-  validateRelationshipDescriptions(rows, diagnostics)
+  validatePurposeHasNoInventory(specifications, diagnostics)
   const seen = new Set<string>()
   for (const row of rows) {
     const pair = relationshipPair(row)

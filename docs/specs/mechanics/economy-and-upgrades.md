@@ -14,17 +14,6 @@ Define resource flows, personnel purchases, and agency improvements.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Agents](./agents.md) for Agent capability and availability rules affected by personnel purchases and upgrades.
-- Uses [Initial Campaign Content](../content/initial-campaign.md) for resource, personnel, and upgrade values and catalogs.
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
-- Uses [Turn Resolution](../foundation/turn-resolution.md) for the timing and snapshots used for resource flows and upgrade effects.
-- Refines [Domain Model](../foundation/domain-model.md) by specifying Agency resource flows, personnel purchases, and upgrade rules.
-- Used by [Agents](./agents.md) for the purchases and upgrade effects that affect Agent availability and capability.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for the parameter meanings and catalog requirements for resource flows, purchases, and upgrades.
-- Used by [Missions](./missions.md) for the resource and upgrade rules applied to Mission rewards and costs.
-- Used by [Player Information](../interfaces/player-information.md) for resource flows, purchases, and Agency upgrades.
-- Used by [Turn Resolution](../foundation/turn-resolution.md) for the resource and upgrade transitions scheduled within a turn.
-
 # Relationships
 
 - Uses [Agents](./agents.md)

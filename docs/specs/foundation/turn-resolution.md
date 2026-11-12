@@ -14,20 +14,6 @@ Define exactly when subsystem rules run and which state each phase reads.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Agents](../mechanics/agents.md) for Agent assignment, exhaustion, and recovery transitions scheduled within a turn.
-- Uses [Campaign](../mechanics/campaign.md) for the Campaign update and end-condition rules scheduled within turn phases.
-- Uses [Core Concepts](./core-concepts.md) for Rule, Campaign state, and Committed state meanings in phase scheduling.
-- Uses [Domain Model](./domain-model.md) for the game structures and references read and changed by turn phases.
-- Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for the resource and upgrade transitions scheduled within a turn.
-- Uses [Factions](../mechanics/factions.md) for the Faction pressure and operation occurrence transitions scheduled within a turn.
-- Uses [Investigations](../mechanics/investigations.md) for the Investigation progress and completion transitions scheduled within a turn.
-- Uses [Missions](../mechanics/missions.md) for the Mission transitions and Campaign consequences scheduled within a turn.
-- Uses [Numbers and Randomness](./numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
-- Refines [Engine Contract](./engine-contract.md) by specifying the precise phase order and snapshot rules for executing a turn.
-- Used by [Campaign](../mechanics/campaign.md) for the timing of Campaign updates and checks for end conditions.
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for effect timing and state snapshots in cross-system scenarios.
-- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for the timing and snapshots used for resource flows and upgrade effects.
-
 # Relationships
 
 - Uses [Agents](../mechanics/agents.md)

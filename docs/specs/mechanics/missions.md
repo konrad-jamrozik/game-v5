@@ -14,17 +14,6 @@ Define mission commitments and translate combat results into campaign consequenc
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Agents](./agents.md) for Agent capabilities and availability when committing Mission participants.
-- Uses [Combat](./combat.md) for automatic battle resolution and Battle result facts used to calculate Mission consequences.
-- Uses [Economy and Upgrades](./economy-and-upgrades.md) for the resource and upgrade rules applied to Mission rewards and costs.
-- Uses [Factions](./factions.md) for the Faction operation occurrence and suppression rules associated with Response missions.
-- Uses [Initial Campaign Content](../content/initial-campaign.md) for Mission and Enemy catalogs and concrete reward inputs.
-- Refines [Domain Model](../foundation/domain-model.md) by specifying Mission commitments and the translation of Battle result facts into Campaign consequences.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for the catalog requirements that Mission and Enemy GDRs must satisfy.
-- Used by [Leads and Progression](./leads-and-progression.md) for the Mission outcomes that establish Lead completion and progression facts.
-- Used by [Player Information](../interfaces/player-information.md) for Mission commitments, results, and Campaign consequences.
-- Used by [Turn Resolution](../foundation/turn-resolution.md) for the Mission transitions and Campaign consequences scheduled within a turn.
-
 # Relationships
 
 - Uses [Agents](./agents.md)

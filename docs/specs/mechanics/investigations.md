@@ -14,14 +14,6 @@ Define exact investigation progress, stochastic completion, player uncertainty, 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Agents](./agents.md) for Agent capabilities and task availability when assigning Investigation participants.
-- Uses [Leads and Progression](./leads-and-progression.md) for the Lead prerequisites and completion effects pursued through Investigations.
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
-- Uses [Player Information](../interfaces/player-information.md) for the visibility and estimate constraints on reporting uncertain Investigation outcomes.
-- Refines [Domain Model](../foundation/domain-model.md) by specifying Investigation progress, stochastic completion, uncertainty, and commitment rules.
-- Used by [Player Information](../interfaces/player-information.md) for Investigation progress, completion, and commitment costs.
-- Used by [Turn Resolution](../foundation/turn-resolution.md) for the Investigation progress and completion transitions scheduled within a turn.
-
 # Relationships
 
 - Uses [Agents](./agents.md)

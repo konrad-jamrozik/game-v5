@@ -26,13 +26,6 @@ This is currently a stub: the concrete test cases await the detailed rules and G
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [History and Persistence](../foundation/history-and-persistence.md) for restoration, replay, and continuation contracts exercised by scenarios.
-- Uses [Initial Campaign Content](../content/initial-campaign.md) for reproducible GDRs and numeric inputs for scenario fixtures.
-- Uses [Terminal CLI](../interfaces/cli.md) for terminal player flows and their observable results.
-- Uses [Turn Resolution](../foundation/turn-resolution.md) for effect timing and state snapshots in cross-system scenarios.
-- Uses [TypeScript Player API](../interfaces/typescript-api.md) for the command and report surface exercised by integration scenarios.
-- Uses [Web UI](../interfaces/web-ui.md) for browser player flows and their observable results.
-
 # Relationships
 
 - Uses [History and Persistence](../foundation/history-and-persistence.md)

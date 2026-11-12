@@ -14,19 +14,6 @@ Define reversible campaign history, reproducible replay, and durable save/load b
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Campaign Modeling Contract](./campaign-modeling-contract.md) for campaign identity, reference resolution, and historical-preservation constraints that restoration must preserve.
-- Uses [Core Concepts](./core-concepts.md) for Session, Campaign state, History, and committed-data meanings applied to restoration and storage.
-- Uses [Developer API](../interfaces/developer-api.md) for the detailed isolation and replay behavior of Developer API commands during restoration.
-- Uses [Domain Model](./domain-model.md) for the game structures and identity/reference relationships preserved during restoration.
-- Uses [Numbers and Randomness](./numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
-- Refines [Engine Contract](./engine-contract.md) by specifying the reversible campaign history, replay, and save/load guarantees.
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for restoration, replay, and continuation contracts exercised by scenarios.
-- Used by [Developer API](../interfaces/developer-api.md) for the retained Campaign state and restoration behavior available for debugging.
-- Used by [Player Information](../interfaces/player-information.md) for the retained facts and restored campaign state available for player reports.
-- Used by [Terminal CLI](../interfaces/cli.md) for the session and save/load behavior exposed through terminal commands.
-- Used by [TypeScript Player API](../interfaces/typescript-api.md) for the session, restoration, and save/load operations exposed by the player API.
-- Used by [Web UI](../interfaces/web-ui.md) for the session and save/load behavior exposed through browser controls.
-
 # Relationships
 
 - Uses [Campaign Modeling Contract](./campaign-modeling-contract.md)

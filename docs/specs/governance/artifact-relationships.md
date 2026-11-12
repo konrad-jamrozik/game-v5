@@ -19,8 +19,6 @@ status, accept a proposed rule, prove that an implementation is correct, or repo
 
 Examples explain the model; they do not declare relationships for the named artifacts.
 
-- Used by [Specification Conventions](./spec-conventions.md) for the canonical relationship model and directional inventory meanings.
-
 # Relationships
 
 - Used by [Specification Conventions](./spec-conventions.md)

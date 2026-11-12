@@ -14,17 +14,6 @@ Make every numeric calculation and random outcome reproducible across supported 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Campaign Modeling Contract](./campaign-modeling-contract.md) for campaign identity and value-classification constraints preserved by numeric and random execution.
-- Uses [Core Concepts](./core-concepts.md) for Rule, Authoritative value, Derived value, and Instance ID meanings in numeric and random contracts.
-- Refines [Engine Contract](./engine-contract.md) by specifying the numeric and random behavior required for reproducible execution.
-- Used by [Agents](../mechanics/agents.md) for numeric representation, rounding, and reproducible random draws.
-- Used by [Combat](../mechanics/combat.md) for numeric representation, rounding, and reproducible random draws.
-- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for numeric representation, rounding, and reproducible random draws.
-- Used by [Factions](../mechanics/factions.md) for numeric representation, rounding, and reproducible random draws.
-- Used by [History and Persistence](./history-and-persistence.md) for numeric representation, rounding, and reproducible random draws.
-- Used by [Investigations](../mechanics/investigations.md) for numeric representation, rounding, and reproducible random draws.
-- Used by [Turn Resolution](./turn-resolution.md) for numeric representation, rounding, and reproducible random draws.
-
 # Relationships
 
 - Uses [Campaign Modeling Contract](./campaign-modeling-contract.md)

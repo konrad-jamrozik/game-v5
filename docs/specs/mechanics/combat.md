@@ -14,13 +14,6 @@ Define fully automatic battles and their reproducible results independently of c
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Agents](./agents.md) for Agent capabilities and exhaustion when resolving a battle.
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md) for numeric representation, rounding, and reproducible random draws.
-- Refines [Domain Model](../foundation/domain-model.md) by specifying Combatant behavior and automatic battle resolution rules.
-- Used by [Agents](./agents.md) for the Battle result facts that affect Agent development and recovery.
-- Used by [Missions](./missions.md) for automatic battle resolution and Battle result facts used to calculate Mission consequences.
-- Used by [Player Information](../interfaces/player-information.md) for automatic battle resolution and retained Battle result facts.
-
 # Relationships
 
 - Uses [Agents](./agents.md)

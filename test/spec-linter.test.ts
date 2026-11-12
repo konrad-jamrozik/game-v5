@@ -131,21 +131,6 @@ function diagnosticCodes(files: readonly SourceFile[]): readonly string[] {
   return lintSpecifications({ files }).map((diagnostic) => diagnostic.code)
 }
 
-function withRelationshipDescriptions(files: readonly SourceFile[]): SourceFile[] {
-  return files.map((file) => {
-    const inventory = /# Relationships\n\n([\s\S]*?)\n# Glossary/.exec(file.content)?.[1] ?? ''
-    const descriptions = [...inventory.matchAll(/^- ([^\n]+)$/gm)].map(
-      (match) => '- ' + match[1] + ' for the shared contract.',
-    )
-    return {
-      ...file,
-      content: descriptions.length
-        ? file.content.replace('\n# Relationships', '\n' + descriptions.join('\n') + '\n\n# Relationships')
-        : file.content,
-    }
-  })
-}
-
 function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
   const files = validCorpus()
   const alpha = files[2]
@@ -163,7 +148,7 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
     '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
     '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |\n| BBB | Foundation | [Beta](foundation/beta.md) | Beta rules. |',
   )
-  return withRelationshipDescriptions([
+  return [
     ...mutate(
       withBeta,
       alpha.path,
@@ -171,7 +156,7 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
       '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)',
     ),
     { path: 'docs/specs/foundation/beta.md', content: betaContent },
-  ])
+  ]
 }
 
 function mutate(files: readonly SourceFile[], path: string, find: string, replacement: string): SourceFile[] {
@@ -396,7 +381,7 @@ describe('specification linter', () => {
       'No explicit relationships.',
       `- ${passive} [Alpha](foundation/alpha.md)`,
     )
-    const result = analyzeSpecifications({ files: withRelationshipDescriptions(files) })
+    const result = analyzeSpecifications({ files })
     expect(result.diagnostics).toEqual([])
     expect(result.corpus.relationships.filter((edge) => edge.origin === 'explicit')).toEqual([
       expect.objectContaining({ dependencyId: 'INDEX', dependentId: 'AAA', kind }),
@@ -467,61 +452,26 @@ describe('specification linter', () => {
   })
 
   test.each([
-    ['', 'missing'],
-    ['Uses [Beta](beta.md) for the shared contract.', 'prose outside a bullet'],
-    ['1. Uses [Beta](beta.md) for the shared contract.', 'ordered list'],
-    ['- Uses [Beta](beta.md)', 'missing explanation'],
-    ['- Uses [Beta](beta.md) .', 'punctuation-only explanation'],
-    ['- Uses [Beta](beta.md#glossary) for the shared contract.', 'fragment link'],
-    ['- Uses [Other](beta.md) for the shared contract.', 'incorrect title'],
-    ['- Used by [Beta](beta.md) for the shared contract.', 'wrong direction'],
-    ['- Uses [Beta](beta.md) for the shared contract.\n  - Nested detail.', 'nested list'],
-    [
-      '- Uses [Beta](beta.md) for the shared contract.\n- Uses [Beta](./beta.md) for another contract.',
-      'duplicate description',
-    ],
-  ])('rejects a relationship description with %s (%s)', (replacement, reason) => {
+    ['- Uses [Game Specification Index](../README.md) for the shared contract.', 'description bullet'],
+    ['- Used by [Game Specification Index](../README.md)', 'bare inventory bullet'],
+  ])('rejects a repeated inventory entry in Purpose and boundaries (%s)', (bullet) => {
     const files = mutate(
-      cycleCorpus('uses'),
+      validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '- Uses [Beta](beta.md) for the shared contract.',
-      replacement,
+      'Alpha purpose.',
+      'Alpha purpose.\n\n' + bullet + '\n',
     )
-    expect(diagnosticCodes(files)).toEqual(reason === 'wrong direction' ? ['SPEC416', 'SPEC416'] : ['SPEC416'])
+    expect(diagnosticCodes(files)).toEqual(['SPEC417'])
   })
 
-  test('accepts a wrapped description with an equivalent relative document path', () => {
+  test('accepts ordinary bullets in Purpose and boundaries', () => {
     const files = mutate(
-      cycleCorpus('uses'),
+      validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '- Uses [Beta](beta.md) for the shared contract.',
-      '- Uses [Beta](./beta.md) for the shared\n  contract.',
+      'Alpha purpose.',
+      'Alpha purpose.\n\n- Uses of [Game Specification Index](../README.md) are informative.\n',
     )
     expect(diagnosticCodes(files)).toEqual([])
-  })
-
-  test('requires separate descriptions for different relationship kinds with the same document', () => {
-    const files = withRelationshipDescriptions(
-      mutate(
-        mutate(
-          validCorpus(),
-          'docs/specs/foundation/alpha.md',
-          'No explicit relationships.',
-          '- Uses [Game Specification Index](../README.md)\n- Refines [Game Specification Index](../README.md)',
-        ),
-        'docs/specs/README.md',
-        'No explicit relationships.',
-        '- Used by [Alpha](foundation/alpha.md)\n- Refined by [Alpha](foundation/alpha.md)',
-      ),
-    )
-    expect(diagnosticCodes(files)).toEqual([])
-    const missing = mutate(
-      files,
-      'docs/specs/foundation/alpha.md',
-      '- Refines [Game Specification Index](../README.md) for the shared contract.\n',
-      '',
-    )
-    expect(diagnosticCodes(missing)).toEqual(['SPEC416'])
   })
 
   test('accepts requirements nested below H2 and H3 topic headings', () => {

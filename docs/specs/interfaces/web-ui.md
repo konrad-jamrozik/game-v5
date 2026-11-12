@@ -14,12 +14,6 @@ Specify the first functional browser interface while keeping gameplay in the sha
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-- Uses [Core Concepts](../foundation/core-concepts.md) for Session and shared execution vocabulary applied to browser workflows.
-- Uses [History and Persistence](../foundation/history-and-persistence.md) for the session and save/load behavior exposed through browser controls.
-- Uses [Player Information](./player-information.md) for Player-visible information and the boundary around hidden Campaign state.
-- Uses [TypeScript Player API](./typescript-api.md) for the player commands, reports, and errors adapted for browser interaction.
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) for browser player flows and their observable results.
-
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
