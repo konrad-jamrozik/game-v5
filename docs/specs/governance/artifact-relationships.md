@@ -108,106 +108,66 @@ A Stub may declare an intended refinement when its prose names the parent contra
 provide. This records planned ownership, not completed detail or acceptance. Preserve unresolved decisions and
 reassess the relationship when actual rules replace the TODOs. Merely referring to a future document is not enough.
 
-Ownership pointers, migration records, and navigation links do not create dependencies when the current contract
-can be interpreted without the linked rules. Conversely, calling a citation informative must not conceal substantive
-reliance on another contract.
+# Links that create no relationship
+
+A link to or mention of another artifact creates no relationship when the linking artifact can be interpreted without
+the linked content. The test: remove the link and the text it supports; if the meaning of the artifact's rules,
+definitions, and examples is unchanged, no relationship exists.
+
+Such a link is not listed under Relationships, needs no mirror, and forms no Cycle. It may therefore point in either
+direction, including from a Dependency to one of its own Dependents. E.g., Core Concepts may point to Engine Contract
+for what a Session holds, although Engine Contract uses Core Concepts.
+
+The following kinds of link create no relationship when they pass the test:
+
+- **Ownership pointers:** say which artifact owns something the linking artifact does not define.
+- **Navigation links:** help a reader find related material.
+- **Migration records:** say where content moved.
+- **Citations and evidence acknowledgements:** credit material inspected while drafting.
+- **Examples:** name other artifacts to explain a rule; they do not declare relationships for the named artifacts.
+- **Process information:** review order, work-plan rows, and folder location.
+
+Calling a link an ownership pointer, navigation link, or informative citation must not conceal substantive reliance.
+When the artifact's rules, definitions, or examples cannot be understood without the linked content, the link is a
+relationship and must be recorded under Relationships. Specification Conventions may restrict such links further for
+particular documents.
 
 # Relationship graphs
 
-The `follows` graph and the `refines` graph must each be a DAG. Writing rules must not govern each other through a
-cycle, and refinements must not form a cycle of increasingly detailed definitions.
+Validate each Relationship kind graph separately. The `follows` graph and the `refines` graph must each be a DAG.
+Writing rules must not govern each other through a cycle, and refinements must not form a cycle of increasingly
+detailed definitions.
 
 The `uses` graph may contain cycles when the owning contracts identify distinct supplied meanings and no definition
 depends circularly on itself. The `implements` and `verifies` graphs are acyclic under their permitted-artifact rules.
-A graph combining different Relationship kinds need not be acyclic.
+A graph combining different Relationship kinds need not be acyclic, and such a cycle is not by itself a defect.
 
 Every retained cycle must be documented in the informative [Specification relationship cycles](../../spec-relationship-cycles.md)
 register. Review the combined explicit uses/refines graph, including cycles longer than two edges, and separately
 check mixed cycles involving implicit follows relationships. Each cyclic component must enumerate its internal edges,
 their independently supplied meanings, their supporting contract passages, and a future removal approach with an
 exit criterion. Stub-based justifications remain provisional. The register reports relationships; it does not create
-them or authorize future contract changes.
+them or authorize future contract changes. Links that create no relationship are not part of any graph.
 
-# Specification inventories
+# Recording relationships
 
-When present, the Relationships and Glossary H1 sections follow Overview in that order, and Glossary immediately
-follows Relationships when both are present. Relationships contains one flat unordered list, without tables or subsections. Each bullet
-describes the current document and consists of a directional phrase followed by one hyperlink whose text is the
-linked document's title. Link to the registered document itself, without an anchor or a scope annotation.
+Every relationship must use the canonical terms Artifact, Relationship, Dependency, Dependent, and Relationship kind
+as defined by the Glossary. Every explicit relationship identifies one Dependency, one Dependent, and exactly one of the
+five Relationship kinds, and satisfies that kind's permitted-artifact rules. Exact duplicates are invalid. A document
+pair may have multiple Relationship kinds when each expresses distinct reliance.
 
-Use this complete phrase order; omit groups with no entries and sort document titles alphabetically within each group:
+Each explicit relationship is recorded twice: once in the Dependent's Relationships section and once, as its mirror
+with the reverse-facing phrase, in the Dependency's. Both entries must resolve to the same Dependency, Dependent, and
+Relationship kind. Implicit relationships are defined centrally by Specification Conventions and are not listed.
+[Relationship inventories](spec-conventions.md#relationship-inventories) in Specification Conventions owns the layout
+of a specification's Relationships section: its phrases, order, and links.
 
-1. Uses
-2. Refines
-3. Follows
-4. Implements
-5. Verifies
-6. Used by
-7. Refined by
-8. Followed by
-9. Implemented by
-10. Verified by
+Relationship entries have no Scope field. Substantive constraints and requirement references belong in the owning
+contract prose; a link to an artifact does not imply reliance on every rule in that artifact.
 
-Groups are contiguous entries, not headings. E.g., Engine Contract contains:
-
-- Uses [Core Concepts](../foundation/core-concepts.md)
-
-Core Concepts contains the mirror:
-
-- Used by [Engine Contract](../foundation/engine-contract.md)
-
-Both entries describe the same relationship. The first five phrases describe the current document as Dependent;
-the last five describe it as Dependency. Reverse-facing phrases are grammatical presentations of the canonical
-Relationship kinds, not additional Relationship kinds or glossary synonyms.
-
-List explicit relationships only. When there are none, omit the Relationships section. Do not repeat implicit
-relationships. Every explicit relationship
-must have its mirror with the same Dependency, Dependent, and Relationship kind. A document pair may have multiple
-Relationship kinds, but duplicate entries of the same Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
-
-Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
-contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
-acknowledgements do not create relationships.
-
-Specification Conventions defines implicit relationships and their applicability. A citation, review order, or folder
-location does not create a relationship.
-
-# Canonical model
-
-Every relationship must use the canonical terms Artifact, Relationship, Dependency,
-Dependent, and Relationship kind as defined by the Glossary. Each relationship must use exactly one of the five
-Relationship kinds and satisfy its permitted-artifact rules.
-
-# Identity
-
-Every explicit relationship must identify one Dependency, one Dependent, and one
-Relationship kind. Exact duplicates are invalid. Relationship inventories have no Scope field. Substantive constraints
-and requirement references belong in the owning contract prose; an artifact link alone must not imply reliance on
-every rule in that artifact.
-
-# Flat inventories
-
-Every registered specification must contain one flat directional list under
-Relationships, using the phrases, ordering, links, and empty-inventory sentence defined in Specification inventories.
-Tables, nested lists, annotations, and Dependencies/Dependents subsections are invalid.
-
-# Mirrored explicit relationships
-
-Every explicit entry must have one matching entry in the other artifact.
-The pair must resolve to the same Dependency, Dependent, and Relationship kind, with the reverse-facing phrase in
-the mirror. Implicit relationships are defined centrally and are not listed.
-
-# Relationship updates
-
-Adding, changing, or removing an explicit relationship must update both entries.
-A missing or disagreeing entry is a documentation defect. Changes must preserve rule ownership and requirement
-traceability. Update the cycle register whenever a change introduces, alters, or removes a cycle.
-
-# Graph validity
-
-Validate each Relationship kind graph separately. Reject cycles in `follows` and
-`refines`, invalid artifacts, and self-relationships. The owning contracts of a `uses` cycle must identify distinct supplied meanings and must
-not leave a circular definition unresolved. A cycle containing different Relationship kinds is not by itself a defect.
+Adding, changing, or removing an explicit relationship must update both entries. A missing or disagreeing entry is a
+documentation defect. Changes must preserve rule ownership and requirement traceability. Update the cycle register
+whenever a change introduces, alters, or removes a cycle.
 
 # Status and evidence
 
@@ -218,43 +178,44 @@ that implementation is complete or tests pass.
 
 # Adoption
 
-New and existing registered specifications must use the flat directional format and applicable
+New and existing registered specifications must record explicit relationships as defined here and apply the
 implicit relationships. Before acceptance, resolve relationship TODOs that affect the contract, verify mirrored entries,
 check links, and validate the graphs. Do not invent implementation or test relationships for planned artifacts.
 
 # Edge cases and failure behavior
 
-| Case                                              | Required result                                                                                  |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| A depends on B                                    | Record `B → A`; B is the Dependency and A is the Dependent                                       |
-| Two Relationship kinds connect the same artifacts | Keep both when they express distinct Relationship kinds                                          |
-| Only implicit relationships apply                 | Omit the Relationships section                                                                   |
-| Explicit relationships exist                      | List all explicit relationships; omit implicit ones                                              |
-| No explicit relationships exist                   | Omit the Relationships section                                                                   |
-| One mirrored entry is missing or disagrees        | Treat the inventory as defective and update both entries                                         |
-| No implementation or test has been identified     | Do not invent an `implements` or `verifies` relationship                                         |
-| A requirement moves                               | Update both entries, links, and requirement references in contract prose                         |
-| A referenced specification remains a Stub         | Preserve its status and record concrete unresolved contract work without inferring missing rules |
-| A work-plan row orders reviews                    | Treat it as process information, not an artifact relationship                                    |
+| Case                                                           | Required result                                                                                                          |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| A depends on B                                                 | Record `B → A`; B is the Dependency and A is the Dependent                                                               |
+| Two Relationship kinds connect the same artifacts              | Keep both when they express distinct Relationship kinds                                                                  |
+| Only implicit relationships apply                              | Omit the Relationships section                                                                                           |
+| Explicit relationships exist                                   | List all explicit relationships; omit implicit ones                                                                      |
+| No explicit relationships exist                                | Omit the Relationships section                                                                                           |
+| One mirrored entry is missing or disagrees                     | Treat the inventory as defective and update both entries                                                                 |
+| No implementation or test has been identified                  | Do not invent an `implements` or `verifies` relationship                                                                 |
+| A requirement moves                                            | Update both entries, links, and requirement references in contract prose                                                 |
+| A referenced specification remains a Stub                      | Preserve its status and record concrete unresolved contract work without inferring missing rules                         |
+| A Dependency links to a Dependent only to say who owns a topic | Record nothing; it is an ownership pointer under [Links that create no relationship](#links-that-create-no-relationship) |
+| A work-plan row orders reviews                                 | Record nothing; it is process information under [Links that create no relationship](#links-that-create-no-relationship)  |
 
 # Acceptance examples
 
 ## Classification cases
 
 The following table gives the complete expected classifications for this acceptance scenario. These cases exercise
-[Canonical model](#canonical-model), [Direction](#direction), and [Status and evidence](#status-and-evidence); they do not add relationships to the named documents.
+[Recording relationships](#recording-relationships), [Direction](#direction), and [Status and evidence](#status-and-evidence); they do not add relationships to the named documents.
 
-| Case                                                                                                                            | Expected classification and reason                                                                              |
-| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                   | Uses Campaign Modeling Contract; it applies campaign composition constraints without elaborating their meanings |
-| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)     | Refines Domain Model; it adds detail to the same lifecycle                                                      |
-| History specifies restoration steps for [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) | Refines Engine Contract; it details the restoration behavior                                                    |
-| History preserves references under [References](../foundation/campaign-modeling-contract.md#references) while restoring state   | Uses Campaign Modeling Contract; satisfying the reference invariant alone is not refinement                     |
-| Initial Campaign Content supplies prices under Economy's purchase rules                                                         | Uses Economy and Upgrades; data values do not elaborate purchase behavior                                       |
-| Terminal CLI maps commands to the player API                                                                                    | Uses TypeScript Player API; an adapter contract applies existing operations                                     |
-| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields   | Intended refinement is permitted; the fields remain unspecified and status stays Stub                           |
-| A document merely says it must obey [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances)        | Uses, not Refines; no added detail about the identity convention is identified                                  |
-| A refinement duplicates the same reliance as a Uses entry                                                                       | Keep only Refines; two Relationship kinds require distinct reliance                                             |
+| Case                                                                                                                                            | Expected classification and reason                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and GDR                                                                                   | Uses Campaign Modeling Contract; it applies campaign composition constraints without elaborating their meanings |
+| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)                     | Refines Domain Model; it adds detail to the same lifecycle                                                      |
+| History and Persistence specifies restoration steps for [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) | Refines Engine Contract; it details the restoration behavior                                                    |
+| History and Persistence preserves references under [References](../foundation/campaign-modeling-contract.md#references) while restoring state   | Uses Campaign Modeling Contract; satisfying the reference invariant alone is not refinement                     |
+| Initial Campaign Content supplies prices under Economy's purchase rules                                                                         | Uses Economy and Upgrades; data values do not elaborate purchase behavior                                       |
+| Terminal CLI maps commands to Player API                                                                                                        | Uses TypeScript Player API; an adapter contract applies existing operations                                     |
+| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields                   | Intended refinement is permitted; the fields remain unspecified and status stays Stub                           |
+| A document merely says it must obey [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances)                        | Uses, not Refines; no added detail about the identity convention is identified                                  |
+| A refinement duplicates the same reliance as a Uses entry                                                                                       | Keep only Refines; two Relationship kinds require distinct reliance                                             |
 
 ## Complete coverage of Relationship kinds
 

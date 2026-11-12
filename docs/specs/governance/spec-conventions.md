@@ -237,8 +237,9 @@ must have its mirror with the same Dependency, Dependent, and Relationship kind.
 Relationship kinds, but duplicate entries of the same Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
 
 Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
-contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
-acknowledgements do not create relationships.
+contract prose; a document link does not imply reliance on every rule in that document.
+[Links that create no relationship](artifact-relationships.md#links-that-create-no-relationship) defines which
+links, e.g. citations and ownership pointers, are not relationships.
 
 Relationships is the only inventory of explicit relationships. Overview must not repeat it as
 directional-phrase bullets; where a reliance matters, the owning contract prose states it.

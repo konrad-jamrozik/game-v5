@@ -16,7 +16,7 @@ The complete result is one game component with 14 documents and 48 internal uses
 with two documents and two internal edges of different Relationship kinds. Neither the refines graph nor the follows graph alone
 contains a cycle. Core Concepts, Engine Contract, Campaign Modeling Contract, and Domain Model occur in no cyclic component.
 Engine Contract uses only Core Concepts; Campaign Modeling Contract uses Core Concepts and refines Engine Contract;
-Domain Model uses Core Concepts and Campaign Modeling Contract. The remaining documents do not belong to cycles. These results were recomputed after the shared-vocabulary split.
+Domain Model uses Core Concepts, Campaign Modeling Contract, and Engine Contract. The remaining documents do not belong to cycles. These results were recomputed after the shared-vocabulary split.
 
 When a relationship changes, recompute these components from the registered inventories, check the supporting prose,
 and update the diagrams, tables, counts, and removal criteria together. Include all internal edges, including edges
