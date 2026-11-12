@@ -44,6 +44,9 @@ TODO: Specify main-menu and campaign screens using Player Information schemas. F
 Lead progression trees, and report details. Define sorting, filtering, and selection without adding exclusive information.
 Developer inspection must use a distinct authorized view rather than widening ordinary Player API results.
 
+TODO: Specify how screens present Display content GDR values, including names, descriptions, and media references,
+and an encyclopedia view of the articles Player Information exposes.
+
 # Interaction and accessibility
 
 TODO: Specify creation/load/save, gameplay actions, Advance turn, action-level and turn-level history navigation,

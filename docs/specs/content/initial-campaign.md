@@ -68,6 +68,10 @@ GDRs. A Lead is not automatically an InvestigationArchetype.
 
 TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, deadlines, all eight upgrade categories, lead prerequisites, and completion effects using explicit GDR identifiers.
 
+TODO: Supply GDRs serving the Display content purpose, as defined in [GDR purpose: display content](../foundation/campaign-modeling-contract.md#gdr-purpose-display-content),
+for the first playable campaign: names and descriptions for player-visible GDRs, encyclopedia articles, and
+media references.
+
 # Completeness and validation
 
 TODO: Ensure every formula parameter and GDR reference resolves, progression reaches its intended ending, and required operation pools exist. Distinguish source-game examples from chosen v5 GDRs.

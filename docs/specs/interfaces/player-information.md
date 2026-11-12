@@ -59,6 +59,10 @@ TODO: Specify the complete Player API query schemas using owning mechanics. Stat
 unknown information from zero or absence. For example, cover Agent capabilities, Investigation estimates, and
 Mission outcomes without exposing hidden inputs through ordinary queries.
 
+TODO: Specify which Display content, as defined in [GDR purpose: display content](../foundation/campaign-modeling-contract.md#gdr-purpose-display-content), each
+Player-visible view exposes, including names, descriptions, encyclopedia articles, and media references, and the
+conditions under which Display content describing hidden state becomes Player-visible.
+
 # Derived values and reports
 
 TODO: Specify complete query and report inventories, including historical Player-visible information at the current

@@ -43,6 +43,7 @@ constraints are specified under [Campaign instances](#campaign-instances).
 
 - **Field, member, key:** use Property from Core Concepts for a named component of a structured Type; unrelated uses retain their ordinary meaning.
 - **Template:** use GDR when naming immutable game data, and Archetype when naming its campaign composition role. Describe initialization directly.
+- **Content:** "content" alone never names a GDR. The Display content GDR purpose and the Content Family keep their names.
 - **Definition:** this is not a modeling category or a synonym for Type or GDR. Ordinary prose may discuss a term's definition.
 
 # Campaign data integrity refinement
@@ -138,16 +139,17 @@ an earlier retained Battle result.
 
 # Purposes of GDRs
 
-GDRs can serve the following five purposes. The purposes can overlap; they do not define separate Types or required
+GDRs can serve the following six purposes. The purposes can overlap; they do not define separate Types or required
 implementation interfaces. The following sections illustrate each purpose.
 
-| Purpose                | Relationship to Rules and Campaign state                                                                                                     | Example                                                                                      |
+| Purpose                | How the engine uses the GDR                                                                                                                  | Example                                                                                      |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | Initialization source  | A Creation Rule takes a GDR’s value as the initial value of a property of a new Campaign instance.                                           | A newly created Agency has money 100, the value of the starting-money GDR.                   |
 | Calculation parameter  | The engine reads a GDR when applying a Calculation Rule.                                                                                     | The engine reads the rate from the Standard upkeep GDR to calculate upkeep.                  |
 | Archetype              | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by Creation Rules. | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID. |
 | Referenced GDR         | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                     | An Investigation holds a reference to the Lead GDR it pursues.                               |
 | Key for campaign facts | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                        | The engine records completions against a Lead GDR’s identity.                                |
+| Display content        | No Rule reads the GDR's value; the engine exposes it to the player through Player API, subject to Player-visible information boundaries.     | The Thug GDR's display name and description appear in the enemy list and the encyclopedia.   |
 
 # GDR purpose: initialization source
 
@@ -322,4 +324,47 @@ flowchart LR
     SelectLead --> SelectCompleted["Engine filters by Completed lifecycle<br/>Only investigation_2 matches"]
     SelectCompleted --> Count["Engine counts matching Investigation Campaign instances"]
     Count --> Result["Derived value:<br/>Completion count for lead_1 = 1"]
+```
+
+# GDR purpose: display content
+
+When serving the Display content purpose, a GDR supplies values that exist only for the player to see: names,
+descriptions, in-game encyclopedia articles, and references to images or other media. Consider an illustrative Thug
+enemy and its encyclopedia article:
+
+| Element             | Modeling role                                          | Meaning in this example                                                                                        |
+| ------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| EnemyArchetype      | Type                                                   | Describes the shared enemy characteristics and initial values, including a display name and a description.     |
+| Thug                | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, base health 10, display name "Thug", and a one-sentence description.                  |
+| EncyclopediaArticle | Type                                                   | Describes an encyclopedia article: a title, body text, an image reference, and a reference to its subject GDR. |
+| Thug article        | GDR serving the Display content purpose                | Has Type EncyclopediaArticle, title "Thug", body text, an image reference, and a reference to the Thug GDR.    |
+
+Combat reads Thug's base health 10 as its Archetype initial value; no Rule reads its display name, its description,
+or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible
+view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the encyclopedia once the player is
+entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.
+
+Display content follows these requirements:
+
+- **No gameplay dependence:** No Rule reads a value that serves the Display content purpose. Changing Display content
+  in a Game build changes only what the player sees; equal initial Campaign state and the same ordered committed
+  commands still produce equal Campaign state.
+- **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing
+  something hidden from the player stays hidden until it becomes Player-visible.
+  [Player Information](../interfaces/player-information.md) owns those visibility conditions.
+- **No inference:** Relationships and gameplay facts are never inferred from Display content, extending the rule under
+  [References](#references). The Thug article identifies its subject through its reference to the Thug GDR, not
+  through its title.
+- **Media:** A reference to an image or other media is a value in the GDR; the referenced media is part of the Game
+  build. Media formats and loading are left to the implementation.
+
+```mermaid
+flowchart LR
+    Thug["GDR: Thug<br/>base health 10<br/>display name and description"]
+    Article["GDR: Thug article<br/>title, body text, image reference"]
+    Article -->|subject reference| Thug
+    Thug -->|base health 10| Combat["Rules: Enemy creation and Combat"]
+    Thug -->|display name and description| PlayerAPI["Player API:<br/>Player-visible information"]
+    Article -->|article when Player-visible| PlayerAPI
+    PlayerAPI --> Interfaces["Interfaces render it for the player"]
 ```
