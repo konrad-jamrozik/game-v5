@@ -7,7 +7,7 @@ export const FAMILY_ORDER: readonly SpecificationFamily[] = [
   'Content',
   'Interfaces',
   'Acceptance',
-  'Guidance',
+  'Implementation',
 ]
 
 export const FAMILY_DIAGRAM_START = '<!-- generated:family-diagram:start -->'

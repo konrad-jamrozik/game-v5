@@ -21,7 +21,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 - Used by [Campaign](../mechanics/campaign.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
-- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
+- Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
 - Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Numbers and Randomness](./numbers-and-randomness.md)

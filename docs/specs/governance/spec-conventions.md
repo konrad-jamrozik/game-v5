@@ -79,7 +79,7 @@ of scope:
 A statement about one of these matters belongs in a specification only when it states an observable consequence, and
 then the specification states the consequence rather than the mechanism. Non-observable steering for implementers,
 e.g. architecture or code-quality advice, is never a requirement. Record it, when it is worth recording, only in a
-Guidance Family document, as described in [Specification families and paths](#specification-families-and-paths).
+Implementation Family document, as described in [Specification families and paths](#specification-families-and-paths).
 
 # Document lifecycle and ownership
 
@@ -98,7 +98,7 @@ The following table is the exhaustive set of Personas. The last column names the
 | Content designer | Human or LLM | Authors GDRs, including the initial campaign content and in-game encyclopedia articles, within the Types the Engine designer exposes for content.                   | Content, Mechanics; e.g. [Initial Campaign Content](../content/initial-campaign.md)                                                         |
 | UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                                        | Interfaces; e.g. [Player Information](../interfaces/player-information.md), [Web UI](../interfaces/web-ui.md)                               |
 | AI designer      | Human or LLM | Designs an AI that plays the game, e.g. an Autopilot AI.                                                                                                            | Interfaces, Foundation; e.g. [Player Information](../interfaces/player-information.md), [Turn Resolution](../foundation/turn-resolution.md) |
-| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                        | Foundation, Mechanics, Interfaces, Acceptance, Guidance                                                                                     |
+| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                        | Foundation, Mechanics, Interfaces, Acceptance, Implementation                                                                               |
 | Player           | Human or LLM | Plays the game.                                                                                                                                                     | None directly; experiences Interfaces and Content                                                                                           |
 
 ## Status
@@ -145,21 +145,21 @@ and authoring order. A folder location does not create a relationship.
 Every registered specification declares exactly one of these Families in metadata and in the Specification register. With
 the exception of the root index, its file must be a direct child of the corresponding lowercase directory.
 
-| Family     | Directory     | Ownership boundary                                                                             |
-| ---------- | ------------- | ---------------------------------------------------------------------------------------------- |
-| Governance | `governance/` | Specification conventions, relationship rules, and planning or process contracts               |
-| Foundation | `foundation/` | Cross-cutting domain, modeling, execution, numeric, timing, history, and persistence contracts |
-| Mechanics  | `mechanics/`  | Player-facing game-system rules, transitions, formulas, and effects                            |
-| Content    | `content/`    | Versioned GDRs, named parameters, catalogs, and starting configurations                        |
-| Interfaces | `interfaces/` | Observable player, developer, API, CLI, and UI contracts                                       |
-| Acceptance | `acceptance/` | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability              |
-| Guidance   | `guidance/`   | Non-behavioural steering for implementers, e.g. architecture or code-quality guidance          |
+| Family         | Directory         | Ownership boundary                                                                             |
+| -------------- | ----------------- | ---------------------------------------------------------------------------------------------- |
+| Governance     | `governance/`     | Specification conventions, relationship rules, and planning or process contracts               |
+| Foundation     | `foundation/`     | Cross-cutting domain, modeling, execution, numeric, timing, history, and persistence contracts |
+| Mechanics      | `mechanics/`      | Player-facing game-system rules, transitions, formulas, and effects                            |
+| Content        | `content/`        | Versioned GDRs, named parameters, catalogs, and starting configurations                        |
+| Interfaces     | `interfaces/`     | Observable player, developer, API, CLI, and UI contracts                                       |
+| Acceptance     | `acceptance/`     | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability              |
+| Implementation | `implementation/` | Non-behavioural steering for implementers, e.g. architecture or code-quality guidance          |
 
-Guidance documents are non-behavioural. They steer implementers toward code that is easier to maintain and to check
+Implementation documents are non-behavioural. They steer implementers toward code that is easier to maintain and to check
 against the other specifications, but they own no game behavior, observable contract, or GDR, and no acceptance test depends on
-them. An implementation that ignores a Guidance document can still satisfy every other specification. A Guidance
+them. An implementation that ignores an Implementation document can still satisfy every other specification. An Implementation
 document may explain which observable contract its guidance supports; that contract remains owned and guaranteed by
-its own specification. Guidance documents are registered so that they participate in relationship inventories,
+its own specification. Implementation documents are registered so that they participate in relationship inventories,
 generated views, and graph validation like every other specification.
 
 The Game Specification Index has Family Governance and remains at `docs/specs/README.md` as the navigation entry point.

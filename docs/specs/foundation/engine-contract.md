@@ -20,7 +20,7 @@ RNG algorithm, save encoding, or subsystem mechanics.
 - Uses [Core Concepts](./core-concepts.md)
 - Used by [Campaign](../mechanics/campaign.md)
 - Used by [Domain Model](./domain-model.md)
-- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
+- Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
 - Used by [Terminal CLI](../interfaces/cli.md)
 - Used by [Web UI](../interfaces/web-ui.md)
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md)

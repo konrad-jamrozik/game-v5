@@ -668,9 +668,9 @@ written by that Autopilot AI at or before that position on the current timeline 
 
 **Category and priority:** Other.
 
-**Affected:** Gameplay Dependency Direction (DEPDIR), [Dependency direction](../guidance/gameplay-dependency-direction.md#dependency-direction).
+**Affected:** Gameplay Dependency Direction (DEPDIR), [Dependency direction](../implementation/gameplay-dependency-direction.md#dependency-direction).
 
-**Batches:** DEPDIR has no batch; it is a Guidance document outside the batch sequence.
+**Batches:** DEPDIR has no batch; it is an Implementation document outside the batch sequence.
 
 **Current wording:**
 
@@ -679,12 +679,12 @@ written by that Autopilot AI at or before that position on the current timeline 
 > Campaign instances must not hold references to the Campaign state that contains them.
 
 **Why it is an issue:** [Specification families and paths](spec-conventions.md#specification-families-and-paths) says
-Guidance documents are non-behavioural and [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification)
+Implementation documents are non-behavioural and [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification)
 says such steering is never a requirement, while [Writing exact requirements](spec-conventions.md#writing-exact-requirements)
 reserves "must" for requirements.
 
 **Suggested resolution:** Replace "must" with "should" and label the section as guidance, or state in DEPDIR what
-"must" means inside a Guidance document.
+"must" means inside an Implementation document.
 
 ### TODO-019: Campaign treated as a Campaign instance in Initial Campaign Content
 

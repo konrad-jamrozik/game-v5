@@ -1,10 +1,10 @@
-# About the Guidance family
+# About the Implementation family
 
 > Informative overview. It owns no rules; each linked specification owns its content.
 
 # What this family is for
 
-Guidance documents steer implementers toward code that is easier to maintain and to check against the other
+Implementation documents steer implementers toward code that is easier to maintain and to check against the other
 specifications. They are non-behavioural: they own no game behavior, observable contract, or GDR, and no acceptance test depends
 on them.
 
@@ -42,5 +42,5 @@ flowchart LR
 
 # Why these boundaries
 
-Guidance is kept apart so that advice never becomes an observable contract. An implementation that ignores it can still
+The Implementation family is kept apart so that advice to implementers never becomes an observable contract. An implementation that ignores its documents can still
 satisfy every other specification.

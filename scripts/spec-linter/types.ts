@@ -18,7 +18,7 @@ export interface LintInput {
 }
 
 export type SpecificationFamily =
-  'Governance' | 'Foundation' | 'Mechanics' | 'Content' | 'Interfaces' | 'Acceptance' | 'Guidance'
+  'Governance' | 'Foundation' | 'Mechanics' | 'Content' | 'Interfaces' | 'Acceptance' | 'Implementation'
 
 export type SpecificationStatus = 'Stub' | 'Draft' | 'Accepted' | 'Superseded'
 

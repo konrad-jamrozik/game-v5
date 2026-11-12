@@ -134,7 +134,7 @@ describe('derived specification renderer', () => {
     const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
     const catalog = outputs.get('docs/derived/README.md') ?? ''
     expect(catalog).toContain('| Accepted   | 1              |')
-    expect(catalog).toContain('| Governance | 2              |')
+    expect(catalog).toContain('| Governance     | 2              |')
     expect(catalog).toContain('| AAA | [Alpha "Quoted" & More](../specs/foundation/alpha.md) | Draft  | Alpha rules. |')
     expect(catalog.indexOf('| CONV')).toBeLessThan(catalog.indexOf('| INDEX'))
     expect(catalog).not.toContain('Scope')

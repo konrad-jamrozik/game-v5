@@ -6,7 +6,7 @@
 
 Foundation specifications hold the cross-cutting contracts that every other part of the game builds on: shared
 vocabulary, engine guarantees, campaign-data structure, the domain itself, and the numeric, timing, and history
-machinery. Mechanics, Content, Interfaces, Acceptance, and Guidance documents all depend on them; none of them is about
+machinery. Mechanics, Content, Interfaces, Acceptance, and Implementation documents all depend on them; none of them is about
 a single game system.
 
 The family reads from abstract to concrete: words, then engine promises, then data rules, then game concepts, with three
@@ -117,20 +117,20 @@ flowchart LR
   family_content["Content family"]:::external
   family_interfaces["Interfaces family"]:::external
   family_acceptance["Acceptance family"]:::external
-  family_guidance["Guidance family"]:::external
+  family_implementation["Implementation family"]:::external
   CMC -->|used by| family_content
-  CMC -->|used by| family_guidance
+  CMC -->|used by| family_implementation
   CMC -->|used by| family_interfaces
   CMC -->|used by| family_mechanics
   CORE -->|used by| family_acceptance
   CORE -->|used by| family_content
-  CORE -->|used by| family_guidance
+  CORE -->|used by| family_implementation
   CORE -->|used by| family_interfaces
   CORE -->|used by| family_mechanics
   DOM -->|used by| family_content
   DOM -->|used by| family_interfaces
   DOM -->|refined by| family_mechanics
-  ENG -->|used by| family_guidance
+  ENG -->|used by| family_implementation
   ENG -->|refined by, used by| family_interfaces
   ENG -->|used by| family_mechanics
   HIST -->|used by| family_acceptance

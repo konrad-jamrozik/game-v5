@@ -24,7 +24,7 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Domain Model](./domain-model.md)
 - Used by [Engine Contract](./engine-contract.md)
 - Used by [Factions](../mechanics/factions.md)
-- Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
+- Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
 - Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Investigations](../mechanics/investigations.md)

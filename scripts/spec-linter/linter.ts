@@ -58,7 +58,7 @@ const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Content',
   'Interfaces',
   'Acceptance',
-  'Guidance',
+  'Implementation',
 ])
 const FRAMING_HEADINGS = ['Overview', 'Relationships', 'Glossary']
 const CLOSING_HEADINGS = ['Edge cases and failure behavior', 'Acceptance examples', 'Open decisions']
@@ -329,7 +329,7 @@ function registryEntries(
         index.path,
         row[1] ?? table,
         'SPEC017',
-        'Register Family must be Governance, Foundation, Mechanics, Content, Interfaces, Acceptance, or Guidance.',
+        'Register Family must be Governance, Foundation, Mechanics, Content, Interfaces, Acceptance, or Implementation.',
       )
     }
     entries.push({
@@ -466,7 +466,7 @@ function validateRegistryAndMetadata(
         specification.path,
         specification.metadata.table,
         'SPEC109',
-        'Metadata Family must be Governance, Foundation, Mechanics, Content, Interfaces, Acceptance, or Guidance.',
+        'Metadata Family must be Governance, Foundation, Mechanics, Content, Interfaces, Acceptance, or Implementation.',
       )
     } else {
       const relativePath = specification.path.slice(parsed.specificationRoot.length + 1)
