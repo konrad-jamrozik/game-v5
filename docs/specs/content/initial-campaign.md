@@ -15,7 +15,7 @@ TODO: Confirm the precise included/excluded scope and rule ownership using the [
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 - Uses [Campaign](../mechanics/campaign.md) for the initialization contract that starting Campaign data must satisfy.
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for campaign composition and GDR modeling roles used by concrete starting data.
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md) for campaign composition and GDR purposes used by concrete starting data.
 - Uses [Core Concepts](../foundation/core-concepts.md) for Types, immutable GDRs, and Game build vocabulary used to describe supplied starting data.
 - Uses [Domain Model](../foundation/domain-model.md) for the game concepts and structural constraints that concrete GDRs must satisfy.
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for the parameter meanings and catalog requirements for resource flows, purchases, and upgrades.

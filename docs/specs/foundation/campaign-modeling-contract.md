@@ -19,7 +19,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 - Used by [Domain Model](./domain-model.md) for Campaign instance composition, creation, and identity/reference constraints applied to game concepts.
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md) for the Campaign instance vocabulary in which its non-behavioural dependency guidance is stated.
 - Used by [History and Persistence](./history-and-persistence.md) for identity, reference resolution, and historical-preservation constraints applied to restoration.
-- Used by [Initial Campaign Content](../content/initial-campaign.md) for campaign composition and GDR modeling roles used by starting data.
+- Used by [Initial Campaign Content](../content/initial-campaign.md) for campaign composition and GDR purposes used by starting data.
 - Used by [Numbers and Randomness](./numbers-and-randomness.md) for campaign identity and value-classification constraints preserved by numeric execution.
 - Used by [Player Information](../interfaces/player-information.md) for value-classification and historical-preservation constraints applied to exposed facts.
 - Used by [TypeScript Player API](../interfaces/typescript-api.md) for Campaign instance creation, composition, and identity/reference constraints preserved by public operations.
@@ -99,7 +99,7 @@ Creation of a Campaign instance, during campaign initialization or gameplay, is 
 behavior. The Creation Rule states when the Campaign instance is created, its Type, and the initial values of its
 Archetype reference, Constants, and State, together with the source of each value; for example, a named GDR or a
 value in Campaign state. The initial values need not all come from the Campaign instance's Archetype: a Creation Rule
-may take some of them from another GDR, such as one in the Initialization source role or a
+may take some of them from another GDR, such as one serving the Initialization source purpose or a
 Referenced GDR (for example, the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign
 state. Every newly created Campaign instance has a fresh Instance ID under
 [Campaign instance identity](#campaign-instance-identity). Which code creates Campaign instances, and what that code
@@ -149,20 +149,20 @@ retained references must be preserved under [Campaign instances](#campaign-insta
 An evolving collection can contain immutable historical records: adding a Battle result does not permit rewriting
 an earlier retained Battle result.
 
-## Roles of GDRs
+## Purposes of GDRs
 
-GDRs can serve the following five roles. The roles can overlap; they do not define separate Types or required
-implementation interfaces. The following sections illustrate each role.
+GDRs can serve the following five purposes. The purposes can overlap; they do not define separate Types or required
+implementation interfaces. The following sections illustrate each purpose.
 
-| Role                   | Relationship to Rules and Campaign state                                                                                                     | Example                                                                                      |
+| Purpose                | Relationship to Rules and Campaign state                                                                                                     | Example                                                                                      |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | Initialization source  | A Creation Rule takes a GDR’s value as the initial value of a property of a new Campaign instance.                                           | A newly created Agency has money 100, the value of the starting-money GDR.                   |
 | Calculation parameter  | The engine reads a GDR when applying a Calculation Rule.                                                                                     | The engine reads the rate from the Standard upkeep GDR to calculate upkeep.                  |
 | Archetype              | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by Creation Rules. | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID. |
-| Referenced GDR         | A Campaign instance holds a reference to a GDR for a purpose other than supplying its Archetype.                                             | An Investigation holds a reference to the Lead GDR it pursues.                               |
+| Referenced GDR         | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                     | An Investigation holds a reference to the Lead GDR it pursues.                               |
 | Key for campaign facts | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                        | The engine records completions against a Lead GDR’s identity.                                |
 
-## GDR role: initialization source
+## GDR purpose: initialization source
 
 Consider an illustrative Creation Rule for the Agency with starting money:
 
@@ -195,7 +195,7 @@ flowchart LR
 If an expense later reduces Agency money to 90, the engine reads 90 from the Agency Campaign instance’s State.
 The starting-money GDR still contains the initial value of 100.
 
-## GDR role: calculation parameter
+## GDR purpose: calculation parameter
 
 Consider an illustrative upkeep calculation for agents serving in a campaign. Its complete local setup is:
 
@@ -225,18 +225,18 @@ flowchart LR
     Update -->|included when turn advancement completes| Committed["New Committed state"]
 ```
 
-## GDR role: archetype
+## GDR purpose: archetype
 
 Consider an illustrative creation of two Enemy Campaign instances whose Archetype is the same Thug GDR:
 
-| Element             | Modeling role             | Meaning in this example                                                                                                                                                                  |
-| ------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Enemy               | Type                      | Describes the Enemy Campaign instances.                                                                                                                                                  |
-| EnemyArchetype      | Type                      | Describes the shared enemy characteristics and initial values.                                                                                                                           |
-| Thug                | GDR in the Archetype role | Has Type EnemyArchetype and base health 10.                                                                                                                                              |
-| Enemy creation      | Creation Rule             | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty Constants, and current health in State equal to the Archetype's base health. |
-| enemy_1 and enemy_2 | Campaign instances        | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                                 |
-| Current health      | Authoritative value       | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                                    |
+| Element             | Modeling role                     | Meaning in this example                                                                                                                                                                  |
+| ------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enemy               | Type                              | Describes the Enemy Campaign instances.                                                                                                                                                  |
+| EnemyArchetype      | Type                              | Describes the shared enemy characteristics and initial values.                                                                                                                           |
+| Thug                | GDR serving the Archetype purpose | Has Type EnemyArchetype and base health 10.                                                                                                                                              |
+| Enemy creation      | Creation Rule                     | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty Constants, and current health in State equal to the Archetype's base health. |
+| enemy_1 and enemy_2 | Campaign instances                | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                                 |
+| Current health      | Authoritative value               | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                                    |
 
 Each newly created Enemy Campaign instance whose Archetype is Thug has current health 10 in State and its own fresh
 Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to its owning Mission.
@@ -250,14 +250,14 @@ flowchart LR
     Thug -->|Archetype and initial health| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: health 10"]
 ```
 
-## GDR role: referenced GDR
+## GDR purpose: referenced GDR
 
-In the Referenced GDR role, a GDR is referenced by a Campaign instance for a purpose other than supplying its Archetype.
+When serving the Referenced GDR purpose, a GDR is referenced by a Campaign instance other than as its Archetype.
 Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
 
 | Example concept        | Modeling role                                                                                                                                   | Question it answers                                                        |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Lead                   | GDR in the Referenced GDR role, representing a Lead to pursue.                                                                                  | Which Lead can be pursued?                                                 |
+| Lead                   | GDR serving the Referenced GDR purpose, representing a Lead to pursue.                                                                          | Which Lead can be pursued?                                                 |
 | Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in State, and an immutable Lead reference in Constants. | Which Investigation concerns that Lead, and how has it progressed?         |
 | InvestigationArchetype | GDR used as an Investigation's Archetype, supplying shared characteristics and initial values independently of the referenced Lead.             | What shared characteristics and initial values does the Investigation use? |
 
@@ -297,20 +297,20 @@ Both Investigations can share lead_1 without sharing progress. Retargeting inves
 would violate its fixed facts. Using lead_1 as its archetype would fail the expected InvestigationArchetype reference,
 regardless of whether some properties match.
 
-## GDR role: key for campaign facts
+## GDR purpose: key for campaign facts
 
-In the Key for campaign facts role, a GDR’s identity associates campaign-specific facts with that GDR. The facts belong to Campaign state;
+When serving the Key for campaign facts purpose, a GDR’s identity associates campaign-specific facts with that GDR. The facts belong to Campaign state;
 the GDR remains shared and immutable.
 
 Continuing the illustrative Investigation example, suppose investigation_2 completes after investigation_1 was abandoned.
 Campaign state retains both Investigation Campaign instances, including the values of the Lead reference property
 within each Campaign instance’s Constants property and the lifecycle property within its State property.
 
-| Element                                                                        | Modeling role                          | Meaning in this example                                                                                                                                   |
-| ------------------------------------------------------------------------------ | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| lead_1                                                                         | GDR in the Key for campaign facts role | Its identity selects the Investigations concerning this Lead; the GDR remains unchanged.                                                                  |
-| Properties of completed investigations that denote to which leads they pertain | Authoritative values                   | The Lead reference property within the Constants property of the Completed Investigation Campaign instance investigation_2 identifies lead_1.             |
-| Completion count for lead_1                                                    | Derived value                          | Count Investigation Campaign instances whose Lead reference property identifies lead_1 and whose lifecycle property has value Completed. The result is 1. |
+| Element                                                                        | Modeling role                                  | Meaning in this example                                                                                                                                   |
+| ------------------------------------------------------------------------------ | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| lead_1                                                                         | GDR serving the Key for campaign facts purpose | Its identity selects the Investigations concerning this Lead; the GDR remains unchanged.                                                                  |
+| Properties of completed investigations that denote to which leads they pertain | Authoritative values                           | The Lead reference property within the Constants property of the Completed Investigation Campaign instance investigation_2 identifies lead_1.             |
+| Completion count for lead_1                                                    | Derived value                                  | Count Investigation Campaign instances whose Lead reference property identifies lead_1 and whose lifecycle property has value Completed. The result is 1. |
 
 How to determine the Derived value of the completion count for the Lead GDR lead_1 from Authoritative values:
 

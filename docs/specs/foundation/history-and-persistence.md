@@ -46,7 +46,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 Session is defined by [Core Concepts](core-concepts.md#glossary).
 
-API surface and execution-role terms and Turn-start checkpoint are owned by the
+API surface and Principal terms and Turn-start checkpoint are owned by the
 [Engine Contract glossary](engine-contract.md#glossary).
 
 | Term                         | Definition                                                                                                                                                                                                                                                   |

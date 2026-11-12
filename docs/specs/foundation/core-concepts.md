@@ -109,6 +109,20 @@ Classifications of a value or piece of information, independent of where it live
 | Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
 
+## Personas
+
+The kinds of participants who make, change, or play the game.
+
+| Term             | Definition                                                                                                                                                 |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Persona          | A kind of participant in making, changing, or playing the game, defined by what the participant does with the game. The Personas are listed in this table. |
+| Engine designer  | The Persona that designs the engine and every Rule, decides which Rule inputs GDRs supply, and establishes the specification conventions.                  |
+| Content designer | The Persona that authors GDRs conforming to the Types the Engine designer exposes for content.                                                             |
+| UI designer      | The Persona that designs player-facing interfaces over the engine API.                                                                                     |
+| AI designer      | The Persona that designs an AI that plays the game.                                                                                                        |
+| Implementor      | The Persona that implements specifications as code and tests.                                                                                              |
+| Player           | The Persona that plays the game.                                                                                                                           |
+
 # Concepts and contract
 
 ## Vocabulary and contract ownership
@@ -117,6 +131,13 @@ Type and Property describe data independently of a programming language. Rule an
 Game build supplies shared data and executable implementation. These meanings apply across the complete game contract.
 Glossary definitions establish vocabulary without choosing an API, storage representation, or campaign-data composition.
 More detailed constraints belong to the specifications using that vocabulary.
+
+## Personas and participants
+
+A Persona describes what a participant does with the game, independently of whether a human or an LLM-based agent fills
+it; in this project, LLM-based agents fill the Implementor Persona. One participant may fill several Personas. A Persona grants no
+engine API authority; API authority belongs to the execution contract. Most Personas write specifications within their
+area, following the specification conventions established by the Engine designer.
 
 ## Rule kinds
 

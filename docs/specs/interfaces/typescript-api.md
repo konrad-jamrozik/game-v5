@@ -42,7 +42,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-API surface and execution-role terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
+API surface and Principal terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
 Shared modeling and Session terms are owned by [Core Concepts](../foundation/core-concepts.md#glossary).
 Campaign-specific composition terms are owned by [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md#glossary).
 

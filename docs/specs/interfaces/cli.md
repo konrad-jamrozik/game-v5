@@ -30,7 +30,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 # Glossary
 
-API surface and execution-role terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
+API surface and Principal terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
 
 TODO: Define CLI-specific terms without duplicating shared definitions.
 

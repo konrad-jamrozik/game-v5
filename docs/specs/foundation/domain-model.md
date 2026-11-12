@@ -207,7 +207,7 @@ Lead is a referenced GDR, distinct from the InvestigationArchetype that supplies
 The Lead reference belongs to the Investigation's Constants; current team references belong to State.
 Different Investigations at the same Lead may use different InvestigationArchetypes where the owning rules permit them,
 while the constraint of at most one Active Investigation per Lead still applies across archetypes. Production archetype fields, selection, and
-allowed combinations remain open. The [GDR role: referenced GDR](./campaign-modeling-contract.md#gdr-role-referenced-gdr)
+allowed combinations remain open. The [GDR purpose: referenced GDR](./campaign-modeling-contract.md#gdr-purpose-referenced-gdr)
 illustrates this separation without selecting investigation kinds as gameplay features.
 
 ## Mission and combat
@@ -281,7 +281,7 @@ Campaign configuration is a component of Campaign state, and its values may chan
 supply multiple starting-configuration GDRs, each describing a starting Campaign configuration or a part of one; for
 example, starting money, enemy difficulty, which factions or technologies are enabled, or their probability of
 occurrence. Campaign creation selects among them through its setup inputs, and the Rules of campaign creation read the
-selected GDRs in the Initialization source role ([Roles of GDRs](campaign-modeling-contract.md#roles-of-gdrs)) to produce the initial Campaign
+selected GDRs serving the Initialization source purpose ([Purposes of GDRs](campaign-modeling-contract.md#purposes-of-gdrs)) to produce the initial Campaign
 configuration and the rest of the initial Campaign state. Campaign state retains references to the selected
 starting-configuration GDRs. These GDRs remain immutable: a later change to Campaign configuration changes Campaign
 state only. Shared meanings are defined in
