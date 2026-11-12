@@ -28,6 +28,7 @@ None.
 - [Specification relationship cycles](../spec-relationship-cycles.md): informative register of retained cycles,
   their contract meanings, and future removal criteria.
 - [Specification work plan and backlog](governance/work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
+- [Outstanding work items](governance/work-todos.md): known issues in the specifications awaiting scheduling, each with its affected batches.
 
 # Foundation ownership
 
@@ -54,6 +55,7 @@ Arrows run from Dependency to Dependent; this diagram shows the complete explici
 | CONV    | Governance | [Specification Conventions](governance/spec-conventions.md)                                          | How specifications are written, reviewed, and maintained.                                                                               |
 | REL     | Governance | [Artifact Relationships](governance/artifact-relationships.md)                                       | Artifact relationship terminology, direction, inventories, and graph validation.                                                        |
 | PLAN    | Governance | [Specification Work Plan and Backlog](governance/work-plan.md)                                       | Specification authoring order, review checkpoints, and work tracking.                                                                   |
+| TODOS   | Governance | [Outstanding Work Items](governance/work-todos.md)                                                   | Known outstanding specification issues awaiting scheduling, with their affected batches.                                                |
 | DOM     | Foundation | [Domain Model](foundation/domain-model.md)                                                           | Game concepts, their properties and relationships, and structural domain invariants.                                                    |
 | CORE    | Foundation | [Core Concepts](foundation/core-concepts.md)                                                         | Shared vocabulary for modeling and engine execution, including Campaign, Session, Game build, and committed data.                       |
 | CMC     | Foundation | [Campaign Modeling Contract](foundation/campaign-modeling-contract.md)                               | Campaign-data composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation. |

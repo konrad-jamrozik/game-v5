@@ -12,7 +12,7 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 18             |
-| Draft      | 6              |
+| Draft      | 7              |
 | Accepted   | 3              |
 | Superseded | 0              |
 
@@ -20,7 +20,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | Family     | Specifications |
 | ---------- | -------------- |
-| Governance | 4              |
+| Governance | 5              |
 | Foundation | 7              |
 | Mechanics  | 8              |
 | Content    | 1              |
@@ -30,12 +30,13 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Governance
 
-| ID    | Document                                                                | Status   | Owns                                                                             |
-| ----- | ----------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------- |
-| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Accepted | How specifications are written, reviewed, and maintained.                        |
-| INDEX | [Game Specification Index](../specs/README.md)                          | Draft    | Specification registration, navigation, and ownership summaries.                 |
-| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Accepted | Specification authoring order, review checkpoints, and work tracking.            |
-| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft    | Artifact relationship terminology, direction, inventories, and graph validation. |
+| ID    | Document                                                                | Status   | Owns                                                                                     |
+| ----- | ----------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------- |
+| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Accepted | How specifications are written, reviewed, and maintained.                                |
+| INDEX | [Game Specification Index](../specs/README.md)                          | Draft    | Specification registration, navigation, and ownership summaries.                         |
+| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Accepted | Specification authoring order, review checkpoints, and work tracking.                    |
+| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft    | Artifact relationship terminology, direction, inventories, and graph validation.         |
+| TODOS | [Outstanding Work Items](../specs/governance/work-todos.md)             | Draft    | Known outstanding specification issues awaiting scheduling, with their affected batches. |
 
 ## Foundation
 
