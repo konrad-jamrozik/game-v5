@@ -35,13 +35,12 @@ campaign-data composition, Session lifecycle, gameplay mechanics, persistence pr
 
 ## Data modeling
 
-Language-independent vocabulary for describing and identifying model data.
+Language-independent vocabulary for describing model data.
 
-| Term        | Definition                                                                                                                                                                                                 |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Type        | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration. |
-| Property    | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                        |
-| Instance ID | An identifier for one occurrence within a Campaign, unique within a declared identity scope and stable for its lifetime.                                                                                   |
+| Term     | Definition                                                                                                                                                                                                 |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type     | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration. |
+| Property | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                        |
 
 ## Game build and content
 
@@ -103,8 +102,8 @@ schema or reveal condition.
 # Authoritative and Derived values
 
 An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values and
-the current rules and GDRs. This classification is independent of mutability: e.g., shared base health and a recorded
-Instance ID can be Authoritative values even though neither changes during gameplay. It is also independent of player
+the current rules and GDRs. This classification is independent of mutability: e.g., shared base health can be an
+Authoritative value even though it never changes during gameplay. It is also independent of player
 visibility: either kind may be hidden from the player. Caching a current calculation does not change its
 classification as a Derived value.
 

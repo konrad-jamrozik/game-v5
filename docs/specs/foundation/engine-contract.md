@@ -208,7 +208,7 @@ A player may commit any sequence of eligible Player API actions during a turn. `
 itself one player action; it atomically executes the turn resolution specified by Turn Resolution. Its internal
 phases are not separately exposed action-history entries. Each successful state-changing Player API action commits
 one action-history entry. Rejected actions and actions with no effect commit no action-history entry and consume
-no gameplay randomness or generated Instance IDs.
+no gameplay randomness or generated Campaign-scoped identifiers.
 
 The mechanics specification owning each gameplay action, e.g. `assignAgents(...)` or `purchaseUpgrade(...)`, states
 the action's preconditions, what the player observes when a precondition fails, and the action's state changes: when
@@ -306,14 +306,14 @@ History and Persistence owns restoration procedures and representation, not alte
 # Continuation state
 
 For equal initial Campaign state, the same Game build, and the same ordered committed commands, execution must
-produce equal resulting Campaign state, generated Instance IDs, gameplay RNG state, and retained reports. Campaign
-state must preserve every input consulted by game behavior, including relevant retained data about past Campaign state or events, current RNG state, and Instance ID
+produce equal resulting Campaign state, generated Campaign-scoped identifiers, gameplay RNG state, and retained reports. Campaign
+state must preserve every input consulted by game behavior, including relevant retained data about past Campaign state or events, current RNG state, and Campaign-scoped identifier
 generation state. An initial random seed alone is insufficient unless it determines the complete restored generator
 position. Gameplay must not depend on wall-clock time, UI rendering, model responses, or Autopilot memory.
 
 Determinism is required within one implementation and Game build, not across different implementations of the
 specification. Consequently, the order of random draws, the order in which Campaign instances are created within one
-command, and the sequence and format of generated Instance IDs are the implementer's choice, provided the equality
+command, and the sequence and format of generated Campaign-scoped identifiers are the implementer's choice, provided the equality
 guarantee above holds. Two implementations may therefore produce different outcomes from the same initial Campaign
 state and commands; each must reproduce its own outcomes exactly.
 
@@ -391,7 +391,7 @@ Committed state distinguishes complete Campaign state at accepted-command bounda
 E.g., the position restored by undo is a Committed state, while values computed partway through Advance turn
 processing are not.
 
-Rejected requests leave Campaign state, gameplay RNG state, Instance ID generation state, reports, action history,
+Rejected requests leave Campaign state, gameplay RNG state, Campaign-scoped identifier generation state, reports, action history,
 and memory unchanged. Execution infrastructure may record a rejected attempt for Autopilot status and budgets;
 that telemetry is not Campaign state. Intermediate processing must not be exposed as Committed state. Failed
 history navigation or load preserves the entire prior Session. Broken references or internal invariants are reported

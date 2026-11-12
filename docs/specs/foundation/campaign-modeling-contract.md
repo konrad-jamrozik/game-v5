@@ -31,8 +31,8 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 # Glossary
 
 Shared modeling and execution vocabulary is owned by [Core Concepts](core-concepts.md#glossary), including Campaign
-state. The terms below add campaign-specific composition; Instance ID is defined by Core Concepts and its
-campaign identity constraints are specified under [Campaign instances](#campaign-instances).
+state. The terms below add campaign-specific composition; Instance ID identity constraints are specified under
+[Campaign instance identity](#campaign-instance-identity).
 
 ## Campaign state components
 
@@ -52,6 +52,7 @@ The composition of each Campaign instance.
 | Term              | Definition                                                                                                                                                                                                                                                 |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Campaign instance | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              |
+| Instance ID       | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](engine-contract.md#glossary).                                                       |
 | Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
 | State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
 | Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
