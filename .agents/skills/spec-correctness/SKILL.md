@@ -23,6 +23,8 @@ Check the concerns that the linter deliberately cannot prove:
 
 - rule ownership;
 - relationship truth and the contract meaning of each dependency;
+- whether every relationship entry is still needed: the specification must still depend on content that the target currently owns, and entries made obsolete by moved, renamed, or deleted content must be pruned;
+- whether each section, rule, and term belongs in the specification: keep it, delete it when it is obsolete or duplicates content owned elsewhere, or move it to the specification that should own it; and whether the specification as a whole should be split into multiple specifications with clear ownership, as the conventions require for a topic that outgrows its specification;
 - the meaning of permitted `uses` cycles;
 - whether refinements preserve the referenced contract;
 - whether formal terms follow their owning glossaries, necessary new terms are defined before use, and encountered synonyms are recorded in the conventions' INSTEAD OF / USE / Context table;
