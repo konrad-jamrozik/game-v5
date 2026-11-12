@@ -193,20 +193,15 @@ content and the "no-op commands" decision. Re-scope NUMRNG's randomness content 
 interval boundaries, and comparisons, plus the observable reproducibility requirement in TODO-004. Reword the Open
 decision to cover only numeric representation, without naming an API.
 
-### TODO-008: Draw ordering in Turn Resolution and Formulas and uncertainty
+### TODO-008: Draw ordering in Formulas and uncertainty
 
 **Category and priority:** Contradiction with a recorded decision.
 
-**Affected:** Turn Resolution (TURN), [Overview](../foundation/turn-resolution.md#overview).
-Related: Specification Conventions (CONV, Accepted), [Formulas and uncertainty](spec-conventions.md#formulas-and-uncertainty).
+**Affected:** Specification Conventions (CONV, Accepted), [Formulas and uncertainty](spec-conventions.md#formulas-and-uncertainty).
 
-**Batches:** TURN is batch 7. CONV has no batch; a change is a revision of an Accepted governance specification.
+**Batches:** CONV has no batch; a change is a revision of an Accepted governance specification.
 
 **Current wording:**
-
-> It uses Domain Model's valid-state constraints and Numbers and Randomness's arithmetic and draw ordering.
-
-(TURN, Overview.)
 
 > For random rules, specify the distribution, draw timing and order, interval boundaries, success comparison, and which information is hidden.
 
@@ -215,10 +210,9 @@ Related: Specification Conventions (CONV, Accepted), [Formulas and uncertainty](
 **Why it is an issue:** The order of random draws is the implementer's choice under
 [Determinism](../foundation/engine-contract.md#determinism), and
 [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification) names it as an out-of-scope
-example. The CONV sentence was not in the original audit finding; it was noticed while recording this Work item.
+example.
 
-**Suggested resolution:** In TURN, replace "arithmetic and draw ordering" with "arithmetic and random-outcome
-contracts". In CONV, replace "draw timing and order" with which Campaign state a random outcome depends on, stated as
+**Suggested resolution:** In CONV, replace "draw timing and order" with which Campaign state a random outcome depends on, stated as
 an outcome rather than a draw order.
 
 ### TODO-009: Draw sites and draw fixtures in Combat
@@ -317,28 +311,13 @@ difficulty is fixed for the whole Investigation and which Campaign state it may 
 
 **Category and priority:** Borderline, low priority.
 
-**Affected:** Turn Resolution (TURN), [Overview](../foundation/turn-resolution.md#overview),
-[Overview](../foundation/turn-resolution.md#overview), and
-[Phase schedule](../foundation/turn-resolution.md#phase-schedule). Specification Conventions (CONV, Accepted),
+**Affected:** Specification Conventions (CONV, Accepted),
 [Writing exact requirements](spec-conventions.md#writing-exact-requirements). Combat (COMBAT), [Battle flow](../mechanics/combat.md#battle-flow).
-Economy and Upgrades (ECON), [Income and costs](../mechanics/economy-and-upgrades.md#income-and-costs).
 Investigations (INVSTG), [Team changes and commitment](../mechanics/investigations.md#team-changes-and-commitment).
 
-**Batches:** TURN is batch 7; COMBAT is batch 5; ECON is batch 3; INVSTG is batch 4. CONV has no batch.
+**Batches:** COMBAT is batch 5; INVSTG is batch 4. CONV has no batch.
 
 **Current wording:**
-
-> Define exactly when subsystem rules run and which state each phase reads.
-
-(TURN, Overview; the register's Owns column for TURN repeats "which state each phase reads".)
-
-> [...] by specifying calculation snapshots, ordered phases, and the atomic publication boundary.
-
-(TURN, Overview.)
-
-> Identify start-of-turn snapshots versus updated-state reads.
-
-(TURN, Phase schedule TODO.)
 
 > - Which state snapshot supplies each input and when each effect becomes visible.
 
@@ -348,10 +327,6 @@ Investigations (INVSTG), [Team changes and commitment](../mechanics/investigatio
 
 (COMBAT, Battle flow.)
 
-> [...] identify evaluation snapshots through TURN and distinguish cash from income rate.
-
-(ECON, Income and costs TODO.)
-
 > TODO: Specify effective-skill-weighted progress loss on removal, the weighting snapshot, [...]
 
 (INVSTG, Team changes and commitment.)
@@ -359,8 +334,9 @@ Investigations (INVSTG), [Team changes and commitment](../mechanics/investigatio
 **Why it is an issue:** Which values an input uses changes outcomes, so it is designer-authored and belongs in the
 specifications. The wording, however, describes a mechanism (snapshots and reads) rather than the outcome.
 
-**Suggested resolution:** Keep the content, and reword it in terms of outcomes, e.g. "uses values as of turn
-start" or "uses values after the preceding phase's effects", rather than snapshots and reads.
+**Suggested resolution:** Keep the content, and reword it in terms of outcomes, following
+[Turn advancement](../foundation/engine-contract.md#turn-advancement), e.g. "uses values as of turn start" or
+"uses the value after training", rather than snapshots and reads.
 
 ### TODO-015: Authoritative versus Derived as a storage decision
 

@@ -31,13 +31,13 @@ appropriate to this document.
 - Uses [Combat](./combat.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Economy and Upgrades](./economy-and-upgrades.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Factions](./factions.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Player Information](../interfaces/player-information.md)
-- Used by [Turn Resolution](../foundation/turn-resolution.md)
 
 # Glossary
 
@@ -59,6 +59,7 @@ TODO: Specify survivor return, casualty effects, resource changes, suppression, 
 # Edge cases and failure behavior
 
 TODO: Define behavior for Last-turn deployment, failed attempts versus expiration, negligible damage, overkill, multiple missions against one faction, and simultaneous rewards/penalties.
+State whether a Mission created during Advance turn ages in that same Advance turn, and the outcome when creation and expiration, or reward and defeat conditions, coincide, under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

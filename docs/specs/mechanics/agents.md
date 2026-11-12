@@ -30,6 +30,7 @@ appropriate to this document.
 
 - Uses [Combat](./combat.md)
 - Uses [Economy and Upgrades](./economy-and-upgrades.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
@@ -38,7 +39,6 @@ appropriate to this document.
 - Used by [Investigations](./investigations.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
-- Used by [Turn Resolution](../foundation/turn-resolution.md)
 
 # Glossary
 
@@ -67,6 +67,7 @@ TODO: Specify training, task exhaustion, exhaustion recovery, injury recovery, f
 # Edge cases and failure behavior
 
 TODO: Define behavior for Exact readiness/exhaustion thresholds, zero health, recovery completion, destination disappearing during transit, and conflicting Current assignments.
+State when an arriving Agent can work and when Mission survivors begin recovering, as exceptions to the turn-start default under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

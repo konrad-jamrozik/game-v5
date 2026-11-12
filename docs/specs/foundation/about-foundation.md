@@ -5,8 +5,8 @@
 # What this family is for
 
 Foundation specifications hold the cross-cutting contracts that every other part of the game builds on: shared
-vocabulary, engine guarantees, campaign-data structure, the engine subsystems, the domain itself, and the numeric and
-timing machinery. Mechanics, Content, Interfaces, Acceptance, and Implementation documents all depend on them; none of
+vocabulary, engine guarantees, campaign-data structure, the engine subsystems, the domain itself, and the numeric
+machinery. Mechanics, Content, Interfaces, Acceptance, and Implementation documents all depend on them; none of
 them is about a single game system.
 
 The family reads from abstract to concrete: words, then engine promises, then data rules, then one document per engine
@@ -26,7 +26,7 @@ definition.
 
 [Engine Contract](engine-contract.md) answers _what does the engine guarantee, whatever subsystem is involved?_ It owns
 the API hierarchy, the data the engine owns and what is persisted, the campaign lifecycle, player queries and actions,
-Dev mode, determinism, the information boundary, and Committed state integrity. It names the owner of each engine
+which values a rule uses during Advance turn, Dev mode, determinism, the information boundary, and Committed state integrity. It names the owner of each engine
 subsystem without stating that subsystem's behavior.
 
 ## Campaign State
@@ -75,16 +75,10 @@ refines one part of it with formulas and transitions.
 owns numeric operations, units, generator state, and draw consumption, so that a campaign replays identically on every
 supported runtime.
 
-## Turn Resolution
-
-[Turn Resolution](turn-resolution.md) answers _when does each rule run, and what state does it read?_ It owns phase
-order, calculation snapshots, and the atomic publication boundary of a turn. Mechanics specifications supply the
-transitions; this document schedules them.
-
 # How they relate
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
-State, Numbers and Randomness, and Turn Resolution refine those guarantees. Timeline, Saves, Configuration, and
+State and Numbers and Randomness refine those guarantees. Timeline, Saves, Configuration, and
 Autopilot each use Engine Contract and own one subsystem outright. Game Data Records builds on Campaign State. Domain
 Model uses Campaign State and Game Data Records to describe the actual game, and the Mechanics family refines Domain
 Model in turn.
@@ -107,7 +101,6 @@ flowchart TD
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   SAVES["SAVES — Saves (Draft)"]
   TIMELINE["TIMELINE — Timeline (Draft)"]
-  TURN["TURN — Turn Resolution (Stub)"]
   CORE -->|used by| AUTO
   CORE -->|used by| CONFIG
   CORE -->|used by| CSTATE
@@ -123,7 +116,6 @@ flowchart TD
   CSTATE -->|used by| NUMRNG
   CSTATE -->|used by| TIMELINE
   DOM -->|used by| CONFIG
-  DOM -->|used by| TURN
   ENG -->|used by| AUTO
   ENG -->|used by| CONFIG
   ENG -->|refined by| CSTATE
@@ -132,9 +124,7 @@ flowchart TD
   ENG -->|refined by| NUMRNG
   ENG -->|used by| SAVES
   ENG -->|used by| TIMELINE
-  ENG -->|refined by| TURN
   GDR -->|used by| DOM
-  NUMRNG -->|used by| TURN
   TIMELINE -->|used by| AUTO
   TIMELINE -->|used by| SAVES
 ```
@@ -152,7 +142,6 @@ flowchart LR
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   SAVES["SAVES — Saves (Draft)"]
   TIMELINE["TIMELINE — Timeline (Draft)"]
-  TURN["TURN — Turn Resolution (Stub)"]
   family_mechanics["Mechanics family"]:::external
   family_content["Content family"]:::external
   family_interfaces["Interfaces family"]:::external
@@ -184,9 +173,6 @@ flowchart LR
   TIMELINE -->|used by| family_implementation
   TIMELINE -->|used by| family_interfaces
   TIMELINE -->|used by| family_mechanics
-  TURN -->|used by| family_acceptance
-  TURN -->|used by| family_mechanics
-  family_mechanics -->|used by| TURN
   classDef external stroke-dasharray: 5 5
 ```
 
@@ -209,9 +195,10 @@ flowchart LR
 - **Campaign State versus Domain Model:** the first holds rules that would apply to any game on this engine;
   the second holds the concepts of this game. E.g., Factions can be redesigned without touching Campaign State,
   and reference integrity can be tightened without touching Domain Model.
-- **Numbers and Randomness and Turn Resolution:** each refines a distinct Engine Contract
-  guarantee (reproducible calculation, phase timing) that several Mechanics documents depend on, so
-  neither belongs inside a single mechanic.
+- **Numbers and Randomness:** it refines an Engine Contract guarantee (reproducible calculation) that several
+  Mechanics documents depend on, so it does not belong inside a single mechanic.
+- **No turn schedule:** the order of rules within Advance turn has no document. Engine Contract gives the default,
+  turn-start values, and each Mechanics document states its own exceptions, so the order follows from the rules.
 
 # Reading order
 
@@ -221,4 +208,4 @@ flowchart LR
 4. [Timeline](timeline.md), [Saves](saves.md), [Configuration](configuration.md), and [Autopilot](autopilot.md) for
    the engine subsystems.
 5. [Domain Model](domain-model.md) for the game's concepts.
-6. [Numbers and Randomness](numbers-and-randomness.md) and [Turn Resolution](turn-resolution.md) as needed.
+6. [Numbers and Randomness](numbers-and-randomness.md) as needed.

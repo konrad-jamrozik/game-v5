@@ -40,14 +40,12 @@ flowchart TD
   SCHEMA["SCHEMA — Storage Schema (Stub)"]
   TIMELINE["TIMELINE — Timeline (Draft)"]
   TODOS["TODOS — Outstanding Work Items (Draft)"]
-  TURN["TURN — Turn Resolution (Stub)"]
   WEB["WEB — Web UI (Stub)"]
   AGENT --> COMBAT
   AGENT --> ECON
   AGENT --> INFO
   AGENT --> INVSTG
   AGENT --> MISSION
-  AGENT --> TURN
   API --> CLI
   API --> DEV
   API --> SCEN
@@ -57,7 +55,6 @@ flowchart TD
   AUTO --> WEB
   CAMP --> INFO
   CAMP --> INIT
-  CAMP --> TURN
   CLI --> SCEN
   COMBAT --> AGENT
   COMBAT --> INFO
@@ -101,19 +98,22 @@ flowchart TD
   DOM --> DEV
   DOM --> INFO
   DOM --> INIT
-  DOM --> TURN
   ECON --> AGENT
   ECON --> INFO
   ECON --> INIT
   ECON --> MISSION
-  ECON --> TURN
+  ENG --> AGENT
   ENG --> AUTO
   ENG --> CAMP
   ENG --> CLI
   ENG --> CONFIG
   ENG --> DEPDIR
   ENG --> DOM
+  ENG --> ECON
+  ENG --> FACTION
   ENG --> GDR
+  ENG --> INVSTG
+  ENG --> MISSION
   ENG --> SAVES
   ENG --> SCHEMA
   ENG --> TIMELINE
@@ -122,7 +122,6 @@ flowchart TD
   FACTION --> INIT
   FACTION --> LEAD
   FACTION --> MISSION
-  FACTION --> TURN
   GDR --> DOM
   GDR --> INFO
   GDR --> INIT
@@ -138,7 +137,6 @@ flowchart TD
   INIT --> MISSION
   INIT --> SCEN
   INVSTG --> INFO
-  INVSTG --> TURN
   LEAD --> FACTION
   LEAD --> INFO
   LEAD --> INIT
@@ -146,13 +144,11 @@ flowchart TD
   MISSION --> INFO
   MISSION --> INIT
   MISSION --> LEAD
-  MISSION --> TURN
   NUMRNG --> AGENT
   NUMRNG --> COMBAT
   NUMRNG --> ECON
   NUMRNG --> FACTION
   NUMRNG --> INVSTG
-  NUMRNG --> TURN
   PLAN --> TODOS
   SAVES --> API
   SAVES --> CLI
@@ -169,9 +165,6 @@ flowchart TD
   TIMELINE --> SCEN
   TIMELINE --> SCHEMA
   TIMELINE --> WEB
-  TURN --> CAMP
-  TURN --> ECON
-  TURN --> SCEN
   WEB --> SCEN
 ```
 

@@ -12,17 +12,22 @@
 
 This document defines the engine's API hierarchy, the data the engine owns, and the guarantees that hold across every engine subsystem when running the game and exposing information.
 
-It owns cross-cutting guarantees, not the behavior of one subsystem or their refinements, e.g. [Timeline](./timeline.md), [Turn Resolution](./turn-resolution.md), or [TypeScript Player API](../interfaces/typescript-api.md). [Engine subsystems](#engine-subsystems) names the owner of each subsystem.
+It owns cross-cutting guarantees, not the behavior of one subsystem or their refinements, e.g. [Timeline](./timeline.md), [Saves](./saves.md), or [TypeScript Player API](../interfaces/typescript-api.md). [Engine subsystems](#engine-subsystems) names the owner of each subsystem.
 
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
+- Used by [Agents](../mechanics/agents.md)
 - Used by [Autopilot](./autopilot.md)
 - Used by [Campaign](../mechanics/campaign.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Domain Model](./domain-model.md)
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
+- Used by [Factions](../mechanics/factions.md)
 - Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
+- Used by [Investigations](../mechanics/investigations.md)
+- Used by [Missions](../mechanics/missions.md)
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Terminal CLI](../interfaces/cli.md)
@@ -32,7 +37,6 @@ It owns cross-cutting guarantees, not the behavior of one subsystem or their ref
 - Refined by [Developer API](../interfaces/developer-api.md)
 - Refined by [Numbers and Randomness](./numbers-and-randomness.md)
 - Refined by [Player Information](../interfaces/player-information.md)
-- Refined by [Turn Resolution](./turn-resolution.md)
 - Refined by [TypeScript Player API](../interfaces/typescript-api.md)
 
 # Glossary
@@ -228,13 +232,12 @@ Nothing a Session holds is persisted, and loading a Campaign save never restores
 Each engine subsystem has one owning specification. This document states only the guarantees that hold across all of
 them. The following table is the complete subsystem inventory.
 
-| Subsystem       | Owner                                 | What it provides                                                                             |
-| --------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Timeline        | [Timeline](timeline.md)               | Undo and redo of every committed action, by action or by turn.                               |
-| Saves           | [Saves](saves.md)                     | Saving a Campaign and loading it back at its saved position.                                 |
-| Configuration   | [Configuration](configuration.md)     | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration. |
-| Autopilot       | [Autopilot](autopilot.md)             | Bounded play by an Autopilot AI, and its Autopilot memory.                                   |
-| Turn resolution | [Turn Resolution](turn-resolution.md) | The order and timing of game behavior within Advance turn.                                   |
+| Subsystem     | Owner                             | What it provides                                                                             |
+| ------------- | --------------------------------- | -------------------------------------------------------------------------------------------- |
+| Timeline      | [Timeline](timeline.md)           | Undo and redo of every committed action, by action or by turn.                               |
+| Saves         | [Saves](saves.md)                 | Saving a Campaign and loading it back at its saved position.                                 |
+| Configuration | [Configuration](configuration.md) | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration. |
+| Autopilot     | [Autopilot](autopilot.md)         | Bounded play by an Autopilot AI, and its Autopilot memory.                                   |
 
 # Campaign lifecycle
 
@@ -272,8 +275,8 @@ Player API queries always return Player-visible information. The same query at e
 same Player-visible information for the Session controller and Autopilot AI, independent of Dev mode.
 
 A player may commit any sequence of eligible Player API actions during a turn. `player.actions.advanceTurn()` is
-itself one player action; it atomically executes the turn resolution specified by Turn Resolution, and its internal
-phases are not separately committed. Each successful state-changing Player API action is one committed action in the
+itself one player action; it atomically applies the rules stated for turn advancement, under
+[Turn advancement](#turn-advancement), and no intermediate result is separately committed. Each successful state-changing Player API action is one committed action in the
 Timeline. A rejected action or an action with no effect is not a committed action and changes no later outcome, under
 [Determinism](#determinism).
 
@@ -282,6 +285,27 @@ the action's preconditions, what the player observes when a precondition fails, 
 they apply, which values change, and by how much. A rejected action changes nothing, under
 [Committed state integrity](#committed-state-integrity). The gameplay action inventory is extensible; future gameplay
 actions follow the same atomicity, visibility, and replay contract.
+
+# Turn advancement
+
+Advance turn applies every rule that a specification states is applied during turn advancement, e.g. paying upkeep
+or completing training. No specification lists the order in which those rules are applied. Each rule instead states
+which values it uses, following this complete rule set:
+
+- **Turn-start default:** A rule applied during Advance turn uses every value as it was in the Committed state in
+  which Advance turn began, unless the rule states an exception.
+- **Stated exception:** A rule may state that it uses a value as it is after another named rule of the same Advance
+  turn has been applied; e.g., "upkeep uses each Agent's rank after this turn's training". The specification owning
+  the rule that uses the value states the exception.
+- **Several changes to one value:** When more than one rule of the same Advance turn changes the same value, the
+  specifications owning those rules state the combined result, e.g. that the changes add up, or which one prevails.
+- **Campaign instances created during Advance turn:** A Campaign instance created during Advance turn has no
+  turn-start values. A rule of the same Advance turn applies to it only when the rule states so.
+- **No circular exceptions:** Stated exceptions must not form a cycle; e.g., rule A using a value after rule B while
+  rule B uses a value after rule A is a defect in the specifications.
+
+Any order of applying the rules that produces the stated results is the implementer's choice. Only the Committed
+state after Advance turn is observable, under [Committed state integrity](#committed-state-integrity).
 
 # Dev mode and developer operations
 
@@ -367,6 +391,9 @@ Exact error representations and asynchronous operation results belong to TypeScr
 - **Session not persisted:** Select a Campaign, save it, exit, and start the game again. The new Session has no
   selected Campaign until the Campaign save is loaded, and loading restores the Campaign's saved data but none of the earlier
   Session's runtime state ([Campaign lifecycle](#campaign-lifecycle), [Data ownership](#data-ownership)).
+- **Turn-start default:** Rule R1 of Advance turn changes value V, and rule R2 of the same Advance turn uses V and
+  states no exception. R2 uses V as it was when Advance turn began. If R2 instead states that it uses V after R1, it
+  uses the value R1 produced ([Turn advancement](#turn-advancement)).
 - **Developer isolation:** Enable Dev mode and inspect hidden difficulty H through Developer API. Player API still
   hides H. Engage Autopilot; its queries and errors hide H and its developer calls fail. Disable Dev mode after
   disengagement and verify Developer API access is revoked

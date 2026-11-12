@@ -205,17 +205,17 @@ check links, and validate the graphs. Do not invent implementation or test relat
 The following table gives the complete expected classifications for this acceptance scenario. These cases exercise
 [Recording relationships](#recording-relationships), [Direction](#direction), and [Status and evidence](#status-and-evidence); they do not add relationships to the named documents.
 
-| Case                                                                                                                                             | Expected classification and reason                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                                    | Uses Campaign State; it applies campaign composition constraints without elaborating their meanings |
-| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)                      | Refines Domain Model; it adds detail to the same lifecycle                                          |
-| Turn Resolution specifies when a turn is published under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) | Refines Engine Contract; it details the atomic publication of a turn                                |
-| Timeline preserves references under [References](../foundation/campaign-state.md#references) while restoring Campaign state                      | Uses Campaign State; satisfying the reference invariant alone is not refinement                     |
-| Initial Campaign Content supplies prices under Economy's purchase rules                                                                          | Uses Economy and Upgrades; data values do not elaborate purchase behavior                           |
-| Terminal CLI maps commands to Player API                                                                                                         | Uses TypeScript Player API; an adapter contract applies existing operations                         |
-| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields                    | Intended refinement is permitted; the fields remain unspecified and status stays Stub               |
-| A document merely says it must obey [Campaign instances](../foundation/campaign-state.md#campaign-instances)                                     | Uses, not Refines; no added detail about the identity convention is identified                      |
-| A refinement duplicates the same reliance as a Uses entry                                                                                        | Keep only Refines; two Relationship kinds require distinct reliance                                 |
+| Case                                                                                                                          | Expected classification and reason                                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and GDR                                                                 | Uses Campaign State; it applies campaign composition constraints without elaborating their meanings |
+| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)   | Refines Domain Model; it adds detail to the same lifecycle                                          |
+| Numbers and Randomness specifies reproducible calculation under [Determinism](../foundation/engine-contract.md#determinism)   | Refines Engine Contract; it details how calculation stays reproducible                              |
+| Timeline preserves references under [References](../foundation/campaign-state.md#references) while restoring Campaign state   | Uses Campaign State; satisfying the reference invariant alone is not refinement                     |
+| Initial Campaign Content supplies prices under Economy's purchase rules                                                       | Uses Economy and Upgrades; data values do not elaborate purchase behavior                           |
+| Terminal CLI maps commands to Player API                                                                                      | Uses TypeScript Player API; an adapter contract applies existing operations                         |
+| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields | Intended refinement is permitted; the fields remain unspecified and status stays Stub               |
+| A document merely says it must obey [Campaign instances](../foundation/campaign-state.md#campaign-instances)                  | Uses, not Refines; no added detail about the identity convention is identified                      |
+| A refinement duplicates the same reliance as a Uses entry                                                                     | Keep only Refines; two Relationship kinds require distinct reliance                                 |
 
 ## Complete coverage of Relationship kinds
 

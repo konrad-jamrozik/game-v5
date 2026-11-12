@@ -18,7 +18,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 This specification intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including [Attribute bounds](../foundation/domain-model.md#attribute-bounds))
 with resource flows, purchase eligibility, and upgrade effects. Agents supplies personnel state and capabilities;
 Numbers and Randomness supplies arithmetic. Initial Campaign Content supplies prices and increments, while this
-document supplies their meanings and formulas. Turn Resolution supplies evaluation timing. These rules remain TODOs.
+document supplies their meanings and formulas. This document states which values its formulas use under
+[Turn advancement](../foundation/engine-contract.md#turn-advancement). These rules remain TODOs.
 
 TODO: Specify Spendable money, recurring funding, upkeep, contracting income, hiring, dismissal, capacity, and upgrades.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
@@ -27,15 +28,14 @@ appropriate to this document.
 # Relationships
 
 - Uses [Agents](./agents.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
-- Uses [Turn Resolution](../foundation/turn-resolution.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Agents](./agents.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
-- Used by [Turn Resolution](../foundation/turn-resolution.md)
 
 # Glossary
 
@@ -44,7 +44,7 @@ duplicating shared definitions.
 
 # Income and costs
 
-TODO: Specify formulas for hiring, dismissal, upkeep, contracting, and recurring funding; identify evaluation snapshots through TURN and distinguish cash from income rate.
+TODO: Specify formulas for hiring, dismissal, upkeep, contracting, and recurring funding; state each formula's exceptions to the turn-start default under [Turn advancement](../foundation/engine-contract.md#turn-advancement), e.g. whether upkeep uses an Agent's rank before or after the same turn's training and when a funding change starts producing income; and distinguish cash from income rate.
 
 # Upgrade effects
 

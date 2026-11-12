@@ -16,7 +16,7 @@ allocates agents, pursues leads, undertakes missions, and opposes factions.
 Conceptual records may be embedded, separately stored, or reconstructed provided their identity and meaning are preserved.
 
 [Core Concepts](core-concepts.md) owns shared vocabulary; [Campaign State](campaign-state.md) owns campaign composition and identity/reference constraints.
-[Engine Contract](engine-contract.md) owns execution guarantees. This document owns the game concepts and structural relationships; the [Mechanics family](../mechanics/about-mechanics.md) owns formulas and detailed transitions. Other details remain in their owning specifications, e.g. [Numbers and Randomness](numbers-and-randomness.md), [Turn Resolution](turn-resolution.md), or [Initial Campaign Content](../content/initial-campaign.md).
+[Engine Contract](engine-contract.md) owns execution guarantees. This document owns the game concepts and structural relationships; the [Mechanics family](../mechanics/about-mechanics.md) owns formulas and detailed transitions. Other details remain in their owning specifications, e.g. [Numbers and Randomness](numbers-and-randomness.md) or [Initial Campaign Content](../content/initial-campaign.md).
 
 A concept can include hidden facts; belonging to the game domain does not imply that every property is visible to the player. [Player Information](../interfaces/player-information.md) owns exact visibility.
 
@@ -30,7 +30,6 @@ A concept can include hidden facts; belonging to the game domain does not imply 
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Player Information](../interfaces/player-information.md)
-- Used by [Turn Resolution](./turn-resolution.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)
 - Refined by [Agents](../mechanics/agents.md)
 - Refined by [Campaign](../mechanics/campaign.md)

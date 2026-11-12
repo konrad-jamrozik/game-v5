@@ -17,8 +17,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's campaign boundary ([Campaign boundary](../foundation/domain-model.md#campaign-boundary-1) and its Campaign and agency section) with
 initialization, Campaign configuration changes, and ending behavior. Initial Campaign Content supplies the exact starting values and catalogs;
-this document supplies their initialization meaning. Turn Resolution supplies state-read timing and the phase in
-which campaign predicates are checked; this document supplies the predicates. Initialization and ending rules remain
+this document supplies their initialization meaning. This document supplies the campaign predicates and states which values they use under
+[Turn advancement](../foundation/engine-contract.md#turn-advancement). Initialization and ending rules remain
 TODOs below; Campaign configuration requirements are specified separately.
 
 TODO: Specify Initial campaign, ongoing/won/lost lifecycle, panic, funding/money boundary, and victory objective.
@@ -32,11 +32,9 @@ appropriate to this document.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Timeline](../foundation/timeline.md)
-- Uses [Turn Resolution](../foundation/turn-resolution.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Player Information](../interfaces/player-information.md)
-- Used by [Turn Resolution](../foundation/turn-resolution.md)
 
 # Glossary
 
@@ -90,6 +88,7 @@ TODO: Define allowed Player-visible information and commands after an ending and
 # Edge cases and failure behavior
 
 TODO: Define behavior for Zero money versus negative money, panic at its limit, all factions defeated, same-turn victory/defeat, and post-ending commands.
+State whether ending predicates use turn-start values or the values after the other rules of the same Advance turn, under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

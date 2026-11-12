@@ -7,8 +7,8 @@
 Mechanics specifications own the player-facing game systems: their rules, transitions, formulas, and effects. Each one
 refines part of the [Domain Model](../foundation/domain-model.md) with the detailed behavior of one system, using
 [Numbers and Randomness](../foundation/numbers-and-randomness.md) for arithmetic and draws. Exact balance values and
-catalogs come from the Content family; when each rule runs comes from
-[Turn Resolution](../foundation/turn-resolution.md).
+catalogs come from the Content family; which values a rule uses during Advance turn follows
+[Turn advancement](../foundation/engine-contract.md#turn-advancement).
 
 # Documents
 
@@ -106,24 +106,18 @@ flowchart LR
   family_foundation["Foundation family"]:::external
   family_content["Content family"]:::external
   family_interfaces["Interfaces family"]:::external
-  AGENT -->|used by| family_foundation
   AGENT -->|used by| family_interfaces
   CAMP -->|used by| family_content
-  CAMP -->|used by| family_foundation
   CAMP -->|used by| family_interfaces
   COMBAT -->|used by| family_interfaces
   ECON -->|used by| family_content
-  ECON -->|used by| family_foundation
   ECON -->|used by| family_interfaces
   FACTION -->|used by| family_content
-  FACTION -->|used by| family_foundation
   FACTION -->|used by| family_interfaces
-  INVSTG -->|used by| family_foundation
   INVSTG -->|used by| family_interfaces
   LEAD -->|used by| family_content
   LEAD -->|used by| family_interfaces
   MISSION -->|used by| family_content
-  MISSION -->|used by| family_foundation
   MISSION -->|used by| family_interfaces
   family_content -->|used by| AGENT
   family_content -->|used by| CAMP

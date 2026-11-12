@@ -27,7 +27,7 @@ This is currently a stub: the concrete test cases await the detailed rules and G
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification uses Initial Campaign Content for reproducible inputs, Turn Resolution for effect timing, and Timeline
+This specification uses Initial Campaign Content for reproducible inputs, the Mechanics family for same-turn effects, and Timeline
 and Saves for undo, redo, save, and load scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
 under test. Specific checked requirements acquire implicit verifies relationships when scenarios identify them;
 these document-level uses entries do not claim that tests already exist or pass.
@@ -44,7 +44,6 @@ appropriate to this document.
 - Uses [Saves](../foundation/saves.md)
 - Uses [Terminal CLI](../interfaces/cli.md)
 - Uses [Timeline](../foundation/timeline.md)
-- Uses [Turn Resolution](../foundation/turn-resolution.md)
 - Uses [TypeScript Player API](../interfaces/typescript-api.md)
 - Uses [Web UI](../interfaces/web-ui.md)
 
@@ -82,6 +81,7 @@ explicitly.
 # Integration scenarios
 
 TODO: Cover resource allocation, transit, investigation uncertainty/abandonment, deadline pressure, transport contention, partial-success missions, faction escalation/suppression, and campaign endings.
+Provide turn walkthroughs with before and after state for arrival, completion, expiration, rewards, suppression, and terminal outcomes.
 
 # Interface flows and Timeline navigation
 

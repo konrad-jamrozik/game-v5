@@ -11,7 +11,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | Status     | Specifications |
 | ---------- | -------------- |
-| Stub       | 18             |
+| Stub       | 17             |
 | Draft      | 10             |
 | Accepted   | 5              |
 | Superseded | 0              |
@@ -21,7 +21,7 @@ These informative views are derived from the registered Markdown specifications.
 | Family         | Specifications |
 | -------------- | -------------- |
 | Governance     | 5              |
-| Foundation     | 11             |
+| Foundation     | 10             |
 | Mechanics      | 8              |
 | Content        | 1              |
 | Interfaces     | 5              |
@@ -52,7 +52,6 @@ These informative views are derived from the registered Markdown specifications.
 | NUMRNG   | [Numbers and Randomness](../specs/foundation/numbers-and-randomness.md) | Stub     | Make every numeric calculation and random outcome reproducible across supported runtimes.                                                             |
 | SAVES    | [Saves](../specs/foundation/saves.md)                                   | Draft    | Campaign save contents, saving, loading, the Save size limit, and Game build compatibility.                                                           |
 | TIMELINE | [Timeline](../specs/foundation/timeline.md)                             | Draft    | Undo and redo of committed actions by action and by turn, and what a restored Timeline position guarantees.                                           |
-| TURN     | [Turn Resolution](../specs/foundation/turn-resolution.md)               | Stub     | Define exactly when Mechanics family rules run and which state each phase reads.                                                                      |
 
 ## Mechanics
 

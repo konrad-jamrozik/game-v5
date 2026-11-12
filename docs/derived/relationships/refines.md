@@ -44,11 +44,9 @@ flowchart LR
   ENG["ENG — Engine Contract (Draft)"]
   INFO["INFO — Player Information (Stub)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
-  TURN["TURN — Turn Resolution (Stub)"]
   ENG --> API
   ENG --> CSTATE
   ENG --> DEV
   ENG --> INFO
   ENG --> NUMRNG
-  ENG --> TURN
 ```

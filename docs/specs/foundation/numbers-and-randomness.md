@@ -36,7 +36,6 @@ appropriate to this document.
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Factions](../mechanics/factions.md)
 - Used by [Investigations](../mechanics/investigations.md)
-- Used by [Turn Resolution](./turn-resolution.md)
 
 # Glossary
 
