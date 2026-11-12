@@ -12,7 +12,8 @@
 
 This document defines the shared language for the complete game contract, spanning campaign data and engine execution. It
 owns the meanings of its glossary terms independently of the contracts that use them. It does not define API authority,
-campaign-data composition, gameplay mechanics, persistence procedures, or interface behavior.
+campaign-data composition, Session lifecycle, gameplay mechanics, persistence procedures, interface behavior, or what a
+specification stating a Rule must state.
 
 # Relationships
 
@@ -59,30 +60,28 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 
 A playthrough, and the runtime context that selects it.
 
-| Term     | Definition                                                                                                                                                                                 |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                                                                        |
-| Session  | The runtime context of one running game, from start to exit, holding the selection of at most one Campaign and runtime-only access and execution state. Nothing in a Session is persisted. |
+| Term     | Definition                                                                                                                          |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                 |
+| Session  | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |
 
-## Campaign state composition
+## Campaign state and History
 
-How one Campaign's data divides into components, and which snapshots of it are authoritative.
+The data of one Campaign, including what it retains about the past. Campaign Modeling Contract owns how Campaign state
+divides into components.
 
-| Term                   | Definition                                                                                                                                                                                                      |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign state         | Data describing one Campaign, including World state and Campaign configuration. History is a subcomponent of World state.                                                                                       |
-| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and History, distinct from Campaign configuration.                                          |
-| Current world state    | The subcomponent of World state other than History: the simulated world as it stands at the selected history position. After undo, it is the state at that earlier position, not the furthest position reached. |
-| Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                    |
-| History                | The subcomponent of World state containing retained data describing past Campaign state or events. Rules and reports may consult History.                                                                       |
+| Term           | Definition                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Campaign state | Data describing one Campaign, including its History.                                                                                 |
+| History        | The part of Campaign state containing retained data describing past Campaign state or events. Rules and reports may consult History. |
 
 ## Campaign state timing
 
 Terms describing when Campaign state is observed, not which part of it.
 
-| Term            | Definition                                                                                                                                                                                                                                                                 |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Committed state | Complete Campaign state, including Campaign configuration and all of World state, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a component; every retained history position is a Committed state. |
+| Term            | Definition                                                                                                                                                                                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Committed state | Complete Campaign state, including every part of it, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a part of Campaign state; every retained history position is a Committed state. |
 
 ## Data and information qualities
 
@@ -105,25 +104,22 @@ More detailed constraints belong to the specifications using that vocabulary.
 # Rule kinds
 
 Every Rule has exactly one Rule kind. Rule kinds exist only because each carries a different contract: the kind
-determines what a specification stating the Rule must state. The following table is the exhaustive set of Rule kinds.
+determines what a specification stating the Rule must state, as listed in
+[Rule kind obligations](../governance/spec-conventions.md#rule-kind-obligations) in Specification Conventions. The
+following table is the exhaustive set of Rule kinds.
 
-| Rule kind   | Relationship to Campaign state                                                | What a specification must state                                                                                                                                | Example                                                                                            |
-| ----------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Calculation | Changes nothing; produces a Derived value from Authoritative values and GDRs. | Its inputs and formula. A Calculation Rule never changes Campaign state and never consumes gameplay randomness.                                                | Upkeep for one turn equals the rate multiplied by the serving-agent count.                         |
-| Eligibility | Changes nothing; decides whether a player action is permitted.                | The condition, and what the player observes when it fails. A rejected action changes nothing.                                                                  | Illustratively, not a selected gameplay rule: an Agent In transit cannot be assigned to a Mission. |
-| Effect      | Changes existing Campaign state.                                              | When it applies, which values change, and by how much.                                                                                                         | Deduct upkeep from Agency money.                                                                   |
-| Creation    | Adds new data to Campaign state, identified by a fresh Instance ID.           | When it applies, the Type of the new data, the initial value of each of its properties and the source of each value, and that it receives a fresh Instance ID. | Starting an Investigation creates one with progress 0.                                             |
-| Invariant   | Changes nothing; constrains every Committed state.                            | The condition and its scope. A violation is an engine or data defect, not a gameplay outcome.                                                                  | At most one Active Investigation per Lead.                                                         |
+| Rule kind   | Relationship to Campaign state                                                | Example                                                                                            |
+| ----------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Calculation | Changes nothing; produces a Derived value from Authoritative values and GDRs. | Upkeep for one turn equals the rate multiplied by the serving-agent count.                         |
+| Eligibility | Changes nothing; decides whether a player action is permitted.                | Illustratively, not a selected gameplay rule: an Agent In transit cannot be assigned to a Mission. |
+| Effect      | Changes existing Campaign state.                                              | Deduct upkeep from Agency money.                                                                   |
+| Creation    | Adds new data to Campaign state, identified by a fresh Instance ID.           | Starting an Investigation creates one with progress 0.                                             |
+| Invariant   | Changes nothing; constrains every Committed state.                            | At most one Active Investigation per Lead.                                                         |
 
 A Rule is named after its kind, for example a Calculation Rule or a Creation Rule. One mechanic usually combines
 several Rules of different kinds. For example, starting an Investigation combines an Eligibility Rule deciding whether
 it may start, a Creation Rule adding the Investigation, and an Effect Rule changing the participating agents' Current
 assignments.
-
-Creating data also changes Campaign state, but Creation is separate from Effect because a Creation Rule carries
-obligations an Effect Rule does not: a fresh Instance ID, and an initial value with its source for every property of
-the new data. [Campaign instance creation](./campaign-modeling-contract.md#campaign-instance-creation) in Campaign
-Modeling Contract applies these obligations to all four properties of each new Campaign instance.
 
 ## Properties that are not Rule kinds
 
@@ -131,9 +127,9 @@ The following are properties that a Rule of any kind can have, or concerns owned
 kind would break the classification of each Rule into exactly one kind. This list is exhaustive for the concerns
 deliberately excluded from Rule kinds:
 
-- **Randomness:** whether a Rule consumes gameplay randomness. It is a property, not a kind: only Effect Rules and
-  Creation Rules may consume gameplay randomness; Calculation, Eligibility, and Invariant Rules never do.
-  [Numbers and Randomness](./numbers-and-randomness.md) owns numeric and random behavior.
+- **Randomness:** whether a Rule consumes gameplay randomness. It is a property, not a kind.
+  [Numbers and Randomness](./numbers-and-randomness.md) owns numeric and random behavior, including which Rule kinds
+  may consume gameplay randomness.
 - **Timing:** when a Rule applies within a turn. [Turn Resolution](./turn-resolution.md) owns it; a Rule keeps its
   kind whichever phase applies it.
 - **Visibility:** what the player may observe about a Rule's inputs and results. [Player Information](../interfaces/player-information.md)
@@ -154,32 +150,12 @@ The classification is also deliberately limited in two ways:
 
 # Campaign and Session
 
-Campaign identifies a playthrough; Campaign state describes its data. Session is the runtime context of one running
-game: it starts with no selected Campaign when the game starts and ends when the game exits. A Session selects at most
-one Campaign at a time and holds runtime-only access and execution state. Nothing in a Session is persisted, and
-loading saved data never restores a Session.
-
-Continuation data associated with a Campaign's history, such as its undo and redo positions, belongs with that
-Campaign's saved data rather than with the Session. Campaign state excludes interface preferences and controller
-continuation data that gameplay Rules do not consult. Session access settings are not gameplay Campaign state: they are runtime-only, while Campaign configuration belongs
-to one Campaign and application-wide preferences belong to neither.
-Specifications using this vocabulary define the Session's exact contents and the storage of continuation data. This
-distinction does not prescribe an internal class layout or save encoding.
-
-# World state and Campaign configuration
-
-Campaign state includes both World state and Campaign configuration. For example, an Investigation's progress is
-World state, while a campaign-wide investigation difficulty multiplier is Campaign configuration. Both belong to
-the particular Campaign, regardless of which Session selects it. Campaign configuration supplies inputs to Rules;
-changing it does not modify the Game build's Ruleset or immutable GDRs.
-
-World state divides into Current world state and History. For example, an Agent's current health is Current world
-state, while a record of the missions that Agent took part in is History. History is a subcomponent of World state,
-including when it records past Campaign configuration values or changes.
-Current Campaign configuration belongs to its own component of Campaign state; historical records about it belong
-to History within World state. This conceptual hierarchy does not require a particular storage layout.
-Interface preferences that gameplay Rules do not consult remain
-outside Campaign state. Mechanics specify permitted configuration changes and when their effects apply.
+Campaign identifies a playthrough; Campaign state describes its data. A Session is the runtime context of one running
+game and selects at most one Campaign at a time. The two differ in kind: a Campaign is a playthrough with its own
+Campaign state, while a Session is runtime context. A Session is not part of any Campaign, and selecting a Campaign
+does not make it part of the Session.
+[Campaign lifecycle](./engine-contract.md#campaign-lifecycle) in Engine Contract owns what a Session holds, when it
+starts and ends, and what is persisted. This distinction does not prescribe an internal class layout or save encoding.
 
 # Committed state and information
 
@@ -204,16 +180,6 @@ change either classification.
 
 # Acceptance examples
 
-- **Configuration and world:** A Campaign's investigation difficulty multiplier is Campaign configuration; its
-  Investigation progress is World state. Both are Campaign state ([World state and Campaign configuration](#world-state-and-campaign-configuration)).
-- **History within world:** A retained record of a past difficulty change belongs to History within World state;
-  the current difficulty value belongs to Campaign configuration. Both are Campaign state
-  ([World state and Campaign configuration](#world-state-and-campaign-configuration)).
-- **Session without a Campaign:** Start the game before selecting a playthrough. It is a Session with no selected
-  Campaign, not an empty Campaign ([Campaign and Session](#campaign-and-session)).
-- **Session not persisted:** Select a Campaign, save it, exit, and start the game again. The new Session has no
-  selected Campaign until the save is loaded, and loading restores the Campaign's saved data but none of the earlier
-  Session's runtime state ([Campaign and Session](#campaign-and-session)).
 - **One mechanic, several Rule kinds:** Starting an Investigation is specified by an Eligibility Rule, a Creation
   Rule, and an Effect Rule on the participating agents' Current assignments; each of these Rules has exactly one Rule
   kind ([Rule kinds](#rule-kinds)).

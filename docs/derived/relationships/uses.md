@@ -52,6 +52,7 @@ flowchart TD
   CAMP --> TURN
   CLI --> SCEN
   CMC --> API
+  CMC --> CAMP
   CMC --> DEPDIR
   CMC --> DEV
   CMC --> DOM

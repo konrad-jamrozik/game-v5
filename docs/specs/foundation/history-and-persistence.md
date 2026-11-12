@@ -188,7 +188,7 @@ prior Session; successful load has no active Autopilot engagement and Dev mode d
 
 # Campaign configuration persistence
 
-Campaign configuration is Campaign state under [World state and Campaign configuration](core-concepts.md#world-state-and-campaign-configuration).
+Campaign configuration is Campaign state under [Campaign state composition](campaign-modeling-contract.md#campaign-state-composition).
 Saving must retain its committed values together with World state. Successful load restores the selected Campaign's
 configuration from the save, rather than retaining configuration from the previously selected Campaign or replacing
 saved values with creation defaults.

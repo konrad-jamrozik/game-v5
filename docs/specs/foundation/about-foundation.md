@@ -17,21 +17,24 @@ supporting execution contracts beside them.
 ## Core Concepts
 
 [Core Concepts](core-concepts.md) answers _what do the shared words mean?_ It owns the vocabulary used across the whole
-game contract, such as Campaign, Session, Game build, Rule kinds, Type, Instance ID, Campaign state, Committed state, and
-Authoritative versus Derived values. It defines meanings only, not behavior, data layout, or mechanics. Nearly every
-other specification uses it, so each term has a single definition.
+game contract, for example Campaign, Session, and Rule kinds. It defines meanings only, not behavior, data layout, or
+mechanics: Engine Contract owns what a Session holds and what is persisted, Campaign Modeling Contract owns how
+Campaign state divides into components, and [Specification Conventions](../governance/spec-conventions.md) owns what a
+specification stating each Rule kind must state. Nearly every other specification uses it, so each term has a single
+definition.
 
 ## Engine Contract
 
 [Engine Contract](engine-contract.md) answers _what does the engine guarantee at runtime?_ It owns the API hierarchy,
-the campaign lifecycle, player queries and actions, Dev mode, Autopilot, action history, save and load, the information
+the campaign lifecycle, including when a Session starts and ends and what it never persists, player queries and actions, Dev mode, Autopilot, action history, save and load, the information
 boundary, and Game build compatibility. These are observable guarantees, not internal architecture. Most other
 Foundation documents and the Interfaces family refine its requirements in more detail.
 
 ## Campaign Modeling Contract
 
 [Campaign Modeling Contract](campaign-modeling-contract.md) answers _how must campaign data be structured?_ It owns
-Campaign instance structure, creation and identity, references, value classification, historical fact preservation,
+Campaign state composition, with its World state, Current world state, and Campaign configuration terms, Campaign
+instance structure, creation and identity, references, value classification, historical fact preservation,
 and the roles a Game Data Record (GDR) can play. It refines Engine Contract's campaign-data integrity requirement into
 concrete data rules. It stays generic: the rules would hold for any game built on this engine.
 
@@ -119,6 +122,7 @@ flowchart LR
   CMC -->|used by| family_content
   CMC -->|used by| family_guidance
   CMC -->|used by| family_interfaces
+  CMC -->|used by| family_mechanics
   CORE -->|used by| family_content
   CORE -->|used by| family_guidance
   CORE -->|used by| family_interfaces

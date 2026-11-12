@@ -265,7 +265,7 @@ selected GDRs serving the Initialization source purpose ([Purposes of GDRs](camp
 configuration and the rest of the initial Campaign state. Campaign state retains references to the selected
 starting-configuration GDRs. These GDRs remain immutable: a later change to Campaign configuration changes Campaign
 state only. Shared meanings are defined in
-[World state and Campaign configuration](core-concepts.md#world-state-and-campaign-configuration).
+[Campaign state composition](campaign-modeling-contract.md#campaign-state-composition).
 
 ## Campaign boundary
 

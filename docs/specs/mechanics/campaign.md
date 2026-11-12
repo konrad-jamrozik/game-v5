@@ -27,6 +27,7 @@ appropriate to this document.
 
 # Relationships
 
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
@@ -38,8 +39,10 @@ appropriate to this document.
 
 # Glossary
 
-Campaign state, World state, and Campaign configuration are defined by
-[Core Concepts](../foundation/core-concepts.md#glossary). This document uses those meanings without redefining them.
+Campaign state is defined by [Core Concepts](../foundation/core-concepts.md#glossary). World state and Campaign
+configuration are defined by [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md#glossary), which
+places them under [Campaign state composition](../foundation/campaign-modeling-contract.md#campaign-state-composition).
+This document uses those meanings without redefining them.
 
 # Campaign configuration
 

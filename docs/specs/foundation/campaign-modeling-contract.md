@@ -18,6 +18,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 
 - Uses [Core Concepts](./core-concepts.md)
 - Refines [Engine Contract](./engine-contract.md)
+- Used by [Campaign](../mechanics/campaign.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
@@ -29,16 +30,19 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 
 # Glossary
 
-Shared modeling and execution vocabulary is owned by [Core Concepts](core-concepts.md#glossary).
-The terms below add campaign-specific composition; Instance ID is defined by Core Concepts and its campaign identity
-constraints are specified under [Campaign instances](#campaign-instances).
+Shared modeling and execution vocabulary is owned by [Core Concepts](core-concepts.md#glossary), including Campaign
+state and History. The terms below add campaign-specific composition; Instance ID is defined by Core Concepts and its
+campaign identity constraints are specified under [Campaign instances](#campaign-instances).
 
-| Term              | Definition                                                                                                                                                                                                                                                 |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              |
-| Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
-| State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
-| Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
+| Term                   | Definition                                                                                                                                                                                                                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and History, distinct from Campaign configuration.                                                                                     |
+| Current world state    | The subcomponent of World state other than History: the simulated world as it stands at the selected history position. After undo, it is the state at that earlier position, not the furthest position reached.                                            |
+| Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                                                               |
+| Campaign instance      | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              |
+| Archetype              | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
+| State                  | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
+| Constants              | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
 
 ## Rejected terms and synonyms
 
@@ -55,6 +59,37 @@ This document refines [Campaign data integrity](engine-contract.md#campaign-data
 composition, initialization, identity, reference, and historical-preservation constraints that campaign creation,
 committed mutations, and restoration must preserve. It supplies campaign modeling detail without defining API authority
 or execution sequencing. Core Concepts supplies the shared vocabulary used to express these constraints.
+
+# Campaign state composition
+
+Campaign state has the following complete conceptual hierarchy. History is a subcomponent of World state.
+
+```text
+Campaign state
+├── World state
+│   ├── Current world state
+│   └── History
+└── Campaign configuration
+```
+
+Campaign state includes both World state and Campaign configuration. For example, an Investigation's progress is
+World state, while a campaign-wide investigation difficulty multiplier is Campaign configuration. Both belong to
+the particular Campaign, regardless of which Session selects it. Campaign configuration supplies inputs to Rules;
+changing it does not modify the Game build's Ruleset or immutable GDRs.
+
+World state divides into Current world state and History. For example, an Agent's current health is Current world
+state, while a record of the missions that Agent took part in is History. History is a subcomponent of World state,
+including when it records past Campaign configuration values or changes.
+Current Campaign configuration belongs to its own component of Campaign state; historical records about it belong
+to History within World state. This conceptual hierarchy does not require a particular storage layout. What Campaign
+state excludes is stated under [Campaign lifecycle](engine-contract.md#campaign-lifecycle) in Engine Contract.
+Mechanics specify permitted configuration changes and when their effects apply.
+
+Every Campaign instance is part of World state, never of Campaign configuration. A Campaign instance that participates
+in current gameplay is part of Current world state. When a Campaign instance no longer participates in current
+gameplay, its data that must remain available is part of History, under
+[Historical fact preservation](#historical-fact-preservation). Placing a Campaign instance in this hierarchy does not
+change its four properties under [Campaign instance structure](#campaign-instance-structure).
 
 # Campaign initialization
 
@@ -84,8 +119,9 @@ Constants, and State. How an implementation stores Campaign instances internally
 ## Campaign instance creation
 
 Creation of a Campaign instance, during campaign initialization or gameplay, is specified by a Creation Rule, under
-[Rule kinds](core-concepts.md#rule-kinds) in Core Concepts, owned by the specification that owns the creating
-behavior. The Creation Rule states when the Campaign instance is created, its Type, and the initial values of its
+[Rule kinds](core-concepts.md#rule-kinds) in Core Concepts and
+[Rule kind obligations](../governance/spec-conventions.md#rule-kind-obligations) in Specification Conventions, owned by
+the specification that owns the creating behavior. The Creation Rule states when the Campaign instance is created, its Type, and the initial values of its
 Archetype reference, Constants, and State, together with the source of each value; for example, a named GDR or a
 value in Campaign state. The initial values need not all come from the Campaign instance's Archetype: a Creation Rule
 may take some of them from another GDR, such as one serving the Initialization source purpose or a
@@ -369,3 +405,11 @@ flowchart LR
     Article -->|article when Player-visible| PlayerAPI
     PlayerAPI --> Interfaces["Interfaces render it for the player"]
 ```
+
+# Acceptance examples
+
+- **Configuration and world:** A Campaign's investigation difficulty multiplier is Campaign configuration; its
+  Investigation progress is World state. Both are Campaign state ([Campaign state composition](#campaign-state-composition)).
+- **History within world:** A retained record of a past difficulty change belongs to History within World state;
+  the current difficulty value belongs to Campaign configuration. Both are Campaign state
+  ([Campaign state composition](#campaign-state-composition)).

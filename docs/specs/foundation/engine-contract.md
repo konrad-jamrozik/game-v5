@@ -134,9 +134,16 @@ or Developer API operations.
 
 # Campaign lifecycle
 
-The Session holds the Current campaign selection, its Current save, Dev mode, and the active Autopilot engagement, if
-any; none of these is persisted. A newly opened Session has no Current campaign and Dev mode is disabled. This is the main-menu state in
-Web UI.
+A Session starts when the game starts and ends when the game exits. The Session holds the Current campaign selection,
+its Current save, Dev mode, and the active Autopilot engagement, if any. Nothing in a Session is persisted, and loading
+a save never restores a Session. A newly opened Session has no Current campaign and Dev mode is disabled. This is the
+main-menu state in Web UI.
+
+Campaign state excludes everything a Session holds, including Session access settings, for example Dev mode.
+Campaign state also excludes interface preferences and the continuation data that gameplay Rules do not consult, for
+example the action history and Autopilot memory; a save captures that continuation data with the Campaign under
+[Save and load](#save-and-load).
+
 `session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status.
 `session.campaigns.create(options)` creates a Campaign using the current Game build, with explicit initialization
 inputs sufficient for reproducibility. `session.campaigns.load(save)` restores a saved campaign timeline and selects it as the Current campaign.
@@ -354,6 +361,11 @@ human's memory; engine-supplied Autopilot AI context nevertheless follows [Autop
   save after a gameplay action before Advance turn, then create Campaign B. Load the saved Campaign A and obtain the
   exact saved continuation with Dev mode disabled and no active Autopilot engagement. A corrupt load leaves Campaign A
   unchanged ([Campaign lifecycle](#campaign-lifecycle), [Save and load](#save-and-load)).
+- **Session without a Campaign:** Start the game before selecting a playthrough. It is a Session with no selected
+  Campaign, not an empty Campaign ([Campaign lifecycle](#campaign-lifecycle)).
+- **Session not persisted:** Select a Campaign, save it, exit, and start the game again. The new Session has no
+  selected Campaign until the save is loaded, and loading restores the Campaign's saved data but none of the earlier
+  Session's runtime state ([Campaign lifecycle](#campaign-lifecycle), [Save and load](#save-and-load)).
 - **Fork by saving as new:** Load save S1 and commit actions. `saveAsNew()` creates S2 and makes it the Current save.
   Undo two actions and commit a different action, then `save()`. S2 contains the new branch; S1 still contains the
   original future. Both belong to the same Campaign ([Save and load](#save-and-load)).
