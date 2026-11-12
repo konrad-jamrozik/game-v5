@@ -10,7 +10,7 @@
 
 # Overview
 
-Define agent capability, task availability, development, exhaustion, and recovery.
+This document defines agent capability, task availability, development, exhaustion, and recovery.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

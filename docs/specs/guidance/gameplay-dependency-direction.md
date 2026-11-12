@@ -10,7 +10,7 @@
 
 # Overview
 
-Steer implementers to keep gameplay code isolated from the Campaign state that contains it. This document is
+This document steers implementers to keep gameplay code isolated from the Campaign state that contains it. It is
 non-behavioural Guidance: it owns no Rule, observable contract, or GDR, and no acceptance test depends on it.
 Campaign data integrity and continuation guarantees remain owned by Engine Contract and Campaign Modeling Contract.
 

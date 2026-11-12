@@ -10,7 +10,7 @@
 
 # Overview
 
-Develop the game specifications in manageable review batches rather than drafting the entire game at once. This document
+This document organizes development of the game specifications into manageable review batches rather than drafting the entire game at once. It
 owns the accepted authoring sequence and work tracking; individual specifications own game rules and interface contracts.
 
 The specifications are the durable design artifacts. Code and tests will be derived from accepted contracts. This is a

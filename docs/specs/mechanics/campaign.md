@@ -10,7 +10,7 @@
 
 # Overview
 
-Define campaign initialization, adjustable Campaign configuration, global panic, and the conditions that start and end play.
+This document defines campaign initialization, adjustable Campaign configuration, global panic, and the conditions that start and end play.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

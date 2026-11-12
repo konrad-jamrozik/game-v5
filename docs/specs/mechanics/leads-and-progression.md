@@ -10,7 +10,7 @@
 
 # Overview
 
-Define the progression graph and the lifecycle of Leads, separately from Investigations.
+This document defines the progression graph and the lifecycle of Leads, separately from Investigations.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

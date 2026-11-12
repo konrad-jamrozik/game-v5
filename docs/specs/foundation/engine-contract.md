@@ -10,9 +10,9 @@
 
 # Overview
 
-Define the engine's API hierarchy and the guarantees it provides when running the game, exposing information, and restoring history.
+This document defines the engine's API hierarchy and the guarantees it provides when running the game, exposing information, and restoring history.
 
-This document owns observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
+It owns observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
 RNG algorithm, save encoding, or subsystem mechanics.
 
 # Relationships

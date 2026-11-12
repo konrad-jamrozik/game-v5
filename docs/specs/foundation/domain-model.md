@@ -10,7 +10,7 @@
 
 # Overview
 
-Define what exists in the game and how those concepts relate. A campaign contains one player-controlled agency that
+This document defines what exists in the game and how those concepts relate. A campaign contains one player-controlled agency that
 allocates agents, pursues leads, undertakes missions, and opposes factions.
 
 Conceptual records may be embedded, separately stored, or reconstructed provided their identity and meaning are preserved. This document does

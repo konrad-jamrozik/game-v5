@@ -10,7 +10,7 @@
 
 # Overview
 
-Make every numeric calculation and random outcome reproducible across supported runtimes.
+This document makes every numeric calculation and random outcome reproducible across supported runtimes.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

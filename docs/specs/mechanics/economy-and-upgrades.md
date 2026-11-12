@@ -10,7 +10,7 @@
 
 # Overview
 
-Define resource flows, personnel purchases, and agency improvements.
+This document defines resource flows, personnel purchases, and agency improvements.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

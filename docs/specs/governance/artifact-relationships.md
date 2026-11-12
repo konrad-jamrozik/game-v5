@@ -10,7 +10,7 @@
 
 # Overview
 
-Define how specifications, requirements, implementations, tests, and other artifacts describe their relationships.
+This document defines how specifications, requirements, implementations, tests, and other artifacts describe their relationships.
 Every relationship runs from a Dependency to a Dependent and has one of five Relationship kinds: `follows`, `refines`, `uses`,
 `implements`, or `verifies`.
 

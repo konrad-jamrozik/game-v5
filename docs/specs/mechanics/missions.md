@@ -10,7 +10,7 @@
 
 # Overview
 
-Define mission commitments and translate combat results into campaign consequences.
+This document defines mission commitments and how combat results translate into campaign consequences.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

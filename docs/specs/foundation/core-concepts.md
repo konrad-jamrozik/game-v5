@@ -10,7 +10,7 @@
 
 # Overview
 
-Define the shared language for the complete game contract, spanning campaign data and engine execution. This document
+This document defines the shared language for the complete game contract, spanning campaign data and engine execution. It
 owns the meanings of its glossary terms independently of the contracts that use them. It does not define API authority,
 campaign-data composition, gameplay mechanics, persistence procedures, or interface behavior.
 

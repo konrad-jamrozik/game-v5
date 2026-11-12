@@ -10,7 +10,7 @@
 
 # Overview
 
-Define full Campaign state inspection and cheat-command details through Developer API, refining Engine Contract access and replay guarantees.
+This document defines full Campaign state inspection and cheat-command details through Developer API, refining Engine Contract access and replay guarantees.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

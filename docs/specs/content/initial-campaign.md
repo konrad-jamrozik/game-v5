@@ -10,7 +10,7 @@
 
 # Overview
 
-Provide the complete, versioned numeric and GDR inputs for the first playable campaign.
+This document provides the complete, versioned numeric and GDR inputs for the first playable campaign.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

@@ -10,7 +10,7 @@
 
 # Overview
 
-Define exactly when subsystem rules run and which state each phase reads.
+This document defines exactly when subsystem rules run and which state each phase reads.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

@@ -10,7 +10,7 @@
 
 # Overview
 
-Define exact callable TypeScript signatures for Session API, Player API, Developer API, and Autopilot memory API, preserving Engine Contract authority and execution guarantees.
+This document defines exact callable TypeScript signatures for Session API, Player API, Developer API, and Autopilot memory API, preserving Engine Contract authority and execution guarantees.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

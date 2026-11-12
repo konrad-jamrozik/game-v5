@@ -10,7 +10,7 @@
 
 # Overview
 
-Provide convenient terminal access to the engine API through a complete adapter usable by humans and AI.
+This document specifies convenient terminal access to the engine API through a complete adapter usable by humans and AI.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.

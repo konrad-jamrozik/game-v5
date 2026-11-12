@@ -10,7 +10,7 @@
 
 # Overview
 
-Define reversible campaign history, reproducible replay, and durable save/load behavior.
+This document defines reversible campaign history, reproducible replay, and durable save/load behavior.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
