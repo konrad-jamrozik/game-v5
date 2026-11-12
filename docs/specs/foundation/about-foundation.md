@@ -17,10 +17,9 @@ supporting execution contracts beside them.
 ## Core Concepts
 
 [Core Concepts](core-concepts.md) answers _what do the shared words mean?_ It owns the vocabulary used across the whole
-game contract, e.g. Campaign, Session, and Rule kinds. It defines meanings only, not behavior, data layout, or
+game contract, e.g. Campaign, Session, and Game build. It defines meanings only, not behavior, data layout, or
 mechanics: Engine Contract owns what a Session holds and what is persisted, and Campaign Modeling Contract owns how
-Campaign state divides into components. The one exception is the Rule kinds classification, which also states what a
-specification stating a Rule of each Rule kind must state. Nearly every other specification uses it, so each term has a single
+Campaign state divides into components. Nearly every other specification uses it, so each term has a single
 definition.
 
 ## Engine Contract

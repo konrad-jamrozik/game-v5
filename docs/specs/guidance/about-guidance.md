@@ -5,7 +5,7 @@
 # What this family is for
 
 Guidance documents steer implementers toward code that is easier to maintain and to check against the other
-specifications. They are non-behavioural: they own no Rule, observable contract, or GDR, and no acceptance test depends
+specifications. They are non-behavioural: they own no game behavior, observable contract, or GDR, and no acceptance test depends
 on them.
 
 # Documents

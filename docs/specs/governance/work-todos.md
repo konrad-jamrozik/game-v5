@@ -19,7 +19,7 @@ work states. This document owns only the list of known issues awaiting schedulin
 specification, as listed in [Batch sequence](work-plan.md#batch-sequence), so that a Work item can be handled when that
 batch is drafted or reviewed. Recording a Work item here neither schedules it nor changes any batch or document status.
 
-This document defines no gameplay Rule, observable contract, or GDR, and it does not change the specifications it
+This document defines no game behavior, observable contract, or GDR, and it does not change the specifications it
 cites. Each owning specification remains authoritative until it is revised. Links from Work items to other
 specifications are ordinary citations, not relationships.
 
@@ -74,16 +74,15 @@ The Work items below were measured against these recorded rules and decisions:
 
 - **Scope rule:** [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification). A statement
   belongs only if it is Observable (a black-box test through the engine API, a save, or a replay could fail),
-  Designer-authored (a GDR or Rule), or Vocabulary. Everything else is the implementer's choice.
+  Designer-authored (a GDR or a description of game behavior), or Vocabulary. Everything else is the implementer's choice.
 - **Determinism decision:** [Continuation state](../foundation/engine-contract.md#continuation-state). Determinism is
   required only within one implementation and Game build. The order of random draws, the order of Campaign instance
   creation within one command, and the sequence and format of generated Instance IDs are the implementer's choice.
   Acceptance tests assert replay equality or use fixed injected random outcomes, never outcomes that depend on a
   particular seed.
-- **Creation decision:** creation of Campaign instances is specified as Creation Rules under
-  [Rule kinds](../foundation/core-concepts.md#rule-kinds) and
-  [Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation). The former
-  Campaign instance constructor concept was removed.
+- **Creation decision:** creation of Campaign instances is specified by the specification that owns the creating
+  behavior, under [Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation).
+  The former Campaign instance constructor concept was removed.
 
 # Work items
 
@@ -252,16 +251,16 @@ three ENG sentences and the API sentence to delegate only the observable save an
 [Edge cases and failure behavior](../interfaces/developer-api.md#edge-cases-and-failure-behavior). History and
 Persistence (HIST), [Refined Engine Contract guarantees](../foundation/history-and-persistence.md#refined-engine-contract-guarantees),
 [Storage containers](../foundation/history-and-persistence.md#storage-containers), and
-[Acceptance examples](../foundation/history-and-persistence.md#acceptance-examples). Related wording question: Core
-Concepts (CORE), [Properties that are not Rule kinds](../foundation/core-concepts.md#properties-that-are-not-rule-kinds).
+[Acceptance examples](../foundation/history-and-persistence.md#acceptance-examples). Related wording question: Numbers
+and Randomness (NUMRNG), [Randomness contract](../foundation/numbers-and-randomness.md#randomness-contract).
 
-**Batches:** ENG and CORE are batch 1; HIST is batch 2; DEV is batch 8.
+**Batches:** ENG is batch 1; HIST and NUMRNG are batch 2; DEV is batch 8.
 
 **Current wording:**
 
 > For equal initial Campaign state, the same Game build, and the same ordered committed commands, execution must
 > produce equal resulting Campaign state, generated Instance IDs, gameplay RNG state, and retained reports. Campaign
-> state must preserve every input consulted by Rules, including relevant History, current RNG state, and Instance ID
+> state must preserve every input consulted by game behavior, including relevant History, current RNG state, and Instance ID
 > generation state. An initial random seed alone is insufficient unless it determines the complete restored generator
 > position.
 
@@ -297,9 +296,9 @@ Concepts (CORE), [Properties that are not Rule kinds](../foundation/core-concept
 HIST Storage containers also says "Two Campaigns created with equal Campaign configuration and seed and given equal
 commands have equal Campaign state".
 
-> - **Randomness:** whether a Rule consumes gameplay randomness.
+> Only state changes, including Campaign instance creation, may consume gameplay randomness.
 
-(CORE, Properties that are not Rule kinds.)
+(NUMRNG, Randomness contract.)
 
 **Why it is an issue:** These passages require a stored random generator and its state, but an implementation could
 derive randomness without one. The scope rule admits only the observable requirement: outcomes after replay, undo,
@@ -308,8 +307,8 @@ later outcomes.
 
 **Suggested resolution:** Replace the generator-state requirements with that observable requirement, and compare
 complete Campaign state, Player-visible information, and reports rather than RNG state in acceptance examples. Decide
-whether a seed is a campaign creation input at all. Keep "consumes gameplay randomness" in CORE only if it is defined
-as designer vocabulary meaning that the Rule's outcome depends on chance, and define it that way.
+whether a seed is a campaign creation input at all. Keep "consume gameplay randomness" in NUMRNG only if it is defined
+as designer vocabulary meaning that the outcome of a state change depends on chance, and define it that way.
 
 ### TODO-005: Mandated identifier format in Unique identifiers
 
@@ -365,13 +364,13 @@ definitions to "The Independent identifier identifying [...]".
 > its earlier State does not itself create a new Campaign instance.
 
 **Why it is an issue:** This is the removed Campaign instance constructor concept without the word: it specifies code
-that creates Campaign instances and that code's return Type. Creation is specified as Creation Rules under
-[Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation), and
+that creates Campaign instances and that code's return Type. Creation is specified by the specification that owns the
+creating behavior, under [Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation), and
 [Canonical terminology](spec-conventions.md#canonical-terminology) says not to specify which code creates a Campaign
 instance or that code's signature.
 
 **Suggested resolution:** Delete both sentences, or replace them with a reference stating that public operations whose
-effects create Campaign instances do so under the applicable Creation Rules.
+effects create Campaign instances do so as their owning specifications state under Campaign instance creation.
 
 ## Contradictions with the determinism decision
 
@@ -757,30 +756,6 @@ Also, because the sequence and format of Instance IDs are the implementer's choi
 
 **Suggested resolution:** Remove "Campaign and" from the list, and say that fixtures use symbolic Instance IDs, e.g.
 `agency_1`, that tests bind to whatever Instance IDs the implementation generates.
-
-### TODO-020: Glossary coverage of kind-named Rule forms
-
-**Category and priority:** Other, low priority.
-
-**Affected:** Core Concepts (CORE), [Rule kinds](../foundation/core-concepts.md#rule-kinds) and
-[Glossary](../foundation/core-concepts.md#glossary); used throughout Campaign Modeling Contract (CMC, Accepted) and
-Domain Model (DOM).
-
-**Batches:** CORE, CMC, and DOM are batch 1.
-
-**Current wording:**
-
-> A Rule is named after its kind, e.g. a Calculation Rule or a Creation Rule.
-
-(CORE, Rule kinds. The CORE glossary defines only "Rule kind"; "Creation Rule" and the other kind-named forms have no
-glossary row.)
-
-**Why it is an issue:** [Canonical terminology](spec-conventions.md#canonical-terminology) requires formal terms to be
-defined in an owning Glossary. The Rule kinds sentence may already be enough, because each kind-named form is the Rule
-kind's name followed by "Rule".
-
-**Suggested resolution:** Confirm that the Rule kinds sentence and the "Rule kind" glossary row suffice. Otherwise add
-one glossary row stating that "X Rule" names a Rule of Rule kind X.
 
 # Edge cases and failure behavior
 

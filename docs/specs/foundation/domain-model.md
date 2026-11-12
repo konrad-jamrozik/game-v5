@@ -138,10 +138,10 @@ Combatant supplies reusable Type-described structure, not a separate Campaign in
 provenance is fixed Campaign instance data in its Response mission's Constants, not a separate Campaign instance
 ([Mission kind and provenance](#mission-kind-and-provenance)). Nested values and historical records need not be Campaign instances.
 
-The creation owners named above specify, as Creation Rules under [Campaign instance creation](campaign-modeling-contract.md#campaign-instance-creation),
+The creation owners named above specify, under [Campaign instance creation](campaign-modeling-contract.md#campaign-instance-creation),
 when each Campaign instance is created and the initial values of its Archetype reference, Constants, and State, with
 their sources; every new Campaign instance also has a fresh Instance ID.
-Production Creation Rules remain unresolved with those owners; [Initial Campaign Content](../content/initial-campaign.md)
+Production creation of Campaign instances remains unresolved with those owners; [Initial Campaign Content](../content/initial-campaign.md)
 owns the starting-configuration GDRs and the archetype catalogs for all six types. Required archetypes do not settle their fields or balance values.
 Types describe structure; gameplay validity and runtime constraints remain explicit contracts.
 
@@ -176,7 +176,7 @@ Historical status and current gameplay relevance are independent; each owning me
 
 # Campaign and agency
 
-A Campaign uses the Ruleset and GDRs supplied by the current Game build. It contains one agency, the current turn,
+A Campaign uses the game behavior and GDRs supplied by the current Game build. It contains one agency, the current turn,
 panic and campaign outcome, progression facts, agents, factions, investigations, and missions.
 
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
@@ -292,7 +292,7 @@ Arrows show relationships, not inheritance or storage layout.
 Campaign configuration is a component of Campaign state, and its values may change during play. The Game build may
 supply multiple starting-configuration GDRs, each describing a starting Campaign configuration or a part of one; e.g.,
 starting money, enemy difficulty, which factions or technologies are enabled, or their probability of
-occurrence. Campaign creation selects among them through its setup inputs, and the Rules of campaign creation read the
+occurrence. Campaign creation selects among them through its setup inputs and reads the
 selected GDRs serving the Initialization source purpose ([Purposes of GDRs](campaign-modeling-contract.md#purposes-of-gdrs)) to produce the initial Campaign
 configuration and the rest of the initial Campaign state. Campaign state retains references to the selected
 starting-configuration GDRs. These GDRs remain immutable: a later change to Campaign configuration changes Campaign
@@ -416,7 +416,7 @@ for purposes of these structural checks. Runtime validation behavior is tested b
 
 ## A. Valid relationships
 
-Given the GDRs C and Ruleset R supplied by the current Game build, turn 3, and:
+Given the GDRs C supplied by the current Game build, turn 3, and:
 
 - Campaign state c1, referring to starting-configuration GDR C1, and its single agency ag1, with all six declared Campaign instance
   types sharing the Instance ID scope.

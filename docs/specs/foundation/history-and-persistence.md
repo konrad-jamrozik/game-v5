@@ -55,16 +55,16 @@ The persisted snapshots of one Campaign and the data and limits they involve.
 | Campaign save                | A persisted snapshot of one Campaign's timeline, identified by its Campaign save ID and recording its Campaign ID, its Campaign state at the saved history position, and its Controller continuation data. One Campaign may have several Campaign saves. |
 | Save size limit              | The maximum size of one Campaign save on disk, fixed by the Game build.                                                                                                                                                                                  |
 | Baseline                     | The complete Campaign state at the earliest position a Campaign save can restore: the initial Campaign state, or the saved Campaign state when the save's action history was dropped.                                                                    |
-| Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.                                                             |
+| Controller continuation data | Data needed to continue controlling a Campaign that game behavior never consults: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.                                                             |
 
 ## Identifiers
 
 The identifiers of Campaigns and their saves.
 
-| Term             | Definition                                                                                                                                                                                                                                         |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign ID      | The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that Campaign. It is not Campaign state, Rules never consult it, and it is distinct from the Instance ID of the Campaign instance. |
-| Campaign save ID | The ULID identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                               |
+| Term             | Definition                                                                                                                                                                                                                                                  |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign ID      | The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that Campaign. It is not Campaign state, game behavior never consults it, and it is distinct from the Instance ID of the Campaign instance. |
+| Campaign save ID | The ULID identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                                        |
 
 # Refined Engine Contract guarantees
 
@@ -112,8 +112,8 @@ Session (runtime, never persisted)
 ```
 
 A Campaign save contains more than Campaign state because continuing a Campaign also requires Controller continuation
-data. Action history and History are distinct: History is part of World state and Rules may consult it, while action
-history is the undo and redo record of committed commands and Rules never consult it.
+data. Action history and History are distinct: History is part of World state and game behavior may consult it, while action
+history is the undo and redo record of committed commands and game behavior never consults it.
 
 One Campaign may have several Campaign saves. E.g., a player may keep a timeline branch that a new action
 after undo would otherwise discard, or keep a save with full history before a later save drops it under the Save size limit.

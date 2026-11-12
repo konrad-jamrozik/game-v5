@@ -173,7 +173,7 @@ a save never restores a Session. A newly opened Session has no Current campaign 
 main-menu state in Web UI.
 
 Campaign state excludes everything a Session holds, including Session access settings, e.g. Dev mode.
-Campaign state also excludes interface preferences and the continuation data that gameplay Rules do not consult, e.g.
+Campaign state also excludes interface preferences and the continuation data that game behavior does not consult, e.g.
 the action history and Autopilot memory; a save captures that continuation data with the Campaign under
 [Save and load](#save-and-load).
 
@@ -193,6 +193,8 @@ before the player advances the turn. Closing or replacing the Current campaign d
 Campaign creation, committed Player API and Developer API actions, and restoration must preserve the declared
 campaign-data composition, identity, reference, and historical-fact invariants.
 Detailed campaign-data structures and the constraints preserving them belong to refining specifications.
+A specification stating an invariant states its condition and its scope; every Committed state satisfies it, and
+[Committed state integrity](#committed-state-integrity) states how a violation is reported.
 
 # Player queries and actions
 
@@ -206,16 +208,17 @@ phases are not separately exposed action-history entries. Each successful state-
 one action-history entry. Rejected actions and actions with no effect commit no action-history entry and consume
 no gameplay randomness or generated Instance IDs.
 
-Mechanics specifications own the Eligibility Rules and Effect Rules, under [Rule kinds](core-concepts.md#rule-kinds),
-for `assignAgents(...)` and `purchaseUpgrade(...)`.
-These are examples of the extensible gameplay action inventory; future gameplay actions follow the same atomicity,
-visibility, and replay contract.
+The mechanics specification owning each gameplay action, e.g. `assignAgents(...)` or `purchaseUpgrade(...)`, states
+the action's preconditions, what the player observes when a precondition fails, and the action's state changes: when
+they apply, which values change, and by how much. A rejected action changes nothing, under
+[Committed state integrity](#committed-state-integrity). The gameplay action inventory is extensible; future gameplay
+actions follow the same atomicity, visibility, and replay contract.
 
 # Dev mode and developer operations
 
 Only the Session controller can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
 a Current campaign and no active Autopilot engagement. Developer API inspection returns detached, read-only full Campaign
-state, with all inputs needed for continuation. It never reveals hidden facts through ordinary gameplay Rules.
+state, with all inputs needed for continuation. It never reveals hidden facts through ordinary game behavior.
 `developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)` are required starter cheat operations;
 Developer API owns their exact inputs, validation, and effects. Future cheat operations belong in that namespace.
 Cheat operations must preserve model invariants and commit atomic, replayable action-history entries.
@@ -302,7 +305,7 @@ History and Persistence owns restoration procedures and representation, not alte
 
 For equal initial Campaign state, the same Game build, and the same ordered committed commands, execution must
 produce equal resulting Campaign state, generated Instance IDs, gameplay RNG state, and retained reports. Campaign
-state must preserve every input consulted by Rules, including relevant History, current RNG state, and Instance ID
+state must preserve every input consulted by game behavior, including relevant History, current RNG state, and Instance ID
 generation state. An initial random seed alone is insufficient unless it determines the complete restored generator
 position. Gameplay must not depend on wall-clock time, UI rendering, model responses, or Autopilot memory.
 
@@ -367,8 +370,8 @@ and storage failure procedures belong to History and Persistence.
 
 # Derived value consistency
 
-Queries, Derived value calculations under Calculation Rules, and evaluation of Eligibility Rules must neither mutate
-Campaign state nor consume gameplay randomness.
+Queries, computing Derived values, and checking action preconditions must neither mutate Campaign state nor consume
+gameplay randomness.
 Caches must be updated or invalidated when their inputs change, including after restoration. Restored reports and
 Player-visible information must correspond to the restored cursor rather than a discarded future.
 

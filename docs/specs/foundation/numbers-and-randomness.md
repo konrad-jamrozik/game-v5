@@ -55,8 +55,8 @@ Determinism is required only within one implementation and Game build under
 therefore the implementer's choice, and acceptance tests must assert replay equality or use fixed injected random
 outcomes, never outcomes that depend on a particular seed.
 
-Only Effect Rules and Creation Rules, under [Rule kinds](core-concepts.md#rule-kinds), may consume gameplay randomness.
-Invariant Rules never consume gameplay randomness, and Calculation Rules and Eligibility Rules never consume it under
+Only state changes, including Campaign instance creation, may consume gameplay randomness. Checking an invariant never
+consumes gameplay randomness, and computing Derived values and checking action preconditions never consume it under
 [Derived value consistency](engine-contract.md#derived-value-consistency).
 
 TODO: Specify distributions, interval endpoints, integer sampling, and the remaining randomness consumption rules.

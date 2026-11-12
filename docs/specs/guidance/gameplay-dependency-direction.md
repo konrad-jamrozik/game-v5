@@ -11,7 +11,7 @@
 # Overview
 
 This document steers implementers to keep gameplay code isolated from the Campaign state that contains it. It is
-non-behavioural Guidance: it owns no Rule, observable contract, or GDR, and no acceptance test depends on it.
+non-behavioural Guidance: it owns no game behavior, observable contract, or GDR, and no acceptance test depends on it.
 Campaign data integrity and continuation guarantees remain owned by Engine Contract and Campaign Modeling Contract.
 
 # Relationships
@@ -22,9 +22,9 @@ Campaign data integrity and continuation guarantees remain owned by Engine Contr
 
 # Glossary
 
-| Term              | Definition                                                                                                                                                      |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Gameplay function | Implementation code that applies gameplay Rules while executing a committed Player API or Developer API action, including code that creates Campaign instances. |
+| Term              | Definition                                                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Gameplay function | Implementation code that carries out game behavior while executing a committed Player API or Developer API action, including code that creates Campaign instances. |
 
 # Dependency direction
 
@@ -35,7 +35,7 @@ campaign creation, save/load, and external engine interfaces, which may access c
 
 # Supported observable contract
 
-**Informative rationale:** Narrow inputs make it easy to see which values a Rule consults, so an implementation can
+**Informative rationale:** Narrow inputs make it easy to see which values a piece of game behavior consults, so an implementation can
 check that every such value is part of Campaign state. The observable property this supports, that execution has no
 hidden inputs, is already guaranteed by [Continuation state](../foundation/engine-contract.md#continuation-state) in
 Engine Contract: equal initial Campaign state, the same Game build, and the same ordered committed commands produce
