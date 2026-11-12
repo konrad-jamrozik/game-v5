@@ -14,6 +14,16 @@ Define campaign initialization, adjustable Campaign configuration, global panic,
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification intends to refine Domain Model's campaign boundary ([Campaign boundary](../foundation/domain-model.md#campaign-boundary-1) and its Campaign and agency section) with
+initialization, Campaign configuration changes, and ending behavior. Initial Campaign Content supplies the exact starting values and catalogs;
+this document supplies their initialization meaning. Turn Resolution supplies state-read timing and the phase in
+which campaign predicates are checked; this document supplies the predicates. Initialization and ending rules remain
+TODOs below; Campaign configuration requirements are specified separately.
+
+TODO: Specify Initial campaign, ongoing/won/lost lifecycle, panic, funding/money boundary, and victory objective.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
@@ -30,21 +40,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 Campaign state, World state, and Campaign configuration are defined by
 [Core Concepts](../foundation/core-concepts.md#glossary). This document uses those meanings without redefining them.
 
-# Concepts and contract
-
-This specification intends to refine Domain Model's campaign boundary ([Campaign boundary](../foundation/domain-model.md#campaign-boundary-1) and its Campaign and agency section) with
-initialization, Campaign configuration changes, and ending behavior. Initial Campaign Content supplies the exact starting values and catalogs;
-this document supplies their initialization meaning. Turn Resolution supplies state-read timing and the phase in
-which campaign predicates are checked; this document supplies the predicates. Initialization and ending rules remain
-TODOs below; Campaign configuration requirements are specified separately.
-
-TODO: Specify Initial campaign, ongoing/won/lost lifecycle, panic, funding/money boundary, and victory objective.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Campaign configuration
+# Campaign configuration
 
 Difficulty is represented by Campaign configuration owned by the Campaign. It may consist of independently
 adjustable parameters rather than a single difficulty level. Examples of possible parameters are enemy count and
@@ -65,19 +61,17 @@ Initial Campaign Content owns concrete defaults and balance values; subsystem me
 The exact parameter inventory and public command/report signatures remain open decisions. Interface specifications
 must expose the mechanical contract rather than introduce different validation or timing rules.
 
-## Initialization
+# Initialization
 
 TODO: Specify how setup inputs, the selected starting-configuration GDRs ([Campaign configuration ownership](../foundation/domain-model.md#campaign-configuration-ownership)), and the seed produce the initial Campaign configuration and initial Campaign state, covering all of these required areas: roster, resources, progression, factions, and counters; link exact Game Data Record (GDR) values to INIT.
 
-## Panic and endings
+# Panic and endings
 
 TODO: Specify panic representation, clamping, contributing effects, victory and defeat predicates, and simultaneous win/loss precedence. Decide whether v5 retains the final Peace on Earth investigation.
 
-## Terminal behavior
+# Terminal behavior
 
 TODO: Define allowed Player-visible information and commands after an ending and how history restores an ongoing campaign.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

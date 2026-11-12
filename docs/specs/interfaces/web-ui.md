@@ -14,6 +14,16 @@ Specify the first functional browser interface while keeping gameplay in the sha
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+Web UI is a required human-facing adapter over the engine API hierarchy implemented by TypeScript Player API.
+Its main menu represents a Session without a Current campaign; creation or load selects the Current campaign.
+Player API views always show Player-visible information. Separate developer controls expose inspection and cheats
+only under authorized Dev mode access. Autopilot controls select one of the three Autopilot limits, show progress, and
+permit disengagement without passing developer information to Autopilot AI.
+
+TypeScript Player API supplies operation results, Player Information supplies permitted views, and History and
+Persistence supplies save/load and navigation semantics. Screens and interactions apply those contracts without
+independently implementing gameplay behavior.
+
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
@@ -28,33 +38,19 @@ API surface and Principal terms are owned by the [Engine Contract glossary](../f
 
 TODO: Define presentation-specific terms without duplicating shared definitions.
 
-# Concepts and contract
-
-Web UI is a required human-facing adapter over the engine API hierarchy implemented by TypeScript Player API.
-Its main menu represents a Session without a Current campaign; creation or load selects the Current campaign.
-Player API views always show Player-visible information. Separate developer controls expose inspection and cheats
-only under authorized Dev mode access. Autopilot controls select one of the three Autopilot limits, show progress, and
-permit disengagement without passing developer information to Autopilot AI.
-
-TypeScript Player API supplies operation results, Player Information supplies permitted views, and History and
-Persistence supplies save/load and navigation semantics. Screens and interactions apply those contracts without
-independently implementing gameplay behavior.
-
-# Requirements
-
-## Screens and data exploration
+# Screens and data exploration
 
 TODO: Specify main-menu and campaign screens using Player Information schemas. For example, provide Agent tables,
 Lead progression trees, and report details. Define sorting, filtering, and selection without adding exclusive information.
 Developer inspection must use a distinct authorized view rather than widening ordinary Player API results.
 
-## Interaction and accessibility
+# Interaction and accessibility
 
 TODO: Specify creation/load/save, gameplay actions, Advance turn, action-level and turn-level history navigation,
 Dev mode controls, and Autopilot limit/progress/disengagement. Define keyboard access, focus behavior, and refresh
 after commits or restoration. Controller mutation controls follow Engine Contract Autopilot restrictions.
 
-## Presentation boundaries
+# Presentation boundaries
 
 TODO: Prioritize readable colors and layouts over decorative graphics. Future graphics must not add exclusive
 gameplay information. Developer views and external AI integration must not leak hidden facts into Autopilot AI context.

@@ -14,6 +14,18 @@ Define complete player-facing knowledge and a consistent boundary around hidden 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) with exposed
+Properties, reveal conditions, and human/AI query consistency. Player API always exposes only Player-visible
+information, independent of Dev mode. Separate full-state inspection is specified by Developer API; developer
+inspection never changes gameplay reveal conditions or information supplied to Autopilot AI.
+
+Core Concepts supplies Player-visible information, Authoritative value, Derived value, and historical meanings.
+Campaign Modeling Contract supplies value-classification and historical-preservation constraints.
+Domain Model supplies represented concepts, and History and Persistence supplies restored facts and history positions.
+Mechanics supply facts and calculations to expose. Investigations owns estimate mathematics and permitted inputs;
+this specification owns the exposed Properties and reveal conditions, without duplicating formulas.
+Historical explanations preserve [Historical fact preservation](../foundation/campaign-modeling-contract.md#historical-fact-preservation).
+
 # Relationships
 
 - Uses [Agents](../mechanics/agents.md)
@@ -41,34 +53,18 @@ Player API, Dev mode, Session controller, and Autopilot AI are owned by the
 
 TODO: Define information-schema terms without duplicating shared definitions.
 
-# Concepts and contract
-
-This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) with exposed
-Properties, reveal conditions, and human/AI query consistency. Player API always exposes only Player-visible
-information, independent of Dev mode. Separate full-state inspection is specified by Developer API; developer
-inspection never changes gameplay reveal conditions or information supplied to Autopilot AI.
-
-Core Concepts supplies Player-visible information, Authoritative value, Derived value, and historical meanings.
-Campaign Modeling Contract supplies value-classification and historical-preservation constraints.
-Domain Model supplies represented concepts, and History and Persistence supplies restored facts and history positions.
-Mechanics supply facts and calculations to expose. Investigations owns estimate mathematics and permitted inputs;
-this specification owns the exposed Properties and reveal conditions, without duplicating formulas.
-Historical explanations preserve [Historical fact preservation](../foundation/campaign-modeling-contract.md#historical-fact-preservation).
-
-# Requirements
-
-## Player-visible information schemas and visibility
+# Player-visible information schemas and visibility
 
 TODO: Specify the complete Player API query schemas using owning mechanics. State reveal conditions and distinguish
 unknown information from zero or absence. For example, cover Agent capabilities, Investigation estimates, and
 Mission outcomes without exposing hidden inputs through ordinary queries.
 
-## Derived values and reports
+# Derived values and reports
 
 TODO: Specify complete query and report inventories, including historical Player-visible information at the current
 cursor. Reference owning mechanics for calculations. Restored views and reports must not reveal discarded-future facts.
 
-## Boundary consistency
+# Boundary consistency
 
 Session controller and Autopilot AI receive the same Player-visible information for equal Campaign state and
 equivalent Player API queries, independent of Dev mode. Autopilot AI never receives Developer API inspection,

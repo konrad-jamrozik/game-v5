@@ -14,6 +14,17 @@ Make every numeric calculation and random outcome reproducible across supported 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+Deterministic identity generation must preserve [Campaign instances](campaign-modeling-contract.md#campaign-instances); calculations and continuation follow [Derived value consistency](engine-contract.md#derived-value-consistency) and [Continuation state](engine-contract.md#continuation-state).
+
+This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Continuation state](engine-contract.md#continuation-state)/[Committed state integrity](engine-contract.md#committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
+draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [Campaign instances](campaign-modeling-contract.md#campaign-instances);
+choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
+under [Committed state integrity](engine-contract.md#committed-state-integrity); the existing no-op and algorithm TODOs remain unresolved.
+
+TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, seeds, generator state, draws, and deterministic IDs.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Campaign Modeling Contract](./campaign-modeling-contract.md)
@@ -32,26 +43,11 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-# Concepts and contract
-
-Deterministic identity generation must preserve [Campaign instances](campaign-modeling-contract.md#campaign-instances); calculations and continuation follow [Derived value consistency](engine-contract.md#derived-value-consistency) and [Continuation state](engine-contract.md#continuation-state).
-
-This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Continuation state](engine-contract.md#continuation-state)/[Committed state integrity](engine-contract.md#committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
-draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [Campaign instances](campaign-modeling-contract.md#campaign-instances);
-choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
-under [Committed state integrity](engine-contract.md#committed-state-integrity); the existing no-op and algorithm TODOs remain unresolved.
-
-TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, seeds, generator state, draws, and deterministic IDs.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Numeric contract
+# Numeric contract
 
 TODO: Choose precision/representation, allowed ranges, rounding operations and their placement, overflow behavior, and treatment of invalid numbers. Cover fractional progress, skill, health, and money.
 
-## Randomness contract
+# Randomness contract
 
 Determinism is required only within one implementation and Game build under
 [Continuation state](engine-contract.md#continuation-state). The generator algorithm and the order of random draws are
@@ -60,13 +56,11 @@ outcomes, never outcomes that depend on a particular seed.
 
 TODO: Specify distributions, interval endpoints, integer sampling, and the remaining randomness consumption rules.
 
-## Deterministic boundaries
+# Deterministic boundaries
 
 TODO: Specify behavior across supported runtimes and runtime versions under the Game build compatibility policy in
-[Requirements](engine-contract.md#requirements), [Game build compatibility](engine-contract.md#game-build-compatibility); exclude ambient randomness and wall-clock time from game results.
+[Game build compatibility](engine-contract.md#game-build-compatibility); exclude ambient randomness and wall-clock time from game results.
 Detail preservation of RNG state on rejection under [Committed state integrity](engine-contract.md#committed-state-integrity). Decide whether no-op commands consume draws.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

@@ -14,6 +14,15 @@ Provide convenient terminal access to the engine API through a complete adapter 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+Terminal CLI is a required adapter over all four engine API namespaces. TypeScript Player API supplies signatures,
+Player Information supplies permitted views, and History and Persistence supplies storage and restoration semantics.
+CLI syntax and output apply those contracts without independently implementing gameplay behavior.
+
+Creation or load selects the Current campaign. Session controller commands manage persistence, history, Dev mode,
+and Autopilot. Player API output always shows Player-visible information. Full-state inspection and cheats use
+separately authorized Developer API commands. Autopilot AI access remains restricted when adapted through CLI;
+an Autopilot AI must not receive an unrestricted command channel.
+
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
@@ -28,33 +37,20 @@ API surface and Principal terms are owned by the [Engine Contract glossary](../f
 
 TODO: Define CLI-specific terms without duplicating shared definitions.
 
-# Concepts and contract
-
-Terminal CLI is a required adapter over all four engine API namespaces. TypeScript Player API supplies signatures,
-Player Information supplies permitted views, and History and Persistence supplies storage and restoration semantics.
-CLI syntax and output apply those contracts without independently implementing gameplay behavior.
-
-Creation or load selects the Current campaign. Session controller commands manage persistence, history, Dev mode,
-and Autopilot. Player API output always shows Player-visible information. Full-state inspection and cheats use
-separately authorized Developer API commands. Autopilot AI access remains restricted when adapted through CLI;
-an Autopilot AI must not receive an unrestricted command channel.
-
-# Requirements
-
-## Commands and sessions
+# Commands and sessions
 
 TODO: Specify grammar, parsing, help/discovery, persistence, and mappings to Engine Contract's required starter
 operations. Cover campaign lifecycle, action-level and turn-level history navigation, all Autopilot limits and
 disengagement reasons, and separate developer inspection and cheats. Expose Autopilot memory only in its restricted
 execution context; it is not a human gameplay command.
 
-## Output contract
+# Output contract
 
 TODO: Specify human-readable and machine-readable output, stable JSON shapes, errors, standard streams, and exit
 codes. Both formats preserve Player API visibility and separately authorized Developer API access. Autopilot
 status must distinguish limit reached from the other disengagement reasons.
 
-## Interaction behavior
+# Interaction behavior
 
 TODO: Specify interactive and noninteractive Session controller workflows, restricted Autopilot AI execution,
 and interruption behavior. Keep gameplay, visibility, history, and Autopilot limit enforcement in the engine.

@@ -81,13 +81,11 @@ function validCorpus(): SourceFile[] {
         '',
         'Alpha purpose. See [Implicit relationships](../governance/spec-conventions.md#implicit-relationships).',
         '',
-        '# Concepts and contract',
+        '# Alpha behavior',
         '',
         'Contract.',
         '',
-        '# Requirements',
-        '',
-        '## Rule',
+        '# Rule',
         '',
         'Alpha must be deterministic.',
         '',
@@ -172,44 +170,49 @@ describe('specification linter', () => {
   })
 
   test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance', 'Guidance'])(
-    'accepts narrative requirements without a dedicated section for %s',
+    'accepts topic sections for %s',
     (family) => {
       const directory = family.toLowerCase()
       const files = validCorpus().map((file) => ({
         path: file.path.replace('foundation/alpha.md', directory + '/alpha.md'),
         content: file.content
           .replaceAll('Foundation', family)
-          .replaceAll('foundation/alpha.md', directory + '/alpha.md')
-          .replace('# Requirements\n\n', '## Explanation\n\nNarrative.\n\n'),
+          .replaceAll('foundation/alpha.md', directory + '/alpha.md'),
       }))
       expect(diagnosticCodes(files)).toEqual([])
     },
   )
 
-  test('rejects an empty optional Requirements section', () => {
+  test('rejects an empty topic section', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
       '# Edge cases and failure behavior',
-      '# Requirements\n\n# Edge cases and failure behavior',
+      '# Empty topic\n\n# Edge cases and failure behavior',
     )
-    const narrative = mutate(files, 'docs/specs/foundation/alpha.md', '# Requirements\n\n', '')
-    expect(diagnosticCodes(narrative)).toEqual(['SPEC204'])
+    expect(diagnosticCodes(files)).toEqual(['SPEC204'])
   })
 
-  test('rejects a misplaced optional Requirements section', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Requirements\n\n', '')
+  test('rejects a topic section after the closing sections', () => {
     const misplaced = mutate(
-      files,
+      validCorpus(),
       'docs/specs/foundation/alpha.md',
       '[Rule](#rule): the same input has the same result.',
-      '[Rule](#rule): the same input has the same result.\n\n# Requirements\n\nSeparate contract.',
+      '[Rule](#rule): the same input has the same result.\n\n# Late topic\n\nSeparate contract.',
     )
     expect(diagnosticCodes(misplaced)).toEqual(['SPEC209'])
   })
 
+  test.each(['Concepts and contract', 'Requirements', 'Details', 'Specification'])(
+    'rejects the generic topic heading %s',
+    (heading) => {
+      const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Alpha behavior', '# ' + heading)
+      expect(diagnosticCodes(files)).toEqual(['SPEC212'])
+    },
+  )
+
   test.each([
-    ['Concepts and contract', 'Contract.'],
+    ['Alpha behavior', 'Contract.'],
     ['Edge cases and failure behavior', 'Failures are defined.'],
   ])('allows omitting %s when it does not apply', (section, body) => {
     const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# ' + section + '\n\n' + body + '\n\n', '')
@@ -224,10 +227,10 @@ describe('specification linter', () => {
   test.each([
     ['# Open decisions\n\nNone.', 'None'],
     ['# Edge cases and failure behavior\n\nNot applicable — this document defines no operations.', 'Not applicable'],
-    ['# Requirements\n\nN/A', 'N/A'],
+    ['# Notes\n\nN/A', 'N/A'],
   ])('rejects a placeholder section instead of omission (%s)', (section, _name) => {
     const files = mutate(
-      mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Requirements\n\n## Rule', '## Rule'),
+      validCorpus(),
       'docs/specs/foundation/alpha.md',
       '# Edge cases and failure behavior\n\nFailures are defined.',
       section.startsWith('# Edge') ? section : 'Failures are defined.\n\n' + section,
@@ -239,8 +242,8 @@ describe('specification linter', () => {
     const misplaced = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '# Concepts and contract',
-      '# Open decisions\n\nChoose the numeric representation.\n\n# Concepts and contract',
+      '# Alpha behavior',
+      '# Open decisions\n\nChoose the numeric representation.\n\n# Alpha behavior',
     )
     expect(diagnosticCodes(misplaced)).toContain('SPEC209')
   })
@@ -477,14 +480,19 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '## Rule',
-      lines(['## Topic', '', '### Detail', '', '#### Rule']),
+      '# Rule',
+      lines(['# Topic', '', '## Detail', '', '### Rule']),
     )
     expect(lintSpecifications({ files })).toEqual([])
   })
 
   test('accepts a requirement after a sibling topic heading', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '## Rule', lines(['## Topic', '', '## Rule']))
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '# Rule',
+      lines(['# Topic', '', 'Topic text.', '', '# Rule']),
+    )
     expect(diagnosticCodes(files)).toEqual([])
   })
 
@@ -492,19 +500,19 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '## Rule',
-      lines(['## Topic', '', '### Detail', '', '#### Explanation', '', '### Nested rule', '', 'Rule.', '', '## Rule']),
+      '# Rule',
+      lines(['# Topic', '', '## Detail', '', '### Explanation', '', '## Nested rule', '', 'Rule.', '', '# Rule']),
     )
     expect(diagnosticCodes(files)).toEqual([])
   })
 
   test('rejects skipped heading levels', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '## Rule', '#### Rule')
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Rule', '### Rule')
     expect(diagnosticCodes(files)).toContain('SPEC211')
   })
 
   test.each(['AAA-001', 'AAA-NNN', 'AAA-nnn'])('rejects numbered labels in headings: %s', (label) => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '## Rule', '## ' + label + ' — Rule')
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Rule', '# ' + label + ' — Rule')
     expect(diagnosticCodes(files)).toContain('SPEC612')
   })
 
@@ -619,7 +627,7 @@ describe('specification linter', () => {
     [
       'standard heading order',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '# Concepts and contract', '# Acceptance examples'),
+        mutate(files, 'docs/specs/foundation/alpha.md', '# Alpha behavior', '# Acceptance examples'),
       'SPEC209',
     ],
     [
@@ -628,8 +636,8 @@ describe('specification linter', () => {
         mutate(
           files,
           'docs/specs/foundation/alpha.md',
-          '# Concepts and contract',
-          '# Terminology\n\nTerms.\n\n# Concepts and contract',
+          '# Alpha behavior',
+          '# Terminology\n\nTerms.\n\n# Alpha behavior',
         ),
       'SPEC203',
     ],
@@ -682,7 +690,7 @@ describe('specification linter', () => {
     ],
     [
       'numbered requirement label',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '## Rule', '## AAA-001 — Rule'),
+      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '# Rule', '# AAA-001 — Rule'),
       'SPEC612',
     ],
     [

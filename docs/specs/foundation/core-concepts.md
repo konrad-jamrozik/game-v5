@@ -94,16 +94,14 @@ Classifications of a value or piece of information, independent of where it live
 | Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
 
-# Concepts and contract
-
-## Vocabulary and contract ownership
+# Vocabulary and contract ownership
 
 Type and Property describe data independently of a programming language. Rule and Ruleset describe permitted behavior;
 Game build supplies shared data and executable implementation. These meanings apply across the complete game contract.
 Glossary definitions establish vocabulary without choosing an API, storage representation, or campaign-data composition.
 More detailed constraints belong to the specifications using that vocabulary.
 
-## Rule kinds
+# Rule kinds
 
 Every Rule has exactly one Rule kind. Rule kinds exist only because each carries a different contract: the kind
 determines what a specification stating the Rule must state. The following table is the exhaustive set of Rule kinds.
@@ -126,7 +124,7 @@ obligations an Effect Rule does not: a fresh Instance ID, and an initial value w
 the new data. [Campaign instance creation](./campaign-modeling-contract.md#campaign-instance-creation) in Campaign
 Modeling Contract applies these obligations to all four properties of each new Campaign instance.
 
-### Properties that are not Rule kinds
+## Properties that are not Rule kinds
 
 The following are properties that a Rule of any kind can have, or concerns owned elsewhere. Making any of them a Rule
 kind would break the classification of each Rule into exactly one kind. This list is exhaustive for the concerns
@@ -153,7 +151,7 @@ The classification is also deliberately limited in two ways:
   required by [What belongs in a specification](../governance/spec-conventions.md#what-belongs-in-a-specification).
   They classify what the Engine designer writes down.
 
-## Campaign and Session
+# Campaign and Session
 
 Campaign identifies a playthrough; Campaign state describes its data. Session is the runtime context of one running
 game: it starts with no selected Campaign when the game starts and ends when the game exits. A Session selects at most
@@ -167,7 +165,7 @@ to one Campaign and application-wide preferences belong to neither.
 Specifications using this vocabulary define the Session's exact contents and the storage of continuation data. This
 distinction does not prescribe an internal class layout or save encoding.
 
-## World state and Campaign configuration
+# World state and Campaign configuration
 
 Campaign state includes both World state and Campaign configuration. For example, an Investigation's progress is
 World state, while a campaign-wide investigation difficulty multiplier is Campaign configuration. Both belong to
@@ -182,7 +180,7 @@ to History within World state. This conceptual hierarchy does not require a part
 Interface preferences that gameplay Rules do not consult remain
 outside Campaign state. Mechanics specify permitted configuration changes and when their effects apply.
 
-## Committed state and information
+# Committed state and information
 
 Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing. For
 example, the position restored by undo is a Committed state, while values computed partway through Advance turn
@@ -190,7 +188,7 @@ processing are not.
 Player-visible information describes deliberate ordinary-player exposure. Neither term specifies a particular command,
 query schema, or reveal condition.
 
-## Authoritative and Derived values
+# Authoritative and Derived values
 
 An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values and
 the current Rules and GDRs. This classification is independent of mutability: shared base health and a recorded

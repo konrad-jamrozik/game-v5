@@ -14,6 +14,18 @@ Define exactly when subsystem rules run and which state each phase reads.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+Phase ordering and state-read timing must preserve [Derived value consistency](engine-contract.md#derived-value-consistency) and [Committed state integrity](engine-contract.md#committed-state-integrity).
+
+This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Committed state integrity](engine-contract.md#committed-state-integrity) by specifying calculation snapshots, ordered phases, and the atomic publication
+boundary. It uses Domain Model's valid-state constraints and Numbers and Randomness's arithmetic and draw ordering.
+Agents, Investigations, Missions, Factions, Economy and Upgrades, and Campaign supply the subsystem transitions and
+effects to schedule. Campaign supplies ending predicates; this document supplies when those predicates are evaluated.
+The phase order and simultaneous-effect decisions remain TODOs below.
+
+TODO: Specify Turn number, management command, turn advancement, phase input, produced effect, and report boundary.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Agents](../mechanics/agents.md)
@@ -35,35 +47,17 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-# Concepts and contract
-
-Phase ordering and state-read timing must preserve [Derived value consistency](engine-contract.md#derived-value-consistency) and [Committed state integrity](engine-contract.md#committed-state-integrity).
-
-This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Committed state integrity](engine-contract.md#committed-state-integrity) by specifying calculation snapshots, ordered phases, and the atomic publication
-boundary. It uses Domain Model's valid-state constraints and Numbers and Randomness's arithmetic and draw ordering.
-Agents, Investigations, Missions, Factions, Economy and Upgrades, and Campaign supply the subsystem transitions and
-effects to schedule. Campaign supplies ending predicates; this document supplies when those predicates are evaluated.
-The phase order and simultaneous-effect decisions remain TODOs below.
-
-TODO: Specify Turn number, management command, turn advancement, phase input, produced effect, and report boundary.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Phase schedule
+# Phase schedule
 
 TODO: Specify the ordered advancement phases and reference subsystem rules without duplicating formulas. Identify start-of-turn snapshots versus updated-state reads.
 
-## Same-turn effects
+# Same-turn effects
 
 TODO: Define when arrivals can work, investigation-created missions begin aging, mission survivors recover, operations spawn, and funding changes start producing income.
 
-## Atomic resolution
+# Atomic resolution
 
 TODO: Define when reports and campaign outcomes finalize, how simultaneous effects are ordered, and what happens if resolution encounters an invariant violation.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

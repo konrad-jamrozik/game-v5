@@ -30,9 +30,7 @@ Batch is defined by the [Specification Work Plan and Backlog glossary](work-plan
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | Work item | One known outstanding issue in one or more registered specifications, recorded in this document until it is resolved or found obsolete. |
 
-# Concepts and contract
-
-## Adding and removing Work items
+# Adding and removing Work items
 
 Add a Work item when an issue is found that is not fixed in the same change. Give it the next unused label, the form
 `TODO-NNN` with three digits, and a heading of the form `TODO-NNN: short title` under the matching category. Never
@@ -43,7 +41,7 @@ Remove a Work item in the same change that resolves it, or when the issue no lon
 done or keep resolved ones; Git history is the record. When a resolution changes only part of a Work item, update the
 remaining wording and quotations instead.
 
-## Work item format
+# Work item format
 
 Every Work item states the following, in this order:
 
@@ -65,7 +63,7 @@ The complete set of categories, in descending priority, is:
 | Borderline                             | The underlying content belongs in a specification, but its wording describes a mechanism rather than an observable or designer-authored outcome.      |
 | Other                                  | Any other defect, for example a terminology or consistency error.                                                                                     |
 
-## Measuring rules
+# Measuring rules
 
 The Work items below were measured against these recorded rules and decisions:
 
@@ -82,14 +80,14 @@ The Work items below were measured against these recorded rules and decisions:
   [Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation). The former
   Campaign instance constructor concept was removed.
 
-## Work items
+# Work items
 
 The Work items below were recorded from an audit on 2026-11-11. Quotations were checked against the specifications at
 that time.
 
-### Clear violations
+## Clear violations
 
-#### TODO-001: Cache wording in Derived value consistency
+### TODO-001: Cache wording in Derived value consistency
 
 **Category and priority:** Clear violation.
 
@@ -137,7 +135,7 @@ computed from the current Campaign state. Remove "cache invalidation" from both 
 sentences are permissive and do not prescribe caches; consider dropping them for consistency, which for CMC is a
 revision of an Accepted specification.
 
-#### TODO-002: Replay prescribed as the restore mechanism in Save size limit
+### TODO-002: Replay prescribed as the restore mechanism in Save size limit
 
 **Category and priority:** Clear violation.
 
@@ -165,7 +163,7 @@ definition already says, and state only the observable effects: positions before
 undo, and positions after it are restored with results equal to uninterrupted play. Reword the acceptance example
 accordingly.
 
-#### TODO-003: History and Persistence remit is mostly implementation
+### TODO-003: History and Persistence remit is mostly implementation
 
 **Category and priority:** Clear violation.
 
@@ -178,7 +176,7 @@ accordingly.
 [Action history and turn navigation](../foundation/engine-contract.md#action-history-and-turn-navigation),
 [Autopilot memory](../foundation/engine-contract.md#autopilot-memory), and
 [Save and load](../foundation/engine-contract.md#save-and-load). Related: TypeScript Player API (API),
-[Concepts and contract](../interfaces/typescript-api.md#concepts-and-contract).
+[Overview](../interfaces/typescript-api.md#overview).
 
 **Batches:** HIST is batch 2; ENG is batch 1; API is batch 8.
 
@@ -238,7 +236,7 @@ and failure behavior, and what a Campaign save restores.
 resulting Session, and what a Campaign save restores. Delete or rewrite the TODOs and Open decisions above. Reword the
 three ENG sentences and the API sentence to delegate only the observable save and load behavior to HIST.
 
-#### TODO-004: Random generator state required as a thing
+### TODO-004: Random generator state required as a thing
 
 **Category and priority:** Clear violation.
 
@@ -308,7 +306,7 @@ complete Campaign state, Player-visible information, and reports rather than RNG
 whether a seed is a campaign creation input at all. Keep "consumes gameplay randomness" in CORE only if it is defined
 as designer vocabulary meaning that the Rule's outcome depends on chance, and define it that way.
 
-#### TODO-005: Mandated identifier format in Unique identifiers
+### TODO-005: Mandated identifier format in Unique identifiers
 
 **Category and priority:** Clear violation.
 
@@ -347,11 +345,11 @@ defined by whether replay must reproduce the identifier. Drop the "Required form
 unless a player-facing reason is stated, for example save lists sortable by creation time. Change the HIST glossary
 definitions to "The Independent identifier identifying [...]".
 
-#### TODO-006: Campaign instance constructor leftover in TypeScript Player API
+### TODO-006: Campaign instance constructor leftover in TypeScript Player API
 
 **Category and priority:** Clear violation; also contradicts the creation decision.
 
-**Affected:** TypeScript Player API (API), [Concepts and contract](../interfaces/typescript-api.md#concepts-and-contract).
+**Affected:** TypeScript Player API (API), [Overview](../interfaces/typescript-api.md#overview).
 
 **Batches:** API is batch 8.
 
@@ -371,13 +369,13 @@ instance or that code's signature.
 **Suggested resolution:** Delete both sentences, or replace them with a reference stating that public operations whose
 effects create Campaign instances do so under the applicable Creation Rules.
 
-### Contradictions with the determinism decision
+## Contradictions with the determinism decision
 
-#### TODO-007: Generator-state and draw planning in Numbers and Randomness
+### TODO-007: Generator-state and draw planning in Numbers and Randomness
 
 **Category and priority:** Contradiction with a recorded decision.
 
-**Affected:** Numbers and Randomness (NUMRNG): [Concepts and contract](../foundation/numbers-and-randomness.md#concepts-and-contract),
+**Affected:** Numbers and Randomness (NUMRNG): [Overview](../foundation/numbers-and-randomness.md#overview),
 [Deterministic boundaries](../foundation/numbers-and-randomness.md#deterministic-boundaries),
 [Edge cases and failure behavior](../foundation/numbers-and-randomness.md#edge-cases-and-failure-behavior), and
 [Open decisions](../foundation/numbers-and-randomness.md#open-decisions).
@@ -393,7 +391,7 @@ effects create Campaign instances do so under the applicable Creation Rules.
 
 > TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, seeds, generator state, draws, and deterministic IDs.
 
-(NUMRNG, Concepts and contract.)
+(NUMRNG, Overview.)
 
 > Decide whether no-op commands consume draws.
 
@@ -419,11 +417,11 @@ content and the "no-op commands" decision. Re-scope NUMRNG's randomness content 
 interval boundaries, and comparisons, plus the observable reproducibility requirement in TODO-004. Reword the Open
 decision to cover only numeric representation, without naming an API.
 
-#### TODO-008: Draw ordering in Turn Resolution and Formulas and uncertainty
+### TODO-008: Draw ordering in Turn Resolution and Formulas and uncertainty
 
 **Category and priority:** Contradiction with a recorded decision.
 
-**Affected:** Turn Resolution (TURN), [Concepts and contract](../foundation/turn-resolution.md#concepts-and-contract).
+**Affected:** Turn Resolution (TURN), [Overview](../foundation/turn-resolution.md#overview).
 Related: Specification Conventions (CONV, Accepted), [Formulas and uncertainty](spec-conventions.md#formulas-and-uncertainty).
 
 **Batches:** TURN is batch 7. CONV has no batch; a change is a revision of an Accepted governance specification.
@@ -432,7 +430,7 @@ Related: Specification Conventions (CONV, Accepted), [Formulas and uncertainty](
 
 > It uses Domain Model's valid-state constraints and Numbers and Randomness's arithmetic and draw ordering.
 
-(TURN, Concepts and contract.)
+(TURN, Overview.)
 
 > For random rules, specify the distribution, draw timing and order, interval boundaries, success comparison, and which information is hidden.
 
@@ -447,7 +445,7 @@ example. The CONV sentence was not in the original audit finding; it was noticed
 contracts". In CONV, replace "draw timing and order" with which Campaign state a random outcome depends on, stated as
 an outcome rather than a draw order.
 
-#### TODO-009: Draw sites and draw fixtures in Combat
+### TODO-009: Draw sites and draw fixtures in Combat
 
 **Category and priority:** Contradiction with a recorded decision.
 
@@ -473,7 +471,7 @@ fixed injected random outcomes under [Continuation state](../foundation/engine-c
 **Suggested resolution:** Replace "random draw sites" with the designer-authored random outcomes of each combat
 calculation and their distributions. Replace "draws" in the fixture TODO with "fixed injected random outcomes".
 
-#### TODO-010: Seeded timelines in Factions
+### TODO-010: Seeded timelines in Factions
 
 **Category and priority:** Contradiction with a recorded decision.
 
@@ -490,11 +488,11 @@ calculation and their distributions. Replace "draws" in the fixture TODO with "f
 
 **Suggested resolution:** Replace "seeded" with timelines that use fixed injected random outcomes.
 
-#### TODO-011: Seed or RNG state in Campaign Integration and Acceptance Tests
+### TODO-011: Seed or RNG state in Campaign Integration and Acceptance Tests
 
 **Category and priority:** Contradiction with a recorded decision.
 
-**Affected:** Campaign Integration and Acceptance Tests (SCEN), [Concepts and contract](../acceptance/campaign-integration-and-acceptance-tests.md#concepts-and-contract)
+**Affected:** Campaign Integration and Acceptance Tests (SCEN), [Overview](../acceptance/campaign-integration-and-acceptance-tests.md#overview)
 and [Glossary](../acceptance/campaign-integration-and-acceptance-tests.md#glossary).
 
 **Batches:** SCEN has no batch; it is the Acceptance parallel track in
@@ -505,7 +503,7 @@ and [Glossary](../acceptance/campaign-integration-and-acceptance-tests.md#glossa
 > TODO: Specify Scenario fixture, game revision when needed for reproducibility, seed or RNG state, command sequence,
 > expected state/view, and requirement reference.
 
-(SCEN, Concepts and contract.)
+(SCEN, Overview.)
 
 > | Fixture | The GDRs, Campaign state, and fixed injected random outcomes or RNG state needed to reproduce a scenario |
 
@@ -519,7 +517,7 @@ uses fixed injected random outcomes, or a replay baseline for replay-equality ch
 **Suggested resolution:** Replace "seed or RNG state" with "injected random outcomes or replay baseline", matching the
 Deterministic fixtures TODO, and drop "or RNG state" from the Fixture definition.
 
-#### TODO-012: Sampling time of hidden difficulty in Investigations
+### TODO-012: Sampling time of hidden difficulty in Investigations
 
 **Category and priority:** Contradiction with a recorded decision.
 
@@ -537,14 +535,14 @@ observable, because hidden difficulty is not Player-visible information either w
 **Suggested resolution:** Replace "and sampling time" with the observable consequence, for example whether hidden
 difficulty is fixed for the whole Investigation and which Campaign state it may depend on.
 
-### Borderline
+## Borderline
 
-#### TODO-013: Snapshot and read wording for turn timing
+### TODO-013: Snapshot and read wording for turn timing
 
 **Category and priority:** Borderline, low priority.
 
 **Affected:** Turn Resolution (TURN), [Overview](../foundation/turn-resolution.md#overview),
-[Concepts and contract](../foundation/turn-resolution.md#concepts-and-contract), and
+[Overview](../foundation/turn-resolution.md#overview), and
 [Phase schedule](../foundation/turn-resolution.md#phase-schedule). Specification Conventions (CONV, Accepted),
 [Writing exact requirements](spec-conventions.md#writing-exact-requirements) and
 [One owner per rule](spec-conventions.md#one-owner-per-rule). Combat (COMBAT), [Battle flow](../mechanics/combat.md#battle-flow).
@@ -561,7 +559,7 @@ Investigations (INVSTG), [Team changes and commitment](../mechanics/investigatio
 
 > [...] by specifying calculation snapshots, ordered phases, and the atomic publication boundary.
 
-(TURN, Concepts and contract.)
+(TURN, Overview.)
 
 > Identify start-of-turn snapshots versus updated-state reads.
 
@@ -590,7 +588,7 @@ specifications. The wording, however, describes a mechanism (snapshots and reads
 **Suggested resolution:** Keep the content, and reword it in terms of outcomes, for example "uses values as of turn
 start" or "uses values after the preceding phase's effects", rather than snapshots and reads.
 
-#### TODO-014: Mechanism wording in API hierarchy and Autopilot limits
+### TODO-014: Mechanism wording in API hierarchy and Autopilot limits
 
 **Category and priority:** Borderline, low priority.
 
@@ -622,7 +620,7 @@ engine object, the invocation loop) instead.
 an Autopilot AI reaches a Session API or Developer API operation", and "An Autopilot engagement ends only under the
 disengagement reasons in Autopilot lifecycle and concurrency".
 
-#### TODO-015: Authoritative versus Derived as a storage decision
+### TODO-015: Authoritative versus Derived as a storage decision
 
 **Category and priority:** Borderline, low priority.
 
@@ -651,7 +649,7 @@ observable; neither passage says so.
 four-property shape, or drop the requirement if that justification is not wanted. This is a revision of an Accepted
 specification.
 
-#### TODO-016: Storage disclaimers in Domain Model
+### TODO-016: Storage disclaimers in Domain Model
 
 **Category and priority:** Borderline, low priority.
 
@@ -683,7 +681,7 @@ storage choice; its observable content is that every view of the relationship ag
 example that Agent-side and team-side views of current membership agree, or drop it if Current versus historical
 teams already implies it.
 
-#### TODO-017: Autopilot memory checkpoints as mechanism wording
+### TODO-017: Autopilot memory checkpoints as mechanism wording
 
 **Category and priority:** Borderline, low priority.
 
@@ -711,9 +709,9 @@ position on a timeline branch. "Checkpoints" describes a storage mechanism for i
 written by that Autopilot AI at or before that position on the current timeline branch, or explicit absence. Keep
 "checkpoint" only if it is defined as vocabulary for that outcome.
 
-### Other
+## Other
 
-#### TODO-018: Must in Gameplay Dependency Direction
+### TODO-018: Must in Gameplay Dependency Direction
 
 **Category and priority:** Other.
 
@@ -735,7 +733,7 @@ reserves "must" for requirements.
 **Suggested resolution:** Replace "must" with "should" and label the section as guidance, or state in DEPDIR what
 "must" means inside a Guidance document.
 
-#### TODO-019: Campaign treated as a Campaign instance in Initial Campaign Content
+### TODO-019: Campaign treated as a Campaign instance in Initial Campaign Content
 
 **Category and priority:** Other.
 
@@ -758,7 +756,7 @@ Also, because the sequence and format of Instance IDs are the implementer's choi
 **Suggested resolution:** Remove "Campaign and" from the list, and say that fixtures use symbolic Instance IDs, for
 example `agency_1`, that tests bind to whatever Instance IDs the implementation generates.
 
-#### TODO-020: Glossary coverage of kind-named Rule forms
+### TODO-020: Glossary coverage of kind-named Rule forms
 
 **Category and priority:** Other, low priority.
 

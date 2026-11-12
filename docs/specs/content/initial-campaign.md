@@ -14,6 +14,18 @@ Provide the complete, versioned numeric and GDR inputs for the first playable ca
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+GDRs and their references follow [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances) and [References](../foundation/campaign-modeling-contract.md#references).
+
+This document uses Domain Model's game concepts and Core Concepts' GDR meanings and Campaign Modeling Contract's composition and reference constraints. It uses
+Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and
+Progression's prerequisites/effects, and Missions' catalog requirements to supply valid GDRs. Supplying those data
+values does not refine the mechanical behavior. The mechanics consume this document's exact values and catalogs;
+formulas and transitions remain owned by the mechanics. Values and catalogs remain TODOs below.
+
+TODO: Specify starting-configuration GDR IDs, named balance parameter, GDR ID, starting state, lead graph, enemy, weapon, faction, and mission GDR.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Campaign](../mechanics/campaign.md)
@@ -39,27 +51,11 @@ Campaign-specific composition terms are owned by [Campaign Modeling Contract](..
 
 TODO: Define remaining local terms here without duplicating shared definitions.
 
-# Concepts and contract
-
-GDRs and their references follow [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances) and [References](../foundation/campaign-modeling-contract.md#references).
-
-This document uses Domain Model's game concepts and Core Concepts' GDR meanings and Campaign Modeling Contract's composition and reference constraints. It uses
-Campaign's initialization contract, Economy and Upgrades' parameter meanings, Factions' operation rules, Leads and
-Progression's prerequisites/effects, and Missions' catalog requirements to supply valid GDRs. Supplying those data
-values does not refine the mechanical behavior. The mechanics consume this document's exact values and catalogs;
-formulas and transitions remain owned by the mechanics. Values and catalogs remain TODOs below.
-
-TODO: Specify starting-configuration GDR IDs, named balance parameter, GDR ID, starting state, lead graph, enemy, weapon, faction, and mission GDR.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Starting configuration and parameters
+# Starting configuration and parameters
 
 TODO: List exact initial resources, roster, capabilities, faction setup, and all named balance parameters with units and valid ranges. Mechanics own formulas; this document owns values.
 
-## GDR catalogs
+# GDR catalogs
 
 TODO: Supply archetype catalogs for every Campaign instance Type declared in
 [Types, multiplicity, and lifecycle](../foundation/domain-model.md#types-multiplicity-and-lifecycle), including the singleton Agency.
@@ -72,11 +68,9 @@ GDRs. A Lead is not automatically an InvestigationArchetype.
 
 TODO: Define factions, enemies, weapons, Initiative/Response missions, rewards, deadlines, all eight upgrade categories, lead prerequisites, and completion effects using explicit GDR identifiers.
 
-## Completeness and validation
+# Completeness and validation
 
 TODO: Ensure every formula parameter and GDR reference resolves, progression reaches its intended ending, and required operation pools exist. Distinguish source-game examples from chosen v5 GDRs.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

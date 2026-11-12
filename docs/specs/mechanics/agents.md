@@ -14,6 +14,17 @@ Define agent capability, task availability, development, exhaustion, and recover
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification intends to refine Domain Model's agent contract ([Agent lifecycle](../foundation/domain-model.md#agent-lifecycle), [Orders and Task phase](../foundation/domain-model.md#orders-and-task-phase), [Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams), and [Attribute bounds](../foundation/domain-model.md#attribute-bounds)) with eligibility, Current assignment,
+travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
+Combat supplies battle-earned experience, Economy and Upgrades supplies economic effects on personnel and
+capabilities, and Initial Campaign Content supplies balance values. Those inputs are applied to agent transitions;
+this document supplies the agent capabilities used by Combat and Economy and Upgrades in return.
+The formulas and transition choices below remain TODOs; the domain constraints still apply.
+
+TODO: Specify Base/effective skill, health, exhaustion, equipment, orders, activity state, readiness, transit, and career statistics.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Combat](./combat.md)
@@ -40,34 +51,17 @@ Shared Campaign instance Type names are owned by the [Domain Model glossary](../
 TODO: Define remaining local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-# Concepts and contract
-
-This specification intends to refine Domain Model's agent contract ([Agent lifecycle](../foundation/domain-model.md#agent-lifecycle), [Orders and Task phase](../foundation/domain-model.md#orders-and-task-phase), [Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams), and [Attribute bounds](../foundation/domain-model.md#attribute-bounds)) with eligibility, Current assignment,
-travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
-Combat supplies battle-earned experience, Economy and Upgrades supplies economic effects on personnel and
-capabilities, and Initial Campaign Content supplies balance values. Those inputs are applied to agent transitions;
-this document supplies the agent capabilities used by Combat and Economy and Upgrades in return.
-The formulas and transition choices below remain TODOs; the domain constraints still apply.
-
-TODO: Specify Base/effective skill, health, exhaustion, equipment, orders, activity state, readiness, transit, and career statistics.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Attributes and effectiveness
+# Attributes and effectiveness
 
 TODO: Specify effective-skill and readiness formulas with units, floors, caps, and exact thresholds. Define which attributes are individual versus agency-derived.
 
-## Current assignments and transit
+# Current assignments and transit
 
 TODO: Provide a transition table for standby, contracting, training, investigation, mission, recovery, death, and dismissal. Specify eligibility and transit for each supported transition.
 
-## Growth and recovery
+# Growth and recovery
 
 TODO: Specify training, task exhaustion, exhaustion recovery, injury recovery, forced withdrawal, and career tracking. Link combat experience rules to COMBAT and economic effects to ECON.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

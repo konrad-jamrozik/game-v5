@@ -14,6 +14,16 @@ Define exact investigation progress, stochastic completion, player uncertainty, 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification intends to refine Domain Model's investigation contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with start, progress, completion,
+team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
+and Numbers and Randomness's arithmetic/draws. Player Information supplies exposed field shapes and reveal conditions;
+this document supplies estimate mathematics and the information those estimates condition on. The exact mathematics
+and transitions remain TODOs below.
+
+TODO: Specify Visible difficulty, hidden actual difficulty, effective team contribution, progress, cumulative completion probability, per-turn conditional probability, and player estimate.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Agents](./agents.md)
@@ -29,21 +39,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-# Concepts and contract
-
-This specification intends to refine Domain Model's investigation contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with start, progress, completion,
-team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
-and Numbers and Randomness's arithmetic/draws. Player Information supplies exposed field shapes and reveal conditions;
-this document supplies estimate mathematics and the information those estimates condition on. The exact mathematics
-and transitions remain TODOs below.
-
-TODO: Specify Visible difficulty, hidden actual difficulty, effective team contribution, progress, cumulative completion probability, per-turn conditional probability, and player estimate.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Start and progress
+# Start and progress
 
 TODO: Specify eligibility, hidden-difficulty distribution and sampling time, agent contribution, sublinear team scaling, transit treatment, and when progress is added.
 
@@ -51,19 +47,17 @@ TODO: Define InvestigationArchetype selection and allowed combinations with Lead
 separate Archetype and immutable Lead reference established by Domain Model; apply the at-most-one-Active-Investigation-per-Lead
 constraint across archetypes. The illustrative InvestigationArchetype GDRs in Campaign Modeling Contract do not select mechanics.
 
-## Completion probability
+# Completion probability
 
 TODO: Provide unambiguous formulas and evaluation order for actual completion, including guaranteed completion, random draws, and the distinction between cumulative and per-turn conditional probability.
 
-## Player uncertainty
+# Player uncertainty
 
 TODO: Define the mathematical meaning of displayed estimates/ranges, information used, rounding, and whether/how prior non-completion updates estimates. Reference INFO for exposed field shapes.
 
-## Team changes and commitment
+# Team changes and commitment
 
 TODO: Specify effective-skill-weighted progress loss on removal, the weighting snapshot, exhaustion-driven removal, and abandonment when everyone leaves. Adding agents preserves progress; a new Investigation starts from zero.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

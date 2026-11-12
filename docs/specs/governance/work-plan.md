@@ -27,9 +27,7 @@ contracts and unresolved design questions before advancing. Later batches have n
 | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Batch | A bounded set of related specifications with one review checkpoint at its end. At that checkpoint, the user can accept the drafts, request revisions, or change direction. Feedback and revised drafts remain part of the same checkpoint until resolved; they do not create additional checkpoints. Combat and Missions are separate batches. |
 
-# Concepts and contract
-
-## Work tracking
+# Work tracking
 
 Track work separately from document status:
 
@@ -44,13 +42,13 @@ Document metadata remains authoritative for Stub, Draft, Accepted, and Supersede
 feedback is incorporated and revised drafts are reviewed. For a multi-document batch, record partial completion explicitly
 instead of marking the whole batch Complete.
 
-## Current baseline
+# Current baseline
 
 - Batch 1 is In review; later batches are Queued.
 - The 10-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
-## Relationship inventory migration
+# Relationship inventory migration
 
 [Artifact Relationships](artifact-relationships.md) is In review as a separate governance
 specification. It defines two directional inventories, centrally defined implicit relationships, mirrored explicit
@@ -67,11 +65,9 @@ conventions and refine the corresponding engine behavior.
 The [cycle register](../../spec-relationship-cycles.md) records retained cycles and prospective removal work. Its
 removal approaches do not select new gameplay rules or change the accepted review sequence.
 
-# Requirements
+# Review sequence and backlog
 
-## Review sequence and backlog
-
-### Batch sequence
+## Batch sequence
 
 Use the following 10-batch sequence, starting with Core Concepts, Engine Contract, Campaign Modeling Contract, and Domain Model. If review reveals a better grouping,
 propose the change explicitly and update this table when agreed rather than silently changing the order.
@@ -92,9 +88,9 @@ propose the change explicitly and update this table when agreed rather than sile
 The table is an authoring sequence, not a declaration that every referenced specification is already accepted. Some dependencies
 are mutual. Drafts must identify unresolved dependencies explicitly rather than borrowing unstated rules from stubs.
 
-## Work that grows alongside the batches
+# Work that grows alongside the batches
 
-### Parallel GDR and acceptance work
+## Parallel GDR and acceptance work
 
 Develop the following documents incrementally with the mechanics they support. They are part of the backlog,
 not work postponed until after the interfaces.
@@ -108,21 +104,21 @@ is scheduled work in that specification, not an unresolved decision about this w
 | Content    | [Initial Campaign Content](../content/initial-campaign.md)                                              | Add exact named parameters and small example GDRs as each subsystem needs them. Complete the playable campaign GDRs after batch 7 and review it explicitly. | Queued     |
 | Acceptance | [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | Add precise cross-system examples with each batch. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10.      | Queued     |
 
-### Early information and API boundaries
+## Early information and API boundaries
 
 During batch 1, identify the player-information boundary and outline the API capabilities needed to support
 it. Refine these notes with each mechanic; do not defer their design influence until batch 8. Keep supporting notes
 explicitly preliminary in Engine Contract, alongside Core Concepts, Campaign Modeling Contract, and Domain Model as the batch 1 deliverable. Exact Player-visible information fields and
 public signatures are finalized in their owning specifications during batch 8.
 
-### Incremental timing refinement
+## Incremental timing refinement
 
 Refine turn timing and shared contracts as mechanics are drafted. Batch 7 reconciles the complete turn
 schedule; earlier drafts must still state their local timing requirements and any unresolved cross-system ordering.
 
-## Review and completion workflow
+# Review and completion workflow
 
-### Batch workflow
+## Batch workflow
 
 For each authorized batch:
 
@@ -135,21 +131,21 @@ For each authorized batch:
 6. Pause before advancing to the next batch so the user can review. Incorporate feedback or follow explicit instructions
    to continue. Record acceptance only when it is explicitly given.
 
-### Backlog updates
+## Backlog updates
 
 Update this backlog when drafting begins, a draft enters review, feedback requires revision, or a document is
 accepted. Keep current
 status summaries consistent with document metadata.
 
-### Separate implementation authorization
+## Separate implementation authorization
 
 Do not treat the completion of a draft or batch as authorization to implement game code. Implementation
 scope and milestones are selected separately. Graphics, animation, and possible browser-based 3D specifications remain
 deferred until those stages are requested.
 
-## First implementation milestone assessment
+# First implementation milestone assessment
 
-### First implementation milestone assessment
+## First implementation milestone assessment
 
 After the batch 4 review, assess whether the accepted contracts support a small headless playable slice.
 Propose its concrete scope and identify missing contracts, GDRs, or acceptance scenarios before implementation is

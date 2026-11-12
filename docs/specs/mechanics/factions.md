@@ -14,6 +14,16 @@ Define escalating faction pressure, Faction operation occurrence generation, sup
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with escalation,
+Faction operation occurrence generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
+Initial Campaign Content supplies catalogs of Game Data Records (GDRs) for Faction operation occurrences and parameter values. Leads and Progression supplies earned
+unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.
+Exact thresholds and transitions remain TODOs below.
+
+TODO: Specify Faction discovery, activity level, escalation clock, Faction operation occurrence level, Faction operation occurrence clock, suppression, and defeat.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
@@ -31,33 +41,17 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-# Concepts and contract
-
-This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with escalation,
-Faction operation occurrence generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
-Initial Campaign Content supplies catalogs of Game Data Records (GDRs) for Faction operation occurrences and parameter values. Leads and Progression supplies earned
-unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.
-Exact thresholds and transitions remain TODOs below.
-
-TODO: Specify Faction discovery, activity level, escalation clock, Faction operation occurrence level, Faction operation occurrence clock, suppression, and defeat.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Escalation
+# Escalation
 
 TODO: Specify starting activity, progression thresholds/distributions, update order, maximum activity, and what information is revealed by faction intelligence.
 
-## Faction operation occurrence generation
+# Faction operation occurrence generation
 
 TODO: Specify countdown timing, severity distribution, mission GDR selection, repeat rules, and behavior with existing active Faction operation occurrences. Link tables to INIT.
 
-## Suppression and defeat
+# Suppression and defeat
 
 TODO: Specify stacking, countdown effects, continued escalation during suppression, defeat predicates, and treatment of pending Faction operation occurrences/missions/leads after defeat.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

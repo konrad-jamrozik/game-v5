@@ -51,9 +51,7 @@ RNG algorithm, save encoding, or subsystem mechanics.
 Shared vocabulary, including Session, is defined by [Core Concepts](core-concepts.md#glossary).
 The name Autopilot AI avoids using Agent for a Principal.
 
-# Concepts and contract
-
-## API hierarchy
+# API hierarchy
 
 The engine API is the source of truth for execution and access behavior. Terminal CLI and Web UI are required
 adapters over the same API. Both expose the Session controller workflow; neither independently implements gameplay,
@@ -133,9 +131,7 @@ restrictions is insufficient. Access must be revoked when an Autopilot engagemen
 An Autopilot AI must not receive the unrestricted engine object or an alternative CLI or Web UI path to Session API
 or Developer API operations.
 
-# Requirements
-
-## Campaign lifecycle
+# Campaign lifecycle
 
 The Session holds the Current campaign selection, its Current save, Dev mode, and the active Autopilot engagement, if
 any; none of these is persisted. A newly opened Session has no Current campaign and Dev mode is disabled. This is the main-menu state in
@@ -151,13 +147,13 @@ when no Current campaign exists. Creation, load, and closure invalidate prior ca
 load preserves the existing Session. Saving captures the Current campaign at a committed action boundary, even
 before the player advances the turn. Closing or replacing the Current campaign does not implicitly save it.
 
-## Campaign data integrity
+# Campaign data integrity
 
 Campaign creation, committed Player API and Developer API actions, and restoration must preserve the declared
 campaign-data composition, identity, reference, and historical-fact invariants.
 Detailed campaign-data structures and the constraints preserving them belong to refining specifications.
 
-## Player queries and actions
+# Player queries and actions
 
 Player API queries always return Player-visible information. The same query at equal Campaign state returns the
 same Player-visible information for the Session controller and Autopilot AI, independent of Dev mode.
@@ -174,7 +170,7 @@ for `assignAgents(...)` and `purchaseUpgrade(...)`.
 These are examples of the extensible gameplay action inventory; future gameplay actions follow the same atomicity,
 visibility, and replay contract.
 
-## Dev mode and developer operations
+# Dev mode and developer operations
 
 Only the Session controller can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
 a Current campaign and no active Autopilot engagement. Developer API inspection returns detached, read-only full Campaign
@@ -191,7 +187,7 @@ cannot be erased from the Session controller's knowledge.
 Autopilot may be engaged while Dev mode is enabled, but Developer API operations remain unavailable while Autopilot
 is engaged and the Autopilot AI never receives them. Dev mode transitions are unavailable while Autopilot is engaged. To inspect or cheat, the Session controller disengages Autopilot and waits for disengagement to complete.
 
-## Autopilot limits
+# Autopilot limits
 
 `session.autopilot.engage(autopilotAiId, limit)` engages Autopilot for the Current campaign. At most one
 Autopilot engagement may be active in a Session. The complete Autopilot limit inventory is:
@@ -216,7 +212,7 @@ engagement; a plan extending beyond the limit is carried forward in Autopilot me
 behavior belong outside gameplay resolution. The engine must not pass developer inspection, unrestricted saves,
 hidden command logs, or the Session controller's unrestricted conversation into the Autopilot AI context.
 
-## Autopilot lifecycle and concurrency
+# Autopilot lifecycle and concurrency
 
 `session.autopilot.getStatus(engagementId)` reports the Autopilot limit, Autopilot progress, and execution status to the Session
 controller. The complete disengagement reason inventory is limit reached, disengaged by controller, campaign ended, and AI
@@ -234,7 +230,7 @@ commits completely or fails without effects. Disengagement never implicitly adva
 committed actions. Failure of the AI follows the same boundary rule. Late responses from a completed Autopilot engagement
 cannot mutate Campaign state or write memory. History navigation remains available after disengagement.
 
-## Action history and turn navigation
+# Action history and turn navigation
 
 Action-history entries retain the ordered committed Player API and Developer API commands and sufficient inputs to
 restore or reproduce their results. Save operations, queries, Dev mode transitions, and Autopilot lifecycle
@@ -261,7 +257,7 @@ without changing the Session; no rewind penalty is added.
 
 History and Persistence owns restoration procedures and representation, not alternative navigation targets.
 
-## Continuation state
+# Continuation state
 
 For equal initial Campaign state, the same Game build, and the same ordered committed commands, execution must
 produce equal resulting Campaign state, generated Instance IDs, gameplay RNG state, and retained reports. Campaign
@@ -280,7 +276,7 @@ API commands are restored under history authority without granting Developer API
 Internal restoration may use snapshots or replay, provided observable results are equal. Engine internals for
 restoration must not become an Autopilot AI path to hidden information or arbitrary mutation.
 
-## Autopilot memory
+# Autopilot memory
 
 `autopilotMemory.read()` returns the active Autopilot AI's applicable Autopilot memory, or an explicit absence
 when none exists. `autopilotMemory.write(memory)` atomically replaces that Autopilot memory without changing
@@ -298,7 +294,7 @@ controller. Loaded saves restore applicable checkpoints. A live Autopilot engage
 not resumed on load. The Autopilot AI context must be recreated from permitted information and restored memory;
 stale external conversation from an undone future must not accompany a new Autopilot engagement.
 
-## Save and load
+# Save and load
 
 `session.campaigns.save()` writes the Current campaign to its Current save, replacing that save's contents. When the
 Current campaign has no Current save, it creates a new save and makes that the Current save.
@@ -313,14 +309,14 @@ contents atomically with no active Autopilot engagement and Dev mode disabled. S
 must never be exposed to Autopilot AI as readable gameplay information. Encoding, the save size limit, validation,
 and storage failure procedures belong to History and Persistence.
 
-## Derived value consistency
+# Derived value consistency
 
 Queries, Derived value calculations under Calculation Rules, and evaluation of Eligibility Rules must neither mutate
 Campaign state nor consume gameplay randomness.
 Caches must be updated or invalidated when their inputs change, including after restoration. Restored reports and
 Player-visible information must correspond to the restored cursor rather than a discarded future.
 
-## Information boundary
+# Information boundary
 
 Player API always exposes only Player-visible information. Developer API adds a distinct full-state inspection path
 for an authorized Session controller. The boundary applies to query results, action discovery, validation errors,
@@ -328,7 +324,7 @@ reports, subscriptions, and history metadata. Hidden identifiers and error detai
 Returned views must not provide mutable references into Campaign state. The engine guarantees the information it
 supplies to Autopilot AI; it cannot erase information independently disclosed by a human outside the API.
 
-## Committed state integrity
+# Committed state integrity
 
 Rejected requests leave Campaign state, gameplay RNG state, Instance ID generation state, reports, action history,
 and memory unchanged. Execution infrastructure may record a rejected attempt for Autopilot status and budgets;
@@ -336,7 +332,7 @@ that telemetry is not Campaign state. Intermediate processing must not be expose
 history navigation or load preserves the entire prior Session. Broken references or internal invariants are reported
 as engine/data defects rather than silently repaired into different gameplay outcomes.
 
-## Game build compatibility
+# Game build compatibility
 
 Backward compatibility and save migration across Game builds are not required. A Game build may reject incompatible
 saves. History and Persistence owns validation and incompatible-save handling. An unsuccessful load does not discard

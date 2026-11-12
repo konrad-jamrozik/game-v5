@@ -14,6 +14,15 @@ Define the progression graph and the lifecycle of Leads, separately from Investi
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification intends to refine Domain Model's lead and progression contract ([Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with prerequisite semantics,
+availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
+progression. Factions in turn uses this document's unlock effects. Initial Campaign Content supplies the actual lead
+graph and effect Game Data Records (GDRs) conforming to these rules. The expression and effect choices remain TODOs below.
+
+TODO: Specify Lead GDR, prerequisites, discovery, availability, blocking, repeatability, completion count, and unlock effect.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Factions](./factions.md)
@@ -30,32 +39,17 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-# Concepts and contract
-
-This specification intends to refine Domain Model's lead and progression contract ([Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with prerequisite semantics,
-availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
-progression. Factions in turn uses this document's unlock effects. Initial Campaign Content supplies the actual lead
-graph and effect Game Data Records (GDRs) conforming to these rules. The expression and effect choices remain TODOs below.
-
-TODO: Specify Lead GDR, prerequisites, discovery, availability, blocking, repeatability, completion count, and unlock effect.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Prerequisites and lifecycle
+# Prerequisites and lifecycle
 
 TODO: Specify prerequisite expression semantics, discovery, active/blocked/completed/historical states, and repeatability. Define blocking by active missions and completed objectives without relying on ID parsing.
 
-## Completion and unlock effects
+# Completion and unlock effects
 
 TODO: Define the supported effect kinds for information, agency/agent improvement, missions, faction progression, and campaign objectives. Reference the authoritative rules for each effect.
 
-## Progression GDR validation
+# Progression GDR validation
 
 TODO: Define valid references, handling of cycles and unreachable GDRs, repeatable chains, and when availability is recomputed.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

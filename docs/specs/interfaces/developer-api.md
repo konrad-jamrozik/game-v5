@@ -14,6 +14,16 @@ Define full Campaign state inspection and cheat-command details through Develope
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) and
+[Dev mode and developer operations](../foundation/engine-contract.md#dev-mode-and-developer-operations) with inspection
+schemas and cheat-command details. Session API controls Dev mode. Developer API exposes full Campaign state,
+including all Authoritative values, only to an authorized Session controller with Dev mode enabled and no active
+Autopilot engagement. Player API always exposes only Player-visible information; Autopilot AI never receives developer access.
+
+Engine Contract owns access transitions and high-level replay guarantees. Domain Model supplies inspected Campaign
+state and invariants. History and Persistence supplies restoration procedures, and TypeScript Player API supplies
+callable signatures and authorization results.
+
 # Relationships
 
 - Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
@@ -31,21 +41,7 @@ API surface and Principal terms are owned by the [Engine Contract glossary](../f
 
 TODO: Define inspection-specific terms without duplicating shared definitions.
 
-# Concepts and contract
-
-This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) and
-[Dev mode and developer operations](../foundation/engine-contract.md#dev-mode-and-developer-operations) with inspection
-schemas and cheat-command details. Session API controls Dev mode. Developer API exposes full Campaign state,
-including all Authoritative values, only to an authorized Session controller with Dev mode enabled and no active
-Autopilot engagement. Player API always exposes only Player-visible information; Autopilot AI never receives developer access.
-
-Engine Contract owns access transitions and high-level replay guarantees. Domain Model supplies inspected Campaign
-state and invariants. History and Persistence supplies restoration procedures, and TypeScript Player API supplies
-callable signatures and authorization results.
-
-# Requirements
-
-## Inspection contract
+# Inspection contract
 
 Full Campaign state inspection presents each Campaign instance as its four properties, Instance ID, Archetype
 reference, Constants, and State, as required by
@@ -56,13 +52,13 @@ TODO: Specify the complete detached, read-only Campaign state query schema throu
 Include all continuation inputs and distinguish full-state inspection from gameplay reveal conditions. Inspection
 must not expose mutable Campaign references or consume gameplay randomness.
 
-## Cheat command details
+# Cheat command details
 
 TODO: Specify `developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)`, with exact input Types,
 allowed ranges, initialization, validation, and effects. These required starter operations preserve model invariants
 and commit replayable action-history entries. Additional cheat operations use the same namespace and guarantees.
 
-## Isolation and history
+# Isolation and history
 
 TODO: Specify authorization failures and access revocation under Engine Contract. Recorded cheat restoration uses
 history authority and does not require Dev mode. Detailed restoration must preserve deterministic continuation

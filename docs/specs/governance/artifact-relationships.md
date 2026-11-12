@@ -40,16 +40,19 @@ Examples explain the model; they do not declare relationships for the named arti
 | DAG                   | A directed acyclic graph                                                                                                                                                             |
 | Implementation        | An executable artifact intended to satisfy a specification or requirement                                                                                                            |
 
-# Concepts and contract
-
-## Direction
+# Direction
 
 Every relationship is read as **Dependency → Dependent**.
 
 If A depends on B, B is the Dependency and A is the Dependent. The relationship runs `B → A`. Dependency and Dependent
 are the only terms for the two participating artifacts in this model.
 
-## Relationship kinds
+Every relationship must run `Dependency → Dependent`. The Dependent `follows`, `refines`,
+`uses`, `implements`, or `verifies` the Dependency. Do not reverse the relationship when presenting it in the other
+artifact's Relationships section. Do not enumerate a transitive relationship unless it also exists directly. An
+artifact must not depend on itself.
+
+# Relationship kinds
 
 Each Relationship kind describes how the Dependent relates to the Dependency.
 
@@ -65,7 +68,7 @@ Merely consuming a result is `uses`, not `refines`. An implementation can `imple
 does not implement its implementation. A test can `verify` a requirement without asserting that the test currently
 passes.
 
-## Choosing uses or refines
+# Choosing uses or refines
 
 For each proposed refinement, identify the parent contract and the additional detail about that same subject or
 behavior. Record both in the owning contract prose, linking to the relevant sections by title. Obeying an invariant,
@@ -90,7 +93,7 @@ Ownership pointers, migration records, and navigation links do not create depend
 can be interpreted without the linked rules. Conversely, calling a citation informative must not conceal substantive
 reliance on another contract.
 
-## Relationship graphs
+# Relationship graphs
 
 The `follows` graph and the `refines` graph must each be a DAG. Writing rules must not govern each other through a
 cycle, and refinements must not form a cycle of increasingly detailed definitions.
@@ -106,7 +109,7 @@ their independently supplied meanings, their supporting contract passages, and a
 exit criterion. Stub-based justifications remain provisional. The register reports relationships; it does not create
 them or authorize future contract changes.
 
-## Specification inventories
+# Specification inventories
 
 When present, the Relationships and Glossary H1 sections follow Overview in that order, and Glossary immediately
 follows Relationships when both are present. Relationships contains one flat unordered list, without tables or subsections. Each bullet
@@ -150,60 +153,51 @@ acknowledgements do not create relationships.
 Specification Conventions defines implicit relationships and their applicability. A citation, review order, or folder
 location does not create a relationship.
 
-# Requirements
-
-## Canonical model
+# Canonical model
 
 Every relationship must use the canonical terms Artifact, Relationship, Dependency,
 Dependent, and Relationship kind as defined by the Glossary. Each relationship must use exactly one of the five
 Relationship kinds and satisfy its permitted-artifact rules.
 
-## Identity
+# Identity
 
 Every explicit relationship must identify one Dependency, one Dependent, and one
 Relationship kind. Exact duplicates are invalid. Relationship inventories have no Scope field. Substantive constraints
 and requirement references belong in the owning contract prose; an artifact link alone must not imply reliance on
 every rule in that artifact.
 
-## Direction
-
-Every relationship must run `Dependency → Dependent`. The Dependent `follows`, `refines`,
-`uses`, `implements`, or `verifies` the Dependency. Do not reverse the relationship when presenting it in the other
-artifact's Relationships section. Do not enumerate a transitive relationship unless it also exists directly. An
-artifact must not depend on itself.
-
-## Flat inventories
+# Flat inventories
 
 Every registered specification must contain one flat directional list under
 Relationships, using the phrases, ordering, links, and empty-inventory sentence defined in Specification inventories.
 Tables, nested lists, annotations, and Dependencies/Dependents subsections are invalid.
 
-## Mirrored explicit relationships
+# Mirrored explicit relationships
 
 Every explicit entry must have one matching entry in the other artifact.
 The pair must resolve to the same Dependency, Dependent, and Relationship kind, with the reverse-facing phrase in
 the mirror. Implicit relationships are defined centrally and are not listed.
 
-## Relationship updates
+# Relationship updates
 
 Adding, changing, or removing an explicit relationship must update both entries.
 A missing or disagreeing entry is a documentation defect. Changes must preserve rule ownership and requirement
 traceability. Update the cycle register whenever a change introduces, alters, or removes a cycle.
 
-## Graph validity
+# Graph validity
 
 Validate each Relationship kind graph separately. Reject cycles in `follows` and
 `refines`, invalid artifacts, and self-relationships. The owning contracts of a `uses` cycle must identify distinct supplied meanings and must
 not leave a circular definition unresolved. A cycle containing different Relationship kinds is not by itself a defect.
 
-## Status and evidence
+# Status and evidence
 
 A relationship must not promote a Stub or Draft to Accepted. A refinement must
 identify the parent subject or behavior, the additional detail, and preservation of the Dependency's constraints.
 An intended Stub refinement must explicitly identify the detail still to be specified. An `implements` or `verifies` relationship must not be presented as evidence
 that implementation is complete or tests pass.
 
-## Adoption
+# Adoption
 
 New and existing registered specifications must use the flat directional format and applicable
 implicit relationships. Before acceptance, resolve relationship TODOs that affect the contract, verify mirrored entries,
@@ -229,7 +223,7 @@ check links, and validate the graphs. Do not invent implementation or test relat
 ## Classification cases
 
 The following table gives the complete expected classifications for this acceptance scenario. These cases exercise
-[Canonical model](#canonical-model), [Direction](#direction-1), and [Status and evidence](#status-and-evidence); they do not add relationships to the named documents.
+[Canonical model](#canonical-model), [Direction](#direction), and [Status and evidence](#status-and-evidence); they do not add relationships to the named documents.
 
 | Case                                                                                                                            | Expected classification and reason                                                                              |
 | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |

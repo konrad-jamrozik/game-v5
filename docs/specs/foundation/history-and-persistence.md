@@ -47,9 +47,7 @@ API surface and Principal terms and Turn-start checkpoint are owned by the
 | Save size limit              | The maximum size of one Campaign save on disk, fixed by the Game build.                                                                                                                                                                                      |
 | Baseline                     | The complete Campaign state at the earliest position a Campaign save can restore: the initial Campaign state, or the saved Campaign state when the save's action history was dropped.                                                                        |
 
-# Concepts and contract
-
-## Refined Engine Contract guarantees
+# Refined Engine Contract guarantees
 
 Session API selects the Current campaign under [Campaign lifecycle](engine-contract.md#campaign-lifecycle).
 This specification refines [Action history and turn navigation](engine-contract.md#action-history-and-turn-navigation),
@@ -70,7 +68,7 @@ Restoration must preserve [Campaign instances](campaign-modeling-contract.md#cam
 instance or restore earlier State; redo restores its Instance ID, Archetype, and Constants unchanged. Required
 historical records remain immutable even in an evolving collection. Restoration is not creation of a new occurrence.
 
-## Storage containers
+# Storage containers
 
 The following conceptual hierarchy shows ownership of persisted and runtime data. It is not a database schema, file
 format, or required class layout.
@@ -112,7 +110,7 @@ Global configuration is read when a Session starts, so its settings apply at the
 selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and Campaign saves do not
 contain it. Interface preferences such as volume, language, and tutorial popups belong to Global configuration.
 
-### Configuration cascade
+## Configuration cascade
 
 Three kinds of setting are distinct. Only the last two take part in the configuration cascade.
 
@@ -143,23 +141,21 @@ starting the game never fails because of an invalid stored value.
 Creating a Campaign does not change the stored new-Campaign defaults. The player changes them only through a separate,
 explicit action. Campaign-specific overrides of global preferences are out of scope.
 
-## Controller state
+# Controller state
 
 Autopilot memory is isolated by Campaign, Autopilot AI identity, history position, and timeline
 branch. Restoration must not supply memory or external conversation from an undone future. Developer API commands
 follow the same deterministic replay guarantees as Player API commands. Dev mode is Session authority and must not
 be restored from action history or saves.
 
-# Requirements
-
-## Undo and redo
+# Undo and redo
 
 TODO: Specify storage and restoration procedures for atomic Player API and Developer API action-history entries,
 complete continuation state, memory checkpoints, and retained redo continuation under Engine Contract.
 Represent Turn-start checkpoints using
 Engine Contract navigation targets; individual actions remain separate history entries within an Autopilot engagement.
 
-### Save size limit
+## Save size limit
 
 Undo and redo history in the Session has no turn limit. The Save size limit is a safety measure against unbounded
 disk use rather than a gameplay rule; no rewind penalty is added.
@@ -181,7 +177,7 @@ The Save size limit is 100 MiB. If a Campaign save would exceed the limit even w
 operation fails: no Campaign save is written or changed, the Current save is unchanged, and the Session keeps its
 Current campaign and history.
 
-## Replay and persistence
+# Replay and persistence
 
 TODO: Specify save encoding, load validation, and replay procedures under
 [Save and load](engine-contract.md#save-and-load) and
@@ -189,7 +185,7 @@ TODO: Specify save encoding, load validation, and replay procedures under
 the history cursor, retained undo/redo continuation, and Autopilot memory checkpoints. Failed load preserves the
 prior Session; successful load has no active Autopilot engagement and Dev mode disabled.
 
-## Campaign configuration persistence
+# Campaign configuration persistence
 
 Campaign configuration is Campaign state under [World state and Campaign configuration](core-concepts.md#world-state-and-campaign-configuration).
 Saving must retain its committed values together with World state. Successful load restores the selected Campaign's

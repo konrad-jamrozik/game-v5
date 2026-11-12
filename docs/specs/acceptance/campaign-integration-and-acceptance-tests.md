@@ -26,6 +26,16 @@ This is currently a stub: the concrete test cases await the detailed rules and G
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification uses Initial Campaign Content for reproducible inputs, Turn Resolution for effect timing, and History and
+Persistence for continuation scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
+under test. Specific checked requirements acquire implicit verifies relationships when scenarios identify them;
+these document-level uses entries do not claim that tests already exist or pass.
+
+TODO: Specify Scenario fixture, game revision when needed for reproducibility, seed or RNG state, command sequence,
+expected state/view, and requirement reference.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
@@ -45,21 +55,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 | End-to-end test  | A test that exercises a player flow through an interface and checks its resulting Player-visible information and game effects                                                  |
 | Acceptance test  | A test that checks whether behavior satisfies referenced specification [requirements](../governance/spec-conventions.md#glossary); it can be an integration or end-to-end test |
 
-# Concepts and contract
-
-This specification uses Initial Campaign Content for reproducible inputs, Turn Resolution for effect timing, and History and
-Persistence for continuation scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
-under test. Specific checked requirements acquire implicit verifies relationships when scenarios identify them;
-these document-level uses entries do not claim that tests already exist or pass.
-
-TODO: Specify Scenario fixture, game revision when needed for reproducibility, seed or RNG state, command sequence,
-expected state/view, and requirement reference.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Deterministic fixtures
+# Deterministic fixtures
 
 Determinism is required only within one implementation and Game build under
 [Continuation state](../foundation/engine-contract.md#continuation-state). Acceptance tests therefore assert replay
@@ -69,17 +65,15 @@ TODO: Define scenario IDs, exact starting state, GDR fixture, injected random ou
 to owning requirements. Record the game revision when needed for reproducibility. Identify any test-only reduced scenario
 explicitly.
 
-## Integration scenarios
+# Integration scenarios
 
 TODO: Cover resource allocation, transit, investigation uncertainty/abandonment, deadline pressure, transport contention, partial-success missions, faction escalation/suppression, and campaign endings.
 
-## Interface flows and history
+# Interface flows and history
 
 TODO: Cover equivalent API/CLI/web actions, player/dev visibility, invalid-action atomicity, replay, save/load, undo/redo,
 and branching. Identify which cases run through the API and which need CLI or browser interaction. Keep strategic
 playtesting observations separate from exact expected-result checks.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 

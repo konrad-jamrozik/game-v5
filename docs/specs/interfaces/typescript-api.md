@@ -14,30 +14,6 @@ Define exact callable TypeScript signatures for Session API, Player API, Develop
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-# Relationships
-
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Developer API](./developer-api.md)
-- Uses [Domain Model](../foundation/domain-model.md)
-- Uses [History and Persistence](../foundation/history-and-persistence.md)
-- Uses [Player Information](./player-information.md)
-- Refines [Engine Contract](../foundation/engine-contract.md)
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
-- Used by [Developer API](./developer-api.md)
-- Used by [Terminal CLI](./cli.md)
-- Used by [Web UI](./web-ui.md)
-
-# Glossary
-
-API surface and Principal terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
-Shared modeling and Session terms are owned by [Core Concepts](../foundation/core-concepts.md#glossary).
-Campaign-specific composition terms are owned by [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md#glossary).
-
-TODO: Define signature-specific terms here without duplicating shared definitions.
-
-# Concepts and contract
-
 This specification refines [API hierarchy](../foundation/engine-contract.md#api-hierarchy),
 [Campaign lifecycle](../foundation/engine-contract.md#campaign-lifecycle),
 [Autopilot limits](../foundation/engine-contract.md#autopilot-limits), and
@@ -62,9 +38,29 @@ its earlier State does not itself create a new Campaign instance. Public restora
 [References](../foundation/campaign-modeling-contract.md#references) and
 [Historical fact preservation](../foundation/campaign-modeling-contract.md#historical-fact-preservation).
 
-# Requirements
+# Relationships
 
-## Functions and types
+- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Developer API](./developer-api.md)
+- Uses [Domain Model](../foundation/domain-model.md)
+- Uses [History and Persistence](../foundation/history-and-persistence.md)
+- Uses [Player Information](./player-information.md)
+- Refines [Engine Contract](../foundation/engine-contract.md)
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
+- Used by [Developer API](./developer-api.md)
+- Used by [Terminal CLI](./cli.md)
+- Used by [Web UI](./web-ui.md)
+
+# Glossary
+
+API surface and Principal terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
+Shared modeling and Session terms are owned by [Core Concepts](../foundation/core-concepts.md#glossary).
+Campaign-specific composition terms are owned by [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md#glossary).
+
+TODO: Define signature-specific terms here without duplicating shared definitions.
+
+# Functions and types
 
 TODO: Specify exact signatures for Engine Contract's required starter operations in all four namespaces. Define
 argument Types, return Types, structured errors, and scoped access validity. Cover action-level and turn-level
@@ -72,7 +68,7 @@ history navigation, all three Autopilot limits, engine-enforced disengagement re
 Define operation availability without a Current campaign and handle invalidation after creation or load.
 Clarify sync/async behavior; this API does not inherently require HTTP.
 
-## Command semantics
+# Command semantics
 
 TODO: Specify eligibility, atomic batch behavior, stale-input handling, and returned effects by referencing owning
 mechanics and Engine Contract. Rejected actions and actions with no effect follow Engine Contract history and
@@ -83,7 +79,7 @@ stale action submissions and memory writes after termination. Failure must not s
 the Current campaign. Define Autopilot AI identity and how a configured Autopilot AI is selected without coupling
 gameplay resolution to model providers.
 
-## Client boundaries
+# Client boundaries
 
 TODO: Define detached Player API and Developer API results, revision handling, refresh behavior, and authorization
 errors. Full Campaign state is available only through authorized Developer API inspection. Player API visibility

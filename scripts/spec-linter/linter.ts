@@ -40,7 +40,6 @@ import type {
 const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
 const CONVENTIONS_PATH = 'docs/specs/governance/spec-conventions.md'
-const GOVERNANCE_LAYOUT_EXCEPTIONS = new Set(['CONV', 'INDEX'])
 const ALLOWED_STATUSES: ReadonlySet<string> = new Set(['Stub', 'Draft', 'Accepted', 'Superseded'])
 const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Governance',
@@ -51,16 +50,9 @@ const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Acceptance',
   'Guidance',
 ])
-const RULE_HEADINGS = [
-  'Overview',
-  'Relationships',
-  'Glossary',
-  'Concepts and contract',
-  'Requirements',
-  'Edge cases and failure behavior',
-  'Acceptance examples',
-  'Open decisions',
-]
+const FRAMING_HEADINGS = ['Overview', 'Relationships', 'Glossary']
+const CLOSING_HEADINGS = ['Edge cases and failure behavior', 'Acceptance examples', 'Open decisions']
+const GENERIC_TOPIC_HEADINGS = /^(?:Concepts and contract|Concepts|Contract|Requirements|Details|Specification)$/i
 const REMOVED_HEADINGS =
   /^(?:Terms|Terminology|Vocabulary|Background references?|Downstream ownership(?: \(informative\))?|Source basis)(?: \(informative\))?$/i
 const PROHIBITED_RELATIONSHIP_TERMS = /\b(?:source|target|upstream|downstream|dependee|inbound|outbound|edge|node)\b/i
@@ -628,39 +620,45 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
       if (heading) validateSectionContent(specification, heading, diagnostics)
     }
 
-    if (specification.id && !GOVERNANCE_LAYOUT_EXCEPTIONS.has(specification.id)) {
-      const topLevel = h1s.slice(1)
-      const actual = topLevel.map(headingText)
-      const requiredHeadings = RULE_HEADINGS.filter((text) => text === 'Overview' || actual.includes(text))
-      const positions = requiredHeadings.map((text) => actual.indexOf(text))
-      const valid = positions.every(
-        (position, index) => position >= 0 && (index === 0 || position > (positions[index - 1] ?? -1)),
-      )
-      if (!valid) {
+    const topLevel = h1s.slice(1)
+    const category = (text: string): number => {
+      if (FRAMING_HEADINGS.includes(text)) return 0
+      if (CLOSING_HEADINGS.includes(text)) return 2
+      if (text.startsWith('Appendix')) return 3
+      return 1
+    }
+    let previousCategory = 0
+    let previousClosing = -1
+    let orderReported = false
+    for (const heading of topLevel) {
+      const text = headingText(heading)
+      const current = category(text)
+      const closing = CLOSING_HEADINGS.indexOf(text)
+      const outOfOrder = current < previousCategory || (closing >= 0 && closing <= previousClosing)
+      if (outOfOrder && !orderReported) {
+        orderReported = true
         addDiagnostic(
           diagnostics,
           specification.path,
-          topLevel[0],
-          'SPEC209',
-          `Standard specifications must use this H1 order: ${requiredHeadings.join(' -> ')}.`,
+          heading,
+          current === 3 || previousCategory === 3 ? 'SPEC210' : 'SPEC209',
+          'H1 sections must follow this order: Overview, Relationships, Glossary, topic sections, ' +
+            CLOSING_HEADINGS.join(', ') +
+            ', appendices.',
         )
       }
-      for (const sectionName of RULE_HEADINGS.slice(3)) {
-        const heading = findHeading(specification.document, 1, sectionName)
-        if (heading) validateSectionContent(specification, heading, diagnostics)
+      previousCategory = Math.max(previousCategory, current)
+      if (closing >= 0) previousClosing = Math.max(previousClosing, closing)
+      if (current === 1 && GENERIC_TOPIC_HEADINGS.test(text)) {
+        addDiagnostic(
+          diagnostics,
+          specification.path,
+          heading,
+          'SPEC212',
+          `Topic heading "${text}" is generic; name the section after its subject.`,
+        )
       }
-      const openIndex = actual.indexOf('Open decisions')
-      for (let index = 0; index < actual.length; index += 1) {
-        if (actual[index]?.startsWith('Appendix') && index < openIndex) {
-          addDiagnostic(
-            diagnostics,
-            specification.path,
-            topLevel[index],
-            'SPEC210',
-            'Appendices must appear after Open decisions.',
-          )
-        }
-      }
+      if (current === 1 || current === 2) validateSectionContent(specification, heading, diagnostics)
     }
   }
 }
@@ -1151,17 +1149,15 @@ function validateLifecycleAndSections(parsed: ParsedInput, diagnostics: Diagnost
           'Accepted specifications must not contain unresolved work beginning "TODO:".',
         )
       }
-      if (specification.id && !GOVERNANCE_LAYOUT_EXCEPTIONS.has(specification.id)) {
-        const open = findHeading(specification.document, 1, 'Open decisions')
-        if (open) {
-          addDiagnostic(
-            diagnostics,
-            specification.path,
-            open,
-            'SPEC605',
-            'Accepted standard specifications must not contain Open decisions.',
-          )
-        }
+      const open = findHeading(specification.document, 1, 'Open decisions')
+      if (open) {
+        addDiagnostic(
+          diagnostics,
+          specification.path,
+          open,
+          'SPEC605',
+          'Accepted specifications must not contain Open decisions.',
+        )
       }
     }
   }

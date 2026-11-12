@@ -45,9 +45,7 @@ constraints are specified under [Campaign instances](#campaign-instances).
 - **Template:** use GDR when naming immutable game data, and Archetype when naming its campaign composition role. Describe initialization directly.
 - **Definition:** this is not a modeling category or a synonym for Type or GDR. Ordinary prose may discuss a term's definition.
 
-# Concepts and contract
-
-## Campaign data integrity refinement
+# Campaign data integrity refinement
 
 This document refines [Campaign data integrity](engine-contract.md#campaign-data-integrity),
 [Continuation state](engine-contract.md#continuation-state), and
@@ -56,7 +54,7 @@ composition, initialization, identity, reference, and historical-preservation co
 committed mutations, and restoration must preserve. It supplies campaign modeling detail without defining API authority
 or execution sequencing. Core Concepts supplies the shared vocabulary used to express these constraints.
 
-## Campaign initialization
+# Campaign initialization
 
 Campaign initialization receives setup inputs, immutable Game Data Records (GDRs), and the Ruleset supplied by the
 Game build, and produces the initial Campaign state from them. GDRs supply data; Rules specify calculations and
@@ -64,9 +62,9 @@ permitted behavior, and Creation Rules specify which Campaign instances the init
 [Campaign instance creation](#campaign-instance-creation). A GDR is not a Rule. Exact starting data and balance
 values are outside this document's ownership. Session lifecycle and publication of Committed state belong to Engine Contract.
 
-## Campaign instances
+# Campaign instances
 
-### Campaign instance structure
+## Campaign instance structure
 
 A Campaign instance Type always has exactly four properties: Instance ID, an Archetype reference, Constants, and State.
 Every Campaign instance has exactly these four properties. The singleton Agency is not exempt: its Archetype reference
@@ -81,7 +79,7 @@ removed or weakened as an implementation detail.
 Developer API full Campaign state inspection presents each Campaign instance as its Instance ID, Archetype reference,
 Constants, and State. How an implementation stores Campaign instances internally is the implementer's choice.
 
-### Campaign instance creation
+## Campaign instance creation
 
 Creation of a Campaign instance, during campaign initialization or gameplay, is specified by a Creation Rule, under
 [Rule kinds](core-concepts.md#rule-kinds) in Core Concepts, owned by the specification that owns the creating
@@ -94,12 +92,12 @@ state. Every newly created Campaign instance has a fresh Instance ID under
 [Campaign instance identity](#campaign-instance-identity). Which code creates Campaign instances, and what that code
 receives, is left to the implementer.
 
-### Campaign instance identity
+## Campaign instance identity
 
 Instance IDs are unique within their explicitly declared scope and stable for the Campaign instance’s lifetime.
 Restoration, including undo/redo, preserves identity and immutable facts; uniqueness applies within the Campaign’s current timeline, excluding discarded futures.
 
-## References
+# References
 
 References identify a particular target and its expected Type. In Committed state, Campaign instance references must resolve
 within the same Campaign; GDR references identify the GDR ID and must resolve against the current Game build.
@@ -108,7 +106,7 @@ Required historical references remain resolvable. Relationships must not be infe
 References that can change belong in State; fixed references belong in Constants. Instance ID and the Archetype reference
 are separate immutable properties. Reference mutability is independent of the target’s mutability.
 
-## Value classification
+# Value classification
 
 Authoritative value and Derived value, including their independence from mutability, caching, and player visibility,
 are defined in [Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. Each specification using these
@@ -121,7 +119,7 @@ Lead is a Derived value: count the Investigation Campaign instances whose Lead r
 that Lead GDR and whose lifecycle property has the value Completed. The count for lead_1 is 1 after investigation_2 completes; investigation_1’s Abandoned lifecycle
 excludes it. No separate completion record or stored Authoritative completion count is required.
 
-## Historical fact preservation
+# Historical fact preservation
 
 A past value cannot always be recovered from its current replacement. For example, a report that needs enemy_1's original
 health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
@@ -138,7 +136,7 @@ retained references must be preserved under [Campaign instances](#campaign-insta
 An evolving collection can contain immutable historical records: adding a Battle result does not permit rewriting
 an earlier retained Battle result.
 
-## Purposes of GDRs
+# Purposes of GDRs
 
 GDRs can serve the following five purposes. The purposes can overlap; they do not define separate Types or required
 implementation interfaces. The following sections illustrate each purpose.
@@ -151,7 +149,7 @@ implementation interfaces. The following sections illustrate each purpose.
 | Referenced GDR         | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                     | An Investigation holds a reference to the Lead GDR it pursues.                               |
 | Key for campaign facts | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                        | The engine records completions against a Lead GDR’s identity.                                |
 
-## GDR purpose: initialization source
+# GDR purpose: initialization source
 
 Consider an illustrative Creation Rule for the Agency with starting money:
 
@@ -184,7 +182,7 @@ flowchart LR
 If an expense later reduces Agency money to 90, the engine reads 90 from the Agency Campaign instance’s State.
 The starting-money GDR still contains the initial value of 100.
 
-## GDR purpose: calculation parameter
+# GDR purpose: calculation parameter
 
 Consider an illustrative upkeep calculation for agents serving in a campaign. Its complete local setup is:
 
@@ -214,7 +212,7 @@ flowchart LR
     Update -->|included when turn advancement completes| Committed["New Committed state"]
 ```
 
-## GDR purpose: archetype
+# GDR purpose: archetype
 
 Consider an illustrative creation of two Enemy Campaign instances whose Archetype is the same Thug GDR:
 
@@ -239,7 +237,7 @@ flowchart LR
     Thug -->|Archetype and initial health| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: health 10"]
 ```
 
-## GDR purpose: referenced GDR
+# GDR purpose: referenced GDR
 
 When serving the Referenced GDR purpose, a GDR is referenced by a Campaign instance other than as its Archetype.
 Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
@@ -286,7 +284,7 @@ Both Investigations can share lead_1 without sharing progress. Retargeting inves
 would violate its fixed facts. Using lead_1 as its archetype would fail the expected InvestigationArchetype reference,
 regardless of whether some properties match.
 
-## GDR purpose: key for campaign facts
+# GDR purpose: key for campaign facts
 
 When serving the Key for campaign facts purpose, a GDR’s identity associates campaign-specific facts with that GDR. The facts belong to Campaign state;
 the GDR remains shared and immutable.

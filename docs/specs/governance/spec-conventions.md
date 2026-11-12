@@ -72,6 +72,17 @@ A Persona describes what a participant does with the game, independently of whet
 it; in this project, LLM-based agents fill the Implementer Persona. One participant may fill several Personas. A Persona
 grants no engine API authority. Most Personas write specifications within their area, following these conventions.
 
+The following table is the exhaustive set of Personas:
+
+| Persona          | Filled by    | What the Persona does                                                                                                                             | Primary specifications                                                                                                                                                                                                                                                    |
+| ---------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Engine designer  | Human        | Designs the engine and every Rule, decides which Rule inputs GDRs supply and so become content, and establishes these specification conventions.  | Foundation and Mechanics specifications, Governance specifications, and the [Game Design Brief](../../game-design-brief.md)                                                                                                                                               |
+| Content designer | Human or LLM | Authors GDRs, including the initial campaign content and in-game encyclopedia articles, within the Types the Engine designer exposes for content. | The GDR Types and their permitted values, and [Initial Campaign Content](../content/initial-campaign.md)                                                                                                                                                                  |
+| UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                      | [Player Information](../interfaces/player-information.md), [Web UI](../interfaces/web-ui.md), [Terminal CLI](../interfaces/cli.md), and [TypeScript Player API](../interfaces/typescript-api.md)                                                                          |
+| AI designer      | Human or LLM | Designs an AI that plays the game, such as an Autopilot AI.                                                                                       | [Player Information](../interfaces/player-information.md), [TypeScript Player API](../interfaces/typescript-api.md), [Engine Contract](../foundation/engine-contract.md) for Player API and Autopilot memory API, and [Turn Resolution](../foundation/turn-resolution.md) |
+| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                      | Every specification's contracts, Guidance specifications, and the repository verification instructions                                                                                                                                                                    |
+| Player           | Human or LLM | Plays the game.                                                                                                                                   | Player-facing documentation and the in-game encyclopedia, which are not specifications                                                                                                                                                                                    |
+
 ## Status
 
 Use one of these statuses in the metadata table:
@@ -331,29 +342,32 @@ unresolved decisions rather than filling them with assumptions.
 
 # Predictable layout and allowed variation
 
-Rule specifications use the following top-level headings in this order. Overview is required; every other section
-is present only when it applies to the document:
+A specification has three parts, in this order:
 
-1. `# Overview`, explaining the document's purpose and scope
-2. `# Relationships`, containing the flat directional inventory
-3. `# Glossary`
-4. `# Concepts and contract`
-5. `# Requirements`
-6. `# Edge cases and failure behavior`
-7. `# Acceptance examples`
-8. `# Open decisions`, containing only substantive unresolved design choices
+1. Framing sections:
+   1. `# Overview`, explaining the document's purpose and scope
+   2. `# Relationships`, containing the flat directional inventory
+   3. `# Glossary`
+2. Topic sections: one or more H1 sections, each named after a subject the specification owns; for example,
+   `# Rule kinds` or `# Agent recovery`. Topic sections state the specification's definitions, Rules, requirements, and
+   constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
+3. Closing sections:
+   1. `# Edge cases and failure behavior`
+   2. `# Acceptance examples`
+   3. `# Open decisions`, containing only substantive unresolved design choices
 
-Use a metadata table immediately below the document-title H1. Major sections are unnumbered H1 headings. Subsections may
-nest from H2 through H6 when the hierarchy requires it, without skipping a heading level. Appendices follow Open
-decisions.
+Overview is required. Every other section is present only when it applies to the document. Appendices follow the
+closing sections.
 
-Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both use the universal Overview, Relationships, and Glossary sequence, but they may replace the remaining standard rule-specification sections with governance-specific H1 sections.
+Use a metadata table immediately below the document-title H1. All sections are unnumbered H1 headings. Subsections may
+nest from H2 through H6 when the hierarchy requires it, without skipping a heading level.
 
-For example, a specification may interweave identified requirements into the narrative under Concepts and contract
-and omit the separate Requirements section, or embed illustrative examples beside the concepts they explain and omit
-the separate Acceptance examples section. Do not maintain a second statement of a contract merely to populate a
-section. Whether a section applies, and whether embedded examples explain the contracts adequately, are semantic review
-concerns; the linter checks section order and content, not applicability.
+Name a topic section after its subject, never after its role in the document. Generic topic headings, for example
+"Concepts and contract", "Requirements", "Details", or "Specification", are prohibited. State a requirement in the topic
+it constrains rather than in a separate collection. An example may sit beside the concept it illustrates instead of
+under Acceptance examples. Do not state a contract twice merely to populate a section. Whether a section applies, and
+whether embedded examples explain the contracts adequately, are semantic review concerns; the linter checks the order
+and content of framing and closing sections, not applicability.
 
 ## Handling sections that do not apply
 
@@ -365,7 +379,7 @@ mechanics specification can have no public function signatures while still defin
 
 ## Specialized material
 
-Add domain-specific subsections under the closest shared heading. Examples of useful content shapes within a Family follow; these are not additional metadata categories or directories.
+Give each specialized subject its own topic section, or a subsection of the closest topic. The following shapes are common within a Family; they are not additional metadata categories or directories.
 
 | Specialized material | Examples of subsections                    |
 | -------------------- | ------------------------------------------ |
@@ -373,7 +387,7 @@ Add domain-specific subsections under the closest shared heading. Examples of us
 | Numeric contracts    | Representation; rounding; test vectors     |
 | API contracts        | Functions; preconditions; results          |
 
-Long supporting tables may use descriptive appendices after Open decisions. State whether an appendix is normative or informative. Do not add unrelated top-level categories for a unique feature. If a section repeatedly outgrows its specification, split it into an indexed specification with clear ownership.
+Long supporting tables may use descriptive appendices after the closing sections. State whether an appendix is normative or informative. If a topic repeatedly outgrows its specification, split it into an indexed specification with clear ownership.
 
 # Writing exact requirements
 
@@ -386,7 +400,7 @@ they are not requirement-reference labels.
 
 A section may combine complete obligations with explanation and clearly identified examples in a flowing narrative.
 State general constraints explicitly; example-specific choices must not silently become universal rules. Requirements
-may be embedded in the narrative or grouped under Requirements. Follow the normal heading hierarchy and give sections
+belong in the topic sections they constrain. Follow the normal heading hierarchy and give sections
 distinct, descriptive titles within their document so references are unambiguous.
 
 Reference a requirement or other specification section with a Markdown hyperlink whose visible text is the exact

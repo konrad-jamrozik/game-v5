@@ -25,16 +25,14 @@ Campaign data integrity and continuation guarantees remain owned by Engine Contr
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Gameplay function | Implementation code that applies gameplay Rules while executing a committed Player API or Developer API action, including code that creates Campaign instances. |
 
-# Concepts and contract
-
-## Dependency direction
+# Dependency direction
 
 Gameplay functions must receive only the inputs and dependencies they need; they must not reach any other part of
 Campaign state, directly or indirectly. This includes the code that creates Campaign instances during gameplay.
 Campaign instances must not hold references to the Campaign state that contains them. These restrictions exclude
 campaign creation, save/load, and external engine interfaces, which may access complete Campaign state.
 
-## Supported observable contract
+# Supported observable contract
 
 **Informative rationale:** Narrow inputs make it easy to see which values a Rule consults, so an implementation can
 check that every such value is part of Campaign state. The observable property this supports, that execution has no

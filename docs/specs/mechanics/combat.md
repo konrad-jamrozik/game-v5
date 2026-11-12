@@ -14,6 +14,14 @@ Define fully automatic battles and their reproducible results independently of c
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
+This specification intends to refine Domain Model's combatant and battle-result contract ([Attribute bounds](../foundation/domain-model.md#attribute-bounds)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with battle transitions,
+calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
+and draws. The combat decisions below remain TODOs; campaign consequences remain owned by Missions.
+
+TODO: Specify Combatant, weapon, effective skill, combat rating, round, attack, damage, incapacitation, retreat, and Battle result.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
 # Relationships
 
 - Uses [Agents](./agents.md)
@@ -28,31 +36,17 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
 
-# Concepts and contract
-
-This specification intends to refine Domain Model's combatant and battle-result contract ([Attribute bounds](../foundation/domain-model.md#attribute-bounds)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with battle transitions,
-calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
-and draws. The combat decisions below remain TODOs; campaign consequences remain owned by Missions.
-
-TODO: Specify Combatant, weapon, effective skill, combat rating, round, attack, damage, incapacitation, retreat, and Battle result.
-Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
-appropriate to this document.
-
-# Requirements
-
-## Battle flow
+# Battle flow
 
 TODO: Specify initial snapshots, participation, round/side order, initiative, targeting, ties, and when changed attributes affect subsequent actions.
 
-## Combat calculations
+# Combat calculations
 
 TODO: Specify combat-rating, hit/contest, damage, exhaustion, experience, and casualty formulas. Define random draw sites and reference NUMRNG conventions.
 
-## Termination and results
+# Termination and results
 
 TODO: Specify victory, retreat, wipe, non-progress/stalemate handling, final injuries and experience, and output needed for partial-success calculation. Campaign rewards belong to MISSION.
-
-TODO: Write concrete requirements under descriptive section titles when rules replace these placeholders.
 
 # Edge cases and failure behavior
 
