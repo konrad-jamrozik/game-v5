@@ -119,16 +119,16 @@ Constants, and State. How an implementation stores Campaign instances internally
 ## Campaign instance creation
 
 Creation of a Campaign instance, during campaign initialization or gameplay, is specified by a Creation Rule, under
-[Rule kinds](core-concepts.md#rule-kinds) in Core Concepts and
-[Rule kind obligations](../governance/spec-conventions.md#rule-kind-obligations) in Specification Conventions, owned by
-the specification that owns the creating behavior. The Creation Rule states when the Campaign instance is created, its Type, and the initial values of its
+[Rule kinds](core-concepts.md#rule-kinds) in Core Concepts, owned by the specification that owns the creating
+behavior. The Creation Rule states when the Campaign instance is created, its Type, and the initial values of its
 Archetype reference, Constants, and State, together with the source of each value; for example, a named GDR or a
 value in Campaign state. The initial values need not all come from the Campaign instance's Archetype: a Creation Rule
 may take some of them from another GDR, such as one serving the Initialization source purpose or a
 Referenced GDR (for example, the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign
 state. Every newly created Campaign instance has a fresh Instance ID under
 [Campaign instance identity](#campaign-instance-identity). Which code creates Campaign instances, and what that code
-receives, is left to the implementer.
+receives, is left to the implementer: a Creation Rule does not state that code, its signature, or its dependencies. It
+states the resulting facts instead, for example which Campaign instance owns the new one.
 
 ## Campaign instance identity
 

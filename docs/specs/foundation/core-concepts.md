@@ -12,8 +12,8 @@
 
 This document defines the shared language for the complete game contract, spanning campaign data and engine execution. It
 owns the meanings of its glossary terms independently of the contracts that use them. It does not define API authority,
-campaign-data composition, Session lifecycle, gameplay mechanics, persistence procedures, interface behavior, or what a
-specification stating a Rule must state.
+campaign-data composition, Session lifecycle, gameplay mechanics, persistence procedures, or interface behavior. It
+owns the Rule kinds classification, including what a specification stating a Rule of each Rule kind must state.
 
 # Relationships
 
@@ -94,6 +94,11 @@ Classifications of a value or piece of information, independent of where it live
 | Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
 
+## Rejected terms and synonyms
+
+- **Rule role, Rule type, Rule category:** use Rule kind when classifying a Rule. GDR purposes in Campaign Modeling
+  Contract are a separate classification of GDRs.
+
 # Vocabulary and contract ownership
 
 Type and Property describe data independently of a programming language. Rule and Ruleset describe permitted behavior;
@@ -104,22 +109,26 @@ More detailed constraints belong to the specifications using that vocabulary.
 # Rule kinds
 
 Every Rule has exactly one Rule kind. Rule kinds exist only because each carries a different contract: the kind
-determines what a specification stating the Rule must state, as listed in
-[Rule kind obligations](../governance/spec-conventions.md#rule-kind-obligations) in Specification Conventions. The
-following table is the exhaustive set of Rule kinds.
+determines what a specification stating the Rule must state. A specification stating a Rule must identify its Rule kind
+and state every item that Rule kind requires in the following table, which is the exhaustive set of Rule kinds.
 
-| Rule kind   | Relationship to Campaign state                                                | Example                                                                                            |
-| ----------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Calculation | Changes nothing; produces a Derived value from Authoritative values and GDRs. | Upkeep for one turn equals the rate multiplied by the serving-agent count.                         |
-| Eligibility | Changes nothing; decides whether a player action is permitted.                | Illustratively, not a selected gameplay rule: an Agent In transit cannot be assigned to a Mission. |
-| Effect      | Changes existing Campaign state.                                              | Deduct upkeep from Agency money.                                                                   |
-| Creation    | Adds new data to Campaign state, identified by a fresh Instance ID.           | Starting an Investigation creates one with progress 0.                                             |
-| Invariant   | Changes nothing; constrains every Committed state.                            | At most one Active Investigation per Lead.                                                         |
+| Rule kind   | Relationship to Campaign state                                                | What a specification must state                                                                                                                                | Example                                                                                            |
+| ----------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Calculation | Changes nothing; produces a Derived value from Authoritative values and GDRs. | Its inputs and formula. A Calculation Rule never changes Campaign state.                                                                                       | Upkeep for one turn equals the rate multiplied by the serving-agent count.                         |
+| Eligibility | Changes nothing; decides whether a player action is permitted.                | The condition, and what the player observes when it fails. A rejected action changes nothing.                                                                  | Illustratively, not a selected gameplay rule: an Agent In transit cannot be assigned to a Mission. |
+| Effect      | Changes existing Campaign state.                                              | When it applies, which values change, and by how much.                                                                                                         | Deduct upkeep from Agency money.                                                                   |
+| Creation    | Adds new data to Campaign state, identified by a fresh Instance ID.           | When it applies, the Type of the new data, the initial value of each of its properties and the source of each value, and that it receives a fresh Instance ID. | Starting an Investigation creates one with progress 0.                                             |
+| Invariant   | Changes nothing; constrains every Committed state.                            | The condition and its scope. A violation is an engine or data defect, not a gameplay outcome.                                                                  | At most one Active Investigation per Lead.                                                         |
 
 A Rule is named after its kind, for example a Calculation Rule or a Creation Rule. One mechanic usually combines
 several Rules of different kinds. For example, starting an Investigation combines an Eligibility Rule deciding whether
 it may start, a Creation Rule adding the Investigation, and an Effect Rule changing the participating agents' Current
 assignments.
+
+Creating data also changes Campaign state, but Creation is separate from Effect because a Creation Rule carries
+obligations an Effect Rule does not: a fresh Instance ID, and an initial value with its source for every property of
+the new data. [Campaign instance creation](./campaign-modeling-contract.md#campaign-instance-creation) in Campaign
+Modeling Contract applies these obligations to all four properties of each new Campaign instance.
 
 ## Properties that are not Rule kinds
 

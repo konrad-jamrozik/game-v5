@@ -310,7 +310,6 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Build                                                   | [Game build](../foundation/core-concepts.md#glossary)                                                                               | Naming the version of the game's supplied data and executable logic; ordinary build-tool operations retain their meaning.                                                                            |
 | ID                                                      | [Instance ID](../foundation/core-concepts.md#glossary)                                                                              | Identifying a Campaign instance; GDR identifiers, document Spec IDs, and other identifiers retain their own descriptions.                                                                            |
 | Relationship type                                       | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                                                          |
-| Rule role; Rule type; Rule category                     | [Rule kind](../foundation/core-concepts.md#glossary)                                                                                | Classifying a Rule; GDR purposes in Campaign Modeling Contract are a separate classification of GDRs.                                                                                                |
 | Assignment                                              | [Current assignment](../foundation/domain-model.md#glossary)                                                                        | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                                                                       |
 | Participation; agent history                            | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Referring to retained participation records, rather than the act of participating or an Agent's broader career.                                                                                      |
 | Campaign instance kind                                  | [Type](../foundation/core-concepts.md#glossary)                                                                                     | Describing a category of Campaign instances.                                                                                                                                                         |
@@ -351,30 +350,6 @@ which values affect current gameplay versus serve only historical explanation. C
 these dimensions differ within one Campaign instance. Link to the owning specification for details; explicitly retain
 unresolved decisions rather than filling them with assumptions.
 
-## Rule kind obligations
-
-A specification stating a Rule must identify its Rule kind and state every item that Rule kind requires in the
-following table. The meaning of each Rule kind is defined in [Rule kinds](../foundation/core-concepts.md#rule-kinds)
-in Core Concepts. The table is exhaustive, with one row per Rule kind.
-
-| Rule kind   | What a specification must state                                                                                                                                |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Calculation | Its inputs and formula.                                                                                                                                        |
-| Eligibility | The condition, and what the player observes when it fails.                                                                                                     |
-| Effect      | When it applies, which values change, and by how much.                                                                                                         |
-| Creation    | When it applies, the Type of the new data, the initial value of each of its properties and the source of each value, and that it receives a fresh Instance ID. |
-| Invariant   | The condition and its scope.                                                                                                                                   |
-
-Creating data also changes Campaign state, but Creation is separate from Effect because a Creation Rule carries
-obligations an Effect Rule does not: a fresh Instance ID, and an initial value with its source for every property of
-the new data.
-
-Specify creation of a Campaign instance as a Creation Rule that states when the Campaign instance is created, the initial
-values of its properties and the source of each value, and that it receives a fresh Instance ID, as required by
-[Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation). Do not specify
-which code creates it or that code's signature or dependencies; state the resulting facts instead, for example which
-Campaign instance owns the new one.
-
 # Predictable layout and allowed variation
 
 A specification has three parts, in this order:
@@ -384,7 +359,7 @@ A specification has three parts, in this order:
    2. `# Relationships`, containing the flat directional inventory
    3. `# Glossary`
 2. Topic sections: one or more H1 sections, each named after a subject the specification owns; for example,
-   `# Rule kinds` or `# Agent recovery`. Topic sections state the specification's definitions, Rules, requirements, and
+   `# Agent recovery`. Topic sections state the specification's definitions, Rules, requirements, and
    constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
 3. Closing sections:
    1. `# Edge cases and failure behavior`
@@ -548,7 +523,6 @@ Before acceptance, verify:
 - Every mention uses the full canonical glossary term, including headings, tables, and diagrams. Necessary new formal terms are defined in their owning Glossary; encountered synonyms and mention shortcuts are recorded in Terminology replacements.
 - Every illustrative enumeration is explicitly labeled and contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
-- Every stated Rule identifies its Rule kind and states every item that Rule kind requires.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
 - Worked examples and acceptance scenarios agree with the rules.

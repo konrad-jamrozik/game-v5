@@ -30,20 +30,20 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Governance
 
-| ID    | Document                                                                | Status   | Owns                                                                                                                    |
-| ----- | ----------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
-| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Accepted | How specifications are written, reviewed, and maintained, including what a specification must state for each Rule kind. |
-| INDEX | [Game Specification Index](../specs/README.md)                          | Draft    | Specification registration, navigation, and ownership summaries.                                                        |
-| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Accepted | Specification authoring order, review checkpoints, and work tracking.                                                   |
-| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft    | Artifact relationship terminology, direction, inventories, and graph validation.                                        |
-| TODOS | [Outstanding Work Items](../specs/governance/work-todos.md)             | Draft    | Known outstanding specification issues awaiting scheduling, with their affected batches.                                |
+| ID    | Document                                                                | Status   | Owns                                                                                     |
+| ----- | ----------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------- |
+| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Accepted | How specifications are written, reviewed, and maintained.                                |
+| INDEX | [Game Specification Index](../specs/README.md)                          | Draft    | Specification registration, navigation, and ownership summaries.                         |
+| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Accepted | Specification authoring order, review checkpoints, and work tracking.                    |
+| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft    | Artifact relationship terminology, direction, inventories, and graph validation.         |
+| TODOS | [Outstanding Work Items](../specs/governance/work-todos.md)             | Draft    | Known outstanding specification issues awaiting scheduling, with their affected batches. |
 
 ## Foundation
 
 | ID     | Document                                                                        | Status   | Owns                                                                                                                                              |
 | ------ | ------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | CMC    | [Campaign Modeling Contract](../specs/foundation/campaign-modeling-contract.md) | Accepted | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.          |
-| CORE   | [Core Concepts](../specs/foundation/core-concepts.md)                           | Draft    | Shared vocabulary for modeling and engine execution, for example Campaign, Session, and Rule kinds.                                               |
+| CORE   | [Core Concepts](../specs/foundation/core-concepts.md)                           | Draft    | Shared vocabulary for modeling and engine execution, for example Campaign, Session, and Rule kinds with their stating obligations.                |
 | DOM    | [Domain Model](../specs/foundation/domain-model.md)                             | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                                              |
 | ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                       | Draft    | API hierarchy, Principal authority, Session and campaign lifecycle, bounded Autopilot AI execution, memory, and deterministic history guarantees. |
 | HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md)       | Stub     | Define reversible campaign history, reproducible replay, and durable save/load behavior.                                                          |
