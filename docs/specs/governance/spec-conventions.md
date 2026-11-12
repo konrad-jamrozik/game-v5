@@ -362,6 +362,27 @@ which values affect current gameplay versus serve only historical explanation. C
 these dimensions differ within one Campaign instance. Link to the owning specification for details; explicitly retain
 unresolved decisions rather than filling them with assumptions.
 
+## Non-terms
+
+A Non-term is a word that specifications use without defining it, for one of three reasons:
+
+- **Context-dependent:** the word deliberately means different things in different contexts. Specifications benefit
+  from that flexibility, and formalizing one meaning would conflict with the others.
+- **Deferred:** the word may be formalized later; until then it is reserved.
+- **Defines a term:** the word appears in the definition of a formal term, so it stays plain English to avoid a
+  circular definition.
+
+A Non-term needs no glossary entry, is never capitalized as a formal term, and must not be treated as a defined term.
+The following list of Non-terms is exhaustive:
+
+| Word              | Reason            | Meaning in context                                                                                                                                                                                                                                          |
+| ----------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| game behavior     | Context-dependent | What the specification at hand describes the executable implementation doing; e.g., a mechanic's effects or the engine's query guarantees.                                                                                                                  |
+| game rules; rules | Context-dependent | Ordinary prose for constraints; e.g., a mechanic's constraints on play, or a validation rule in these conventions. Never a stand-in for a complete set of rules.                                                                                            |
+| modeling role     | Context-dependent | Which modeling concept an element is or exemplifies; e.g., the "Modeling role" column of the worked-example tables in Campaign Modeling Contract, whose values include Type, GDR, and Authoritative value. Also used when specifying a game concept, above. |
+| playthrough       | Defines a term    | One play of the game, used in the definition of Campaign.                                                                                                                                                                                                   |
+| Ruleset           | Deferred          | Intentionally unused in specifications. Reserved for future player-facing documentation: a game encyclopedia that explains the rules to the player by highlighting and rewording parts of the specifications.                                               |
+
 # Predictable layout and allowed variation
 
 A specification has three parts, in this order:

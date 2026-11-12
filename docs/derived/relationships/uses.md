@@ -71,11 +71,15 @@ flowchart TD
   CORE --> DEV
   CORE --> DOM
   CORE --> ENG
+  CORE --> FACTION
   CORE --> HIST
   CORE --> INFO
   CORE --> INIT
+  CORE --> INVSTG
+  CORE --> LEAD
+  CORE --> MISSION
   CORE --> NUMRNG
-  CORE --> TURN
+  CORE --> SCEN
   CORE --> WEB
   DEV --> API
   DEV --> HIST

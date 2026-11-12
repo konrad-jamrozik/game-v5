@@ -31,7 +31,6 @@ appropriate to this document.
 
 - Uses [Agents](../mechanics/agents.md)
 - Uses [Campaign](../mechanics/campaign.md)
-- Uses [Core Concepts](./core-concepts.md)
 - Uses [Domain Model](./domain-model.md)
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Uses [Factions](../mechanics/factions.md)

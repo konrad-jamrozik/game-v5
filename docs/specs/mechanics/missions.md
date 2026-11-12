@@ -29,6 +29,7 @@ appropriate to this document.
 
 - Uses [Agents](./agents.md)
 - Uses [Combat](./combat.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Economy and Upgrades](./economy-and-upgrades.md)
 - Uses [Factions](./factions.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)

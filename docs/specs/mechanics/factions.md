@@ -27,6 +27,7 @@ appropriate to this document.
 
 # Relationships
 
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)

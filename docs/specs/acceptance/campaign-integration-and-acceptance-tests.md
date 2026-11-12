@@ -39,6 +39,7 @@ appropriate to this document.
 
 # Relationships
 
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Terminal CLI](../interfaces/cli.md)

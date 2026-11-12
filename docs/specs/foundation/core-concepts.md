@@ -17,17 +17,21 @@ campaign-data composition, Session lifecycle, gameplay mechanics, persistence pr
 # Relationships
 
 - Used by [Campaign](../mechanics/campaign.md)
+- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Campaign Modeling Contract](./campaign-modeling-contract.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Engine Contract](./engine-contract.md)
+- Used by [Factions](../mechanics/factions.md)
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
 - Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
+- Used by [Investigations](../mechanics/investigations.md)
+- Used by [Leads and Progression](../mechanics/leads-and-progression.md)
+- Used by [Missions](../mechanics/missions.md)
 - Used by [Numbers and Randomness](./numbers-and-randomness.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Terminal CLI](../interfaces/cli.md)
-- Used by [Turn Resolution](./turn-resolution.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)
 - Used by [Web UI](../interfaces/web-ui.md)
 
@@ -58,18 +62,18 @@ divides into components.
 
 | Term           | Definition                                                                                                                          |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign       | A particular playthrough with its own evolving Campaign state and retained history.                                                 |
+| Campaign       | A particular playthrough with its own evolving Campaign state.                                                                      |
 | Campaign state | Data describing one Campaign, including retained data describing its past Campaign state or events.                                 |
 | Session        | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |
 
 ## Value classification
 
-Classifications of a value, independent of where it lives in Campaign state.
+Classifications of a value, whether a GDR or Campaign state supplies it.
 
-| Term                | Definition                                                                                     |
-| ------------------- | ---------------------------------------------------------------------------------------------- |
-| Authoritative value | A value treated as established truth rather than recomputed from other values.                 |
-| Derived value       | A value calculated deterministically from Authoritative values and the current rules and GDRs. |
+| Term                | Definition                                                                                                    |
+| ------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Authoritative value | A value treated as established truth rather than recomputed from other values.                                |
+| Derived value       | A value calculated deterministically by game behavior from Authoritative values, including those GDRs supply. |
 
 # Vocabulary and contract ownership
 
@@ -79,11 +83,7 @@ specification prose. These meanings apply across the complete game contract. Glo
 without choosing an API, storage representation, or campaign-data composition. More detailed constraints belong to the
 specifications using that vocabulary.
 
-The term Ruleset is intentionally unused in the specifications. It is reserved for future player-facing documentation:
-a game encyclopedia that explains the rules of the game to the player by highlighting and rewording important pieces of
-the specifications.
-
-# Campaign and Session
+# Campaign versus Session
 
 Campaign identifies a playthrough; Campaign state describes its data. A Session is the runtime context of one running
 game and selects at most one Campaign at a time. The two differ in kind: a Campaign is a playthrough with its own
@@ -94,9 +94,9 @@ starts and ends, and what is persisted. This distinction does not prescribe an i
 
 # Authoritative and Derived values
 
-An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values and
-the current rules and GDRs. This classification is independent of mutability: e.g., shared base health can be an
-Authoritative value even though it never changes during gameplay. It is also independent of player
+An Authoritative value is treated as established truth. A Derived value is calculated deterministically by game
+behavior from Authoritative values, including those GDRs supply. This classification is independent of mutability:
+e.g., a GDR's shared base health is an Authoritative value even though it never changes during gameplay. It is also independent of player
 visibility: either kind may be hidden from the player. Caching a current calculation does not change its
 classification as a Derived value.
 

@@ -26,6 +26,7 @@ appropriate to this document.
 
 # Relationships
 
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Factions](./factions.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Missions](./missions.md)

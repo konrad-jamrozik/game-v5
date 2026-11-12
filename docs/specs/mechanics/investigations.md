@@ -28,6 +28,7 @@ appropriate to this document.
 # Relationships
 
 - Uses [Agents](./agents.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Uses [Player Information](../interfaces/player-information.md)

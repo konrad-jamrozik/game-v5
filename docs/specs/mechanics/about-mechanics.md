@@ -137,8 +137,8 @@ flowchart LR
   family_foundation -->|refined by, used by| ECON
   family_foundation -->|refined by, used by| FACTION
   family_foundation -->|refined by, used by| INVSTG
-  family_foundation -->|refined by| LEAD
-  family_foundation -->|refined by| MISSION
+  family_foundation -->|refined by, used by| LEAD
+  family_foundation -->|refined by, used by| MISSION
   family_interfaces -->|used by| INVSTG
   classDef external stroke-dasharray: 5 5
 ```

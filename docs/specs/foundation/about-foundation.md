@@ -91,7 +91,6 @@ flowchart TD
   CORE -->|used by| ENG
   CORE -->|used by| HIST
   CORE -->|used by| NUMRNG
-  CORE -->|used by| TURN
   DOM -->|used by| HIST
   DOM -->|used by| TURN
   ENG -->|refined by| CMC
@@ -123,6 +122,7 @@ flowchart LR
   CMC -->|used by| family_guidance
   CMC -->|used by| family_interfaces
   CMC -->|used by| family_mechanics
+  CORE -->|used by| family_acceptance
   CORE -->|used by| family_content
   CORE -->|used by| family_guidance
   CORE -->|used by| family_interfaces
