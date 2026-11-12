@@ -37,16 +37,34 @@ Session is defined by [Core Concepts](core-concepts.md#glossary).
 API surface and Principal terms and Turn-start checkpoint are owned by the
 [Engine Contract glossary](engine-contract.md#glossary).
 
-| Term                         | Definition                                                                                                                                                                                                                                                   |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Game storage                 | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                                                                                 |
-| Global configuration         | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It contains preferences and defaults for new Campaigns, stores only values the player has set, and never contains Campaign state. |
-| Campaign save                | A persisted snapshot of one Campaign's timeline, identified by its Campaign save ID and recording its Campaign ID, its Campaign state at the saved history position, and its Controller continuation data. One Campaign may have several Campaign saves.     |
-| Campaign ID                  | The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that Campaign. It is not Campaign state, Rules never consult it, and it is distinct from the Instance ID of the Campaign instance.           |
-| Campaign save ID             | The ULID identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                                         |
-| Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.                                                                 |
-| Save size limit              | The maximum size of one Campaign save on disk, fixed by the Game build.                                                                                                                                                                                      |
-| Baseline                     | The complete Campaign state at the earliest position a Campaign save can restore: the initial Campaign state, or the saved Campaign state when the save's action history was dropped.                                                                        |
+## Storage
+
+The persisted root and the configuration shared by every Campaign.
+
+| Term                 | Definition                                                                                                                                                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Game storage         | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                                                                                 |
+| Global configuration | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It contains preferences and defaults for new Campaigns, stores only values the player has set, and never contains Campaign state. |
+
+## Saves
+
+The persisted snapshots of one Campaign and the data and limits they involve.
+
+| Term                         | Definition                                                                                                                                                                                                                                               |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign save                | A persisted snapshot of one Campaign's timeline, identified by its Campaign save ID and recording its Campaign ID, its Campaign state at the saved history position, and its Controller continuation data. One Campaign may have several Campaign saves. |
+| Save size limit              | The maximum size of one Campaign save on disk, fixed by the Game build.                                                                                                                                                                                  |
+| Baseline                     | The complete Campaign state at the earliest position a Campaign save can restore: the initial Campaign state, or the saved Campaign state when the save's action history was dropped.                                                                    |
+| Controller continuation data | Data needed to continue controlling a Campaign that gameplay Rules never consult: the action history, including retained redo entries, the history cursor, and Autopilot memory checkpoints.                                                             |
+
+## Identifiers
+
+The identifiers of Campaigns and their saves.
+
+| Term             | Definition                                                                                                                                                                                                                                         |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign ID      | The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that Campaign. It is not Campaign state, Rules never consult it, and it is distinct from the Instance ID of the Campaign instance. |
+| Campaign save ID | The ULID identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                               |
 
 # Refined Engine Contract guarantees
 

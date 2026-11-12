@@ -226,6 +226,24 @@ function mutate(files: readonly SourceFile[], path: string, find: string, replac
   }))
 }
 
+function glossaryTable(...terms: readonly string[]): string[] {
+  return [
+    '| Term | Definition |',
+    '| --- | --- |',
+    ...terms.map((term) => `| ${term} | A ${term.toLowerCase()} definition. |`),
+  ]
+}
+
+function glossaryGroup(name: string, ...terms: readonly string[]): string[] {
+  return [`## ${name}`, '', `Terms about ${name.toLowerCase()}.`, '', ...glossaryTable(...terms), '']
+}
+
+function glossaryCodes(glossary: readonly string[]): readonly string[] {
+  return diagnosticCodes(
+    withGlossary(validCorpus(), 'docs/specs/foundation/alpha.md', lines(['# Glossary', '', ...glossary])),
+  )
+}
+
 describe('specification linter', () => {
   test('accepts modeling Types as glossary terms and descriptions', () => {
     const files = withGlossary(
@@ -849,6 +867,57 @@ describe('specification linter', () => {
       lines(['# Glossary', '', '| Term | Definition |', '| --- | --- |', '| Incomplete | |']),
     )
     expect(diagnosticCodes(files)).toContain('SPEC504')
+  })
+
+  describe('glossary groups', () => {
+    test('accepts one ungrouped table', () => {
+      expect(glossaryCodes(glossaryTable('Apple'))).not.toContain('SPEC505')
+    })
+
+    test('accepts two or more groups of at least two terms', () => {
+      expect(
+        glossaryCodes([
+          'Shared terms are owned elsewhere.',
+          '',
+          ...glossaryGroup('Fruit', 'Apple', 'Pear'),
+          ...glossaryGroup('Tools', 'Hammer', 'Saw'),
+        ]),
+      ).not.toContain('SPEC505')
+    })
+
+    test.each([
+      ['two ungrouped tables', [...glossaryTable('Apple'), '', ...glossaryTable('Pear')]],
+      [
+        'a table outside groups',
+        [
+          ...glossaryTable('Apple'),
+          '',
+          ...glossaryGroup('Fruit', 'Pear', 'Plum'),
+          ...glossaryGroup('Tools', 'Hammer', 'Saw'),
+        ],
+      ],
+      ['a single group', glossaryGroup('Fruit', 'Apple', 'Pear')],
+      ['a one-term group', [...glossaryGroup('Fruit', 'Apple'), ...glossaryGroup('Tools', 'Hammer', 'Saw')]],
+      [
+        'a group without a description',
+        ['## Fruit', '', ...glossaryTable('Apple', 'Pear'), '', ...glossaryGroup('Tools', 'Hammer', 'Saw')],
+      ],
+      [
+        'a group with two tables',
+        [
+          ...glossaryGroup('Fruit', 'Apple', 'Pear'),
+          ...glossaryTable('Plum', 'Fig'),
+          '',
+          ...glossaryGroup('Tools', 'Hammer', 'Saw'),
+        ],
+      ],
+      [
+        'an H3 heading',
+        [...glossaryGroup('Fruit', 'Apple', 'Pear'), '### Citrus', '', ...glossaryGroup('Tools', 'Hammer', 'Saw')],
+      ],
+    ])('rejects %s', (_name, glossary) => {
+      expect(glossaryCodes(glossary)).toContain('SPEC505')
+    })
   })
 
   test('rejects compact ranges and removed requirement references', () => {

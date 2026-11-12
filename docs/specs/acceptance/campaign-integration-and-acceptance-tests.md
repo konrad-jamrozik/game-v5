@@ -48,10 +48,21 @@ appropriate to this document.
 
 # Glossary
 
-| Term             | Meaning in this document                                                                                                                                                       |
+## Test inputs
+
+What a test starts from and runs.
+
+| Term          | Definition                                                                                               |
+| ------------- | -------------------------------------------------------------------------------------------------------- |
+| Test scenario | A specified starting state, sequence of actions, and expected results                                    |
+| Fixture       | The GDRs, Campaign state, and fixed injected random outcomes or RNG state needed to reproduce a scenario |
+
+## Test levels
+
+Kinds of test, by what they exercise or check.
+
+| Term             | Definition                                                                                                                                                                     |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Test scenario    | A specified starting state, sequence of actions, and expected results                                                                                                          |
-| Fixture          | The GDRs, Campaign state, and fixed injected random outcomes or RNG state needed to reproduce a scenario                                                                       |
 | Integration test | A test that exercises several game systems together, typically through the player API                                                                                          |
 | End-to-end test  | A test that exercises a player flow through an interface and checks its resulting Player-visible information and game effects                                                  |
 | Acceptance test  | A test that checks whether behavior satisfies referenced specification [requirements](../governance/spec-conventions.md#glossary); it can be an integration or end-to-end test |

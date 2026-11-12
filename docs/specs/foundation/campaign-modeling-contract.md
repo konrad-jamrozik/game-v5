@@ -34,22 +34,26 @@ Shared modeling and execution vocabulary is owned by [Core Concepts](core-concep
 state and History. The terms below add campaign-specific composition; Instance ID is defined by Core Concepts and its
 campaign identity constraints are specified under [Campaign instances](#campaign-instances).
 
-| Term                   | Definition                                                                                                                                                                                                                                                 |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and History, distinct from Campaign configuration.                                                                                     |
-| Current world state    | The subcomponent of World state other than History: the simulated world as it stands at the selected history position. After undo, it is the state at that earlier position, not the furthest position reached.                                            |
-| Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                                                               |
-| Campaign instance      | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              |
-| Archetype              | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
-| State                  | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
-| Constants              | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
+## Campaign state components
 
-## Rejected terms and synonyms
+The components into which Campaign state divides.
 
-- **Field, member, key:** use Property from Core Concepts for a named component of a structured Type; unrelated uses retain their ordinary meaning.
-- **Template:** use GDR when naming immutable game data, and Archetype when naming its campaign composition role. Describe initialization directly.
-- **Content:** "content" alone never names a GDR. The Display content GDR purpose and the Content Family keep their names.
-- **Definition:** this is not a modeling category or a synonym for Type or GDR. Ordinary prose may discuss a term's definition.
+| Term                   | Definition                                                                                                                                                                                                      |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and History, distinct from Campaign configuration.                                          |
+| Current world state    | The subcomponent of World state other than History: the simulated world as it stands at the selected history position. After undo, it is the state at that earlier position, not the furthest position reached. |
+| Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                    |
+
+## Campaign instances
+
+The composition of each Campaign instance.
+
+| Term              | Definition                                                                                                                                                                                                                                                 |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign instance | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              |
+| Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
+| State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
+| Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
 
 # Campaign data integrity refinement
 

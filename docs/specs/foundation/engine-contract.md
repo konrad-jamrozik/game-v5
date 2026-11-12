@@ -30,29 +30,60 @@ RNG algorithm, save encoding, or subsystem mechanics.
 
 # Glossary
 
-| Term                       | Definition                                                                                                                                                                                                                                                                                                                                                     |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Principal                  | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                           |
-| Session controller         | The Principal holding Session authority: managing the Session, selecting the Current campaign, navigating history, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using CLI or Web UI, or an LLM-based agent driving the API or CLI; the Principal's authority does not depend on which kind of caller holds it. |
-| Autopilot                  | The game feature through which the Session controller lends Player API control of the Current campaign to an Autopilot AI within an Autopilot limit, then regains it.                                                                                                                                                                                          |
-| Autopilot AI               | The AI that plays through Player API while Autopilot is engaged, with access only to Player-visible information and its own Autopilot memory.                                                                                                                                                                                                                  |
-| Autopilot limit            | The bound on an Autopilot engagement, measured in committed player actions or turn advancements.                                                                                                                                                                                                                                                               |
-| Autopilot engagement       | One period from engaging to disengaging Autopilot, with a fixed Autopilot limit, Autopilot progress, and a disengagement reason.                                                                                                                                                                                                                               |
-| Autopilot progress         | The committed player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it.                                                                                                                                                           |
-| Autopilot memory           | Data an Autopilot AI writes through Autopilot memory API to carry its plans across Autopilot engagements. It is checkpointed at history positions, isolated by Campaign, Autopilot AI identity, and timeline branch, and saved with the campaign timeline. It is not Campaign state, and gameplay never depends on it.                                         |
-| Session API                | The API surface for Session controller operations over campaign selection, persistence, history navigation, Dev mode, and Autopilot.                                                                                                                                                                                                                           |
-| Player API                 | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode.                                                                                                                                                                                                                 |
-| Developer API              | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled.                                                                                                                                                                                                   |
-| Autopilot memory API       | The API surface through which the active Autopilot AI reads and writes its Autopilot memory.                                                                                                                                                                                                                                                                   |
-| Current campaign           | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                                                                                                    |
-| Current save               | The save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                                                                                                                    |
-| Dev mode                   | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                             |
-| Turn-start checkpoint      | A history position immediately after campaign creation or a committed Advance turn action, before subsequent actions.                                                                                                                                                                                                                                          |
-| Campaign-scoped identifier | A unique identifier that replaying the same committed commands from the same Campaign state must reproduce exactly.                                                                                                                                                                                                                                            |
-| Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, e.g. one identifying a stored record or a runtime operation.                                                                                                                                                                                                                   |
-
 Shared vocabulary, including Session, is defined by [Core Concepts](core-concepts.md#glossary).
-The name Autopilot AI avoids using Agent for a Principal.
+
+## Principals and access
+
+Kinds of engine API caller and the Session access settings that govern them.
+
+| Term               | Definition                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                           |
+| Session controller | The Principal holding Session authority: managing the Session, selecting the Current campaign, navigating history, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using CLI or Web UI, or an LLM-based agent driving the API or CLI; the Principal's authority does not depend on which kind of caller holds it. |
+| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                             |
+
+## Autopilot
+
+Lending Player API control to an AI for a bounded period. The name Autopilot AI avoids using Agent for a Principal.
+
+| Term                 | Definition                                                                                                                                                                                                                                                                                                             |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Autopilot            | The game feature through which the Session controller lends Player API control of the Current campaign to an Autopilot AI within an Autopilot limit, then regains it.                                                                                                                                                  |
+| Autopilot AI         | The AI that plays through Player API while Autopilot is engaged, with access only to Player-visible information and its own Autopilot memory.                                                                                                                                                                          |
+| Autopilot limit      | The bound on an Autopilot engagement, measured in committed player actions or turn advancements.                                                                                                                                                                                                                       |
+| Autopilot engagement | One period from engaging to disengaging Autopilot, with a fixed Autopilot limit, Autopilot progress, and a disengagement reason.                                                                                                                                                                                       |
+| Autopilot progress   | The committed player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it.                                                                                                                   |
+| Autopilot memory     | Data an Autopilot AI writes through Autopilot memory API to carry its plans across Autopilot engagements. It is checkpointed at history positions, isolated by Campaign, Autopilot AI identity, and timeline branch, and saved with the campaign timeline. It is not Campaign state, and gameplay never depends on it. |
+
+## API surfaces
+
+The separately authorized parts of the engine API.
+
+| Term                 | Definition                                                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Session API          | The API surface for Session controller operations over campaign selection, persistence, history navigation, Dev mode, and Autopilot.                         |
+| Player API           | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode.               |
+| Developer API        | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled. |
+| Autopilot memory API | The API surface through which the active Autopilot AI reads and writes its Autopilot memory.                                                                 |
+
+## Campaign selection and history positions
+
+What a Session has selected and the history positions it relies on.
+
+| Term                  | Definition                                                                                                                                                                  |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current campaign      | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                 |
+| Current save          | The save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced. |
+| Turn-start checkpoint | A history position immediately after campaign creation or a committed Advance turn action, before subsequent actions.                                                       |
+
+## Identifiers
+
+How the engine scopes unique identifiers.
+
+| Term                       | Definition                                                                                                                                   |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign-scoped identifier | A unique identifier that replaying the same committed commands from the same Campaign state must reproduce exactly.                          |
+| Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, e.g. one identifying a stored record or a runtime operation. |
 
 # API hierarchy
 

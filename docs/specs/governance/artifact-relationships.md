@@ -26,20 +26,38 @@ Examples explain the model; they do not declare relationships for the named arti
 
 # Glossary
 
-| Term                  | Definition                                                                                                                                                                           |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Artifact              | An identified [specification](spec-conventions.md#glossary), [requirement](spec-conventions.md#glossary), implementation, test, or other item that can participate in a relationship |
-| Relationship          | A directional connection from one Dependency to one Dependent with a Relationship kind                                                                                               |
-| Dependency            | The artifact on which the Dependent relies; it appears on the left of `Dependency → Dependent`                                                                                       |
-| Dependent             | The artifact that relies on the Dependency; it appears on the right of `Dependency → Dependent`                                                                                      |
-| Relationship kind     | Exactly one of `follows`, `refines`, `uses`, `implements`, or `verifies`                                                                                                             |
-| Explicit relationship | A relationship recorded in mirrored directional list entries                                                                                                                         |
-| Implicit relationship | A relationship created by an applicability rule in Specification Conventions rather than repeated artifact entries                                                                   |
-| Relationships section | An artifact's flat list of explicit directional relationships                                                                                                                        |
-| Graph                 | A collection of artifacts and relationships                                                                                                                                          |
-| Cycle                 | A directional relationship path that returns to its starting artifact                                                                                                                |
-| DAG                   | A directed acyclic graph                                                                                                                                                             |
-| Implementation        | An executable artifact intended to satisfy a specification or requirement                                                                                                            |
+## Artifacts
+
+The things that relationships connect.
+
+| Term           | Definition                                                                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Artifact       | An identified [specification](spec-conventions.md#glossary), [requirement](spec-conventions.md#glossary), implementation, test, or other item that can participate in a relationship |
+| Implementation | An executable artifact intended to satisfy a specification or requirement                                                                                                            |
+
+## Relationships
+
+Directional connections between artifacts and how they are recorded.
+
+| Term                  | Definition                                                                                                         |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Relationship          | A directional connection from one Dependency to one Dependent with a Relationship kind                             |
+| Dependency            | The artifact on which the Dependent relies; it appears on the left of `Dependency → Dependent`                     |
+| Dependent             | The artifact that relies on the Dependency; it appears on the right of `Dependency → Dependent`                    |
+| Relationship kind     | Exactly one of `follows`, `refines`, `uses`, `implements`, or `verifies`                                           |
+| Explicit relationship | A relationship recorded in mirrored directional list entries                                                       |
+| Implicit relationship | A relationship created by an applicability rule in Specification Conventions rather than repeated artifact entries |
+| Relationships section | An artifact's flat list of explicit directional relationships                                                      |
+
+## Graphs
+
+Structures formed by artifacts and their relationships.
+
+| Term  | Definition                                                            |
+| ----- | --------------------------------------------------------------------- |
+| Graph | A collection of artifacts and relationships                           |
+| Cycle | A directional relationship path that returns to its starting artifact |
+| DAG   | A directed acyclic graph                                              |
 
 # Direction
 

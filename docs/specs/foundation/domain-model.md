@@ -47,30 +47,62 @@ Player Information owns exact visibility. Shared modeling vocabulary belongs to
 
 # Glossary
 
-| Term                         | Definition                                                                                                                                                                        |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Combatant                    | Reusable structure described by a Type for combat-related Agent and Enemy state, describing skill, health, exhaustion, and weapon capability; it is not a Campaign instance Type. |
-| Agency                       | The player-controlled Campaign instance Type whose Campaign instance owns resources, upgrades, and the roster within a campaign.                                                  |
-| Agent                        | A Campaign instance Type whose Campaign instances have identity, attributes, Current assignments, and Participation history.                                                      |
-| Lead                         | A GDR representing a Lead to pursue and describing its progression rules.                                                                                                         |
-| Lead progression             | Campaign state keyed by lead GDR, recording completions and earned facts.                                                                                                         |
-| Investigation                | A Campaign instance Type whose Campaign instances each represent an Investigation of one Lead.                                                                                    |
-| Mission                      | A Campaign instance Type whose Campaign instances refer to mission GDRs and have their own origin, participants, and result.                                                      |
-| Enemy                        | A Campaign instance Type whose Campaign instances are each owned by one mission and refer to enemy GDRs.                                                                          |
-| Battle result                | Retained combat facts owned by a resolved mission and used to determine campaign consequences.                                                                                    |
-| Faction                      | A Campaign instance Type whose Campaign instances refer to faction GDRs and record their activity and progression.                                                                |
-| Faction operation occurrence | The origin of one Response mission, identified by that mission rather than a separate Campaign instance.                                                                          |
-| Participation history        | Immutable records linking agents to investigations and missions in which they previously participated.                                                                            |
-| Current assignment           | An agent's current orders, with activity references and a destination when travelling.                                                                                            |
-| Task phase                   | The distinction between At assignment and In transit, including travel timing facts.                                                                                              |
-| Report                       | Historical facts and explanations linked to commands or turns and Campaign instances in the timeline.                                                                             |
-
 This document uses [Campaign instances](campaign-modeling-contract.md#campaign-instances), [References](campaign-modeling-contract.md#references), [Historical fact preservation](campaign-modeling-contract.md#historical-fact-preservation), and [Value classification](campaign-modeling-contract.md#value-classification) to describe game concepts. It applies the modeling vocabulary and
 constraints; it does not add detail to the modeling language itself.
 
 Campaign and other shared modeling terms are owned by the [Core Concepts glossary](core-concepts.md#glossary).
 Campaign-specific composition terms are owned by [Campaign Modeling Contract](campaign-modeling-contract.md#glossary).
 This document describes the game-specific composition of Campaign state; it does not redefine Campaign.
+
+## Agency and Agents
+
+The player-controlled organization, its Agents, and what each Agent is doing.
+
+| Term               | Definition                                                                                                                       |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Agency             | The player-controlled Campaign instance Type whose Campaign instance owns resources, upgrades, and the roster within a campaign. |
+| Agent              | A Campaign instance Type whose Campaign instances have identity, attributes, Current assignments, and Participation history.     |
+| Current assignment | An agent's current orders, with activity references and a destination when travelling.                                           |
+| Task phase         | The distinction between At assignment and In transit, including travel timing facts.                                             |
+
+## Leads, Investigations, and Missions
+
+The work the Agency discovers and undertakes.
+
+| Term             | Definition                                                                                                                   |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Lead             | A GDR representing a Lead to pursue and describing its progression rules.                                                    |
+| Lead progression | Campaign state keyed by lead GDR, recording completions and earned facts.                                                    |
+| Investigation    | A Campaign instance Type whose Campaign instances each represent an Investigation of one Lead.                               |
+| Mission          | A Campaign instance Type whose Campaign instances refer to mission GDRs and have their own origin, participants, and result. |
+
+## Combat
+
+The participants and retained results of combat.
+
+| Term          | Definition                                                                                                                                                                        |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Combatant     | Reusable structure described by a Type for combat-related Agent and Enemy state, describing skill, health, exhaustion, and weapon capability; it is not a Campaign instance Type. |
+| Enemy         | A Campaign instance Type whose Campaign instances are each owned by one mission and refer to enemy GDRs.                                                                          |
+| Battle result | Retained combat facts owned by a resolved mission and used to determine campaign consequences.                                                                                    |
+
+## Factions
+
+The opposing organizations and their operations.
+
+| Term                         | Definition                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Faction                      | A Campaign instance Type whose Campaign instances refer to faction GDRs and record their activity and progression. |
+| Faction operation occurrence | The origin of one Response mission, identified by that mission rather than a separate Campaign instance.           |
+
+## Retained records
+
+Records kept to explain past gameplay.
+
+| Term                  | Definition                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| Participation history | Immutable records linking agents to investigations and missions in which they previously participated. |
+| Report                | Historical facts and explanations linked to commands or turns and Campaign instances in the timeline.  |
 
 # Modeling dimensions
 

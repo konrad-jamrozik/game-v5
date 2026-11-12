@@ -1099,9 +1099,60 @@ function validateRelationships(
   return rows
 }
 
+function isTermTable(table: Table): boolean {
+  const header = tableRows(table)[0]?.map((cell) => textOf(cell).trim())
+  return header?.[0] === 'Term' && header[1] === 'Definition'
+}
+
+function validateGlossaryGroups(specification: Specification, glossary: Heading, diagnostics: Diagnostic[]): void {
+  const nodes = sectionNodes(specification.document, glossary)
+  const report = (node: Node | undefined, message: string): void =>
+    addDiagnostic(diagnostics, specification.path, node, 'SPEC505', message)
+  const groupStarts: number[] = []
+  nodes.forEach((node, index) => {
+    if (!isHeading(node)) return
+    if (node.depth === 2) groupStarts.push(index)
+    else report(node, 'Glossary must not contain headings deeper than H2.')
+  })
+  if (groupStarts.length === 0) {
+    const tables = tablesIn(nodes).filter(isTermTable)
+    if (tables.length > 1) {
+      report(tables[1], 'An ungrouped Glossary must contain exactly one Term and Definition table.')
+    }
+    return
+  }
+  const firstGroup = nodes[groupStarts[0] ?? 0]
+  if (groupStarts.length < 2) {
+    report(firstGroup, 'A grouped Glossary must contain at least two groups; otherwise use one ungrouped table.')
+  }
+  for (const table of tablesIn(nodes.slice(0, groupStarts[0])).filter(isTermTable)) {
+    report(table, 'In a grouped Glossary, every Term and Definition table must belong to an H2 group.')
+  }
+  groupStarts.forEach((start, position) => {
+    const heading = nodes[start]
+    const end = groupStarts[position + 1] ?? nodes.length
+    const body = nodes.slice(start + 1, end).filter((node) => !isHeading(node))
+    const tables = tablesIn(body)
+    const table = tables[0]
+    if (tables.length !== 1 || !table || !isTermTable(table)) {
+      report(heading, 'Each Glossary group must contain exactly one Term and Definition table.')
+      return
+    }
+    const tableIndex = body.indexOf(table)
+    const description = body.slice(0, tableIndex)
+    if (!description.some((node) => node.type === 'paragraph' && textOf(node).trim())) {
+      report(heading, 'Each Glossary group must start with a description before its table.')
+    }
+    if (tableRows(table).length - 1 < 2) {
+      report(heading, 'Each Glossary group must contain at least two terms.')
+    }
+  })
+}
+
 function glossaryTerms(specification: Specification, diagnostics: Diagnostic[]): readonly GlossaryTerm[] {
   const glossary = findHeading(specification.document, 1, 'Glossary')
   if (!glossary) return []
+  validateGlossaryGroups(specification, glossary, diagnostics)
   const terms: GlossaryTerm[] = []
   for (const table of tablesIn(sectionNodes(specification.document, glossary))) {
     const rows = tableRows(table)

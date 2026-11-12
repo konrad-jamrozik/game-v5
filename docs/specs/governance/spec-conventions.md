@@ -24,22 +24,40 @@ signatures belong in specifications because API callers observe them.
 
 # Glossary
 
-| Term               | Definition                                                                                                                                                                                                                 |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records (GDRs), governance, or planned specification work.                                                            |
-| Registered         | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                                                                                         |
-| Family             | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                                                                            |
-| Requirement        | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                                                                        |
-| Canonical term     | The sole term assigned to one concept within the specification set.                                                                                                                                                        |
-| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                                                                          |
-| Evidence basis     | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships.                                              |
-| Persona            | A kind of participant in making, changing, or playing the game, defined by what the participant does with the game. The Personas are Engine designer, Content designer, UI designer, AI designer, Implementer, and Player. |
-| Engine designer    | The Persona that designs the engine and every Rule, decides which Rule inputs GDRs supply, and establishes these specification conventions.                                                                                |
-| Content designer   | The Persona that authors GDRs conforming to the Types the Engine designer exposes for content.                                                                                                                             |
-| UI designer        | The Persona that designs player-facing interfaces over the engine API.                                                                                                                                                     |
-| AI designer        | The Persona that designs an AI that plays the game.                                                                                                                                                                        |
-| Implementer        | The Persona that implements specifications as code and tests.                                                                                                                                                              |
-| Player             | The Persona that plays the game.                                                                                                                                                                                           |
+## Specifications
+
+What a specification is and how it is identified and classified.
+
+| Term          | Definition                                                                                                                                                      |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Specification | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records (GDRs), governance, or planned specification work. |
+| Registered    | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                              |
+| Family        | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                 |
+| Requirement   | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                             |
+
+## Specification content
+
+Kinds of content a specification states or relies on.
+
+| Term               | Definition                                                                                                                                                                    |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Canonical term     | The sole term assigned to one concept within the specification set.                                                                                                           |
+| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                             |
+| Evidence basis     | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships. |
+
+## Personas
+
+The kinds of participant in making, changing, or playing the game.
+
+| Term             | Definition                                                                                                                                                                                                                 |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Persona          | A kind of participant in making, changing, or playing the game, defined by what the participant does with the game. The Personas are Engine designer, Content designer, UI designer, AI designer, Implementer, and Player. |
+| Engine designer  | The Persona that designs the engine and every Rule, decides which Rule inputs GDRs supply, and establishes these specification conventions.                                                                                |
+| Content designer | The Persona that authors GDRs conforming to the Types the Engine designer exposes for content.                                                                                                                             |
+| UI designer      | The Persona that designs player-facing interfaces over the engine API.                                                                                                                                                     |
+| AI designer      | The Persona that designs an AI that plays the game.                                                                                                                                                                        |
+| Implementer      | The Persona that implements specifications as code and tests.                                                                                                                                                              |
+| Player           | The Persona that plays the game.                                                                                                                                                                                           |
 
 # What belongs in a specification
 
@@ -271,6 +289,18 @@ The modeling term [Type](../foundation/core-concepts.md#glossary) describes data
 language. Explicit TypeScript terminology remains valid for programming contracts and explanatory analogies;
 “relationship type” remains a prohibited substitute for “Relationship kind.”
 
+## Glossary groups
+
+When a Glossary's terms form more than one subject, group them. Each group is an H2 subsection of Glossary named
+after the subject its terms cover, never after its role in the document. Each group contains a one-sentence
+description followed by exactly one Term and Definition table, and holds at least two terms. A Glossary whose terms
+form only one group is not grouped: it keeps a single Term and Definition table directly under its H1 and has no H2
+subsections. Prose identifying where shared terms are owned may precede the first group. A Glossary contains no
+other subsections and no headings deeper than H2.
+
+Groups only aid navigation. They do not change a term's owner or meaning, and links to a term continue to target the
+owning Glossary.
+
 ## Terminology replacements
 
 Use the following contextual replacements. This table records prohibited synonyms, not alternative accepted names.
@@ -319,10 +349,11 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Fatigue                                                 | [Exhaustion](../mechanics/agents.md#glossary)                                                                                       | Naming the combatant attribute, its accumulation, or recovery.                                                                                                                                       |
 | Hit points; hit-point                                   | [Health](../mechanics/agents.md#glossary)                                                                                           | Naming the combatant health attribute.                                                                                                                                                               |
 | Past participation                                      | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Naming Participation history facts.                                                                                                                                                                  |
+| Template                                                | [GDR](../foundation/core-concepts.md#glossary) or [Archetype](../foundation/campaign-modeling-contract.md#glossary)                 | Naming immutable game data, or its campaign composition role; describe initialization directly.                                                                                                      |
+| Definition (as a modeling category)                     | [Type](../foundation/core-concepts.md#glossary) or [GDR](../foundation/core-concepts.md#glossary)                                   | Naming a modeling category; ordinary prose may discuss a term's definition.                                                                                                                          |
 
 These are contextual replacements, not a ban on ordinary uses of “definition,” legitimate destruction mechanics,
-or unrelated uses of “configuration.” Use GDR or Archetype rather than “Template” for modeling concepts, as
-explained in [Rejected terms and synonyms](../foundation/campaign-modeling-contract.md#rejected-terms-and-synonyms).
+or unrelated uses of “configuration.”
 Retention in History does not replace named lifecycle states; e.g., Killed and Completed.
 
 When specifying a game concept, state its applicable modeling role and mutability. Use prose,
@@ -498,6 +529,7 @@ Before acceptance, verify:
   [What belongs in a specification](#what-belongs-in-a-specification); implementer-discretion matters are not specified.
 - Explicit relationships and Implicit relationships satisfy Artifact Relationships, including mirrored Explicit relationship rows.
 - Every mention uses the full canonical glossary term, including headings, tables, and diagrams. Necessary new formal terms are defined in their owning Glossary; encountered synonyms and mention shortcuts are recorded in Terminology replacements.
+- Glossary terms are grouped as required by [Glossary groups](#glossary-groups).
 - Every example is introduced with "e.g." or sits under an explicit "Examples" label; every illustrative enumeration contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
