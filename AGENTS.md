@@ -30,3 +30,9 @@ push them without asking the user for confirmation first. Commit and push direct
 session branches unless the user asks.
 After pushing, give the user a link to the commit's diff view so they can see exactly what was committed, in the form
 `https://github.com/konrad-jamrozik/game-v5/commit/<full-sha>`.
+
+Exception: when a change set modifies a specification whose metadata Status was Accepted before the change, do not
+commit or push any part of it. Leave the whole change set uncommitted in the working tree so the user can review the
+local diff first, and tell the user it is uncommitted and which Accepted specifications it touches. This exception
+does not apply when the only change to an Accepted specification is one the user explicitly asked to commit, e.g.
+setting its Status to Accepted.
