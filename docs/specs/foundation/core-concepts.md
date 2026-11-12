@@ -51,7 +51,7 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 | Game build             | A particular version of the game's data and of the executable implementation of its game behavior, supplied together.                  |
 | Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated. |
 
-## Campaign and Session contexts
+## Campaign and Session
 
 A playthrough, its data, and the runtime context that selects it. Campaign Modeling Contract owns how Campaign state
 divides into components.
