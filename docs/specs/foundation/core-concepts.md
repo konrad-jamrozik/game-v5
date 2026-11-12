@@ -68,20 +68,19 @@ Contract owns how Campaign state divides into components.
 
 | Term            | Definition                                                                                                                                                                                                                                                 |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign state  | Data describing one Campaign, including its History.                                                                                                                                                                                                       |
-| History         | The part of Campaign state containing retained data describing past Campaign state or events. Game behavior and reports may consult History.                                                                                                               |
+| Campaign state  | Data describing one Campaign, including retained data describing its past Campaign state or events.                                                                                                                                                        |
 | Committed state | Complete Campaign state, including every part of it, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a part of Campaign state; every retained history position is a Committed state. |
 
 ## Data and information qualities
 
 Classifications of a value or piece of information, independent of where it lives in Campaign state.
 
-| Term                       | Definition                                                                                                                                                                                                                                               |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Authoritative value        | A value treated as established truth rather than recomputed from other values.                                                                                                                                                                           |
-| Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs.                                                                                                                                                           |
-| Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
-| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
+| Term                       | Definition                                                                                                                                                                                                                                                 |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authoritative value        | A value treated as established truth rather than recomputed from other values.                                                                                                                                                                             |
+| Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs.                                                                                                                                                             |
+| Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability, not whether the data describes past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
+| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                      |
 
 # Vocabulary and contract ownership
 

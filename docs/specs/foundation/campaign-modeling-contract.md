@@ -31,7 +31,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 # Glossary
 
 Shared modeling and execution vocabulary is owned by [Core Concepts](core-concepts.md#glossary), including Campaign
-state and History. The terms below add campaign-specific composition; Instance ID is defined by Core Concepts and its
+state. The terms below add campaign-specific composition; Instance ID is defined by Core Concepts and its
 campaign identity constraints are specified under [Campaign instances](#campaign-instances).
 
 ## Campaign state components
@@ -42,6 +42,7 @@ The components into which Campaign state divides.
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and History, distinct from Campaign configuration.                                          |
 | Current world state    | The subcomponent of World state other than History: the simulated world as it stands at the selected history position. After undo, it is the state at that earlier position, not the furthest position reached. |
+| History                | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and reports may consult History.      |
 | Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                    |
 
 ## Campaign instances

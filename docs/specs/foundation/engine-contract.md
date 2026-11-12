@@ -305,7 +305,7 @@ History and Persistence owns restoration procedures and representation, not alte
 
 For equal initial Campaign state, the same Game build, and the same ordered committed commands, execution must
 produce equal resulting Campaign state, generated Instance IDs, gameplay RNG state, and retained reports. Campaign
-state must preserve every input consulted by game behavior, including relevant History, current RNG state, and Instance ID
+state must preserve every input consulted by game behavior, including relevant retained data about past Campaign state or events, current RNG state, and Instance ID
 generation state. An initial random seed alone is insufficient unless it determines the complete restored generator
 position. Gameplay must not depend on wall-clock time, UI rendering, model responses, or Autopilot memory.
 
