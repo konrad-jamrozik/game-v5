@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define exact callable TypeScript signatures for Session API, Player API, Developer API, and Autopilot memory API, preserving Engine Contract authority and execution guarantees.
 

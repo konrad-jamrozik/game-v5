@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define agent capability, task availability, development, exhaustion, and recovery.
 
@@ -72,8 +72,7 @@ TODO: Write concrete requirements under descriptive section titles when rules re
 # Edge cases and failure behavior
 
 TODO: Define behavior for Exact readiness/exhaustion thresholds, zero health, recovery completion, destination disappearing during transit, and conflicting Current assignments.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples
 

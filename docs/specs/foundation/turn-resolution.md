@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define exactly when subsystem rules run and which state each phase reads.
 
@@ -68,8 +68,7 @@ TODO: Write concrete requirements under descriptive section titles when rules re
 # Edge cases and failure behavior
 
 TODO: Define behavior for Investigation completion and exhaustion together; mission creation/expiration together; reward and defeat conditions together; multiple missions affecting one faction.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples
 

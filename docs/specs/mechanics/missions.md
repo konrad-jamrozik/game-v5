@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define mission commitments and translate combat results into campaign consequences.
 
@@ -63,8 +63,7 @@ TODO: Write concrete requirements under descriptive section titles when rules re
 # Edge cases and failure behavior
 
 TODO: Define behavior for Last-turn deployment, failed attempts versus expiration, negligible damage, overkill, multiple missions against one faction, and simultaneous rewards/penalties.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples
 

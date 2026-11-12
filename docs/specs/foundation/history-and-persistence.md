@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define reversible campaign history, reproducible replay, and durable save/load behavior.
 

@@ -7,7 +7,7 @@
 | Status      | Draft                                            |
 | Conventions | [Specification Conventions](spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define how specifications, requirements, implementations, tests, and other artifacts describe their relationships.
 Every relationship runs from a Dependency to a Dependent and has one of five Relationship kinds: `follows`, `refines`, `uses`,
@@ -108,8 +108,8 @@ them or authorize future contract changes.
 
 ## Specification inventories
 
-Every registered specification contains adjacent Relationships and Glossary H1 sections immediately after
-Purpose and boundaries. Relationships contains one flat unordered list, without tables or subsections. Each bullet
+When present, the Relationships and Glossary H1 sections follow Overview in that order, and Glossary immediately
+follows Relationships when both are present. Relationships contains one flat unordered list, without tables or subsections. Each bullet
 describes the current document and consists of a directional phrase followed by one hyperlink whose text is the
 linked document's title. Link to the registered document itself, without an anchor or a scope annotation.
 
@@ -138,8 +138,8 @@ Both entries describe the same relationship. The first five phrases describe the
 the last five describe it as Dependency. Reverse-facing phrases are grammatical presentations of the canonical
 Relationship kinds, not additional Relationship kinds or glossary synonyms.
 
-List explicit relationships only. When there are none, write exactly **No explicit relationships.** as an unformatted
-paragraph. Do not repeat implicit relationships or the former implicit-only sentences. Every explicit relationship
+List explicit relationships only. When there are none, omit the Relationships section. Do not repeat implicit
+relationships. Every explicit relationship
 must have its mirror with the same Dependency, Dependent, and Relationship kind. A document pair may have multiple
 Relationship kinds, but duplicate entries of the same Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
 
@@ -215,9 +215,9 @@ check links, and validate the graphs. Do not invent implementation or test relat
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | A depends on B                                    | Record `B → A`; B is the Dependency and A is the Dependent                                       |
 | Two Relationship kinds connect the same artifacts | Keep both when they express distinct Relationship kinds                                          |
-| Only implicit relationships apply                 | Write `No explicit relationships.`                                                               |
+| Only implicit relationships apply                 | Omit the Relationships section                                                                   |
 | Explicit relationships exist                      | List all explicit relationships; omit implicit ones                                              |
-| No explicit relationships exist                   | Write `No explicit relationships.`                                                               |
+| No explicit relationships exist                   | Omit the Relationships section                                                                   |
 | One mirrored entry is missing or disagrees        | Treat the inventory as defective and update both entries                                         |
 | No implementation or test has been identified     | Do not invent an `implements` or `verifies` relationship                                         |
 | A requirement moves                               | Update both entries, links, and requirement references in contract prose                         |
@@ -268,8 +268,8 @@ Removing or changing either entry requires the corresponding change in the other
 
 ## No explicit relationships
 
-A registered specification with no explicit relationships writes exactly "No explicit relationships." Its implicit
-relationships still apply. It must not list implicit entries or use the former implicit-only sentences.
+A registered specification with no explicit relationships omits the Relationships section. Its implicit
+relationships still apply. It must not list implicit entries.
 
 ## Graph checks
 

@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define campaign initialization, adjustable Campaign configuration, global panic, and the conditions that start and end play.
 
@@ -82,8 +82,7 @@ TODO: Write concrete requirements under descriptive section titles when rules re
 # Edge cases and failure behavior
 
 TODO: Define behavior for Zero money versus negative money, panic at its limit, all factions defeated, same-turn victory/defeat, and post-ending commands.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples
 

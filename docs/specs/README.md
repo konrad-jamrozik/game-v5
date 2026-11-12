@@ -6,18 +6,10 @@
 | Family   | Governance |
 | Status   | Draft      |
 
-# Purpose and boundaries
+# Overview
 
 This index registers every specification's stable ID, Family, title, and ownership scope. It also provides navigation and
 the current specification-development status. It does not define gameplay behavior.
-
-# Relationships
-
-No explicit relationships.
-
-# Glossary
-
-None.
 
 # Start here
 

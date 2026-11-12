@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define fully automatic battles and their reproducible results independently of campaign rewards.
 
@@ -57,8 +57,7 @@ TODO: Write concrete requirements under descriptive section titles when rules re
 # Edge cases and failure behavior
 
 TODO: Define behavior for Ties, no valid targets, all participants incapacitated, zero damage/effective skill, simultaneous terminal conditions, and battles that cannot progress.
-State exact thresholds and effect ordering where relevant. Use a reasoned Not applicable statement only for cases
-that truly fall outside this document's scope.
+State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples
 

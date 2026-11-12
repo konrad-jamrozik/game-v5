@@ -7,7 +7,7 @@
 | Status      | Accepted                                                       |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define campaign-data composition, Campaign instance creation, identity, reference integrity, value classification, and historical preservation. These constraints apply to Campaign state, not the complete engine API hierarchy. Session authority, Autopilot orchestration, API signatures, and interface behavior belong to their owning contracts.
 

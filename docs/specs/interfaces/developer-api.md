@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define full Campaign state inspection and cheat-command details through Developer API, refining Engine Contract access and replay guarantees.
 

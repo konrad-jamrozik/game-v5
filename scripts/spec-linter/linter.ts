@@ -52,7 +52,7 @@ const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Guidance',
 ])
 const RULE_HEADINGS = [
-  'Purpose and boundaries',
+  'Overview',
   'Relationships',
   'Glossary',
   'Concepts and contract',
@@ -480,7 +480,7 @@ function validateRegistryAndMetadata(
         specification.path,
         specification.metadata.table,
         'SPEC111',
-        'Scope belongs in Purpose and boundaries, not in metadata.',
+        'Scope belongs in Overview, not in metadata.',
       )
     }
   }
@@ -517,19 +517,21 @@ function validateSectionContent(specification: Specification, heading: Heading, 
       specification.path,
       heading,
       'SPEC204',
-      `Required section "${headingText(heading)}" must not be empty.`,
+      `Section "${headingText(heading)}" must not be empty; omit a section that does not apply.`,
     )
   }
-  for (const node of nodes) {
-    if (textOf(node).trim() === 'N/A') {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        node,
-        'SPEC205',
-        'Use a precise explanation or "None.", not bare "N/A".',
-      )
-    }
+  const content = nodes
+    .map((node) => textOf(node).trim())
+    .filter(Boolean)
+    .join(' ')
+  if (content === 'N/A' || content === 'None.' || /^Not applicable\b/i.test(content)) {
+    addDiagnostic(
+      diagnostics,
+      specification.path,
+      heading,
+      'SPEC205',
+      `Section "${headingText(heading)}" must be omitted instead of containing a placeholder.`,
+    )
   }
 }
 
@@ -579,25 +581,28 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
       previousHeading = heading
     }
 
-    const purpose = findHeading(specification.document, 1, 'Purpose and boundaries')
+    const overview = findHeading(specification.document, 1, 'Overview')
     const relationships = findHeading(specification.document, 1, 'Relationships')
     const glossary = findHeading(specification.document, 1, 'Glossary')
-    const universal = [purpose, relationships, glossary]
-    if (universal.some((heading) => heading === undefined)) {
+    const universal = [overview, relationships, glossary]
+    const presentUniversal = universal.filter((heading): heading is Heading => heading !== undefined)
+    if (!overview) {
       addDiagnostic(
         diagnostics,
         specification.path,
         specification.document.children[0],
         'SPEC206',
-        'Every specification must contain Purpose and boundaries, Relationships, and Glossary H1 sections.',
+        'Every specification must contain an Overview H1 section.',
       )
-    } else if (!(lineOf(purpose) < lineOf(relationships) && lineOf(relationships) < lineOf(glossary))) {
+    } else if (
+      presentUniversal.some((heading, index) => index > 0 && lineOf(heading) <= lineOf(presentUniversal[index - 1]))
+    ) {
       addDiagnostic(
         diagnostics,
         specification.path,
-        purpose,
+        overview,
         'SPEC207',
-        'Universal sections must appear in Purpose and boundaries, Relationships, Glossary order.',
+        'Universal sections must appear in Overview, Relationships, Glossary order.',
       )
     }
 
@@ -626,13 +631,7 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
     if (specification.id && !GOVERNANCE_LAYOUT_EXCEPTIONS.has(specification.id)) {
       const topLevel = h1s.slice(1)
       const actual = topLevel.map(headingText)
-      const requiredHeadings = RULE_HEADINGS.filter(
-        (text) =>
-          (text !== 'Requirements' || actual.includes(text)) &&
-          (text !== 'Open decisions' || actual.includes(text)) &&
-          (text !== 'Edge cases and failure behavior' || specification.id !== 'CMC' || actual.includes(text)) &&
-          (text !== 'Acceptance examples' || specification.family !== 'Foundation' || actual.includes(text)),
-      )
+      const requiredHeadings = RULE_HEADINGS.filter((text) => text === 'Overview' || actual.includes(text))
       const positions = requiredHeadings.map((text) => actual.indexOf(text))
       const valid = positions.every(
         (position, index) => position >= 0 && (index === 0 || position > (positions[index - 1] ?? -1)),
@@ -741,22 +740,13 @@ function parseInventory(
   if (!heading) return []
   const nodes = sectionNodes(specification.document, heading)
   const only = nodes[0]
-  if (
-    nodes.length === 1 &&
-    only &&
-    isParagraph(only) &&
-    only.children.length === 1 &&
-    only.children[0]?.type === 'text' &&
-    textOf(only) === 'No explicit relationships.'
-  )
-    return []
   if (nodes.length !== 1 || !only || only.type !== 'list' || only.ordered) {
     addDiagnostic(
       diagnostics,
       specification.path,
       heading,
       'SPEC401',
-      'Relationships must contain one unordered flat list or exactly "No explicit relationships.".',
+      'Relationships must contain one unordered flat list; omit the section when there are no explicit relationships.',
     )
     return []
   }
@@ -845,11 +835,11 @@ function relationshipPair(row: RelationshipRow): {
     : { dependency: row.owner, dependent: row.destination }
 }
 
-function validatePurposeHasNoInventory(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
+function validateOverviewHasNoInventory(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
   for (const specification of specifications) {
-    const purpose = findHeading(specification.document, 1, 'Purpose and boundaries')
-    if (!purpose) continue // The layout validator reports the missing section.
-    const bullets = sectionNodes(specification.document, purpose).flatMap((node) =>
+    const overview = findHeading(specification.document, 1, 'Overview')
+    if (!overview) continue // The layout validator reports the missing section.
+    const bullets = sectionNodes(specification.document, overview).flatMap((node) =>
       node.type === 'list' && !node.ordered ? node.children : [],
     )
     for (const item of bullets) {
@@ -864,7 +854,7 @@ function validatePurposeHasNoInventory(specifications: readonly Specification[],
         specification.path,
         item,
         'SPEC417',
-        'Purpose and boundaries must not repeat the Relationships inventory as directional-phrase bullets.',
+        'Overview must not repeat the Relationships inventory as directional-phrase bullets.',
       )
     }
   }
@@ -914,7 +904,7 @@ function validateRelationships(
 ): readonly RelationshipRow[] {
   const byPath = new Map(specifications.map((specification) => [specification.path, specification]))
   const rows = specifications.flatMap((specification) => parseInventory(specification, byPath, diagnostics))
-  validatePurposeHasNoInventory(specifications, diagnostics)
+  validateOverviewHasNoInventory(specifications, diagnostics)
   const seen = new Set<string>()
   for (const row of rows) {
     const pair = relationshipPair(row)
@@ -1164,19 +1154,13 @@ function validateLifecycleAndSections(parsed: ParsedInput, diagnostics: Diagnost
       if (specification.id && !GOVERNANCE_LAYOUT_EXCEPTIONS.has(specification.id)) {
         const open = findHeading(specification.document, 1, 'Open decisions')
         if (open) {
-          const content = sectionNodes(specification.document, open)
-            .map((node) => textOf(node).trim())
-            .filter(Boolean)
-            .join(' ')
-          if (content !== 'None.') {
-            addDiagnostic(
-              diagnostics,
-              specification.path,
-              open,
-              'SPEC605',
-              'Accepted standard specifications must contain exactly "None." under Open decisions.',
-            )
-          }
+          addDiagnostic(
+            diagnostics,
+            specification.path,
+            open,
+            'SPEC605',
+            'Accepted standard specifications must not contain Open decisions.',
+          )
         }
       }
     }

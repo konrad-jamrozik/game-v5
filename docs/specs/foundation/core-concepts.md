@@ -7,7 +7,7 @@
 | Status      | Draft                                                          |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define the shared language for the complete game contract, spanning campaign data and engine execution. This document
 owns the meanings of its glossary terms independently of the contracts that use them. It does not define API authority,
@@ -202,11 +202,6 @@ For example, each enemy's current health is an Authoritative value and the enemi
 value. With two enemies at health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Caching the total does
 not make it an Authoritative value, and hiding either the individual health or the total from the player does not
 change either classification.
-
-# Edge cases and failure behavior
-
-Not applicable — this document defines shared meanings rather than executable operations. Rejection, authorization,
-restoration, and storage failures belong to the contracts that specify those operations.
 
 # Acceptance examples
 

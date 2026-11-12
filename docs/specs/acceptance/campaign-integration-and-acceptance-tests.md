@@ -7,7 +7,7 @@
 | Status      | Stub                                                           |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 This document defines test scenarios that verify how game systems work together. Each scenario specifies a starting
 state, player actions, and expected results derived from the game specifications. These scenarios guide automated

@@ -7,7 +7,7 @@
 | Status      | Draft                                                          |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define what exists in the game and how those concepts relate. A campaign contains one player-controlled agency that
 allocates agents, pursues leads, undertakes missions, and opposes factions.

@@ -25,17 +25,9 @@ function validCorpus(): SourceFile[] {
         '| Status | Draft |',
 
         '',
-        '# Purpose and boundaries',
+        '# Overview',
         '',
         'Registry.',
-        '',
-        '# Relationships',
-        '',
-        'No explicit relationships.',
-        '',
-        '# Glossary',
-        '',
-        'None.',
         '',
         '# Specification register',
         '',
@@ -58,13 +50,9 @@ function validCorpus(): SourceFile[] {
         '| Status | Draft |',
 
         '',
-        '# Purpose and boundaries',
+        '# Overview',
         '',
         'Conventions.',
-        '',
-        '# Relationships',
-        '',
-        'No explicit relationships.',
         '',
         '# Glossary',
         '',
@@ -89,17 +77,9 @@ function validCorpus(): SourceFile[] {
         '| Status | Draft |',
 
         '',
-        '# Purpose and boundaries',
+        '# Overview',
         '',
         'Alpha purpose. See [Implicit relationships](../governance/spec-conventions.md#implicit-relationships).',
-        '',
-        '# Relationships',
-        '',
-        'No explicit relationships.',
-        '',
-        '# Glossary',
-        '',
-        'None.',
         '',
         '# Concepts and contract',
         '',
@@ -118,10 +98,6 @@ function validCorpus(): SourceFile[] {
         '# Acceptance examples',
         '',
         '[Rule](#rule): the same input has the same result.',
-        '',
-        '# Open decisions',
-        '',
-        'None.',
       ]),
     },
   ]
@@ -137,11 +113,11 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
   if (!alpha) return files
   const active = { follows: 'Follows', refines: 'Refines', uses: 'Uses' }[kind]
   const passive = { follows: 'Followed by', refines: 'Refined by', uses: 'Used by' }[kind]
-  const betaContent = alpha.content
-    .replaceAll('Alpha', 'Beta')
-    .replaceAll('AAA', 'BBB')
-    .replaceAll('aaa', 'bbb')
-    .replace('No explicit relationships.', '- ' + active + ' [Alpha](alpha.md)\n- ' + passive + ' [Alpha](alpha.md)')
+  const betaContent = insertSection(
+    alpha.content.replaceAll('Alpha', 'Beta').replaceAll('AAA', 'BBB').replaceAll('aaa', 'bbb'),
+    ['Overview'],
+    '# Relationships\n\n- ' + active + ' [Alpha](alpha.md)\n- ' + passive + ' [Alpha](alpha.md)',
+  )
   const withBeta = mutate(
     files,
     'docs/specs/README.md',
@@ -149,14 +125,33 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
     '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |\n| BBB | Foundation | [Beta](foundation/beta.md) | Beta rules. |',
   )
   return [
-    ...mutate(
-      withBeta,
-      alpha.path,
-      'No explicit relationships.',
-      '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)',
-    ),
+    ...withRelationships(withBeta, alpha.path, '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)'),
     { path: 'docs/specs/foundation/beta.md', content: betaContent },
   ]
+}
+
+function insertSection(content: string, after: readonly string[], section: string): string {
+  const headings = [...content.matchAll(/^# .*$/gm)]
+  const anchor = headings.filter((match) => after.includes(match[0].slice(2))).at(-1)
+  const next = headings.find((match) => (match.index ?? 0) > (anchor?.index ?? 0))
+  const position = next?.index ?? content.length
+  return content.slice(0, position) + section + '\n\n' + content.slice(position)
+}
+
+function withRelationships(files: readonly SourceFile[], path: string, inventory: string): SourceFile[] {
+  return files.map((file) =>
+    file.path === path
+      ? { ...file, content: insertSection(file.content, ['Overview'], '# Relationships\n\n' + inventory) }
+      : file,
+  )
+}
+
+function withGlossary(files: readonly SourceFile[], path: string, glossary: string): SourceFile[] {
+  return files.map((file) =>
+    file.path === path
+      ? { ...file, content: insertSection(file.content, ['Overview', 'Relationships'], glossary) }
+      : file,
+  )
 }
 
 function mutate(files: readonly SourceFile[], path: string, find: string, replacement: string): SourceFile[] {
@@ -168,10 +163,9 @@ function mutate(files: readonly SourceFile[], path: string, find: string, replac
 
 describe('specification linter', () => {
   test('accepts modeling Types as glossary terms and descriptions', () => {
-    const files = mutate(
+    const files = withGlossary(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '# Glossary\n\nNone.',
       '# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Type | A named description of data. |\n| Value | Data conforming to a Type. |',
     )
     expect(lintSpecifications({ files })).toEqual([])
@@ -208,30 +202,42 @@ describe('specification linter', () => {
     const misplaced = mutate(
       files,
       'docs/specs/foundation/alpha.md',
-      '# Open decisions',
-      '# Requirements\n\nSeparate contract.\n\n# Open decisions',
+      '[Rule](#rule): the same input has the same result.',
+      '[Rule](#rule): the same input has the same result.\n\n# Requirements\n\nSeparate contract.',
     )
     expect(diagnosticCodes(misplaced)).toEqual(['SPEC209'])
   })
 
-  test.each(['Concepts and contract', 'Edge cases and failure behavior'])(
-    'still requires %s when requirements are interwoven',
-    (section) => {
-      const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Requirements\n\n', '')
-      const missing = mutate(files, 'docs/specs/foundation/alpha.md', '# ' + section, '# Other section')
-      expect(diagnosticCodes(missing)).toContain('SPEC209')
-    },
-  )
+  test.each([
+    ['Concepts and contract', 'Contract.'],
+    ['Edge cases and failure behavior', 'Failures are defined.'],
+  ])('allows omitting %s when it does not apply', (section, body) => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# ' + section + '\n\n' + body + '\n\n', '')
+    expect(diagnosticCodes(files)).toEqual([])
+  })
 
-  test('allows omission of Open decisions when no unresolved choices remain', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Open decisions\n\nNone.', '')
-    expect(lintSpecifications({ files })).toEqual([])
+  test('requires Overview', () => {
+    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Overview', '# Introduction')
+    expect(diagnosticCodes(files)).toContain('SPEC206')
+  })
+
+  test.each([
+    ['# Open decisions\n\nNone.', 'None'],
+    ['# Edge cases and failure behavior\n\nNot applicable — this document defines no operations.', 'Not applicable'],
+    ['# Requirements\n\nN/A', 'N/A'],
+  ])('rejects a placeholder section instead of omission (%s)', (section, _name) => {
+    const files = mutate(
+      mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Requirements\n\n## Rule', '## Rule'),
+      'docs/specs/foundation/alpha.md',
+      '# Edge cases and failure behavior\n\nFailures are defined.',
+      section.startsWith('# Edge') ? section : 'Failures are defined.\n\n' + section,
+    )
+    expect(diagnosticCodes(files)).toContain('SPEC205')
   })
 
   test('rejects a misplaced optional Open decisions section', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Open decisions\n\nNone.', '')
     const misplaced = mutate(
-      files,
+      validCorpus(),
       'docs/specs/foundation/alpha.md',
       '# Concepts and contract',
       '# Open decisions\n\nChoose the numeric representation.\n\n# Concepts and contract',
@@ -255,7 +261,7 @@ describe('specification linter', () => {
   })
 
   test.each(['Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance', 'Guidance'])(
-    'still requires the separate acceptance section for standard %s specifications',
+    'allows omitting the separate acceptance section for %s specifications',
     (family) => {
       const directory = family.toLowerCase()
       const files = validCorpus().map((file) => ({
@@ -265,7 +271,7 @@ describe('specification linter', () => {
           .replaceAll('foundation/alpha.md', `${directory}/alpha.md`)
           .replace('# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n', ''),
       }))
-      expect(diagnosticCodes(files)).toEqual(['SPEC209'])
+      expect(diagnosticCodes(files)).toEqual([])
     },
   )
 
@@ -289,7 +295,7 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toEqual(['SPEC204'])
   })
 
-  test('still requires other Foundation sections when examples are embedded', () => {
+  test('allows omitting several sections that do not apply', () => {
     const files = mutate(
       mutate(
         validCorpus(),
@@ -301,7 +307,7 @@ describe('specification linter', () => {
       '# Edge cases and failure behavior\n\nFailures are defined.\n\n',
       '',
     )
-    expect(diagnosticCodes(files)).toEqual(['SPEC209'])
+    expect(diagnosticCodes(files)).toEqual([])
   })
 
   test('allows Campaign Modeling Contract to omit the separate failure behavior section', () => {
@@ -320,10 +326,9 @@ describe('specification linter', () => {
   test.each(['TypeScript type', 'TypeScript types', '`TypeScript type`', '**TypeScript type**'])(
     'allows explicit programming terminology: %s',
     (term) => {
-      const files = mutate(
+      const files = withGlossary(
         validCorpus(),
         'docs/specs/foundation/alpha.md',
-        '# Glossary\n\nNone.',
         `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Example | A ${term} describing data. |`,
       )
       expect(lintSpecifications({ files })).toEqual([])
@@ -333,10 +338,9 @@ describe('specification linter', () => {
   test.each(['', ' A target artifact is also described.'])(
     'distinguishes Constants reference targets from artifact terminology: %s',
     (extra) => {
-      const files = mutate(
+      const files = withGlossary(
         validCorpus(),
         'docs/specs/foundation/alpha.md',
-        '# Glossary\n\nNone.',
         `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Constants | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.${extra} |`,
       )
       expect(diagnosticCodes(files)).toEqual(extra === '' ? [] : ['SPEC501'])
@@ -354,10 +358,9 @@ describe('specification linter', () => {
     'fixed target',
     'target’s State',
   ])('still rejects competing formal relationship terminology: %s', (term) => {
-    const files = mutate(
+    const files = withGlossary(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '# Glossary\n\nNone.',
       `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Example | A ${term}. |`,
     )
     expect(diagnosticCodes(files)).toContain('SPEC501')
@@ -370,15 +373,13 @@ describe('specification linter', () => {
     ['Implements', 'Implemented by', 'implements'],
     ['Verifies', 'Verified by', 'verifies'],
   ])('normalizes %s and %s into one correctly directed edge', (active, passive, kind) => {
-    const files = mutate(
-      mutate(
+    const files = withRelationships(
+      withRelationships(
         validCorpus(),
         'docs/specs/foundation/alpha.md',
-        'No explicit relationships.',
         `- ${active} [Game Specification Index](../README.md)`,
       ),
       'docs/specs/README.md',
-      'No explicit relationships.',
       `- ${passive} [Alpha](foundation/alpha.md)`,
     )
     const result = analyzeSpecifications({ files })
@@ -427,21 +428,19 @@ describe('specification linter', () => {
       'SPEC401',
     ],
   ])('rejects %s', (_name, inventory, code) => {
-    expect(
-      diagnosticCodes(mutate(validCorpus(), 'docs/specs/foundation/alpha.md', 'No explicit relationships.', inventory)),
-    ).toContain(code)
+    expect(diagnosticCodes(withRelationships(validCorpus(), 'docs/specs/foundation/alpha.md', inventory))).toContain(
+      code,
+    )
   })
 
   test('does not accept a mirror with the wrong direction', () => {
-    const files = mutate(
-      mutate(
+    const files = withRelationships(
+      withRelationships(
         validCorpus(),
         'docs/specs/foundation/alpha.md',
-        'No explicit relationships.',
         '- Uses [Game Specification Index](../README.md)',
       ),
       'docs/specs/README.md',
-      'No explicit relationships.',
       '- Uses [Alpha](foundation/alpha.md)',
     )
     expect(diagnosticCodes(files).filter((code) => code === 'SPEC413')).toHaveLength(2)
@@ -454,7 +453,7 @@ describe('specification linter', () => {
   test.each([
     ['- Uses [Game Specification Index](../README.md) for the shared contract.', 'description bullet'],
     ['- Used by [Game Specification Index](../README.md)', 'bare inventory bullet'],
-  ])('rejects a repeated inventory entry in Purpose and boundaries (%s)', (bullet) => {
+  ])('rejects a repeated inventory entry in Overview (%s)', (bullet) => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
@@ -464,7 +463,7 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toEqual(['SPEC417'])
   })
 
-  test('accepts ordinary bullets in Purpose and boundaries', () => {
+  test('accepts ordinary bullets in Overview', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
@@ -620,12 +619,18 @@ describe('specification linter', () => {
     [
       'standard heading order',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '# Concepts and contract', '# Requirements'),
+        mutate(files, 'docs/specs/foundation/alpha.md', '# Concepts and contract', '# Acceptance examples'),
       'SPEC209',
     ],
     [
       'removed headings',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '# Glossary', '# Terminology'),
+      (files: SourceFile[]) =>
+        mutate(
+          files,
+          'docs/specs/foundation/alpha.md',
+          '# Concepts and contract',
+          '# Terminology\n\nTerms.\n\n# Concepts and contract',
+        ),
       'SPEC203',
     ],
     [
@@ -647,16 +652,15 @@ describe('specification linter', () => {
     ],
     [
       'None dependencies',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', 'No explicit relationships.', 'None.'),
+      (files: SourceFile[]) => withRelationships(files, 'docs/specs/foundation/alpha.md', 'None.'),
       'SPEC401',
     ],
     [
       'invalid relationship kind',
       (files: SourceFile[]) =>
-        mutate(
+        withRelationships(
           files,
           'docs/specs/foundation/alpha.md',
-          'No explicit relationships.',
           '- Copies [Specification Conventions](../governance/spec-conventions.md)',
         ),
       'SPEC409',
@@ -664,18 +668,16 @@ describe('specification linter', () => {
     [
       'missing relationship mirror',
       (files: SourceFile[]) =>
-        mutate(
+        withRelationships(
           files,
           'docs/specs/foundation/alpha.md',
-          'No explicit relationships.',
           '- Uses [Specification Conventions](../governance/spec-conventions.md)',
         ),
       'SPEC413',
     ],
     [
       'prohibited formal terminology',
-      (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', 'None.\n\n# Concepts', 'Source.\n\n# Concepts'),
+      (files: SourceFile[]) => withGlossary(files, 'docs/specs/foundation/alpha.md', '# Glossary\n\nSource.'),
       'SPEC501',
     ],
     [
@@ -733,10 +735,9 @@ describe('specification linter', () => {
   })
 
   test('rejects duplicate glossary ownership and aliases', () => {
-    const files = mutate(
+    const files = withGlossary(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '# Glossary\n\nNone.',
       lines([
         '# Glossary',
         '',
@@ -752,10 +753,9 @@ describe('specification linter', () => {
   })
 
   test('rejects incomplete glossary rows', () => {
-    const files = mutate(
+    const files = withGlossary(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '# Glossary\n\nNone.',
       lines(['# Glossary', '', '| Term | Definition |', '| --- | --- |', '| Incomplete | |']),
     )
     expect(diagnosticCodes(files)).toContain('SPEC504')

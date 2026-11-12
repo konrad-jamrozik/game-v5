@@ -7,7 +7,7 @@
 | Status      | Draft                                            |
 | Conventions | [Specification conventions](spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 This document is the register of known outstanding issues in the registered specifications that should be addressed
 eventually but are not yet scheduled. Each Work item records one issue completely enough that a reader with no other
@@ -21,10 +21,6 @@ batch is drafted or reviewed. Recording a Work item here neither schedules it no
 This document defines no gameplay Rule, observable contract, or GDR, and it does not change the specifications it
 cites. Each owning specification remains authoritative until it is revised. Links from Work items to other
 specifications are ordinary citations, not relationships.
-
-# Relationships
-
-No explicit relationships.
 
 # Glossary
 
@@ -547,7 +543,7 @@ difficulty is fixed for the whole Investigation and which Campaign state it may 
 
 **Category and priority:** Borderline, low priority.
 
-**Affected:** Turn Resolution (TURN), [Purpose and boundaries](../foundation/turn-resolution.md#purpose-and-boundaries),
+**Affected:** Turn Resolution (TURN), [Overview](../foundation/turn-resolution.md#overview),
 [Concepts and contract](../foundation/turn-resolution.md#concepts-and-contract), and
 [Phase schedule](../foundation/turn-resolution.md#phase-schedule). Specification Conventions (CONV, Accepted),
 [Writing exact requirements](spec-conventions.md#writing-exact-requirements) and
@@ -561,7 +557,7 @@ Investigations (INVSTG), [Team changes and commitment](../mechanics/investigatio
 
 > Define exactly when subsystem rules run and which state each phase reads.
 
-(TURN, Purpose and boundaries; the register's Owns column for TURN repeats "which state each phase reads".)
+(TURN, Overview; the register's Owns column for TURN repeats "which state each phase reads".)
 
 > [...] by specifying calculation snapshots, ordered phases, and the atomic publication boundary.
 
@@ -659,7 +655,7 @@ specification.
 
 **Category and priority:** Borderline, low priority.
 
-**Affected:** Domain Model (DOM), [Purpose and boundaries](../foundation/domain-model.md#purpose-and-boundaries),
+**Affected:** Domain Model (DOM), [Overview](../foundation/domain-model.md#overview),
 [Agent](../foundation/domain-model.md#agent), and
 [Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams).
 
@@ -669,7 +665,7 @@ specification.
 
 > Conceptual records may be embedded, separately stored, or reconstructed provided their identity and meaning are preserved.
 
-(DOM, Purpose and boundaries.)
+(DOM, Overview.)
 
 > [...] this model does not require duplicate stored records.
 

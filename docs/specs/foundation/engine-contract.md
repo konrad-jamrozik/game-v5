@@ -7,7 +7,7 @@
 | Status      | Draft                                                          |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Define the engine's API hierarchy and the guarantees it provides when running the game, exposing information, and restoring history.
 

@@ -7,7 +7,7 @@
 | Status      | Draft                                                          |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Steer implementers to keep gameplay code isolated from the Campaign state that contains it. This document is
 non-behavioural Guidance: it owns no Rule, observable contract, or GDR, and no acceptance test depends on it.
@@ -41,13 +41,3 @@ check that every such value is part of Campaign state. The observable property t
 hidden inputs, is already guaranteed by [Continuation state](../foundation/engine-contract.md#continuation-state) in
 Engine Contract: equal initial Campaign state, the same Game build, and the same ordered committed commands produce
 equal results. An implementation that satisfies that guarantee by other means also satisfies every specification.
-
-# Edge cases and failure behavior
-
-Not applicable — this Guidance document defines no behavior, so no input, state, or failure can violate it
-observably. Failures of the supported guarantee are defined by [Continuation state](../foundation/engine-contract.md#continuation-state).
-
-# Acceptance examples
-
-Not applicable — no acceptance test depends on Guidance. Acceptance examples for the supported guarantee belong to
-[Continuation state](../foundation/engine-contract.md#continuation-state) in Engine Contract.

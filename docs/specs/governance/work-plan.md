@@ -7,7 +7,7 @@
 | Status      | Accepted                                         |
 | Conventions | [Specification conventions](spec-conventions.md) |
 
-# Purpose and boundaries
+# Overview
 
 Develop the game specifications in manageable review batches rather than drafting the entire game at once. This document
 owns the accepted authoring sequence and work tracking; individual specifications own game rules and interface contracts.
@@ -20,10 +20,6 @@ The [Game Design Brief](../../game-design-brief.md) supplies strategic intent an
 **Current work:** [Core Concepts](../foundation/core-concepts.md), [Domain Model](../foundation/domain-model.md), [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md),
 and [Engine Contract](../foundation/engine-contract.md) are **In review** for batch 1. Review their
 contracts and unresolved design questions before advancing. Later batches have not started.
-
-# Relationships
-
-No explicit relationships.
 
 # Glossary
 

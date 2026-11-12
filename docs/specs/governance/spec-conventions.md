@@ -7,7 +7,7 @@
 | Status            | Accepted                                                                    |
 | Related documents | [Spec index](../README.md), [game design brief](../../game-design-brief.md) |
 
-# Purpose and boundaries
+# Overview
 
 Specifications are the durable authority for intended behavior. Code and tests implement that behavior and may be replaced without changing the contract. The [game design brief](../../game-design-brief.md) explains intent and strategic tensions; the specifications resolve those ideas into precise rules.
 
@@ -102,8 +102,8 @@ record batch progress; lifecycle rules and worked review scenarios may discuss s
 Open decisions contains only substantive unresolved design choices and their affected contracts. Do not list already
 stated rules merely to request acceptance. Omit the section when no substantive unresolved choices remain.
 
-Each specification has a stable Spec ID, Family, title, status, and related-document links. Purpose and boundaries
-defines the specification’s scope, ownership, and exclusions; do not add a Scope row to metadata. The specification
+Each specification has a stable Spec ID, Family, title, status, and related-document links. Overview explains the
+specification’s purpose and scope, including what it owns and what it excludes; do not add a Scope row to metadata. The specification
 register’s Owns column supplies concise ownership summaries for navigation and the generated catalog.
 
 ## Specification families and paths
@@ -164,8 +164,8 @@ Implicit relationships are exempt from mirrored table rows.
 
 ## Relationship inventories
 
-Every registered specification contains adjacent Relationships and Glossary H1 sections immediately after
-Purpose and boundaries. Relationships contains one flat unordered list, without tables or subsections. Each bullet
+When present, the Relationships and Glossary H1 sections follow Overview in that order, and Glossary immediately
+follows Relationships when both are present. Relationships contains one flat unordered list, without tables or subsections. Each bullet
 describes the current document and consists of a directional phrase followed by one hyperlink whose text is the
 linked document's title. Link to the registered document itself, without an anchor or a scope annotation.
 
@@ -194,8 +194,8 @@ Both entries describe the same relationship. The first five phrases describe the
 the last five describe it as Dependency. Reverse-facing phrases are grammatical presentations of the canonical
 Relationship kinds, not additional Relationship kinds or glossary synonyms.
 
-List explicit relationships only. When there are none, write exactly **No explicit relationships.** as an unformatted
-paragraph. Do not repeat implicit relationships or the former implicit-only sentences. Every explicit relationship
+List explicit relationships only. When there are none, omit the Relationships section. Do not repeat implicit
+relationships. Every explicit relationship
 must have its mirror with the same Dependency, Dependent, and Relationship kind. A document pair may have multiple
 Relationship kinds, but duplicate entries of the same Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
 
@@ -203,7 +203,7 @@ Relationship entries have no Scope field. Keep substantive constraints and requi
 contract prose; a document link does not imply reliance on every rule in that document. Ordinary citations and evidence
 acknowledgements do not create relationships.
 
-Relationships is the only inventory of explicit relationships. Purpose and boundaries must not repeat it as
+Relationships is the only inventory of explicit relationships. Overview must not repeat it as
 directional-phrase bullets; where a reliance matters, the owning contract prose states it.
 
 Classify relationships using [Choosing uses or refines](artifact-relationships.md#choosing-uses-or-refines).
@@ -331,39 +331,37 @@ unresolved decisions rather than filling them with assumptions.
 
 # Predictable layout and allowed variation
 
-Rule specifications use the following top-level headings in this order:
+Rule specifications use the following top-level headings in this order. Overview is required; every other section
+is present only when it applies to the document:
 
-1. `# Purpose and boundaries`
+1. `# Overview`, explaining the document's purpose and scope
 2. `# Relationships`, containing the flat directional inventory
 3. `# Glossary`
 4. `# Concepts and contract`
-5. `# Requirements` (optional)
+5. `# Requirements`
 6. `# Edge cases and failure behavior`
 7. `# Acceptance examples`
-8. `# Open decisions` (optional; include only for substantive unresolved design choices)
+8. `# Open decisions`, containing only substantive unresolved design choices
 
 Use a metadata table immediately below the document-title H1. Major sections are unnumbered H1 headings. Subsections may
 nest from H2 through H6 when the hierarchy requires it, without skipping a heading level. Appendices follow Open
 decisions.
 
-Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both must use the universal Purpose and boundaries, Relationships, and Glossary sequence, but they may replace the remaining standard rule-specification sections with governance-specific H1 sections.
+Specification Conventions (`CONV`) and the Game Specification Index (`INDEX`) are governance-layout exceptions. Both use the universal Overview, Relationships, and Glossary sequence, but they may replace the remaining standard rule-specification sections with governance-specific H1 sections.
 
-All rule-specification families may interweave identified requirements into the narrative under Concepts and contract
-and omit the separate Requirements section. If present, Requirements retains its standard position and content requirements.
-Do not maintain a second statement of a contract merely to populate that section.
-
-Foundation specifications may embed illustrative examples beside the concepts they explain and omit the separate
-Acceptance examples section. If present, that section retains its standard position and content requirements.
-Campaign Modeling Contract (`CMC`) may also omit the separate Edge cases and failure behavior section; its conceptual contracts
-define validity directly. If present, that section retains its standard position and content requirements.
-All other standard sections remain required. Whether embedded examples explain the contracts adequately is a semantic
-review concern; the linter checks section presence, content, and order, not the examples' explanatory quality.
+For example, a specification may interweave identified requirements into the narrative under Concepts and contract
+and omit the separate Requirements section, or embed illustrative examples beside the concepts they explain and omit
+the separate Acceptance examples section. Do not maintain a second statement of a contract merely to populate a
+section. Whether a section applies, and whether embedded examples explain the contracts adequately, are semantic review
+concerns; the linter checks section order and content, not applicability.
 
 ## Handling sections that do not apply
 
-Retain the standard headings for navigation, except for the optional sections explicitly permitted above. If a required section truly does not apply, write **Not applicable —** followed by a specific explanation. Never use an empty section, unexplained "N/A", or a TODO as a substitute for that explanation.
+Omit a section that does not apply. Do not keep its heading with a placeholder such as "Not applicable", "N/A",
+"None.", or "No explicit relationships."; a present section is never empty.
 
-A missing decision is not "not applicable." For example, a mechanics specification can have no public function signatures while still defining inputs, outputs, and state changes.
+A missing decision is not "not applicable": keep the section and record the missing content as a TODO. For example, a
+mechanics specification can have no public function signatures while still defining inputs, outputs, and state changes.
 
 ## Specialized material
 
