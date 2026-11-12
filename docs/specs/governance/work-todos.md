@@ -66,7 +66,7 @@ The complete set of categories, in descending priority, is:
 | Clear violation                        | The wording specifies a matter that [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification) leaves to the implementer. |
 | Contradiction with a recorded decision | The wording plans or requires something that a recorded decision in another section has already excluded.                                             |
 | Borderline                             | The underlying content belongs in a specification, but its wording describes a mechanism rather than an observable or designer-authored outcome.      |
-| Other                                  | Any other defect, for example a terminology or consistency error.                                                                                     |
+| Other                                  | Any other defect, e.g. a terminology or consistency error.                                                                                            |
 
 # Measuring rules
 
@@ -134,7 +134,7 @@ Related permissive clarifications:
 **Why it is an issue:** Whether caches exist is the implementer's choice under the scope rule; only the consistency of
 returned values is observable. The second ENG sentence already states the observable part.
 
-**Suggested resolution:** In ENG, delete the cache sentence and state only the observable consistency, for example
+**Suggested resolution:** In ENG, delete the cache sentence and state only the observable consistency, e.g.
 that every query result, report, and Player-visible information after any action or restoration equals what would be
 computed from the current Campaign state. Remove "cache invalidation" from both HIST passages. The CMC and CORE
 sentences are permissive and do not prescribe caches; consider dropping them for consistency, which for CMC is a
@@ -346,7 +346,7 @@ Campaign save IDs. Only uniqueness, stability, and whether replay must reproduce
 
 **Suggested resolution:** Keep the two-way classification of Campaign-scoped identifiers and Independent identifiers,
 defined by whether replay must reproduce the identifier. Drop the "Required format" column and the ULID mandate,
-unless a player-facing reason is stated, for example save lists sortable by creation time. Change the HIST glossary
+unless a player-facing reason is stated, e.g. save lists sortable by creation time. Change the HIST glossary
 definitions to "The Independent identifier identifying [...]".
 
 ### TODO-006: Campaign instance constructor leftover in TypeScript Player API
@@ -536,7 +536,7 @@ Deterministic fixtures TODO, and drop "or RNG state" from the Fixture definition
 **Why it is an issue:** The hidden-difficulty distribution is designer-authored, but when it is sampled is not
 observable, because hidden difficulty is not Player-visible information either way.
 
-**Suggested resolution:** Replace "and sampling time" with the observable consequence, for example whether hidden
+**Suggested resolution:** Replace "and sampling time" with the observable consequence, e.g. whether hidden
 difficulty is fixed for the whole Investigation and which Campaign state it may depend on.
 
 ## Borderline
@@ -587,7 +587,7 @@ Investigations (INVSTG), [Team changes and commitment](../mechanics/investigatio
 **Why it is an issue:** Which values an input uses changes outcomes, so it is designer-authored and belongs in the
 specifications. The wording, however, describes a mechanism (snapshots and reads) rather than the outcome.
 
-**Suggested resolution:** Keep the content, and reword it in terms of outcomes, for example "uses values as of turn
+**Suggested resolution:** Keep the content, and reword it in terms of outcomes, e.g. "uses values as of turn
 start" or "uses values after the preceding phase's effects", rather than snapshots and reads.
 
 ### TODO-014: Mechanism wording in API hierarchy and Autopilot limits
@@ -618,7 +618,7 @@ start" or "uses values after the preceding phase's effects", rather than snapsho
 operations, and it does not decide when an Autopilot engagement ends. The wording names mechanisms (facades, the
 engine object, the invocation loop) instead.
 
-**Suggested resolution:** Keep the rules and state them as observable outcomes, for example "No operation available to
+**Suggested resolution:** Keep the rules and state them as observable outcomes, e.g. "No operation available to
 an Autopilot AI reaches a Session API or Developer API operation", and "An Autopilot engagement ends only under the
 disengagement reasons in Autopilot lifecycle and concurrency".
 
@@ -679,8 +679,8 @@ specification.
 scope rule now leaves to the implementer without any need for disclaimers. The third sentence is conditional on a
 storage choice; its observable content is that every view of the relationship agrees.
 
-**Suggested resolution:** Drop the first two sentences. Reword the third as an observable consistency requirement, for
-example that Agent-side and team-side views of current membership agree, or drop it if Current versus historical
+**Suggested resolution:** Drop the first two sentences. Reword the third as an observable consistency requirement, e.g.
+that Agent-side and team-side views of current membership agree, or drop it if Current versus historical
 teams already implies it.
 
 ### TODO-017: Autopilot memory checkpoints as mechanism wording
@@ -755,8 +755,8 @@ after batch 7.
 Also, because the sequence and format of Instance IDs are the implementer's choice under
 [Continuation state](../foundation/engine-contract.md#continuation-state), fixtures cannot state concrete Instance IDs.
 
-**Suggested resolution:** Remove "Campaign and" from the list, and say that fixtures use symbolic Instance IDs, for
-example `agency_1`, that tests bind to whatever Instance IDs the implementation generates.
+**Suggested resolution:** Remove "Campaign and" from the list, and say that fixtures use symbolic Instance IDs, e.g.
+`agency_1`, that tests bind to whatever Instance IDs the implementation generates.
 
 ### TODO-020: Glossary coverage of kind-named Rule forms
 
@@ -770,7 +770,7 @@ Domain Model (DOM).
 
 **Current wording:**
 
-> A Rule is named after its kind, for example a Calculation Rule or a Creation Rule.
+> A Rule is named after its kind, e.g. a Calculation Rule or a Creation Rule.
 
 (CORE, Rule kinds. The CORE glossary defines only "Rule kind"; "Creation Rule" and the other kind-named forms have no
 glossary row.)

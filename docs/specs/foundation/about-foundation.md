@@ -17,7 +17,7 @@ supporting execution contracts beside them.
 ## Core Concepts
 
 [Core Concepts](core-concepts.md) answers _what do the shared words mean?_ It owns the vocabulary used across the whole
-game contract, for example Campaign, Session, and Rule kinds. It defines meanings only, not behavior, data layout, or
+game contract, e.g. Campaign, Session, and Rule kinds. It defines meanings only, not behavior, data layout, or
 mechanics: Engine Contract owns what a Session holds and what is persisted, and Campaign Modeling Contract owns how
 Campaign state divides into components. The one exception is the Rule kinds classification, which also states what a
 specification stating a Rule of each Rule kind must state. Nearly every other specification uses it, so each term has a single
@@ -149,11 +149,11 @@ flowchart LR
 
 - **Core Concepts versus the rest:** vocabulary is shared by every family, so it cannot live inside any one of its
   users.
-- **Engine Contract versus Campaign Modeling Contract:** engine behavior (sessions, Autopilot, save and load) and data
-  shape (identity, references, GDR roles) change for different reasons. Keeping data rules in their own refinement lets
+- **Engine Contract versus Campaign Modeling Contract:** engine behavior (e.g. sessions, Autopilot, save and load) and
+  data shape (e.g. identity, references, GDR roles) change for different reasons. Keeping data rules in their own refinement lets
   Engine Contract stay about guarantees.
 - **Campaign Modeling Contract versus Domain Model:** the first holds rules that would apply to any game on this engine;
-  the second holds the concepts of this game. Factions can be redesigned without touching Campaign Modeling Contract,
+  the second holds the concepts of this game. E.g., Factions can be redesigned without touching Campaign Modeling Contract,
   and reference integrity can be tightened without touching Domain Model.
 - **Numbers and Randomness, Turn Resolution, and History and Persistence:** each refines a distinct Engine Contract
   guarantee (reproducible calculation, phase timing, reversible history) that several Mechanics documents depend on, so

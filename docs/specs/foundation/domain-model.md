@@ -120,16 +120,16 @@ Campaign membership follows containment.
 
 The following table states the required modeling classifications; example values are explicitly marked.
 
-| Values                                                                            | Mutability during gameplay                                                                                                                                                               | Authority and gameplay relevance                                                                                                                                                                                                         |
-| --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GDRs, including archetypes                                                        | Immutable during gameplay ([Campaign instances](campaign-modeling-contract.md#campaign-instances)).                                                                                      | Types describe structure; GDRs supply Authoritative values used by rules. GDRs are not campaign history.                                                                                                                                 |
-| Constants and Instance IDs                                                        | Fixed at creation, including nested data; stable for the lifetime of the Campaign instance within its timeline ([Campaign instances](campaign-modeling-contract.md#campaign-instances)). | Identity recorded as an Authoritative value; historical references remain resolvable ([References](campaign-modeling-contract.md#references)).                                                                                           |
-| Retained origin references                                                        | Stored in Constants; preserve the creation source required by [Mission kind and provenance](#mission-kind-and-provenance).                                                               | Provenance recorded as Authoritative values used by rules and historical explanations.                                                                                                                                                   |
-| State; for example, money, orders, and health                                     | Mutable under the owning mechanics; fixed Campaign instance facts belong in Constants.                                                                                                   | Authoritative values used to resolve current gameplay. See [Value classification](campaign-modeling-contract.md#value-classification) for the existing classification.                                                                   |
-| Derived values; for example, effective skill, availability, and completion counts | Calculated from Authoritative values and the current rules and GDRs.                                                                                                                     | Derived values under the Core Concepts glossary. Gameplay relevance depends on the owning rule or report.                                                                                                                                |
-| Completed investigations, mission wins, and earned unlocks                        | Retained outcomes must not be overwritten by current calculations ([Historical fact preservation](campaign-modeling-contract.md#historical-fact-preservation)).                          | Historical Authoritative values can still affect current progression; [Leads and Progression](../mechanics/leads-and-progression.md) owns predicates and effects ([Progression facts](#progression-facts)).                              |
-| Final attributes of Killed/Dismissed agents and Participation history             | Retained historical values; undo may restore earlier state ([Agent lifecycle](#agent-lifecycle)/[Current versus historical teams](#current-versus-historical-teams)).                    | Historical records treated as Authoritative values. These records do not constitute Current assignments or team membership.                                                                                                              |
-| Original inputs or values retained only to explain a past result                  | Preserve the historical basis ([Historical fact preservation](campaign-modeling-contract.md#historical-fact-preservation)).                                                              | Used for historical explanation; retaining such values does not make them current combat inputs. Retention details belong to History and Persistence and report visibility to [Player Information](../interfaces/player-information.md). |
+| Values                                                                     | Mutability during gameplay                                                                                                                                                               | Authority and gameplay relevance                                                                                                                                                                                                         |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GDRs, including archetypes                                                 | Immutable during gameplay ([Campaign instances](campaign-modeling-contract.md#campaign-instances)).                                                                                      | Types describe structure; GDRs supply Authoritative values used by rules. GDRs are not campaign history.                                                                                                                                 |
+| Constants and Instance IDs                                                 | Fixed at creation, including nested data; stable for the lifetime of the Campaign instance within its timeline ([Campaign instances](campaign-modeling-contract.md#campaign-instances)). | Identity recorded as an Authoritative value; historical references remain resolvable ([References](campaign-modeling-contract.md#references)).                                                                                           |
+| Retained origin references                                                 | Stored in Constants; preserve the creation source required by [Mission kind and provenance](#mission-kind-and-provenance).                                                               | Provenance recorded as Authoritative values used by rules and historical explanations.                                                                                                                                                   |
+| State; e.g., money, orders, and health                                     | Mutable under the owning mechanics; fixed Campaign instance facts belong in Constants.                                                                                                   | Authoritative values used to resolve current gameplay. See [Value classification](campaign-modeling-contract.md#value-classification) for the existing classification.                                                                   |
+| Derived values; e.g., effective skill, availability, and completion counts | Calculated from Authoritative values and the current rules and GDRs.                                                                                                                     | Derived values under the Core Concepts glossary. Gameplay relevance depends on the owning rule or report.                                                                                                                                |
+| Completed investigations, mission wins, and earned unlocks                 | Retained outcomes must not be overwritten by current calculations ([Historical fact preservation](campaign-modeling-contract.md#historical-fact-preservation)).                          | Historical Authoritative values can still affect current progression; [Leads and Progression](../mechanics/leads-and-progression.md) owns predicates and effects ([Progression facts](#progression-facts)).                              |
+| Final attributes of Killed/Dismissed agents and Participation history      | Retained historical values; undo may restore earlier state ([Agent lifecycle](#agent-lifecycle)/[Current versus historical teams](#current-versus-historical-teams)).                    | Historical records treated as Authoritative values. These records do not constitute Current assignments or team membership.                                                                                                              |
+| Original inputs or values retained only to explain a past result           | Preserve the historical basis ([Historical fact preservation](campaign-modeling-contract.md#historical-fact-preservation)).                                                              | Used for historical explanation; retaining such values does not make them current combat inputs. Retention details belong to History and Persistence and report visibility to [Player Information](../interfaces/player-information.md). |
 
 Examples of Authoritative values versus Derived values (not a complete state inventory):
 
@@ -150,7 +150,7 @@ panic and campaign outcome, progression facts, agents, factions, investigations,
 The agency owns money, recurring funding, upgrade acquisitions/capabilities, and its roster. A player controls the agency;
 switching between human and AI control does not create another agency. The agency has its own Instance ID property and
 required Archetype reference, even though there is exactly one agency per campaign. The campaign-wide properties,
-for example the references to the selected starting-configuration GDRs, current turn, and panic, belong directly to Campaign state.
+e.g. the references to the selected starting-configuration GDRs, current turn, and panic, belong directly to Campaign state.
 State needed for reproducible command execution belongs to [Continuation state](engine-contract.md#continuation-state).
 
 # Agent
@@ -258,8 +258,8 @@ Arrows show relationships, not inheritance or storage layout.
 ## Campaign configuration ownership
 
 Campaign configuration is a component of Campaign state, and its values may change during play. The Game build may
-supply multiple starting-configuration GDRs, each describing a starting Campaign configuration or a part of one; for
-example, starting money, enemy difficulty, which factions or technologies are enabled, or their probability of
+supply multiple starting-configuration GDRs, each describing a starting Campaign configuration or a part of one; e.g.,
+starting money, enemy difficulty, which factions or technologies are enabled, or their probability of
 occurrence. Campaign creation selects among them through its setup inputs, and the Rules of campaign creation read the
 selected GDRs serving the Initialization source purpose ([Purposes of GDRs](campaign-modeling-contract.md#purposes-of-gdrs)) to produce the initial Campaign
 configuration and the rest of the initial Campaign state. Campaign state retains references to the selected
@@ -270,8 +270,8 @@ state only. Shared meanings are defined in
 ## Campaign boundary
 
 Campaign state must contain exactly one player-controlled agency. Every Campaign instance in that campaign
-must belong to its Campaign state. AI memory, UI selections, browser
-state, and CLI preferences are not Campaign state.
+must belong to its Campaign state. Data outside the Campaign is not Campaign state, e.g. AI memory, UI
+selections, and browser or CLI preferences.
 Multiplayer agencies and cross-campaign trading are outside this model.
 
 ## Campaign instance identity scope
@@ -305,7 +305,7 @@ An agent assigned to investigation I belongs to its current team even while trav
 Agents/Investigations rule. An agent cannot be assigned to multiple investigations/missions at once.
 
 If both agent-side and team-side links are stored, they must agree in Committed state. Agents recorded in Participation history are not
-current team members: a concluded mission can retain an agent's Participation history after that agent is assigned elsewhere.
+current team members: e.g., a concluded mission can retain an agent's Participation history after that agent is assigned elsewhere.
 
 ## Attribute bounds
 
@@ -337,7 +337,7 @@ lead affiliation must not depend on specially spelled identifiers. Their predica
 ## Mission kind and provenance
 
 Mission Constants must retain mission kind and provenance. Missions must explicitly distinguish Initiative (agency objective) and Response
-(intervention against a Faction operation occurrence). Initiative missions must retain their creation source; for example, an investigation
+(intervention against a Faction operation occurrence). Initiative missions must retain their creation source; e.g., an investigation
 or campaign creation. Response missions must retain a Faction operation occurrence origin identifying its initiating faction.
 
 For the initial model, each Faction operation occurrence creates exactly one Response mission; provenance is embedded there

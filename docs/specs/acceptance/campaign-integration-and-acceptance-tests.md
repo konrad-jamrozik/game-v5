@@ -18,7 +18,7 @@ Most scenarios can exercise the game through the TypeScript Player API without a
 CLI or web UI to verify that equivalent actions produce equivalent results and respect the same information boundary.
 This document describes the test cases; the executable tests and their test framework belong to implementation work.
 
-Individual mechanics specifications keep examples of their own rules. This document connects those rules across systems, for example, investigation completion creating a mission whose result changes agent health, agency resources, and progression.
+Individual mechanics specifications keep examples of their own rules. This document connects those rules across systems, e.g., investigation completion creating a mission whose result changes agent health, agency resources, and progression.
 Expected results must reference the owning rules; scenarios cannot introduce new mechanics. Strategic playtesting
 assesses whether the game is interesting and balanced separately from these exact behavior checks.
 

@@ -57,7 +57,7 @@ TODO: Define information-schema terms without duplicating shared definitions.
 # Player-visible information schemas and visibility
 
 TODO: Specify the complete Player API query schemas using owning mechanics. State reveal conditions and distinguish
-unknown information from zero or absence. For example, cover Agent capabilities, Investigation estimates, and
+unknown information from zero or absence. E.g., cover Agent capabilities, Investigation estimates, and
 Mission outcomes without exposing hidden inputs through ordinary queries.
 
 TODO: Specify which Display content, as defined in [GDR purpose: display content](../foundation/campaign-modeling-contract.md#gdr-purpose-display-content), each
@@ -75,7 +75,7 @@ Session controller and Autopilot AI receive the same Player-visible information 
 equivalent Player API queries, independent of Dev mode. Autopilot AI never receives Developer API inspection,
 unrestricted saves, hidden command logs, or the Session controller's unrestricted conversation.
 
-TODO: Define schema-level visibility for every Player API result path and history metadata. For example, validate
+TODO: Define schema-level visibility for every Player API result path and history metadata. E.g., validate
 queries, action discovery, and errors against the same hidden-state boundary. Exclude gameplay RNG state and mutable
 Campaign references. Engine Contract owns Autopilot AI context and memory restoration guarantees.
 

@@ -47,5 +47,5 @@ flowchart LR
 
 # Why these boundaries
 
-Data is separated from behavior so that balancing a campaign changes only this family. A new campaign or data set
+Data is separated from behavior so that balancing a campaign changes only this family. E.g., a new campaign or data set
 would become another Content specification without touching any Mechanics document.

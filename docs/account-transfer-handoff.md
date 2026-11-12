@@ -26,7 +26,7 @@ Engine Contract, Campaign Modeling Contract, and Domain Model. Campaign Modeling
 Engine Contract, and Domain Model are Draft. Partial acceptance does not complete the batch.
 
 The foundation split, engine API hierarchy, scoped Delegated AI, and Campaign configuration terminology are already
-saved in the specifications. Earlier chats use obsolete names such as Modeling Foundations and Content entry; use
+saved in the specifications. Earlier chats use obsolete names, e.g. Modeling Foundations and Content entry; use
 the current glossaries and terminology table when continuing. Agent names an in-game individual; Delegated AI names
 the AI executing a bounded gameplay task.
 

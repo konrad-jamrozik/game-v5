@@ -41,7 +41,7 @@ TODO: Define presentation-specific terms without duplicating shared definitions.
 
 # Screens and data exploration
 
-TODO: Specify main-menu and campaign screens using Player Information schemas. For example, provide Agent tables,
+TODO: Specify main-menu and campaign screens using Player Information schemas. E.g., provide Agent tables,
 Lead progression trees, and report details. Define sorting, filtering, and selection without adding exclusive information.
 Developer inspection must use a distinct authorized view rather than widening ordinary Player API results.
 

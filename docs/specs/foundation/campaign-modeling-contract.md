@@ -72,12 +72,12 @@ Campaign state
 └── Campaign configuration
 ```
 
-Campaign state includes both World state and Campaign configuration. For example, an Investigation's progress is
+Campaign state includes both World state and Campaign configuration. E.g., an Investigation's progress is
 World state, while a campaign-wide investigation difficulty multiplier is Campaign configuration. Both belong to
 the particular Campaign, regardless of which Session selects it. Campaign configuration supplies inputs to Rules;
 changing it does not modify the Game build's Ruleset or immutable GDRs.
 
-World state divides into Current world state and History. For example, an Agent's current health is Current world
+World state divides into Current world state and History. E.g., an Agent's current health is Current world
 state, while a record of the missions that Agent took part in is History. History is a subcomponent of World state,
 including when it records past Campaign configuration values or changes.
 Current Campaign configuration belongs to its own component of Campaign state; historical records about it belong
@@ -122,14 +122,14 @@ Constants, and State. How an implementation stores Campaign instances internally
 Creation of a Campaign instance, during campaign initialization or gameplay, is specified by a Creation Rule, under
 [Rule kinds](core-concepts.md#rule-kinds) in Core Concepts, owned by the specification that owns the creating
 behavior. The Creation Rule states when the Campaign instance is created, its Type, and the initial values of its
-Archetype reference, Constants, and State, together with the source of each value; for example, a named GDR or a
+Archetype reference, Constants, and State, together with the source of each value; e.g., a named GDR or a
 value in Campaign state. The initial values need not all come from the Campaign instance's Archetype: a Creation Rule
-may take some of them from another GDR, such as one serving the Initialization source purpose or a
-Referenced GDR (for example, the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign
+may take some of them from another GDR, e.g. one serving the Initialization source purpose or a
+Referenced GDR (e.g., the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign
 state. Every newly created Campaign instance has a fresh Instance ID under
 [Campaign instance identity](#campaign-instance-identity). Which code creates Campaign instances, and what that code
 receives, is left to the implementer: a Creation Rule does not state that code, its signature, or its dependencies. It
-states the resulting facts instead, for example which Campaign instance owns the new one.
+states the resulting facts instead, e.g. which Campaign instance owns the new one.
 
 ## Campaign instance identity
 
@@ -152,7 +152,7 @@ are defined in [Authoritative and Derived values](core-concepts.md#authoritative
 concepts must declare which of its values are Authoritative values and which are Derived values. Retaining a past
 calculation as a historical fact follows [Historical fact preservation](#historical-fact-preservation).
 
-Each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle property
+E.g., each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle property
 within its State property. The values of these two properties are Authoritative values. The completion count for a
 Lead is a Derived value: count the Investigation Campaign instances whose Lead reference property identifies
 that Lead GDR and whose lifecycle property has the value Completed. The count for lead_1 is 1 after investigation_2 completes; investigation_1’s Abandoned lifecycle
@@ -160,25 +160,25 @@ excludes it. No separate completion record or stored Authoritative completion co
 
 # Historical fact preservation
 
-A past value cannot always be recovered from its current replacement. For example, a report that needs enemy_1's original
+A past value cannot always be recovered from its current replacement. E.g., a report that needs enemy_1's original
 health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
 replacement for that historical fact. When a rule or report needs the historical basis, the original inputs or historical
 value must be preserved; required historical values must not be overwritten with current calculations. This does not
 require retaining every intermediate calculation or every possible chart.
 
 When a Campaign instance no longer participates in current gameplay, data required by rules, reports, or retained
-references must remain in History rather than being deleted. For example, if enemy_1 no longer participates in a Mission,
+references must remain in History rather than being deleted. E.g., if enemy_1 no longer participates in a Mission,
 a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
 name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
 changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
 retained references must be preserved under [Campaign instances](#campaign-instances) and [References](#references).
-An evolving collection can contain immutable historical records: adding a Battle result does not permit rewriting
+An evolving collection can contain immutable historical records: e.g., adding a Battle result does not permit rewriting
 an earlier retained Battle result.
 
 # Purposes of GDRs
 
 GDRs can serve the following six purposes. The purposes can overlap; they do not define separate Types or required
-implementation interfaces. The following sections illustrate each purpose.
+implementation interfaces. Each of the following sections is a worked example of one purpose.
 
 | Purpose                | How the engine uses the GDR                                                                                                                  | Example                                                                                      |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
@@ -366,7 +366,7 @@ flowchart LR
 
 # GDR purpose: display content
 
-When serving the Display content purpose, a GDR supplies values that exist only for the player to see: names,
+When serving the Display content purpose, a GDR supplies values that exist only for the player to see, e.g. names,
 descriptions, in-game encyclopedia articles, and references to images or other media. Consider an illustrative Thug
 enemy and its encyclopedia article:
 

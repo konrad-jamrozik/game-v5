@@ -47,7 +47,7 @@ appropriate to this document.
 
 # Glossary
 
-Shared terms, for example GDR and Type, are owned by [Core Concepts](../foundation/core-concepts.md#glossary).
+Shared terms, e.g. GDR and Type, are owned by [Core Concepts](../foundation/core-concepts.md#glossary).
 Campaign-specific composition terms are owned by [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md#glossary).
 
 TODO: Define remaining local terms here without duplicating shared definitions.

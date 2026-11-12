@@ -138,7 +138,7 @@ Earlier interfaces remain supported. Graphics must not become necessary to acces
 
 The engine owns rules, validation, visibility, and consequences. Clients own presentation or player strategy. GDRs remain separate from Campaign instances. Browser and terminal dependencies stay outside the engine.
 
-Only these interfaces are in scope. Dedicated native game engines such as Unity are excluded. Choose the web framework later, with grid and tree capabilities as major criteria.
+Only these interfaces are in scope. Dedicated native game engines, e.g. Unity, are excluded. Choose the web framework later, with grid and tree capabilities as major criteria.
 
 ## 4. Turns, determinism, and history
 

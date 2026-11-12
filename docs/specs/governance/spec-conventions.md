@@ -15,7 +15,7 @@ Specifications are the durable authority for intended behavior. Code and tests i
 These conventions are the accepted working agreement. A stub uses the standard layout, but neither its presence nor its formatting makes unresolved rules accepted.
 
 Specifications state only what satisfies [What belongs in a specification](#what-belongs-in-a-specification). Do not
-prescribe internal classes, file organization, libraries, or algorithms. For example, exact public TypeScript
+prescribe internal classes, file organization, libraries, or algorithms. E.g., exact public TypeScript
 signatures belong in specifications because API callers observe them.
 
 # Relationships
@@ -51,16 +51,16 @@ in a specification only if it meets at least one of the following criteria. This
 2. **Designer-authored:** the statement is a GDR or Rule that the Engine designer must write down.
 3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
 
-Everything else is left to the implementer's discretion and must not be specified. For example, the following are out
+Everything else is left to the implementer's discretion and must not be specified. E.g., the following are out
 of scope:
 
-- Internal ordering, for example call order and the order of random draws.
-- Code structure, for example which code creates which objects, internal function signatures, and dependency injection.
+- Internal ordering, e.g. call order and the order of random draws.
+- Code structure, e.g. which code creates which objects, internal function signatures, and dependency injection.
 - Internal storage layout.
 
 A statement about one of these matters belongs in a specification only when it states an observable consequence, and
 then the specification states the consequence rather than the mechanism. Non-observable steering for implementers,
-for example architecture or code-quality advice, is never a requirement. Record it, when it is worth recording, only in a
+e.g. architecture or code-quality advice, is never a requirement. Record it, when it is worth recording, only in a
 Guidance Family document, as described in [Specification families and paths](#specification-families-and-paths).
 
 # Document lifecycle and ownership
@@ -79,7 +79,7 @@ The following table is the exhaustive set of Personas. The last column names the
 | Engine designer  | Human        | Designs the engine and every Rule, decides which Rule inputs GDRs supply and so become content, and establishes these specification conventions.  | Governance, Foundation, Mechanics; e.g. [Specification Conventions](spec-conventions.md), [Core Concepts](../foundation/core-concepts.md)   |
 | Content designer | Human or LLM | Authors GDRs, including the initial campaign content and in-game encyclopedia articles, within the Types the Engine designer exposes for content. | Content, Mechanics; e.g. [Initial Campaign Content](../content/initial-campaign.md)                                                         |
 | UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                      | Interfaces; e.g. [Player Information](../interfaces/player-information.md), [Web UI](../interfaces/web-ui.md)                               |
-| AI designer      | Human or LLM | Designs an AI that plays the game, such as an Autopilot AI.                                                                                       | Interfaces, Foundation; e.g. [Player Information](../interfaces/player-information.md), [Turn Resolution](../foundation/turn-resolution.md) |
+| AI designer      | Human or LLM | Designs an AI that plays the game, e.g. an Autopilot AI.                                                                                          | Interfaces, Foundation; e.g. [Player Information](../interfaces/player-information.md), [Turn Resolution](../foundation/turn-resolution.md) |
 | Implementer      | LLM          | Implements specifications as code and tests.                                                                                                      | Foundation, Mechanics, Interfaces, Acceptance, Guidance                                                                                     |
 | Player           | Human or LLM | Plays the game.                                                                                                                                   | None directly; experiences Interfaces and Content                                                                                           |
 
@@ -135,7 +135,7 @@ the exception of the root index, its file must be a direct child of the correspo
 | Content    | `content/`    | Versioned GDRs, named parameters, catalogs, and starting configurations                        |
 | Interfaces | `interfaces/` | Observable player, developer, API, CLI, and UI contracts                                       |
 | Acceptance | `acceptance/` | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability              |
-| Guidance   | `guidance/`   | Non-behavioural steering for implementers, for example architecture or code-quality guidance   |
+| Guidance   | `guidance/`   | Non-behavioural steering for implementers, e.g. architecture or code-quality guidance          |
 
 Guidance documents are non-behavioural. They steer implementers toward code that is easier to maintain and to check
 against the other specifications, but they own no Rule, observable contract, or GDR, and no acceptance test depends on
@@ -145,20 +145,20 @@ its own specification. Guidance documents are registered so that they participat
 generated views, and graph validation like every other specification.
 
 The Game Specification Index has Family Governance and remains at `docs/specs/README.md` as the navigation entry point.
-Family describes ownership, not dependencies: a Foundation specification may depend on Mechanics specifications without
+Family describes ownership, not dependencies; e.g., a Foundation specification may depend on Mechanics specifications without
 changing Family. Moving a specification between Families changes its declared ownership category and requires updating its
 metadata, register entry, path, and links together.
 
 ## Family overviews
 
 Each Family that has at least one registered specification has an informative Family overview at
-`docs/specs/<directory>/about-<directory>.md`, for example `foundation/about-foundation.md`. A Family overview is not a
+`docs/specs/<directory>/about-<directory>.md`, e.g. `foundation/about-foundation.md`. A Family overview is not a
 specification: it has no metadata, Spec ID, register entry, or relationship inventory, and it owns no Rule, contract,
 term, or GDR. It explains what question each specification in the Family answers, how they relate, and why the
 boundaries between them sit where they do, linking each specification instead of restating its content.
 
 A Family overview begins with the H1 `About the <Family> family` and contains the H1 sections What this family is for,
-Documents, How they relate, and Why these boundaries, in that order; further sections such as Reading order may follow.
+Documents, How they relate, and Why these boundaries, in that order; further sections, e.g. Reading order, may follow.
 It links every registered specification of its Family. The How they relate section contains one pair of
 `<!-- generated:family-diagram:start -->` and `<!-- generated:family-diagram:end -->` markers. `npm run docs:generate`
 replaces the content between them with diagrams of the Family's Explicit relationships, both within the Family and with
@@ -201,7 +201,7 @@ Use this complete phrase order; omit groups with no entries and sort document ti
 9. Implemented by
 10. Verified by
 
-Groups are contiguous entries, not headings. For example, Engine Contract contains:
+Groups are contiguous entries, not headings. E.g., Engine Contract contains:
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
 
@@ -250,17 +250,17 @@ afterward, including headings, tables, and diagram labels. The owning Glossary r
 as its term label. This abbreviation is an exception to the full-term rule below, not a separate modeling concept.
 
 Player-visible information names the information exposed to an ordinary player. **Player-visible** may be used
-as an adjective describing that exposure, for example, "this value is Player-visible"; it does not name a separate concept.
+as an adjective describing that exposure, e.g., "this value is Player-visible"; it does not name a separate concept.
 
 Use the full glossary term on every mention. Do not abbreviate it, drop words, split its words across a compound,
-or substitute a generic noun after introducing the full term. For example, use GDR rather than "content"
+or substitute a generic noun after introducing the full term. E.g., use GDR rather than "content"
 or "entry", and Campaign instance rather than "instance", when referring to those modeling concepts. Grammatical plurals and possessives must retain every word of the term:
 GDRs (under the approved abbreviation exception) and Campaign instance's are valid; entries and instance's are not substitutes.
 
 This rule applies throughout specifications and all other project documentation, including headings, tables, diagram
 labels, examples, and generated views. Update the owning sources and regenerate derived documentation. Document titles,
 file paths, literal code identifiers, and exact quotations retain their actual spelling. Ordinary words remain valid
-when they describe something else: a glossary entry is not a GDR. Review each use in context; do not infer compliance from text search alone.
+when they describe something else; e.g., a glossary entry is not a GDR. Review each use in context; do not infer compliance from text search alone.
 
 If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
 replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
@@ -287,9 +287,9 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Game designer; ruleset designer                         | [Engine designer](#glossary)                                                                                                        | Naming the Persona that designs the engine and every Rule.                                                                                                                                           |
 | Implementor                                             | [Implementer](#glossary)                                                                                                            | Naming the Persona that implements specifications as code and tests.                                                                                                                                 |
 | GDR role                                                | GDR purpose                                                                                                                         | Naming what a GDR serves relative to Rules and Campaign state, as defined in [Purposes of GDRs](../foundation/campaign-modeling-contract.md#purposes-of-gdrs); one GDR may serve several purposes.   |
-| Field; member; key                                      | [Property](../foundation/core-concepts.md#glossary)                                                                                 | Naming a component of a structured Type; unrelated uses, such as a lookup key, retain their ordinary meaning.                                                                                        |
+| Field; member; key                                      | [Property](../foundation/core-concepts.md#glossary)                                                                                 | Naming a component of a structured Type; unrelated uses, e.g. a lookup key, retain their ordinary meaning.                                                                                           |
 | Player observation; Player observations                 | [Player-visible information](../foundation/core-concepts.md#glossary)                                                               | Referring to information deliberately exposed by the engine to an ordinary player.                                                                                                                   |
-| Opportunity                                             | [Lead](../foundation/domain-model.md#glossary)                                                                                      | Referring to a Lead; ordinary uses such as opportunity cost remain valid.                                                                                                                            |
+| Opportunity                                             | [Lead](../foundation/domain-model.md#glossary)                                                                                      | Referring to a Lead; ordinary uses, e.g. opportunity cost, remain valid.                                                                                                                             |
 | Attempt                                                 | [Investigation](../foundation/domain-model.md#glossary)                                                                             | Referring to an Investigation of a Lead; attempts to execute commands or undertake Missions remain distinct.                                                                                         |
 | Fixed reference                                         | Immutable reference                                                                                                                 | A reference in [Constants](../foundation/campaign-modeling-contract.md#glossary); its target cannot be replaced or cleared.                                                                          |
 | Changeable reference                                    | Mutable reference                                                                                                                   | A reference in [State](../foundation/campaign-modeling-contract.md#glossary); gameplay rules govern replacing or clearing its target.                                                                |
@@ -323,7 +323,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 These are contextual replacements, not a ban on ordinary uses of “definition,” legitimate destruction mechanics,
 or unrelated uses of “configuration.” Use GDR or Archetype rather than “Template” for modeling concepts, as
 explained in [Rejected terms and synonyms](../foundation/campaign-modeling-contract.md#rejected-terms-and-synonyms).
-Retention in History does not replace named lifecycle states; for example, Killed and Completed.
+Retention in History does not replace named lifecycle states; e.g., Killed and Completed.
 
 When specifying a game concept, state its applicable modeling role and mutability. Use prose,
 property tables, and diagrams for conceptual descriptions; a programming-language declaration is not required. State
@@ -340,7 +340,7 @@ A specification has three parts, in this order:
    1. `# Overview`, explaining the document's purpose and scope
    2. `# Relationships`, containing the flat directional inventory
    3. `# Glossary`
-2. Topic sections: one or more H1 sections, each named after a subject the specification owns; for example,
+2. Topic sections: one or more H1 sections, each named after a subject the specification owns; e.g.,
    `# Agent recovery`. Topic sections state the specification's definitions, Rules, requirements, and
    constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
 3. Closing sections:
@@ -354,7 +354,7 @@ closing sections.
 Use a metadata table immediately below the document-title H1. All sections are unnumbered H1 headings. Subsections may
 nest from H2 through H6 when the hierarchy requires it, without skipping a heading level.
 
-Name a topic section after its subject, never after its role in the document. Generic topic headings, for example
+Name a topic section after its subject, never after its role in the document. Generic topic headings, e.g.
 "Concepts and contract", "Requirements", "Details", or "Specification", are prohibited. State a requirement in the topic
 it constrains rather than in a separate collection. An example may sit beside the concept it illustrates instead of
 under Acceptance examples. Do not state a contract twice merely to populate a section. Whether a section applies, and
@@ -363,10 +363,10 @@ and content of framing and closing sections, not applicability.
 
 ## Handling sections that do not apply
 
-Omit a section that does not apply. Do not keep its heading with a placeholder such as "Not applicable", "N/A",
+Omit a section that does not apply. Do not keep its heading with a placeholder, e.g. "Not applicable", "N/A",
 "None.", or "No explicit relationships."; a present section is never empty.
 
-A missing decision is not "not applicable": keep the section and record the missing content as a TODO. For example, a
+A missing decision is not "not applicable": keep the section and record the missing content as a TODO. E.g., a
 mechanics specification can have no public function signatures while still defining inputs, outputs, and state changes.
 
 ## Specialized material
@@ -386,7 +386,7 @@ Long supporting tables may use descriptive appendices after the closing sections
 Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative. Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
 
 Name each coherent requirement or contract with a descriptive section title, without a numbered requirement label or
-Spec ID prefix. For example, Engine Contract uses the heading **Derived value consistency**. Section titles replace
+Spec ID prefix. E.g., Engine Contract uses the heading **Derived value consistency**. Section titles replace
 numbered labels throughout specifications, examples, TODOs, and other authored documents. Document-level Spec IDs remain registry and metadata identifiers;
 they are not requirement-reference labels.
 
@@ -396,7 +396,7 @@ belong in the topic sections they constrain. Follow the normal heading hierarchy
 distinct, descriptive titles within their document so references are unambiguous.
 
 Reference a requirement or other specification section with a Markdown hyperlink whose visible text is the exact
-section title and whose destination is that section's heading anchor. For example, use
+section title and whose destination is that section's heading anchor. E.g., use
 [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency). Link each relevant section
 individually rather than using numbered labels, ranges, or a document-only link when a specific contract is meant.
 When a title changes or a section moves, update every reference and anchor together. When removing a section, remove
@@ -427,11 +427,21 @@ Public API specifications define exact names, types, argument shapes, outputs, a
 
 GDR tables define stable GDR identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit GDR. Use parameter references instead of copying balance values throughout mechanics specifications.
 
+## Marking examples
+
+Introduce every example with "e.g." so a reader never has to infer whether a statement is general or illustrative.
+This applies to whole example sentences, clauses, inline enumerations, bullet lists, and illustrative tables. Write
+"E.g., Factions can be redesigned without touching Campaign Modeling Contract.", not a bare "Factions can be
+redesigned without touching Campaign Modeling Contract." following a general statement. Do not use "for example" or
+"for instance" as the marker. "Such as", "including", and "illustrates" alone do not mark an example. A section,
+table, or list explicitly titled or labeled "Examples", "Acceptance examples", or "Worked example" is already marked,
+and its items need no further "e.g.". This rule applies to every authored document in the repository, not only
+specifications.
+
 ## Illustrative and exhaustive enumerations
 
-Every non-exhaustive enumeration must explicitly use "for example", "e.g.", or an "Examples" label. This applies to
-inline enumerations, bullet lists, and illustrative tables. "Such as", "including", and "illustrates" alone do not
-satisfy the rule. Each illustrative list must contain at most three examples. Do not split one list into smaller
+Every non-exhaustive enumeration must be marked under [Marking examples](#marking-examples), with "e.g." or an
+"Examples" label. This applies to inline enumerations, bullet lists, and illustrative tables. Each illustrative list must contain at most three examples. Do not split one list into smaller
 lists merely to evade this limit. Use the fewest representative examples needed and link to the authoritative
 enumeration when readers need the full set.
 
@@ -473,11 +483,11 @@ Run `npm run lint:specs` to validate the complete registered specification corpu
 
 A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
 
-A TODO states what is missing and what a complete answer must include. Prefer:
+A TODO states what is missing and what a complete answer must include. E.g., prefer:
 
 > TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful turns, progress-removal behavior, rounding, and a numerical example.
 
-Avoid vague placeholders; for example, "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation.
+Avoid vague placeholders; e.g., "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation.
 
 Use Open decisions to collect unresolved choices and identify affected sections or specifications. A TODO may appear at the exact location of missing content; summarize blocking choices in Open decisions without duplicating entire rules. Do not invent a default to close a TODO unless it is explicitly labeled as a proposal.
 
@@ -488,7 +498,7 @@ Before acceptance, verify:
   [What belongs in a specification](#what-belongs-in-a-specification); implementer-discretion matters are not specified.
 - Explicit relationships and Implicit relationships satisfy Artifact Relationships, including mirrored Explicit relationship rows.
 - Every mention uses the full canonical glossary term, including headings, tables, and diagrams. Necessary new formal terms are defined in their owning Glossary; encountered synonyms and mention shortcuts are recorded in Terminology replacements.
-- Every illustrative enumeration is explicitly labeled and contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
+- Every example is introduced with "e.g." or sits under an explicit "Examples" label; every illustrative enumeration contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.

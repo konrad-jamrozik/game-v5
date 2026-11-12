@@ -97,7 +97,7 @@ A Campaign save contains more than Campaign state because continuing a Campaign 
 data. Action history and History are distinct: History is part of World state and Rules may consult it, while action
 history is the undo and redo record of committed commands and Rules never consult it.
 
-One Campaign may have several Campaign saves. For example, a player may keep a timeline branch that a new action
+One Campaign may have several Campaign saves. E.g., a player may keep a timeline branch that a new action
 after undo would otherwise discard, or keep a save with full history before a later save drops it under the Save size limit.
 Campaign saves of one Campaign share its Campaign ID and have distinct Campaign save IDs. Two Campaigns created with
 equal Campaign configuration and seed and given equal commands have equal Campaign state but distinct Campaign IDs;
@@ -109,13 +109,13 @@ Campaign ID and receives a new Campaign save ID.
 
 Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is
 selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and Campaign saves do not
-contain it. Interface preferences such as volume, language, and tutorial popups belong to Global configuration.
+contain it. Interface preferences, e.g. volume, language, and tutorial popups, belong to Global configuration.
 
 ## Configuration cascade
 
 Three kinds of setting are distinct. Only the last two take part in the configuration cascade.
 
-| Kind                   | For example                             | Where it lives                            | Persisted         |
+| Kind                   | Examples                                | Where it lives                            | Persisted         |
 | ---------------------- | --------------------------------------- | ----------------------------------------- | ----------------- |
 | Session access setting | Dev mode                                | Session                                   | Never             |
 | Global configuration   | Volume, language, new-Campaign defaults | Game storage                              | Yes, one set      |

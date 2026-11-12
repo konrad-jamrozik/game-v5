@@ -26,7 +26,7 @@ Check the concerns that the linter deliberately cannot prove:
 - the meaning of permitted `uses` cycles;
 - whether refinements preserve the referenced contract;
 - whether formal terms follow their owning glossaries, necessary new terms are defined before use, and encountered synonyms are recorded in the conventions' INSTEAD OF / USE / Context table;
-- whether every illustrative enumeration explicitly says "for example", "e.g.", or "Examples", contains at most three examples, and is distinct from exhaustive contracts or worked acceptance scenarios;
+- whether every example sentence, clause, or illustrative enumeration is introduced with "e.g." or sits under an explicit "Examples" label, every illustrative enumeration contains at most three examples, and is distinct from exhaustive contracts or worked acceptance scenarios;
 - whether flat relationship entries use the correct perspective and their owning prose preserves substantive constraints;
 - formula precision and correctness;
 - whether acceptance examples prove the intended behavior.

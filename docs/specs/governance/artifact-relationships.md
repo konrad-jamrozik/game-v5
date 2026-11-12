@@ -76,7 +76,7 @@ behavior. Record both in the owning contract prose, linking to the relevant sect
 using a vocabulary, consuming a result, or supplying Game Data Record (GDR) values is insufficient by itself: those are uses.
 Being more concrete or appearing later in an authoring sequence is also insufficient.
 
-Domain Model uses Core Concepts vocabulary and Campaign Modeling Contract composition constraints to describe game concepts.
+E.g., Domain Model uses Core Concepts vocabulary and Campaign Modeling Contract composition constraints to describe game concepts.
 Campaign Modeling Contract refines Engine Contract campaign-data integrity; vocabulary use alone is not refinement. History and Persistence uses the modeling identity and historical-preservation conventions, while
 its restoration procedures refine Engine Contract's restoration guarantees. Numbers and Randomness similarly uses
 identity conventions while refining deterministic execution. These classifications concern the particular contract
@@ -130,7 +130,7 @@ Use this complete phrase order; omit groups with no entries and sort document ti
 9. Implemented by
 10. Verified by
 
-Groups are contiguous entries, not headings. For example, Engine Contract contains:
+Groups are contiguous entries, not headings. E.g., Engine Contract contains:
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
 

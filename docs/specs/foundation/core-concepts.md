@@ -44,7 +44,7 @@ Language-independent vocabulary for describing and identifying model data.
 | Property    | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                        |
 | Instance ID | An identifier for one occurrence within a Campaign, unique within a declared identity scope and stable for its lifetime.                                                                                   |
 
-## Game build and Rules
+## Game build, Rules, and content
 
 What a version of the game supplies: shared by every Campaign and unchanged during play.
 
@@ -65,22 +65,15 @@ A playthrough, and the runtime context that selects it.
 | Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                 |
 | Session  | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |
 
-## Campaign state and History
+## Campaign state
 
-The data of one Campaign, including what it retains about the past. Campaign Modeling Contract owns how Campaign state
-divides into components.
-
-| Term           | Definition                                                                                                                           |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Campaign state | Data describing one Campaign, including its History.                                                                                 |
-| History        | The part of Campaign state containing retained data describing past Campaign state or events. Rules and reports may consult History. |
-
-## Campaign state timing
-
-Terms describing when Campaign state is observed, not which part of it.
+The data of one Campaign, including what it retains about the past, and when that data is observed. Campaign Modeling
+Contract owns how Campaign state divides into components.
 
 | Term            | Definition                                                                                                                                                                                                                                                 |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign state  | Data describing one Campaign, including its History.                                                                                                                                                                                                       |
+| History         | The part of Campaign state containing retained data describing past Campaign state or events. Rules and reports may consult History.                                                                                                                       |
 | Committed state | Complete Campaign state, including every part of it, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a part of Campaign state; every retained history position is a Committed state. |
 
 ## Data and information qualities
