@@ -45,7 +45,7 @@ The components into which Campaign state divides, and whether model data stays a
 | World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and World history, distinct from Campaign configuration.                                                                                   |
 | Current world state    | The subcomponent of World state other than World history: the simulated world as it stands at the position selected by undo and redo. After undo, it is the state at that earlier position, not the furthest position reached.                                 |
 | World history          | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and reports may consult World history.                                               |
-| Campaign configuration | The component of Campaign state containing campaign-specific parameters that select or adjust gameplay behavior and may be changed through permitted operations during play.                                                                                   |
+| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation.     |
 | Retained               | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; World history describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
 
 ## Campaign instances
@@ -92,7 +92,10 @@ including when it records past Campaign configuration values or changes.
 Current Campaign configuration belongs to its own component of Campaign state; historical records about it belong
 to World history within World state. This conceptual hierarchy does not require a particular storage layout. What Campaign
 state excludes is stated under [Data ownership](engine-contract.md#data-ownership) in Engine Contract.
-Mechanics specify permitted configuration changes and when their effects apply.
+Each Campaign configuration value is either adjustable during play or fixed after creation. E.g., an investigation
+difficulty multiplier can be adjustable during play, while starting money is fixed after creation and remains in
+Campaign configuration as the value the Campaign started with. Mechanics specify which class each value has, the
+permitted changes to adjustable values, and when their effects apply.
 
 Every Campaign instance is part of World state, never of Campaign configuration. A Campaign instance that participates
 in current gameplay is part of Current world state. When a Campaign instance no longer participates in current
@@ -133,7 +136,7 @@ Creation of a Campaign instance, during campaign initialization or gameplay, is 
 owns the creating behavior. That specification states when the Campaign instance is created, its Type, and the initial
 values of its Archetype reference, Constants, and State, together with the source of each value; e.g., a named GDR or a
 value in Campaign state. The initial values need not all come from the Campaign instance's Archetype: the creating
-specification may take some of them from another GDR, e.g. one serving the Initialization source purpose under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs) or a
+specification may take some of them from another GDR, e.g. one serving the Campaign instance initialization purpose under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs) or a
 Referenced GDR (e.g., the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign
 state. Every newly created Campaign instance has a fresh Instance ID under
 [Campaign instance identity](#campaign-instance-identity). Which code creates Campaign instances, and what that code

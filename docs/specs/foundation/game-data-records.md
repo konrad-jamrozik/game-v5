@@ -25,54 +25,103 @@ This document defines the purposes a Game Data Record (GDR) can serve relative t
 
 GDR, Type, Authoritative value, and Derived value are defined by [Core Concepts](core-concepts.md#glossary).
 Committed state, Player API, and Player-visible information are defined by the [Engine Contract glossary](engine-contract.md#glossary).
-Campaign instance, Instance ID, Archetype, Constants, and State are defined by [Campaign State](campaign-state.md#glossary).
+Campaign instance, Instance ID, Archetype, Constants, State, and Campaign configuration are defined by [Campaign State](campaign-state.md#glossary).
 
 # Purposes of GDRs
 
-GDRs can serve the following six purposes. The purposes can overlap; they do not define separate Types or required
+GDRs can serve the following seven purposes. The purposes can overlap; they do not define separate Types or required
 implementation interfaces. Each of the following sections is a worked example of one purpose.
 
-| Purpose                | How the engine uses the GDR                                                                                                                                                                              | Example                                                                                      |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Initialization source  | [Campaign instance creation](campaign-state.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance.                                            | A newly created Agency has money 100, the value of the starting-money GDR.                   |
-| Calculation parameter  | The engine reads a GDR when computing a Derived value.                                                                                                                                                   | The engine reads the rate from the Standard upkeep GDR to calculate upkeep.                  |
-| Archetype              | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-state.md#campaign-instance-creation). | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID. |
-| Referenced GDR         | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                                                                                 | An Investigation holds a reference to the Lead GDR it pursues.                               |
-| Key for campaign facts | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                                                                                    | The engine records completions against a Lead GDR’s identity.                                |
-| Display content        | No game behavior reads the GDR's value; the engine exposes it to the player through Player API, subject to Player-visible information boundaries.                                                        | The Thug GDR's display name and description appear in the enemy list and the encyclopedia.   |
+| Purpose                          | How the engine uses the GDR                                                                                                                                                                              | Example                                                                                                                    |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Campaign instance initialization | [Campaign instance creation](campaign-state.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance. The player cannot override the value.      | A newly hired Agent has skill 100, the value of the recruit-skill GDR.                                                     |
+| Campaign configuration preset    | Campaign creation takes the GDR’s values as the complete initial Campaign configuration. Before creation, the engine lets the player override individual values of the selected preset.                  | A Campaign created from the Hard preset with one override has starting money 80 and investigation difficulty multiplier 2. |
+| Calculation parameter            | The engine reads a GDR when computing a Derived value.                                                                                                                                                   | The engine reads the rate from the Standard upkeep GDR to calculate upkeep.                                                |
+| Archetype                        | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-state.md#campaign-instance-creation). | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID.                               |
+| Referenced GDR                   | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                                                                                 | An Investigation holds a reference to the Lead GDR it pursues.                                                             |
+| Key for campaign facts           | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                                                                                    | The engine records completions against a Lead GDR’s identity.                                                              |
+| Display content                  | No game behavior reads the GDR's value; the engine exposes it to the player through Player API, subject to Player-visible information boundaries.                                                        | The Thug GDR's display name and description appear in the enemy list and the encyclopedia.                                 |
 
-# GDR purpose: initialization source
+# GDR purpose: campaign instance initialization
 
-Consider an illustrative creation of the Agency with starting money:
+Consider an illustrative creation of an Agent hired during play:
 
-| Element                | Modeling role                                                              | Meaning in this example                                                                                                                   |
-| ---------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Money                  | Type                                                                       | Describes a nonnegative integer amount of money.                                                                                          |
-| Starting money         | GDR                                                                        | Has Type Money and value 100.                                                                                                             |
-| Agency creation        | [Campaign instance creation](campaign-state.md#campaign-instance-creation) | Campaign creation creates one Agency Campaign instance with a fresh Instance ID and money in State equal to the starting-money GDR value. |
-| Agency                 | Campaign instance                                                          | The newly created Agency Campaign instance, with money 100 in State.                                                                      |
-| Agency money           | Authoritative value                                                        | Initially 100 in the Agency Campaign instance’s State.                                                                                    |
-| Initial Campaign state | Committed state                                                            | Contains the Agency Campaign instance when campaign creation completes.                                                                   |
+| Element             | Modeling role                                                              | Meaning in this example                                                                                                      |
+| ------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Skill               | Type                                                                       | Describes a nonnegative integer skill.                                                                                       |
+| Recruit skill       | GDR                                                                        | Has Type Skill and value 100.                                                                                                |
+| Agent hiring        | [Campaign instance creation](campaign-state.md#campaign-instance-creation) | Hiring creates one Agent Campaign instance with a fresh Instance ID and skill in State equal to the recruit-skill GDR value. |
+| Agent               | Campaign instance                                                          | The newly created Agent Campaign instance, with skill 100 in State.                                                          |
+| Agent skill         | Authoritative value                                                        | Initially 100 in the Agent Campaign instance’s State.                                                                        |
+| New Committed state | Committed state                                                            | Contains the Agent Campaign instance when the hiring action completes.                                                       |
 
-Starting money is an Initialization source distinct from the Agency's Archetype so that a campaign can vary that one
-value through a separate GDR while the Archetype stays the same.
+Recruit skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies
+to newly hired Agents of every Archetype without being repeated in each Archetype.
 
-The example shows only the money initial value; the specification owning Agency creation also states the Agency's
-other initial values. When campaign creation completes, the initial Campaign state contains an Agency Campaign instance with a fresh
-Instance ID and money 100 in State, the value of the starting-money GDR. The engine publishes the initial Committed
-state when campaign creation completes.
+The example shows only the skill initial value; the specification owning Agent hiring also states the Agent's
+other initial values. When the hiring action completes, the new Committed state contains an Agent Campaign instance
+with a fresh Instance ID and skill 100 in State, the value of the recruit-skill GDR.
 
 ```mermaid
 flowchart LR
-    Type["Type: Money"] -.->|describes| GDR["GDR: Starting money · value 100"]
-    Creation["Agency creation<br/>money starts at the starting-money value"] -->|specifies| Agency["Agency Campaign instance<br/>fresh Instance ID"]
-    GDR -->|initial money 100| Agency
-    Agency -->|State contains| Money["Authoritative value:<br/>money 100"]
-    Agency -->|included in| State["Initial Campaign state:<br/>Committed state"]
+    Type["Type: Skill"] -.->|describes| GDR["GDR: Recruit skill · value 100"]
+    Creation["Agent hiring<br/>skill starts at the recruit-skill value"] -->|specifies| Agent["Agent Campaign instance<br/>fresh Instance ID"]
+    GDR -->|initial skill 100| Agent
+    Agent -->|State contains| Skill["Authoritative value:<br/>skill 100"]
+    Agent -->|included in| State["New Committed state"]
 ```
 
-If an expense later reduces Agency money to 90, the engine reads 90 from the Agency Campaign instance’s State.
-The starting-money GDR still contains the initial value of 100.
+If training later raises the Agent's skill to 110, the engine reads 110 from the Agent Campaign instance’s State.
+The recruit-skill GDR still contains the initial value of 100.
+
+The engine exposes no way for the player to change a value this purpose supplies. That distinguishes it from the
+Campaign configuration preset purpose, described next.
+
+# GDR purpose: campaign configuration preset
+
+When serving the Campaign configuration preset purpose, a GDR supplies one value for every Campaign configuration
+value, and campaign creation takes those values as the initial Campaign configuration. The Game build can supply
+several such GDRs, and the player selects one of them. Unlike every other purpose, this one comes with a built-in
+engine capability: before the Campaign is created, the player may override individual values of the selected preset.
+
+A value belongs to Campaign configuration if and only if the preset GDRs supply it. Whatever no preset can change is
+game behavior, not GDR data and not Campaign configuration; e.g., a starting turn that is the same for every Campaign.
+
+Consider an illustrative Game build with two presets and two Campaign configuration values:
+
+| Element                             | Modeling role                                                              | Meaning in this example                                                                                                       |
+| ----------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| CampaignConfiguration               | Type                                                                       | Describes one value for every Campaign configuration value: starting money and an investigation difficulty multiplier.        |
+| Standard                            | GDR serving the Campaign configuration preset purpose                      | Has Type CampaignConfiguration, starting money 100, and investigation difficulty multiplier 1. It is the default preset.      |
+| Hard                                | GDR serving the Campaign configuration preset purpose                      | Has Type CampaignConfiguration, starting money 60, and investigation difficulty multiplier 2.                                 |
+| Preset selection                    | Player choice before creation                                              | The player selects Hard instead of the default Standard.                                                                      |
+| Override                            | Player choice before creation                                              | The player overrides Hard's starting money with 80 and leaves its investigation difficulty multiplier unchanged.              |
+| Campaign configuration              | Component of Campaign state                                                | Holds starting money 80 and investigation difficulty multiplier 2 when campaign creation completes.                           |
+| Starting money                      | Authoritative value, fixed after creation                                  | 80 in Campaign configuration for the whole Campaign.                                                                          |
+| Investigation difficulty multiplier | Authoritative value, adjustable during play                                | Initially 2 in Campaign configuration.                                                                                        |
+| Agency creation                     | [Campaign instance creation](campaign-state.md#campaign-instance-creation) | Campaign creation creates the Agency Campaign instance with money in State equal to starting money in Campaign configuration. |
+
+Campaign creation copies the selected preset's values into the initial Campaign configuration, replacing each
+overridden value with the player's override. The initial Campaign configuration therefore holds starting money 80 and
+investigation difficulty multiplier 2, and the newly created Agency has money 80 in State. The Hard GDR still has
+starting money 60: the override changed nothing in the GDR. Campaign state holds the resulting values and no
+reference to Hard.
+
+```mermaid
+flowchart LR
+    Standard["GDR: Standard · default preset<br/>starting money 100<br/>multiplier 1"]
+    Hard["GDR: Hard<br/>starting money 60<br/>multiplier 2"]
+    Hard -->|selected preset| Creation["Campaign creation"]
+    Override["Player override:<br/>starting money 80"] -->|replaces one value| Creation
+    Creation -->|copies the resulting values| Config["Campaign configuration<br/>starting money 80 · fixed after creation<br/>multiplier 2 · adjustable during play"]
+    Config -->|starting money 80| Agency["Agency Campaign instance<br/>State: money 80"]
+```
+
+The preset supplies both classes of Campaign configuration value. If the player later changes the investigation
+difficulty multiplier to 1 during play, the engine reads 1 from Campaign configuration, and the Hard GDR still has
+multiplier 2. Starting money is fixed after creation: it stays 80 in Campaign configuration even after an expense
+reduces Agency money to 70, because Agency money is a separate Authoritative value in the Agency Campaign instance's
+State.
 
 # GDR purpose: calculation parameter
 

@@ -23,7 +23,7 @@ Progression's prerequisites/effects, and Missions' catalog requirements to suppl
 values does not refine the mechanical behavior. The mechanics consume this document's exact values and catalogs;
 formulas and transitions remain owned by the mechanics. Values and catalogs remain TODOs below.
 
-TODO: Specify starting-configuration GDR IDs, named balance parameter, GDR ID, starting state, lead graph, enemy, weapon, faction, and mission GDR.
+TODO: Specify Campaign configuration preset GDR IDs, named balance parameter, GDR ID, starting state, lead graph, enemy, weapon, faction, and mission GDR.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -54,6 +54,10 @@ Campaign-specific composition terms are owned by [Campaign State](../foundation/
 TODO: Define remaining local terms here without duplicating shared definitions.
 
 # Starting configuration and parameters
+
+TODO: Supply the Campaign configuration presets under
+[Campaign configuration ownership](../foundation/domain-model.md#campaign-configuration-ownership): each preset's GDR
+ID, its display name, and its value for every Campaign configuration value. Name the one Game build default preset.
 
 TODO: List exact initial resources, roster, capabilities, faction setup, and all named balance parameters with units and valid ranges. Mechanics own formulas; this document owns values.
 
@@ -86,7 +90,7 @@ State exact thresholds and effect ordering where relevant.
 # Acceptance examples
 
 TODO: Include the required archetypes, all four properties, and Instance IDs for every Campaign instance, including Campaign
-and Agency, in initial-state validation. Provide one fully specified starting Campaign configuration that acceptance fixtures can reference without inventing missing values.
+and Agency, in initial-state validation. Provide one fully specified Campaign configuration preset that acceptance fixtures can reference without inventing missing values.
 Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
 fixtures instead of introducing implicit balance values.
 

@@ -65,7 +65,7 @@ The separately authorized parts of the engine API, and the information Player AP
 
 | Term                       | Definition                                                                                                                                                   |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Session API                | The API surface for Session controller operations over campaign selection, Campaign saves, Timeline navigation, Dev mode, and Autopilot.                     |
+| Session API                | The API surface for Session controller operations over campaign selection, new-Campaign setup, Campaign saves, Timeline navigation, Dev mode, and Autopilot. |
 | Player API                 | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode.               |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                        |
 | Developer API              | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled. |
@@ -124,6 +124,11 @@ Engine API
 │   │   ├── save()
 │   │   ├── saveAsNew()
 │   │   └── close()
+│   ├── newCampaign
+│   │   ├── getSetup()
+│   │   ├── selectPreset(preset)
+│   │   ├── setPresetEdit(preset, value)
+│   │   └── removePresetEdit(preset, value)
 │   ├── timeline
 │   │   ├── getStatus()
 │   │   ├── undoAction()
@@ -198,6 +203,7 @@ Game storage (persisted)
 
 Session (runtime, never persisted)
     Current campaign selection · Current save · Dev mode · active Autopilot engagement
+    new-Campaign setup: selected preset · Preset edits
 ```
 
 | Part                 | Owner                                                                                                            |
@@ -208,6 +214,7 @@ Session (runtime, never persisted)
 | Timeline             | [Timeline](timeline.md)                                                                                          |
 | Autopilot memory     | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                   |
 | Session              | [Campaign lifecycle](#campaign-lifecycle)                                                                        |
+| New-Campaign setup   | [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                       |
 
 Campaign state holds everything game behavior consults and nothing else. It excludes everything a Session holds,
 e.g. Dev mode; Global configuration, e.g. interface preferences; and the Timeline and Autopilot memory, which a
@@ -236,8 +243,11 @@ and Dev mode is disabled. This is the main-menu state in Web UI. What a Session 
 [Data ownership](#data-ownership).
 
 `session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status.
-`session.campaigns.create(options)` creates a Campaign using the current Game build, with explicit initialization
-inputs sufficient for reproducibility. `session.campaigns.load(save)` restores a Campaign save and selects its Campaign
+`session.campaigns.create(options)` creates a Campaign using the current Game build, the Session's new-Campaign setup,
+and explicit initialization inputs sufficient for reproducibility. The new-Campaign setup is the selected preset and
+its Preset edits, read and changed through `session.newCampaign` as
+[Preset selection and edits](configuration.md#preset-selection-and-edits) specifies; the Session holds it and it is
+never persisted. `session.campaigns.load(save)` restores a Campaign save and selects its Campaign
 as the Current campaign, as [Saves](saves.md) specifies. Successful creation or load selects the Current campaign and
 disables Dev mode. A newly created Campaign has a Timeline with no committed actions and no Autopilot memory.
 
