@@ -13,6 +13,8 @@ A → B means A is refined by B.
 ```mermaid
 flowchart LR
   AGENT["AGENT — Agents (Stub)"]
+  API["API — TypeScript Player API (Stub)"]
+  AUTO["AUTO — Autopilot (Draft)"]
   CAMP["CAMP — Campaign (Stub)"]
   COMBAT["COMBAT — Combat (Stub)"]
   DOM["DOM — Domain Model (Draft)"]
@@ -21,6 +23,7 @@ flowchart LR
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
+  AUTO --> API
   DOM --> AGENT
   DOM --> CAMP
   DOM --> COMBAT
@@ -36,17 +39,15 @@ flowchart LR
 ```mermaid
 flowchart LR
   API["API — TypeScript Player API (Stub)"]
-  CMC["CMC — Campaign Modeling Contract (Accepted)"]
+  CSTATE["CSTATE — Campaign State (Accepted)"]
   DEV["DEV — Developer API (Stub)"]
   ENG["ENG — Engine Contract (Draft)"]
-  HIST["HIST — History and Persistence (Stub)"]
   INFO["INFO — Player Information (Stub)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   TURN["TURN — Turn Resolution (Stub)"]
   ENG --> API
-  ENG --> CMC
+  ENG --> CSTATE
   ENG --> DEV
-  ENG --> HIST
   ENG --> INFO
   ENG --> NUMRNG
   ENG --> TURN

@@ -10,22 +10,26 @@
 
 # Overview
 
-This document defines the engine's API hierarchy and the guarantees it provides when running the game, exposing information, and restoring history.
+This document defines the engine's API hierarchy, the data the engine owns, and the guarantees that hold across every engine subsystem when running the game and exposing information.
 
-It owns observable execution guarantees, not a UI framework, internal architecture, exact API signatures, turn phase order,
-RNG algorithm, save encoding, or subsystem mechanics.
+It owns cross-cutting guarantees, not the behavior of one subsystem or their refinements, e.g. [Timeline](./timeline.md), [Turn Resolution](./turn-resolution.md), or [TypeScript Player API](../interfaces/typescript-api.md). [Engine subsystems](#engine-subsystems) names the owner of each subsystem.
 
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
+- Used by [Autopilot](./autopilot.md)
 - Used by [Campaign](../mechanics/campaign.md)
+- Used by [Configuration](./configuration.md)
 - Used by [Domain Model](./domain-model.md)
+- Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
+- Used by [Saves](./saves.md)
+- Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Terminal CLI](../interfaces/cli.md)
+- Used by [Timeline](./timeline.md)
 - Used by [Web UI](../interfaces/web-ui.md)
-- Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md)
+- Refined by [Campaign State](./campaign-state.md)
 - Refined by [Developer API](../interfaces/developer-api.md)
-- Refined by [History and Persistence](./history-and-persistence.md)
 - Refined by [Numbers and Randomness](./numbers-and-randomness.md)
 - Refined by [Player Information](../interfaces/player-information.md)
 - Refined by [Turn Resolution](./turn-resolution.md)
@@ -39,24 +43,21 @@ Shared vocabulary, including Session, is defined by [Core Concepts](core-concept
 
 Kinds of engine API caller and the Session access settings that govern them.
 
-| Term               | Definition                                                                                                                                                                                                                                                                                                                                                     |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                           |
-| Session controller | The Principal holding Session authority: managing the Session, selecting the Current campaign, navigating history, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using CLI or Web UI, or an LLM-based agent driving the API or CLI; the Principal's authority does not depend on which kind of caller holds it. |
-| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                             |
+| Term               | Definition                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                |
+| Session controller | The Principal holding Session authority: managing the Session, selecting the Current campaign, navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using CLI or Web UI, or an LLM-based agent driving the API or CLI; the Principal's authority does not depend on which kind of caller holds it. |
+| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory. The name avoids using Agent for a Principal.                                                                                                                                                                           |
+| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                  |
 
 ## Autopilot
 
-Lending Player API control to an AI for a bounded period. The name Autopilot AI avoids using Agent for a Principal.
+Lending Player API control to an Autopilot AI for a bounded period.
 
-| Term                 | Definition                                                                                                                                                                                                                                                                                                             |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Autopilot            | The game feature through which the Session controller lends Player API control of the Current campaign to an Autopilot AI within an Autopilot limit, then regains it.                                                                                                                                                  |
-| Autopilot AI         | The AI that plays through Player API while Autopilot is engaged, with access only to Player-visible information and its own Autopilot memory.                                                                                                                                                                          |
-| Autopilot limit      | The bound on an Autopilot engagement, measured in committed player actions or turn advancements.                                                                                                                                                                                                                       |
-| Autopilot engagement | One period from engaging to disengaging Autopilot, with a fixed Autopilot limit, Autopilot progress, and a disengagement reason.                                                                                                                                                                                       |
-| Autopilot progress   | The committed player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it.                                                                                                                   |
-| Autopilot memory     | Data an Autopilot AI writes through Autopilot memory API to carry its plans across Autopilot engagements. It is checkpointed at history positions, isolated by Campaign, Autopilot AI identity, and timeline branch, and saved with the campaign timeline. It is not Campaign state, and gameplay never depends on it. |
+| Term                 | Definition                                                                                                                                                       |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Autopilot            | The game feature through which the Session controller lends Player API control of the Current campaign to an Autopilot AI for a bounded period, then regains it. |
+| Autopilot engagement | One period from engaging to disengaging Autopilot. [Autopilot](autopilot.md) owns what bounds an Autopilot engagement and why it ends.                           |
 
 ## API surfaces
 
@@ -64,22 +65,33 @@ The separately authorized parts of the engine API, and the information Player AP
 
 | Term                       | Definition                                                                                                                                                   |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Session API                | The API surface for Session controller operations over campaign selection, persistence, history navigation, Dev mode, and Autopilot.                         |
+| Session API                | The API surface for Session controller operations over campaign selection, Campaign saves, Timeline navigation, Dev mode, and Autopilot.                     |
 | Player API                 | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode.               |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                        |
 | Developer API              | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled. |
-| Autopilot memory API       | The API surface through which the active Autopilot AI reads and writes its Autopilot memory.                                                                 |
+| Autopilot memory API       | The API surface through which the active Autopilot AI reads and writes Autopilot memory.                                                                     |
 
-## Campaign selection and history positions
+## Persisted data
 
-What a Session has selected, the complete Campaign state the engine commits, and the history positions it relies on.
+The data that survives the end of a Session. [Data ownership](#data-ownership) shows how these terms nest.
 
-| Term                  | Definition                                                                                                                                                                                                                                                 |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Committed state       | Complete Campaign state, including every part of it, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a part of Campaign state; every retained history position is a Committed state. |
-| Current campaign      | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                |
-| Current save          | The save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                |
-| Turn-start checkpoint | A history position immediately after campaign creation or a committed Advance turn action, before subsequent actions.                                                                                                                                      |
+| Term                 | Definition                                                                                                                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Game storage         | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                      |
+| Global configuration | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It never contains Campaign state.                                      |
+| Campaign save        | A persisted copy of one Campaign at one position of its Timeline, together with its Timeline and Autopilot memory. One Campaign may have several Campaign saves.                                  |
+| Timeline             | The undo and redo record of one Campaign: its ordered committed actions and the position the Campaign is currently at. Game behavior never consults it.                                           |
+| Autopilot memory     | Data an Autopilot AI writes through Autopilot memory API to carry its plans across Autopilot engagements. It belongs to one Campaign, is not Campaign state, and game behavior never consults it. |
+
+## Campaign selection
+
+What a Session has selected, and the complete Campaign state the engine commits.
+
+| Term             | Definition                                                                                                                                                                                                                                                                    |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Committed state  | Complete Campaign state, including every part of it, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a part of Campaign state; the Campaign state at every position of a Timeline is a Committed state. |
+| Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                   |
+| Current save     | The Campaign save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                          |
 
 ## Identifiers
 
@@ -94,7 +106,7 @@ How the engine scopes unique identifiers.
 
 The engine API is the source of truth for execution and access behavior. Terminal CLI and Web UI are required
 adapters over the same API. Both expose the Session controller workflow; neither independently implements gameplay,
-history, visibility, or Autopilot rules. The engine grants Session controller authority by Principal, never by the kind of
+Timeline, visibility, or Autopilot rules. The engine grants Session controller authority by Principal, never by the kind of
 caller holding it. An Autopilot AI never inherits that authority, whatever model or software implements it.
 
 The complete namespace inventory is `session`, `player`, `developer`, and `autopilotMemory`. The following tree is the
@@ -112,7 +124,7 @@ Engine API
 │   │   ├── save()
 │   │   ├── saveAsNew()
 │   │   └── close()
-│   ├── history
+│   ├── timeline
 │   │   ├── getStatus()
 │   │   ├── undoAction()
 │   │   ├── redoAction()
@@ -158,40 +170,80 @@ The complete namespace placement rules are:
 
 The complete Principal access matrix is:
 
-| Surface              | Session controller                                                                      | Active Autopilot AI                                                   |
-| -------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Session API          | Available subject to lifecycle and Autopilot restrictions                               | Unavailable                                                           |
-| Player API           | Available with a Current campaign; mutations blocked during Autopilot                   | Available only for its Current campaign and remaining Autopilot limit |
-| Developer API        | Available with a Current campaign, Dev mode enabled, and no active Autopilot engagement | Unavailable in every Dev mode setting                                 |
-| Autopilot memory API | Unavailable                                                                             | Available only for its own active Autopilot engagement                |
+| Surface              | Session controller                                                                      | Active Autopilot AI                                                     |
+| -------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Session API          | Available subject to lifecycle and Autopilot restrictions                               | Unavailable                                                             |
+| Player API           | Available with a Current campaign; mutations blocked during Autopilot                   | Available only for its Current campaign during its Autopilot engagement |
+| Developer API        | Available with a Current campaign, Dev mode enabled, and no active Autopilot engagement | Unavailable in every Dev mode setting                                   |
+| Autopilot memory API | Unavailable                                                                             | Available only during its own active Autopilot engagement               |
 
-Authority must be enforced by the engine at invocation time. Passing a restricted facade without enforcing its
-restrictions is insufficient. Access must be revoked when an Autopilot engagement ends or the Current campaign changes.
-An Autopilot AI must not receive the unrestricted engine object or an alternative CLI or Web UI path to Session API
-or Developer API operations.
+The engine enforces this matrix on every invocation. No operation available to an Autopilot AI reaches a Session API
+or Developer API operation, including through Terminal CLI or Web UI. An Autopilot AI's access ends when its Autopilot
+engagement ends or the Current campaign changes.
+
+# Data ownership
+
+The following complete conceptual hierarchy shows which data the engine owns, what is persisted, and which
+specification owns each part.
+
+```text
+Game storage (persisted)
+├── Global configuration
+└── Campaign saves (zero or more)
+    └── Campaign save
+        ├── Campaign save ID and Campaign ID
+        ├── Campaign state (at the saved position of the Timeline)
+        ├── Timeline
+        └── Autopilot memory
+
+Session (runtime, never persisted)
+    Current campaign selection · Current save · Dev mode · active Autopilot engagement
+```
+
+| Part                 | Owner                                                                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Global configuration | [Configuration](configuration.md)                                                                                |
+| Campaign save        | [Saves](saves.md), including its identifiers and when its Timeline is omitted                                    |
+| Campaign state       | [Campaign state composition](campaign-state.md#campaign-state-composition) in Campaign State, for its components |
+| Timeline             | [Timeline](timeline.md)                                                                                          |
+| Autopilot memory     | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                   |
+| Session              | [Campaign lifecycle](#campaign-lifecycle)                                                                        |
+
+Campaign state holds everything game behavior consults and nothing else. It excludes everything a Session holds,
+e.g. Dev mode; Global configuration, e.g. interface preferences; and the Timeline and Autopilot memory, which a
+Campaign save keeps beside Campaign state because continuing to control a Campaign needs them although game behavior
+never consults them.
+
+Nothing a Session holds is persisted, and loading a Campaign save never restores a Session.
+
+# Engine subsystems
+
+Each engine subsystem has one owning specification. This document states only the guarantees that hold across all of
+them. The following table is the complete subsystem inventory.
+
+| Subsystem       | Owner                                 | What it provides                                                                             |
+| --------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Timeline        | [Timeline](timeline.md)               | Undo and redo of every committed action, by action or by turn.                               |
+| Saves           | [Saves](saves.md)                     | Saving a Campaign and loading it back at its saved position.                                 |
+| Configuration   | [Configuration](configuration.md)     | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration. |
+| Autopilot       | [Autopilot](autopilot.md)             | Bounded play by an Autopilot AI, and its Autopilot memory.                                   |
+| Turn resolution | [Turn Resolution](turn-resolution.md) | The order and timing of game behavior within Advance turn.                                   |
 
 # Campaign lifecycle
 
-A Session starts when the game starts and ends when the game exits. The Session holds the Current campaign selection,
-its Current save, Dev mode, and the active Autopilot engagement, if any. Nothing in a Session is persisted, and loading
-a save never restores a Session. A newly opened Session has no Current campaign and Dev mode is disabled. This is the
-main-menu state in Web UI.
-
-Campaign state excludes everything a Session holds, including Session access settings, e.g. Dev mode.
-Campaign state also excludes interface preferences and the continuation data that game behavior does not consult, e.g.
-the action history and Autopilot memory; a save captures that continuation data with the Campaign under
-[Save and load](#save-and-load).
+A Session starts when the game starts and ends when the game exits. A newly opened Session has no Current campaign
+and Dev mode is disabled. This is the main-menu state in Web UI. What a Session holds is stated under
+[Data ownership](#data-ownership).
 
 `session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status.
 `session.campaigns.create(options)` creates a Campaign using the current Game build, with explicit initialization
-inputs sufficient for reproducibility. `session.campaigns.load(save)` restores a saved campaign timeline and selects it as the Current campaign.
-Successful creation or load selects the Current campaign and disables Dev mode. Creation starts a fresh timeline
-and fresh Autopilot memory; loading restores the saved timeline and applicable memory.
+inputs sufficient for reproducibility. `session.campaigns.load(save)` restores a Campaign save and selects its Campaign
+as the Current campaign, as [Saves](saves.md) specifies. Successful creation or load selects the Current campaign and
+disables Dev mode. A newly created Campaign has a Timeline with no committed actions and no Autopilot memory.
 
 `session.campaigns.close()` removes the Current campaign and disables Dev mode. Campaign-dependent operations fail
 when no Current campaign exists. Creation, load, and closure invalidate prior campaign access. Failure to create or
-load preserves the existing Session. Saving captures the Current campaign at a committed action boundary, even
-before the player advances the turn. Closing or replacing the Current campaign does not implicitly save it.
+load preserves the existing Session. Closing or replacing the Current campaign does not implicitly save it.
 
 # Campaign data integrity
 
@@ -208,13 +260,12 @@ schema or reveal condition; [Player Information](../interfaces/player-informatio
 
 Player API queries always return Player-visible information. The same query at equal Campaign state returns the
 same Player-visible information for the Session controller and Autopilot AI, independent of Dev mode.
-Queries must not mutate Campaign state or consume gameplay randomness.
 
 A player may commit any sequence of eligible Player API actions during a turn. `player.actions.advanceTurn()` is
-itself one player action; it atomically executes the turn resolution specified by Turn Resolution. Its internal
-phases are not separately exposed action-history entries. Each successful state-changing Player API action commits
-one action-history entry. Rejected actions and actions with no effect commit no action-history entry and consume
-no gameplay randomness or generated Campaign-scoped identifiers.
+itself one player action; it atomically executes the turn resolution specified by Turn Resolution, and its internal
+phases are not separately committed. Each successful state-changing Player API action is one committed action in the
+Timeline. A rejected action or an action with no effect is not a committed action and changes no later outcome, under
+[Determinism](#determinism).
 
 The mechanics specification owning each gameplay action, e.g. `assignAgents(...)` or `purchaseUpgrade(...)`, states
 the action's preconditions, what the player observes when a precondition fails, and the action's state changes: when
@@ -226,96 +277,28 @@ actions follow the same atomicity, visibility, and replay contract.
 
 Only the Session controller can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
 a Current campaign and no active Autopilot engagement. Developer API inspection returns detached, read-only full Campaign
-state, with all inputs needed for continuation. It never reveals hidden facts through ordinary game behavior.
+state. It never reveals hidden facts through ordinary game behavior.
 `developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)` are required starter cheat operations;
 Developer API owns their exact inputs, validation, and effects. Future cheat operations belong in that namespace.
-Cheat operations must preserve model invariants and commit atomic, replayable action-history entries.
+Cheat operations must preserve model invariants, and each successful one is one atomic committed action in the Timeline.
 
-Dev mode starts disabled and is disabled on successful creation, load, or closure. History navigation leaves the
-current Dev mode setting unchanged. Dev mode is not gameplay Campaign state and is not restored as authority from
-a save or action history. Disabling Dev mode revokes subsequent Developer API access. Previously returned information
+Dev mode starts disabled and is disabled on successful creation, load, or closure. Timeline navigation leaves the
+current Dev mode setting unchanged. Dev mode is not Campaign state and is never restored from a Campaign save or the
+Timeline. Disabling Dev mode revokes subsequent Developer API access. Previously returned information
 cannot be erased from the Session controller's knowledge.
 
 Autopilot may be engaged while Dev mode is enabled, but Developer API operations remain unavailable while Autopilot
 is engaged and the Autopilot AI never receives them. Dev mode transitions are unavailable while Autopilot is engaged. To inspect or cheat, the Session controller disengages Autopilot and waits for disengagement to complete.
 
-# Autopilot limits
-
-`session.autopilot.engage(autopilotAiId, limit)` engages Autopilot for the Current campaign. At most one
-Autopilot engagement may be active in a Session. The complete Autopilot limit inventory is:
-
-| Autopilot limit     | Input                      | Successful completion                                                                   |
-| ------------------- | -------------------------- | --------------------------------------------------------------------------------------- |
-| `singleAction`      | No action count            | One Player API action successfully commits, including Advance turn if chosen.           |
-| `untilTurnAdvanced` | No turn count              | The first Advance turn action successfully commits, after any preceding player actions. |
-| `turnAdvancements`  | A positive integer `count` | Exactly `count` Advance turn actions successfully commit.                               |
-
-Queries, memory operations, rejected actions, and actions with no effect count toward no Autopilot limit. The limit measures
-committed player actions or turn advancements, not model calls. The engine counts commits and disengages
-Autopilot immediately at its limit; another mutation through that Autopilot engagement is rejected.
-The engine drives each Autopilot engagement: it repeatedly invokes the Autopilot AI to choose its next Player API
-action, during which the AI may make Player API queries and Autopilot memory operations, until Autopilot disengages.
-The Autopilot AI never decides when an engagement ends. A malformed limit or unavailable Autopilot AI
-rejects engagement without changing Campaign state or creating an active Autopilot engagement.
-
-The Autopilot AI receives only Player API access and its own Autopilot memory API access. It does not receive its
-Autopilot limit or Autopilot progress, so it plays for the campaign as a whole rather than toward the end of the
-engagement; a plan extending beyond the limit is carried forward in Autopilot memory. It chooses actions using Player-visible information and its applicable memory. Strategy and model-provider
-behavior belong outside gameplay resolution. The engine must not pass developer inspection, unrestricted saves,
-hidden command logs, or the Session controller's unrestricted conversation into the Autopilot AI context.
-
-# Autopilot lifecycle and concurrency
-
-`session.autopilot.getStatus(engagementId)` reports the Autopilot limit, Autopilot progress, and execution status to the Session
-controller. The complete disengagement reason inventory is limit reached, disengaged by controller, campaign ended, and AI
-failed. A disengagement result identifies the reason, whether the Autopilot limit was reached, and Autopilot progress.
-Campaign completion before the limit is reached disengages with campaign ended; reaching the limit on the same
-action takes precedence as limit reached. Autopilot disengages as AI failed when the Autopilot AI reports an error,
-produces no valid action, or exhausts its configured finite execution budget. That budget prevents indefinitely
-repeated invalid actions or non-progressing model calls; its exact limits belong to TypeScript Player API.
-
-Campaign mutations are serialized. During an Autopilot engagement, the Session controller may read Player API queries,
-Session status, history status, and Autopilot status, and disengage Autopilot. All other Session API operations,
-Session controller gameplay mutations, and Developer API operations are unavailable until disengagement completes.
-`session.autopilot.disengage(engagementId)` requests disengagement between atomic actions. An action already executing either
-commits completely or fails without effects. Disengagement never implicitly advances a turn or rolls back earlier
-committed actions. Failure of the AI follows the same boundary rule. Late responses from a completed Autopilot engagement
-cannot mutate Campaign state or write memory. History navigation remains available after disengagement.
-
-# Action history and turn navigation
-
-Action-history entries retain the ordered committed Player API and Developer API commands and sufficient inputs to
-restore or reproduce their results. Save operations, queries, Dev mode transitions, and Autopilot lifecycle
-operations are not gameplay action-history entries. Autopilot contributes the same individual player action-history
-entries as direct execution; it does not collapse an Autopilot engagement into one undo unit.
-
-`session.history.getStatus()` exposes navigation availability and cursor metadata without exposing hidden Campaign
-state. `undoAction()` restores the position immediately before the preceding committed action; `redoAction()`
-restores the position immediately after the next retained action. Every restored position includes the complete
-continuation state and its applicable Autopilot memory. A new committed Player API or Developer API action after
-undo discards the redo continuation and its memory, establishing a new timeline branch.
-
-Turn-start checkpoints exist immediately after creation and after every committed Advance turn. The current turn's
-start is the most recent Turn-start checkpoint at or before the current cursor. `undoTurn()` restores the preceding
-Turn-start checkpoint before that current turn's start. It therefore reverses the previous completed turn together
-with any actions already committed in the current turn. `redoTurn()` restores the nearest retained Turn-start
-checkpoint strictly after the current cursor. This is the complete target-selection rule.
-
-E.g., from the start of turn 5 or partway through turn 5, `undoTurn()` returns to the start of turn 4. To reverse only
-current-turn edits, use `undoAction()`. At a Turn-start checkpoint, one `redoTurn()` replays the next complete turn;
-remaining current-turn edits are individually accessible through `redoAction()`. Partial retained futures without
-a following Turn-start checkpoint remain accessible through `redoAction()`. An unavailable target rejects navigation
-without changing the Session; no rewind penalty is added.
-
-History and Persistence owns restoration procedures and representation, not alternative navigation targets.
-
-# Continuation state
+# Determinism
 
 For equal initial Campaign state, the same Game build, and the same ordered committed commands, execution must
-produce equal resulting Campaign state, generated Campaign-scoped identifiers, gameplay RNG state, and retained reports. Campaign
-state must preserve every input consulted by game behavior, including relevant retained data about past Campaign state or events, current RNG state, and Campaign-scoped identifier
-generation state. An initial random seed alone is insufficient unless it determines the complete restored generator
-position. Gameplay must not depend on wall-clock time, UI rendering, model responses, or Autopilot memory.
+produce equal resulting Campaign state and retained reports. Gameplay consults nothing outside Campaign state, e.g.
+wall-clock time or Autopilot memory, so Campaign state holds every input consulted by game behavior, including
+relevant retained data about past Campaign state or events.
+
+Consequently, outcomes after undo, redo, or load equal those of uninterrupted play, and a query, a rejected action,
+or an action with no effect never changes a later outcome.
 
 Determinism is required within one implementation and Game build, not across different implementations of the
 specification. Consequently, the order of random draws, the order in which Campaign instances are created within one
@@ -323,74 +306,36 @@ command, and the sequence and format of generated Campaign-scoped identifiers ar
 guarantee above holds. Two implementations may therefore produce different outcomes from the same initial Campaign
 state and commands; each must reproduce its own outcomes exactly.
 
-Undo/redo and replay restore or reproduce committed commands without invoking AI strategy again. Recorded Developer
-API commands are restored under history authority without granting Developer API access or requiring Dev mode.
-Internal restoration may use snapshots or replay, provided observable results are equal. Engine internals for
-restoration must not become an Autopilot AI path to hidden information or arbitrary mutation.
-
 ## Unique identifiers
 
 Every specification that introduces a unique identifier must classify it as a Campaign-scoped identifier or an
 Independent identifier. The test is whether replaying the same committed commands from the same Campaign state,
 including through undo and redo, must reproduce the same identifier.
 
-| Kind                       | Required format                                                                                                                                                | Examples                                  |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| Campaign-scoped identifier | Generated deterministically from Campaign state under its owning contract; never a ULID or any other format that consults wall-clock time or fresh randomness. | E.g., Instance IDs.                       |
-| Independent identifier     | A [ULID](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifier).                                                             | E.g., Campaign IDs and Campaign save IDs. |
+| Kind                       | Replay reproduces it | Examples                                                       |
+| -------------------------- | -------------------- | -------------------------------------------------------------- |
+| Campaign-scoped identifier | Yes                  | E.g., [Instance IDs](campaign-state.md#glossary).              |
+| Independent identifier     | No                   | E.g., [Campaign IDs and Campaign save IDs](saves.md#glossary). |
 
-A ULID embeds wall-clock time and fresh randomness, so generating one during replayed gameplay would break
-deterministic replay. Do not specify a GUID, UUID, or other format for an Independent identifier unless a ULID
-cannot satisfy a stated technical requirement; the specification must then state that requirement.
-
-# Autopilot memory
-
-`autopilotMemory.read()` returns the active Autopilot AI's applicable Autopilot memory, or an explicit absence
-when none exists. `autopilotMemory.write(memory)` atomically replaces that Autopilot memory without changing
-Campaign state, consuming gameplay randomness, or counting toward the Autopilot limit. The memory is produced
-through the restricted Autopilot AI context; the Session controller cannot inject developer knowledge through this API.
-
-Memory is isolated by Campaign, Autopilot AI identity, and timeline branch, and is checkpointed at its history
-position. Later Autopilot engagements for the same Autopilot AI read the applicable checkpoint. At a given position,
-subsequent writes replace its applicable checkpoint; restoration to an earlier position must select only memory
-available at that earlier position, never memory from a later cursor or discarded branch. Redo restores applicable
-checkpoints along the retained future. History and Persistence owns encoding and checkpoint storage procedures.
-
-A new branch discards all memory checkpoints from the removed future, even if that future belonged to another AI
-controller. Loaded saves restore applicable checkpoints. A live Autopilot engagement and external model conversation are
-not resumed on load. The Autopilot AI context must be recreated from permitted information and restored memory;
-stale external conversation from an undone future must not accompany a new Autopilot engagement.
-
-# Save and load
-
-`session.campaigns.save()` writes the Current campaign to its Current save, replacing that save's contents. When the
-Current campaign has no Current save, it creates a new save and makes that the Current save.
-`session.campaigns.saveAsNew()` always creates a new save of the same Campaign and makes that the Current save; every
-earlier save is unchanged. Forking a timeline uses `saveAsNew()`: there is no separate fork operation, and a fork
-keeps the Campaign's identity.
-
-A save captures complete continuation state, the action-history cursor, retained undo/redo
-continuation, and Autopilot memory checkpoints associated with that timeline, unless the save size limit in History
-and Persistence requires dropping that history; such a save reports the loss and restores only its saved position. A successful load restores those
-contents atomically with no active Autopilot engagement and Dev mode disabled. Saves contain hidden Campaign state and
-must never be exposed to Autopilot AI as readable gameplay information. Encoding, the save size limit, validation,
-and storage failure procedures belong to History and Persistence.
+A Campaign-scoped identifier therefore depends on nothing outside Campaign state, e.g. wall-clock time. The format of
+every identifier is the implementer's choice.
 
 # Derived value consistency
 
-Queries, computing Derived values, and checking action preconditions must neither mutate Campaign state nor consume
-gameplay randomness.
+Queries, computing Derived values, and checking action preconditions must neither change Campaign state nor change
+any later outcome.
 After any action or restoration, every query result, report, and Player-visible information equals what would be
-computed from the current Campaign state. After restoration, that is the state at the restored cursor rather than a
-discarded future.
+computed from the current Campaign state. After restoration, that is the Campaign state at the restored position
+rather than one that was undone.
 
 # Information boundary
 
 Player API always exposes only Player-visible information. Developer API adds a distinct full-state inspection path
 for an authorized Session controller. The boundary applies to query results, action discovery, validation errors,
-reports, subscriptions, and history metadata. Hidden identifiers and error details must follow the same boundary.
+reports, subscriptions, and Timeline status. Hidden identifiers and error details must follow the same boundary.
 Returned views must not provide mutable references into Campaign state. The engine guarantees the information it
 supplies to Autopilot AI; it cannot erase information independently disclosed by a human outside the API.
+A Campaign save contains information that is not Player-visible information and is never exposed to an Autopilot AI.
 
 # Committed state integrity
 
@@ -398,65 +343,31 @@ Committed state distinguishes complete Campaign state at accepted-command bounda
 E.g., the position restored by undo is a Committed state, while values computed partway through Advance turn
 processing are not.
 
-Rejected requests leave Campaign state, gameplay RNG state, Campaign-scoped identifier generation state, reports, action history,
-and memory unchanged. Execution infrastructure may record a rejected attempt for Autopilot status and budgets;
-that telemetry is not Campaign state. Intermediate processing must not be exposed as Committed state. Failed
-history navigation or load preserves the entire prior Session. Broken references or internal invariants are reported
+Rejected requests leave Campaign state, reports, the Timeline, and Autopilot memory unchanged. This covers every
+rejection, e.g. no Current campaign, an unavailable Timeline navigation target, or an unauthorized call.
+Intermediate processing must not be exposed as Committed state. Failed
+Timeline navigation or load preserves the entire prior Session. Broken references or internal invariants are reported
 as engine/data defects rather than silently repaired into different gameplay outcomes.
-
-# Game build compatibility
-
-Backward compatibility and save migration across Game builds are not required. A Game build may reject incompatible
-saves. History and Persistence owns validation and incompatible-save handling. An unsuccessful load does not discard
-the Current campaign; successful restoration satisfies all continuation and integrity guarantees above.
-
-# Edge cases and failure behavior
-
-No Current campaign, unavailable history targets, invalid Autopilot limits, stale access, and unauthorized calls reject without
-Campaign state changes under [Committed state integrity](#committed-state-integrity). Autopilot disengagement and AI
-failure preserve committed actions under [Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency).
-Exact error representations and asynchronous operation results belong to TypeScript Player API. A Session controller
-cannot erase previously inspected hidden information by disabling Dev mode, and history navigation cannot erase a
-human's memory; engine-supplied Autopilot AI context nevertheless follows [Autopilot memory](#autopilot-memory).
+Exact error representations and asynchronous operation results belong to TypeScript Player API.
 
 # Acceptance examples
 
-- **Lifecycle:** Open a Session with no Current campaign. A gameplay query fails without mutation. Create Campaign A,
-  save after a gameplay action before Advance turn, then create Campaign B. Load the saved Campaign A and obtain the
-  exact saved continuation with Dev mode disabled and no active Autopilot engagement. A corrupt load leaves Campaign A
-  unchanged ([Campaign lifecycle](#campaign-lifecycle), [Save and load](#save-and-load)).
 - **Session without a Campaign:** Start the game before selecting a playthrough. It is a Session with no selected
-  Campaign, not an empty Campaign ([Campaign lifecycle](#campaign-lifecycle)).
+  Campaign, not an empty Campaign, and a gameplay query fails without mutation ([Campaign lifecycle](#campaign-lifecycle)).
 - **Session not persisted:** Select a Campaign, save it, exit, and start the game again. The new Session has no
-  selected Campaign until the save is loaded, and loading restores the Campaign's saved data but none of the earlier
-  Session's runtime state ([Campaign lifecycle](#campaign-lifecycle), [Save and load](#save-and-load)).
-- **Fork by saving as new:** Load save S1 and commit actions. `saveAsNew()` creates S2 and makes it the Current save.
-  Undo two actions and commit a different action, then `save()`. S2 contains the new branch; S1 still contains the
-  original future. Both belong to the same Campaign ([Save and load](#save-and-load)).
+  selected Campaign until the Campaign save is loaded, and loading restores the Campaign's saved data but none of the earlier
+  Session's runtime state ([Campaign lifecycle](#campaign-lifecycle), [Data ownership](#data-ownership)).
 - **Developer isolation:** Enable Dev mode and inspect hidden difficulty H through Developer API. Player API still
-  hides H. Engage Autopilot with `untilTurnAdvanced`; its queries and errors hide H, its developer calls fail, and
-  its first committed Advance turn ends execution. A late action fails. Disable Dev mode after disengagement and
-  verify Developer API access is revoked ([Dev mode and developer operations](#dev-mode-and-developer-operations),
-  [Autopilot limits](#autopilot-limits), [Information boundary](#information-boundary)).
-- **Limit accounting:** In `singleAction`, repeated queries and a rejected action do not reach the limit; one
-  committed gameplay action does. In `turnAdvancements` with count 2, ordinary actions do not increase Autopilot progress toward the limit;
-  the second committed Advance turn disengages Autopilot before a third can execute
-  ([Autopilot limits](#autopilot-limits)).
-- **Action replay:** Starting at S, add money through Developer API, commit ordinary gameplay actions, and Advance
-  turn. Undo each action and redo it with Dev mode disabled. Complete Campaign state, RNG state, generated Instance
-  IDs, and retained reports equal the original results. Queries between actions do not change those results
-  ([Action history and turn navigation](#action-history-and-turn-navigation), [Continuation state](#continuation-state)).
-- **Turn targets:** At the start of turn 5, `undoTurn()` restores the start of turn 4 and `redoTurn()` restores the
-  start of turn 5. After one action in turn 5, `undoTurn()` also restores the start of turn 4 and removes that current-turn action. Undo then commit a
-  different action; the discarded future cannot be redone
-  ([Action history and turn navigation](#action-history-and-turn-navigation)).
-- **Memory restoration:** At position P, Autopilot AI X saves plan M. Later at Q it observes a newly revealed
-  outcome and saves M2. Undo to P and engage Autopilot with X again: memory is M, and neither M2 nor the stale conversation from
-  Q is supplied. Save at P with its redo continuation, load, and redo to Q: applicable memory is M2
-  ([Autopilot memory](#autopilot-memory), [Save and load](#save-and-load)).
-- **Disengagement and defects:** Disengage Autopilot during an action. The action either commits completely or fails
-  without effects; earlier committed actions remain. A broken internal reference reports an engine defect without
-  publishing intermediate Campaign state. Returned inspection data cannot mutate the engine
-  ([Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency), [Committed state integrity](#committed-state-integrity)).
-- **Campaign integrity:** A committed action and its undo/redo preserve declared campaign-data composition and identity,
+  hides H. Engage Autopilot; its queries and errors hide H and its developer calls fail. Disable Dev mode after
+  disengagement and verify Developer API access is revoked
+  ([Dev mode and developer operations](#dev-mode-and-developer-operations), [API hierarchy](#api-hierarchy),
+  [Information boundary](#information-boundary)).
+- **Equal outcomes:** Starting at Campaign state S, add money through Developer API, commit ordinary gameplay actions,
+  and Advance turn. Repeat the same commands from S with queries and a rejected action interleaved. Complete Campaign
+  state and retained reports equal the original results ([Determinism](#determinism),
+  [Derived value consistency](#derived-value-consistency)).
+- **Defects:** A broken internal reference reports an engine defect without publishing intermediate Campaign state.
+  Returned inspection data cannot mutate the engine ([Committed state integrity](#committed-state-integrity),
+  [Information boundary](#information-boundary)).
+- **Campaign integrity:** A committed action and its undo and redo preserve declared campaign-data composition and identity,
   and required historical references remain resolvable ([Campaign data integrity](#campaign-data-integrity)).

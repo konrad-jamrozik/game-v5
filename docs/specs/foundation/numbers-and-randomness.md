@@ -15,10 +15,10 @@ This document makes every numeric calculation and random outcome reproducible ac
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-Deterministic identity generation must preserve [Campaign instances](campaign-modeling-contract.md#campaign-instances); calculations and continuation follow [Derived value consistency](engine-contract.md#derived-value-consistency) and [Continuation state](engine-contract.md#continuation-state).
+Deterministic identity generation must preserve [Campaign instances](campaign-state.md#campaign-instances); calculations follow [Derived value consistency](engine-contract.md#derived-value-consistency) and [Determinism](engine-contract.md#determinism).
 
-This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Continuation state](engine-contract.md#continuation-state)/[Committed state integrity](engine-contract.md#committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
-draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [Campaign instances](campaign-modeling-contract.md#campaign-instances);
+This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Determinism](engine-contract.md#determinism)/[Committed state integrity](engine-contract.md#committed-state-integrity) with numeric operations, reproducible generator-state evolution, and
+draw-consumption rules at query, command, and restoration boundaries. It uses the identity convention in [Campaign instances](campaign-state.md#campaign-instances);
 choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
 under [Committed state integrity](engine-contract.md#committed-state-integrity); the existing no-op and algorithm TODOs remain unresolved.
 
@@ -28,14 +28,13 @@ appropriate to this document.
 
 # Relationships
 
-- Uses [Campaign Modeling Contract](./campaign-modeling-contract.md)
+- Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Refines [Engine Contract](./engine-contract.md)
 - Used by [Agents](../mechanics/agents.md)
 - Used by [Combat](../mechanics/combat.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Factions](../mechanics/factions.md)
-- Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Investigations](../mechanics/investigations.md)
 - Used by [Turn Resolution](./turn-resolution.md)
 
@@ -51,7 +50,7 @@ TODO: Choose precision/representation, allowed ranges, rounding operations and t
 # Randomness contract
 
 Determinism is required only within one implementation and Game build under
-[Continuation state](engine-contract.md#continuation-state). The generator algorithm and the order of random draws are
+[Determinism](engine-contract.md#determinism). The generator algorithm and the order of random draws are
 therefore the implementer's choice, and acceptance tests must assert replay equality or use fixed injected random
 outcomes, never outcomes that depend on a particular seed.
 
@@ -64,7 +63,7 @@ TODO: Specify distributions, interval endpoints, integer sampling, and the remai
 # Deterministic boundaries
 
 TODO: Specify behavior across supported runtimes and runtime versions under the Game build compatibility policy in
-[Game build compatibility](engine-contract.md#game-build-compatibility); exclude ambient randomness and wall-clock time from game results.
+[Game build compatibility](saves.md#game-build-compatibility); exclude ambient randomness and wall-clock time from game results.
 Detail preservation of RNG state on rejection under [Committed state integrity](engine-contract.md#committed-state-integrity). Decide whether no-op commands consume draws.
 
 # Edge cases and failure behavior

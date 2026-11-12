@@ -21,26 +21,28 @@ information, independent of Dev mode. Separate full-state inspection is specifie
 inspection never changes gameplay reveal conditions or information supplied to Autopilot AI.
 
 Core Concepts supplies Player-visible information, Authoritative value, Derived value, and historical meanings.
-Campaign Modeling Contract supplies value-classification and historical-preservation constraints.
-Domain Model supplies represented concepts, and History and Persistence supplies restored facts and history positions.
+Campaign State supplies value-classification and historical-preservation constraints.
+Domain Model supplies represented concepts, and Timeline supplies Timeline positions and what undo and redo restore.
 Mechanics supply facts and calculations to expose. Investigations owns estimate mathematics and permitted inputs;
 this specification owns the exposed Properties and reveal conditions, without duplicating formulas.
-Historical explanations preserve [Historical fact preservation](../foundation/campaign-modeling-contract.md#historical-fact-preservation).
+Historical explanations preserve [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation).
 
 # Relationships
 
 - Uses [Agents](../mechanics/agents.md)
+- Uses [Autopilot](../foundation/autopilot.md)
 - Uses [Campaign](../mechanics/campaign.md)
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
+- Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Combat](../mechanics/combat.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Domain Model](../foundation/domain-model.md)
 - Uses [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Uses [Factions](../mechanics/factions.md)
-- Uses [History and Persistence](../foundation/history-and-persistence.md)
+- Uses [Game Data Records](../foundation/game-data-records.md)
 - Uses [Investigations](../mechanics/investigations.md)
 - Uses [Leads and Progression](../mechanics/leads-and-progression.md)
 - Uses [Missions](../mechanics/missions.md)
+- Uses [Timeline](../foundation/timeline.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
 - Used by [Investigations](../mechanics/investigations.md)
 - Used by [Terminal CLI](./cli.md)
@@ -60,7 +62,7 @@ TODO: Specify the complete Player API query schemas using owning mechanics. Stat
 unknown information from zero or absence. E.g., cover Agent capabilities, Investigation estimates, and
 Mission outcomes without exposing hidden inputs through ordinary queries.
 
-TODO: Specify which Display content, as defined in [GDR purpose: display content](../foundation/campaign-modeling-contract.md#gdr-purpose-display-content), each
+TODO: Specify which Display content, as defined in [GDR purpose: display content](../foundation/game-data-records.md#gdr-purpose-display-content), each
 Player-visible view exposes, including names, descriptions, encyclopedia articles, and media references, and the
 conditions under which Display content describing hidden state becomes Player-visible.
 
@@ -72,10 +74,9 @@ cursor. Reference owning mechanics for calculations. Restored views and reports 
 # Boundary consistency
 
 Session controller and Autopilot AI receive the same Player-visible information for equal Campaign state and
-equivalent Player API queries, independent of Dev mode. Autopilot AI never receives Developer API inspection,
-unrestricted saves, hidden command logs, or the Session controller's unrestricted conversation.
+equivalent Player API queries, independent of Dev mode. What an Autopilot AI receives is limited under [What an Autopilot AI receives](../foundation/autopilot.md#what-an-autopilot-ai-receives).
 
-TODO: Define schema-level visibility for every Player API result path and history metadata. E.g., validate
+TODO: Define schema-level visibility for every Player API result path and Timeline status. E.g., validate
 queries, action discovery, and errors against the same hidden-state boundary. Exclude gameplay RNG state and mutable
 Campaign references. Engine Contract owns Autopilot AI context and memory restoration guarantees.
 
@@ -87,9 +88,9 @@ Player API errors and action availability must preserve the information boundary
 # Acceptance examples
 
 TODO: Provide paired full-state and Player API fixtures proving visibility for Session controller and Autopilot AI,
-including after Dev mode changes and history navigation. Identify each exercised requirement section.
+including after Dev mode changes and Timeline navigation. Identify each exercised requirement section.
 
 # Open decisions
 
 - TODO: Choose complete Player API query schemas, reveal conditions, and uncertainty presentation.
-- TODO: Choose historical-report visibility consistent with the restored history cursor.
+- TODO: Choose historical-report visibility consistent with the Timeline cursor after undo and redo.

@@ -15,10 +15,15 @@ on them.
 [Gameplay Dependency Direction](gameplay-dependency-direction.md) answers _what may gameplay code read?_ It steers
 gameplay code away from Campaign state beyond its necessary inputs.
 
+## Storage Schema
+
+[Storage Schema](storage-schema.md) answers _how might everything persisted be laid out?_ It steers implementers toward
+one physical layout for Game storage.
+
 # How they relate
 
-Gameplay Dependency Direction uses the Foundation family's vocabulary and continuation guarantees, which it helps
-implementations satisfy. No specification depends on it.
+Both documents use the Foundation family: Gameplay Dependency Direction uses its vocabulary and determinism guarantees,
+and Storage Schema uses its data ownership, Campaign save, and Timeline contracts. No specification depends on either.
 
 <!-- generated:family-diagram:start -->
 
@@ -26,15 +31,23 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ## Within the family
 
-This family has a single specification, so there are no relationships within it.
+```mermaid
+flowchart TD
+  DEPDIR["DEPDIR — Gameplay Dependency Direction (Draft)"]
+  SCHEMA["SCHEMA — Storage Schema (Stub)"]
+```
+
+No relationships are declared within this family.
 
 ## Across families
 
 ```mermaid
 flowchart LR
   DEPDIR["DEPDIR — Gameplay Dependency Direction (Draft)"]
+  SCHEMA["SCHEMA — Storage Schema (Stub)"]
   family_foundation["Foundation family"]:::external
   family_foundation -->|used by| DEPDIR
+  family_foundation -->|used by| SCHEMA
   classDef external stroke-dasharray: 5 5
 ```
 

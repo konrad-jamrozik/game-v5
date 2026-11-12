@@ -21,16 +21,18 @@ Player API views always show Player-visible information. Separate developer cont
 only under authorized Dev mode access. Autopilot controls select one of the three Autopilot limits, show progress, and
 permit disengagement without passing developer information to Autopilot AI.
 
-TypeScript Player API supplies operation results, Player Information supplies permitted views, and History and
-Persistence supplies save/load and navigation semantics. Screens and interactions apply those contracts without
+TypeScript Player API supplies operation results, Player Information supplies permitted views, and Saves, Timeline,
+and Autopilot supply save, load, navigation, and Autopilot behavior. Screens and interactions apply those contracts without
 independently implementing gameplay behavior.
 
 # Relationships
 
+- Uses [Autopilot](../foundation/autopilot.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [History and Persistence](../foundation/history-and-persistence.md)
 - Uses [Player Information](./player-information.md)
+- Uses [Saves](../foundation/saves.md)
+- Uses [Timeline](../foundation/timeline.md)
 - Uses [TypeScript Player API](./typescript-api.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 
@@ -51,7 +53,7 @@ and an encyclopedia view of the articles Player Information exposes.
 
 # Interaction and accessibility
 
-TODO: Specify creation/load/save, gameplay actions, Advance turn, action-level and turn-level history navigation,
+TODO: Specify creation/load/save, gameplay actions, Advance turn, action-level and turn-level Timeline navigation,
 Dev mode controls, and Autopilot limit/progress/disengagement. Define keyboard access, focus behavior, and refresh
 after commits or restoration. Controller mutation controls follow Engine Contract Autopilot restrictions.
 
@@ -67,7 +69,7 @@ prior committed view intact; presentation must not imply an uncommitted gameplay
 
 # Acceptance examples
 
-TODO: Provide keyboard-accessible journeys mapping main menu, gameplay, history, developer controls, and Autopilot
+TODO: Provide keyboard-accessible journeys mapping main menu, gameplay, Timeline navigation, developer controls, and Autopilot
 to exact API operations. Verify unchanged Player API visibility with Dev mode enabled and matching results with CLI.
 Identify each exercised requirement section.
 

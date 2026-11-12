@@ -27,10 +27,11 @@ appropriate to this document.
 
 # Relationships
 
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
+- Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
+- Uses [Timeline](../foundation/timeline.md)
 - Uses [Turn Resolution](../foundation/turn-resolution.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
@@ -40,8 +41,8 @@ appropriate to this document.
 # Glossary
 
 Campaign state is defined by [Core Concepts](../foundation/core-concepts.md#glossary). World state and Campaign
-configuration are defined by [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md#glossary), which
-places them under [Campaign state composition](../foundation/campaign-modeling-contract.md#campaign-state-composition).
+configuration are defined by [Campaign State](../foundation/campaign-state.md#glossary), which
+places them under [Campaign state composition](../foundation/campaign-state.md#campaign-state-composition).
 This document uses those meanings without redefining them.
 
 # Campaign configuration
@@ -53,14 +54,14 @@ an investigation difficulty multiplier; these examples do not establish a final 
 Players must be able to change difficulty during an ongoing Campaign without restarting it or enabling Dev mode.
 An accepted configuration change is an atomic Campaign mutation at a committed action boundary and does not
 itself advance the turn. The complete requested change must be validated before commitment; invalid changes
-leave Campaign state unchanged. A change is retained in action history with the inputs needed to reproduce it.
+leave Campaign state unchanged. A committed change is one Timeline entry.
 Requests that leave configuration unchanged follow Engine Contract's rules for actions with no effect.
 
 Each parameter's owning mechanic must specify its Type, permitted values, creation default source, and effect timing.
 It must state whether a change affects existing World state, future calculations or generation, or both, including
 how activities already underway are treated. Updating configuration alone does not authorize regenerating existing
 World state, rewriting past outcomes, or resampling randomness. Any such effect requires an explicit mechanical rule.
-Initial Campaign Content owns concrete defaults and balance values; subsystem mechanics own formulas and effects.
+Initial Campaign Content owns concrete defaults and balance values; the owning mechanics specifications own formulas and effects.
 
 The exact parameter inventory and public command/report signatures remain open decisions. Interface specifications
 must expose the mechanical contract rather than introduce different validation or timing rules.
@@ -75,7 +76,7 @@ TODO: Specify panic representation, clamping, contributing effects, victory and 
 
 # Terminal behavior
 
-TODO: Define allowed Player-visible information and commands after an ending and how history restores an ongoing campaign.
+TODO: Define allowed Player-visible information and commands after an ending and how undo restores an ongoing campaign.
 
 # Edge cases and failure behavior
 
@@ -85,7 +86,7 @@ State exact thresholds and effect ordering where relevant.
 # Acceptance examples
 
 - **Adjustment during play:** In an ongoing Campaign, submit valid configuration values different from the current ones. The requested values
-  commit together, the turn remains unchanged, and the change is retained as one action-history entry
+  commit together, the turn remains unchanged, and the change is one Timeline entry
   ([Campaign configuration](#campaign-configuration)).
 - **Invalid adjustment:** Submit a configuration change containing a value outside its parameter's permitted range.
   The whole request fails and both configuration and World state remain unchanged

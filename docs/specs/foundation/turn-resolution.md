@@ -10,7 +10,7 @@
 
 # Overview
 
-This document defines exactly when subsystem rules run and which state each phase reads.
+This document defines exactly when the rules of the [Mechanics family](../mechanics/about-mechanics.md) run and which state each phase reads.
 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
@@ -19,8 +19,7 @@ Phase ordering and state-read timing must preserve [Derived value consistency](e
 
 This specification intends to refine [Derived value consistency](engine-contract.md#derived-value-consistency)/[Committed state integrity](engine-contract.md#committed-state-integrity) by specifying calculation snapshots, ordered phases, and the atomic publication
 boundary. It uses Domain Model's valid-state constraints and Numbers and Randomness's arithmetic and draw ordering.
-Agents, Investigations, Missions, Factions, Economy and Upgrades, and Campaign supply the subsystem transitions and
-effects to schedule. Campaign supplies ending predicates; this document supplies when those predicates are evaluated.
+Agents, Investigations, Missions, Factions, Economy and Upgrades, and Campaign supply the transitions and effects to schedule. Campaign supplies ending predicates; this document supplies when those predicates are evaluated.
 The phase order and simultaneous-effect decisions remain TODOs below.
 
 TODO: Specify Turn number, management command, turn advancement, phase input, produced effect, and report boundary.
@@ -49,7 +48,7 @@ duplicating shared definitions.
 
 # Phase schedule
 
-TODO: Specify the ordered advancement phases and reference subsystem rules without duplicating formulas. Identify start-of-turn snapshots versus updated-state reads.
+TODO: Specify the ordered advancement phases and reference the rules of the owning mechanics specifications without duplicating formulas. Identify start-of-turn snapshots versus updated-state reads.
 
 # Same-turn effects
 

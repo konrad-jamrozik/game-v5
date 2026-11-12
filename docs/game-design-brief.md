@@ -19,7 +19,7 @@ The main domain concepts are:
 - **Combat:** automatic battles with targeting, skill contests, damage, exhaustion, incapacitation, retreat, casualties, and experience.
 - **Factions:** opponents that escalate, launch operations, can be suppressed, and can eventually be defeated.
 - **Economy and panic:** money, recurring funding, upkeep, upgrades, and global pressure.
-- **Reports and history:** structured explanations of decisions and consequences.
+- **Reports and World history:** structured explanations of decisions and consequences.
 
 Initiative and Response describe agency purpose, independently of combat tactics. Avoid offensive/defensive as mission categories.
 
@@ -114,7 +114,7 @@ This is a v5 requirement rather than an inherited reward rule: existing mission 
 
 Missions are auto-battles. The player chooses whether to commit and which agents to send, then accepts automatic resolution without controlling individual attacks.
 
-Seeded determinism prevents replaying an identical attempt to obtain fresh rolls. Improving preparation may require revisiting earlier recruitment, training, recovery, and allocation decisions, abandoning the progress of that timeline.
+Seeded determinism prevents replaying an identical attempt to obtain fresh rolls. Improving preparation may require revisiting earlier recruitment, training, recovery, and allocation decisions, abandoning the progress of that Timeline branch.
 
 This reduces the value of retrying combat, but does not eliminate foreknowledge from undo. Undo remains supported; no additional rewind penalty is introduced by this brief.
 
@@ -140,20 +140,21 @@ The engine owns rules, validation, visibility, and consequences. Clients own pre
 
 Only these interfaces are in scope. Dedicated native game engines, e.g. Unity, are excluded. Choose the web framework later, with grid and tree capabilities as major criteria.
 
-## 4. Turns, determinism, and history
+## 4. Turns, determinism, and the Timeline
 
 Management commands take immediate effect. **Advance turn** atomically resolves time-dependent activity and generates a report. Combat rounds remain internal to that resolution.
 
 - Under the same game revision, identical initial state and commands reproduce identical outcomes.
 - Random-generator state and deterministic Instance ID counters belong to Authoritative values in Campaign state.
 - Processing order and rounding are explicit. Queries, rendering, and wall-clock time do not influence gameplay.
-- Every accepted command, including an entire turn advancement, is one history step.
+- Every accepted command, including an entire turn advancement, is one Timeline entry.
 - Undo restores state, randomness, and reports. Redo restores the recorded result without rerolling.
-- A new command after undo replaces the redo continuation.
-- Rejected commands change neither state nor history.
-- UI preferences remain outside gameplay history. Persistent AI memory is restored with the campaign timeline when needed for automated continuation.
+- A new command after undo discards the redo entries and starts a new Timeline branch.
+- Rejected commands change neither state nor the Timeline.
+- UI preferences belong to Global configuration and remain outside the Timeline. Autopilot memory follows the Timeline cursor, so an Autopilot AI that is engaged again reads the memory it wrote at or before that Timeline position.
+- World history, the past that game behavior and reports consult, is part of Campaign state and is separate from the Timeline.
 
-Begin with snapshots; optimize history storage later.
+Begin with snapshots; optimize Timeline storage later.
 
 ## 5. Delivery and acceptance
 

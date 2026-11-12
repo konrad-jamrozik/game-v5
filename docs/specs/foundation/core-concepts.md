@@ -17,22 +17,26 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 
 # Relationships
 
+- Used by [Autopilot](./autopilot.md)
 - Used by [Campaign](../mechanics/campaign.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
-- Used by [Campaign Modeling Contract](./campaign-modeling-contract.md)
+- Used by [Campaign State](./campaign-state.md)
+- Used by [Configuration](./configuration.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Engine Contract](./engine-contract.md)
 - Used by [Factions](../mechanics/factions.md)
+- Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
-- Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Investigations](../mechanics/investigations.md)
 - Used by [Leads and Progression](../mechanics/leads-and-progression.md)
 - Used by [Missions](../mechanics/missions.md)
 - Used by [Numbers and Randomness](./numbers-and-randomness.md)
 - Used by [Player Information](../interfaces/player-information.md)
+- Used by [Saves](./saves.md)
 - Used by [Terminal CLI](../interfaces/cli.md)
+- Used by [Timeline](./timeline.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)
 - Used by [Web UI](../interfaces/web-ui.md)
 
@@ -58,7 +62,7 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 
 ## Campaign and Session
 
-A playthrough, its data, and the runtime context that selects it. Campaign Modeling Contract owns how Campaign state
+A playthrough, its data, and the runtime context that selects it. Campaign State owns how Campaign state
 divides into components.
 
 | Term           | Definition                                                                                                                          |

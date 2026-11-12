@@ -22,18 +22,17 @@ including all Authoritative values, only to an authorized Session controller wit
 Autopilot engagement. Player API always exposes only Player-visible information; Autopilot AI never receives developer access.
 
 Engine Contract owns access transitions and high-level replay guarantees. Domain Model supplies inspected Campaign
-state and invariants. History and Persistence supplies restoration procedures, and TypeScript Player API supplies
+state and invariants. Timeline supplies undo and redo of committed cheat actions, and TypeScript Player API supplies
 callable signatures and authorization results.
 
 # Relationships
 
-- Uses [Campaign Modeling Contract](../foundation/campaign-modeling-contract.md)
+- Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Domain Model](../foundation/domain-model.md)
-- Uses [History and Persistence](../foundation/history-and-persistence.md)
+- Uses [Timeline](../foundation/timeline.md)
 - Uses [TypeScript Player API](./typescript-api.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
-- Used by [History and Persistence](../foundation/history-and-persistence.md)
 - Used by [TypeScript Player API](./typescript-api.md)
 
 # Glossary
@@ -46,24 +45,24 @@ TODO: Define inspection-specific terms without duplicating shared definitions.
 
 Full Campaign state inspection presents each Campaign instance as its four properties, Instance ID, Archetype
 reference, Constants, and State, as required by
-[Campaign instance structure](../foundation/campaign-modeling-contract.md#campaign-instance-structure). How an
+[Campaign instance structure](../foundation/campaign-state.md#campaign-instance-structure). How an
 implementation stores Campaign instances internally is the implementer's choice.
 
 TODO: Specify the complete detached, read-only Campaign state query schema through `developer.queries.getCampaignState()`.
-Include all continuation inputs and distinguish full-state inspection from gameplay reveal conditions. Inspection
+Include complete Campaign state and distinguish full-state inspection from gameplay reveal conditions. Inspection
 must not expose mutable Campaign references or consume gameplay randomness.
 
 # Cheat command details
 
 TODO: Specify `developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)`, with exact input Types,
 allowed ranges, initialization, validation, and effects. These required starter operations preserve model invariants
-and commit replayable action-history entries. Additional cheat operations use the same namespace and guarantees.
+and each commits one Timeline entry. Additional cheat operations use the same namespace and guarantees.
 
-# Isolation and history
+# Isolation and Timeline navigation
 
-TODO: Specify authorization failures and access revocation under Engine Contract. Recorded cheat restoration uses
-history authority and does not require Dev mode. Detailed restoration must preserve deterministic continuation
-without making internal replay operations callable by Autopilot AI.
+TODO: Specify authorization failures and access revocation under Engine Contract. Undo and redo of a committed cheat action follow
+[Restored Timeline positions](../foundation/timeline.md#restored-timeline-positions): they do not require Dev mode and give an Autopilot AI no
+way to commit a cheat action.
 
 # Edge cases and failure behavior
 

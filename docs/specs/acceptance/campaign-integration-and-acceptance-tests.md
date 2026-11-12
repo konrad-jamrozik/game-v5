@@ -27,8 +27,8 @@ This is currently a stub: the concrete test cases await the detailed rules and G
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification uses Initial Campaign Content for reproducible inputs, Turn Resolution for effect timing, and History and
-Persistence for continuation scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
+This specification uses Initial Campaign Content for reproducible inputs, Turn Resolution for effect timing, and Timeline
+and Saves for undo, redo, save, and load scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
 under test. Specific checked requirements acquire implicit verifies relationships when scenarios identify them;
 these document-level uses entries do not claim that tests already exist or pass.
 
@@ -40,9 +40,10 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [History and Persistence](../foundation/history-and-persistence.md)
 - Uses [Initial Campaign Content](../content/initial-campaign.md)
+- Uses [Saves](../foundation/saves.md)
 - Uses [Terminal CLI](../interfaces/cli.md)
+- Uses [Timeline](../foundation/timeline.md)
 - Uses [Turn Resolution](../foundation/turn-resolution.md)
 - Uses [TypeScript Player API](../interfaces/typescript-api.md)
 - Uses [Web UI](../interfaces/web-ui.md)
@@ -71,7 +72,7 @@ Kinds of test, by what they exercise or check.
 # Deterministic fixtures
 
 Determinism is required only within one implementation and Game build under
-[Continuation state](../foundation/engine-contract.md#continuation-state). Acceptance tests therefore assert replay
+[Determinism](../foundation/engine-contract.md#determinism). Acceptance tests therefore assert replay
 equality or use fixed injected random outcomes; they never assert outcomes that depend on a particular seed.
 
 TODO: Define scenario IDs, exact starting state, GDR fixture, injected random outcomes or replay baseline, ordered commands, expected results, and references
@@ -82,7 +83,7 @@ explicitly.
 
 TODO: Cover resource allocation, transit, investigation uncertainty/abandonment, deadline pressure, transport contention, partial-success missions, faction escalation/suppression, and campaign endings.
 
-# Interface flows and history
+# Interface flows and Timeline navigation
 
 TODO: Cover equivalent API/CLI/web actions, player/dev visibility, invalid-action atomicity, replay, save/load, undo/redo,
 and branching. Identify which cases run through the API and which need CLI or browser interaction. Keep strategic

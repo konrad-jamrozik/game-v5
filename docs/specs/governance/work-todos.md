@@ -75,13 +75,13 @@ The Work items below were measured against these recorded rules and decisions:
 - **Scope rule:** [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification). A statement
   belongs only if it is Observable (a black-box test through the engine API, a save, or a replay could fail),
   Designer-authored (a GDR or a description of game behavior), or Vocabulary. Everything else is the implementer's choice.
-- **Determinism decision:** [Continuation state](../foundation/engine-contract.md#continuation-state). Determinism is
+- **Determinism decision:** [Determinism](../foundation/engine-contract.md#determinism). Determinism is
   required only within one implementation and Game build. The order of random draws, the order of Campaign instance
   creation within one command, and the sequence and format of generated Instance IDs are the implementer's choice.
   Acceptance tests assert replay equality or use fixed injected random outcomes, never outcomes that depend on a
   particular seed.
 - **Creation decision:** creation of Campaign instances is specified by the specification that owns the creating
-  behavior, under [Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation).
+  behavior, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation).
   The former Campaign instance constructor concept was removed.
 
 # Work items
@@ -91,214 +91,35 @@ that time.
 
 ## Clear violations
 
-### TODO-002: Replay prescribed as the restore mechanism in Save size limit
-
-**Category and priority:** Clear violation.
-
-**Affected:** History and Persistence (HIST), [Save size limit](../foundation/history-and-persistence.md#save-size-limit)
-and its example in [Acceptance examples](../foundation/history-and-persistence.md#acceptance-examples).
-
-**Batches:** HIST is batch 2.
-
-**Current wording:**
-
-> Every Campaign save has a Baseline and the action history after it. Restoring any position replays action history
-> from the Baseline. A save written with its full history has the initial Campaign state as its Baseline.
-
-> After such a save is loaded, the Baseline is the earliest position: undo before it is unavailable, and replay of
-> later actions starts from it.
-
-The acceptance example "History dropped at the size limit" also ends "and new actions replay from it".
-
-**Why it is an issue:** It prescribes replay as the restoration mechanism, which conflicts with
-[Continuation state](../foundation/engine-contract.md#continuation-state): "Internal restoration may use snapshots or
-replay, provided observable results are equal."
-
-**Suggested resolution:** Keep Baseline as the earliest position a Campaign save can restore, as its glossary
-definition already says, and state only the observable effects: positions before the Baseline are unavailable to
-undo, and positions after it are restored with results equal to uninterrupted play. Reword the acceptance example
-accordingly.
-
-### TODO-003: History and Persistence remit is mostly implementation
-
-**Category and priority:** Clear violation.
-
-**Affected:** History and Persistence (HIST): [Refined Engine Contract guarantees](../foundation/history-and-persistence.md#refined-engine-contract-guarantees),
-[Undo and redo](../foundation/history-and-persistence.md#undo-and-redo),
-[Replay and persistence](../foundation/history-and-persistence.md#replay-and-persistence),
-[Campaign configuration persistence](../foundation/history-and-persistence.md#campaign-configuration-persistence),
-[Edge cases and failure behavior](../foundation/history-and-persistence.md#edge-cases-and-failure-behavior), and
-[Open decisions](../foundation/history-and-persistence.md#open-decisions). Engine Contract (ENG):
-[Action history and turn navigation](../foundation/engine-contract.md#action-history-and-turn-navigation),
-[Autopilot memory](../foundation/engine-contract.md#autopilot-memory), and
-[Save and load](../foundation/engine-contract.md#save-and-load). Related: TypeScript Player API (API),
-[Overview](../interfaces/typescript-api.md#overview).
-
-**Batches:** HIST is batch 2; ENG is batch 1; API is batch 8.
-
-**Current wording:** HIST plans implementation content in these places:
-
-> [...] with restoration procedures, checkpoint storage, the Save size limit, and encoding.
-
-(HIST, Refined Engine Contract guarantees.)
-
-> TODO: Specify storage and restoration procedures for atomic Player API and Developer API action-history entries,
-> complete continuation state, memory checkpoints, and retained redo continuation under Engine Contract.
-> Represent Turn-start checkpoints using
-> Engine Contract navigation targets; [...]
-
-(HIST, Undo and redo.)
-
-> TODO: Specify save encoding, load validation, and replay procedures under [...]
-
-(HIST, Replay and persistence.)
-
-> TODO: Specify storage separation between Campaign state and Controller continuation data within a Campaign save.
-
-(HIST, Campaign configuration persistence.)
-
-> Define representation of partially retained futures without changing Engine Contract navigation targets.
-
-(HIST, Edge cases and failure behavior.)
-
-> - TODO: Choose checkpoint storage, save encoding, and storage versioning.
-
-(HIST, Open decisions.)
-
-ENG delegates the same matters to HIST:
-
-> History and Persistence owns restoration procedures and representation, not alternative navigation targets.
-
-(ENG, Action history and turn navigation.)
-
-> History and Persistence owns encoding and checkpoint storage procedures.
-
-(ENG, Autopilot memory.)
-
-> Encoding, the save size limit, validation, and storage failure procedures belong to History and Persistence.
-
-(ENG, Save and load.)
-
-API also says "History and Persistence supplies storage and restoration procedures."
-
-**Why it is an issue:** [Game build compatibility](../foundation/engine-contract.md#game-build-compatibility) does not
-require saves to be compatible across Game builds, so save encoding, checkpoint storage, storage versioning, and
-storage and restoration procedures are not observable through a black-box test and are the implementer's choice under
-the scope rule. The observable content HIST owns is the configuration cascade, the Save size limit, load validation
-and failure behavior, and what a Campaign save restores.
-
-**Suggested resolution:** Re-scope HIST to its observable content: [Configuration cascade](../foundation/history-and-persistence.md#configuration-cascade),
-[Save size limit](../foundation/history-and-persistence.md#save-size-limit), which saves load or are rejected and the
-resulting Session, and what a Campaign save restores. Delete or rewrite the TODOs and Open decisions above. Reword the
-three ENG sentences and the API sentence to delegate only the observable save and load behavior to HIST.
-
 ### TODO-004: Random generator state required as a thing
 
 **Category and priority:** Clear violation.
 
-**Affected:** Engine Contract (ENG): [Continuation state](../foundation/engine-contract.md#continuation-state),
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions),
-[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity), and
-[Acceptance examples](../foundation/engine-contract.md#acceptance-examples). Developer API (DEV),
-[Edge cases and failure behavior](../interfaces/developer-api.md#edge-cases-and-failure-behavior). History and
-Persistence (HIST), [Refined Engine Contract guarantees](../foundation/history-and-persistence.md#refined-engine-contract-guarantees),
-[Storage containers](../foundation/history-and-persistence.md#storage-containers), and
-[Acceptance examples](../foundation/history-and-persistence.md#acceptance-examples). Related wording question: Numbers
-and Randomness (NUMRNG), [Randomness contract](../foundation/numbers-and-randomness.md#randomness-contract).
+**Affected:** Developer API (DEV), [Edge cases and failure behavior](../interfaces/developer-api.md#edge-cases-and-failure-behavior).
+Related wording question: Numbers and Randomness (NUMRNG), [Randomness contract](../foundation/numbers-and-randomness.md#randomness-contract).
 
-**Batches:** ENG is batch 1; HIST and NUMRNG are batch 2; DEV is batch 8.
+**Batches:** NUMRNG is batch 2; DEV is batch 8.
 
 **Current wording:**
-
-> For equal initial Campaign state, the same Game build, and the same ordered committed commands, execution must
-> produce equal resulting Campaign state, generated Instance IDs, gameplay RNG state, and retained reports. Campaign
-> state must preserve every input consulted by game behavior, including relevant History, current RNG state, and Instance ID
-> generation state. An initial random seed alone is insufficient unless it determines the complete restored generator
-> position.
-
-(ENG, Continuation state.)
-
-> Rejected actions and actions with no effect commit no action-history entry and consume
-> no gameplay randomness or generated Instance IDs.
-
-(ENG, Player queries and actions.)
-
-> Rejected requests leave Campaign state, gameplay RNG state, Instance ID generation state, reports, action history,
-> and memory unchanged.
-
-(ENG, Committed state integrity.)
-
-> Complete Campaign state, RNG state, generated Instance IDs, and retained reports equal the original results.
-
-(ENG, Acceptance examples, "Action replay".)
 
 > Invalid cheat inputs preserve Campaign state, RNG state, generated Instance IDs, reports, and history.
 
 (DEV, Edge cases and failure behavior.)
-
-> [...] Numbers and Randomness supplies numeric and generator-state contracts.
-
-(HIST, Refined Engine Contract guarantees.)
-
-> TODO: Specify action-level and turn-level restoration and save/load scenarios comparing complete Campaign state,
-> generated Instance IDs, RNG state, reports, and applicable Autopilot memory.
-
-(HIST, Acceptance examples.)
-
-HIST Storage containers also says "Two Campaigns created with equal Campaign configuration and seed and given equal
-commands have equal Campaign state".
 
 > Only state changes, including Campaign instance creation, may consume gameplay randomness.
 
 (NUMRNG, Randomness contract.)
 
 **Why it is an issue:** These passages require a stored random generator and its state, but an implementation could
-derive randomness without one. The scope rule admits only the observable requirement: outcomes after replay, undo,
-redo, or load equal those of uninterrupted play, and rejected actions, actions with no effect, and queries do not change
+derive randomness without one. The scope rule admits only the observable requirement, which
+[Determinism](../foundation/engine-contract.md#determinism) in Engine Contract now states: outcomes after undo, redo,
+or load equal those of uninterrupted play, and rejected actions, actions with no effect, and queries do not change
 later outcomes.
 
-**Suggested resolution:** Replace the generator-state requirements with that observable requirement, and compare
-complete Campaign state, Player-visible information, and reports rather than RNG state in acceptance examples. Decide
-whether a seed is a campaign creation input at all. Keep "consume gameplay randomness" in NUMRNG only if it is defined
-as designer vocabulary meaning that the outcome of a state change depends on chance, and define it that way.
-
-### TODO-005: Mandated identifier format in Unique identifiers
-
-**Category and priority:** Clear violation.
-
-**Affected:** Engine Contract (ENG), [Unique identifiers](../foundation/engine-contract.md#unique-identifiers);
-History and Persistence (HIST), [Glossary](../foundation/history-and-persistence.md#glossary).
-
-**Batches:** ENG is batch 1; HIST is batch 2.
-
-**Current wording:**
-
-> Generated deterministically from Campaign state under its owning contract; never a ULID or any other format that
-> consults wall-clock time or fresh randomness.
-
-(ENG, Unique identifiers, "Required format" cell for Campaign-scoped identifier.)
-
-> A [ULID](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifier).
-
-(ENG, Unique identifiers, "Required format" cell for Independent identifier, whose examples are Campaign IDs and
-Campaign save IDs. The following paragraph adds "Do not specify a GUID, UUID, or other format for an Independent
-identifier unless a ULID cannot satisfy a stated technical requirement".)
-
-> The ULID identifying one Campaign, assigned when the Campaign is created and recorded in every Campaign save of that
-> Campaign.
-
-> The ULID identifying one Campaign save, assigned when that Campaign save is created.
-
-(HIST, Glossary definitions of Campaign ID and Campaign save ID.)
-
-**Why it is an issue:** The determinism decision in [Continuation state](../foundation/engine-contract.md#continuation-state)
-made the sequence and format of Instance IDs the implementer's choice; the same reasoning applies to Campaign IDs and
-Campaign save IDs. Only uniqueness, stability, and whether replay must reproduce the identifier are observable.
-
-**Suggested resolution:** Keep the two-way classification of Campaign-scoped identifiers and Independent identifiers,
-defined by whether replay must reproduce the identifier. Drop the "Required format" column and the ULID mandate,
-unless a player-facing reason is stated, e.g. save lists sortable by creation time. Change the HIST glossary
-definitions to "The Independent identifier identifying [...]".
+**Suggested resolution:** Reword the DEV sentence to say that invalid cheat inputs change nothing, under
+[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity). Decide whether a seed is a
+campaign creation input at all. Keep "consume gameplay randomness" in NUMRNG only if it is defined as designer
+vocabulary meaning that the outcome of a state change depends on chance, and define it that way.
 
 ### TODO-006: Campaign instance constructor leftover in TypeScript Player API
 
@@ -311,13 +132,13 @@ definitions to "The Independent identifier identifying [...]".
 **Current wording:**
 
 > An operation creating a Campaign instance must satisfy
-> [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances), with a declared return Type and
+> [Campaign instances](../foundation/campaign-state.md#campaign-instances), with a declared return Type and
 > initialization of Instance ID, Archetype, Constants, and State. Returning an existing Campaign instance or restoring
 > its earlier State does not itself create a new Campaign instance.
 
 **Why it is an issue:** This is the removed Campaign instance constructor concept without the word: it specifies code
 that creates Campaign instances and that code's return Type. Creation is specified by the specification that owns the
-creating behavior, under [Campaign instance creation](../foundation/campaign-modeling-contract.md#campaign-instance-creation), and
+creating behavior, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation), and
 [Canonical terminology](spec-conventions.md#canonical-terminology) says not to specify which code creates a Campaign
 instance or that code's signature.
 
@@ -339,7 +160,7 @@ effects create Campaign instances do so as their owning specifications state und
 
 **Current wording:**
 
-> Deterministic identity generation must preserve [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances); [...]
+> Deterministic identity generation must preserve [Campaign instances](../foundation/campaign-state.md#campaign-instances); [...]
 
 > This specification intends to refine [...] with numeric operations, reproducible generator-state evolution, and
 > draw-consumption rules at query, command, and restoration boundaries.
@@ -360,7 +181,7 @@ effects create Campaign instances do so as their owning specifications state und
 
 (NUMRNG, Open decisions.)
 
-**Why it is an issue:** [Continuation state](../foundation/engine-contract.md#continuation-state) and NUMRNG's own
+**Why it is an issue:** [Determinism](../foundation/engine-contract.md#determinism) and NUMRNG's own
 [Randomness contract](../foundation/numbers-and-randomness.md#randomness-contract) make the generator algorithm, the
 order of draws, and Instance ID generation the implementer's choice. Generator state, draw consumption, and seeds are
 not observable; the Open decision also names a JavaScript API and a mechanism. Whether no-op commands consume draws is
@@ -392,7 +213,7 @@ Related: Specification Conventions (CONV, Accepted), [Formulas and uncertainty](
 (CONV, Formulas and uncertainty.)
 
 **Why it is an issue:** The order of random draws is the implementer's choice under
-[Continuation state](../foundation/engine-contract.md#continuation-state), and
+[Determinism](../foundation/engine-contract.md#determinism), and
 [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification) names it as an out-of-scope
 example. The CONV sentence was not in the original audit finding; it was noticed while recording this Work item.
 
@@ -420,7 +241,7 @@ an outcome rather than a draw order.
 (COMBAT, Acceptance examples.)
 
 **Why it is an issue:** Where random draws happen is not observable under the scope rule. Acceptance fixtures must use
-fixed injected random outcomes under [Continuation state](../foundation/engine-contract.md#continuation-state) and
+fixed injected random outcomes under [Determinism](../foundation/engine-contract.md#determinism) and
 [Examples, conformance, and evidence](spec-conventions.md#examples-conformance-and-evidence).
 
 **Suggested resolution:** Replace "random draw sites" with the designer-authored random outcomes of each combat
@@ -439,7 +260,7 @@ calculation and their distributions. Replace "draws" in the fixture TODO with "f
 > TODO: Give seeded escalation/spawn timelines and compare temporary suppression with permanent defeat.
 
 **Why it is an issue:** Acceptance tests must never assert outcomes that depend on a particular seed under
-[Continuation state](../foundation/engine-contract.md#continuation-state).
+[Determinism](../foundation/engine-contract.md#determinism).
 
 **Suggested resolution:** Replace "seeded" with timelines that use fixed injected random outcomes.
 
@@ -465,7 +286,7 @@ and [Glossary](../acceptance/campaign-integration-and-acceptance-tests.md#glossa
 (SCEN, Glossary.)
 
 **Why it is an issue:** Seeds and RNG state are not fixture inputs under
-[Continuation state](../foundation/engine-contract.md#continuation-state) and SCEN's own
+[Determinism](../foundation/engine-contract.md#determinism) and SCEN's own
 [Deterministic fixtures](../acceptance/campaign-integration-and-acceptance-tests.md#deterministic-fixtures); a fixture
 uses fixed injected random outcomes, or a replay baseline for replay-equality checks.
 
@@ -541,46 +362,14 @@ specifications. The wording, however, describes a mechanism (snapshots and reads
 **Suggested resolution:** Keep the content, and reword it in terms of outcomes, e.g. "uses values as of turn
 start" or "uses values after the preceding phase's effects", rather than snapshots and reads.
 
-### TODO-014: Mechanism wording in API hierarchy and Autopilot limits
-
-**Category and priority:** Borderline, low priority.
-
-**Affected:** Engine Contract (ENG), [API hierarchy](../foundation/engine-contract.md#api-hierarchy) and
-[Autopilot limits](../foundation/engine-contract.md#autopilot-limits).
-
-**Batches:** ENG is batch 1.
-
-**Current wording:**
-
-> Passing a restricted facade without enforcing its
-> restrictions is insufficient.
-
-> An Autopilot AI must not receive the unrestricted engine object or an alternative CLI or Web UI path to Session API
-> or Developer API operations.
-
-(ENG, API hierarchy.)
-
-> The engine drives each Autopilot engagement: it repeatedly invokes the Autopilot AI to choose its next Player API
-> action, during which the AI may make Player API queries and Autopilot memory operations, until Autopilot disengages.
-
-(ENG, Autopilot limits.)
-
-**Why it is an issue:** The underlying rules are observable: an Autopilot AI cannot reach Session API or Developer API
-operations, and it does not decide when an Autopilot engagement ends. The wording names mechanisms (facades, the
-engine object, the invocation loop) instead.
-
-**Suggested resolution:** Keep the rules and state them as observable outcomes, e.g. "No operation available to
-an Autopilot AI reaches a Session API or Developer API operation", and "An Autopilot engagement ends only under the
-disengagement reasons in Autopilot lifecycle and concurrency".
-
 ### TODO-015: Authoritative versus Derived as a storage decision
 
 **Category and priority:** Borderline, low priority.
 
 **Affected:** Domain Model (DOM), [Progression facts](../foundation/domain-model.md#progression-facts); Campaign
-Modeling Contract (CMC, Accepted), [Value classification](../foundation/campaign-modeling-contract.md#value-classification).
+Modeling Contract (CSTATE, Accepted), [Value classification](../foundation/campaign-state.md#value-classification).
 
-**Batches:** DOM and CMC are batch 1.
+**Batches:** DOM and CSTATE are batch 1.
 
 **Current wording:**
 
@@ -591,14 +380,14 @@ Modeling Contract (CMC, Accepted), [Value classification](../foundation/campaign
 > Each specification using these
 > concepts must declare which of its values are Authoritative values and which are Derived values.
 
-(CMC, Value classification.)
+(CSTATE, Value classification.)
 
 **Why it is an issue:** What is stored versus computed is normally the implementer's choice. The classification is in
 scope only because Developer API full Campaign state inspection exposes Authoritative values, which makes it
 observable; neither passage says so.
 
-**Suggested resolution:** State that justification explicitly in CMC Value classification, as
-[Campaign instance structure](../foundation/campaign-modeling-contract.md#campaign-instance-structure) does for the
+**Suggested resolution:** State that justification explicitly in CSTATE Value classification, as
+[Campaign instance structure](../foundation/campaign-state.md#campaign-instance-structure) does for the
 four-property shape, or drop the requirement if that justification is not wanted. This is a revision of an Accepted
 specification.
 
@@ -633,34 +422,6 @@ storage choice; its observable content is that every view of the relationship ag
 **Suggested resolution:** Drop the first two sentences. Reword the third as an observable consistency requirement, e.g.
 that Agent-side and team-side views of current membership agree, or drop it if Current versus historical
 teams already implies it.
-
-### TODO-017: Autopilot memory checkpoints as mechanism wording
-
-**Category and priority:** Borderline, low priority.
-
-**Affected:** Engine Contract (ENG), [Autopilot memory](../foundation/engine-contract.md#autopilot-memory) and the
-Autopilot memory row of the [Glossary](../foundation/engine-contract.md#glossary); History and Persistence (HIST),
-[Storage containers](../foundation/history-and-persistence.md#storage-containers),
-[Controller state](../foundation/history-and-persistence.md#controller-state), and the
-[Glossary](../foundation/history-and-persistence.md#glossary).
-
-**Batches:** ENG is batch 1; HIST is batch 2.
-
-**Current wording:**
-
-> Memory is isolated by Campaign, Autopilot AI identity, and timeline branch, and is checkpointed at its history
-> position. Later Autopilot engagements for the same Autopilot AI read the applicable checkpoint. At a given position,
-> subsequent writes replace its applicable checkpoint; [...]
-
-(ENG, Autopilot memory. The ENG glossary says Autopilot memory "is checkpointed at history positions", and HIST lists
-"Autopilot memory checkpoints" in Storage containers and in the Controller continuation data definition.)
-
-**Why it is an issue:** The observable rule is which Autopilot memory `autopilotMemory.read()` returns at a history
-position on a timeline branch. "Checkpoints" describes a storage mechanism for it.
-
-**Suggested resolution:** State the rule as an outcome: at each history position, read returns the most recent memory
-written by that Autopilot AI at or before that position on the current timeline branch, or explicit absence. Keep
-"checkpoint" only if it is defined as vocabulary for that outcome.
 
 ## Other
 
@@ -704,7 +465,7 @@ after batch 7.
 **Why it is an issue:** Campaign state is not a Campaign instance and has no Instance ID or Archetype, under
 [Types, multiplicity, and lifecycle](../foundation/domain-model.md#types-multiplicity-and-lifecycle) in Domain Model.
 Also, because the sequence and format of Instance IDs are the implementer's choice under
-[Continuation state](../foundation/engine-contract.md#continuation-state), fixtures cannot state concrete Instance IDs.
+[Determinism](../foundation/engine-contract.md#determinism), fixtures cannot state concrete Instance IDs.
 
 **Suggested resolution:** Remove "Campaign and" from the list, and say that fixtures use symbolic Instance IDs, e.g.
 `agency_1`, that tests bind to whatever Instance IDs the implementation generates.
@@ -727,7 +488,7 @@ batch, or split so that each part is resolved with its own batch.
 These are workflow checks, not gameplay tests:
 
 - **Resolution removes the Work item ([Adding and removing Work items](#adding-and-removing-work-items)):** A change
-  rewrites the Engine Contract sentence about caches. The same change removes TODO-001. TODO-002 keeps its label.
+  rewrites the Engine Contract sentence about caches. The same change removes TODO-001. TODO-004 keeps its label.
 - **New issue ([Adding and removing Work items](#adding-and-removing-work-items), [Work item format](#work-item-format)):**
   A reviewer finds an out-of-scope storage statement in Missions. They add TODO-021 under Clear violations, naming
   Missions and batch 6 from [Batch sequence](work-plan.md#batch-sequence), with the exact quoted wording.

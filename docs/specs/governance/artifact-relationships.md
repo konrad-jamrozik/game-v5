@@ -94,9 +94,9 @@ behavior. Record both in the owning contract prose, linking to the relevant sect
 using a vocabulary, consuming a result, or supplying Game Data Record (GDR) values is insufficient by itself: those are uses.
 Being more concrete or appearing later in an authoring sequence is also insufficient.
 
-E.g., Domain Model uses Core Concepts vocabulary and Campaign Modeling Contract composition constraints to describe game concepts.
-Campaign Modeling Contract refines Engine Contract campaign-data integrity; vocabulary use alone is not refinement. History and Persistence uses the modeling identity and historical-preservation conventions, while
-its restoration procedures refine Engine Contract's restoration guarantees. Numbers and Randomness similarly uses
+E.g., Domain Model uses Core Concepts vocabulary and Campaign State composition constraints to describe game concepts.
+Campaign State refines Engine Contract campaign-data integrity; vocabulary use alone is not refinement. Timeline uses the Campaign State identity and historical-preservation conventions and Engine Contract guarantees;
+obeying them while restoring Campaign state is not refinement. Numbers and Randomness similarly uses
 identity conventions while refining deterministic execution. These classifications concern the particular contract
 meaning, not a prohibition on refinement between any document families.
 
@@ -205,17 +205,17 @@ check links, and validate the graphs. Do not invent implementation or test relat
 The following table gives the complete expected classifications for this acceptance scenario. These cases exercise
 [Recording relationships](#recording-relationships), [Direction](#direction), and [Status and evidence](#status-and-evidence); they do not add relationships to the named documents.
 
-| Case                                                                                                                                            | Expected classification and reason                                                                              |
-| ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                                   | Uses Campaign Modeling Contract; it applies campaign composition constraints without elaborating their meanings |
-| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)                     | Refines Domain Model; it adds detail to the same lifecycle                                                      |
-| History and Persistence specifies restoration steps for [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) | Refines Engine Contract; it details the restoration behavior                                                    |
-| History and Persistence preserves references under [References](../foundation/campaign-modeling-contract.md#references) while restoring state   | Uses Campaign Modeling Contract; satisfying the reference invariant alone is not refinement                     |
-| Initial Campaign Content supplies prices under Economy's purchase rules                                                                         | Uses Economy and Upgrades; data values do not elaborate purchase behavior                                       |
-| Terminal CLI maps commands to Player API                                                                                                        | Uses TypeScript Player API; an adapter contract applies existing operations                                     |
-| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields                   | Intended refinement is permitted; the fields remain unspecified and status stays Stub                           |
-| A document merely says it must obey [Campaign instances](../foundation/campaign-modeling-contract.md#campaign-instances)                        | Uses, not Refines; no added detail about the identity convention is identified                                  |
-| A refinement duplicates the same reliance as a Uses entry                                                                                       | Keep only Refines; two Relationship kinds require distinct reliance                                             |
+| Case                                                                                                                                             | Expected classification and reason                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and GDR                                                                                    | Uses Campaign State; it applies campaign composition constraints without elaborating their meanings |
+| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)                      | Refines Domain Model; it adds detail to the same lifecycle                                          |
+| Turn Resolution specifies when a turn is published under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) | Refines Engine Contract; it details the atomic publication of a turn                                |
+| Timeline preserves references under [References](../foundation/campaign-state.md#references) while restoring Campaign state                      | Uses Campaign State; satisfying the reference invariant alone is not refinement                     |
+| Initial Campaign Content supplies prices under Economy's purchase rules                                                                          | Uses Economy and Upgrades; data values do not elaborate purchase behavior                           |
+| Terminal CLI maps commands to Player API                                                                                                         | Uses TypeScript Player API; an adapter contract applies existing operations                         |
+| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields                    | Intended refinement is permitted; the fields remain unspecified and status stays Stub               |
+| A document merely says it must obey [Campaign instances](../foundation/campaign-state.md#campaign-instances)                                     | Uses, not Refines; no added detail about the identity convention is identified                      |
+| A refinement duplicates the same reliance as a Uses entry                                                                                        | Keep only Refines; two Relationship kinds require distinct reliance                                 |
 
 ## Complete coverage of Relationship kinds
 

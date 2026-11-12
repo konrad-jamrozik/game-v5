@@ -107,7 +107,7 @@ configuration and describes completeness/timing rather than a child container.
 Proposed placement when the design is resolved:
 
 - [Core Concepts](specs/foundation/core-concepts.md): shared definitions and the revised Session boundary.
-- [History and Persistence](specs/foundation/history-and-persistence.md): persistence diagram, containers, startup
+- History and Persistence, since replaced by [Data ownership](specs/foundation/engine-contract.md#data-ownership) in Engine Contract, [Saves](specs/foundation/saves.md), and [Configuration](specs/foundation/configuration.md): persistence diagram, containers, startup
   loading, and configuration cascade; revisit the current Session-owned state section.
 - [Engine Contract](specs/foundation/engine-contract.md): Session lifecycle and runtime responsibilities.
 

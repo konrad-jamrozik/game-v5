@@ -78,7 +78,6 @@ flowchart LR
   family_acceptance["Acceptance family"]:::external
   API -->|used by| family_acceptance
   CLI -->|used by| family_acceptance
-  DEV -->|used by| family_foundation
   INFO -->|used by| family_mechanics
   WEB -->|used by| family_acceptance
   family_foundation -->|refined by, used by| API
