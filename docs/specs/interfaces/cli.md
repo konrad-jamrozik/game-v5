@@ -27,6 +27,7 @@ an Autopilot AI must not receive an unrestricted command channel.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [History and Persistence](../foundation/history-and-persistence.md)
 - Uses [Player Information](./player-information.md)
 - Uses [TypeScript Player API](./typescript-api.md)

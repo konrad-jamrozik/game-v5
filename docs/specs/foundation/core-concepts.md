@@ -62,16 +62,14 @@ divides into components.
 | Campaign state | Data describing one Campaign, including retained data describing its past Campaign state or events.                                 |
 | Session        | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |
 
-## Data and information qualities
+## Value classification
 
-Classifications of a value or piece of information, independent of where it lives in Campaign state.
+Classifications of a value, independent of where it lives in Campaign state.
 
-| Term                       | Definition                                                                                                                                                                                                                                                 |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Authoritative value        | A value treated as established truth rather than recomputed from other values.                                                                                                                                                                             |
-| Derived value              | A value calculated deterministically from Authoritative values and the current rules and GDRs.                                                                                                                                                             |
-| Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability, not whether the data describes past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
-| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                      |
+| Term                | Definition                                                                                     |
+| ------------------- | ---------------------------------------------------------------------------------------------- |
+| Authoritative value | A value treated as established truth rather than recomputed from other values.                 |
+| Derived value       | A value calculated deterministically from Authoritative values and the current rules and GDRs. |
 
 # Vocabulary and contract ownership
 
@@ -93,11 +91,6 @@ Campaign state, while a Session is runtime context. A Session is not part of any
 does not make it part of the Session.
 [Campaign lifecycle](./engine-contract.md#campaign-lifecycle) in Engine Contract owns what a Session holds, when it
 starts and ends, and what is persisted. This distinction does not prescribe an internal class layout or save encoding.
-
-# Player-visible information
-
-Player-visible information describes deliberate ordinary-player exposure. The term does not specify a particular query
-schema or reveal condition.
 
 # Authoritative and Derived values
 

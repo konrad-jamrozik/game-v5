@@ -91,8 +91,10 @@ flowchart TD
   ECON --> MISSION
   ECON --> TURN
   ENG --> CAMP
+  ENG --> CLI
   ENG --> DEPDIR
   ENG --> DOM
+  ENG --> WEB
   FACTION --> INFO
   FACTION --> INIT
   FACTION --> LEAD

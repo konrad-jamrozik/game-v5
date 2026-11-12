@@ -21,6 +21,8 @@ RNG algorithm, save encoding, or subsystem mechanics.
 - Used by [Campaign](../mechanics/campaign.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
+- Used by [Terminal CLI](../interfaces/cli.md)
+- Used by [Web UI](../interfaces/web-ui.md)
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md)
 - Refined by [Developer API](../interfaces/developer-api.md)
 - Refined by [History and Persistence](./history-and-persistence.md)
@@ -58,14 +60,15 @@ Lending Player API control to an AI for a bounded period. The name Autopilot AI 
 
 ## API surfaces
 
-The separately authorized parts of the engine API.
+The separately authorized parts of the engine API, and the information Player API exposes.
 
-| Term                 | Definition                                                                                                                                                   |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Session API          | The API surface for Session controller operations over campaign selection, persistence, history navigation, Dev mode, and Autopilot.                         |
-| Player API           | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode.               |
-| Developer API        | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled. |
-| Autopilot memory API | The API surface through which the active Autopilot AI reads and writes its Autopilot memory.                                                                 |
+| Term                       | Definition                                                                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Session API                | The API surface for Session controller operations over campaign selection, persistence, history navigation, Dev mode, and Autopilot.                         |
+| Player API                 | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode.               |
+| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                        |
+| Developer API              | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled. |
+| Autopilot memory API       | The API surface through which the active Autopilot AI reads and writes its Autopilot memory.                                                                 |
 
 ## Campaign selection and history positions
 
@@ -199,6 +202,9 @@ A specification stating an invariant states its condition and its scope; every C
 [Committed state integrity](#committed-state-integrity) states how a violation is reported.
 
 # Player queries and actions
+
+Player-visible information describes deliberate ordinary-player exposure. The term does not specify a particular query
+schema or reveal condition; [Player Information](../interfaces/player-information.md) owns those conditions.
 
 Player API queries always return Player-visible information. The same query at equal Campaign state returns the
 same Player-visible information for the Session controller and Autopilot AI, independent of Dev mode.

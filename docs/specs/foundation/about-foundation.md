@@ -131,7 +131,7 @@ flowchart LR
   DOM -->|used by| family_interfaces
   DOM -->|refined by| family_mechanics
   ENG -->|used by| family_guidance
-  ENG -->|refined by| family_interfaces
+  ENG -->|refined by, used by| family_interfaces
   ENG -->|used by| family_mechanics
   HIST -->|used by| family_acceptance
   HIST -->|used by| family_interfaces
