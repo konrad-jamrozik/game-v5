@@ -30,6 +30,7 @@ Player Information owns exact visibility. Shared modeling vocabulary belongs to
 
 - Uses [Campaign Modeling Contract](./campaign-modeling-contract.md)
 - Uses [Core Concepts](./core-concepts.md)
+- Uses [Engine Contract](./engine-contract.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [History and Persistence](./history-and-persistence.md)
 - Used by [Initial Campaign Content](../content/initial-campaign.md)

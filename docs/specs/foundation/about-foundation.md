@@ -95,6 +95,7 @@ flowchart TD
   DOM -->|used by| HIST
   DOM -->|used by| TURN
   ENG -->|refined by| CMC
+  ENG -->|used by| DOM
   ENG -->|refined by| HIST
   ENG -->|refined by| NUMRNG
   ENG -->|refined by| TURN

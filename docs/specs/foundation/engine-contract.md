@@ -19,6 +19,7 @@ RNG algorithm, save encoding, or subsystem mechanics.
 
 - Uses [Core Concepts](./core-concepts.md)
 - Used by [Campaign](../mechanics/campaign.md)
+- Used by [Domain Model](./domain-model.md)
 - Used by [Gameplay Dependency Direction](../guidance/gameplay-dependency-direction.md)
 - Refined by [Campaign Modeling Contract](./campaign-modeling-contract.md)
 - Refined by [Developer API](../interfaces/developer-api.md)
@@ -68,13 +69,14 @@ The separately authorized parts of the engine API.
 
 ## Campaign selection and history positions
 
-What a Session has selected and the history positions it relies on.
+What a Session has selected, the complete Campaign state the engine commits, and the history positions it relies on.
 
-| Term                  | Definition                                                                                                                                                                  |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Current campaign      | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                 |
-| Current save          | The save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced. |
-| Turn-start checkpoint | A history position immediately after campaign creation or a committed Advance turn action, before subsequent actions.                                                       |
+| Term                  | Definition                                                                                                                                                                                                                                                 |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Committed state       | Complete Campaign state, including every part of it, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a part of Campaign state; every retained history position is a Committed state. |
+| Current campaign      | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                |
+| Current save          | The save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                |
+| Turn-start checkpoint | A history position immediately after campaign creation or a committed Advance turn action, before subsequent actions.                                                                                                                                      |
 
 ## Identifiers
 
@@ -384,6 +386,10 @@ Returned views must not provide mutable references into Campaign state. The engi
 supplies to Autopilot AI; it cannot erase information independently disclosed by a human outside the API.
 
 # Committed state integrity
+
+Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing.
+E.g., the position restored by undo is a Committed state, while values computed partway through Advance turn
+processing are not.
 
 Rejected requests leave Campaign state, gameplay RNG state, Instance ID generation state, reports, action history,
 and memory unchanged. Execution infrastructure may record a rejected attempt for Autopilot status and budgets;

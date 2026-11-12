@@ -54,22 +54,14 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 
 ## Campaign and Session contexts
 
-A playthrough, and the runtime context that selects it.
+A playthrough, its data, and the runtime context that selects it. Campaign Modeling Contract owns how Campaign state
+divides into components.
 
-| Term     | Definition                                                                                                                          |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign | A particular playthrough with its own evolving Campaign state and retained history.                                                 |
-| Session  | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |
-
-## Campaign state
-
-The data of one Campaign, including what it retains about the past, and when that data is observed. Campaign Modeling
-Contract owns how Campaign state divides into components.
-
-| Term            | Definition                                                                                                                                                                                                                                                 |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign state  | Data describing one Campaign, including retained data describing its past Campaign state or events.                                                                                                                                                        |
-| Committed state | Complete Campaign state, including every part of it, at an accepted-command boundary rather than during intermediate processing. It describes completeness and timing, not a part of Campaign state; every retained history position is a Committed state. |
+| Term           | Definition                                                                                                                          |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign       | A particular playthrough with its own evolving Campaign state and retained history.                                                 |
+| Campaign state | Data describing one Campaign, including retained data describing its past Campaign state or events.                                 |
+| Session        | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |
 
 ## Data and information qualities
 
@@ -103,13 +95,10 @@ does not make it part of the Session.
 [Campaign lifecycle](./engine-contract.md#campaign-lifecycle) in Engine Contract owns what a Session holds, when it
 starts and ends, and what is persisted. This distinction does not prescribe an internal class layout or save encoding.
 
-# Committed state and information
+# Player-visible information
 
-Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing. E.g.,
-the position restored by undo is a Committed state, while values computed partway through Advance turn
-processing are not.
-Player-visible information describes deliberate ordinary-player exposure. Neither term specifies a particular command,
-query schema, or reveal condition.
+Player-visible information describes deliberate ordinary-player exposure. The term does not specify a particular query
+schema or reveal condition.
 
 # Authoritative and Derived values
 
