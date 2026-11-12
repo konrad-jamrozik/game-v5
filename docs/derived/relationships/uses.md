@@ -32,7 +32,9 @@ flowchart TD
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
+  PLAN["PLAN — Specification Work Plan and Backlog (Accepted)"]
   SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
+  TODOS["TODOS — Outstanding Work Items (Draft)"]
   TURN["TURN — Turn Resolution (Stub)"]
   WEB["WEB — Web UI (Stub)"]
   AGENT --> COMBAT
@@ -128,6 +130,7 @@ flowchart TD
   NUMRNG --> HIST
   NUMRNG --> INVSTG
   NUMRNG --> TURN
+  PLAN --> TODOS
   TURN --> CAMP
   TURN --> ECON
   TURN --> SCEN

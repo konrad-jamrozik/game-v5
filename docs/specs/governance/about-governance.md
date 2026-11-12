@@ -39,8 +39,8 @@ unscheduled issues and the batches they affect.
 # How they relate
 
 Specification Conventions uses Artifact Relationships for the relationship model it requires every specification to
-declare. The index, work plan, and work-item register are each self-contained and are tied to the rest of the corpus by
-links rather than declared relationships.
+declare. Outstanding Work Items uses the Specification Work Plan and Backlog for the batches it assigns each Work item
+to. The index is tied to the rest of the corpus by links rather than declared relationships.
 
 <!-- generated:family-diagram:start -->
 
@@ -55,6 +55,7 @@ flowchart TD
   PLAN["PLAN — Specification Work Plan and Backlog (Accepted)"]
   REL["REL — Artifact Relationships (Draft)"]
   TODOS["TODOS — Outstanding Work Items (Draft)"]
+  PLAN -->|used by| TODOS
   REL -->|used by| CONV
 ```
 

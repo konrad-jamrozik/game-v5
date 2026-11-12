@@ -23,6 +23,10 @@ This document defines no gameplay Rule, observable contract, or GDR, and it does
 cites. Each owning specification remains authoritative until it is revised. Links from Work items to other
 specifications are ordinary citations, not relationships.
 
+# Relationships
+
+- Uses [Specification Work Plan and Backlog](work-plan.md)
+
 # Glossary
 
 Batch is defined by the [Specification Work Plan and Backlog glossary](work-plan.md#glossary).

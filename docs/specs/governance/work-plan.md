@@ -22,6 +22,10 @@ The [Game Design Brief](../../game-design-brief.md) supplies strategic intent an
 and [Engine Contract](../foundation/engine-contract.md) are **In review** for batch 1. Review their
 contracts and unresolved design questions before advancing. Later batches have not started.
 
+# Relationships
+
+- Used by [Outstanding Work Items](work-todos.md)
+
 # Glossary
 
 | Term  | Definition                                                                                                                                                                                                                                                                                                                                     |
