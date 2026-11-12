@@ -4,7 +4,11 @@ import GithubSlugger from 'github-slugger'
 import { describe, expect, test } from 'vitest'
 
 import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
-import { renderDerivedDocumentation } from '../scripts/spec-docs/generator.ts'
+import {
+  renderDerivedDocumentation,
+  renderFamilyDiagram,
+  renderFamilyOverviews,
+} from '../scripts/spec-docs/generator.ts'
 import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
 import { headingText, isLink, parseDocument, visit } from '../scripts/spec-linter/markdown.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from '../scripts/spec-linter/paths.ts'
@@ -278,6 +282,108 @@ describe('derived specification renderer', () => {
     const first = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
     const second = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
     expect(outputObject(second)).toEqual(outputObject(first))
+  })
+})
+
+describe('family overview diagrams', () => {
+  const overview = [
+    '# About the Foundation family',
+    '',
+    '# How they relate',
+    '',
+    'Prose.',
+    '',
+    '<!-- generated:family-diagram:start -->',
+    'stale content',
+    '<!-- generated:family-diagram:end -->',
+    '',
+    '# Why these boundaries',
+    '',
+    'Reasons.',
+    '',
+  ].join('\n')
+
+  test('collapses other Families, combines kinds, and omits implicit follows', () => {
+    const diagram = renderFamilyDiagram(sampleCorpus(), 'Foundation')
+    expect(diagram).toContain('This family has a single specification')
+    expect(diagram).toContain('family_mechanics["Mechanics family"]:::external')
+    expect(diagram).toContain('AAA -->|refined by, used by| family_mechanics')
+    expect(diagram).toContain('family_mechanics -->|used by| AAA')
+    expect(diagram).toContain('classDef external stroke-dasharray: 5 5')
+    expect(diagram).not.toContain('CONV')
+    expect(diagram).not.toContain('family_governance')
+  })
+
+  test('renders relationships within a Family separately from those across Families', () => {
+    const corpus = sampleCorpus()
+    const diagram = renderFamilyDiagram(
+      {
+        ...corpus,
+        specifications: [
+          ...corpus.specifications,
+          {
+            id: 'BBB',
+            family: 'Foundation',
+            title: 'Beta',
+            status: 'Draft',
+            owns: 'Beta rules.',
+            path: 'docs/specs/foundation/beta.md',
+          },
+        ],
+        relationships: [
+          ...corpus.relationships,
+          {
+            dependencyId: 'AAA',
+            dependencyPath: 'docs/specs/foundation/alpha.md',
+            dependentId: 'BBB',
+            dependentPath: 'docs/specs/foundation/beta.md',
+            kind: 'uses',
+            origin: 'explicit',
+            sourcePaths: ['docs/specs/foundation/alpha.md', 'docs/specs/foundation/beta.md'],
+          },
+        ],
+      },
+      'Foundation',
+    )
+    const across = diagram.indexOf('## Across families')
+    expect(diagram.indexOf('AAA -->|used by| BBB')).toBeLessThan(across)
+    expect(diagram.indexOf('family_mechanics')).toBeGreaterThan(across)
+    expect(diagram.slice(across)).not.toContain('BBB')
+  })
+
+  test('replaces only the marked block and is idempotent', async () => {
+    const sources = new Map([['docs/specs/foundation/about-foundation.md', overview]])
+    const first = await renderFamilyOverviews(sampleCorpus(), sources, PRETTIER_OPTIONS)
+    const output = first.get('docs/specs/foundation/about-foundation.md') ?? ''
+    expect(output).not.toContain('stale content')
+    expect(output).toContain('Prose.')
+    expect(output).toContain('Reasons.')
+    expect(output).toContain('```mermaid')
+    expect(first.has('docs/specs/mechanics/about-mechanics.md')).toBe(false)
+    const second = await renderFamilyOverviews(
+      sampleCorpus(),
+      new Map([['docs/specs/foundation/about-foundation.md', output]]),
+      PRETTIER_OPTIONS,
+    )
+    expect(second.get('docs/specs/foundation/about-foundation.md')).toBe(output)
+  })
+
+  test('check mode reports a stale overview diagram', async () => {
+    const files = await currentFiles()
+    const analysis = analyzeSpecifications({ files })
+    const derived = await renderDerivedDocumentation(analysis.corpus, PRETTIER_OPTIONS)
+    const path = 'docs/specs/foundation/about-foundation.md'
+    const stale = files.map((file) =>
+      file.path === path ? { ...file, content: file.content.replace('flowchart TD', 'flowchart LR') } : file,
+    )
+    const errors: string[] = []
+    const io: DerivedDocsIO = {
+      actualOutputs: derived,
+      writeOutputs: () => Promise.resolve(),
+      writeError: (message) => errors.push(message),
+    }
+    expect(await runDerivedDocumentation(stale, ['check'], io, PRETTIER_OPTIONS)).toBe(1)
+    expect(errors).toEqual([`${path}: generated documentation is stale; run npm run docs:generate.`])
   })
 })
 

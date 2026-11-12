@@ -6,6 +6,13 @@ import { remark } from 'remark'
 import remarkGfm from 'remark-gfm'
 
 import { isLink, visit } from '../spec-linter/markdown.ts'
+import {
+  FAMILY_DIAGRAM_END,
+  FAMILY_DIAGRAM_START,
+  FAMILY_ORDER,
+  familyDirectoryName,
+  familyOverviewFileName,
+} from '../spec-linter/overviews.ts'
 import { decodeUrlPart, directoryOf, isExternalUrl, resolvePath, splitUrl } from '../spec-linter/paths.ts'
 import type {
   GlossaryRecord,
@@ -23,15 +30,6 @@ export const DERIVED_BASE_OUTPUT_PATHS = [
   'docs/derived/relationships.md',
 ] as const
 
-const FAMILY_ORDER: readonly SpecificationFamily[] = [
-  'Governance',
-  'Foundation',
-  'Mechanics',
-  'Content',
-  'Interfaces',
-  'Acceptance',
-  'Guidance',
-]
 const STATUS_ORDER: readonly SpecificationStatus[] = ['Stub', 'Draft', 'Accepted', 'Superseded']
 const RELATIONSHIP_ORDER: readonly RelationshipKind[] = ['follows', 'refines', 'uses', 'implements', 'verifies']
 const PASSIVE_DESCRIPTIONS: Readonly<Record<RelationshipKind, string>> = {
@@ -41,6 +39,8 @@ const PASSIVE_DESCRIPTIONS: Readonly<Record<RelationshipKind, string>> = {
   implements: 'A → B means A is implemented by B.',
   verifies: 'A → B means A is verified by B.',
 }
+const FAMILY_DIAGRAM_NOTICE =
+  '_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; dashed boxes stand for whole other Families._'
 const GENERATED_NOTICE =
   '> **Generated — do not edit.** Run `npm run docs:generate` after changing registered specifications.'
 
@@ -356,6 +356,142 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
   }
   lines.push(renderRelationshipDiagram(specifications, kindRelationships))
   return `${lines.join('\n')}\n`
+}
+
+const PASSIVE_LABELS: Readonly<Record<RelationshipKind, string>> = {
+  follows: 'followed by',
+  refines: 'refined by',
+  uses: 'used by',
+  implements: 'implemented by',
+  verifies: 'verified by',
+}
+
+function externalFamilyNodeId(family: SpecificationFamily): string {
+  return `family_${familyDirectoryName(family)}`
+}
+
+export function renderFamilyDiagram(corpus: SpecificationCorpus, family: SpecificationFamily): string {
+  const familyById = new Map(corpus.specifications.map((specification) => [specification.id, specification.family]))
+  const members = corpus.specifications
+    .filter((specification) => specification.family === family)
+    .toSorted((left, right) => compareText(left.id, right.id))
+  const edges = new Map<string, { from: string; to: string; kinds: Set<RelationshipKind> }>()
+  const externalFamilies = new Set<SpecificationFamily>()
+  for (const relationship of corpus.relationships) {
+    if (relationship.origin !== 'explicit') continue
+    const dependencyFamily = familyById.get(relationship.dependencyId)
+    const dependentFamily = familyById.get(relationship.dependentId)
+    if (!dependencyFamily || !dependentFamily) continue
+    if (dependencyFamily !== family && dependentFamily !== family) continue
+    const from = dependencyFamily === family ? relationship.dependencyId : externalFamilyNodeId(dependencyFamily)
+    const to = dependentFamily === family ? relationship.dependentId : externalFamilyNodeId(dependentFamily)
+    if (dependencyFamily !== family) externalFamilies.add(dependencyFamily)
+    if (dependentFamily !== family) externalFamilies.add(dependentFamily)
+    const key = `${from}\u0000${to}`
+    const edge = edges.get(key) ?? { from, to, kinds: new Set<RelationshipKind>() }
+    edge.kinds.add(relationship.kind)
+    edges.set(key, edge)
+  }
+  const memberIds = new Set(members.map((specification) => specification.id))
+  const sortedEdges = [...edges.values()].toSorted(
+    (left, right) => compareText(left.from, right.from) || compareText(left.to, right.to),
+  )
+  const internalEdges = sortedEdges.filter((edge) => memberIds.has(edge.from) && memberIds.has(edge.to))
+  const crossEdges = sortedEdges.filter((edge) => !memberIds.has(edge.from) || !memberIds.has(edge.to))
+  const sections = ['## Within the family', '']
+  if (members.length > 1) {
+    sections.push(renderFamilyEdges(members, [], internalEdges, 'TD'))
+    if (internalEdges.length === 0) sections.push('', 'No relationships are declared within this family.')
+  } else {
+    sections.push('This family has a single specification, so there are no relationships within it.')
+  }
+  sections.push('', '## Across families', '')
+  if (crossEdges.length > 0) {
+    const crossMembers = members.filter((specification) =>
+      crossEdges.some((edge) => edge.from === specification.id || edge.to === specification.id),
+    )
+    const externals = FAMILY_ORDER.filter((candidate) => externalFamilies.has(candidate))
+    sections.push(renderFamilyEdges(crossMembers, externals, crossEdges, 'LR'))
+  } else {
+    sections.push('No relationships are declared with specifications in other families.')
+  }
+  return sections.join('\n')
+}
+
+function renderFamilyEdges(
+  members: readonly SpecificationRecord[],
+  externals: readonly SpecificationFamily[],
+  edges: readonly { from: string; to: string; kinds: ReadonlySet<RelationshipKind> }[],
+  direction: 'LR' | 'TD',
+): string {
+  const lines = ['```mermaid', `flowchart ${direction}`]
+  for (const specification of members) {
+    lines.push(
+      `  ${specification.id}["${mermaidText(`${specification.id} — ${specification.title} (${specification.status})`)}"]`,
+    )
+  }
+  for (const external of externals) {
+    lines.push(`  ${externalFamilyNodeId(external)}["${mermaidText(`${external} family`)}"]:::external`)
+  }
+  for (const edge of edges) {
+    const label = RELATIONSHIP_ORDER.filter((kind) => edge.kinds.has(kind))
+      .map((kind) => PASSIVE_LABELS[kind])
+      .join(', ')
+    lines.push(`  ${edge.from} -->|${label}| ${edge.to}`)
+  }
+  if (externals.length > 0) lines.push('  classDef external stroke-dasharray: 5 5')
+  lines.push('```')
+  return lines.join('\n')
+}
+
+function familyOverviewOutputPath(corpus: SpecificationCorpus, family: SpecificationFamily): string | undefined {
+  const directoryName = familyDirectoryName(family)
+  const member = corpus.specifications.find(
+    (specification) =>
+      specification.family === family && directoryOf(specification.path).split('/').at(-1) === directoryName,
+  )
+  return member ? `${directoryOf(member.path)}/${familyOverviewFileName(family)}` : undefined
+}
+
+function spliceFamilyDiagram(content: string, path: string, diagram: string): string {
+  const normalized = content.replace(/\r\n?/g, '\n')
+  const start = normalized.indexOf(FAMILY_DIAGRAM_START)
+  const end = normalized.indexOf(FAMILY_DIAGRAM_END)
+  if (start === -1 || end === -1 || end < start) {
+    throw new Error(`Family overview ${path} is missing its generated diagram markers.`)
+  }
+  return [
+    normalized.slice(0, start + FAMILY_DIAGRAM_START.length),
+    '',
+    FAMILY_DIAGRAM_NOTICE,
+    '',
+    diagram,
+    '',
+    normalized.slice(end),
+  ].join('\n')
+}
+
+/**
+ * Returns each existing family overview with its generated diagram block refreshed. Overviews that are absent from
+ * `sources` are skipped; the specification linter reports them.
+ */
+export async function renderFamilyOverviews(
+  corpus: SpecificationCorpus,
+  sources: ReadonlyMap<string, string>,
+  prettierOptions: Options = {},
+): Promise<ReadonlyMap<string, string>> {
+  const outputs = new Map<string, string>()
+  for (const family of FAMILY_ORDER) {
+    const path = familyOverviewOutputPath(corpus, family)
+    const source = path === undefined ? undefined : sources.get(path)
+    if (path === undefined || source === undefined) continue
+    const spliced = spliceFamilyDiagram(source, path, renderFamilyDiagram(corpus, family))
+    outputs.set(
+      path,
+      normalizeOutput(await format(spliced, { ...prettierOptions, parser: 'markdown', endOfLine: 'lf' })),
+    )
+  }
+  return outputs
 }
 
 export async function renderDerivedDocumentation(

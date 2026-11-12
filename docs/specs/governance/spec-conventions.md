@@ -151,6 +151,22 @@ Family describes ownership, not dependencies: a Foundation specification may dep
 changing Family. Moving a specification between Families changes its declared ownership category and requires updating its
 metadata, register entry, path, and links together.
 
+## Family overviews
+
+Each Family that has at least one registered specification has an informative Family overview at
+`docs/specs/<directory>/about-<directory>.md`, for example `foundation/about-foundation.md`. A Family overview is not a
+specification: it has no metadata, Spec ID, register entry, or relationship inventory, and it owns no Rule, contract,
+term, or GDR. It explains what question each specification in the Family answers, how they relate, and why the
+boundaries between them sit where they do, linking each specification instead of restating its content.
+
+A Family overview begins with the H1 `About the <Family> family` and contains the H1 sections What this family is for,
+Documents, How they relate, and Why these boundaries, in that order; further sections such as Reading order may follow.
+It links every registered specification of its Family. The How they relate section contains one pair of
+`<!-- generated:family-diagram:start -->` and `<!-- generated:family-diagram:end -->` markers. `npm run docs:generate`
+replaces the content between them with diagrams of the Family's Explicit relationships, both within the Family and with
+other Families, so the diagrams are never edited by hand. The prose outside the markers is maintained by hand: update it
+when adding, renaming, re-scoping, or moving a specification in that Family.
+
 ## One owner per rule
 
 A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
@@ -496,7 +512,7 @@ Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Pro
 
 ## Deterministic validation
 
-Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for registry and metadata agreement, required layout, local links and anchors, relationship inventories and mirrors, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, and status-specific TODO and Open decisions rules. It performs no network access and offers no automatic fixes.
+Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for registry and metadata agreement, required layout, local links and anchors, relationship inventories and mirrors, Family overview presence, structure, and coverage, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, and status-specific TODO and Open decisions rules. It performs no network access and offers no automatic fixes.
 
 A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
 

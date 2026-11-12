@@ -23,22 +23,18 @@ the current specification-development status. It does not define gameplay behavi
 - [Specification work plan and backlog](governance/work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 - [Outstanding work items](governance/work-todos.md): known issues in the specifications awaiting scheduling, each with its affected batches.
 
-# Foundation ownership
+# Family overviews
 
-Core Concepts owns shared vocabulary. Engine Contract uses that vocabulary to define the complete API and execution
-guarantees. Campaign Modeling Contract refines engine campaign-data integrity with composition and reference rules.
-Domain Model applies the shared vocabulary and campaign modeling rules to concrete game concepts.
+Each Family has an informative overview that explains what each of its specifications is for, how they relate, and why
+the boundaries between them sit where they do. Each overview includes generated relationship diagrams.
 
-```mermaid
-flowchart TD
-    CORE[Core Concepts] -->|used by| ENG[Engine Contract]
-    CORE -->|used by| CMC[Campaign Modeling Contract]
-    CORE -->|used by| DOM[Domain Model]
-    ENG -->|refined by| CMC
-    CMC -->|used by| DOM
-```
-
-Arrows run from Dependency to Dependent; this diagram shows the complete explicit relationships among these four documents.
+- [About the Governance family](governance/about-governance.md)
+- [About the Foundation family](foundation/about-foundation.md)
+- [About the Mechanics family](mechanics/about-mechanics.md)
+- [About the Content family](content/about-content.md)
+- [About the Interfaces family](interfaces/about-interfaces.md)
+- [About the Acceptance family](acceptance/about-acceptance.md)
+- [About the Guidance family](guidance/about-guidance.md)
 
 # Specification register
 

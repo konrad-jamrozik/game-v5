@@ -1,14 +1,78 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { relative, resolve } from 'node:path'
+import { posix } from 'node:path'
 
 import { describe, expect, test } from 'vitest'
 
-import { runSpecificationLint } from '../scripts/lint-specs.ts'
-import { analyzeSpecifications, lintSectionReferences, lintSpecifications } from '../scripts/spec-linter/linter.ts'
-import type { SourceFile } from '../scripts/spec-linter/types.ts'
+import { runSpecificationLint as runSpecificationLintRaw } from '../scripts/lint-specs.ts'
+import {
+  analyzeSpecifications as analyzeSpecificationsRaw,
+  lintSectionReferences,
+  lintSpecifications as lintSpecificationsRaw,
+} from '../scripts/spec-linter/linter.ts'
+import { FAMILY_DIAGRAM_END, FAMILY_DIAGRAM_START } from '../scripts/spec-linter/overviews.ts'
+import type { LintInput, SourceFile } from '../scripts/spec-linter/types.ts'
 
 function lines(values: readonly string[]): string {
   return values.join('\n')
+}
+
+function overviewFixture(family: string, memberPaths: readonly string[], overviewPath: string): string {
+  return lines([
+    `# About the ${family} family`,
+    '',
+    '# What this family is for',
+    '',
+    'Purpose.',
+    '',
+    '# Documents',
+    '',
+    ...memberPaths.map((path) => `- [${path}](${posix.relative(posix.dirname(overviewPath), path)})`),
+    '',
+    '# How they relate',
+    '',
+    FAMILY_DIAGRAM_START,
+    FAMILY_DIAGRAM_END,
+    '',
+    '# Why these boundaries',
+    '',
+    'Reasons.',
+  ])
+}
+
+/**
+ * Adds a valid family overview for every Family declared in specification metadata that has none yet, so fixtures
+ * that are not about family overviews stay focused on what they test.
+ */
+function withOverviews(files: readonly SourceFile[]): readonly SourceFile[] {
+  const members = new Map<string, string[]>()
+  for (const file of files) {
+    if (!file.path.startsWith('docs/specs/') || /\/about-[^/]*\.md$/.test(file.path)) continue
+    const family = /^\|\s*Family\s*\|\s*([A-Za-z]+)\s*\|/m.exec(file.content)?.[1]
+    if (!family) continue
+    members.set(family, [...(members.get(family) ?? []), file.path])
+  }
+  const added: SourceFile[] = []
+  for (const [family, paths] of members) {
+    const path = `docs/specs/${family.toLowerCase()}/about-${family.toLowerCase()}.md`
+    if (files.some((file) => file.path === path)) continue
+    added.push({ path, content: overviewFixture(family, paths, path) })
+  }
+  return [...files, ...added]
+}
+
+function lintSpecifications(input: LintInput): ReturnType<typeof lintSpecificationsRaw> {
+  return lintSpecificationsRaw({ ...input, files: withOverviews(input.files) })
+}
+
+function analyzeSpecifications(input: LintInput): ReturnType<typeof analyzeSpecificationsRaw> {
+  return analyzeSpecificationsRaw({ ...input, files: withOverviews(input.files) })
+}
+
+function runSpecificationLint(
+  ...[files, ...rest]: Parameters<typeof runSpecificationLintRaw>
+): ReturnType<typeof runSpecificationLintRaw> {
+  return runSpecificationLintRaw(withOverviews(files), ...rest)
 }
 
 function validCorpus(): SourceFile[] {
@@ -809,6 +873,88 @@ describe('specification linter', () => {
       ),
     ).toBe(1)
     expect(runSpecificationLint(validCorpus(), ['unexpected'], (message) => output.push(message))).toBe(2)
+  })
+})
+
+function rawCodes(files: readonly SourceFile[]): readonly string[] {
+  return lintSpecificationsRaw({ files }).map((diagnostic) => diagnostic.code)
+}
+
+function replaceOverview(
+  files: readonly SourceFile[],
+  path: string,
+  edit: (content: string) => string,
+): readonly SourceFile[] {
+  return files.map((file) => (file.path === path ? { ...file, content: edit(file.content) } : file))
+}
+
+describe('family overviews', () => {
+  const foundationOverview = 'docs/specs/foundation/about-foundation.md'
+
+  test('accepts overviews without treating them as specifications', () => {
+    const files = withOverviews(validCorpus())
+    expect(lintSpecificationsRaw({ files })).toEqual([])
+    const ids = analyzeSpecificationsRaw({ files }).corpus.specifications.map((specification) => specification.id)
+    expect(ids).toEqual(['AAA', 'CONV', 'INDEX'])
+  })
+
+  test('requires an overview for every Family with registered specifications', () => {
+    const files = withOverviews(validCorpus()).filter((file) => file.path !== foundationOverview)
+    const diagnostics = lintSpecificationsRaw({ files })
+    expect(diagnostics.map((diagnostic) => [diagnostic.code, diagnostic.path])).toEqual([
+      ['SPEC702', foundationOverview],
+    ])
+  })
+
+  test('rejects a misnamed or misplaced overview', () => {
+    const files = [
+      ...withOverviews(validCorpus()),
+      { path: 'docs/specs/foundation/about-mechanics.md', content: '# About\n' },
+    ]
+    expect(rawCodes(files)).toEqual(['SPEC701'])
+  })
+
+  test('requires the overview title', () => {
+    const files = replaceOverview(withOverviews(validCorpus()), foundationOverview, (content) =>
+      content.replace('# About the Foundation family', '# Foundation'),
+    )
+    expect(rawCodes(files)).toEqual(['SPEC703'])
+  })
+
+  test('requires the overview sections in order', () => {
+    const files = replaceOverview(withOverviews(validCorpus()), foundationOverview, (content) =>
+      content.replace('# Why these boundaries', '# Rationale'),
+    )
+    expect(rawCodes(files)).toEqual(['SPEC704'])
+  })
+
+  test('requires exactly one pair of diagram markers inside How they relate', () => {
+    const missing = replaceOverview(withOverviews(validCorpus()), foundationOverview, (content) =>
+      content.replace(FAMILY_DIAGRAM_END, ''),
+    )
+    expect(rawCodes(missing)).toEqual(['SPEC705'])
+    const misplaced = replaceOverview(
+      withOverviews(validCorpus()),
+      foundationOverview,
+      (content) =>
+        content.replace(`${FAMILY_DIAGRAM_START}\n${FAMILY_DIAGRAM_END}\n`, '') +
+        `\n\n${FAMILY_DIAGRAM_START}\n${FAMILY_DIAGRAM_END}\n`,
+    )
+    expect(rawCodes(misplaced)).toEqual(['SPEC705'])
+  })
+
+  test('requires a link to every specification in the Family', () => {
+    const files = replaceOverview(withOverviews(validCorpus()), foundationOverview, (content) =>
+      content.replace('[docs/specs/foundation/alpha.md](alpha.md)', 'Alpha'),
+    )
+    expect(rawCodes(files)).toEqual(['SPEC706'])
+  })
+
+  test('checks overview links', () => {
+    const files = replaceOverview(withOverviews(validCorpus()), foundationOverview, (content) =>
+      content.replace('Reasons.', '[Missing](missing.md)'),
+    )
+    expect(rawCodes(files)).toEqual(['SPEC303'])
   })
 })
 

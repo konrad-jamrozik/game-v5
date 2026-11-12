@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { resolveConfig, type Options } from 'prettier'
 
 import { collectMarkdownFiles } from './lint-specs.ts'
-import { renderDerivedDocumentation } from './spec-docs/generator.ts'
+import { renderDerivedDocumentation, renderFamilyOverviews } from './spec-docs/generator.ts'
 import { analyzeSpecifications, formatDiagnostic, lintSectionReferences } from './spec-linter/linter.ts'
 import { columnOf, headingSlugs, isLink, lineOf, parseDocument, visit } from './spec-linter/markdown.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from './spec-linter/paths.ts'
@@ -117,7 +117,9 @@ export async function runDerivedDocumentation(
       for (const diagnostic of analysis.diagnostics) io.writeError(formatDiagnostic(diagnostic))
       return 1
     }
-    const expected = await renderDerivedDocumentation(analysis.corpus, prettierOptions)
+    const sources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
+    const overviews = await renderFamilyOverviews(analysis.corpus, sources, prettierOptions)
+    const expected = new Map([...(await renderDerivedDocumentation(analysis.corpus, prettierOptions)), ...overviews])
     const linkFindings = derivedLinkFindings(files, expected)
     if (linkFindings.length > 0) {
       for (const finding of linkFindings) io.writeError(finding)
@@ -126,7 +128,9 @@ export async function runDerivedDocumentation(
     const sectionDiagnostics = lintSectionReferences(
       {
         files: [
-          ...files.filter((file) => !file.path.startsWith('docs/derived/')),
+          ...files.filter(
+            (file) => !file.path.startsWith('docs/derived/') && !overviews.has(file.path.replace(/\\/g, '/')),
+          ),
           ...[...expected].map(([path, content]) => ({ path, content })),
         ],
       },
@@ -147,7 +151,11 @@ export async function runDerivedDocumentation(
       await io.writeOutputs(expected)
       return 0
     }
-    const findings = derivedOutputFindings(expected, io.actualOutputs)
+    const actual = new Map([
+      ...io.actualOutputs,
+      ...[...overviews.keys()].map((path) => [path, sources.get(path) ?? ''] as const),
+    ])
+    const findings = derivedOutputFindings(expected, actual)
     for (const finding of findings) io.writeError(finding)
     return findings.length === 0 ? 0 : 1
   } catch (error: unknown) {

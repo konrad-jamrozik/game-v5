@@ -21,14 +21,14 @@ Client-side hooks can be bypassed with `--no-verify`, so CI is the authoritative
 
 Run the targeted checks while iterating. They give faster, narrower feedback than the full pipeline.
 
-| Change                                | Targeted checks                                                                                         |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Specifications under `docs/specs/`    | `npm run lint:specs`, then `npm run docs:generate`, and commit the regenerated files in `docs/derived/` |
-| Other Markdown or configuration files | `npm run format:check` (or `npm run format` to fix)                                                     |
-| Application code in `src/`            | `npm run lint:code`, `npm run typecheck`, `npm test`                                                    |
-| Tests in `test/`                      | `npm test` (or `npm run test:watch`), `npm run lint:code`                                               |
-| Tooling in `scripts/`                 | `npm test`, `npm run lint:code`, `npm run typecheck`; rerun any affected script                         |
-| Dependencies or build configuration   | `npm ci`, then `npm run check`                                                                          |
+| Change                                | Targeted checks                                                                                                                          |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Specifications under `docs/specs/`    | `npm run lint:specs`, then `npm run docs:generate`, and commit the regenerated files in `docs/derived/` and the Family overview diagrams |
+| Other Markdown or configuration files | `npm run format:check` (or `npm run format` to fix)                                                                                      |
+| Application code in `src/`            | `npm run lint:code`, `npm run typecheck`, `npm test`                                                                                     |
+| Tests in `test/`                      | `npm test` (or `npm run test:watch`), `npm run lint:code`                                                                                |
+| Tooling in `scripts/`                 | `npm test`, `npm run lint:code`, `npm run typecheck`; rerun any affected script                                                          |
+| Dependencies or build configuration   | `npm ci`, then `npm run check`                                                                                                           |
 
 Run `npm run lint:specs` first when checking specifications or the relationships between them. The derived-view check
 (`npm run docs:check`) and the rest of the pipeline depend on specifications that parse and resolve.

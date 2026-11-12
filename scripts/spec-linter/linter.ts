@@ -1,4 +1,4 @@
-import type { Blockquote, Heading, ListItem, Paragraph, Table } from 'mdast'
+import type { Blockquote, Heading, ListItem, Paragraph, RootContent, Table } from 'mdast'
 import type { Node } from 'unist'
 
 import {
@@ -23,6 +23,15 @@ import {
   topLevelHeadings,
   visit,
 } from './markdown.ts'
+import {
+  FAMILY_DIAGRAM_END,
+  FAMILY_DIAGRAM_START,
+  FAMILY_ORDER,
+  FAMILY_OVERVIEW_HEADINGS,
+  familyOverviewPath,
+  familyOverviewTitle,
+  isFamilyOverviewCandidate,
+} from './overviews.ts'
 import { decodeUrlPart, directoryOf, isExternalUrl, normalizePath, resolvePath, splitUrl } from './paths.ts'
 import type {
   Diagnostic,
@@ -107,8 +116,14 @@ interface GlossaryTerm {
   readonly node: Node
 }
 
+interface FamilyOverview {
+  readonly path: string
+  readonly document: ReturnType<typeof parseDocument>
+}
+
 interface ParsedInput {
   readonly specifications: readonly Specification[]
+  readonly overviews: readonly FamilyOverview[]
   readonly allDocuments: ReadonlyMap<string, ReturnType<typeof parseDocument>>
   readonly exactPaths: ReadonlySet<string>
   readonly casePaths: ReadonlyMap<string, string>
@@ -209,8 +224,13 @@ function parseInput(input: LintInput, diagnostics: Diagnostic[]): ParsedInput {
     }
   }
   const specifications: Specification[] = []
+  const overviews: FamilyOverview[] = []
   for (const [filePath, document] of allDocuments) {
     if (!filePath.startsWith(`${specificationRoot}/`)) continue
+    if (isFamilyOverviewCandidate(specificationRoot, filePath)) {
+      overviews.push({ path: filePath, document })
+      continue
+    }
     const metadata = parseMetadata(filePath, document, diagnostics)
     const first = document.children[0]
     specifications.push({
@@ -223,7 +243,7 @@ function parseInput(input: LintInput, diagnostics: Diagnostic[]): ParsedInput {
       title: first && isHeading(first) ? headingText(first) : '',
     })
   }
-  return { specifications, allDocuments, exactPaths, casePaths, indexPath, specificationRoot }
+  return { specifications, overviews, allDocuments, exactPaths, casePaths, indexPath, specificationRoot }
 }
 
 function registryEntries(
@@ -683,7 +703,7 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
 
 function validateLinks(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
   const slugCache = new Map<string, ReadonlySet<string>>()
-  for (const specification of parsed.specifications) {
+  for (const specification of [...parsed.specifications, ...parsed.overviews]) {
     visit(specification.document.tree, (node) => {
       if (!isLink(node) || isExternalUrl(node.url)) return
       const parts = splitUrl(node.url)
@@ -731,6 +751,121 @@ function validateLinks(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
         }
       }
     })
+  }
+}
+
+function validateFamilyOverviews(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
+  const overviewsByPath = new Map(parsed.overviews.map((overview) => [overview.path, overview]))
+  const expectedPaths = new Set<string>()
+  for (const family of FAMILY_ORDER) {
+    const members = parsed.specifications.filter((specification) => specification.family === family)
+    const path = familyOverviewPath(parsed.specificationRoot, family)
+    expectedPaths.add(path)
+    if (members.length === 0) continue
+    const overview = overviewsByPath.get(path)
+    if (!overview) {
+      addDiagnostic(
+        diagnostics,
+        path,
+        undefined,
+        'SPEC702',
+        `The ${family} family has registered specifications but no family overview at ${path}.`,
+      )
+      continue
+    }
+    validateFamilyOverview(overview, family, members, diagnostics)
+  }
+  for (const overview of parsed.overviews) {
+    if (expectedPaths.has(overview.path)) continue
+    addDiagnostic(
+      diagnostics,
+      overview.path,
+      undefined,
+      'SPEC701',
+      'Family overviews must be named about-<directory>.md and placed directly in a Family directory.',
+    )
+  }
+}
+
+function validateFamilyOverview(
+  overview: FamilyOverview,
+  family: SpecificationFamily,
+  members: readonly Specification[],
+  diagnostics: Diagnostic[],
+): void {
+  const { document, path } = overview
+  const title = document.children[0]
+  const expectedTitle = familyOverviewTitle(family)
+  if (!title || !isHeading(title) || title.depth !== 1 || headingText(title) !== expectedTitle) {
+    addDiagnostic(
+      diagnostics,
+      path,
+      title,
+      'SPEC703',
+      `The first element of a family overview must be the H1 "${expectedTitle}".`,
+    )
+  }
+  const sectionHeadings = topLevelHeadings(document).slice(1)
+  const sectionTitles = sectionHeadings.map(headingText)
+  let searchFrom = 0
+  for (const required of FAMILY_OVERVIEW_HEADINGS) {
+    const index = sectionTitles.indexOf(required, searchFrom)
+    if (index === -1) {
+      addDiagnostic(
+        diagnostics,
+        path,
+        undefined,
+        'SPEC704',
+        `Family overviews must contain the H1 sections ${FAMILY_OVERVIEW_HEADINGS.map((heading) => `"${heading}"`).join(', ')} in that order; "${required}" is missing or out of order.`,
+      )
+      break
+    }
+    searchFrom = index + 1
+  }
+
+  const markers = document.children.filter(
+    (node): node is RootContent & { value: string } =>
+      node.type === 'html' && 'value' in node && typeof node.value === 'string',
+  )
+  const starts = markers.filter((node) => node.value.trim() === FAMILY_DIAGRAM_START)
+  const ends = markers.filter((node) => node.value.trim() === FAMILY_DIAGRAM_END)
+  const relateHeading = sectionHeadings.find((heading) => headingText(heading) === 'How they relate')
+  const relateSection = relateHeading ? sectionNodes(document, relateHeading) : []
+  const start = starts[0]
+  const end = ends[0]
+  if (
+    starts.length !== 1 ||
+    ends.length !== 1 ||
+    !start ||
+    !end ||
+    lineOf(start) > lineOf(end) ||
+    !relateSection.includes(start) ||
+    !relateSection.includes(end)
+  ) {
+    addDiagnostic(
+      diagnostics,
+      path,
+      start ?? relateHeading,
+      'SPEC705',
+      `The "How they relate" section must contain exactly one "${FAMILY_DIAGRAM_START}" followed by one "${FAMILY_DIAGRAM_END}" marker, each on its own line.`,
+    )
+  }
+
+  const linkedPaths = new Set<string>()
+  visit(document.tree, (node) => {
+    if (!isLink(node) || isExternalUrl(node.url)) return
+    const decoded = decodeUrlPart(splitUrl(node.url).path)
+    if (decoded) linkedPaths.add(resolvePath(path, decoded))
+  })
+  for (const member of members) {
+    if (linkedPaths.has(member.path)) continue
+    addDiagnostic(
+      diagnostics,
+      path,
+      undefined,
+      'SPEC706',
+      `The family overview must link every ${family} specification; "${member.path}" is not linked.`,
+    )
   }
 }
 
@@ -1297,6 +1432,7 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   validateRegistryAndMetadata(parsed, entries, diagnostics)
   validateLayout(parsed.specifications, diagnostics)
   validateLinks(parsed, diagnostics)
+  validateFamilyOverviews(parsed, diagnostics)
   const relationships = validateRelationships(parsed.specifications, diagnostics)
   const glossary = validateTerminology(parsed.specifications, diagnostics)
   validateLifecycleAndSections(parsed, diagnostics)
