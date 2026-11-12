@@ -4,7 +4,7 @@
 | ----------- | ------------------------------------------------------------------------ |
 | Spec ID     | CORE                                                                     |
 | Family      | Foundation                                                               |
-| Status      | Draft                                                                    |
+| Status      | Accepted                                                                 |
 | Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)           |
 

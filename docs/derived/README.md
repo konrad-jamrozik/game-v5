@@ -12,8 +12,8 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 18             |
-| Draft      | 7              |
-| Accepted   | 3              |
+| Draft      | 6              |
+| Accepted   | 4              |
 | Superseded | 0              |
 
 ## Counts by family
@@ -43,7 +43,7 @@ These informative views are derived from the registered Markdown specifications.
 | ID     | Document                                                                        | Status   | Owns                                                                                                                                              |
 | ------ | ------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | CMC    | [Campaign Modeling Contract](../specs/foundation/campaign-modeling-contract.md) | Accepted | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.          |
-| CORE   | [Core Concepts](../specs/foundation/core-concepts.md)                           | Draft    | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                      |
+| CORE   | [Core Concepts](../specs/foundation/core-concepts.md)                           | Accepted | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                      |
 | DOM    | [Domain Model](../specs/foundation/domain-model.md)                             | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                                              |
 | ENG    | [Engine Contract](../specs/foundation/engine-contract.md)                       | Draft    | API hierarchy, Principal authority, Session and campaign lifecycle, bounded Autopilot AI execution, memory, and deterministic history guarantees. |
 | HIST   | [History and Persistence](../specs/foundation/history-and-persistence.md)       | Stub     | Define reversible campaign history, reproducible replay, and durable save/load behavior.                                                          |

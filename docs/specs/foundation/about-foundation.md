@@ -77,7 +77,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 ```mermaid
 flowchart TD
   CMC["CMC — Campaign Modeling Contract (Accepted)"]
-  CORE["CORE — Core Concepts (Draft)"]
+  CORE["CORE — Core Concepts (Accepted)"]
   DOM["DOM — Domain Model (Draft)"]
   ENG["ENG — Engine Contract (Draft)"]
   HIST["HIST — History and Persistence (Stub)"]
@@ -107,7 +107,7 @@ flowchart TD
 ```mermaid
 flowchart LR
   CMC["CMC — Campaign Modeling Contract (Accepted)"]
-  CORE["CORE — Core Concepts (Draft)"]
+  CORE["CORE — Core Concepts (Accepted)"]
   DOM["DOM — Domain Model (Draft)"]
   ENG["ENG — Engine Contract (Draft)"]
   HIST["HIST — History and Persistence (Stub)"]

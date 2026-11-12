@@ -19,7 +19,7 @@ flowchart TD
   CLI["CLI — Terminal CLI (Stub)"]
   CMC["CMC — Campaign Modeling Contract (Accepted)"]
   COMBAT["COMBAT — Combat (Stub)"]
-  CORE["CORE — Core Concepts (Draft)"]
+  CORE["CORE — Core Concepts (Accepted)"]
   DEPDIR["DEPDIR — Gameplay Dependency Direction (Draft)"]
   DEV["DEV — Developer API (Stub)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
