@@ -82,7 +82,7 @@ The following table is the exhaustive set of Personas. The last column names the
 | UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                      | Interfaces; e.g. [Player Information](../interfaces/player-information.md), [Web UI](../interfaces/web-ui.md)                               |
 | AI designer      | Human or LLM | Designs an AI that plays the game, such as an Autopilot AI.                                                                                       | Interfaces, Foundation; e.g. [Player Information](../interfaces/player-information.md), [Turn Resolution](../foundation/turn-resolution.md) |
 | Implementer      | LLM          | Implements specifications as code and tests.                                                                                                      | Foundation, Mechanics, Interfaces, Acceptance, Guidance                                                                                     |
-| Player           | Human or LLM | Plays the game.                                                                                                                                   | None (player docs are not specifications)                                                                                                   |
+| Player           | Human or LLM | Plays the game.                                                                                                                                   | None directly; experiences Interfaces and Content                                                                                           |
 
 ## Status
 
