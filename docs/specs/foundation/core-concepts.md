@@ -48,13 +48,13 @@ Language-independent vocabulary for describing and identifying model data.
 
 What a version of the game supplies: shared by every Campaign and unchanged during play.
 
-| Term                   | Definition                                                                                                                                                                                                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Rule                   | A declared statement governing game behavior, belonging to exactly one Rule kind; for example, a formula producing a Derived value, a condition permitting a player action, or a statement of when new data is created in a Campaign and with which initial values. |
-| Rule kind              | The classification of a Rule by its relationship to Campaign state, determining what a specification stating that Rule must state. The exhaustive Rule kinds are Calculation, Eligibility, Effect, Creation, and Invariant.                                         |
-| Ruleset                | The collection of Rules governing a Campaign.                                                                                                                                                                                                                       |
-| Game build             | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                                                                                                                                                  |
-| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated.                                                                                                                              |
+| Term                   | Definition                                                                                                                                                                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Rule                   | A declared statement governing game behavior, belonging to exactly one Rule kind; e.g., a formula producing a Derived value, a condition permitting a player action, or a statement of when new data is created in a Campaign and with which initial values. |
+| Rule kind              | The classification of a Rule by its relationship to Campaign state, determining what a specification stating that Rule must state. The exhaustive Rule kinds are Calculation, Eligibility, Effect, Creation, and Invariant.                                  |
+| Ruleset                | The collection of Rules governing a Campaign.                                                                                                                                                                                                                |
+| Game build             | A particular version of the game's data, Ruleset, and executable implementation supplied together.                                                                                                                                                           |
+| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated.                                                                                                                       |
 
 ## Campaign and Session contexts
 
@@ -108,8 +108,8 @@ and state every item that Rule kind requires in the following table, which is th
 | Creation    | Adds new data to Campaign state, identified by a fresh Instance ID.           | When it applies, the Type of the new data, the initial value of each of its properties and the source of each value, and that it receives a fresh Instance ID. | Starting an Investigation creates one with progress 0.                                             |
 | Invariant   | Changes nothing; constrains every Committed state.                            | The condition and its scope. A violation is an engine or data defect, not a gameplay outcome.                                                                  | At most one Active Investigation per Lead.                                                         |
 
-A Rule is named after its kind, for example a Calculation Rule or a Creation Rule. One mechanic usually combines
-several Rules of different kinds. For example, starting an Investigation combines an Eligibility Rule deciding whether
+A Rule is named after its kind, e.g. a Calculation Rule or a Creation Rule. One mechanic usually combines
+several Rules of different kinds. E.g., starting an Investigation combines an Eligibility Rule deciding whether
 it may start, a Creation Rule adding the Investigation, and an Effect Rule changing the participating agents' Current
 assignments.
 
@@ -139,7 +139,7 @@ These links identify owners only; the meanings in this document do not depend on
 
 The classification is also deliberately limited in two ways:
 
-- **No finer subdivision:** the five kinds are not subdivided further, for example into random and non-random
+- **No finer subdivision:** the five kinds are not subdivided further, e.g. into random and non-random
   Effects, because a kind exists only where the statements a specification must make differ.
 - **No implementation prescription:** Rule kinds do not imply functions, classes, modules, or call order, as
   required by [What belongs in a specification](../governance/spec-conventions.md#what-belongs-in-a-specification).
@@ -156,8 +156,8 @@ starts and ends, and what is persisted. This distinction does not prescribe an i
 
 # Committed state and information
 
-Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing. For
-example, the position restored by undo is a Committed state, while values computed partway through Advance turn
+Committed state distinguishes complete Campaign state at accepted-command boundaries from intermediate processing. E.g.,
+the position restored by undo is a Committed state, while values computed partway through Advance turn
 processing are not.
 Player-visible information describes deliberate ordinary-player exposure. Neither term specifies a particular command,
 query schema, or reveal condition.
@@ -165,12 +165,12 @@ query schema, or reveal condition.
 # Authoritative and Derived values
 
 An Authoritative value is treated as established truth. A Derived value is calculated from Authoritative values and
-the current Rules and GDRs. This classification is independent of mutability: shared base health and a recorded
+the current Rules and GDRs. This classification is independent of mutability: e.g., shared base health and a recorded
 Instance ID can be Authoritative values even though neither changes during gameplay. It is also independent of player
 visibility: either kind may be hidden from the player. Caching a current calculation does not change its
 classification as a Derived value.
 
-For example, each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
+E.g., each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
 value. With two enemies at health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Caching the total does
 not make it an Authoritative value, and hiding either the individual health or the total from the player does not
 change either classification.
