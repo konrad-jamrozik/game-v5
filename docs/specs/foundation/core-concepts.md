@@ -98,13 +98,11 @@ starts and ends, and what is persisted. This distinction does not prescribe an i
 An Authoritative value is treated as established truth. A Derived value is calculated deterministically by game
 behavior from Authoritative values, including those GDRs supply. This classification is independent of mutability:
 e.g., a GDR's shared base health is an Authoritative value even though it never changes during gameplay. It is also independent of player
-visibility: either kind may be hidden from the player. Caching a current calculation does not change its
-classification as a Derived value.
+visibility: either kind may be hidden from the player.
 
 E.g., each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
-value. With two enemies at health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Caching the total does
-not make it an Authoritative value, and hiding either the individual health or the total from the player does not
-change either classification.
+value. With two enemies at health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Hiding either the
+individual health or the total from the player does not change either classification.
 
 # Acceptance examples
 

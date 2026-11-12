@@ -91,54 +91,6 @@ that time.
 
 ## Clear violations
 
-### TODO-001: Cache wording in Derived value consistency
-
-**Category and priority:** Clear violation.
-
-**Affected:** Engine Contract (ENG), [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency);
-History and Persistence (HIST), [Refined Engine Contract guarantees](../foundation/history-and-persistence.md#refined-engine-contract-guarantees)
-and [Campaign configuration persistence](../foundation/history-and-persistence.md#campaign-configuration-persistence).
-Related, lower priority: Campaign Modeling Contract (CMC, Accepted),
-[Value classification](../foundation/campaign-modeling-contract.md#value-classification); Core Concepts (CORE),
-[Authoritative and Derived values](../foundation/core-concepts.md#authoritative-and-derived-values).
-
-**Batches:** ENG, CMC, and CORE are batch 1; HIST is batch 2.
-
-**Current wording:**
-
-> Caches must be updated or invalidated when their inputs change, including after restoration. Restored reports and
-> Player-visible information must correspond to the restored cursor rather than a discarded future.
-
-(ENG, Derived value consistency.)
-
-> [...] with cache invalidation, restoration of complete continuation state, and atomic undo/redo and load procedures.
-
-(HIST, Refined Engine Contract guarantees.)
-
-> Detail checkpoint replacement at the same position, discarded-future removal across Autopilot AIs, late-result
-> rejection, and cache invalidation.
-
-(HIST, a TODO under Campaign configuration persistence.)
-
-Related permissive clarifications:
-
-> Authoritative value and Derived value, including their independence from mutability, caching, and player visibility,
-
-(CMC, Value classification.)
-
-> Caching a current calculation does not change its classification as a Derived value.
-
-(CORE, Authoritative and Derived values, which also says "Caching the total does not make it an Authoritative value".)
-
-**Why it is an issue:** Whether caches exist is the implementer's choice under the scope rule; only the consistency of
-returned values is observable. The second ENG sentence already states the observable part.
-
-**Suggested resolution:** In ENG, delete the cache sentence and state only the observable consistency, e.g.
-that every query result, report, and Player-visible information after any action or restoration equals what would be
-computed from the current Campaign state. Remove "cache invalidation" from both HIST passages. The CMC and CORE
-sentences are permissive and do not prescribe caches; consider dropping them for consistency, which for CMC is a
-revision of an Accepted specification.
-
 ### TODO-002: Replay prescribed as the restore mechanism in Save size limit
 
 **Category and priority:** Clear violation.

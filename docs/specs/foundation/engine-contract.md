@@ -380,8 +380,9 @@ and storage failure procedures belong to History and Persistence.
 
 Queries, computing Derived values, and checking action preconditions must neither mutate Campaign state nor consume
 gameplay randomness.
-Caches must be updated or invalidated when their inputs change, including after restoration. Restored reports and
-Player-visible information must correspond to the restored cursor rather than a discarded future.
+After any action or restoration, every query result, report, and Player-visible information equals what would be
+computed from the current Campaign state. After restoration, that is the state at the restored cursor rather than a
+discarded future.
 
 # Information boundary
 

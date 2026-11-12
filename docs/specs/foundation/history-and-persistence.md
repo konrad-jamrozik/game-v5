@@ -76,7 +76,7 @@ contents, and Dev mode lifecycle are defined by Engine Contract, not open decisi
 
 This specification also refines [Derived value consistency](engine-contract.md#derived-value-consistency),
 [Continuation state](engine-contract.md#continuation-state), and
-[Committed state integrity](engine-contract.md#committed-state-integrity) with cache invalidation, restoration of
+[Committed state integrity](engine-contract.md#committed-state-integrity) with restoration of
 complete continuation state, and atomic undo/redo and load procedures. Domain Model supplies the Campaign instances
 restored; Numbers and Randomness supplies numeric and generator-state contracts. Developer API supplies the
 inspection and cheat-command isolation details used during restoration.
@@ -220,8 +220,8 @@ Session contents, namely the Current campaign selection, Dev mode, and the activ
 persisted. Continuation data associated with a Campaign's history is saved with that Campaign, not with the Session.
 
 TODO: Specify storage separation between Campaign state and Controller continuation data within a Campaign save. History navigation leaves Dev mode unchanged and restores only applicable memory checkpoints.
-Detail checkpoint replacement at the same position, discarded-future removal across Autopilot AIs, late-result
-rejection, and cache invalidation. External model conversations must not bypass restored memory boundaries.
+Detail checkpoint replacement at the same position, discarded-future removal across Autopilot AIs, and late-result
+rejection. External model conversations must not bypass restored memory boundaries.
 
 # Edge cases and failure behavior
 

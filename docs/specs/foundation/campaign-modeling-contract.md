@@ -154,7 +154,7 @@ are separate immutable properties. Reference mutability is independent of the ta
 
 # Value classification
 
-Authoritative value and Derived value, including their independence from mutability, caching, and player visibility,
+Authoritative value and Derived value, including their independence from mutability and player visibility,
 are defined in [Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. Each specification using these
 concepts must declare which of its values are Authoritative values and which are Derived values. Retaining a past
 calculation as a historical fact follows [Historical fact preservation](#historical-fact-preservation).
@@ -353,8 +353,7 @@ How to determine the Derived value of the completion count for the Lead GDR lead
 3. **Filter by Completed lifecycle:** For each remaining Investigation Campaign instance, read the value of the lifecycle property within its State property. Keep only Campaign instances whose lifecycle property has the value Completed.
 4. **Count matching Investigations:** Count the remaining Investigation Campaign instances. The result is the Derived value of the completion count for lead_1. In this example, investigation_1 is excluded because its lifecycle property has the value Abandoned; investigation_2 is counted, so the result is 1.
 
-The Lead reference and lifecycle property values read in steps 2 and 3 are Authoritative values. Caching the resulting
-completion count does not change its classification as a Derived value.
+The Lead reference and lifecycle property values read in steps 2 and 3 are Authoritative values.
 
 ```mermaid
 flowchart LR
