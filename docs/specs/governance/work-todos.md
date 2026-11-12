@@ -315,22 +315,21 @@ as designer vocabulary meaning that the Rule's outcome depends on chance, and de
 
 **Category and priority:** Clear violation.
 
-**Affected:** Specification Conventions (CONV, Accepted), [Unique identifiers](spec-conventions.md#unique-identifiers);
+**Affected:** Engine Contract (ENG), [Unique identifiers](../foundation/engine-contract.md#unique-identifiers);
 History and Persistence (HIST), [Glossary](../foundation/history-and-persistence.md#glossary).
 
-**Batches:** CONV has no batch; it is an Accepted governance specification outside the batch sequence, so a change is a
-revision presented to the project owner. HIST is batch 2.
+**Batches:** ENG is batch 1; HIST is batch 2.
 
 **Current wording:**
 
 > Generated deterministically from Campaign state under its owning contract; never a ULID or any other format that
 > consults wall-clock time or fresh randomness.
 
-(CONV, Unique identifiers, "Required format" cell for Campaign-scoped identifier.)
+(ENG, Unique identifiers, "Required format" cell for Campaign-scoped identifier.)
 
 > A [ULID](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifier).
 
-(CONV, Unique identifiers, "Required format" cell for Independent identifier, whose examples are Campaign IDs and
+(ENG, Unique identifiers, "Required format" cell for Independent identifier, whose examples are Campaign IDs and
 Campaign save IDs. The following paragraph adds "Do not specify a GUID, UUID, or other format for an Independent
 identifier unless a ULID cannot satisfy a stated technical requirement".)
 
@@ -549,8 +548,7 @@ difficulty is fixed for the whole Investigation and which Campaign state it may 
 **Affected:** Turn Resolution (TURN), [Overview](../foundation/turn-resolution.md#overview),
 [Overview](../foundation/turn-resolution.md#overview), and
 [Phase schedule](../foundation/turn-resolution.md#phase-schedule). Specification Conventions (CONV, Accepted),
-[Writing exact requirements](spec-conventions.md#writing-exact-requirements) and
-[One owner per rule](spec-conventions.md#one-owner-per-rule). Combat (COMBAT), [Battle flow](../mechanics/combat.md#battle-flow).
+[Writing exact requirements](spec-conventions.md#writing-exact-requirements). Combat (COMBAT), [Battle flow](../mechanics/combat.md#battle-flow).
 Economy and Upgrades (ECON), [Income and costs](../mechanics/economy-and-upgrades.md#income-and-costs).
 Investigations (INVSTG), [Team changes and commitment](../mechanics/investigations.md#team-changes-and-commitment).
 
@@ -572,8 +570,7 @@ Investigations (INVSTG), [Team changes and commitment](../mechanics/investigatio
 
 > - Which state snapshot supplies each input and when each effect becomes visible.
 
-(CONV, Writing exact requirements checklist; One owner per rule also says "Turn Resolution owns phase ordering and
-state-read timing".)
+(CONV, Writing exact requirements checklist.)
 
 > TODO: Specify initial snapshots, participation, round/side order, [...]
 
@@ -807,5 +804,6 @@ These are workflow checks, not gameplay tests:
 - **New issue ([Adding and removing Work items](#adding-and-removing-work-items), [Work item format](#work-item-format)):**
   A reviewer finds an out-of-scope storage statement in Missions. They add TODO-021 under Clear violations, naming
   Missions and batch 6 from [Batch sequence](work-plan.md#batch-sequence), with the exact quoted wording.
-- **Accepted owner ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)):** TODO-005 affects Specification
-  Conventions, which is Accepted. The ULID mandate remains in force until the project owner accepts a revision.
+- **Accepted owner ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)):** TODO-015 affects Campaign
+  Modeling Contract, which is Accepted. Its Value classification wording remains in force until the project owner
+  accepts a revision.

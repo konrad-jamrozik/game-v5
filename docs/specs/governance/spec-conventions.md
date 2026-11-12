@@ -24,24 +24,22 @@ signatures belong in specifications because API callers observe them.
 
 # Glossary
 
-| Term                       | Definition                                                                                                                                                                                                                 |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Specification              | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records (GDRs), governance, or planned specification work.                                                            |
-| Registered                 | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                                                                                         |
-| Family                     | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                                                                            |
-| Requirement                | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                                                                        |
-| Canonical term             | The sole term assigned to one concept within the specification set.                                                                                                                                                        |
-| Acceptance example         | A worked example that identifies the requirements it checks and states testable expected results.                                                                                                                          |
-| Evidence basis             | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships.                                              |
-| Campaign-scoped identifier | A unique identifier that replaying the same committed commands from the same Campaign state must reproduce exactly.                                                                                                        |
-| Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, for example one identifying a stored record or a runtime operation.                                                                        |
-| Persona                    | A kind of participant in making, changing, or playing the game, defined by what the participant does with the game. The Personas are Engine designer, Content designer, UI designer, AI designer, Implementer, and Player. |
-| Engine designer            | The Persona that designs the engine and every Rule, decides which Rule inputs GDRs supply, and establishes these specification conventions.                                                                                |
-| Content designer           | The Persona that authors GDRs conforming to the Types the Engine designer exposes for content.                                                                                                                             |
-| UI designer                | The Persona that designs player-facing interfaces over the engine API.                                                                                                                                                     |
-| AI designer                | The Persona that designs an AI that plays the game.                                                                                                                                                                        |
-| Implementer                | The Persona that implements specifications as code and tests.                                                                                                                                                              |
-| Player                     | The Persona that plays the game.                                                                                                                                                                                           |
+| Term               | Definition                                                                                                                                                                                                                 |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Specification      | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records (GDRs), governance, or planned specification work.                                                            |
+| Registered         | Listed in the [Specification register](../README.md#specification-register) with a stable Spec ID.                                                                                                                         |
+| Family             | A specification's single ownership category, declared in metadata and the register and mapped to its directory.                                                                                                            |
+| Requirement        | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                                                                        |
+| Canonical term     | The sole term assigned to one concept within the specification set.                                                                                                                                                        |
+| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                                                                          |
+| Evidence basis     | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships.                                              |
+| Persona            | A kind of participant in making, changing, or playing the game, defined by what the participant does with the game. The Personas are Engine designer, Content designer, UI designer, AI designer, Implementer, and Player. |
+| Engine designer    | The Persona that designs the engine and every Rule, decides which Rule inputs GDRs supply, and establishes these specification conventions.                                                                                |
+| Content designer   | The Persona that authors GDRs conforming to the Types the Engine designer exposes for content.                                                                                                                             |
+| UI designer        | The Persona that designs player-facing interfaces over the engine API.                                                                                                                                                     |
+| AI designer        | The Persona that designs an AI that plays the game.                                                                                                                                                                        |
+| Implementer        | The Persona that implements specifications as code and tests.                                                                                                                                                              |
+| Player             | The Persona that plays the game.                                                                                                                                                                                           |
 
 # What belongs in a specification
 
@@ -170,16 +168,6 @@ when adding, renaming, re-scoping, or moving a specification in that Family.
 ## One owner per rule
 
 A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
-
-- Domain Model owns shared Campaign instance Types, their Campaign instances, and invariants; subsystem specifications own their detailed transitions.
-- Numbers and Randomness owns units, numeric operations, and reproducibility conventions.
-- Mechanics own formulas. Initial Campaign Content owns named balance values and GDR rows.
-- Turn Resolution owns phase ordering and state-read timing, not subsystem formulas.
-- Combat produces Battle results; Missions converts them into campaign effects.
-- Investigations owns probability and estimate calculations; Player Information owns which results and fields players see.
-- Interface specifications reference mechanical eligibility and effects rather than independently defining them.
-- Acceptance scenarios exercise rules; they cannot introduce new rules.
-- Guidance documents steer implementers; they cannot introduce or change rules.
 
 ## Implicit relationships
 
@@ -310,6 +298,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Build                                                   | [Game build](../foundation/core-concepts.md#glossary)                                                                               | Naming the version of the game's supplied data and executable logic; ordinary build-tool operations retain their meaning.                                                                            |
 | ID                                                      | [Instance ID](../foundation/core-concepts.md#glossary)                                                                              | Identifying a Campaign instance; GDR identifiers, document Spec IDs, and other identifiers retain their own descriptions.                                                                            |
 | Relationship type                                       | [Relationship kind](artifact-relationships.md#glossary)                                                                             | Classifying a Relationship; ordinary kinds of other things remain distinct.                                                                                                                          |
+| Rule role; Rule type; Rule category                     | [Rule kind](../foundation/core-concepts.md#glossary)                                                                                | Classifying a Rule; GDR purposes in Campaign Modeling Contract are a separate classification of GDRs.                                                                                                |
 | Assignment                                              | [Current assignment](../foundation/domain-model.md#glossary)                                                                        | Naming an Agent's current orders; the literal lifecycle label At assignment remains unchanged.                                                                                                       |
 | Participation; agent history                            | [Participation history](../foundation/domain-model.md#glossary)                                                                     | Referring to retained participation records, rather than the act of participating or an Agent's broader career.                                                                                      |
 | Campaign instance kind                                  | [Type](../foundation/core-concepts.md#glossary)                                                                                     | Describing a category of Campaign instances.                                                                                                                                                         |
@@ -336,14 +325,7 @@ or unrelated uses of “configuration.” Use GDR or Archetype rather than “Te
 explained in [Rejected terms and synonyms](../foundation/campaign-modeling-contract.md#rejected-terms-and-synonyms).
 Retention in History does not replace named lifecycle states; for example, Killed and Completed.
 
-Treat GDRs and Rules as distinct concepts; a GDR is not a Rule. Attribute execution to the engine. Rules specify
-behavior; GDRs supply input data. Avoid wording that makes Rules or GDRs perform operations. Follow
-[Campaign initialization](../foundation/campaign-modeling-contract.md#campaign-initialization).
-
-When specifying a game concept, state its applicable modeling role and mutability. A Campaign instance's Type describes
-its four properties: Instance ID, Archetype, Constants, and State.
-Distinguish structural constraints, initial values on creation, and ongoing gameplay invariants. Declare Instance ID scopes;
-singleton Campaign instances are not exempt. Structural compatibility does not establish domain validity. Use prose,
+When specifying a game concept, state its applicable modeling role and mutability. Use prose,
 property tables, and diagrams for conceptual descriptions; a programming-language declaration is not required. State
 multiplicity with an explicit scope, creation and historical transitions, Authoritative values versus Derived values, and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
@@ -444,21 +426,6 @@ Include worked numerical examples for normal cases and boundaries. Equations, pr
 Public API specifications define exact names, types, argument shapes, outputs, and errors when they are ready for acceptance. Conceptual domain specifications need not mirror implementation storage layouts.
 
 GDR tables define stable GDR identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit GDR. Use parameter references instead of copying balance values throughout mechanics specifications.
-
-## Unique identifiers
-
-Every specification that introduces a unique identifier must classify it as a Campaign-scoped identifier or a
-Independent identifier. The test is whether replaying the same committed commands from the same Campaign state,
-including through undo and redo, must reproduce the same identifier.
-
-| Kind                       | Required format                                                                                                                                                | Examples                                         |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Campaign-scoped identifier | Generated deterministically from Campaign state under its owning contract; never a ULID or any other format that consults wall-clock time or fresh randomness. | For example, Instance IDs.                       |
-| Independent identifier     | A [ULID](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifier).                                                             | For example, Campaign IDs and Campaign save IDs. |
-
-A ULID embeds wall-clock time and fresh randomness, so generating one during replayed gameplay would break
-deterministic replay. Do not specify a GUID, UUID, or other format for an Independent identifier unless a ULID
-cannot satisfy a stated technical requirement; the specification must then state that requirement.
 
 ## Illustrative and exhaustive enumerations
 

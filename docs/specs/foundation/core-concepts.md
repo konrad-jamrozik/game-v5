@@ -94,11 +94,6 @@ Classifications of a value or piece of information, independent of where it live
 | Retained                   | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; History describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                                                                                                    |
 
-## Rejected terms and synonyms
-
-- **Rule role, Rule type, Rule category:** use Rule kind when classifying a Rule. GDR purposes in Campaign Modeling
-  Contract are a separate classification of GDRs.
-
 # Vocabulary and contract ownership
 
 Type and Property describe data independently of a programming language. Rule and Ruleset describe permitted behavior;

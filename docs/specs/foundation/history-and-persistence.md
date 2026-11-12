@@ -101,7 +101,7 @@ One Campaign may have several Campaign saves. For example, a player may keep a t
 after undo would otherwise discard, or keep a save with full history before a later save drops it under the Save size limit.
 Campaign saves of one Campaign share its Campaign ID and have distinct Campaign save IDs. Two Campaigns created with
 equal Campaign configuration and seed and given equal commands have equal Campaign state but distinct Campaign IDs;
-each may be saved. Identifier format follows [Unique identifiers](../governance/spec-conventions.md#unique-identifiers).
+each may be saved. Identifier format follows [Unique identifiers](engine-contract.md#unique-identifiers).
 
 Saving overwrites the Current save, and saving as new creates another Campaign save of the same Campaign, under
 [Save and load](engine-contract.md#save-and-load). A fork is a Campaign save created by saving as new; it keeps the

@@ -96,7 +96,8 @@ change its four properties under [Campaign instance structure](#campaign-instanc
 Campaign initialization receives setup inputs, immutable Game Data Records (GDRs), and the Ruleset supplied by the
 Game build, and produces the initial Campaign state from them. GDRs supply data; Rules specify calculations and
 permitted behavior, and Creation Rules specify which Campaign instances the initial Campaign state contains, under
-[Campaign instance creation](#campaign-instance-creation). A GDR is not a Rule. Exact starting data and balance
+[Campaign instance creation](#campaign-instance-creation). A GDR is not a Rule. The engine performs every operation: it
+reads GDRs and applies Rules, and neither a GDR nor a Rule performs an operation. Exact starting data and balance
 values are outside this document's ownership. Session lifecycle and publication of Committed state belong to Engine Contract.
 
 # Campaign instances
