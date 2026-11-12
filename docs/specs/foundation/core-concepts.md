@@ -11,8 +11,17 @@
 # Overview
 
 This document defines the shared language for the complete game contract, spanning campaign data and engine execution. It
-owns the meanings of its glossary terms independently of the contracts that use them. It does not define API authority,
-campaign-data composition, Session lifecycle, gameplay mechanics, persistence procedures, or interface behavior.
+owns the meanings of its glossary terms independently of the contracts that use them. The behavior and structure those
+terms describe are owned elsewhere:
+
+- The engine API and what a Session holds: [API hierarchy](./engine-contract.md#api-hierarchy) and
+  [Campaign lifecycle](./engine-contract.md#campaign-lifecycle) in Engine Contract.
+- How Campaign state divides into components:
+  [Campaign state composition](./campaign-modeling-contract.md#campaign-state-composition) in Campaign Modeling Contract.
+- Saving, loading, undo, and redo: [History and Persistence](./history-and-persistence.md).
+- Gameplay: the specifications of the [Mechanics family](../mechanics/about-mechanics.md).
+- How players and developers reach the engine: the specifications of the
+  [Interfaces family](../interfaces/about-interfaces.md).
 
 # Relationships
 
