@@ -5,6 +5,7 @@
 | Spec ID     | CMC                                                            |
 | Family      | Foundation                                                     |
 | Status      | Accepted                                                       |
+| Audience    | Engine designer, Content designer, Implementer                 |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview

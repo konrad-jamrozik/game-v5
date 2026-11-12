@@ -5,6 +5,7 @@
 | Spec ID     | INIT                                                           |
 | Family      | Content                                                        |
 | Status      | Stub                                                           |
+| Audience    | Content designer, Implementer                                  |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview

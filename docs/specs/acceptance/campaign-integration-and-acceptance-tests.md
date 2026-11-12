@@ -5,6 +5,7 @@
 | Spec ID     | SCEN                                                           |
 | Family      | Acceptance                                                     |
 | Status      | Stub                                                           |
+| Audience    | Engine designer, Implementer                                   |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview

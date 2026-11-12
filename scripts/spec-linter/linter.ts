@@ -41,6 +41,7 @@ const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
 const CONVENTIONS_PATH = 'docs/specs/governance/spec-conventions.md'
 const ALLOWED_STATUSES: ReadonlySet<string> = new Set(['Stub', 'Draft', 'Accepted', 'Superseded'])
+const PERSONAS = ['Engine designer', 'Content designer', 'UI designer', 'AI designer', 'Implementer', 'Player']
 const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Governance',
   'Foundation',
@@ -465,6 +466,23 @@ function validateRegistryAndMetadata(
             : `Family ${specification.family} specifications must be direct children of ${parsed.specificationRoot}/${expectedDirectory}.`,
         )
       }
+    }
+    const audience = (specification.metadata.values.get('Audience') ?? '')
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean)
+    const ranks = audience.map((value) => PERSONAS.indexOf(value))
+    if (
+      audience.length === 0 ||
+      ranks.some((rank, index) => rank < 0 || (index > 0 && rank <= (ranks[index - 1] ?? -1)))
+    ) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        specification.metadata.table,
+        'SPEC112',
+        `Metadata Audience must list one or more distinct Personas in this order: ${PERSONAS.join(', ')}.`,
+      )
     }
     if (specification.metadata.values.has('Scope')) {
       addDiagnostic(

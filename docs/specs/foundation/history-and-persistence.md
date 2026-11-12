@@ -5,6 +5,7 @@
 | Spec ID     | HIST                                                           |
 | Family      | Foundation                                                     |
 | Status      | Stub                                                           |
+| Audience    | Engine designer, UI designer, Implementer                      |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview

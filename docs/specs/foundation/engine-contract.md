@@ -5,6 +5,7 @@
 | Spec ID     | ENG                                                            |
 | Family      | Foundation                                                     |
 | Status      | Draft                                                          |
+| Audience    | Engine designer, UI designer, AI designer, Implementer         |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview

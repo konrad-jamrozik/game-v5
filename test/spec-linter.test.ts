@@ -23,6 +23,7 @@ function validCorpus(): SourceFile[] {
         '| Spec ID | INDEX |',
         '| Family | Governance |',
         '| Status | Draft |',
+        '| Audience | Engine designer, Implementer |',
 
         '',
         '# Overview',
@@ -48,6 +49,7 @@ function validCorpus(): SourceFile[] {
         '| Spec ID | CONV |',
         '| Family | Governance |',
         '| Status | Draft |',
+        '| Audience | Engine designer, Implementer |',
 
         '',
         '# Overview',
@@ -75,6 +77,7 @@ function validCorpus(): SourceFile[] {
         '| Spec ID | AAA |',
         '| Family | Foundation |',
         '| Status | Draft |',
+        '| Audience | Engine designer, Implementer |',
 
         '',
         '# Overview',
@@ -217,6 +220,21 @@ describe('specification linter', () => {
   ])('allows omitting %s when it does not apply', (section, body) => {
     const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# ' + section + '\n\n' + body + '\n\n', '')
     expect(diagnosticCodes(files)).toEqual([])
+  })
+
+  test.each([
+    ['', 'missing'],
+    ['Engine designer, Designer', 'unknown Persona'],
+    ['Implementer, Engine designer', 'wrong order'],
+    ['Implementer, Implementer', 'duplicate'],
+  ])('rejects Audience metadata %j (%s)', (value, _reason) => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '| Audience | Engine designer, Implementer |',
+      value ? '| Audience | ' + value + ' |' : '',
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC112'])
   })
 
   test('requires Overview', () => {

@@ -1,11 +1,12 @@
 # Core Concepts
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | CORE                                                           |
-| Family      | Foundation                                                     |
-| Status      | Draft                                                          |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                    |
+| ----------- | ------------------------------------------------------------------------ |
+| Spec ID     | CORE                                                                     |
+| Family      | Foundation                                                               |
+| Status      | Draft                                                                    |
+| Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)           |
 
 # Overview
 

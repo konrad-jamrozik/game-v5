@@ -1,10 +1,11 @@
 # Game Specification Index
 
-| Metadata | Value      |
-| -------- | ---------- |
-| Spec ID  | INDEX      |
-| Family   | Governance |
-| Status   | Draft      |
+| Metadata | Value                                                                    |
+| -------- | ------------------------------------------------------------------------ |
+| Spec ID  | INDEX                                                                    |
+| Family   | Governance                                                               |
+| Status   | Draft                                                                    |
+| Audience | Engine designer, Content designer, UI designer, AI designer, Implementer |
 
 # Overview
 

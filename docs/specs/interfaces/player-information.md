@@ -5,6 +5,7 @@
 | Spec ID     | INFO                                                           |
 | Family      | Interfaces                                                     |
 | Status      | Stub                                                           |
+| Audience    | Content designer, UI designer, AI designer, Implementer        |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview

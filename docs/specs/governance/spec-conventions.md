@@ -5,6 +5,7 @@
 | Spec ID           | CONV                                                                        |
 | Family            | Governance                                                                  |
 | Status            | Accepted                                                                    |
+| Audience          | Engine designer, Content designer, UI designer, AI designer, Implementer    |
 | Related documents | [Spec index](../README.md), [game design brief](../../game-design-brief.md) |
 
 # Overview
@@ -114,7 +115,9 @@ record batch progress; lifecycle rules and worked review scenarios may discuss s
 Open decisions contains only substantive unresolved design choices and their affected contracts. Do not list already
 stated rules merely to request acceptance. Omit the section when no substantive unresolved choices remain.
 
-Each specification has a stable Spec ID, Family, title, status, and related-document links. Overview explains the
+Each specification has a stable Spec ID, Family, title, status, Audience, and related-document links. The Audience
+metadata row lists the [Personas](#personas) who mainly read or act on the document, separated by commas, in the order
+of the Personas table; at least one Persona is required. Overview explains the
 specification’s purpose and scope, including what it owns and what it excludes; do not add a Scope row to metadata. The specification
 register’s Owns column supplies concise ownership summaries for navigation and the generated catalog.
 
@@ -276,7 +279,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Delegation scope                                        | [Autopilot limit](../foundation/engine-contract.md#glossary)                                                                        | Referring to the bound on an Autopilot engagement.                                                                                                                                                   |
 | Holistic AI; overarching AI                             | [Session controller](../foundation/engine-contract.md#glossary)                                                                     | Referring to the Principal holding Session authority; its authority does not depend on what kind of caller holds it.                                                                                 |
 | Role; execution role                                    | [Principal](../foundation/engine-contract.md#glossary)                                                                              | Naming a kind of engine API caller defined by its API authority; ordinary uses of "role" remain valid.                                                                                               |
-| Audience; actor; user role                              | [Persona](#glossary)                                                                                                                | Naming a kind of participant in making, changing, or playing the game; ordinary uses of "role" remain valid.                                                                                         |
+| Audience; actor; user role                              | [Persona](#glossary)                                                                                                                | Naming a kind of participant in making, changing, or playing the game; the Audience metadata row keeps its name and lists Personas; ordinary uses of "role" remain valid.                            |
 | Game designer; ruleset designer                         | [Engine designer](#glossary)                                                                                                        | Naming the Persona that designs the engine and every Rule.                                                                                                                                           |
 | Implementor                                             | [Implementer](#glossary)                                                                                                            | Naming the Persona that implements specifications as code and tests.                                                                                                                                 |
 | GDR role                                                | GDR purpose                                                                                                                         | Naming what a GDR serves relative to Rules and Campaign state, as defined in [Purposes of GDRs](../foundation/campaign-modeling-contract.md#purposes-of-gdrs); one GDR may serve several purposes.   |

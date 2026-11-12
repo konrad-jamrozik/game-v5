@@ -5,6 +5,7 @@
 | Spec ID     | REL                                              |
 | Family      | Governance                                       |
 | Status      | Draft                                            |
+| Audience    | Engine designer, Implementer                     |
 | Conventions | [Specification Conventions](spec-conventions.md) |
 
 # Overview

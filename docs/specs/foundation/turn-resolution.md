@@ -5,6 +5,7 @@
 | Spec ID     | TURN                                                           |
 | Family      | Foundation                                                     |
 | Status      | Stub                                                           |
+| Audience    | Engine designer, AI designer, Implementer                      |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview

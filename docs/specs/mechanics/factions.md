@@ -5,6 +5,7 @@
 | Spec ID     | FACTION                                                        |
 | Family      | Mechanics                                                      |
 | Status      | Stub                                                           |
+| Audience    | Engine designer, Content designer, AI designer, Implementer    |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview

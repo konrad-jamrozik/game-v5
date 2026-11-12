@@ -5,6 +5,7 @@
 | Spec ID     | DOM                                                            |
 | Family      | Foundation                                                     |
 | Status      | Draft                                                          |
+| Audience    | Engine designer, Content designer, AI designer, Implementer    |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview
