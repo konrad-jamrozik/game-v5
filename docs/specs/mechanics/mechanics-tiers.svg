@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 700" role="img" aria-label="Planned Mechanics tiers: documents in five tiers above Agents. Every kept arrow points down to a lower tier. The five removed arrows are the ones that pointed up or back.">
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="700" viewBox="0 0 920 700" role="img" aria-label="Planned Mechanics tiers: documents in five tiers above Agents. Every kept arrow points down to a lower tier. The five removed arrows are the ones that pointed up or back.">
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --refine: #0b7a75; --refine-soft: #dff1ef; --cut: #c2362b; }
     @media (prefers-color-scheme: dark) {
