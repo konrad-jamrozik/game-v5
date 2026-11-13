@@ -35,7 +35,7 @@ implementation interfaces. Each of the following sections is a worked example of
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | Campaign instance initialization | [Campaign instance creation](campaign-state.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance. The player cannot override the value.      | A newly hired Agent has skill 100, the value of the recruit-skill GDR.                                                     |
 | Campaign configuration preset    | Campaign creation takes the GDR’s values as the complete initial Campaign configuration. Before creation, the engine lets the player override individual values of the selected preset.                  | A Campaign created from the Hard preset with one override has starting money 80 and investigation difficulty multiplier 2. |
-| Calculation parameter            | The engine reads a GDR when computing a Derived value.                                                                                                                                                   | The engine reads the rate from the Standard upkeep GDR to calculate upkeep.                                                |
+| Calculation parameter            | The engine reads a GDR when computing a Derived value.                                                                                                                                                   | The engine reads the rate from the Standard contracting GDR to calculate contracting income.                               |
 | Archetype                        | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-state.md#campaign-instance-creation). | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID.                               |
 | Referenced GDR                   | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                                                                                 | An Investigation holds a reference to the Lead GDR it pursues.                                                             |
 | Key for campaign facts           | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                                                                                    | The engine records completions against a Lead GDR’s identity.                                                              |
@@ -125,30 +125,31 @@ State.
 
 # GDR purpose: calculation parameter
 
-Consider an illustrative upkeep calculation for agents serving in a campaign. Its complete local setup is:
+Consider an illustrative contracting income calculation for one Agent. Its complete local setup is:
 
-| Element             | Modeling role       | Meaning in this example                                                     |
-| ------------------- | ------------------- | --------------------------------------------------------------------------- |
-| UpkeepRate          | Type                | Describes a nonnegative integer amount of money per serving agent per turn. |
-| Standard upkeep     | GDR                 | Has Type UpkeepRate and value 2 money per serving agent per turn.           |
-| Serving-agent count | Authoritative value | Value in Campaign state, currently 3.                                       |
-| Upkeep calculation  | Formula             | Upkeep for one turn equals the rate multiplied by the serving-agent count.  |
-| Total upkeep        | Derived value       | 2 × 3 = 6 money for this turn.                                              |
-| Upkeep deduction    | State change        | Deduct total upkeep from Agency money.                                      |
+| Element                        | Modeling role       | Meaning in this example                                                          |
+| ------------------------------ | ------------------- | -------------------------------------------------------------------------------- |
+| ContractingRate                | Type                | Describes a nonnegative integer amount of money per point of skill per turn.     |
+| Standard contracting           | GDR                 | Has Type ContractingRate and value 2 money per point of skill per turn.          |
+| Agent skill                    | Authoritative value | Value in the Agent Campaign instance's State, currently 100.                     |
+| Contracting income calculation | Formula             | Contracting income for one turn equals the rate multiplied by the Agent's skill. |
+| Contracting income             | Derived value       | 2 × 100 = 200 money for this turn.                                               |
+| Contracting payment            | State change        | Add contracting income to Agency money.                                          |
 
-During "advance turn" computation, the engine reads the rate of 2 from the Standard upkeep GDR, which conforms to
-Type UpkeepRate, and the serving-agent count of 3, an Authoritative value in Campaign state. The engine applies the
-upkeep formula to these inputs, producing total upkeep of 6, a Derived value. Applying the upkeep deduction, the engine deducts 6 from the campaign's current money; the updated
-money becomes part of the new Committed state, which is the result of turn advancement completion.
+During "advance turn" computation, the engine reads the rate of 2 from the Standard contracting GDR, which conforms to
+Type ContractingRate, and the Agent's skill of 100, an Authoritative value in Campaign state. The engine applies the
+contracting income formula to these inputs, producing contracting income of 200, a Derived value. Applying the
+contracting payment, the engine adds 200 to the campaign's current money; the updated money becomes part of the new
+Committed state, which is the result of turn advancement completion.
 
 ```mermaid
 flowchart LR
-    Type["Type: UpkeepRate"] -.->|describes| GDR["GDR: Standard upkeep · rate 2"]
-    GDR -->|rate 2| Engine["Engine applies upkeep formula"]
-    State["Campaign state"] -->|Authoritative value: serving-agent count 3| Engine
-    Formula["Formula: rate × serving-agent count"] -->|specifies calculation| Engine
-    Engine -->|calculates| Total["Derived value: total upkeep 6"]
-    Total -->|amount to deduct| Update["Engine updates campaign money"]
+    Type["Type: ContractingRate"] -.->|describes| GDR["GDR: Standard contracting · rate 2"]
+    GDR -->|rate 2| Engine["Engine applies contracting income formula"]
+    State["Campaign state"] -->|Authoritative value: Agent skill 100| Engine
+    Formula["Formula: rate × Agent skill"] -->|specifies calculation| Engine
+    Engine -->|calculates| Total["Derived value: contracting income 200"]
+    Total -->|amount to add| Update["Engine updates campaign money"]
     State -->|current money| Update
     Update -->|included when turn advancement completes| Committed["New Committed state"]
 ```
