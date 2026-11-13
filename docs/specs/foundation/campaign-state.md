@@ -157,11 +157,11 @@ are separate immutable properties. Reference mutability is independent of the ta
 # Value classification
 
 Authoritative value and Derived value, including their independence from mutability and player visibility,
-are defined in [Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. Each specification using these
-concepts must declare which of its values are Authoritative values and which are Derived values. The declaration
-states game behavior, not storage: a Derived value follows the Authoritative values its formula uses, while an
-Authoritative value changes only when game behavior changes it, as Core Concepts states. What an implementation
-stores is the implementer's choice. A past calculation retained as a historical fact is an Authoritative value and
+are defined in [Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. The way a specification
+defines a value determines its classification, as Core Concepts states; a specification makes no separate
+declaration of it. The classification states game behavior, not storage: a Derived value follows the Authoritative
+values its formula uses, while an Authoritative value changes only when game behavior changes it. What an
+implementation stores is the implementer's choice. A past calculation retained as a historical fact is an Authoritative value and
 follows [Historical fact preservation](#historical-fact-preservation).
 
 E.g., each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle property

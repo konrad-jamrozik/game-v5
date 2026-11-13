@@ -114,15 +114,24 @@ The classification has the following complete set of consequences:
   Agents, so it rises as soon as an Agent is hired.
 - **An Authoritative value changes only when game behavior changes it:** it does not follow the values it was once
   calculated from. E.g., an unlock recorded as earned remains earned after the condition that earned it stops
-  holding.
+  holding. Game behavior changes only the Authoritative values that the specification describing it states it
+  changes; every other Authoritative value keeps its value.
 - **Campaign state consists of Authoritative values:** a Derived value adds no information to Campaign state, so two
   Campaign states are equal exactly when their Authoritative values are equal.
 
 Which values are Authoritative values and which are Derived values is the Engine designer's decision, because the
 first two consequences are observable game behavior. When several values determine one another, e.g. maximum health,
 current health, and damage taken, the specification owning them chooses which are Authoritative values and defines
-the others as Derived values. The classification does not state what an implementation stores; e.g., an
-implementation may keep a calculated copy of a Derived value, provided no observable result differs.
+the others as Derived values. The choice decides what the player observes. E.g., current health always equals
+maximum health minus damage taken, and a level-up raises maximum health by 5. When maximum health and damage taken
+are the Authoritative values, current health rises by 5; when maximum health and current health are the
+Authoritative values, current health keeps its value and damage taken rises by 5.
+
+The way a specification defines a value determines its classification, so a specification needs no separate
+statement of it: a value defined by a formula over the current Campaign state and GDRs is a Derived value, and a
+value defined by its initial value and the changes game behavior makes to it is an Authoritative value. The
+classification does not state what an implementation stores; e.g., an implementation may keep a calculated copy of a
+Derived value, provided no observable result differs.
 
 The classification is independent of mutability: e.g., a GDR's shared base health is an Authoritative value even
 though it never changes during gameplay. It is also independent of player visibility: either kind may be hidden from
