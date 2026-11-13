@@ -60,6 +60,11 @@ Factions use each other, since faction state unlocks progression and progression
 Mechanics document is refined from the Foundation family and supplies the meanings that Game Data Records (GDRs) fill with
 values.
 
+The following diagram is a trial of a hand-drawn SVG. It shows the planned tier structure, not the current
+relationships; the generated diagrams below show the current relationships.
+
+![Planned Mechanics tiers](./mechanics-tiers.svg)
+
 <!-- generated:family-diagram:start -->
 
 _Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; dashed boxes stand for whole other Families._

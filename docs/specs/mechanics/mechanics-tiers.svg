@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 700" role="img" aria-label="Planned Mechanics tiers: documents in five tiers above Agents. Every kept arrow points down to a lower tier. The five removed arrows are the ones that pointed up or back.">
+  <style>
+    :root { --bg: #ffffff; --surface: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --refine: #0b7a75; --refine-soft: #dff1ef; --cut: #c2362b; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161d; --surface: #1a2029; --fg: #e6eaf0; --muted: #9aa5b5; --line: #323b49; --refine: #4fc7bf; --refine-soft: #123532; --cut: #f0796d; }
+    }
+    text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
+    .bg { fill: var(--bg); }
+    .box { fill: var(--surface); stroke: var(--fg); stroke-width: 1.3; }
+    .new { fill: var(--refine-soft); stroke: var(--refine); stroke-width: 2; }
+    .slab { fill: var(--surface); stroke: var(--fg); stroke-width: 2.2; }
+    .band { fill: none; stroke: var(--line); stroke-width: 1.3; stroke-dasharray: 5 5; }
+    .t { fill: var(--fg); font-size: 13px; font-weight: 600; text-anchor: middle; }
+    .tier { fill: var(--muted); font-size: 11.5px; text-anchor: end; letter-spacing: .04em; }
+    .note { fill: var(--muted); font-size: 11.5px; text-anchor: middle; }
+    .lg { fill: var(--muted); font-size: 12.5px; }
+    .e-u { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+    .e-r { fill: none; stroke: var(--refine); stroke-width: 2.6; }
+    .e-c { fill: none; stroke: var(--cut); stroke-width: 1.8; stroke-dasharray: 6 4; }
+    .m-u { fill: var(--muted); } .m-r { fill: var(--refine); } .m-c { fill: var(--cut); }
+    .l-r { fill: var(--refine); font-size: 11.5px; font-weight: 600; }
+    .l-c { fill: var(--cut); font-size: 11.5px; font-weight: 600; }
+  </style>
+  <defs>
+    <marker id="au" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="m-u" d="M0 1 L10 5 L0 9z"/></marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto"><path class="m-r" d="M0 1 L10 5 L0 9z"/></marker>
+    <marker id="ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="m-c" d="M0 1 L10 5 L0 9z"/></marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="920" height="700"/>
+
+  <!-- legend -->
+  <path class="e-u" d="M30 30 H62"/><text class="lg" x="70" y="34">uses</text>
+  <path class="e-r" d="M130 30 H162"/><text class="lg" x="170" y="34">refines</text>
+  <path class="e-c" d="M250 30 H282"/><text class="lg" x="290" y="34">removed by the tier plan</text>
+  <rect class="new" x="470" y="23" width="18" height="14" rx="3"/><text class="lg" x="496" y="34">new document</text>
+
+  <g transform="translate(0 60)">
+    <rect class="band" x="20" y="14" width="830" height="72" rx="8"/>
+    <text class="tier" x="910" y="54">INTERFACES</text>
+    <text class="tier" x="910" y="164">TIER 5</text>
+    <text class="tier" x="910" y="274">TIER 4</text>
+    <text class="tier" x="910" y="384">TIER 3</text>
+    <text class="tier" x="910" y="494">TIER 2</text>
+    <text class="tier" x="910" y="604">TIER 1</text>
+
+    <!-- uses -->
+    <path class="e-u" marker-end="url(#au)" d="M60 160 H48 V578"/>
+    <path class="e-u" marker-end="url(#au)" d="M220 165 L665 262"/>
+    <path class="e-u" marker-end="url(#au)" d="M110 72 V138"/>
+    <path class="e-u" marker-end="url(#au)" d="M605 44 H675"/>
+    <path class="e-u" marker-end="url(#au)" d="M380 285 L480 365"/>
+    <path class="e-u" marker-end="url(#au)" d="M690 292 L625 358"/>
+    <path class="e-u" marker-end="url(#au)" d="M490 402 L215 468"/>
+    <path class="e-u" marker-end="url(#au)" d="M530 402 L440 468"/>
+    <path class="e-u" marker-end="url(#au)" d="M580 402 V578"/>
+    <!-- refines -->
+    <path class="e-r" marker-end="url(#ar)" d="M280 292 V578"/>
+    <path class="e-r" marker-end="url(#ar)" d="M175 512 V578"/>
+    <path class="e-r" marker-end="url(#ar)" d="M375 512 V578"/>
+    <path class="e-r" marker-end="url(#ar)" d="M610 402 L700 468"/>
+    <path class="e-r" marker-end="url(#ar)" d="M730 292 V468"/>
+    <!-- removed -->
+    <path class="e-c" marker-end="url(#ac)" d="M100 578 V512"/>
+    <path class="e-c" marker-end="url(#ac)" d="M445 578 V512"/>
+    <path class="e-c" marker-end="url(#ac)" d="M790 468 V292"/>
+    <path class="e-c" marker-end="url(#ac)" d="M170 138 V72"/>
+    <path class="e-c" marker-end="url(#ac)" d="M675 58 H605"/>
+
+    <text class="l-r" x="169" y="550" text-anchor="end">+ uses</text>
+    <text class="l-r" x="369" y="550" text-anchor="end">+ uses</text>
+    <text class="l-r" x="664" y="428">+ uses</text>
+    <text class="l-c" x="94" y="550" text-anchor="end">cut</text>
+    <text class="l-c" x="452" y="550">cut</text>
+    <text class="l-c" x="797" y="384">cut</text>
+    <text class="l-c" x="177" y="109">cut</text>
+    <text class="l-c" x="640" y="76" text-anchor="middle">cut</text>
+
+    <rect class="box" x="55" y="28" width="170" height="44" rx="6"/><text class="t" x="140" y="55">Player Information</text>
+    <rect class="box" x="435" y="28" width="170" height="44" rx="6"/><text class="t" x="520" y="55">TypeScript Player API</text>
+    <rect class="box" x="675" y="28" width="150" height="44" rx="6"/><text class="t" x="750" y="55">Developer API</text>
+
+    <rect class="box" x="60" y="138" width="160" height="44" rx="6"/><text class="t" x="140" y="165">Investigations</text>
+    <rect class="box" x="670" y="138" width="160" height="44" rx="6"/><text class="t" x="750" y="165">Panic and Endings</text>
+    <text class="note" x="750" y="200">links not decided yet</text>
+
+    <rect class="box new" x="220" y="248" width="160" height="44" rx="6"/><text class="t" x="300" y="275">Agent Recovery</text>
+    <rect class="box" x="665" y="248" width="170" height="44" rx="6"/><text class="t" x="750" y="275">Leads and Progression</text>
+
+    <rect class="box" x="480" y="358" width="160" height="44" rx="6"/><text class="t" x="560" y="385">Missions</text>
+
+    <rect class="box" x="75" y="468" width="150" height="44" rx="6"/><text class="t" x="150" y="495">Combat</text>
+    <rect class="box" x="315" y="468" width="170" height="44" rx="6"/><text class="t" x="400" y="495">Economy and Upgrades</text>
+    <rect class="box" x="665" y="468" width="170" height="44" rx="6"/><text class="t" x="750" y="495">Factions</text>
+
+    <rect class="slab" x="30" y="578" width="620" height="44" rx="6"/><text class="t" x="340" y="605">Agents</text>
+  </g>
+</svg>
