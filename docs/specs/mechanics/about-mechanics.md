@@ -20,7 +20,12 @@ predicates, and what remains possible after an ending.
 ## Agents
 
 [Agents](agents-spec.md) answers _what can an agent do, and how does an agent change over time?_ It owns agent capability,
-task availability, development, exhaustion, and recovery.
+task availability, development, and the meaning of health, exhaustion, and experience.
+
+## Agent Recovery
+
+[Agent Recovery](agent-recovery.md) answers _how does an agent get back to full strength?_ It owns how health goes up
+and exhaustion goes down, and the result when several rules change one of those values in the same turn.
 
 ## Economy and Upgrades
 
@@ -54,14 +59,34 @@ operation occurrence generation, suppression, and permanent defeat.
 
 # How they relate
 
-Agents is the hub: Combat, Economy and Upgrades, Investigations, and Missions all use agent capabilities. Missions sits
-where several systems meet, combining Agents, Combat, Economy and Upgrades, and Factions. Leads and Progression and
-Factions use each other, since faction state unlocks progression and progression effects shape factions. Every
-Mechanics document is refined from the Foundation family and supplies the meanings that Game Data Records (GDRs) fill with
-values.
+The family is arranged in tiers with Agents as the base. Every Mechanics document is refined from the Foundation
+family and supplies the meanings that Game Data Records (GDRs) fill with values.
 
-The following diagram is a trial of a hand-drawn SVG. It shows the planned tier structure, not the current
-relationships; the generated diagrams below show the current relationships.
+## The tier rule
+
+A lower document states what its things are and what can happen to them. A higher document states when it happens and
+by how much. A lower document may point up to those details with an ownership pointer, but never depends on them.
+
+E.g., Agents states what health is and that it can go down and up. Combat states how a Battle lowers it, and Agent
+Recovery states how it goes back up.
+
+| Tier | Documents                              | Depends on                                     |
+| ---- | -------------------------------------- | ---------------------------------------------- |
+| 1    | Agents                                 | Foundation only                                |
+| 2    | Combat, Economy and Upgrades, Factions | Agents                                         |
+| 3    | Missions                               | Agents, Combat, Economy and Upgrades, Factions |
+| 4    | Agent Recovery, Leads and Progression  | Agents, Factions, Missions                     |
+| 5    | Investigations                         | Agents, Leads and Progression                  |
+
+Panic and Endings declares no relationship to another Mechanics document yet; its tier is decided when its predicates
+are written.
+
+A document refines a lower one when it adds detail to the same subject, e.g. Combat refines Agents with how health
+goes down. It uses a lower one when it reads that subject to describe its own, e.g. Combat uses Agent skill to resolve
+a Battle.
+
+The following hand-drawn diagram is a trial of SVG diagrams. It shows the tiers together with the five relationships
+removed when the tiers were introduced; the generated diagrams below show the current relationships.
 
 ![Planned Mechanics tiers](./mechanics-tiers.svg)
 
@@ -81,19 +106,19 @@ flowchart TD
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
-  AGENT -->|used by| COMBAT
-  AGENT -->|used by| ECON
+  RECOVER["RECOVER — Agent Recovery (Stub)"]
+  AGENT -->|refined by, used by| COMBAT
+  AGENT -->|refined by, used by| ECON
   AGENT -->|used by| INVSTG
   AGENT -->|used by| MISSION
-  COMBAT -->|used by| AGENT
+  AGENT -->|refined by| RECOVER
   COMBAT -->|used by| MISSION
-  ECON -->|used by| AGENT
   ECON -->|used by| MISSION
-  FACTION -->|used by| LEAD
-  FACTION -->|used by| MISSION
-  LEAD -->|used by| FACTION
+  FACTION -->|refined by, used by| LEAD
+  FACTION -->|refined by, used by| MISSION
   LEAD -->|used by| INVSTG
   MISSION -->|used by| LEAD
+  MISSION -->|used by| RECOVER
 ```
 
 ## Across families
@@ -108,6 +133,7 @@ flowchart LR
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
+  RECOVER["RECOVER — Agent Recovery (Stub)"]
   family_foundation["Foundation family"]:::external
   family_interfaces["Interfaces family"]:::external
   AGENT -->|used by| family_interfaces
@@ -118,6 +144,7 @@ flowchart LR
   INVSTG -->|used by| family_interfaces
   LEAD -->|used by| family_interfaces
   MISSION -->|used by| family_interfaces
+  RECOVER -->|used by| family_interfaces
   family_foundation -->|refined by, used by| AGENT
   family_foundation -->|refined by, used by| COMBAT
   family_foundation -->|refined by, used by| ECON
@@ -126,7 +153,7 @@ flowchart LR
   family_foundation -->|refined by, used by| INVSTG
   family_foundation -->|refined by, used by| LEAD
   family_foundation -->|refined by, used by| MISSION
-  family_interfaces -->|used by| INVSTG
+  family_foundation -->|used by| RECOVER
   classDef external stroke-dasharray: 5 5
 ```
 
@@ -134,6 +161,8 @@ flowchart LR
 
 # Why these boundaries
 
+- **Agents versus the documents that change an Agent:** Agents is the complete list of what an Agent has and which
+  values can be modified, so no Agent property is introduced by a higher document.
 - **Combat versus Missions:** a battle's resolution is kept separate from its campaign consequences, so combat can be
   tested and tuned without the campaign around it.
 - **Leads and Progression versus Investigations:** what is available is separated from how the player pursues it, so
@@ -144,7 +173,7 @@ flowchart LR
 
 # Reading order
 
-Start with [Agents](agents-spec.md), then [Combat](combat.md) and [Missions](missions.md). Read
-[Leads and Progression](leads-and-progression.md) before [Investigations](investigations.md), and
-[Factions](factions.md) after both. [Economy and Upgrades](economy-and-upgrades.md) and [Panic and Endings](panic-and-endings.md) can be
-read at any point.
+Read in tier order: [Agents](agents-spec.md); then [Combat](combat.md), [Economy and Upgrades](economy-and-upgrades.md),
+and [Factions](factions.md); then [Missions](missions.md); then [Agent Recovery](agent-recovery.md) and
+[Leads and Progression](leads-and-progression.md); then [Investigations](investigations.md).
+[Panic and Endings](panic-and-endings.md) can be read at any point.

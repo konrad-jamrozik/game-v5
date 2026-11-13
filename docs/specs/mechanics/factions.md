@@ -17,8 +17,11 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with escalation,
 Faction operation occurrence generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
-Game Data Records (GDRs) supply the catalogs for Faction operation occurrences and the parameter values. Leads and Progression supplies earned
-unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.
+Game Data Records (GDRs) supply the catalogs for Faction operation occurrences and the parameter values. This document states what a
+Faction is and what can happen to it, e.g. discovery, suppression, and defeat, without stating what causes it.
+[Missions](./missions.md) owns the Mission a Faction operation occurrence creates and the Mission outcomes that
+suppress a Faction, and [Leads and Progression](./leads-and-progression.md) owns the completions that discover or
+defeat one. These are ownership pointers; this document relies on neither specification.
 Exact thresholds and transitions remain TODOs below.
 
 TODO: Specify Faction discovery, activity level, escalation clock, Faction operation occurrence level, Faction operation occurrence clock, suppression, and defeat.
@@ -29,12 +32,13 @@ appropriate to this document.
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
+- Refined by [Leads and Progression](./leads-and-progression.md)
+- Refined by [Missions](./missions.md)
 
 # Glossary
 
@@ -51,7 +55,7 @@ TODO: Specify countdown timing, severity distribution, mission GDR selection, re
 
 # Suppression and defeat
 
-TODO: Specify stacking, countdown effects, continued escalation during suppression, defeat predicates, and treatment of pending Faction operation occurrences/missions/leads after defeat.
+TODO: Specify stacking, countdown effects, continued escalation during suppression, what defeat does to a Faction, and treatment of pending Faction operation occurrences/missions/leads after defeat. The predicates that cause defeat belong to Leads and Progression.
 
 # Edge cases and failure behavior
 

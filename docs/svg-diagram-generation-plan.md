@@ -12,8 +12,8 @@ removed by this work.
 
 # Precondition
 
-Do this work after the Mechanics tier plan is applied. Tiers are clearest when a family has no dependency loop, and
-the trial file shows the planned structure, not the current one.
+The Mechanics tier plan is applied: the Mechanics family has no dependency loop, so its tiers can be computed. The
+trial file also draws the five relationships that plan removed; the generated diagram draws only current relationships.
 
 # Scope
 

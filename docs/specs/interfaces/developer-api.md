@@ -22,8 +22,10 @@ including all Authoritative values, only to an authorized Session controller wit
 Autopilot engagement. Player API always exposes only Player-visible information; Autopilot AI never receives developer access.
 
 Engine Contract owns access transitions and high-level replay guarantees. Domain Model supplies inspected Campaign
-state and invariants. Timeline supplies undo and redo of committed cheat actions, and TypeScript Player API supplies
-callable signatures and authorization results.
+state and invariants. Timeline supplies undo and redo of committed cheat actions.
+[API hierarchy](../foundation/engine-contract.md#api-hierarchy) supplies the Developer API surface and its access
+results. The exact callable TypeScript signatures are owned by [TypeScript Player API](./typescript-api.md); this
+document does not rely on them.
 
 # Relationships
 
@@ -31,7 +33,6 @@ callable signatures and authorization results.
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Domain Model](../foundation/domain-model.md)
 - Uses [Timeline](../foundation/timeline.md)
-- Uses [TypeScript Player API](./typescript-api.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
 - Used by [TypeScript Player API](./typescript-api.md)
 

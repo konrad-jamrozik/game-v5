@@ -17,7 +17,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's lead and progression contract ([Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with prerequisite semantics,
 availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
-progression. Factions in turn uses this document's unlock effects. Game Data Records (GDRs) conforming to these rules
+progression. It also intends to refine Factions'
+[Suppression and defeat](./factions.md#suppression-and-defeat) with the completions that discover or defeat a Faction. Game Data Records (GDRs) conforming to these rules
 supply the actual lead graph and effects. The expression and effect choices remain TODOs below.
 
 TODO: Specify Lead GDR, prerequisites, discovery, availability, blocking, repeatability, completion count, and unlock effect.
@@ -30,7 +31,7 @@ appropriate to this document.
 - Uses [Factions](./factions.md)
 - Uses [Missions](./missions.md)
 - Refines [Domain Model](../foundation/domain-model.md)
-- Used by [Factions](./factions.md)
+- Refines [Factions](./factions.md)
 - Used by [Investigations](./investigations.md)
 - Used by [Player Information](../interfaces/player-information.md)
 

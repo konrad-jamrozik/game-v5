@@ -17,7 +17,10 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's combatant and battle-result contract ([Attribute bounds](../foundation/domain-model.md#attribute-bounds)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with battle transitions,
 calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
-and draws. The combat decisions below remain TODOs; campaign consequences remain owned by Missions.
+and draws. It also intends to refine Agents'
+[Attributes and effectiveness](./agents-spec.md#attributes-and-effectiveness) with how a Battle lowers health, raises
+exhaustion, and awards experience, within the meanings and bounds Agents states for those values. The combat
+decisions below remain TODOs; campaign consequences remain owned by Missions.
 
 TODO: Specify Combatant, weapon, effective skill, combat rating, round, attack, damage, incapacitation, retreat, and Battle result.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
@@ -27,8 +30,8 @@ appropriate to this document.
 
 - Uses [Agents](./agents-spec.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](../foundation/domain-model.md)
-- Used by [Agents](./agents-spec.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
 

@@ -23,6 +23,10 @@ flowchart LR
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
+  RECOVER["RECOVER — Agent Recovery (Stub)"]
+  AGENT --> COMBAT
+  AGENT --> ECON
+  AGENT --> RECOVER
   AUTO --> API
   DOM --> AGENT
   DOM --> COMBAT
@@ -32,6 +36,8 @@ flowchart LR
   DOM --> INVSTG
   DOM --> LEAD
   DOM --> MISSION
+  FACTION --> LEAD
+  FACTION --> MISSION
 ```
 
 ## Engine contract

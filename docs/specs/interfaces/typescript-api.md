@@ -51,7 +51,6 @@ its earlier State does not itself create a new Campaign instance. Public restora
 - Refines [Autopilot](../foundation/autopilot.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
-- Used by [Developer API](./developer-api.md)
 - Used by [Terminal CLI](./cli.md)
 - Used by [Web UI](./web-ui.md)
 

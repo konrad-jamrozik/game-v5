@@ -17,8 +17,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's investigation contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with start, progress, completion,
 team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
-and Numbers and Randomness's arithmetic/draws. Player Information supplies exposed field shapes and reveal conditions;
-this document supplies estimate mathematics and the information those estimates condition on. The exact mathematics
+and Numbers and Randomness's arithmetic/draws. This document supplies estimate mathematics over inputs it names itself. Which of those inputs and results the player
+sees is owned by [Player Information](../interfaces/player-information.md); this document does not rely on it. The exact mathematics
 and transitions remain TODOs below.
 
 TODO: Specify Visible difficulty, hidden actual difficulty, effective team contribution, progress, cumulative completion probability, per-turn conditional probability, and player estimate.
@@ -32,7 +32,6 @@ appropriate to this document.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
-- Uses [Player Information](../interfaces/player-information.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Player Information](../interfaces/player-information.md)
 
@@ -56,7 +55,7 @@ TODO: Provide unambiguous formulas and evaluation order for actual completion, i
 
 # Player uncertainty
 
-TODO: Define the mathematical meaning of displayed estimates/ranges, information used, rounding, and whether/how prior non-completion updates estimates. Reference INFO for exposed field shapes.
+TODO: Define the mathematical meaning of displayed estimates/ranges, information used, rounding, and whether/how prior non-completion updates estimates. Which estimates are shown to the player belongs to Player Information.
 
 # Team changes and commitment
 

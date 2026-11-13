@@ -56,7 +56,6 @@ flowchart TD
   INFO["INFO — Player Information (Stub)"]
   WEB["WEB — Web UI (Stub)"]
   API -->|used by| CLI
-  API -->|used by| DEV
   API -->|used by| WEB
   DEV -->|used by| API
   INFO -->|used by| API
@@ -78,7 +77,6 @@ flowchart LR
   family_acceptance["Acceptance family"]:::external
   API -->|used by| family_acceptance
   CLI -->|used by| family_acceptance
-  INFO -->|used by| family_mechanics
   WEB -->|used by| family_acceptance
   family_foundation -->|refined by, used by| API
   family_foundation -->|used by| CLI

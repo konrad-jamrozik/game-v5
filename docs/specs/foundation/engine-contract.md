@@ -17,6 +17,7 @@ It owns cross-cutting guarantees, not the behavior of one subsystem or their ref
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
+- Used by [Agent Recovery](../mechanics/agent-recovery.md)
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
 - Used by [Configuration](./configuration.md)

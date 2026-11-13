@@ -11,7 +11,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | Status     | Specifications |
 | ---------- | -------------- |
-| Stub       | 16             |
+| Stub       | 17             |
 | Draft      | 10             |
 | Accepted   | 5              |
 | Superseded | 0              |
@@ -22,7 +22,7 @@ These informative views are derived from the registered Markdown specifications.
 | -------------- | -------------- |
 | Governance     | 5              |
 | Foundation     | 10             |
-| Mechanics      | 8              |
+| Mechanics      | 9              |
 | Content        | 0              |
 | Interfaces     | 5              |
 | Acceptance     | 1              |
@@ -55,16 +55,17 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Mechanics
 
-| ID      | Document                                                             | Status | Owns                                                                                                  |
-| ------- | -------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------- |
-| AGENT   | [Agents](../specs/mechanics/agents-spec.md)                          | Stub   | Define agent capability, task availability, development, exhaustion, and recovery.                    |
-| COMBAT  | [Combat](../specs/mechanics/combat.md)                               | Stub   | Define fully automatic battles and their reproducible results independently of campaign rewards.      |
-| ECON    | [Economy and Upgrades](../specs/mechanics/economy-and-upgrades.md)   | Stub   | Define resource flows, personnel purchases, and agency improvements.                                  |
-| ENDING  | [Panic and Endings](../specs/mechanics/panic-and-endings.md)         | Stub   | Define global panic, the conditions that end a Campaign, and what remains possible after an ending.   |
-| FACTION | [Factions](../specs/mechanics/factions.md)                           | Stub   | Define escalating faction pressure, operation generation, suppression, and permanent defeat.          |
-| INVSTG  | [Investigations](../specs/mechanics/investigations.md)               | Stub   | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs. |
-| LEAD    | [Leads and Progression](../specs/mechanics/leads-and-progression.md) | Stub   | Define the progression graph and the lifecycle of Leads, separately from Investigations.              |
-| MISSION | [Missions](../specs/mechanics/missions.md)                           | Stub   | Define mission commitments and translate combat results into campaign consequences.                   |
+| ID      | Document                                                             | Status | Owns                                                                                                                                          |
+| ------- | -------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| AGENT   | [Agents](../specs/mechanics/agents-spec.md)                          | Stub   | Define what an Agent has and can do: agent capability, task availability, development, and the meaning of health, exhaustion, and experience. |
+| COMBAT  | [Combat](../specs/mechanics/combat.md)                               | Stub   | Define fully automatic battles and their reproducible results independently of campaign rewards.                                              |
+| ECON    | [Economy and Upgrades](../specs/mechanics/economy-and-upgrades.md)   | Stub   | Define resource flows, personnel purchases, and agency improvements.                                                                          |
+| ENDING  | [Panic and Endings](../specs/mechanics/panic-and-endings.md)         | Stub   | Define global panic, the conditions that end a Campaign, and what remains possible after an ending.                                           |
+| FACTION | [Factions](../specs/mechanics/factions.md)                           | Stub   | Define escalating faction pressure, operation generation, suppression, and permanent defeat.                                                  |
+| INVSTG  | [Investigations](../specs/mechanics/investigations.md)               | Stub   | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs.                                         |
+| LEAD    | [Leads and Progression](../specs/mechanics/leads-and-progression.md) | Stub   | Define the progression graph and the lifecycle of Leads, separately from Investigations.                                                      |
+| MISSION | [Missions](../specs/mechanics/missions.md)                           | Stub   | Define mission commitments and translate combat results into campaign consequences.                                                           |
+| RECOVER | [Agent Recovery](../specs/mechanics/agent-recovery.md)               | Stub   | Define how an Agent's health goes up and exhaustion goes down, and the result when several rules change one of those values in the same turn. |
 
 ## Content
 

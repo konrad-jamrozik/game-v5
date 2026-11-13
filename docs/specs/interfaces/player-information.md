@@ -29,6 +29,7 @@ Historical explanations preserve [Historical fact preservation](../foundation/ca
 
 # Relationships
 
+- Uses [Agent Recovery](../mechanics/agent-recovery.md)
 - Uses [Agents](../mechanics/agents-spec.md)
 - Uses [Autopilot](../foundation/autopilot.md)
 - Uses [Campaign State](../foundation/campaign-state.md)
@@ -44,7 +45,6 @@ Historical explanations preserve [Historical fact preservation](../foundation/ca
 - Uses [Panic and Endings](../mechanics/panic-and-endings.md)
 - Uses [Timeline](../foundation/timeline.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
-- Used by [Investigations](../mechanics/investigations.md)
 - Used by [Terminal CLI](./cli.md)
 - Used by [TypeScript Player API](./typescript-api.md)
 - Used by [Web UI](./web-ui.md)

@@ -18,7 +18,10 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 This specification intends to refine Domain Model's mission contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with creation, deployment, deadlines,
 resolution, and campaign consequences. Agents supplies participant eligibility, Combat supplies Battle results,
 Economy and Upgrades supplies capacities and resource effects, and Factions supplies operation provenance and
-suppression semantics. Game Data Records (GDRs) supply the mission catalog and numeric values under this contract.
+suppression semantics. This specification also intends to refine Factions'
+[Faction operation occurrence generation](./factions.md#faction-operation-occurrence-generation) and
+[Suppression and defeat](./factions.md#suppression-and-defeat) with the Mission an occurrence creates and the Mission
+outcomes that suppress a Faction. Game Data Records (GDRs) supply the mission catalog and numeric values under this contract.
 The lifecycle and consequence choices remain TODOs below.
 
 TODO: Specify Initiative mission, Response mission, Faction operation occurrence, deadline, deployment, Battle result, mission outcome, and partial success.
@@ -34,6 +37,8 @@ appropriate to this document.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Factions](./factions.md)
 - Refines [Domain Model](../foundation/domain-model.md)
+- Refines [Factions](./factions.md)
+- Used by [Agent Recovery](./agent-recovery.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Player Information](../interfaces/player-information.md)
 

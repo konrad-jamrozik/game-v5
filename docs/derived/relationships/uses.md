@@ -34,6 +34,7 @@ flowchart TD
   MISSION["MISSION — Missions (Stub)"]
   NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
   PLAN["PLAN — Specification Work Plan and Backlog (Accepted)"]
+  RECOVER["RECOVER — Agent Recovery (Stub)"]
   SAVES["SAVES — Saves (Draft)"]
   SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
   SCHEMA["SCHEMA — Storage Schema (Stub)"]
@@ -46,14 +47,12 @@ flowchart TD
   AGENT --> INVSTG
   AGENT --> MISSION
   API --> CLI
-  API --> DEV
   API --> SCEN
   API --> WEB
   AUTO --> CLI
   AUTO --> INFO
   AUTO --> WEB
   CLI --> SCEN
-  COMBAT --> AGENT
   COMBAT --> INFO
   COMBAT --> MISSION
   CORE --> API
@@ -90,7 +89,6 @@ flowchart TD
   DOM --> API
   DOM --> DEV
   DOM --> INFO
-  ECON --> AGENT
   ECON --> INFO
   ECON --> MISSION
   ENDING --> INFO
@@ -106,6 +104,7 @@ flowchart TD
   ENG --> GDR
   ENG --> INVSTG
   ENG --> MISSION
+  ENG --> RECOVER
   ENG --> SAVES
   ENG --> SCHEMA
   ENG --> TIMELINE
@@ -117,20 +116,20 @@ flowchart TD
   GDR --> INFO
   INFO --> API
   INFO --> CLI
-  INFO --> INVSTG
   INFO --> WEB
   INVSTG --> INFO
-  LEAD --> FACTION
   LEAD --> INFO
   LEAD --> INVSTG
   MISSION --> INFO
   MISSION --> LEAD
+  MISSION --> RECOVER
   NUMRNG --> AGENT
   NUMRNG --> COMBAT
   NUMRNG --> ECON
   NUMRNG --> FACTION
   NUMRNG --> INVSTG
   PLAN --> TODOS
+  RECOVER --> INFO
   SAVES --> API
   SAVES --> CLI
   SAVES --> SCEN
