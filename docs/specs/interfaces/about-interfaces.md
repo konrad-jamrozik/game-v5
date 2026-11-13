@@ -44,48 +44,15 @@ adapters that use TypeScript Player API and Player Information without adding be
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; dashed boxes stand for whole other Families._
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
 
 ## Within the family
 
-```mermaid
-flowchart TD
-  API["API — TypeScript Player API (Stub)"]
-  CLI["CLI — Terminal CLI (Stub)"]
-  DEV["DEV — Developer API (Stub)"]
-  INFO["INFO — Player Information (Stub)"]
-  WEB["WEB — Web UI (Stub)"]
-  API -->|used by| CLI
-  API -->|used by| WEB
-  DEV -->|used by| API
-  INFO -->|used by| API
-  INFO -->|used by| CLI
-  INFO -->|used by| WEB
-```
+![Interfaces family: relationships within the family](./interfaces-family-within.svg)
 
 ## Across families
 
-```mermaid
-flowchart LR
-  API["API — TypeScript Player API (Stub)"]
-  CLI["CLI — Terminal CLI (Stub)"]
-  DEV["DEV — Developer API (Stub)"]
-  INFO["INFO — Player Information (Stub)"]
-  WEB["WEB — Web UI (Stub)"]
-  family_foundation["Foundation family"]:::external
-  family_mechanics["Mechanics family"]:::external
-  family_acceptance["Acceptance family"]:::external
-  API -->|used by| family_acceptance
-  CLI -->|used by| family_acceptance
-  WEB -->|used by| family_acceptance
-  family_foundation -->|refined by, used by| API
-  family_foundation -->|used by| CLI
-  family_foundation -->|refined by, used by| DEV
-  family_foundation -->|refined by, used by| INFO
-  family_foundation -->|used by| WEB
-  family_mechanics -->|used by| INFO
-  classDef external stroke-dasharray: 5 5
-```
+![Interfaces family: relationships with other families](./interfaces-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

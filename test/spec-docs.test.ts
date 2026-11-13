@@ -308,20 +308,30 @@ describe('family overview diagrams', () => {
     '',
   ].join('\n')
 
+  const foundationOverview = 'docs/specs/foundation/about-foundation.md'
+  const withinPath = 'docs/specs/foundation/foundation-family-within.svg'
+  const acrossPath = 'docs/specs/foundation/foundation-family-across.svg'
+
   test('collapses other Families, combines kinds, and omits implicit follows', () => {
     const diagram = renderFamilyDiagram(sampleCorpus(), 'Foundation')
     expect(diagram).toContain('This family has a single specification')
-    expect(diagram).toContain('family_mechanics["Mechanics family"]:::external')
-    expect(diagram).toContain('AAA -->|refined by, used by| family_mechanics')
-    expect(diagram).toContain('family_mechanics -->|used by| AAA')
-    expect(diagram).toContain('classDef external stroke-dasharray: 5 5')
-    expect(diagram).not.toContain('CONV')
-    expect(diagram).not.toContain('family_governance')
+    expect(diagram).toContain('![Foundation family: relationships with other families](./foundation-family-across.svg)')
+    expect(diagram).not.toContain('```mermaid')
+    const files = renderFamilyDiagramFiles(sampleCorpus(), new Map([[foundationOverview, overview]]))
+    expect([...files.keys()]).toEqual([acrossPath])
+    const across = files.get(acrossPath) ?? ''
+    // The Mechanics family both supplies and depends on AAA, so it is drawn on both sides.
+    expect(across.match(/>Mechanics family</g)).toHaveLength(2)
+    expect(across).toContain('class="edge edge-both"')
+    expect(across).toContain('class="edge edge-uses"')
+    expect(across).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More (Draft)')
+    expect(across).not.toContain('CONV')
+    expect(across).not.toContain('Governance family')
   })
 
   test('renders relationships within a Family separately from those across Families', () => {
     const corpus = sampleCorpus()
-    const diagram = renderFamilyDiagram(
+    const files = renderFamilyDiagramFiles(
       {
         ...corpus,
         specifications: [
@@ -348,12 +358,16 @@ describe('family overview diagrams', () => {
           },
         ],
       },
-      'Foundation',
+      new Map([[foundationOverview, overview]]),
     )
-    const across = diagram.indexOf('## Across families')
-    expect(diagram.indexOf('AAA -->|used by| BBB')).toBeLessThan(across)
-    expect(diagram.indexOf('family_mechanics')).toBeGreaterThan(across)
-    expect(diagram.slice(across)).not.toContain('BBB')
+    const within = files.get(withinPath) ?? ''
+    expect(within).toContain('AAA — ')
+    expect(within).toContain('BBB — Beta (Draft)')
+    expect(within).toContain('LAYER 2')
+    expect(within).not.toContain('Mechanics family')
+    const across = files.get(acrossPath) ?? ''
+    expect(across).toContain('>Mechanics family<')
+    expect(across).not.toContain('BBB')
   })
 
   test('replaces only the marked block and is idempotent', async () => {
@@ -363,7 +377,8 @@ describe('family overview diagrams', () => {
     expect(output).not.toContain('stale content')
     expect(output).toContain('Prose.')
     expect(output).toContain('Reasons.')
-    expect(output).toContain('```mermaid')
+    expect(output).toContain('(./foundation-family-across.svg)')
+    expect(output).not.toContain('```mermaid')
     expect(first.has('docs/specs/mechanics/about-mechanics.md')).toBe(false)
     const second = await renderFamilyOverviews(
       sampleCorpus(),
@@ -379,7 +394,9 @@ describe('family overview diagrams', () => {
     const derived = await renderDerivedDocumentation(analysis.corpus, PRETTIER_OPTIONS)
     const path = 'docs/specs/foundation/about-foundation.md'
     const stale = files.map((file) =>
-      file.path === path ? { ...file, content: file.content.replace('flowchart TD', 'flowchart LR') } : file,
+      file.path === path
+        ? { ...file, content: file.content.replace('./foundation-family-within.svg', './stale.svg') }
+        : file,
     )
     const errors: string[] = []
     const io: DerivedDocsIO = {

@@ -86,89 +86,15 @@ Model in turn.
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; dashed boxes stand for whole other Families._
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
 
 ## Within the family
 
-```mermaid
-flowchart TD
-  AUTO["AUTO — Autopilot (Draft)"]
-  CONFIG["CONFIG — Configuration (Draft)"]
-  CORE["CORE — Core Concepts (Accepted)"]
-  CSTATE["CSTATE — Campaign State (Accepted)"]
-  DOM["DOM — Domain Model (Draft)"]
-  ENG["ENG — Engine Contract (Draft)"]
-  GDR["GDR — Game Data Records (Accepted)"]
-  NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
-  SAVES["SAVES — Saves (Draft)"]
-  TIMELINE["TIMELINE — Timeline (Draft)"]
-  CORE -->|used by| AUTO
-  CORE -->|used by| CONFIG
-  CORE -->|used by| CSTATE
-  CORE -->|used by| DOM
-  CORE -->|used by| ENG
-  CORE -->|used by| GDR
-  CORE -->|used by| NUMRNG
-  CORE -->|used by| SAVES
-  CORE -->|used by| TIMELINE
-  CSTATE -->|used by| CONFIG
-  CSTATE -->|used by| DOM
-  CSTATE -->|used by| GDR
-  CSTATE -->|used by| NUMRNG
-  CSTATE -->|used by| TIMELINE
-  ENG -->|used by| AUTO
-  ENG -->|used by| CONFIG
-  ENG -->|refined by| CSTATE
-  ENG -->|used by| DOM
-  ENG -->|used by| GDR
-  ENG -->|refined by| NUMRNG
-  ENG -->|used by| SAVES
-  ENG -->|used by| TIMELINE
-  GDR -->|used by| DOM
-  TIMELINE -->|used by| AUTO
-  TIMELINE -->|used by| CONFIG
-  TIMELINE -->|used by| SAVES
-```
+![Foundation family: relationships within the family](./foundation-family-within.svg)
 
 ## Across families
 
-```mermaid
-flowchart LR
-  AUTO["AUTO — Autopilot (Draft)"]
-  CORE["CORE — Core Concepts (Accepted)"]
-  CSTATE["CSTATE — Campaign State (Accepted)"]
-  DOM["DOM — Domain Model (Draft)"]
-  ENG["ENG — Engine Contract (Draft)"]
-  GDR["GDR — Game Data Records (Accepted)"]
-  NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
-  SAVES["SAVES — Saves (Draft)"]
-  TIMELINE["TIMELINE — Timeline (Draft)"]
-  family_mechanics["Mechanics family"]:::external
-  family_interfaces["Interfaces family"]:::external
-  family_acceptance["Acceptance family"]:::external
-  family_implementation["Implementation family"]:::external
-  AUTO -->|refined by, used by| family_interfaces
-  CORE -->|used by| family_acceptance
-  CORE -->|used by| family_implementation
-  CORE -->|used by| family_interfaces
-  CORE -->|used by| family_mechanics
-  CSTATE -->|used by| family_implementation
-  CSTATE -->|used by| family_interfaces
-  DOM -->|used by| family_interfaces
-  DOM -->|refined by| family_mechanics
-  ENG -->|used by| family_implementation
-  ENG -->|refined by, used by| family_interfaces
-  ENG -->|used by| family_mechanics
-  GDR -->|used by| family_interfaces
-  NUMRNG -->|used by| family_mechanics
-  SAVES -->|used by| family_acceptance
-  SAVES -->|used by| family_implementation
-  SAVES -->|used by| family_interfaces
-  TIMELINE -->|used by| family_acceptance
-  TIMELINE -->|used by| family_implementation
-  TIMELINE -->|used by| family_interfaces
-  classDef external stroke-dasharray: 5 5
-```
+![Foundation family: relationships with other families](./foundation-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

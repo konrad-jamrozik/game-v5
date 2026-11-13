@@ -22,7 +22,7 @@ Interfaces family for the surfaces they exercise. Nothing depends on it in retur
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; dashed boxes stand for whole other Families._
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
 
 ## Within the family
 
@@ -30,15 +30,7 @@ This family has a single specification, so there are no relationships within it.
 
 ## Across families
 
-```mermaid
-flowchart LR
-  SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
-  family_foundation["Foundation family"]:::external
-  family_interfaces["Interfaces family"]:::external
-  family_foundation -->|used by| SCEN
-  family_interfaces -->|used by| SCEN
-  classDef external stroke-dasharray: 5 5
-```
+![Acceptance family: relationships with other families](./acceptance-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

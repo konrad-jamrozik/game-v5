@@ -198,7 +198,7 @@ describe('family SVG diagrams', () => {
     expect(across.match(/<rect class="box"/g)).toHaveLength(2)
   })
 
-  test('renders no files without the overview or for a family that keeps Mermaid', () => {
+  test('renders files only for a family whose overview exists', () => {
     expect(renderFamilyDiagramFiles(mechanicsCorpus(), new Map()).size).toBe(0)
     const paths = [...renderFamilyDiagramFiles(mechanicsCorpus(), sources).keys()]
     expect(paths.every((path) => path.startsWith('docs/specs/mechanics/'))).toBe(true)
@@ -213,7 +213,7 @@ describe('family SVG diagrams', () => {
     const diagrams = renderFamilyDiagramFiles(analysis.corpus, fileSources)
     const within = 'docs/specs/mechanics/mechanics-family-within.svg'
     const across = 'docs/specs/mechanics/mechanics-family-across.svg'
-    expect([...diagrams.keys()]).toEqual([within, across])
+    expect(diagrams.has(within) && diagrams.has(across)).toBe(true)
     const run = async (actualOutputs: ReadonlyMap<string, string>): Promise<readonly string[]> => {
       const errors: string[] = []
       const io: DerivedDocsIO = {
@@ -228,7 +228,8 @@ describe('family SVG diagrams', () => {
     expect(await run(new Map([...derived, ...diagrams, [within, '<svg/>']]))).toEqual([
       `${within}: generated documentation is stale; run npm run docs:generate.`,
     ])
-    expect(await run(new Map([...derived, [within, diagrams.get(within) ?? '']]))).toEqual([
+    const withoutAcross = [...diagrams].filter(([path]) => path !== across)
+    expect(await run(new Map([...derived, ...withoutAcross]))).toEqual([
       `${across}: generated documentation is missing; run npm run docs:generate.`,
     ])
     const extra = 'docs/specs/mechanics/old-family-within.svg'

@@ -44,20 +44,11 @@ to. The index is tied to the rest of the corpus by links rather than declared re
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; dashed boxes stand for whole other Families._
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
 
 ## Within the family
 
-```mermaid
-flowchart TD
-  CONV["CONV — Specification Conventions (Accepted)"]
-  INDEX["INDEX — Game Specification Index (Draft)"]
-  PLAN["PLAN — Specification Work Plan and Backlog (Accepted)"]
-  REL["REL — Artifact Relationships (Draft)"]
-  TODOS["TODOS — Outstanding Work Items (Draft)"]
-  PLAN -->|used by| TODOS
-  REL -->|used by| CONV
-```
+![Governance family: relationships within the family](./governance-family-within.svg)
 
 ## Across families
 

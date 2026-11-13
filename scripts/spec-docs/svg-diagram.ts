@@ -71,6 +71,11 @@ const STYLE_SHEET = `
     .head-both { fill: var(--both); }
   `
 
+/** The width of a box holding these lines, estimated from their length because the generator cannot measure text. */
+export function estimateBoxWidth(lines: readonly string[]): number {
+  return Math.max(0, ...lines.map((line) => line.length)) * CHARACTER_WIDTH + BOX_PADDING_X * 2
+}
+
 function compareText(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0
 }
@@ -207,12 +212,11 @@ export function renderSvgDiagram(input: DiagramInput): string {
       Number(!connected.has(left.id)) - Number(!connected.has(right.id)) || compareText(left.id, right.id),
   )) {
     const row = rowOfLayer.get(node.layer) ?? 0
-    const longest = Math.max(0, ...node.lines.map((line) => line.length))
     items.set(node.id, {
       key: node.id,
       node,
       row,
-      width: longest * CHARACTER_WIDTH + BOX_PADDING_X * 2,
+      width: estimateBoxWidth(node.lines),
       height: node.lines.length * LINE_HEIGHT + BOX_PADDING_Y * 2,
       x: 0,
     })

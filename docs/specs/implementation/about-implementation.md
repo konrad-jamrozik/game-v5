@@ -27,29 +27,17 @@ and Storage Schema uses its data ownership, Campaign save, and Timeline contract
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; dashed boxes stand for whole other Families._
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
 
 ## Within the family
 
-```mermaid
-flowchart TD
-  DEPDIR["DEPDIR — Gameplay Dependency Direction (Draft)"]
-  SCHEMA["SCHEMA — Storage Schema (Stub)"]
-```
+![Implementation family: relationships within the family](./implementation-family-within.svg)
 
 No relationships are declared within this family.
 
 ## Across families
 
-```mermaid
-flowchart LR
-  DEPDIR["DEPDIR — Gameplay Dependency Direction (Draft)"]
-  SCHEMA["SCHEMA — Storage Schema (Stub)"]
-  family_foundation["Foundation family"]:::external
-  family_foundation -->|used by| DEPDIR
-  family_foundation -->|used by| SCHEMA
-  classDef external stroke-dasharray: 5 5
-```
+![Implementation family: relationships with other families](./implementation-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 
