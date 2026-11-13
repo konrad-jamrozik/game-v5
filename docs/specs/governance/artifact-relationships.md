@@ -207,7 +207,7 @@ The following table gives the complete expected classifications for this accepta
 | Case                                                                                                                          | Expected classification and reason                                                                  |
 | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Domain Model describes agents using Campaign instance and GDR                                                                 | Uses Campaign State; it applies campaign composition constraints without elaborating their meanings |
-| Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)   | Refines Domain Model; it adds detail to the same lifecycle                                          |
+| Agents supplies the lifecycle of the Agent described by [Agent](../foundation/domain-model.md#agent)                          | Refines Domain Model; it adds detail to the same concept                                            |
 | Combat rounds a damage value with a rounding operation that Numbers defines                                                   | Uses Numbers; applying a rounding operation does not elaborate its meaning                          |
 | Timeline preserves references under [References](../foundation/campaign-state.md#references) while restoring Campaign state   | Uses Campaign State; satisfying the reference invariant alone is not refinement                     |
 | Saves persists the Timeline whose navigation Timeline defines                                                                 | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
@@ -228,7 +228,7 @@ The following table gives the complete expected classifications for this accepta
 
 ## Mirrored entries
 
-Given Agents refines Domain Model for lifecycle constraints, Agents contains:
+Given Agents refines Domain Model for the Agent concept, Agents contains:
 
 - Refines [Domain Model](../foundation/domain-model.md)
 
@@ -236,7 +236,7 @@ Domain Model contains the mirror:
 
 - Refined by [Agents](../mechanics/agents-spec.md)
 
-Both entries describe Domain Model → Agents. The lifecycle constraints belong in the contract prose.
+Both entries describe Domain Model → Agents. The Agent lifecycle rules belong in the contract prose.
 Removing or changing either entry requires the corresponding change in the other.
 
 ## No explicit relationships

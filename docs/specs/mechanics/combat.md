@@ -15,7 +15,8 @@ This document defines fully automatic battles and their reproducible results ind
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification intends to refine Domain Model's combatant and battle-result contract ([Attribute bounds](../foundation/domain-model.md#attribute-bounds)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with battle transitions,
+This specification refines Domain Model's combatant and battle-result contract ([Attribute bounds](../foundation/domain-model.md#attribute-bounds)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with what an Enemy has and what a
+Battle result holds, and intends to refine it further with battle transitions,
 calculations, and termination rules. It uses Agents' combatant capabilities and Numbers' arithmetic, and it
 owns the distributions of its own random outcomes. It also intends to refine Agents'
 [Attributes and effectiveness](./agents-spec.md#attributes-and-effectiveness) with how a Battle lowers health, raises
@@ -39,6 +40,16 @@ appropriate to this document.
 
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
+
+# Combatants and Battle results
+
+An Enemy has its own combat attributes, structured as a Combatant within
+[Attribute bounds](../foundation/domain-model.md#attribute-bounds).
+
+A Battle result holds the participants, the outcome, combat facts, and the measures needed for Mission consequences.
+A Battle result must retain the facts that the partial-success formula requires; [Missions](./missions.md) owns that
+formula. [Combat and consequences](../foundation/domain-model.md#combat-and-consequences) in Domain Model owns how a
+Battle result relates to its Mission.
 
 # Battle flow
 

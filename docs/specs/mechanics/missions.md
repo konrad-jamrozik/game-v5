@@ -15,7 +15,8 @@ This document defines mission commitments and how combat results translate into 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification intends to refine Domain Model's mission contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with creation, deployment, deadlines,
+This specification refines Domain Model's mission contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with what a Mission has, and intends to refine it
+further with creation, deployment, deadlines,
 resolution, and campaign consequences. Agents supplies participant eligibility, Combat supplies Battle results,
 Economy and Upgrades supplies capacities and resource effects, and Factions supplies operation provenance and
 suppression semantics. This specification also intends to refine Factions'
@@ -46,6 +47,14 @@ appropriate to this document.
 
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
+
+# Mission aspects
+
+A Mission has an Initiative or Response kind, an origin, an optional target Faction, deadline facts, a lifecycle and
+outcome, Enemies, a Current team, Participation history, and a Battle result once resolved. Its Archetype describes
+the encounter configuration. [Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)
+and [Combat and consequences](../foundation/domain-model.md#combat-and-consequences) in Domain Model own how a
+Mission relates to Factions, Enemies, and its Battle result.
 
 # Creation and lifecycle
 

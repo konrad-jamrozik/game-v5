@@ -67,8 +67,9 @@ Autopilot AI receives, how an Autopilot engagement ends, and Autopilot memory.
 
 [Domain Model](domain-model.md) answers _what exists in this game?_ It owns the game concepts and how they relate: the
 Agency, Agents, Leads, Investigations, Missions, Combat, Factions, weapons, upgrades, and Reports. It applies Core
-Concepts' vocabulary and Campaign State's rules to these concepts, and each Mechanics specification
-refines one part of it with formulas and transitions.
+Concepts' vocabulary and Campaign State's rules to these concepts. It defines each concept briefly and states the
+rules that span several concepts; each Mechanics specification refines one concept with what that concept has, its
+lifecycle, formulas, and transitions.
 
 ## Numbers
 
@@ -116,6 +117,10 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 - **Campaign State versus Domain Model:** the first holds rules that would apply to any game on this engine;
   the second holds the concepts of this game. E.g., Factions can be redesigned without touching Campaign State,
   and reference integrity can be tightened without touching Domain Model.
+- **Domain Model versus the Mechanics family:** Domain Model holds each concept's definition and the rules relating
+  one concept to another; what a single concept has and does on its own belongs to the Mechanics specification that
+  refines it. E.g., that an Agent's Current assignment places the Agent in a Current team is in Domain Model, and the
+  Agent lifecycle states are in Agents.
 - **Numbers:** several Mechanics documents depend on the same arithmetic, e.g. the same rounding operations, so it
   does not belong inside a single mechanic.
 - **No randomness document:** reproducibility and the Campaign seed hold across all subsystems, so Engine Contract

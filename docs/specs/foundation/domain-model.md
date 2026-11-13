@@ -15,9 +15,14 @@ Agency that allocates Agents, pursues Leads, undertakes Missions, and opposes Fa
 
 It applies the vocabulary of [Core Concepts](core-concepts.md) and the rules of [Campaign State](campaign-state.md) to
 these concepts without adding to either. Each concept is classified by its modeling role under
-[Game concepts](#game-concepts). This document does not own, e.g., formulas and transitions, which belong to the
-[Mechanics family](../mechanics/about-mechanics.md), or which properties the player sees, which belongs to
-[Player Information](../interfaces/player-information.md). A concept can include facts hidden from the player.
+[Game concepts](#game-concepts).
+
+This document owns the definition of each concept and the rules that relate one concept to another, e.g. that an
+Agent's Current assignment places it in a Current team. It does not own what a single concept has or does on its
+own, e.g. its properties, lifecycle states, formulas, and transitions; these belong to the specification of the
+[Mechanics family](../mechanics/about-mechanics.md) that refines the concept. It does not own which properties the
+player sees, which belongs to [Player Information](../interfaces/player-information.md). A concept can include facts
+hidden from the player.
 
 # Relationships
 
@@ -114,8 +119,11 @@ The following table is the complete set of concepts this specification declares,
 
 GDR purposes are defined under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs). Every Campaign instance of
 the six Campaign instance Types has the four properties stated under
-[Campaign instance structure](campaign-state.md#campaign-instance-structure). Each concept's section below names the
-Mechanics specification that refines it.
+[Campaign instance structure](campaign-state.md#campaign-instance-structure). Each concept's section below states how
+the concept relates to the other concepts and names the Mechanics specification that refines it. That Mechanics
+specification owns what the concept has on its own. Being a property of a concept does not determine whether a value
+is an Authoritative value or a Derived value; e.g., an Agent's career statistics may be Derived values calculated from
+retained facts.
 
 ```mermaid
 flowchart TD
@@ -182,37 +190,15 @@ general identity rules; this section declares the scope those rules require.
 
 # Agent
 
-An Agent's identity persists through its Current assignments and combat. An Agent has these aspects:
+An Agent is a Campaign instance belonging to the Agency. Its combat-related values are structured as a Combatant,
+under [Attribute bounds](#attribute-bounds). Its Current assignment gives its current orders; an Investigation or
+Mission Current assignment references that Investigation or Mission. Its Participation history links it to the
+Investigations and Missions it previously participated in.
 
-| Aspect                | Meaning                                                                                                                                                         |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lifecycle             | Serving, Killed, or Dismissed; distinct from the Agent's Current assignment                                                                                     |
-| Attributes            | Skill, health, exhaustion, and equipped weapon values, structured as a Combatant, and career statistics                                                         |
-| Current assignment    | The Agent's current orders, including the destination while travelling; an Investigation or Mission Current assignment references that Investigation or Mission |
-| Task phase            | At assignment or In transit, with the timing facts needed to describe travel                                                                                    |
-| Participation history | The Investigations and Missions the Agent previously participated in                                                                                            |
-
-Being an aspect of Agent does not determine whether a value is an Authoritative value or a Derived value; e.g.,
-career statistics may be Derived values calculated from retained facts. [Agents](../mechanics/agents-spec.md) owns the
-transitions between these states and the formulas for the attributes.
-
-## Agent lifecycle
-
-An Agent's lifecycle must distinguish Serving, Killed, and Dismissed. A Serving Agent must have exactly one Current
-assignment and Task phase. A Killed or Dismissed Agent must have neither; its final attributes, career statistics, and
-Participation history remain in World history under
-[Historical fact preservation](campaign-state.md#historical-fact-preservation). Killed and Dismissed are lifecycle
-states, not Current assignments.
-
-## Orders and Task phase
-
-The Current assignment of a Serving Agent must be exactly one of Standby, Contracting, Training, Investigation with a
-reference to that Investigation, Mission with a reference to that Mission, and Recovery. Task phase must distinguish
-At assignment from In transit. An Agent In transit keeps the Current assignment it is travelling to, with its
-destination and the timing facts that Agents requires; transit is not a second Current assignment.
-
-At assignment does not itself imply readiness. Agents owns which transitions and Task phase combinations are allowed,
-which Current assignments require transit, and travel duration.
+[Agents](../mechanics/agents-spec.md) owns what an Agent has, the Agent lifecycle, the Current assignments an Agent
+can have, Task phase, and the formulas for the attributes. Whatever its lifecycle state, an Agent remains in World
+history with its final values and Participation history, under
+[Historical fact preservation](campaign-state.md#historical-fact-preservation).
 
 ## Current versus historical teams
 
@@ -226,36 +212,27 @@ participants of an Investigation or Mission are one relationship seen from oppos
 Participation history are not members of the Current team, and Participation history neither assigns nor reserves an
 Agent; e.g., a concluded Mission retains an Agent's Participation history after that Agent is assigned elsewhere.
 
-## Attribute bounds
-
-For Agents and Enemies, maximum health must be positive; current health must be between zero and maximum health
-inclusive; skill and exhaustion must be nonnegative. Serving Agents must have positive health, Killed Agents zero
-health, and Dismissed Agents positive health. Agents owns dismissal eligibility, exhaustion caps, rounding, and
-recovery formulas.
-
 # Lead and Investigation
 
-| Concept          | Meaning                                                                                                                                                 |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lead             | A GDR describing difficulty, repeatability, prerequisites, effects, and an optional explicit Faction reference                                          |
-| Lead progression | Campaign state keyed by Lead GDR: earned facts that are not Derived values; discovery, availability, and completion count are Derived values            |
-| Investigation    | A Campaign instance for investigation of one Lead, with progress, hidden difficulty, lifecycle, timing facts, a Current team, and Participation history |
+A Lead is a GDR, and an Investigation is a Campaign instance for investigation of one Lead. A Lead is a Referenced
+GDR, distinct from the InvestigationArchetype that is the Investigation's Archetype, as
+[GDR purpose: referenced GDR](./game-data-records.md#gdr-purpose-referenced-gdr) illustrates. Lead progression is
+Campaign state keyed by Lead GDR.
 
-A Lead is a Referenced GDR, distinct from the InvestigationArchetype that is the Investigation's Archetype, as
-[GDR purpose: referenced GDR](./game-data-records.md#gdr-purpose-referenced-gdr) illustrates.
-[Leads and Progression](../mechanics/leads-and-progression.md) owns discovery and unlock effects; Investigations owns
-progress, completion probability, Current team changes, and abandonment.
+[Leads and Progression](../mechanics/leads-and-progression.md) owns what a Lead GDR describes, discovery, and unlock
+effects. [Investigations](../mechanics/investigations.md) owns what an Investigation has, the Investigation
+lifecycle, progress, completion probability, Current team changes, and abandonment.
 
 ## Leads and Investigations
 
-An Investigation must retain its reference to one Lead GDR in Constants and distinguish the lifecycle states Active,
-Completed, and Abandoned. At most one Active Investigation may exist for a Lead in a Campaign, whatever the Archetypes
-of the Investigations of that Lead. In Committed state, an Active Investigation must have at least one Agent in its
-Current team, and a Completed or Abandoned Investigation must have an empty Current team.
+An Investigation must retain its reference to one Lead GDR in Constants. An Investigation is Active from its creation
+until it concludes; Investigations owns the lifecycle states and what concludes an Investigation. At most one Active
+Investigation may exist for a Lead in a Campaign, whatever the Archetypes of the Investigations of that Lead. In
+Committed state, an Active Investigation must have at least one Agent in its Current team, and an Investigation that
+is not Active must have an empty Current team.
 
-A Completed or Abandoned Investigation retains its Instance ID and Participation history. Starting an Investigation of
-a Lead whose earlier Investigation was Abandoned creates another Investigation; the progress of the Abandoned
-Investigation is not resumed. Investigations owns eligibility and progress-loss rules.
+An Investigation that is not Active retains its Instance ID and Participation history. A later Investigation of the
+same Lead is another Campaign instance, under [Campaign instance identity scope](#campaign-instance-identity-scope).
 
 ## Progression facts
 
@@ -269,15 +246,13 @@ Progression owns the predicates and effects of progression facts.
 
 # Mission, Enemy, and Combat
 
-| Concept       | Meaning                                                                                                                                                                                                                                                              |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mission       | A Campaign instance with Initiative or Response kind, origin, optional target Faction, deadline facts, lifecycle and outcome, Enemies, a Current team, Participation history, and a Battle result once resolved; its Archetype describes the encounter configuration |
-| Enemy         | A Campaign instance owned by one Mission, with its own combat attributes structured as a Combatant; its Archetype is an EnemyArchetype                                                                                                                               |
-| Combatant     | The structure shared by the combat-related state of Agents and Enemies; it adds no third Campaign instance Type                                                                                                                                                      |
-| Battle result | Facts owned by the resolved Mission: participants, outcome, combat facts, and the measures needed for Mission consequences                                                                                                                                           |
+A Mission is a Campaign instance that the Agency undertakes with a Current team against the Enemies the Mission owns;
+a resolved Mission owns one Battle result. An Enemy is a Campaign instance owned by one Mission; its Archetype is an
+EnemyArchetype. Combatant is the structure shared by the combat-related state of Agents and Enemies; it adds no
+Campaign instance Type.
 
-[Combat](../mechanics/combat.md) owns battle resolution; [Missions](../mechanics/missions.md) owns deployment,
-deadlines, rewards, and partial success.
+[Missions](../mechanics/missions.md) owns what a Mission has, the Mission lifecycle, deployment, deadlines, rewards,
+and partial success. [Combat](../mechanics/combat.md) owns battle resolution and what a Battle result holds.
 
 ## Mission kind and provenance
 
@@ -291,24 +266,30 @@ same Faction are distinct Campaign instances. A Faction operation occurrence spa
 Response Mission, is out of scope. Target Faction and initiating Faction are explicit references, never inferred from
 a Mission's name.
 
+## Attribute bounds
+
+The Combatant structure of every Agent and Enemy must obey these bounds: maximum health must be positive; current
+health must be between zero and maximum health inclusive; skill and exhaustion must be nonnegative. Agents owns the
+health an Agent has in each lifecycle state, dismissal eligibility, exhaustion caps, and rounding.
+
 ## Combat and consequences
 
 An Enemy must belong to exactly one Mission. Enemies sharing an Archetype share neither Instance ID nor health. Combat
 changes the participating Agent and Enemy Campaign instances themselves: the Agent changed by combat is the same Agent
 that returns to the Agency. A Battle result is distinct from the Mission's consequences for the Campaign, so a failed
-battle can still yield damage-related benefits. A Battle result must retain the facts that the partial-success formula
-owned by Missions requires, and a retained Battle result is never rewritten, under
-[Historical fact preservation](campaign-state.md#historical-fact-preservation).
+battle can still yield damage-related benefits. A retained Battle result is never rewritten, under
+[Historical fact preservation](campaign-state.md#historical-fact-preservation). Combat owns which facts a Battle
+result retains.
 
 # Faction and Faction operation occurrences
 
-A Faction is a Campaign instance with activity, Faction operation occurrence clocks, suppression, and defeat and
-progression facts. Its Archetype supplies its descriptive identity and configuration.
+A Faction is a Campaign instance for one opposing organization. Its Archetype supplies its descriptive identity and
+configuration. [Factions](../mechanics/factions.md) owns what a Faction has, escalation, Faction operation occurrence
+generation, suppression, and defeat.
 
 A Faction operation occurrence is the origin of one Response Mission: its initiating Faction, severity, type, and
 creation facts are values in that Mission's Constants, and that Mission's Instance ID identifies the Faction operation
-occurrence. It is not a separate Campaign instance. [Factions](../mechanics/factions.md) owns escalation, Faction
-operation occurrence generation, suppression, and defeat.
+occurrence. It is not a separate Campaign instance.
 
 # Weapons and upgrades
 
@@ -351,64 +332,65 @@ Given turn 3 and:
   F1 (Faction), and E1 (Enemy), plus the GDRs L1 (Lead) and W1 (weapon). These are test GDRs with no other required
   properties in this fixture.
 - Faction f1 with Archetype F1.
-- Serving Agent a1 assigned to Investigation i1, In transit.
-- Serving Agent a2 assigned to Mission m1, At assignment.
+- Agent a1 whose Current assignment references Investigation i1, In transit.
+- Agent a2 whose Current assignment references Mission m1, At assignment.
 - Active Investigation i1 referring to L1, Current team {a1}.
 - Initiative Mission m1 with Archetype M1, originating from campaign creation, targeting f1, Current team {a2}.
 - Enemy e1 owned by m1, with Archetype E1.
 - Each Agent and Enemy has skill 100, health 10 of maximum health 10, exhaustion 0, and equipped values referring to W1.
 - Other collections empty.
 
-Each Campaign instance has the following complete allocation of properties for this fixture:
+Each Campaign instance has the following allocation of the properties this specification names; the properties that
+Mechanics specifications add are assumed valid:
 
-| Campaign instance | Instance ID         | Archetype | Constants                                                        | State                                                                                                      |
-| ----------------- | ------------------- | --------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| ag1               | ag1                 | G1        | Empty                                                            | Resources, upgrades, roster {a1, a2}                                                                       |
-| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                       | Lifecycle, Current assignment, Task phase, combat attributes, career statistics, and Participation history |
-| i1                | i1                  | I1        | Lead L1                                                          | Active lifecycle, progress, Current team {a1}, Participation history                                       |
-| m1                | m1                  | M1        | Initiative kind; campaign-creation provenance; target Faction f1 | Current team {a2}, Enemies {e1}, resolution status, and retained Battle results                            |
-| e1                | e1                  | E1        | Mission m1                                                       | Combat attributes                                                                                          |
-| f1                | f1                  | F1        | Empty                                                            | Activity and progression                                                                                   |
+| Campaign instance | Instance ID         | Archetype | Constants                                                        | State                                                                       |
+| ----------------- | ------------------- | --------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ag1               | ag1                 | G1        | Empty                                                            | Resources, upgrades, roster {a1, a2}                                        |
+| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                       | Current assignment, Task phase, Combatant values, and Participation history |
+| i1                | i1                  | I1        | Lead L1                                                          | Active, Current team {a1}, Participation history                            |
+| m1                | m1                  | M1        | Initiative kind; campaign-creation provenance; target Faction f1 | Current team {a2}, Enemies {e1}, and no Battle result until resolved        |
+| e1                | e1                  | E1        | Mission m1                                                       | Combatant values                                                            |
+| f1                | f1                  | F1        | Empty                                                            | The values Factions owns                                                    |
 
 Campaign state c1 holds turn 3, Lead progression, and collections containing Agency ag1, Agents a1 and a2,
 Investigation i1, Mission m1, and Faction f1; e1 is reached through m1. Required references resolve in c1. Immutable
 affiliation and target references are assumptions of this fixture, not lifecycle rules.
 
 These relationships satisfy [Agency per Campaign](#agency-per-campaign),
-[Campaign instance identity scope](#campaign-instance-identity-scope), [Agent lifecycle](#agent-lifecycle),
-[Orders and Task phase](#orders-and-task-phase), [Current versus historical teams](#current-versus-historical-teams),
-[Attribute bounds](#attribute-bounds), [Leads and Investigations](#leads-and-investigations),
-[Mission kind and provenance](#mission-kind-and-provenance), and [Combat and consequences](#combat-and-consequences).
-Current team membership does not assert that a1 makes progress while In transit.
+[Campaign instance identity scope](#campaign-instance-identity-scope),
+[Current versus historical teams](#current-versus-historical-teams), [Attribute bounds](#attribute-bounds),
+[Leads and Investigations](#leads-and-investigations), [Mission kind and provenance](#mission-kind-and-provenance),
+and [Combat and consequences](#combat-and-consequences). Current team membership does not assert that a1 makes
+progress while In transit. The Mechanics specifications that refine a concept check the rules they own against this
+fixture; e.g., [Acceptance examples](../mechanics/agents-spec.md#acceptance-examples) in Agents checks the Agent
+lifecycle.
 
 ## B. Invalid variants
 
 Each row independently changes fixture A and describes an invalid state.
 
-| Change                                                                                 | Violation                                                                               |
-| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Give e1 the same Instance ID as a1                                                     | [Campaign instance identity scope](#campaign-instance-identity-scope)                   |
-| Add a second Agency                                                                    | [Agency per Campaign](#agency-per-campaign)                                             |
-| Mark a1 Killed while keeping its Current assignment and Task phase                     | [Agent lifecycle](#agent-lifecycle)                                                     |
-| Give a1 both a Training and an Investigation Current assignment                        | [Agent lifecycle](#agent-lifecycle) and [Orders and Task phase](#orders-and-task-phase) |
-| List a1 in the Current team of m1 while a1 is assigned to i1                           | [Current versus historical teams](#current-versus-historical-teams)                     |
-| Set health to 11 with maximum health 10, or set the health of a Serving Agent to zero  | [Attribute bounds](#attribute-bounds)                                                   |
-| Add another Active Investigation for L1, or leave i1 Active with an empty Current team | [Leads and Investigations](#leads-and-investigations)                                   |
-| Mark m1 Response without Faction operation occurrence provenance                       | [Mission kind and provenance](#mission-kind-and-provenance)                             |
-| Assign e1 a second owning Mission                                                      | [Combat and consequences](#combat-and-consequences)                                     |
+| Change                                                                                    | Violation                                                             |
+| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Give e1 the same Instance ID as a1                                                        | [Campaign instance identity scope](#campaign-instance-identity-scope) |
+| Add a second Agency                                                                       | [Agency per Campaign](#agency-per-campaign)                           |
+| List a1 in the Current team of m1 while a1 is assigned to i1                              | [Current versus historical teams](#current-versus-historical-teams)   |
+| Set the health of a1 or e1 to 11 with maximum health 10, or set its exhaustion below zero | [Attribute bounds](#attribute-bounds)                                 |
+| Add another Active Investigation for L1, or leave i1 Active with an empty Current team    | [Leads and Investigations](#leads-and-investigations)                 |
+| Mark m1 Response without Faction operation occurrence provenance                          | [Mission kind and provenance](#mission-kind-and-provenance)           |
+| Assign e1 a second owning Mission                                                         | [Combat and consequences](#combat-and-consequences)                   |
 
 ## C. Completion and later Participation history
 
 Given i1 concludes and m1 resolves under their owning specifications, a valid resulting state has:
 
-- i1 Completed, with an empty Current team, and a1 retained in its Participation history.
+- i1 no longer Active, with an empty Current team, and a1 retained in its Participation history.
 - m1 with a retained Battle result and a2 in its Participation history, but no Current assignment of a2 referencing it.
-- a1 and a2 Serving, each with one new valid Current assignment and Task phase.
+- a1 and a2 each with a Current assignment that references neither i1 nor m1.
 - An explicit progression fact for any win of m1, and a completion count of 1 for L1, derived from i1.
 
-This satisfies [Agent lifecycle](#agent-lifecycle), [Current versus historical teams](#current-versus-historical-teams),
+This satisfies [Current versus historical teams](#current-versus-historical-teams),
 [Leads and Investigations](#leads-and-investigations), [Progression facts](#progression-facts), and
 [Combat and consequences](#combat-and-consequences). Assigning a1 to another Investigation does not rewrite the
-Participation history of i1. If i1 were Abandoned instead, a later Investigation of L1 has a new Instance ID and does
-not resume the progress of i1 ([Leads and Investigations](#leads-and-investigations)). This fixture does not choose
-the replacement Current assignments or turn timing.
+Participation history of i1. A later Investigation of L1 has a new Instance ID
+([Leads and Investigations](#leads-and-investigations)). This fixture does not choose the replacement Current
+assignments or turn timing.

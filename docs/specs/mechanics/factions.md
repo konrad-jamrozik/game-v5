@@ -15,7 +15,7 @@ This document defines escalating faction pressure, Faction operation occurrence 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with escalation,
+This specification refines Domain Model's faction and Faction operation occurrence provenance contract ([Faction and Faction operation occurrences](../foundation/domain-model.md#faction-and-faction-operation-occurrences)/[Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with what a Faction has, and intends to refine it further with escalation,
 Faction operation occurrence generation, suppression, and defeat behavior. Numbers supplies arithmetic, and this document owns the distributions of its own random outcomes;
 Game Data Records (GDRs) supply the catalogs for Faction operation occurrences and the parameter values. This document states what a
 Faction is and what can happen to it, e.g. discovery, suppression, and defeat, without stating what causes it.
@@ -44,6 +44,12 @@ appropriate to this document.
 
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
+
+# Faction aspects
+
+A Faction has activity, Faction operation occurrence clocks, suppression, and defeat and progression facts.
+[Faction and Faction operation occurrences](../foundation/domain-model.md#faction-and-faction-operation-occurrences)
+in Domain Model owns how a Faction operation occurrence relates a Faction to a Response Mission.
 
 # Escalation
 

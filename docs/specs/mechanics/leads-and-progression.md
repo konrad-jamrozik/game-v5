@@ -15,7 +15,8 @@ This document defines the progression graph and the lifecycle of Leads, separate
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification intends to refine Domain Model's lead and progression contract ([Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with prerequisite semantics,
+This specification refines Domain Model's lead and progression contract ([Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with what a Lead GDR describes and
+what Lead progression records, and intends to refine it further with prerequisite semantics,
 availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
 progression. It also intends to refine Factions'
 [Suppression and defeat](./factions.md#suppression-and-defeat) with the completions that discover or defeat a Faction. Game Data Records (GDRs) conforming to these rules
@@ -39,6 +40,14 @@ appropriate to this document.
 
 TODO: Define the local terms here or link their authoritative definitions. Resolve terminology conflicts without
 duplicating shared definitions.
+
+# Lead GDRs and Lead progression
+
+A Lead GDR describes difficulty, repeatability, prerequisites, effects, and an optional explicit Faction reference.
+
+Lead progression records, for each Lead GDR, the earned facts that are not Derived values. Discovery, availability,
+and completion count are Derived values, under [Progression facts](../foundation/domain-model.md#progression-facts)
+in Domain Model.
 
 # Prerequisites and lifecycle
 
