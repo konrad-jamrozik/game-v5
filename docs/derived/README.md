@@ -40,18 +40,18 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Foundation
 
-| ID       | Document                                                                | Status   | Owns                                                                                                                                                  |
-| -------- | ----------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AUTO     | [Autopilot](../specs/foundation/autopilot.md)                           | Draft    | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                                |
-| CONFIG   | [Configuration](../specs/foundation/configuration.md)                   | Draft    | Kinds of setting, Global configuration, and the configuration cascade.                                                                                |
-| CORE     | [Core Concepts](../specs/foundation/core-concepts.md)                   | Accepted | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                          |
-| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)                 | Accepted | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.              |
-| DOM      | [Domain Model](../specs/foundation/domain-model.md)                     | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                                                  |
-| ENG      | [Engine Contract](../specs/foundation/engine-contract.md)               | Draft    | API hierarchy, Principal authority, Session and campaign lifecycle, data ownership, determinism, and the guarantees shared by every engine subsystem. |
-| GDR      | [Game Data Records](../specs/foundation/game-data-records.md)           | Accepted | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                             |
-| NUMRNG   | [Numbers and Randomness](../specs/foundation/numbers-and-randomness.md) | Stub     | Make every numeric calculation and random outcome reproducible across supported runtimes.                                                             |
-| SAVES    | [Saves](../specs/foundation/saves.md)                                   | Draft    | Campaign save contents, saving, loading, the Save size limit, and Game build compatibility.                                                           |
-| TIMELINE | [Timeline](../specs/foundation/timeline.md)                             | Draft    | Undo and redo of committed actions by action and by turn, and what a restored Timeline position guarantees.                                           |
+| ID       | Document                                                      | Status   | Owns                                                                                                                                                  |
+| -------- | ------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AUTO     | [Autopilot](../specs/foundation/autopilot.md)                 | Draft    | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                                |
+| CONFIG   | [Configuration](../specs/foundation/configuration.md)         | Draft    | Kinds of setting, Global configuration, and the configuration cascade.                                                                                |
+| CORE     | [Core Concepts](../specs/foundation/core-concepts.md)         | Accepted | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                          |
+| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)       | Accepted | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.              |
+| DOM      | [Domain Model](../specs/foundation/domain-model.md)           | Draft    | Game concepts, their properties and relationships, and structural domain invariants.                                                                  |
+| ENG      | [Engine Contract](../specs/foundation/engine-contract.md)     | Draft    | API hierarchy, Principal authority, Session and campaign lifecycle, data ownership, determinism, and the guarantees shared by every engine subsystem. |
+| GDR      | [Game Data Records](../specs/foundation/game-data-records.md) | Accepted | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                             |
+| NUMBERS  | [Numbers](../specs/foundation/numbers.md)                     | Stub     | Which quantities are whole numbers, the precision of those that are not, and how rounding works.                                                      |
+| SAVES    | [Saves](../specs/foundation/saves.md)                         | Draft    | Campaign save contents, saving, loading, the Save size limit, and Game build compatibility.                                                           |
+| TIMELINE | [Timeline](../specs/foundation/timeline.md)                   | Draft    | Undo and redo of committed actions by action and by turn, and what a restored Timeline position guarantees.                                           |
 
 ## Mechanics
 
@@ -74,13 +74,13 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Interfaces
 
-| ID   | Document                                                        | Status | Owns                                                                                                  |
-| ---- | --------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------- |
-| API  | [TypeScript Player API](../specs/interfaces/typescript-api.md)  | Stub   | Exact TypeScript signatures for Session API, Player API, Developer API, and Autopilot memory API.     |
-| CLI  | [Terminal CLI](../specs/interfaces/cli.md)                      | Stub   | Terminal adapter for the four engine API namespaces with Principal-restricted commands and output.    |
-| DEV  | [Developer API](../specs/interfaces/developer-api.md)           | Stub   | Full Campaign state inspection and cheat-command details through separately authorized Developer API. |
-| INFO | [Player Information](../specs/interfaces/player-information.md) | Stub   | Define complete player-facing knowledge and a consistent boundary around hidden state.                |
-| WEB  | [Web UI](../specs/interfaces/web-ui.md)                         | Stub   | Specify the first functional browser interface while keeping gameplay in the shared API.              |
+| ID   | Document                                                        | Status | Owns                                                                                                                             |
+| ---- | --------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| API  | [TypeScript Player API](../specs/interfaces/typescript-api.md)  | Stub   | Exact TypeScript signatures for Session API, Player API, Developer API, and Autopilot memory API.                                |
+| CLI  | [Terminal CLI](../specs/interfaces/cli.md)                      | Stub   | Terminal adapter for the four engine API namespaces with Principal-restricted commands and output.                               |
+| DEV  | [Developer API](../specs/interfaces/developer-api.md)           | Stub   | Full Campaign state inspection, cheat-command details, and random outcome overrides through separately authorized Developer API. |
+| INFO | [Player Information](../specs/interfaces/player-information.md) | Stub   | Define complete player-facing knowledge and a consistent boundary around hidden state.                                           |
+| WEB  | [Web UI](../specs/interfaces/web-ui.md)                         | Stub   | Specify the first functional browser interface while keeping gameplay in the shared API.                                         |
 
 ## Acceptance
 

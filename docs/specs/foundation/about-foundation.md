@@ -70,17 +70,17 @@ Agency, Agents, Leads, Investigations, Missions, Combat, Factions, weapons, upgr
 Concepts' vocabulary and Campaign State's rules to these concepts, and each Mechanics specification
 refines one part of it with formulas and transitions.
 
-## Numbers and Randomness
+## Numbers
 
-[Numbers and Randomness](numbers-and-randomness.md) answers _how are numbers calculated and random outcomes decided?_
-It owns numeric operations, units, the designer-authored distributions of random outcomes, and the permitted values
-of the Campaign seed. Every random outcome derives from the Campaign seed; how an implementation derives it is the
-implementer's choice, under [Determinism](engine-contract.md#determinism).
+[Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns which quantities are whole numbers, the
+precision of those that are not, and how rounding works. It owns nothing about randomness: Engine Contract owns
+[Determinism](engine-contract.md#determinism) and the [Campaign seed](engine-contract.md#campaign-seed), and each
+Mechanics specification owns the distributions of its own random outcomes.
 
 # How they relate
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
-State and Numbers and Randomness refine those guarantees. Timeline, Saves, Configuration, and
+State refines those guarantees. Numbers stands alone and is used by Mechanics. Timeline, Saves, Configuration, and
 Autopilot each use Engine Contract and own one subsystem outright. Game Data Records builds on Campaign State. Domain
 Model uses Campaign State and Game Data Records to describe the actual game, and the Mechanics family refines Domain
 Model in turn.
@@ -116,8 +116,11 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 - **Campaign State versus Domain Model:** the first holds rules that would apply to any game on this engine;
   the second holds the concepts of this game. E.g., Factions can be redesigned without touching Campaign State,
   and reference integrity can be tightened without touching Domain Model.
-- **Numbers and Randomness:** it refines an Engine Contract guarantee (reproducible calculation) that several
-  Mechanics documents depend on, so it does not belong inside a single mechanic.
+- **Numbers:** several Mechanics documents depend on the same arithmetic, e.g. the same rounding operations, so it
+  does not belong inside a single mechanic.
+- **No randomness document:** reproducibility and the Campaign seed hold across all subsystems, so Engine Contract
+  owns them; each Mechanics document owns the distributions of its own random outcomes; and how a random rule is
+  written is owned by Specification Conventions. Nothing else about randomness is observable or designer-authored.
 - **No turn schedule:** the order of rules within Advance turn has no document. Engine Contract gives the default,
   turn-start values, and each Mechanics document states its own exceptions, so the order follows from the rules.
 
@@ -129,4 +132,4 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 4. [Timeline](timeline.md), [Saves](saves.md), [Configuration](configuration.md), and [Autopilot](autopilot.md) for
    the engine subsystems.
 5. [Domain Model](domain-model.md) for the game's concepts.
-6. [Numbers and Randomness](numbers-and-randomness.md) as needed.
+6. [Numbers](numbers.md) as needed.

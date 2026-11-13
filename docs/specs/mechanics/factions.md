@@ -16,7 +16,7 @@ TODO: Confirm the precise included/excluded scope and rule ownership using the [
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with escalation,
-Faction operation occurrence generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
+Faction operation occurrence generation, suppression, and defeat behavior. Numbers supplies arithmetic, and this document owns the distributions of its own random outcomes;
 Game Data Records (GDRs) supply the catalogs for Faction operation occurrences and the parameter values. This document states what a
 Faction is and what can happen to it, e.g. discovery, suppression, and defeat, without stating what causes it.
 [Missions](./missions.md) owns the Mission a Faction operation occurrence creates and the Mission outcomes that
@@ -32,7 +32,7 @@ appropriate to this document.
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Uses [Numbers](../foundation/numbers.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Missions](./missions.md)

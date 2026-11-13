@@ -16,7 +16,7 @@ TODO: Confirm the precise included/excluded scope and rule ownership using the [
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's agent contract ([Agent lifecycle](../foundation/domain-model.md#agent-lifecycle), [Orders and Task phase](../foundation/domain-model.md#orders-and-task-phase), [Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams), and [Attribute bounds](../foundation/domain-model.md#attribute-bounds)) with eligibility, Current assignment,
-travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
+travel, attribute, and lifecycle transitions. It uses Numbers for arithmetic.
 GDRs supply balance values.
 
 This document is the base of the Mechanics family. It states what each Agent value is, its range, what its extremes
@@ -34,7 +34,7 @@ appropriate to this document.
 # Relationships
 
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Uses [Numbers](../foundation/numbers.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Combat](./combat.md)
 - Used by [Economy and Upgrades](./economy-and-upgrades.md)

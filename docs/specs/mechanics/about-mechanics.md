@@ -6,7 +6,7 @@
 
 Mechanics specifications own the player-facing game systems: their rules, transitions, formulas, and effects. Each one
 refines part of the [Domain Model](../foundation/domain-model.md) with the detailed behavior of one system, using
-[Numbers and Randomness](../foundation/numbers-and-randomness.md) for arithmetic and draws. Exact balance values and
+[Numbers](../foundation/numbers.md) for arithmetic. Each one owns the distributions of its own random outcomes. Exact balance values and
 catalogs are Game Data Records (GDRs); which values a rule uses during Advance turn follows
 [Turn advancement](../foundation/engine-contract.md#turn-advancement).
 

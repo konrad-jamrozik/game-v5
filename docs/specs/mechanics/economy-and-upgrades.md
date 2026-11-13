@@ -19,7 +19,7 @@ This specification intends to refine Domain Model's Agency, Weapons and upgrades
 with resource flows, purchase eligibility, and upgrade effects. Agents supplies personnel state and capabilities.
 This specification also intends to refine Agents' [Modifiable values](./agents-spec.md#modifiable-values) with how
 each upgrade changes them;
-Numbers and Randomness supplies arithmetic. GDRs supply prices and increments, while this
+Numbers supplies arithmetic. GDRs supply prices and increments, while this
 document supplies their meanings and formulas. This document states which values its formulas use under
 [Turn advancement](../foundation/engine-contract.md#turn-advancement). These rules remain TODOs.
 
@@ -31,7 +31,7 @@ appropriate to this document.
 
 - Uses [Agents](./agents-spec.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Uses [Numbers](../foundation/numbers.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Missions](./missions.md)

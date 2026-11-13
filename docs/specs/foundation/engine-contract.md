@@ -36,7 +36,6 @@ It owns cross-cutting guarantees, not the behavior of one subsystem or their ref
 - Used by [Web UI](../interfaces/web-ui.md)
 - Refined by [Campaign State](./campaign-state.md)
 - Refined by [Developer API](../interfaces/developer-api.md)
-- Refined by [Numbers and Randomness](./numbers-and-randomness.md)
 - Refined by [Player Information](../interfaces/player-information.md)
 - Refined by [TypeScript Player API](../interfaces/typescript-api.md)
 
@@ -333,7 +332,9 @@ is engaged and the Autopilot AI never receives them. Dev mode transitions are un
 
 Given the same Game build, the same initial Campaign configuration, the same Campaign seed, and the same ordered
 committed commands, exactly the same things must happen: Campaign state and retained reports are equal at every
-Timeline position. This holds whenever, and in whichever Session, each Campaign is created and played. The Game
+Timeline position. This holds whenever, in whichever Session, and on whichever machine each Campaign is created and
+played; e.g., a Campaign save made on one machine and loaded on another continues exactly as it would have on the
+first, given the same committed commands. The Game
 build includes its GDRs, and the committed commands are the committed actions of the Session controller and the
 Autopilot AI. The Campaign seed is what makes a Campaign reproducible, and so makes undo, redo, load, and debugging
 possible.
@@ -353,7 +354,8 @@ Consequently, outcomes after undo, redo, or load equal those of uninterrupted pl
 or an action with no effect never changes a later outcome.
 
 Determinism is required within one implementation and Game build, not across different implementations of the
-specification or different Game builds. Consequently, how random outcomes are derived from the Campaign seed, the
+specification or different Game builds. Within one implementation and Game build it is required across machines:
+no outcome may depend on the machine, operating system, or runtime that executes the Game build. Consequently, how random outcomes are derived from the Campaign seed, the
 order of random draws, the order in which Campaign instances are created within one command, and the sequence and
 format of generated Campaign-scoped identifiers are the implementer's choice, provided the equality guarantee above
 holds. Two implementations may therefore produce different outcomes from the same Campaign seed and commands; each
@@ -365,8 +367,10 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
 
 - **Supplied:** The Session controller may supply the Campaign seed in `session.campaigns.create(options)`. A
   supplied value that is not a permitted Campaign seed fails creation, under
-  [Campaign lifecycle](#campaign-lifecycle). [Randomness contract](numbers-and-randomness.md#randomness-contract)
-  in Numbers and Randomness owns the permitted values.
+  [Campaign lifecycle](#campaign-lifecycle).
+- **Permitted values:** A permitted Campaign seed is any non-empty text. Two Campaign seeds are the same exactly
+  when their texts are equal character for character; e.g., `abc` and `ABC` are different Campaign seeds.
+  TypeScript Player API owns the exact Type and the maximum length.
 - **Chosen:** When none is supplied, the engine chooses a permitted Campaign seed. Which one it chooses is
   unspecified and need not be reproducible; it is the only engine decision exempt from the guarantee under
   [Determinism](#determinism).
@@ -380,10 +384,22 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
 - **Not Player-visible:** The Campaign seed is not Player-visible information, because together with the Game build
   it determines facts hidden from the player. Player API never exposes it, so an Autopilot AI never receives it.
 - **Sole source of randomness:** Every random outcome of a Campaign derives from its Campaign seed. No outcome
-  depends on anything outside Campaign state; e.g., not on wall-clock time, on when or in which Session the Campaign
-  is created, loaded, or played, on a second seed, or on a random source that differs from one run to another. This
+  depends on anything outside Campaign state; e.g., not on wall-clock time, on when, in which Session, or on which
+  machine the Campaign is created, loaded, or played, on a second seed, or on a random source that differs from one run to another. This
   is observable: any such dependence makes two Campaigns that the guarantee under [Determinism](#determinism)
   requires to be equal differ.
+- **Stated distributions:** Among Campaigns that differ only in their Campaign seed, every random outcome takes
+  each of its possible values as often as the distribution in its rule states. E.g., an outcome whose rule states a
+  60% probability occurs in 60% of such Campaigns, not in all of them or in none.
+- **Independent outcomes:** Random outcomes are independent of one another unless a rule states otherwise: the
+  value of one says nothing about the value of any other. E.g., two attacks that each hit with probability 60% both
+  hit with probability 36%; an implementation in which they always hit or miss together does not conform. A rule
+  states a dependence explicitly, e.g. that a damage outcome exists only when the attack hits.
+- **Different commands, different outcomes:** Only the same ordered committed commands guarantee the same outcomes,
+  under [Determinism](#determinism). After a different committed command, any later random outcome may differ, even
+  one whose rule does not involve what that command changed. E.g., an attack misses; the Session controller loads
+  the earlier Campaign save, hires an Agent, and commits the same attack, which may now hit. Whether it does is the
+  implementer's choice.
 
 ## Unique identifiers
 
@@ -452,6 +468,10 @@ Exact error representations and asynchronous operation results belong to TypeScr
   Advance turn, and record Campaign state and retained reports at each Timeline position. End the Session. In a new
   Session, create Campaign B with the same new-Campaign setup and K, and commit the same actions. B equals A at
   every Timeline position ([Determinism](#determinism), [Campaign seed](#campaign-seed)).
+- **Same save, another machine:** Save Campaign A on one machine, then commit gameplay actions including Advance
+  turn and record Campaign state and retained reports at each Timeline position. On another machine running the same
+  Game build, load that Campaign save and commit the same actions. The results equal those recorded on the first
+  machine at every Timeline position ([Determinism](#determinism)).
 - **Seed chosen by the engine:** Create Campaign C supplying no Campaign seed. `session.getStatus()` reports its
   Campaign seed K2. Create Campaign D with the same new-Campaign setup supplying K2, and commit the same actions in
   both. D equals C at every Timeline position ([Campaign seed](#campaign-seed)).

@@ -96,8 +96,7 @@ Being more concrete or appearing later in an authoring sequence is also insuffic
 
 E.g., Domain Model uses Core Concepts vocabulary and Campaign State composition constraints to describe game concepts.
 Campaign State refines Engine Contract campaign-data integrity; vocabulary use alone is not refinement. Timeline uses the Campaign State identity and historical-preservation conventions and Engine Contract guarantees;
-obeying them while restoring Campaign state is not refinement. Numbers and Randomness similarly uses
-identity conventions while refining deterministic execution. These classifications concern the particular contract
+obeying them while restoring Campaign state is not refinement. These classifications concern the particular contract
 meaning, not a prohibition on refinement between any document families.
 
 A refinement does not need an additional uses entry merely because it inherits the parent's constraints. Declare
@@ -209,7 +208,7 @@ The following table gives the complete expected classifications for this accepta
 | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Domain Model describes agents using Campaign instance and GDR                                                                 | Uses Campaign State; it applies campaign composition constraints without elaborating their meanings |
 | Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)   | Refines Domain Model; it adds detail to the same lifecycle                                          |
-| Numbers and Randomness specifies reproducible calculation under [Determinism](../foundation/engine-contract.md#determinism)   | Refines Engine Contract; it details how calculation stays reproducible                              |
+| Combat rounds a damage value with a rounding operation that Numbers defines                                                   | Uses Numbers; applying a rounding operation does not elaborate its meaning                          |
 | Timeline preserves references under [References](../foundation/campaign-state.md#references) while restoring Campaign state   | Uses Campaign State; satisfying the reference invariant alone is not refinement                     |
 | Saves persists the Timeline whose navigation Timeline defines                                                                 | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
 | Terminal CLI maps commands to Player API                                                                                      | Uses TypeScript Player API; an adapter contract applies existing operations                         |

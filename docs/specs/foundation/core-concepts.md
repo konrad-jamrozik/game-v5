@@ -30,7 +30,6 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Investigations](../mechanics/investigations.md)
 - Used by [Leads and Progression](../mechanics/leads-and-progression.md)
 - Used by [Missions](../mechanics/missions.md)
-- Used by [Numbers and Randomness](./numbers-and-randomness.md)
 - Used by [Panic and Endings](../mechanics/panic-and-endings.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Saves](./saves.md)

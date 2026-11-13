@@ -16,8 +16,8 @@ TODO: Confirm the precise included/excluded scope and rule ownership using the [
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's combatant and battle-result contract ([Attribute bounds](../foundation/domain-model.md#attribute-bounds)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with battle transitions,
-calculations, and termination rules. It uses Agents' combatant capabilities and Numbers and Randomness's arithmetic
-and draws. It also intends to refine Agents'
+calculations, and termination rules. It uses Agents' combatant capabilities and Numbers' arithmetic, and it
+owns the distributions of its own random outcomes. It also intends to refine Agents'
 [Attributes and effectiveness](./agents-spec.md#attributes-and-effectiveness) with how a Battle lowers health, raises
 exhaustion, and awards experience, within the meanings and bounds Agents states for those values. The combat
 decisions below remain TODOs; campaign consequences remain owned by Missions.
@@ -29,7 +29,7 @@ appropriate to this document.
 # Relationships
 
 - Uses [Agents](./agents-spec.md)
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Uses [Numbers](../foundation/numbers.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Missions](./missions.md)
@@ -46,7 +46,7 @@ TODO: Specify initial snapshots, participation, round/side order, initiative, ta
 
 # Combat calculations
 
-TODO: Specify combat-rating, hit/contest, damage, exhaustion, experience, and casualty formulas. Define random draw sites and reference NUMRNG conventions.
+TODO: Specify combat-rating, hit/contest, damage, exhaustion, experience, and casualty formulas. Name each random outcome of each combat calculation and state its distribution.
 
 # Termination and results
 

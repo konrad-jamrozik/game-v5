@@ -23,7 +23,6 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 - Used by [Domain Model](./domain-model.md)
 - Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
-- Used by [Numbers and Randomness](./numbers-and-randomness.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Timeline](./timeline.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)

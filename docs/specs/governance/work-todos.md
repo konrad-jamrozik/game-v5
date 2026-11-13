@@ -95,35 +95,6 @@ that time.
 
 ## Clear violations
 
-### TODO-004: Random generator state required as a thing
-
-**Category and priority:** Clear violation.
-
-**Affected:** Developer API (DEV), [Edge cases and failure behavior](../interfaces/developer-api.md#edge-cases-and-failure-behavior).
-Related wording question: Numbers and Randomness (NUMRNG), [Randomness contract](../foundation/numbers-and-randomness.md#randomness-contract).
-
-**Batches:** NUMRNG is batch 2; DEV is batch 8.
-
-**Current wording:**
-
-> Invalid cheat inputs preserve Campaign state, RNG state, generated Instance IDs, reports, and history.
-
-(DEV, Edge cases and failure behavior.)
-
-> Only state changes, including Campaign instance creation, may consume gameplay randomness.
-
-(NUMRNG, Randomness contract.)
-
-**Why it is an issue:** These passages require a stored random generator and its state, but an implementation could
-derive every random outcome from the Campaign seed without one. The scope rule admits only the observable requirement, which
-[Determinism](../foundation/engine-contract.md#determinism) in Engine Contract now states: outcomes after undo, redo,
-or load equal those of uninterrupted play, and rejected actions, actions with no effect, and queries do not change
-later outcomes.
-
-**Suggested resolution:** Reword the DEV sentence to say that invalid cheat inputs change nothing, under
-[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity). Keep "consume gameplay
-randomness" in NUMRNG only if it is defined as designer vocabulary meaning that the outcome of a state change depends on chance, and define it that way.
-
 ### TODO-006: Campaign instance constructor leftover in TypeScript Player API
 
 **Category and priority:** Clear violation; also contradicts the creation decision.
@@ -150,95 +121,24 @@ effects create Campaign instances do so as their owning specifications state und
 
 ## Contradictions with the determinism decision
 
-### TODO-007: Generator-state and draw planning in Numbers and Randomness
+### TODO-009: Draw fixtures in Combat
 
 **Category and priority:** Contradiction with a recorded decision.
 
-**Affected:** Numbers and Randomness (NUMRNG): [Overview](../foundation/numbers-and-randomness.md#overview),
-[Deterministic boundaries](../foundation/numbers-and-randomness.md#deterministic-boundaries), and
-[Edge cases and failure behavior](../foundation/numbers-and-randomness.md#edge-cases-and-failure-behavior).
-
-**Batches:** NUMRNG is batch 2.
-
-**Current wording:**
-
-> Deterministic identity generation must preserve [Campaign instances](../foundation/campaign-state.md#campaign-instances); [...]
-
-> This specification intends to refine [...] with numeric operations, reproducible generator-state evolution, and
-> draw-consumption rules at query, command, and restoration boundaries.
-
-> TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, the permitted values of the Campaign seed, generator state, draws, and deterministic IDs.
-
-(NUMRNG, Overview.)
-
-> Decide whether no-op commands consume draws.
-
-(NUMRNG, Deterministic boundaries.)
-
-> TODO: Define behavior for Zero and one probabilities, inclusive/exclusive bounds, ties, extreme values, fractional thresholds, seed equivalence, and floating-point pitfalls.
-
-(NUMRNG, Edge cases and failure behavior.)
-
-**Why it is an issue:** [Determinism](../foundation/engine-contract.md#determinism) and NUMRNG's own
-[Randomness contract](../foundation/numbers-and-randomness.md#randomness-contract) make the generator algorithm, the
-order of draws, and Instance ID generation the implementer's choice. Generator state and draw consumption are not
-observable. The Campaign seed is in scope, but only as
-[Campaign seed](../foundation/engine-contract.md#campaign-seed) states it. Whether no-op commands consume draws is
-both unobservable and already settled observably by [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions):
-actions with no effect consume no gameplay randomness.
-
-**Suggested resolution:** Remove the planned generator-state, draw-consumption, and deterministic-identifier
-content and the "no-op commands" decision. Re-scope NUMRNG's randomness content to designer-authored distributions,
-interval boundaries, and comparisons, plus the observable reproducibility requirement in TODO-004. Keep seed content
-only for what NUMRNG owns: the permitted values of the Campaign seed and whether distinct values are equivalent.
-
-### TODO-008: Draw ordering in Formulas and uncertainty
-
-**Category and priority:** Contradiction with a recorded decision.
-
-**Affected:** Specification Conventions (CONV, Accepted), [Formulas and uncertainty](spec-conventions.md#formulas-and-uncertainty).
-
-**Batches:** CONV has no batch; a change is a revision of an Accepted governance specification.
-
-**Current wording:**
-
-> For random rules, specify the distribution, draw timing and order, interval boundaries, success comparison, and which information is hidden.
-
-(CONV, Formulas and uncertainty.)
-
-**Why it is an issue:** The order of random draws is the implementer's choice under
-[Determinism](../foundation/engine-contract.md#determinism), and
-[What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification) names it as an out-of-scope
-example.
-
-**Suggested resolution:** In CONV, replace "draw timing and order" with which Campaign state a random outcome depends on, stated as
-an outcome rather than a draw order.
-
-### TODO-009: Draw sites and draw fixtures in Combat
-
-**Category and priority:** Contradiction with a recorded decision.
-
-**Affected:** Combat (COMBAT), [Combat calculations](../mechanics/combat.md#combat-calculations) and
-[Acceptance examples](../mechanics/combat.md#acceptance-examples).
+**Affected:** Combat (COMBAT), [Acceptance examples](../mechanics/combat.md#acceptance-examples).
 
 **Batches:** COMBAT is batch 5.
 
 **Current wording:**
 
-> Define random draw sites and reference NUMRNG conventions.
-
-(COMBAT, Combat calculations TODO.)
-
 > TODO: Give deterministic round-by-round fixtures with attacks, draws, damage, experience, and expected Battle results.
 
-(COMBAT, Acceptance examples.)
-
-**Why it is an issue:** Where random draws happen is not observable under the scope rule. Acceptance fixtures must use
-fixed injected random outcomes under [Determinism](../foundation/engine-contract.md#determinism) and
+**Why it is an issue:** Random draws are not observable under the scope rule. Acceptance fixtures must use fixed
+injected random outcomes, each identified by the name its rule gives it, under
+[Determinism](../foundation/engine-contract.md#determinism) and
 [Examples, conformance, and evidence](spec-conventions.md#examples-conformance-and-evidence).
 
-**Suggested resolution:** Replace "random draw sites" with the designer-authored random outcomes of each combat
-calculation and their distributions. Replace "draws" in the fixture TODO with "fixed injected random outcomes".
+**Suggested resolution:** Replace "draws" in the fixture TODO with "fixed injected random outcomes".
 
 ### TODO-010: Seeded timelines in Factions
 
@@ -408,7 +308,7 @@ batch, or split so that each part is resolved with its own batch.
 These are workflow checks, not gameplay tests:
 
 - **Resolution removes the Work item ([Adding and removing Work items](#adding-and-removing-work-items)):** A change
-  rewrites the Engine Contract sentence about caches. The same change removes TODO-001. TODO-004 keeps its label.
+  rewrites the Engine Contract sentence about caches. The same change removes TODO-001. TODO-006 keeps its label.
 - **New issue ([Adding and removing Work items](#adding-and-removing-work-items), [Work item format](#work-item-format)):**
   A reviewer finds an out-of-scope storage statement in Missions. They add TODO-021 under Clear violations, naming
   Missions and batch 6 from [Batch sequence](work-plan.md#batch-sequence), with the exact quoted wording.

@@ -17,7 +17,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's investigation contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with start, progress, completion,
 team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
-and Numbers and Randomness's arithmetic/draws. This document supplies estimate mathematics over inputs it names itself. Which of those inputs and results the player
+and Numbers' arithmetic, and it owns the distributions of its own random outcomes. This document supplies estimate mathematics over inputs it names itself. Which of those inputs and results the player
 sees is owned by [Player Information](../interfaces/player-information.md); this document does not rely on it. The exact mathematics
 and transitions remain TODOs below.
 
@@ -31,7 +31,7 @@ appropriate to this document.
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
-- Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
+- Uses [Numbers](../foundation/numbers.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Player Information](../interfaces/player-information.md)
 

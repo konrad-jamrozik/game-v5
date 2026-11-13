@@ -514,7 +514,15 @@ Every transition not listed, e.g. from Open directly to Locked, is impossible.
 
 Define every symbol, unit, domain, and referenced parameter. Show evaluation order and rounding points; link common numeric rules rather than assuming real-number arithmetic equals runtime arithmetic.
 
-For random rules, specify the distribution, draw timing and order, interval boundaries, success comparison, and which information is hidden. Distinguish the true probability, conditional probability, cumulative probability, and displayed estimate whenever relevant. Define what information an estimate conditions on, including previous outcomes.
+For random rules, state every random outcome as a distinct, named outcome: what it belongs to, its possible values,
+and its distribution, including interval boundaries and the success comparison. E.g., "each delivery has one delay
+outcome, late or on time, and each late delivery has one lateness outcome, a whole number of days from 1 to 10". A
+reader must be able to tell how many distinct random outcomes a rule has, because a named random outcome is what an
+acceptance example fixes when it uses fixed injected random outcomes under
+[Examples, conformance, and evidence](#examples-conformance-and-evidence). Also state which state each random outcome
+may depend on and which information is hidden. Do not state when or in which order random values are drawn.
+
+Distinguish the true probability, conditional probability, cumulative probability, and displayed estimate whenever relevant. Define what information an estimate conditions on, including previous outcomes.
 
 Include worked numerical examples for normal cases and boundaries. Equations, prose, pseudocode, and examples must agree. An unexplained "chance increases over time" or "diminishing returns" is not a complete rule.
 
@@ -570,7 +578,8 @@ need not be organized as test fixtures or command sequences. Every acceptance ex
 items in this checklist:
 
 - Hyperlinks to the requirement sections exercised and, when needed for reproducibility, the game revision and GDR fixture.
-- Initial state and inputs, including fixed injected random outcomes for stochastic results; never assert outcomes
+- Initial state and inputs, including fixed injected random outcomes for stochastic results, each
+  identified by the name its rule gives it under [Formulas and uncertainty](#formulas-and-uncertainty); never assert outcomes
   that depend on a particular seed, and otherwise compare replayed results for equality.
 - The command or event sequence.
 - Expected state, output, visibility, history, and random behavior where relevant.
