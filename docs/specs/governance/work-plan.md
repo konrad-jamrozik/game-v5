@@ -19,7 +19,7 @@ The [Game Design Brief](../../game-design-brief.md) supplies strategic intent an
 
 **Current work:** Batch 1 is partially complete. [Core Concepts](../foundation/core-concepts.md), [Campaign State](../foundation/campaign-state.md), and
 [Game Data Records](../foundation/game-data-records.md) are Accepted. [Engine Contract](../foundation/engine-contract.md) and [Domain Model](../foundation/domain-model.md) are **In review**. Review their
-contracts and unresolved design questions before advancing. Later batches have not started.
+contracts and unresolved design questions before advancing. Batch 2 is Drafting and has not been presented for review; batches 3 to 10 have not started.
 
 # Relationships
 
@@ -48,7 +48,8 @@ instead of marking the whole batch Complete.
 
 # Current baseline
 
-- Batch 1 is In review, with three of its five specifications Accepted; later batches are Queued.
+- Batch 1 is In review, with three of its five specifications Accepted. Batch 2 is Drafting: four of its five
+  specifications are Draft and none has been presented for review. Batches 3 to 10 are Queued.
 - The 10-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
@@ -79,7 +80,7 @@ propose the change explicitly and update this table when agreed rather than sile
 | Batch | Specifications                                                                                                                                                                                                                                                  | Review objective and reason for this order                                                                                                                                                                                                                                                                                                                            | Work state |
 | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | 1     | [Core Concepts](../foundation/core-concepts.md); [Domain Model](../foundation/domain-model.md); [Campaign State](../foundation/campaign-state.md); [Game Data Records](../foundation/game-data-records.md); [Engine Contract](../foundation/engine-contract.md) | Agree on vocabulary, Types, four-property Campaign instances, archetypes and other Game Data Records (GDRs), mandatory Instance IDs, Campaign instance creation, relationships, Authoritative values in Campaign state, and boundaries before specifying behavior. Review the five documents as one batch, preserving the Accepted status of retained modeling rules. | In review  |
-| 2     | [Numbers](../foundation/numbers.md); [Timeline](../foundation/timeline.md); [Saves](../foundation/saves.md); [Configuration](../foundation/configuration.md); [Autopilot](../foundation/autopilot.md)                                                           | Establish exact calculations, undo and redo, save and load, configuration, and Autopilot contracts before relying on them in mechanics.                                                                                                                                                                                                                               | Queued     |
+| 2     | [Numbers](../foundation/numbers.md); [Timeline](../foundation/timeline.md); [Saves](../foundation/saves.md); [Configuration](../foundation/configuration.md); [Autopilot](../foundation/autopilot.md)                                                           | Establish exact calculations, undo and redo, save and load, configuration, and Autopilot contracts before relying on them in mechanics.                                                                                                                                                                                                                               | Drafting   |
 | 3     | [Agents](../mechanics/agents-spec.md); [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                                                                                                                                             | Define personnel availability, effectiveness, growth, resources, and purchases used by other mechanics.                                                                                                                                                                                                                                                               | Queued     |
 | 4     | [Leads and Progression](../mechanics/leads-and-progression.md); [Investigations](../mechanics/investigations.md)                                                                                                                                                | Define the first major strategic game system, including precise progress, completion probabilities, player uncertainty, and commitment costs.                                                                                                                                                                                                                         | Queued     |
 | 5     | [Combat](../mechanics/combat.md)                                                                                                                                                                                                                                | Define automatic battle resolution and its outputs. Present this for review before drafting the mission-consequence contract.                                                                                                                                                                                                                                         | Queued     |
@@ -103,17 +104,19 @@ Initial campaign scope and balance decisions are recorded as GDRs, not in a spec
 incrementally alongside each mechanic, then review the complete playable campaign after batch 7. Their later resolution
 is scheduled work, not an unresolved decision about this work plan.
 
-| Track      | Document                                                                                                | When and what to add                                                                                                                                                      | Work state |
-| ---------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| Content    | GDRs; no specification                                                                                  | Add exact named parameters and small example GDRs as each mechanics specification needs them. Complete the playable campaign GDRs after batch 7 and review it explicitly. | Queued     |
-| Acceptance | [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | Add precise cross-system examples with each batch. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10.                    | Queued     |
+| Track      | Document                                                                                                | When and what to add                                                                                                                                                                                                                                                                           | Work state |
+| ---------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Content    | GDRs; no specification                                                                                  | Add exact named parameters and small example GDRs as each mechanics specification needs them. Complete the playable campaign GDRs after batch 7 and review it explicitly.                                                                                                                      | Queued     |
+| Acceptance | [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | Add precise cross-system examples with each batch from batch 3, the first batch that defines gameplay. Batches 1 and 2 state their checks in each specification's own Acceptance examples. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10. | Queued     |
 
 ## Early information and API boundaries
 
-During batch 1, identify the player-information boundary and outline the API capabilities needed to support
-it. Refine these notes with each mechanic; do not defer their design influence until batch 8. Keep supporting notes
-explicitly preliminary in Engine Contract, alongside Core Concepts, Campaign State, Game Data Records, and Domain Model as the batch 1 deliverable. Exact Player-visible information fields and
-public signatures are finalized in their owning specifications during batch 8.
+Batch 1 states the player-information boundary and the API capabilities needed to support it in Engine Contract:
+[API hierarchy](../foundation/engine-contract.md#api-hierarchy) gives the required starter operation inventory, and
+[Information boundary](../foundation/engine-contract.md#information-boundary) gives the boundary. Both are part of the
+batch 1 deliverable and are reviewed with it. Extend the operation inventory with each mechanic; do not defer its
+design influence until batch 8. Exact Player-visible information fields and public signatures are finalized in their
+owning specifications during batch 8.
 
 ## Incremental timing refinement
 
@@ -183,7 +186,7 @@ available for revision; a change in order alone does not invalidate their conten
 These are workflow checks, not gameplay tests:
 
 - **First review ([Batch sequence](#batch-sequence), [Early information and API boundaries](#early-information-and-api-boundaries), [Batch workflow](#batch-workflow)):** Presenting newly drafted batch 1 material sets that material to
-  Draft and batch 1 to In review; reorganizing an existing Accepted contract preserves its Accepted status. Preliminary API/information notes do not imply those contracts are
+  Draft and batch 1 to In review; reorganizing an existing Accepted contract preserves its Accepted status. The starter operation inventory and Information boundary in Engine Contract do not imply that the batch 8 contracts are
   complete. The next batch does not begin without the review opportunity or an explicit instruction to continue.
 - **Requested revision ([Batch workflow](#batch-workflow), [Backlog updates](#backlog-updates)):** Feedback requests a different model for Agents and Current assignments. Batch 1 remains
   In review while affected notes and examples are updated.
