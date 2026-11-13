@@ -11,7 +11,7 @@
 # Overview
 
 This document defines the Timeline of a Campaign: what it records, how undo and redo navigate it by action and by
-turn, and what a restored Timeline position guarantees.
+Turn, and what a restored Timeline position guarantees.
 
 It owns Timeline navigation only. The past that game behavior consults is World history, owned by
 [Campaign State](campaign-state.md); persisting a Timeline is owned by [Saves](saves.md).
@@ -34,36 +34,36 @@ It owns Timeline navigation only. The past that game behavior consults is World 
 
 # Glossary
 
-Timeline, Committed state, Campaign save, and the API surface and Principal terms are defined by the
+Timeline, Committed action, Committed state, Campaign save, and the API surface and Principal terms are defined by the
 [Engine Contract glossary](engine-contract.md#glossary). World history is defined by the
 [Campaign State glossary](campaign-state.md#glossary).
 
-| Term                | Definition                                                                                                                                                                        |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Timeline entry      | One committed Player API or Developer API action recorded in the Timeline.                                                                                                        |
-| Timeline position   | A point in the Timeline: before its first Timeline entry, or immediately after any one Timeline entry. The Campaign state at a Timeline position is a Committed state.            |
-| Timeline cursor     | The Timeline position the Campaign is currently at. Timeline entries after it are the redo entries.                                                                               |
-| Timeline branch     | The Timeline entries reachable from the Timeline cursor by undo and redo. Committing a new action after undo starts a new Timeline branch and discards the previous redo entries. |
-| Turn-start position | A Timeline position immediately after campaign creation or immediately after a committed Advance turn action.                                                                     |
+| Term                | Definition                                                                                                                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Timeline entry      | One Committed action recorded in the Timeline.                                                                                                                                             |
+| Timeline position   | A point in the Timeline: before its first Timeline entry, or immediately after any one Timeline entry. The Campaign state at a Timeline position is a Committed state.                     |
+| Timeline cursor     | The Timeline position the Campaign is currently at. Timeline entries after it are the redo entries.                                                                                        |
+| Timeline branch     | The Timeline entries reachable from the Timeline cursor by undo and redo. Committing a new action after undo starts a new Timeline branch and discards the previous redo entries.          |
+| Turn-start position | A Timeline position immediately after campaign creation or immediately after a committed Advance turn action.                                                                              |
+| Turn                | The Timeline positions from one Turn-start position up to, but not including, the next Turn-start position. Every Timeline position belongs to exactly one Turn, and Advance turn ends it. |
 
 # Timeline structure
 
-The following hand-kept diagram shows one example Timeline: a Campaign with six committed actions, of which the last
+The following hand-kept diagram shows one example Timeline: a Campaign with six Committed actions, of which the last
 two have been undone. It illustrates the terms of the [Glossary](#glossary) and the rules of the sections below, and
 it adds no rule of its own.
 
-![Timeline structure: Timeline entries, Timeline positions, turns, and undo and redo](./timeline-structure.svg)
+![Timeline structure: Timeline entries, Timeline positions, Turns, and undo and redo](./timeline-structure.svg)
 
 The diagram reads as follows:
 
-- **Timeline entries:** each box is one Timeline entry, which is one committed action. A Player API action and a
+- **Timeline entries:** each box is one Timeline entry, which is one Committed action. A Player API action and a
   Developer API action are Timeline entries alike, under [Timeline entries](#timeline-entries).
 - **Timeline positions:** each circle is a Timeline position. The Campaign state at it is a Committed state, labelled
   S0 to S6. A Timeline with six Timeline entries therefore has seven Timeline positions.
 - **Advance turn:** Advance turn is one Timeline entry, and the Timeline position after it is a Turn-start position.
   The values partway through it are not a Committed state, so no Timeline position lies inside it.
-- **Turns:** each bracket groups the Timeline positions of one turn, from a Turn-start position up to the Advance turn
-  that leads to the next Turn-start position.
+- **Turns:** each bracket groups the Timeline positions of one Turn.
 - **Undo and redo:** the Timeline cursor is at S4. Each arrow shows where one navigation operation moves it, under
   [Action navigation](#action-navigation) and [Turn navigation](#turn-navigation). The two dashed boxes are the redo
   entries.
@@ -75,7 +75,7 @@ Three things keep a Campaign's past, for different purposes. The following compa
 | Kept past     | What it records                                                              | Consulted by game behavior | Effect of undo                                                              | Owner                                                                      |
 | ------------- | ---------------------------------------------------------------------------- | -------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | World history | Past Campaign state or events that game behavior and reports need            | Yes                        | Restored as part of Campaign state, to what it was at the Timeline position | [Campaign state composition](campaign-state.md#campaign-state-composition) |
-| Timeline      | The committed actions of the Campaign and the Timeline cursor                | Never                      | Moves the Timeline cursor                                                   | This document                                                              |
+| Timeline      | The Committed actions of the Campaign and the Timeline cursor                | Never                      | Moves the Timeline cursor                                                   | This document                                                              |
 | Campaign save | A persisted copy of the Campaign at one Timeline position, with its Timeline | Never                      | None until the Campaign is saved again                                      | [Saves](saves.md)                                                          |
 
 World history and the Timeline are independent. A game without undo would have no Timeline and would still need
@@ -109,15 +109,15 @@ branch. The discarded Timeline entries cannot be redone.
 # Turn navigation
 
 Turn-start positions exist immediately after campaign creation and after every committed Advance turn. The current
-turn's start is the most recent Turn-start position at or before the Timeline cursor.
+Turn's start is the most recent Turn-start position at or before the Timeline cursor.
 
-`session.timeline.undoTurn()` moves the Timeline cursor to the Turn-start position preceding the current turn's start.
-It therefore reverses the previous completed turn together with any actions already committed in the current turn.
+`session.timeline.undoTurn()` moves the Timeline cursor to the Turn-start position preceding the current Turn's start.
+It therefore reverses the previous completed Turn together with any actions already committed in the current Turn.
 `session.timeline.redoTurn()` moves the Timeline cursor to the nearest Turn-start position strictly after it. This is
 the complete target-selection rule.
 
-E.g., from the start of turn 5 or partway through turn 5, `undoTurn()` returns to the start of turn 4. To reverse only
-current-turn actions, use `undoAction()`. At a Turn-start position, one `redoTurn()` redoes the next complete turn.
+E.g., from the start of Turn 5 or partway through Turn 5, `undoTurn()` returns to the start of Turn 4. To reverse only
+current-Turn actions, use `undoAction()`. At a Turn-start position, one `redoTurn()` redoes the next complete Turn.
 Redo entries that are not followed by a Turn-start position remain reachable through `redoAction()`.
 
 # Restored Timeline positions
@@ -127,7 +127,7 @@ first reached, including its Campaign configuration and World history. Autopilot
 under [Autopilot memory](autopilot.md#autopilot-memory).
 
 Play continued from a restored Timeline position produces the outcomes of uninterrupted play, under
-[Determinism](engine-contract.md#determinism). Redo reproduces the committed action exactly:
+[Determinism](engine-contract.md#determinism). Redo reproduces the Committed action exactly:
 
 - Redoing an action that an Autopilot AI chose does not ask any Autopilot AI to choose again.
 - A Developer API action is undone and redone whether or not Dev mode is enabled, and doing so grants no Developer
@@ -156,9 +156,9 @@ states which Timeline positions are then unavailable.
   actions, and Advance turn. Undo each action and redo it with Dev mode disabled. Complete Campaign state and retained
   reports equal the original results, and queries between actions do not change those results
   ([Action navigation](#action-navigation), [Restored Timeline positions](#restored-timeline-positions)).
-- **Turn targets:** At the start of turn 5, `undoTurn()` restores the start of turn 4 and `redoTurn()` restores the
-  start of turn 5. After one action in turn 5, `undoTurn()` also restores the start of turn 4 and undoes that
-  current-turn action ([Turn navigation](#turn-navigation)).
+- **Turn targets:** At the start of Turn 5, `undoTurn()` restores the start of Turn 4 and `redoTurn()` restores the
+  start of Turn 5. After one action in Turn 5, `undoTurn()` also restores the start of Turn 4 and undoes that
+  current-Turn action ([Turn navigation](#turn-navigation)).
 - **New Timeline branch:** Undo one action, then commit a different action. The undone action cannot be redone
   ([Action navigation](#action-navigation)).
 - **Campaign configuration follows the Timeline cursor:** Commit a Campaign configuration change. Undo restores the

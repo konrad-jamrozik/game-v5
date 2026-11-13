@@ -35,7 +35,7 @@
     <marker id="nav-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path class="navhead" d="M0 1 L10 5 L0 9z"/></marker>
   </defs>
   <rect class="bg" x="0" y="0" width="1080" height="500"/>
-  <text class="title" x="24" y="34">Timeline of one Campaign, with its last two committed actions undone</text>
+  <text class="title" x="24" y="34">Timeline of one Campaign, with its last two Committed actions undone</text>
   <path class="nav" marker-end="url(#nav-head)" d="M 694 256 Q 620 186 548 253"/>
   <text class="navlabel" x="620" y="212">undoAction()</text>
   <path class="nav" marker-end="url(#nav-head)" d="M 697 254 C 660 90, 100 90, 64 254"/>
@@ -118,5 +118,5 @@
   <text class="legend" x="411" y="448">Advance turn, the Player API action that ends a turn</text>
   <rect class="entry player redo" x="740" y="435" width="26" height="16" rx="3"/>
   <text class="legend" x="774" y="448">redo entry: undone, reachable by redo</text>
-  <text class="legend" x="24" y="476">Every box is one committed action and one Timeline entry. Values partway through an action, e.g. inside Advance turn, are not a Committed state.</text>
+  <text class="legend" x="24" y="476">Every box is one Committed action and one Timeline entry. Values partway through an action, e.g. inside Advance turn, are not a Committed state.</text>
 </svg>

@@ -71,9 +71,9 @@ by hand, without relying on a prepared acceptance test.
 
 An override is a cheat operation under
 [Dev mode and developer operations](../foundation/engine-contract.md#dev-mode-and-developer-operations): it belongs in
-`developer.actions`, and each successful one is one atomic committed action in the Timeline. The guarantee under
+`developer.actions`, and each successful one is one atomic Committed action in the Timeline. The guarantee under
 [Determinism](../foundation/engine-contract.md#determinism) therefore still holds, because replaying the same ordered
-committed commands replays the same overrides.
+Committed actions replays the same overrides.
 
 TODO: Specify the override operations: how a random outcome is identified, validation that the supplied value is one
 of its possible values, whether an override applies once or until cleared, what happens to an override whose random

@@ -86,7 +86,7 @@ Session status, Timeline status, and Autopilot status, and disengage Autopilot. 
 Session controller gameplay mutations, and Developer API operations are unavailable until disengagement completes.
 `session.autopilot.disengage(engagementId)` requests disengagement between atomic actions. An action already executing either
 commits completely or fails without effects. Disengagement never implicitly advances a turn or undoes earlier
-committed actions. Failure of the Autopilot AI follows the same boundary rule. A late response from a completed Autopilot engagement
+Committed actions. Failure of the Autopilot AI follows the same boundary rule. A late response from a completed Autopilot engagement
 cannot change Campaign state or write Autopilot memory. Timeline navigation remains available after disengagement.
 
 # Autopilot memory
@@ -117,7 +117,7 @@ successful load restores it.
 
 # Edge cases and failure behavior
 
-Autopilot disengagement and failure of the Autopilot AI preserve every committed action. An Autopilot AI that calls
+Autopilot disengagement and failure of the Autopilot AI preserve every Committed action. An Autopilot AI that calls
 an operation outside its access is rejected without changing anything, under
 [Committed state integrity](engine-contract.md#committed-state-integrity).
 
@@ -141,5 +141,5 @@ nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-recei
   Autopilot with Autopilot AI Y: Y reads absence. Disengage, undo to an earlier Timeline position, and engage Autopilot
   with X: X also reads absence ([Autopilot memory](#autopilot-memory)).
 - **Disengagement during an action:** Disengage Autopilot during an action. The action either commits completely or
-  fails without effects; earlier committed actions remain
+  fails without effects; earlier Committed actions remain
   ([Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency)).
