@@ -6,6 +6,7 @@ import { runDerivedDocumentation, type DerivedDocsIO } from '../scripts/derived-
 import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
 import {
   isFamilyDiagramFilePath,
+  renderDerivedDiagramFiles,
   renderDerivedDocumentation,
   renderFamilyDiagram,
   renderFamilyDiagramFiles,
@@ -160,6 +161,31 @@ describe('SVG diagram renderer', () => {
     }
   })
 
+  test('draws a layer too wide to read as several rows under one layer label', () => {
+    const wide: DiagramInput = {
+      label: 'Wide',
+      nodes: [
+        { id: 'ROOT', lines: ['ROOT — Root'], layer: 1 },
+        ...Array.from({ length: 12 }, (_, index) => ({
+          id: `N${String(index).padStart(2, '0')}`,
+          lines: [`N${String(index).padStart(2, '0')} — A specification with a long title`],
+          layer: 2,
+        })),
+      ],
+      edges: Array.from({ length: 12 }, (_, index) => ({
+        from: 'ROOT',
+        to: `N${String(index).padStart(2, '0')}`,
+        kinds: kinds('uses'),
+      })),
+      showLayerLabels: true,
+    }
+    const svg = renderSvgDiagram(wide)
+    const rowTops = new Set([...svg.matchAll(/<rect class="box" x="[\d.-]+" y="([\d.-]+)"/g)].map((match) => match[1]))
+    expect(rowTops.size).toBeGreaterThan(2)
+    expect(svg.match(/LAYER 2/g)).toHaveLength(1)
+    expect(svg).not.toContain('LAYER 3')
+  })
+
   test('produces identical output repeatedly and regardless of input order', () => {
     const reversed = { ...input, nodes: input.nodes.toReversed(), edges: input.edges.toReversed() }
     expect(renderSvgDiagram(input)).toBe(renderSvgDiagram(input))
@@ -208,7 +234,10 @@ describe('family SVG diagrams', () => {
     const root = process.cwd()
     const files = await collectMarkdownFiles(root, resolve(root, 'docs'))
     const analysis = analyzeSpecifications({ files })
-    const derived = await renderDerivedDocumentation(analysis.corpus, PRETTIER_OPTIONS)
+    const derived = new Map([
+      ...(await renderDerivedDocumentation(analysis.corpus, PRETTIER_OPTIONS)),
+      ...renderDerivedDiagramFiles(analysis.corpus),
+    ])
     const fileSources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
     const diagrams = renderFamilyDiagramFiles(analysis.corpus, fileSources)
     const within = 'docs/specs/mechanics/mechanics-family-within.svg'

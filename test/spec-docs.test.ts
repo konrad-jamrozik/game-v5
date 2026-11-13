@@ -5,6 +5,7 @@ import { describe, expect, test } from 'vitest'
 
 import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
 import {
+  renderDerivedDiagramFiles,
   renderDerivedDocumentation,
   renderFamilyDiagram,
   renderFamilyDiagramFiles,
@@ -122,7 +123,12 @@ function sampleCorpus(): SpecificationCorpus {
 }
 
 function diagramFiles(files: readonly SourceFile[], corpus: SpecificationCorpus): ReadonlyMap<string, string> {
-  return renderFamilyDiagramFiles(corpus, new Map(files.map((file) => [file.path.replaceAll('\\', '/'), file.content])))
+  const sources = new Map(files.map((file) => [file.path.replaceAll('\\', '/'), file.content]))
+  return new Map([...renderDerivedDiagramFiles(corpus), ...renderFamilyDiagramFiles(corpus, sources)])
+}
+
+function arrows(svg: string, style: string): number {
+  return svg.split('\n').filter((line) => line.includes(`class="edge edge-${style}"`) && !line.includes(' H ')).length
 }
 
 function outputObject(outputs: ReadonlyMap<string, string>): Readonly<Record<string, string>> {
@@ -163,15 +169,25 @@ describe('derived specification renderer', () => {
     expect(index).toContain('[Refines relationships](relationships/refines.md)')
     expect(index).toContain('implicit `follows` relationship')
     expect(outputs.has('docs/derived/relationships/follows.md')).toBe(false)
-    expect(refines).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More (Draft)')
+    const diagrams = renderDerivedDiagramFiles(sampleCorpus())
+    expect([...diagrams.keys()]).toEqual([
+      'docs/derived/relationships/refines-all.svg',
+      'docs/derived/relationships/uses-all.svg',
+    ])
+    const refinesDiagram = diagrams.get('docs/derived/relationships/refines-all.svg') ?? ''
+    const usesDiagram = diagrams.get('docs/derived/relationships/uses-all.svg') ?? ''
     expect(refines).toContain('A → B means A is refined by B.')
-    expect(refines).toContain('AAA --> ZZZ')
+    expect(refines).toContain('![Refines relationships](./refines-all.svg)')
+    expect(refinesDiagram).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More (Draft)')
+    expect(arrows(refinesDiagram, 'refines')).toBe(1)
     expect(uses).toContain('A → B means A is used by B.')
-    expect(uses).toContain('AAA --> ZZZ')
-    expect(uses).toContain('ZZZ --> AAA')
-    expect([...outputs.values()].join('\n')).not.toContain('CONV --> AAA')
+    expect(uses).toContain('![Uses relationships](./uses-all.svg)')
+    // AAA and ZZZ use each other, so they share a layer and both arrows are drawn.
+    expect(arrows(usesDiagram, 'uses')).toBe(2)
+    expect(usesDiagram).not.toContain('LAYER 2')
+    expect([...diagrams.values()].join('\n')).not.toContain('CONV')
+    expect([...outputs.values()].join('\n')).not.toContain('```mermaid')
     expect(refines).not.toContain('REL-')
-    expect(refines).not.toContain('-->|')
     expect(refines).not.toMatch(/^\|/m)
     expect(refines).not.toContain('Explicit relationship overview')
     expect(refines).not.toContain('Shared state')
@@ -183,104 +199,110 @@ describe('derived specification renderer', () => {
 
   test('renders the Engine Contract refinement subtree as a separate diagram', async () => {
     const corpus = sampleCorpus()
-    const outputs = await renderDerivedDocumentation(
-      {
-        ...corpus,
-        specifications: [
-          ...corpus.specifications,
-          {
-            id: 'ENG',
-            family: 'Foundation',
-            title: 'Engine Contract',
-            status: 'Draft',
+    const engineCorpus: SpecificationCorpus = {
+      ...corpus,
+      specifications: [
+        ...corpus.specifications,
+        {
+          id: 'ENG',
+          family: 'Foundation',
+          title: 'Engine Contract',
+          status: 'Draft',
 
-            owns: 'Engine behavior.',
-            path: 'docs/specs/foundation/engine-contract.md',
-          },
-        ],
-        relationships: [
-          ...corpus.relationships,
-          {
-            dependencyId: 'ENG',
-            dependencyPath: 'docs/specs/foundation/engine-contract.md',
-            dependentId: 'CONV',
-            dependentPath: 'docs/specs/governance/spec-conventions.md',
-            kind: 'refines',
-            origin: 'explicit',
-            sourcePaths: ['docs/specs/foundation/engine-contract.md', 'docs/specs/governance/spec-conventions.md'],
-          },
-        ],
-      },
-      PRETTIER_OPTIONS,
-    )
+          owns: 'Engine behavior.',
+          path: 'docs/specs/foundation/engine-contract.md',
+        },
+      ],
+      relationships: [
+        ...corpus.relationships,
+        {
+          dependencyId: 'ENG',
+          dependencyPath: 'docs/specs/foundation/engine-contract.md',
+          dependentId: 'CONV',
+          dependentPath: 'docs/specs/governance/spec-conventions.md',
+          kind: 'refines',
+          origin: 'explicit',
+          sourcePaths: ['docs/specs/foundation/engine-contract.md', 'docs/specs/governance/spec-conventions.md'],
+        },
+      ],
+    }
+    const outputs = await renderDerivedDocumentation(engineCorpus, PRETTIER_OPTIONS)
+    const diagrams = renderDerivedDiagramFiles(engineCorpus)
     const refines = outputs.get('docs/derived/relationships/refines.md') ?? ''
     expect(refines).toContain('## Model and gameplay specifications')
     expect(refines).toContain('## Engine contract')
-    expect(refines.match(/```mermaid/g)).toHaveLength(2)
-    expect(refines.indexOf('AAA --> ZZZ')).toBeLessThan(refines.indexOf('## Engine contract'))
-    expect(refines.indexOf('ENG --> CONV')).toBeGreaterThan(refines.indexOf('## Engine contract'))
+    expect(refines.match(/!\[Refines relationships: /g)).toHaveLength(2)
+    expect(refines.indexOf('(./refines-model-and-gameplay.svg)')).toBeLessThan(refines.indexOf('## Engine contract'))
+    expect(refines.indexOf('(./refines-engine-contract.svg)')).toBeGreaterThan(refines.indexOf('## Engine contract'))
+    const gameplay = diagrams.get('docs/derived/relationships/refines-model-and-gameplay.svg') ?? ''
+    const engine = diagrams.get('docs/derived/relationships/refines-engine-contract.svg') ?? ''
+    expect(gameplay).toContain('ZZZ — Zulu (Stub)')
+    expect(gameplay).not.toContain('ENG — ')
+    expect(engine).toContain('ENG — Engine Contract (Draft)')
+    expect(engine).toContain('CONV — Conventions (Accepted)')
+    expect(engine).not.toContain('ZZZ — ')
   })
 
-  test('isolates relationship governance and renders the main uses graph top-down with Domain Model first', async () => {
+  test('isolates relationship governance from the main uses graph', async () => {
     const corpus = sampleCorpus()
-    const outputs = await renderDerivedDocumentation(
-      {
-        ...corpus,
-        specifications: [
-          ...corpus.specifications,
-          {
-            id: 'DOM',
-            family: 'Foundation',
-            title: 'Domain Model',
-            status: 'Draft',
+    const governanceCorpus: SpecificationCorpus = {
+      ...corpus,
+      specifications: [
+        ...corpus.specifications,
+        {
+          id: 'DOM',
+          family: 'Foundation',
+          title: 'Domain Model',
+          status: 'Draft',
 
-            owns: 'Shared domain.',
-            path: 'docs/specs/foundation/domain-model.md',
-          },
-          {
-            id: 'REL',
-            family: 'Governance',
-            title: 'Artifact Relationships',
-            status: 'Draft',
+          owns: 'Shared domain.',
+          path: 'docs/specs/foundation/domain-model.md',
+        },
+        {
+          id: 'REL',
+          family: 'Governance',
+          title: 'Artifact Relationships',
+          status: 'Draft',
 
-            owns: 'Relationship rules.',
-            path: 'docs/specs/governance/artifact-relationships.md',
-          },
-        ],
-        relationships: [
-          ...corpus.relationships,
-          {
-            dependencyId: 'DOM',
-            dependencyPath: 'docs/specs/foundation/domain-model.md',
-            dependentId: 'AAA',
-            dependentPath: 'docs/specs/foundation/alpha.md',
-            kind: 'uses',
-            origin: 'explicit',
-            sourcePaths: ['docs/specs/foundation/domain-model.md', 'docs/specs/foundation/alpha.md'],
-          },
-          {
-            dependencyId: 'REL',
-            dependencyPath: 'docs/specs/governance/artifact-relationships.md',
-            dependentId: 'CONV',
-            dependentPath: 'docs/specs/governance/spec-conventions.md',
-            kind: 'uses',
-            origin: 'explicit',
-            sourcePaths: [
-              'docs/specs/governance/artifact-relationships.md',
-              'docs/specs/governance/spec-conventions.md',
-            ],
-          },
-        ],
-      },
-      PRETTIER_OPTIONS,
-    )
+          owns: 'Relationship rules.',
+          path: 'docs/specs/governance/artifact-relationships.md',
+        },
+      ],
+      relationships: [
+        ...corpus.relationships,
+        {
+          dependencyId: 'DOM',
+          dependencyPath: 'docs/specs/foundation/domain-model.md',
+          dependentId: 'AAA',
+          dependentPath: 'docs/specs/foundation/alpha.md',
+          kind: 'uses',
+          origin: 'explicit',
+          sourcePaths: ['docs/specs/foundation/domain-model.md', 'docs/specs/foundation/alpha.md'],
+        },
+        {
+          dependencyId: 'REL',
+          dependencyPath: 'docs/specs/governance/artifact-relationships.md',
+          dependentId: 'CONV',
+          dependentPath: 'docs/specs/governance/spec-conventions.md',
+          kind: 'uses',
+          origin: 'explicit',
+          sourcePaths: ['docs/specs/governance/artifact-relationships.md', 'docs/specs/governance/spec-conventions.md'],
+        },
+      ],
+    }
+    const outputs = await renderDerivedDocumentation(governanceCorpus, PRETTIER_OPTIONS)
+    const diagrams = renderDerivedDiagramFiles(governanceCorpus)
     const uses = outputs.get('docs/derived/relationships/uses.md') ?? ''
     const governanceStart = uses.indexOf('## Relationship governance')
-    expect(uses).toContain('## Game specifications\n\n```mermaid\nflowchart TD\n  DOM[')
-    expect(uses.match(/```mermaid/g)).toHaveLength(2)
-    expect(uses.indexOf('DOM --> AAA')).toBeLessThan(governanceStart)
-    expect(uses.indexOf('REL --> CONV')).toBeGreaterThan(governanceStart)
-    expect(uses.slice(governanceStart)).not.toContain('DOM --> AAA')
+    expect(uses.indexOf('(./uses-game.svg)')).toBeLessThan(governanceStart)
+    expect(uses.indexOf('(./uses-governance.svg)')).toBeGreaterThan(governanceStart)
+    const game = diagrams.get('docs/derived/relationships/uses-game.svg') ?? ''
+    const governance = diagrams.get('docs/derived/relationships/uses-governance.svg') ?? ''
+    expect(game).toContain('DOM — Domain Model (Draft)')
+    expect(game).not.toContain('REL — ')
+    expect(governance).toContain('REL — Artifact Relationships (Draft)')
+    expect(governance).toContain('CONV — Conventions (Accepted)')
+    expect(governance).not.toContain('DOM — ')
   })
 
   test('produces identical output repeatedly', async () => {

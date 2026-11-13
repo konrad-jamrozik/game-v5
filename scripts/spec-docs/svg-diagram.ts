@@ -39,7 +39,9 @@ const BOX_PADDING_X = 16
 const BOX_PADDING_Y = 13
 const PORT_SPACING = 26
 const NODE_GAP = 36
-const DUMMY_WIDTH = 18
+const DUMMY_WIDTH = 4
+const ROUTE_GAP = 8
+const MAX_ROW_WIDTH = 1100
 const ROW_GAP = 72
 const SAME_ROW_ARC = 26
 const MARGIN = 24
@@ -201,17 +203,29 @@ function mean(values: readonly number[]): number {
 export function renderSvgDiagram(input: DiagramInput): string {
   const nodes = input.nodes.toSorted((left, right) => compareText(left.id, right.id))
   const layerNumbers = [...new Set(nodes.map((node) => node.layer))].toSorted((left, right) => left - right)
-  const rowOfLayer = new Map(layerNumbers.map((layer, row) => [layer, row]))
-  const rowCount = layerNumbers.length
-  const items = new Map<string, Item>()
-  const rows: string[][] = layerNumbers.map(() => [])
   const connected = new Set(input.edges.flatMap((edge) => [edge.from, edge.to]))
+  // A layer too wide to read is drawn as several rows; only its first row carries the layer label.
+  const rowLayers: { readonly layer: number; readonly first: boolean }[] = []
+  const rowOfNode = new Map<string, number>()
+  for (const layer of layerNumbers) {
+    const members = nodes.filter((node) => node.layer === layer)
+    const total = members.reduce((sum, node) => sum + estimateBoxWidth(node.lines) + NODE_GAP, 0)
+    const rowsNeeded = Math.max(1, Math.ceil(total / MAX_ROW_WIDTH))
+    const perRow = Math.ceil(members.length / rowsNeeded)
+    for (const [position, node] of members.entries()) {
+      if (position % perRow === 0) rowLayers.push({ layer, first: position === 0 })
+      rowOfNode.set(node.id, rowLayers.length - 1)
+    }
+  }
+  const rowCount = rowLayers.length
+  const items = new Map<string, Item>()
+  const rows: string[][] = rowLayers.map(() => [])
 
   for (const node of nodes.toSorted(
     (left, right) =>
       Number(!connected.has(left.id)) - Number(!connected.has(right.id)) || compareText(left.id, right.id),
   )) {
-    const row = rowOfLayer.get(node.layer) ?? 0
+    const row = rowOfNode.get(node.id) ?? 0
     items.set(node.id, {
       key: node.id,
       node,
@@ -335,7 +349,8 @@ export function renderSvgDiagram(input: DiagramInput): string {
 
   // Place each row, then pull every box toward the boxes it connects to while keeping the order and the gaps.
   const separation = (left: Item, right: Item): number =>
-    (left.width + right.width) / 2 + (left.node && right.node ? NODE_GAP : NODE_GAP / 2)
+    (left.width + right.width) / 2 +
+    (left.node && right.node ? NODE_GAP : left.node || right.node ? NODE_GAP / 2 : ROUTE_GAP)
   const rowItems = (row: number): Item[] =>
     (rows[row] ?? []).flatMap((key) => {
       const item = items.get(key)
@@ -496,12 +511,14 @@ export function renderSvgDiagram(input: DiagramInput): string {
 
   const layerMarks: string[] = []
   if (input.showLayerLabels) {
-    for (const [row, layer] of layerNumbers.entries()) {
+    for (const [row, { layer, first }] of rowLayers.entries()) {
       const middle = (rowTop[row] ?? 0) + (rowHeight[row] ?? 0) / 2
-      layerMarks.push(
-        `  <text class="layer" x="${number(MARGIN)}" y="${number(middle + 4)}">LAYER ${String(layer)}</text>`,
-      )
-      if (row + 1 < rowCount) {
+      if (first) {
+        layerMarks.push(
+          `  <text class="layer" x="${number(MARGIN)}" y="${number(middle + 4)}">LAYER ${String(layer)}</text>`,
+        )
+      }
+      if (row + 1 < rowCount && rowLayers[row + 1]?.first === true) {
         const ruleY = (rowTop[row] ?? 0) + (rowHeight[row] ?? 0) + ROW_GAP / 2
         layerMarks.push(
           `  <path class="rule" d="M ${number(MARGIN)} ${number(ruleY)} H ${number(MARGIN + LAYER_LABEL_WIDTH - 16)}"/>`,

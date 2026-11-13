@@ -185,39 +185,6 @@ function relationshipSort(left: RelationshipRecord, right: RelationshipRecord): 
   )
 }
 
-function mermaidText(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/[\r\n]+/g, ' ')
-}
-
-function renderMermaid(
-  specifications: readonly SpecificationRecord[],
-  relationships: readonly RelationshipRecord[],
-  direction: 'LR' | 'TD' = 'LR',
-  firstSpecificationId?: string,
-): string {
-  const lines = ['```mermaid', `flowchart ${direction}`]
-  const sortedSpecifications = specifications.toSorted((left, right) => {
-    if (left.id === firstSpecificationId) return -1
-    if (right.id === firstSpecificationId) return 1
-    return compareText(left.id, right.id)
-  })
-  for (const specification of sortedSpecifications) {
-    lines.push(
-      `  ${specification.id}["${mermaidText(`${specification.id} — ${specification.title} (${specification.status})`)}"]`,
-    )
-  }
-  for (const relationship of relationships.toSorted(relationshipSort)) {
-    lines.push(`  ${relationship.dependencyId} --> ${relationship.dependentId}`)
-  }
-  lines.push('```')
-  return lines.join('\n')
-}
-
 function titleForRelationshipKind(kind: RelationshipKind): string {
   return `${kind[0]?.toUpperCase() ?? ''}${kind.slice(1)}`
 }
@@ -271,19 +238,6 @@ function descendantRelationships(
   return descendants
 }
 
-function renderRelationshipDiagram(
-  specifications: readonly SpecificationRecord[],
-  relationships: readonly RelationshipRecord[],
-  direction: 'LR' | 'TD' = 'LR',
-  firstSpecificationId?: string,
-): string {
-  const participantIds = new Set(
-    relationships.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
-  )
-  const participants = specifications.filter((specification) => participantIds.has(specification.id))
-  return renderMermaid(participants, relationships, direction, firstSpecificationId)
-}
-
 function renderRelationshipsIndex(corpus: SpecificationCorpus): string {
   const kinds = renderedRelationshipKinds(corpus)
   return `${[
@@ -304,36 +258,32 @@ function renderRelationshipsIndex(corpus: SpecificationCorpus): string {
   ].join('\n')}\n`
 }
 
-function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipKind): string {
-  const specifications = corpus.specifications.toSorted((left, right) => compareText(left.id, right.id))
+interface RelationshipSection {
+  readonly heading: string | undefined
+  readonly slug: string
+  readonly relationships: readonly RelationshipRecord[]
+}
+
+/** Splits the relationships of one kind into the diagrams its page shows. */
+function relationshipSections(corpus: SpecificationCorpus, kind: RelationshipKind): readonly RelationshipSection[] {
   const kindRelationships = explicitRelationships(corpus, kind)
-  const lines = [
-    `# ${titleForRelationshipKind(kind)} Relationships`,
-    '',
-    GENERATED_NOTICE,
-    '',
-    passiveDescription(kind),
-    '',
-    '[Back to the relationship graph index](../relationships.md)',
-    '',
-    '[Back to the derived specification catalog](../README.md)',
-    '',
-  ]
   if (kind === 'refines') {
     const engineRelationships = descendantRelationships(kindRelationships, 'ENG')
     if (engineRelationships.length > 0) {
       const engineRelationshipSet = new Set(engineRelationships)
       const otherRelationships = kindRelationships.filter((relationship) => !engineRelationshipSet.has(relationship))
-      if (otherRelationships.length > 0) {
-        lines.push(
-          '## Model and gameplay specifications',
-          '',
-          renderRelationshipDiagram(specifications, otherRelationships),
-          '',
-        )
-      }
-      lines.push('## Engine contract', '', renderRelationshipDiagram(specifications, engineRelationships))
-      return `${lines.join('\n')}\n`
+      return [
+        ...(otherRelationships.length > 0
+          ? [
+              {
+                heading: 'Model and gameplay specifications',
+                slug: 'model-and-gameplay',
+                relationships: otherRelationships,
+              },
+            ]
+          : []),
+        { heading: 'Engine contract', slug: 'engine-contract', relationships: engineRelationships },
+      ]
     }
   }
   if (kind === 'uses') {
@@ -343,20 +293,89 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
     if (governanceRelationships.length > 0) {
       const governanceRelationshipSet = new Set(governanceRelationships)
       const gameRelationships = kindRelationships.filter((relationship) => !governanceRelationshipSet.has(relationship))
-      if (gameRelationships.length > 0) {
-        lines.push(
-          '## Game specifications',
-          '',
-          renderRelationshipDiagram(specifications, gameRelationships, 'TD', 'DOM'),
-          '',
-        )
-      }
-      lines.push('## Relationship governance', '', renderRelationshipDiagram(specifications, governanceRelationships))
-      return `${lines.join('\n')}\n`
+      return [
+        ...(gameRelationships.length > 0
+          ? [{ heading: 'Game specifications', slug: 'game', relationships: gameRelationships }]
+          : []),
+        { heading: 'Relationship governance', slug: 'governance', relationships: governanceRelationships },
+      ]
     }
   }
-  lines.push(renderRelationshipDiagram(specifications, kindRelationships))
+  return [{ heading: undefined, slug: 'all', relationships: kindRelationships }]
+}
+
+function relationshipSvgFileName(kind: RelationshipKind, section: RelationshipSection): string {
+  return `${kind}-${section.slug}.svg`
+}
+
+function relationshipSvgLabel(kind: RelationshipKind, section: RelationshipSection): string {
+  const title = `${titleForRelationshipKind(kind)} relationships`
+  return section.heading === undefined ? title : `${title}: ${section.heading}`
+}
+
+function renderRelationshipSvg(
+  corpus: SpecificationCorpus,
+  kind: RelationshipKind,
+  section: RelationshipSection,
+): string {
+  const participantIds = new Set(
+    section.relationships.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
+  )
+  const participants = corpus.specifications
+    .filter((specification) => participantIds.has(specification.id))
+    .toSorted((left, right) => compareText(left.id, right.id))
+  const edges = section.relationships.map((relationship) => ({
+    from: relationship.dependencyId,
+    to: relationship.dependentId,
+    kinds: new Set<RelationshipKind>([relationship.kind]),
+  }))
+  const layers = computeLayers(
+    participants.map((specification) => specification.id),
+    edges,
+  )
+  return renderSvgDiagram({
+    label: relationshipSvgLabel(kind, section),
+    nodes: participants.map((specification) => ({
+      id: specification.id,
+      lines: [specificationLabel(specification)],
+      layer: layers.get(specification.id) ?? 1,
+    })),
+    edges,
+    showLayerLabels: true,
+  })
+}
+
+function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipKind): string {
+  const lines = [
+    `# ${titleForRelationshipKind(kind)} Relationships`,
+    '',
+    GENERATED_NOTICE,
+    '',
+    `${passiveDescription(kind)} Layer 1 holds the specifications that depend on no other specification in the diagram.`,
+    '',
+    '[Back to the relationship graph index](../relationships.md)',
+    '',
+    '[Back to the derived specification catalog](../README.md)',
+  ]
+  for (const section of relationshipSections(corpus, kind)) {
+    if (section.heading !== undefined) lines.push('', `## ${section.heading}`)
+    lines.push('', `![${relationshipSvgLabel(kind, section)}](./${relationshipSvgFileName(kind, section)})`)
+  }
   return `${lines.join('\n')}\n`
+}
+
+/** Returns the SVG diagram files linked from the derived relationship pages. */
+export function renderDerivedDiagramFiles(corpus: SpecificationCorpus): ReadonlyMap<string, string> {
+  const outputs = new Map<string, string>()
+  for (const kind of renderedRelationshipKinds(corpus)) {
+    for (const section of relationshipSections(corpus, kind)) {
+      outputs.set(
+        `docs/derived/relationships/${relationshipSvgFileName(kind, section)}`,
+        renderRelationshipSvg(corpus, kind, section),
+      )
+    }
+  }
+  return outputs
 }
 
 function externalFamilyNodeId(family: SpecificationFamily): string {

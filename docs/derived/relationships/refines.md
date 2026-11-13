@@ -2,7 +2,7 @@
 
 > **Generated — do not edit.** Run `npm run docs:generate` after changing registered specifications.
 
-A → B means A is refined by B.
+A → B means A is refined by B. Layer 1 holds the specifications that depend on no other specification in the diagram.
 
 [Back to the relationship graph index](../relationships.md)
 
@@ -10,49 +10,8 @@ A → B means A is refined by B.
 
 ## Model and gameplay specifications
 
-```mermaid
-flowchart LR
-  AGENT["AGENT — Agents (Stub)"]
-  API["API — TypeScript Player API (Stub)"]
-  AUTO["AUTO — Autopilot (Draft)"]
-  COMBAT["COMBAT — Combat (Stub)"]
-  DOM["DOM — Domain Model (Draft)"]
-  ECON["ECON — Economy and Upgrades (Stub)"]
-  ENDING["ENDING — Panic and Endings (Stub)"]
-  FACTION["FACTION — Factions (Stub)"]
-  INVSTG["INVSTG — Investigations (Stub)"]
-  LEAD["LEAD — Leads and Progression (Stub)"]
-  MISSION["MISSION — Missions (Stub)"]
-  RECOVER["RECOVER — Agent Recovery (Stub)"]
-  AGENT --> COMBAT
-  AGENT --> ECON
-  AGENT --> RECOVER
-  AUTO --> API
-  DOM --> AGENT
-  DOM --> COMBAT
-  DOM --> ECON
-  DOM --> ENDING
-  DOM --> FACTION
-  DOM --> INVSTG
-  DOM --> LEAD
-  DOM --> MISSION
-  FACTION --> LEAD
-  FACTION --> MISSION
-```
+![Refines relationships: Model and gameplay specifications](./refines-model-and-gameplay.svg)
 
 ## Engine contract
 
-```mermaid
-flowchart LR
-  API["API — TypeScript Player API (Stub)"]
-  CSTATE["CSTATE — Campaign State (Accepted)"]
-  DEV["DEV — Developer API (Stub)"]
-  ENG["ENG — Engine Contract (Draft)"]
-  INFO["INFO — Player Information (Stub)"]
-  NUMRNG["NUMRNG — Numbers and Randomness (Stub)"]
-  ENG --> API
-  ENG --> CSTATE
-  ENG --> DEV
-  ENG --> INFO
-  ENG --> NUMRNG
-```
+![Refines relationships: Engine contract](./refines-engine-contract.svg)

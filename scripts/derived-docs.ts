@@ -7,6 +7,7 @@ import { resolveConfig, type Options } from 'prettier'
 import { collectMarkdownFiles } from './lint-specs.ts'
 import {
   isFamilyDiagramFilePath,
+  renderDerivedDiagramFiles,
   renderDerivedDocumentation,
   renderFamilyDiagramFiles,
   renderFamilyOverviews,
@@ -128,7 +129,11 @@ export async function runDerivedDocumentation(
       ...(await renderDerivedDocumentation(analysis.corpus, prettierOptions)),
       ...overviews,
     ])
-    const expected = new Map([...expectedMarkdown, ...renderFamilyDiagramFiles(analysis.corpus, sources)])
+    const expected = new Map([
+      ...expectedMarkdown,
+      ...renderDerivedDiagramFiles(analysis.corpus),
+      ...renderFamilyDiagramFiles(analysis.corpus, sources),
+    ])
     const linkFindings = derivedLinkFindings(files, expectedMarkdown)
     if (linkFindings.length > 0) {
       for (const finding of linkFindings) io.writeError(finding)
