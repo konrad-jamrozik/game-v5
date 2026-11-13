@@ -46,6 +46,28 @@ Timeline, Committed state, Campaign save, and the API surface and Principal term
 | Timeline branch     | The Timeline entries reachable from the Timeline cursor by undo and redo. Committing a new action after undo starts a new Timeline branch and discards the previous redo entries. |
 | Turn-start position | A Timeline position immediately after campaign creation or immediately after a committed Advance turn action.                                                                     |
 
+# Timeline structure
+
+The following hand-kept diagram shows one example Timeline: a Campaign with six committed actions, of which the last
+two have been undone. It illustrates the terms of the [Glossary](#glossary) and the rules of the sections below, and
+it adds no rule of its own.
+
+![Timeline structure: Timeline entries, Timeline positions, turns, and undo and redo](./timeline-structure.svg)
+
+The diagram reads as follows:
+
+- **Timeline entries:** each box is one Timeline entry, which is one committed action. A Player API action and a
+  Developer API action are Timeline entries alike, under [Timeline entries](#timeline-entries).
+- **Timeline positions:** each circle is a Timeline position. The Campaign state at it is a Committed state, labelled
+  S0 to S6. A Timeline with six Timeline entries therefore has seven Timeline positions.
+- **Advance turn:** Advance turn is one Timeline entry, and the Timeline position after it is a Turn-start position.
+  The values partway through it are not a Committed state, so no Timeline position lies inside it.
+- **Turns:** each bracket groups the Timeline positions of one turn, from a Turn-start position up to the Advance turn
+  that leads to the next Turn-start position.
+- **Undo and redo:** the Timeline cursor is at S4. Each arrow shows where one navigation operation moves it, under
+  [Action navigation](#action-navigation) and [Turn navigation](#turn-navigation). The two dashed boxes are the redo
+  entries.
+
 # World history, Timeline, and Campaign save
 
 Three things keep a Campaign's past, for different purposes. The following comparison is complete.

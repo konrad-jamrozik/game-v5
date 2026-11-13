@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="500" viewBox="0 0 1080 500" role="img" aria-label="Timeline structure: Timeline entries, Timeline positions, turns, and undo and redo">
+  <!-- Hand-kept diagram for docs/specs/foundation/timeline.md; not generated. -->
+  <style>
+    :root { --bg: #ffffff; --surface: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --player: #2f7f95; --dev: #b26a00; --nav: #4f2fe0; --tint: #e6f2f5; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161d; --surface: #1a2029; --fg: #e6eaf0; --muted: #9aa5b5; --line: #323b49; --player: #6fb3c7; --dev: #e0a64a; --nav: #a595ff; --tint: #1f3138; }
+    }
+    text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
+    .bg { fill: var(--bg); }
+    .title { fill: var(--fg); font-size: 14px; font-weight: 600; }
+    .axis { stroke: var(--fg); stroke-width: 1.4; fill: none; }
+    .head { fill: var(--fg); }
+    .pos { fill: var(--surface); stroke: var(--fg); stroke-width: 1.4; }
+    .ring { fill: none; stroke: var(--fg); stroke-width: 1.4; }
+    .cursor { fill: var(--nav); stroke: var(--nav); stroke-width: 1.4; }
+    .redo { stroke-dasharray: 5 4; }
+    .entry { fill: var(--surface); stroke-width: 1.6; }
+    .player { stroke: var(--player); }
+    .dev { stroke: var(--dev); }
+    .adv { stroke: var(--player); stroke-width: 3.2; fill: var(--tint); }
+    .kind { fill: var(--muted); font-size: 10.5px; text-anchor: middle; }
+    .name { fill: var(--fg); font-size: 13px; font-weight: 600; text-anchor: middle; }
+    .state { fill: var(--fg); font-size: 13px; font-weight: 600; text-anchor: middle; }
+    .sub { fill: var(--muted); font-size: 11.5px; text-anchor: middle; }
+    .subcursor { fill: var(--nav); font-size: 11.5px; font-weight: 600; text-anchor: middle; }
+    .turn { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+    .turnlabel { fill: var(--fg); font-size: 13px; font-weight: 600; text-anchor: middle; }
+    .nav { fill: none; stroke: var(--nav); stroke-width: 1.8; }
+    .navhead { fill: var(--nav); }
+    .navlabel { fill: var(--nav); font-size: 12.5px; font-weight: 600; text-anchor: middle; }
+    .legend { fill: var(--muted); font-size: 12px; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs>
+    <marker id="nav-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path class="navhead" d="M0 1 L10 5 L0 9z"/></marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1080" height="500"/>
+  <text class="title" x="24" y="34">Timeline of one Campaign, with its last two committed actions undone</text>
+  <path class="nav" marker-end="url(#nav-head)" d="M 694 256 Q 620 186 548 253"/>
+  <text class="navlabel" x="620" y="212">undoAction()</text>
+  <path class="nav" marker-end="url(#nav-head)" d="M 697 254 C 660 90, 100 90, 64 254"/>
+  <text class="navlabel" x="380" y="122">undoTurn()</text>
+  <path class="nav redo" marker-end="url(#nav-head)" d="M 706 256 Q 780 186 855 257"/>
+  <text class="navlabel" x="780" y="212">redoAction()</text>
+  <path class="nav redo" marker-end="url(#nav-head)" d="M 703 254 C 730 130, 990 130, 1016 254"/>
+  <text class="navlabel" x="860" y="152">redoTurn()</text>
+  <path class="axis" d="M 72 270 H 80 M 200 270 H 206"/>
+  <path class="head" d="M 204 266 L 212 270 L 204 274z"/>
+  <rect class="entry player" x="80" y="248" width="120" height="44" rx="6"/>
+  <text class="kind" x="140" y="265">Player API action</text>
+  <text class="name" x="140" y="282">assignAgents</text>
+  <path class="axis" d="M 228 270 H 240 M 360 270 H 366"/>
+  <path class="head" d="M 364 266 L 372 270 L 364 274z"/>
+  <rect class="entry dev" x="240" y="248" width="120" height="44" rx="6"/>
+  <text class="kind" x="300" y="265">Developer API action</text>
+  <text class="name" x="300" y="282">addMoney</text>
+  <path class="axis" d="M 388 270 H 400 M 520 270 H 522"/>
+  <path class="head" d="M 520 266 L 528 270 L 520 274z"/>
+  <rect class="entry adv" x="400" y="248" width="120" height="44" rx="6"/>
+  <text class="kind" x="460" y="265">Player API action</text>
+  <text class="name" x="460" y="282">advanceTurn</text>
+  <path class="axis" d="M 552 270 H 560 M 680 270 H 686"/>
+  <path class="head" d="M 684 266 L 692 270 L 684 274z"/>
+  <rect class="entry player" x="560" y="248" width="120" height="44" rx="6"/>
+  <text class="kind" x="620" y="265">Player API action</text>
+  <text class="name" x="620" y="282">purchaseUpgrade</text>
+  <path class="axis" d="M 708 270 H 720 M 840 270 H 846"/>
+  <path class="head" d="M 844 266 L 852 270 L 844 274z"/>
+  <rect class="entry player redo" x="720" y="248" width="120" height="44" rx="6"/>
+  <text class="kind" x="780" y="265">Player API action</text>
+  <text class="name" x="780" y="282">assignAgents</text>
+  <path class="axis" d="M 868 270 H 880 M 1000 270 H 1002"/>
+  <path class="head" d="M 1000 266 L 1008 270 L 1000 274z"/>
+  <rect class="entry adv redo" x="880" y="248" width="120" height="44" rx="6"/>
+  <text class="kind" x="940" y="265">Player API action</text>
+  <text class="name" x="940" y="282">advanceTurn</text>
+  <circle class="pos" cx="60" cy="270" r="12"/>
+  <circle class="ring" cx="60" cy="270" r="7"/>
+  <text class="state" x="60" y="306">S0</text>
+  <text class="sub" x="60" y="323">Turn-start position</text>
+  <circle class="pos" cx="220" cy="270" r="8"/>
+  <text class="state" x="220" y="306">S1</text>
+  <circle class="pos" cx="380" cy="270" r="8"/>
+  <text class="state" x="380" y="306">S2</text>
+  <circle class="pos" cx="540" cy="270" r="12"/>
+  <circle class="ring" cx="540" cy="270" r="7"/>
+  <text class="state" x="540" y="306">S3</text>
+  <text class="sub" x="540" y="323">Turn-start position</text>
+  <circle class="cursor" cx="700" cy="270" r="8"/>
+  <text class="state" x="700" y="306">S4</text>
+  <text class="subcursor" x="700" y="323">Timeline cursor</text>
+  <circle class="pos redo" cx="860" cy="270" r="8"/>
+  <text class="state" x="860" y="306">S5</text>
+  <circle class="pos redo" cx="1020" cy="270" r="12"/>
+  <circle class="ring redo" cx="1020" cy="270" r="7"/>
+  <text class="state" x="1020" y="306">S6</text>
+  <text class="sub" x="1020" y="323">Turn-start position</text>
+  <path class="turn" d="M 48 344 V 352 H 522 V 344"/>
+  <text class="turnlabel" x="285" y="374">Turn 1</text>
+  <path class="turn" d="M 528 344 V 352 H 1002 V 344"/>
+  <text class="turnlabel" x="765" y="374">Turn 2</text>
+  <path class="turn" d="M 1008 344 V 352 H 1064"/>
+  <text class="turnlabel" x="1036" y="374">Turn 3</text>
+  <path class="rule" d="M 24 398 H 1056"/>
+  <circle class="pos" cx="32" cy="416" r="7"/>
+  <text class="legend" x="48" y="420">Timeline position; its Campaign state is a Committed state (S0 to S6)</text>
+  <circle class="pos" cx="512" cy="416" r="9"/><circle class="ring" cx="512" cy="416" r="5"/>
+  <text class="legend" x="530" y="420">Turn-start position</text>
+  <circle class="cursor" cx="692" cy="416" r="7"/>
+  <text class="legend" x="708" y="420">Timeline cursor</text>
+  <path class="nav" marker-end="url(#nav-head)" d="M 840 416 H 872"/>
+  <text class="legend" x="882" y="420">undo and redo operations</text>
+  <rect class="entry player" x="24" y="435" width="26" height="16" rx="3"/>
+  <text class="legend" x="58" y="448">Player API action</text>
+  <rect class="entry dev" x="190" y="435" width="26" height="16" rx="3"/>
+  <text class="legend" x="224" y="448">Developer API action</text>
+  <rect class="entry adv" x="376" y="435" width="26" height="16" rx="3"/>
+  <text class="legend" x="411" y="448">Advance turn, the Player API action that ends a turn</text>
+  <rect class="entry player redo" x="740" y="435" width="26" height="16" rx="3"/>
+  <text class="legend" x="774" y="448">redo entry: undone, reachable by redo</text>
+  <text class="legend" x="24" y="476">Every box is one committed action and one Timeline entry. Values partway through an action, e.g. inside Advance turn, are not a Committed state.</text>
+</svg>
