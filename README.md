@@ -78,7 +78,7 @@ commit, full, and CI layers relate, and what a clean result does and does not pr
 The [derived specification catalog](docs/derived/README.md) links an alphabetical glossary and specification relationship
 graphs. These informative Markdown files are generated from the registered specifications; the source specifications remain
 authoritative. Each spec Family directory also has an `about-<family>.md` overview whose relationship diagrams the same
-command regenerates between marker comments. After changing a specification, run `npm run docs:generate`. Commit the resulting files. `npm run docs:check`
+command regenerates between marker comments. After changing a specification, run `npm run docs:generate`. For the Mechanics family the command also writes the overview diagrams as SVG files next to the overview, e.g. `docs/specs/mechanics/mechanics-family-within.svg`; do not edit them by hand. Commit the resulting files. `npm run docs:check`
 reports missing, stale, or unexpected files without modifying them, and runs as part of commit and CI checks.
 
 ## Strictness and tests

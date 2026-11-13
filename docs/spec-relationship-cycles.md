@@ -15,7 +15,7 @@ The review also includes implicit follows relationships in a separate pass to id
 The complete result is one governance component with two documents and two internal edges of different Relationship
 kinds. No game specification occurs in a cyclic component: the combined explicit uses/refines graph is acyclic.
 Neither the refines graph nor the follows graph alone contains a cycle. These results were recomputed after the
-Mechanics family was arranged in tiers, which removed five uses relationships: Agents uses Combat, Agents uses Economy
+Mechanics family was arranged in layers, which removed five uses relationships: Agents uses Combat, Agents uses Economy
 and Upgrades, Factions uses Leads and Progression, Investigations uses Player Information, and Developer API uses
 TypeScript Player API.
 

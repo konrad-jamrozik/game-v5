@@ -59,36 +59,27 @@ operation occurrence generation, suppression, and permanent defeat.
 
 # How they relate
 
-The family is arranged in tiers with Agents as the base. Every Mechanics document is refined from the Foundation
+The family is arranged in layers with Agents as the base. Every Mechanics document is refined from the Foundation
 family and supplies the meanings that Game Data Records (GDRs) fill with values.
 
-## The tier rule
+## The layer rule
 
-A lower document states what its things are and what can happen to them. A higher document states when it happens and
-by how much. A lower document may point up to those details with an ownership pointer, but never depends on them.
+A document's layer is one after the latest layer among the Mechanics documents it uses or refines; a document that
+depends on no Mechanics document is in layer 1. The first diagram below shows each document's layer.
+
+A document in an earlier layer states what its things are and what can happen to them. A document in a later layer
+states when it happens and by how much. A document may point to those later details with an ownership pointer, but
+never depends on them.
 
 E.g., Agents states what health is and that it can go down and up. Combat states how a Battle lowers it, and Agent
 Recovery states how it goes back up.
 
-| Tier | Documents                              | Depends on                                     |
-| ---- | -------------------------------------- | ---------------------------------------------- |
-| 1    | Agents                                 | Foundation only                                |
-| 2    | Combat, Economy and Upgrades, Factions | Agents                                         |
-| 3    | Missions                               | Agents, Combat, Economy and Upgrades, Factions |
-| 4    | Agent Recovery, Leads and Progression  | Agents, Factions, Missions                     |
-| 5    | Investigations                         | Agents, Leads and Progression                  |
+A document refines an earlier one when it adds detail to the same subject, e.g. Combat refines Agents with how health
+goes down. It uses an earlier one when it reads that subject to describe its own, e.g. Combat uses Agent skill to
+resolve a Battle.
 
-Panic and Endings declares no relationship to another Mechanics document yet; its tier is decided when its predicates
-are written.
-
-A document refines a lower one when it adds detail to the same subject, e.g. Combat refines Agents with how health
-goes down. It uses a lower one when it reads that subject to describe its own, e.g. Combat uses Agent skill to resolve
-a Battle.
-
-The following hand-drawn diagram is a trial of SVG diagrams. It shows the tiers together with the five relationships
-removed when the tiers were introduced; the generated diagrams below show the current relationships.
-
-![Planned Mechanics tiers](./mechanics-tiers.svg)
+Panic and Endings declares no relationship to another Mechanics document yet, so it is drawn in layer 1; its layer is
+decided when its predicates are written.
 
 <!-- generated:family-diagram:start -->
 
@@ -96,66 +87,11 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ## Within the family
 
-```mermaid
-flowchart TD
-  AGENT["AGENT — Agents (Stub)"]
-  COMBAT["COMBAT — Combat (Stub)"]
-  ECON["ECON — Economy and Upgrades (Stub)"]
-  ENDING["ENDING — Panic and Endings (Stub)"]
-  FACTION["FACTION — Factions (Stub)"]
-  INVSTG["INVSTG — Investigations (Stub)"]
-  LEAD["LEAD — Leads and Progression (Stub)"]
-  MISSION["MISSION — Missions (Stub)"]
-  RECOVER["RECOVER — Agent Recovery (Stub)"]
-  AGENT -->|refined by, used by| COMBAT
-  AGENT -->|refined by, used by| ECON
-  AGENT -->|used by| INVSTG
-  AGENT -->|used by| MISSION
-  AGENT -->|refined by| RECOVER
-  COMBAT -->|used by| MISSION
-  ECON -->|used by| MISSION
-  FACTION -->|refined by, used by| LEAD
-  FACTION -->|refined by, used by| MISSION
-  LEAD -->|used by| INVSTG
-  MISSION -->|used by| LEAD
-  MISSION -->|used by| RECOVER
-```
+![Mechanics family: relationships within the family](./mechanics-family-within.svg)
 
 ## Across families
 
-```mermaid
-flowchart LR
-  AGENT["AGENT — Agents (Stub)"]
-  COMBAT["COMBAT — Combat (Stub)"]
-  ECON["ECON — Economy and Upgrades (Stub)"]
-  ENDING["ENDING — Panic and Endings (Stub)"]
-  FACTION["FACTION — Factions (Stub)"]
-  INVSTG["INVSTG — Investigations (Stub)"]
-  LEAD["LEAD — Leads and Progression (Stub)"]
-  MISSION["MISSION — Missions (Stub)"]
-  RECOVER["RECOVER — Agent Recovery (Stub)"]
-  family_foundation["Foundation family"]:::external
-  family_interfaces["Interfaces family"]:::external
-  AGENT -->|used by| family_interfaces
-  COMBAT -->|used by| family_interfaces
-  ECON -->|used by| family_interfaces
-  ENDING -->|used by| family_interfaces
-  FACTION -->|used by| family_interfaces
-  INVSTG -->|used by| family_interfaces
-  LEAD -->|used by| family_interfaces
-  MISSION -->|used by| family_interfaces
-  RECOVER -->|used by| family_interfaces
-  family_foundation -->|refined by, used by| AGENT
-  family_foundation -->|refined by, used by| COMBAT
-  family_foundation -->|refined by, used by| ECON
-  family_foundation -->|refined by, used by| ENDING
-  family_foundation -->|refined by, used by| FACTION
-  family_foundation -->|refined by, used by| INVSTG
-  family_foundation -->|refined by, used by| LEAD
-  family_foundation -->|refined by, used by| MISSION
-  family_foundation -->|used by| RECOVER
-  classDef external stroke-dasharray: 5 5
-```
+![Mechanics family: relationships with other families](./mechanics-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 
@@ -173,7 +109,7 @@ flowchart LR
 
 # Reading order
 
-Read in tier order: [Agents](agents-spec.md); then [Combat](combat.md), [Economy and Upgrades](economy-and-upgrades.md),
-and [Factions](factions.md); then [Missions](missions.md); then [Agent Recovery](agent-recovery.md) and
-[Leads and Progression](leads-and-progression.md); then [Investigations](investigations.md).
-[Panic and Endings](panic-and-endings.md) can be read at any point.
+Read in layer order: [Agents](agents-spec.md) and [Factions](factions.md); then [Combat](combat.md) and
+[Economy and Upgrades](economy-and-upgrades.md); then [Missions](missions.md); then
+[Agent Recovery](agent-recovery.md) and [Leads and Progression](leads-and-progression.md); then
+[Investigations](investigations.md). [Panic and Endings](panic-and-endings.md) can be read at any point.

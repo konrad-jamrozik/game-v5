@@ -7,6 +7,7 @@ import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
 import {
   renderDerivedDocumentation,
   renderFamilyDiagram,
+  renderFamilyDiagramFiles,
   renderFamilyOverviews,
 } from '../scripts/spec-docs/generator.ts'
 import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
@@ -118,6 +119,10 @@ function sampleCorpus(): SpecificationCorpus {
       },
     ],
   }
+}
+
+function diagramFiles(files: readonly SourceFile[], corpus: SpecificationCorpus): ReadonlyMap<string, string> {
+  return renderFamilyDiagramFiles(corpus, new Map(files.map((file) => [file.path.replaceAll('\\', '/'), file.content])))
 }
 
 function outputObject(outputs: ReadonlyMap<string, string>): Readonly<Record<string, string>> {
@@ -378,7 +383,7 @@ describe('family overview diagrams', () => {
     )
     const errors: string[] = []
     const io: DerivedDocsIO = {
-      actualOutputs: derived,
+      actualOutputs: new Map([...derived, ...diagramFiles(files, analysis.corpus)]),
       writeOutputs: () => Promise.resolve(),
       writeError: (message) => errors.push(message),
     }
@@ -464,7 +469,7 @@ describe('derived documentation checking', () => {
     let writes = 0
     const errors: string[] = []
     const io: DerivedDocsIO = {
-      actualOutputs: expected,
+      actualOutputs: new Map([...expected, ...diagramFiles(files, analysis.corpus)]),
       writeOutputs: () => {
         writes += 1
         return Promise.resolve()

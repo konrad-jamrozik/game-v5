@@ -5,7 +5,12 @@ import { fileURLToPath } from 'node:url'
 import { resolveConfig, type Options } from 'prettier'
 
 import { collectMarkdownFiles } from './lint-specs.ts'
-import { renderDerivedDocumentation, renderFamilyOverviews } from './spec-docs/generator.ts'
+import {
+  isFamilyDiagramFilePath,
+  renderDerivedDocumentation,
+  renderFamilyDiagramFiles,
+  renderFamilyOverviews,
+} from './spec-docs/generator.ts'
 import { analyzeSpecifications, formatDiagnostic, lintSectionReferences } from './spec-linter/linter.ts'
 import { columnOf, headingSlugs, isLink, lineOf, parseDocument, visit } from './spec-linter/markdown.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from './spec-linter/paths.ts'
@@ -119,8 +124,12 @@ export async function runDerivedDocumentation(
     }
     const sources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
     const overviews = await renderFamilyOverviews(analysis.corpus, sources, prettierOptions)
-    const expected = new Map([...(await renderDerivedDocumentation(analysis.corpus, prettierOptions)), ...overviews])
-    const linkFindings = derivedLinkFindings(files, expected)
+    const expectedMarkdown = new Map([
+      ...(await renderDerivedDocumentation(analysis.corpus, prettierOptions)),
+      ...overviews,
+    ])
+    const expected = new Map([...expectedMarkdown, ...renderFamilyDiagramFiles(analysis.corpus, sources)])
+    const linkFindings = derivedLinkFindings(files, expectedMarkdown)
     if (linkFindings.length > 0) {
       for (const finding of linkFindings) io.writeError(finding)
       return 1
@@ -131,7 +140,7 @@ export async function runDerivedDocumentation(
           ...files.filter(
             (file) => !file.path.startsWith('docs/derived/') && !overviews.has(file.path.replace(/\\/g, '/')),
           ),
-          ...[...expected].map(([path, content]) => ({ path, content })),
+          ...[...expectedMarkdown].map(([path, content]) => ({ path, content })),
         ],
       },
       true,
@@ -165,7 +174,11 @@ export async function runDerivedDocumentation(
   }
 }
 
-async function collectOutputFiles(root: string, directory: string): Promise<ReadonlyMap<string, string>> {
+async function collectOutputFiles(
+  root: string,
+  directory: string,
+  include: (path: string) => boolean = () => true,
+): Promise<ReadonlyMap<string, string>> {
   let entries
   try {
     entries = await readdir(directory, { withFileTypes: true })
@@ -177,9 +190,10 @@ async function collectOutputFiles(root: string, directory: string): Promise<Read
   for (const entry of entries) {
     const path = resolve(directory, entry.name)
     if (entry.isDirectory()) {
-      for (const [childPath, content] of await collectOutputFiles(root, path)) output.set(childPath, content)
+      for (const [childPath, content] of await collectOutputFiles(root, path, include)) output.set(childPath, content)
     } else if (entry.isFile()) {
-      output.set(relative(root, path).replace(/\\/g, '/'), await readFile(path, 'utf8'))
+      const relativePath = relative(root, path).replace(/\\/g, '/')
+      if (include(relativePath)) output.set(relativePath, await readFile(path, 'utf8'))
     }
   }
   return output
@@ -189,11 +203,13 @@ async function main(): Promise<void> {
   const root = process.cwd()
   const docsDirectory = resolve(root, 'docs')
   const outputDirectory = resolve(root, 'docs', 'derived')
-  const [files, actualOutputs, prettierOptions] = await Promise.all([
+  const [files, derivedOutputs, diagramOutputs, prettierOptions] = await Promise.all([
     collectMarkdownFiles(root, docsDirectory),
     collectOutputFiles(root, outputDirectory),
+    collectOutputFiles(root, resolve(docsDirectory, 'specs'), isFamilyDiagramFilePath),
     resolveConfig(root),
   ])
+  const actualOutputs = new Map([...derivedOutputs, ...diagramOutputs])
   process.exitCode = await runDerivedDocumentation(
     files,
     process.argv.slice(2),

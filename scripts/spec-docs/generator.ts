@@ -23,6 +23,7 @@ import type {
   SpecificationRecord,
   SpecificationStatus,
 } from '../spec-linter/types.ts'
+import { computeLayers, renderSvgDiagram, type DiagramEdge, type DiagramNode } from './svg-diagram.ts'
 
 export const DERIVED_BASE_OUTPUT_PATHS = [
   'docs/derived/README.md',
@@ -370,7 +371,23 @@ function externalFamilyNodeId(family: SpecificationFamily): string {
   return `family_${familyDirectoryName(family)}`
 }
 
-export function renderFamilyDiagram(corpus: SpecificationCorpus, family: SpecificationFamily): string {
+/** Families whose overview diagrams are generated as SVG files instead of Mermaid blocks. */
+const SVG_DIAGRAM_FAMILIES: ReadonlySet<SpecificationFamily> = new Set<SpecificationFamily>(['Mechanics'])
+
+interface FamilyEdge {
+  readonly from: string
+  readonly to: string
+  readonly kinds: ReadonlySet<RelationshipKind>
+}
+
+interface FamilyDiagramData {
+  readonly members: readonly SpecificationRecord[]
+  readonly internalEdges: readonly FamilyEdge[]
+  readonly crossEdges: readonly FamilyEdge[]
+  readonly externalFamilies: ReadonlySet<SpecificationFamily>
+}
+
+function familyDiagramData(corpus: SpecificationCorpus, family: SpecificationFamily): FamilyDiagramData {
   const familyById = new Map(corpus.specifications.map((specification) => [specification.id, specification.family]))
   const members = corpus.specifications
     .filter((specification) => specification.family === family)
@@ -398,9 +415,131 @@ export function renderFamilyDiagram(corpus: SpecificationCorpus, family: Specifi
   )
   const internalEdges = sortedEdges.filter((edge) => memberIds.has(edge.from) && memberIds.has(edge.to))
   const crossEdges = sortedEdges.filter((edge) => !memberIds.has(edge.from) || !memberIds.has(edge.to))
+  return { members, internalEdges, crossEdges, externalFamilies }
+}
+
+type DiagramScope = 'within' | 'across'
+
+function familySvgFileName(family: SpecificationFamily, scope: DiagramScope): string {
+  return `${familyDirectoryName(family)}-family-${scope}.svg`
+}
+
+function familySvgLabel(family: SpecificationFamily, scope: DiagramScope): string {
+  return scope === 'within'
+    ? `${family} family: relationships within the family`
+    : `${family} family: relationships with other families`
+}
+
+function specificationLabel(specification: SpecificationRecord): string {
+  return `${specification.id} — ${specification.title} (${specification.status})`
+}
+
+function renderWithinFamilySvg(family: SpecificationFamily, data: FamilyDiagramData): string {
+  const layers = computeLayers(
+    data.members.map((specification) => specification.id),
+    data.internalEdges,
+  )
+  return renderSvgDiagram({
+    label: familySvgLabel(family, 'within'),
+    nodes: data.members.map((specification) => ({
+      id: specification.id,
+      lines: [specificationLabel(specification)],
+      layer: layers.get(specification.id) ?? 1,
+    })),
+    edges: data.internalEdges,
+    showLayerLabels: true,
+  })
+}
+
+/**
+ * Draws the other Families a Family depends on above its members and the Families depending on it below them.
+ * Members with identical relationships to other Families share one box.
+ */
+function renderAcrossFamiliesSvg(family: SpecificationFamily, data: FamilyDiagramData): string {
+  const memberIds = new Set(data.members.map((specification) => specification.id))
+  const kindsText = (kinds: ReadonlySet<RelationshipKind>): string =>
+    RELATIONSHIP_ORDER.filter((kind) => kinds.has(kind)).join('+')
+  const groups = new Map<string, { readonly members: SpecificationRecord[]; readonly edges: readonly FamilyEdge[] }>()
+  for (const specification of data.members) {
+    const edges = data.crossEdges.filter((edge) => edge.from === specification.id || edge.to === specification.id)
+    if (edges.length === 0) continue
+    const signature = edges
+      .map((edge) =>
+        memberIds.has(edge.from)
+          ? `out:${edge.to}:${kindsText(edge.kinds)}`
+          : `in:${edge.from}:${kindsText(edge.kinds)}`,
+      )
+      .toSorted(compareText)
+      .join('|')
+    const group = groups.get(signature) ?? { members: [], edges }
+    group.members.push(specification)
+    groups.set(signature, group)
+  }
+  const nodes: DiagramNode[] = []
+  const edges: DiagramEdge[] = []
+  const familyNodes = new Set<string>()
+  const addFamilyNode = (externalId: string, side: 'in' | 'out'): string => {
+    const id = `${side}_${externalId}`
+    if (!familyNodes.has(id)) {
+      familyNodes.add(id)
+      const external = FAMILY_ORDER.find((candidate) => externalFamilyNodeId(candidate) === externalId)
+      nodes.push({ id, lines: [`${external ?? externalId} family`], layer: side === 'in' ? 1 : 3, external: true })
+    }
+    return id
+  }
+  const sortedGroups = [...groups.values()].toSorted((left, right) =>
+    compareText(left.members[0]?.id ?? '', right.members[0]?.id ?? ''),
+  )
+  for (const [index, group] of sortedGroups.entries()) {
+    const id = `group_${String(index).padStart(3, '0')}`
+    nodes.push({ id, lines: group.members.map(specificationLabel), layer: 2 })
+    for (const edge of group.edges) {
+      if (memberIds.has(edge.from)) edges.push({ from: id, to: addFamilyNode(edge.to, 'out'), kinds: edge.kinds })
+      else edges.push({ from: addFamilyNode(edge.from, 'in'), to: id, kinds: edge.kinds })
+    }
+  }
+  return renderSvgDiagram({ label: familySvgLabel(family, 'across'), nodes, edges, showLayerLabels: false })
+}
+
+function imageLink(family: SpecificationFamily, scope: DiagramScope): string {
+  return `![${familySvgLabel(family, scope)}](./${familySvgFileName(family, scope)})`
+}
+
+/**
+ * Returns the SVG diagram files of every Family whose overview exists in `sources` and whose diagrams are generated
+ * as SVG. The overview's generated block links to these files.
+ */
+export function renderFamilyDiagramFiles(
+  corpus: SpecificationCorpus,
+  sources: ReadonlyMap<string, string>,
+): ReadonlyMap<string, string> {
+  const outputs = new Map<string, string>()
+  for (const family of FAMILY_ORDER) {
+    const overviewPath = familyOverviewOutputPath(corpus, family)
+    if (!SVG_DIAGRAM_FAMILIES.has(family) || overviewPath === undefined || !sources.has(overviewPath)) continue
+    const data = familyDiagramData(corpus, family)
+    const directory = directoryOf(overviewPath)
+    if (data.members.length > 1) {
+      outputs.set(`${directory}/${familySvgFileName(family, 'within')}`, renderWithinFamilySvg(family, data))
+    }
+    if (data.crossEdges.length > 0) {
+      outputs.set(`${directory}/${familySvgFileName(family, 'across')}`, renderAcrossFamiliesSvg(family, data))
+    }
+  }
+  return outputs
+}
+
+/** Returns true for a path that `renderFamilyDiagramFiles` may produce. */
+export function isFamilyDiagramFilePath(path: string): boolean {
+  return /^docs\/specs\/[^/]+\/[^/]+-family-(within|across)\.svg$/.test(path)
+}
+
+export function renderFamilyDiagram(corpus: SpecificationCorpus, family: SpecificationFamily): string {
+  const { members, internalEdges, crossEdges, externalFamilies } = familyDiagramData(corpus, family)
+  const svg = SVG_DIAGRAM_FAMILIES.has(family)
   const sections = ['## Within the family', '']
   if (members.length > 1) {
-    sections.push(renderFamilyEdges(members, [], internalEdges, 'TD'))
+    sections.push(svg ? imageLink(family, 'within') : renderFamilyEdges(members, [], internalEdges, 'TD'))
     if (internalEdges.length === 0) sections.push('', 'No relationships are declared within this family.')
   } else {
     sections.push('This family has a single specification, so there are no relationships within it.')
@@ -411,7 +550,7 @@ export function renderFamilyDiagram(corpus: SpecificationCorpus, family: Specifi
       crossEdges.some((edge) => edge.from === specification.id || edge.to === specification.id),
     )
     const externals = FAMILY_ORDER.filter((candidate) => externalFamilies.has(candidate))
-    sections.push(renderFamilyEdges(crossMembers, externals, crossEdges, 'LR'))
+    sections.push(svg ? imageLink(family, 'across') : renderFamilyEdges(crossMembers, externals, crossEdges, 'LR'))
   } else {
     sections.push('No relationships are declared with specifications in other families.')
   }
@@ -421,7 +560,7 @@ export function renderFamilyDiagram(corpus: SpecificationCorpus, family: Specifi
 function renderFamilyEdges(
   members: readonly SpecificationRecord[],
   externals: readonly SpecificationFamily[],
-  edges: readonly { from: string; to: string; kinds: ReadonlySet<RelationshipKind> }[],
+  edges: readonly FamilyEdge[],
   direction: 'LR' | 'TD',
 ): string {
   const lines = ['```mermaid', `flowchart ${direction}`]
