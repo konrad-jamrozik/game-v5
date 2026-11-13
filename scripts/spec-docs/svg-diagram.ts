@@ -48,9 +48,9 @@ const LEGEND_HEIGHT = 44
 const ARROW_LENGTH = 3
 
 const STYLE_SHEET = `
-    :root { --bg: #ffffff; --surface: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --uses: #5c9db3; --refines: #c07fa9; --both: #4f2fe0; }
+    :root { --bg: #ffffff; --surface: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --uses: #5c9db3; --refines: #4f2fe0; --both: #4f2fe0; }
     @media (prefers-color-scheme: dark) {
-      :root { --bg: #12161d; --surface: #1a2029; --fg: #e6eaf0; --muted: #9aa5b5; --line: #323b49; --uses: #5f9fb3; --refines: #b57a9f; --both: #a595ff; }
+      :root { --bg: #12161d; --surface: #1a2029; --fg: #e6eaf0; --muted: #9aa5b5; --line: #323b49; --uses: #5f9fb3; --refines: #a595ff; --both: #a595ff; }
     }
     text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
     .bg { fill: var(--bg); }
@@ -62,8 +62,8 @@ const STYLE_SHEET = `
     .legend { fill: var(--muted); font-size: 12.5px; }
     .edge { fill: none; }
     .edge-uses { stroke: var(--uses); stroke-width: 1.6; }
-    .edge-refines { stroke: var(--refines); stroke-width: 1.6; }
-    .edge-both { stroke: var(--both); stroke-width: 3; }
+    .edge-refines { stroke: var(--refines); stroke-width: 1.8; }
+    .edge-both { stroke: var(--both); stroke-width: 3.4; }
     .edge-other { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
     .head-uses { fill: var(--uses); }
     .head-other { fill: var(--muted); }
