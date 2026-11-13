@@ -68,5 +68,6 @@ fixtures instead of introducing implicit balance values.
 # Open decisions
 
 - TODO: Resolve upgrade stacking, retroactivity, capacity semantics, and income/cost timing.
+- TODO: State the rule determining the Agency Campaign instances that the initial Campaign state contains, and name the GDRs supplying their initial values, under [Initial Campaign state](../foundation/domain-model.md#initial-campaign-state).
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

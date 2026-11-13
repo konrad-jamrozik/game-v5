@@ -26,7 +26,7 @@ definition.
 
 [Engine Contract](engine-contract.md) answers _what does the engine guarantee, whatever subsystem is involved?_ It owns
 the API hierarchy, the data the engine owns and what is persisted, the campaign lifecycle, player queries and actions,
-which values a rule uses during Advance turn, Dev mode, determinism, the information boundary, and Committed state integrity. It names the owner of each engine
+which values a rule uses during Advance turn, Dev mode, determinism and the Campaign seed, the information boundary, and Committed state integrity. It names the owner of each engine
 subsystem without stating that subsystem's behavior.
 
 ## Campaign State
@@ -73,8 +73,9 @@ refines one part of it with formulas and transitions.
 ## Numbers and Randomness
 
 [Numbers and Randomness](numbers-and-randomness.md) answers _how are numbers calculated and random outcomes decided?_
-It owns numeric operations, units, and the designer-authored distributions of random outcomes. How an implementation
-produces random outcomes is the implementer's choice, under [Determinism](engine-contract.md#determinism).
+It owns numeric operations, units, the designer-authored distributions of random outcomes, and the permitted values
+of the Campaign seed. Every random outcome derives from the Campaign seed; how an implementation derives it is the
+implementer's choice, under [Determinism](engine-contract.md#determinism).
 
 # How they relate
 

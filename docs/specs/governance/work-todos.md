@@ -75,11 +75,15 @@ The Work items below were measured against these recorded rules and decisions:
 - **Scope rule:** [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification). A statement
   belongs only if it is Observable (a black-box test through the engine API, a save, or a replay could fail),
   Designer-authored (a GDR or a description of game behavior), or Vocabulary. Everything else is the implementer's choice.
-- **Determinism decision:** [Determinism](../foundation/engine-contract.md#determinism). Determinism is
-  required only within one implementation and Game build. The order of random draws, the order of Campaign instance
-  creation within one command, and the sequence and format of generated Instance IDs are the implementer's choice.
-  Acceptance tests assert replay equality or use fixed injected random outcomes, never outcomes that depend on a
-  particular seed.
+- **Determinism decision:** [Determinism](../foundation/engine-contract.md#determinism) and
+  [Campaign seed](../foundation/engine-contract.md#campaign-seed). Every Campaign has a Campaign seed, supplied by
+  the Session controller at campaign creation or chosen by the engine, and every random outcome derives from it and
+  from nothing else. The same Game build, initial Campaign configuration, Campaign seed, and ordered committed
+  commands reproduce the same Campaign state and retained reports. Determinism is required only within one
+  implementation and Game build. How random outcomes are derived from the Campaign seed, the order of random draws,
+  the order of Campaign instance creation within one command, and the sequence and format of generated Instance IDs
+  are the implementer's choice. Acceptance tests assert replay equality, including from the same Campaign seed, or
+  use fixed injected random outcomes, never which outcome a particular Campaign seed produces.
 - **Creation decision:** creation of Campaign instances is specified by the specification that owns the creating
   behavior, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation).
   The former Campaign instance constructor concept was removed.
@@ -111,15 +115,14 @@ Related wording question: Numbers and Randomness (NUMRNG), [Randomness contract]
 (NUMRNG, Randomness contract.)
 
 **Why it is an issue:** These passages require a stored random generator and its state, but an implementation could
-derive randomness without one. The scope rule admits only the observable requirement, which
+derive every random outcome from the Campaign seed without one. The scope rule admits only the observable requirement, which
 [Determinism](../foundation/engine-contract.md#determinism) in Engine Contract now states: outcomes after undo, redo,
 or load equal those of uninterrupted play, and rejected actions, actions with no effect, and queries do not change
 later outcomes.
 
 **Suggested resolution:** Reword the DEV sentence to say that invalid cheat inputs change nothing, under
-[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity). Decide whether a seed is a
-campaign creation input at all. Keep "consume gameplay randomness" in NUMRNG only if it is defined as designer
-vocabulary meaning that the outcome of a state change depends on chance, and define it that way.
+[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity). Keep "consume gameplay
+randomness" in NUMRNG only if it is defined as designer vocabulary meaning that the outcome of a state change depends on chance, and define it that way.
 
 ### TODO-006: Campaign instance constructor leftover in TypeScript Player API
 
@@ -152,9 +155,8 @@ effects create Campaign instances do so as their owning specifications state und
 **Category and priority:** Contradiction with a recorded decision.
 
 **Affected:** Numbers and Randomness (NUMRNG): [Overview](../foundation/numbers-and-randomness.md#overview),
-[Deterministic boundaries](../foundation/numbers-and-randomness.md#deterministic-boundaries),
-[Edge cases and failure behavior](../foundation/numbers-and-randomness.md#edge-cases-and-failure-behavior), and
-[Open decisions](../foundation/numbers-and-randomness.md#open-decisions).
+[Deterministic boundaries](../foundation/numbers-and-randomness.md#deterministic-boundaries), and
+[Edge cases and failure behavior](../foundation/numbers-and-randomness.md#edge-cases-and-failure-behavior).
 
 **Batches:** NUMRNG is batch 2.
 
@@ -165,7 +167,7 @@ effects create Campaign instances do so as their owning specifications state und
 > This specification intends to refine [...] with numeric operations, reproducible generator-state evolution, and
 > draw-consumption rules at query, command, and restoration boundaries.
 
-> TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, seeds, generator state, draws, and deterministic IDs.
+> TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, the permitted values of the Campaign seed, generator state, draws, and deterministic IDs.
 
 (NUMRNG, Overview.)
 
@@ -177,21 +179,18 @@ effects create Campaign instances do so as their owning specifications state und
 
 (NUMRNG, Edge cases and failure behavior.)
 
-> - TODO: Choose numeric representation and supported-runtime guarantees; gameplay randomness must still come from preserved generator state rather than Math.random().
-
-(NUMRNG, Open decisions.)
-
 **Why it is an issue:** [Determinism](../foundation/engine-contract.md#determinism) and NUMRNG's own
 [Randomness contract](../foundation/numbers-and-randomness.md#randomness-contract) make the generator algorithm, the
-order of draws, and Instance ID generation the implementer's choice. Generator state, draw consumption, and seeds are
-not observable; the Open decision also names a JavaScript API and a mechanism. Whether no-op commands consume draws is
+order of draws, and Instance ID generation the implementer's choice. Generator state and draw consumption are not
+observable. The Campaign seed is in scope, but only as
+[Campaign seed](../foundation/engine-contract.md#campaign-seed) states it. Whether no-op commands consume draws is
 both unobservable and already settled observably by [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions):
 actions with no effect consume no gameplay randomness.
 
-**Suggested resolution:** Remove the planned generator-state, draw-consumption, seed, and deterministic-identifier
+**Suggested resolution:** Remove the planned generator-state, draw-consumption, and deterministic-identifier
 content and the "no-op commands" decision. Re-scope NUMRNG's randomness content to designer-authored distributions,
-interval boundaries, and comparisons, plus the observable reproducibility requirement in TODO-004. Reword the Open
-decision to cover only numeric representation, without naming an API.
+interval boundaries, and comparisons, plus the observable reproducibility requirement in TODO-004. Keep seed content
+only for what NUMRNG owns: the permitted values of the Campaign seed and whether distinct values are equivalent.
 
 ### TODO-008: Draw ordering in Formulas and uncertainty
 
@@ -253,8 +252,9 @@ calculation and their distributions. Replace "draws" in the fixture TODO with "f
 
 > TODO: Give seeded escalation/spawn timelines and compare temporary suppression with permanent defeat.
 
-**Why it is an issue:** Acceptance tests must never assert outcomes that depend on a particular seed under
-[Determinism](../foundation/engine-contract.md#determinism).
+**Why it is an issue:** Acceptance examples must never assert which outcome a particular Campaign seed produces,
+under [Determinism](../foundation/engine-contract.md#determinism), because how outcomes derive from the Campaign seed
+is the implementer's choice.
 
 **Suggested resolution:** Replace "seeded" with timelines that use fixed injected random outcomes.
 
@@ -279,13 +279,12 @@ and [Glossary](../acceptance/campaign-integration-and-acceptance-tests.md#glossa
 
 (SCEN, Glossary.)
 
-**Why it is an issue:** Seeds and RNG state are not fixture inputs under
-[Determinism](../foundation/engine-contract.md#determinism) and SCEN's own
-[Deterministic fixtures](../acceptance/campaign-integration-and-acceptance-tests.md#deterministic-fixtures); a fixture
-uses fixed injected random outcomes, or a replay baseline for replay-equality checks.
+**Why it is an issue:** A Campaign seed is a legitimate fixture input for replay-equality scenarios, under
+[Campaign seed](../foundation/engine-contract.md#campaign-seed); RNG state is not, because it is the implementer's
+choice.
 
-**Suggested resolution:** Replace "seed or RNG state" with "injected random outcomes or replay baseline", matching the
-Deterministic fixtures TODO, and drop "or RNG state" from the Fixture definition.
+**Suggested resolution:** Replace "seed or RNG state" with "Campaign seed, injected random outcomes, or replay
+baseline", and drop "or RNG state" from the Fixture definition.
 
 ### TODO-012: Sampling time of hidden difficulty in Investigations
 

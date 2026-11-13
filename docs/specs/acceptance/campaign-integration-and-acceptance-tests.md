@@ -71,7 +71,8 @@ Kinds of test, by what they exercise or check.
 
 Determinism is required only within one implementation and Game build under
 [Determinism](../foundation/engine-contract.md#determinism). Acceptance tests therefore assert replay
-equality or use fixed injected random outcomes; they never assert outcomes that depend on a particular seed.
+equality, including from the same Campaign seed, or use fixed injected random outcomes; they never assert which
+outcome a particular Campaign seed produces.
 
 TODO: Define scenario IDs, exact starting state, GDR fixture, injected random outcomes or replay baseline, ordered commands, expected results, and references
 to owning requirements. Record the game revision when needed for reproducibility. Identify any test-only reduced scenario

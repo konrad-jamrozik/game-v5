@@ -71,9 +71,14 @@ every Campaign configuration value. A preset is never partial, and presets do no
 Game build default preset.
 
 A value is a Campaign configuration value if and only if the presets supply it. E.g., starting money, enemy
-difficulty, and which factions are enabled can be Campaign configuration values. Whatever no preset can change about
-a new Campaign is game behavior and is not Campaign configuration; e.g., a starting turn that is the same for every
-Campaign. A preset supplies both the values that are adjustable during play and the values that are fixed after
+difficulty, and a multiplier of how often Missions appear can be Campaign configuration values. Whatever no preset can
+change about a new Campaign is not Campaign configuration. It is either a GDR serving another purpose, e.g. a recruit
+skill value, or game behavior, e.g. a starting turn that is the same for every Campaign, and the rule determining
+which Campaign instances the initial Campaign state contains, under
+[Initial Campaign state](domain-model.md#initial-campaign-state). The Campaign seed is the one exception: no preset
+supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor
+part of the new-Campaign setup; campaign creation receives it separately, under
+[Campaign seed](engine-contract.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after
 creation, under [Campaign state composition](campaign-state.md#campaign-state-composition).
 
 Presets are immutable: a Preset edit, or a later change to Campaign configuration, never changes a preset. Campaign

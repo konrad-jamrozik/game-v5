@@ -22,7 +22,7 @@ draw-consumption rules at query, command, and restoration boundaries. It uses th
 choosing a generation algorithm does not elaborate the meaning of identity. Rejected commands cannot consume draws
 under [Committed state integrity](engine-contract.md#committed-state-integrity); the existing no-op and algorithm TODOs remain unresolved.
 
-TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, seeds, generator state, draws, and deterministic IDs.
+TODO: Specify Numeric units, integer/fractional quantities, percentages, probabilities, the permitted values of the Campaign seed, generator state, draws, and deterministic IDs.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -48,16 +48,20 @@ TODO: Choose precision/representation, allowed ranges, rounding operations and t
 
 # Randomness contract
 
-Determinism is required only within one implementation and Game build under
-[Determinism](engine-contract.md#determinism). The generator algorithm and the order of random draws are
-therefore the implementer's choice, and acceptance tests must assert replay equality or use fixed injected random
-outcomes, never outcomes that depend on a particular seed.
+Every random outcome of a Campaign derives from its Campaign seed and has no other source, under
+[Campaign seed](engine-contract.md#campaign-seed). Determinism is required only within one implementation and Game
+build under [Determinism](engine-contract.md#determinism). How random outcomes are derived from the Campaign seed,
+including the generator algorithm and the order of random draws, is therefore the implementer's choice. Acceptance
+tests may supply a Campaign seed and assert that the same Campaign seed reproduces the same outcomes, or use fixed
+injected random outcomes; they must never assert which outcome a particular Campaign seed produces.
 
 Only state changes, including Campaign instance creation, may consume gameplay randomness. Checking an invariant never
 consumes gameplay randomness, and computing Derived values and checking action preconditions never consume it under
 [Derived value consistency](engine-contract.md#derived-value-consistency).
 
 TODO: Specify distributions, interval endpoints, integer sampling, and the remaining randomness consumption rules.
+
+TODO: Specify the permitted values of a Campaign seed and its written form, e.g. text the player can copy.
 
 # Deterministic boundaries
 
@@ -78,6 +82,6 @@ fixtures instead of introducing implicit balance values.
 
 # Open decisions
 
-- TODO: Choose numeric representation and supported-runtime guarantees; gameplay randomness must still come from preserved generator state rather than Math.random().
+- TODO: Choose numeric representation and supported-runtime guarantees; every random outcome must still derive from the Campaign seed under [Campaign seed](engine-contract.md#campaign-seed).
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

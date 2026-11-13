@@ -94,5 +94,6 @@ fixtures instead of introducing implicit balance values.
 # Open decisions
 
 - TODO: Choose transition delays and attribute formulas; balance values are GDRs.
+- TODO: State the rule determining the Agent Campaign instances that the initial Campaign state contains, and name the GDRs supplying their initial values, under [Initial Campaign state](../foundation/domain-model.md#initial-campaign-state).
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

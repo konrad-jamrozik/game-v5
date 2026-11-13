@@ -63,7 +63,9 @@ A Campaign save holds nothing a Session holds and no Global configuration.
 
 One Campaign may have several Campaign saves, which share its Campaign ID and have distinct Campaign save IDs. E.g., a
 player may keep a Timeline branch that a new action after undo would otherwise discard. Two Campaigns created with equal
-creation inputs and given equal commands have equal Campaign state but distinct Campaign IDs.
+creation inputs, including the same Campaign seed, and given equal commands have equal Campaign state but distinct
+Campaign IDs. Because the Campaign seed is Campaign state, under [Campaign seed](engine-contract.md#campaign-seed),
+every Campaign save holds it, including one written without its Timeline.
 
 # Saving
 

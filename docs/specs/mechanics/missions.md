@@ -76,5 +76,6 @@ fixtures instead of introducing implicit balance values.
 - TODO: Choose the partial-success formula and mission lifecycle rules, including whether reattempts exist; do not copy victory-only rewards as the v5 contract.
 - TODO: Decide which data of Enemies must remain in World history once they no longer participate in current
   gameplay. This affects [Combat](combat.md).
+- TODO: State the rule determining the Mission and Enemy Campaign instances that the initial Campaign state contains, and name the GDRs supplying their initial values, under [Initial Campaign state](../foundation/domain-model.md#initial-campaign-state).
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

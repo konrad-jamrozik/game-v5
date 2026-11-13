@@ -84,7 +84,8 @@ several such GDRs, and the player selects one of them. Unlike every other purpos
 engine capability: before the Campaign is created, the player may override individual values of the selected preset.
 
 A value belongs to Campaign configuration if and only if the preset GDRs supply it. Whatever no preset can change is
-game behavior, not GDR data and not Campaign configuration; e.g., a starting turn that is the same for every Campaign.
+not Campaign configuration. It is either a GDR serving another purpose, e.g. the recruit-skill GDR, or game behavior,
+e.g. a starting turn that is the same for every Campaign.
 
 Consider an illustrative Game build with two presets and two Campaign configuration values:
 

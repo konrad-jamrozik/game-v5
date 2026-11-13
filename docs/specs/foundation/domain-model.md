@@ -40,8 +40,8 @@ these concepts without adding to either. Each concept is classified by its model
 # Glossary
 
 Campaign, Campaign state, Type, GDR, Authoritative value, and Derived value are defined by the
-[Core Concepts glossary](core-concepts.md#glossary). Campaign instance, Instance ID, Archetype, Constants, State, and
-World history are defined by the [Campaign State glossary](campaign-state.md#glossary). Committed state is defined by
+[Core Concepts glossary](core-concepts.md#glossary). Campaign instance, Instance ID, Archetype, Constants, State,
+World history, and Campaign configuration are defined by the [Campaign State glossary](campaign-state.md#glossary). Committed state is defined by
 the [Engine Contract glossary](engine-contract.md#glossary).
 
 ## Agency and Agents
@@ -99,24 +99,23 @@ Records kept to explain past gameplay.
 
 The following table is the complete set of concepts this specification declares, each with its modeling role.
 
-| Concept                                       | Modeling role                                                                                | Multiplicity within one Campaign                                                                                                             | Owner of creation and transitions                                                   |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Agency                                        | Campaign instance Type                                                                       | Exactly one, under [Agency per Campaign](#agency-per-campaign)                                                                               | [Economy and Upgrades](../mechanics/economy-and-upgrades.md) for money and upgrades |
-| Agent                                         | Campaign instance Type                                                                       | Any number; roster limits belong to Economy and Upgrades                                                                                     | [Agents](../mechanics/agents-spec.md); recruitment belongs to Economy and Upgrades  |
-| Investigation                                 | Campaign instance Type                                                                       | At most one Active Investigation per Lead, under [Leads and Investigations](#leads-and-investigations)                                       | [Investigations](../mechanics/investigations.md)                                    |
-| Mission                                       | Campaign instance Type                                                                       | Any number; exactly one Response Mission per Faction operation occurrence, under [Mission kind and provenance](#mission-kind-and-provenance) | [Missions](../mechanics/missions.md)                                                |
-| Enemy                                         | Campaign instance Type                                                                       | Any number, each belonging to exactly one Mission, under [Combat and consequences](#combat-and-consequences)                                 | Missions and [Combat](../mechanics/combat.md)                                       |
-| Faction                                       | Campaign instance Type                                                                       | Undecided; see [Open decisions](../mechanics/factions.md#open-decisions) in Factions                                                         | [Factions](../mechanics/factions.md)                                                |
-| Combatant                                     | Reusable structure described by a Type, within Agent and Enemy; not a Campaign instance Type | No Campaign instances                                                                                                                        | Combat                                                                              |
-| Lead                                          | GDR serving the Referenced GDR and Key for campaign facts purposes                           | Not a Campaign instance                                                                                                                      | [Leads and Progression](../mechanics/leads-and-progression.md)                      |
-| Weapon and upgrade GDRs                       | GDRs                                                                                         | Not Campaign instances                                                                                                                       | Economy and Upgrades                                                                |
-| Archetypes of the six Campaign instance Types | GDRs serving the Archetype purpose                                                           | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist                                                | The specification owning each Campaign instance Type                                |
+| Concept                                       | Modeling role                                                                                | Multiplicity within one Campaign                                                                                                             |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agency                                        | Campaign instance Type                                                                       | Exactly one, under [Agency per Campaign](#agency-per-campaign)                                                                               |
+| Agent                                         | Campaign instance Type                                                                       | Any number; roster limits belong to Economy and Upgrades                                                                                     |
+| Investigation                                 | Campaign instance Type                                                                       | At most one Active Investigation per Lead, under [Leads and Investigations](#leads-and-investigations)                                       |
+| Mission                                       | Campaign instance Type                                                                       | Any number; exactly one Response Mission per Faction operation occurrence, under [Mission kind and provenance](#mission-kind-and-provenance) |
+| Enemy                                         | Campaign instance Type                                                                       | Any number, each belonging to exactly one Mission, under [Combat and consequences](#combat-and-consequences)                                 |
+| Faction                                       | Campaign instance Type                                                                       | Undecided; see [Open decisions](../mechanics/factions.md#open-decisions) in Factions                                                         |
+| Combatant                                     | Reusable structure described by a Type, within Agent and Enemy; not a Campaign instance Type | No Campaign instances                                                                                                                        |
+| Lead                                          | GDR serving the Referenced GDR and Key for campaign facts purposes                           | Not a Campaign instance                                                                                                                      |
+| Weapon and upgrade GDRs                       | GDRs                                                                                         | Not Campaign instances                                                                                                                       |
+| Archetypes of the six Campaign instance Types | GDRs serving the Archetype purpose                                                           | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist                                                |
 
 GDR purposes are defined under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs). Every Campaign instance of
 the six Campaign instance Types has the four properties stated under
-[Campaign instance structure](campaign-state.md#campaign-instance-structure). The owner named in the last column
-states when each Campaign instance is created and its initial values, under
-[Campaign instance creation](campaign-state.md#campaign-instance-creation).
+[Campaign instance structure](campaign-state.md#campaign-instance-structure). Each concept's section below names the
+Mechanics specification that refines it.
 
 ```mermaid
 flowchart TD
@@ -151,6 +150,28 @@ Agency.
 
 Campaign state must contain exactly one Agency. Several Agencies in one Campaign, e.g. for multiplayer, and trading
 between Campaigns are out of scope.
+
+## Initial Campaign state
+
+Everything a new Campaign starts with is either game data, supplied as GDRs by the Game build, or game behavior,
+stated as rules in specifications. Among GDRs, only those serving the Campaign configuration preset purpose can be
+overridden by the player before creation; every other GDR is fixed, e.g. a Faction's Archetype.
+
+Which Campaign instances the initial Campaign state contains is the same for every new Campaign. No GDR serving the Campaign configuration preset purpose, under
+[GDR purpose: campaign configuration preset](game-data-records.md#gdr-purpose-campaign-configuration-preset), adds,
+removes, or selects an initial Campaign instance; e.g., no preset changes the initial roster of Agents, the initial
+Factions, or the initial Missions. A Campaign configuration value can still supply an initial value of an initial
+Campaign instance, e.g. starting money becomes the Agency's initial money, and can influence which Campaign instances
+come into existence during play, e.g. a multiplier of how often Missions appear.
+
+The initial Campaign state contains exactly one Agency, under [Agency per Campaign](#agency-per-campaign). For
+each Campaign instance Type, the Mechanics specification that refines it states the rule determining the initial
+Campaign instances of that Type and the source of each of their initial values, under
+[Campaign instance creation](campaign-state.md#campaign-instance-creation); e.g., "the initial Campaign state contains
+one Faction for each Faction Archetype the Game build supplies". The rule is game behavior; the content it reads is
+supplied by GDRs that serve no Campaign configuration preset purpose, e.g. the Faction Archetypes and their values.
+This section states what the initial
+Campaign state contains, not which code creates it.
 
 ## Campaign instance identity scope
 
@@ -389,10 +410,3 @@ This satisfies [Agent lifecycle](#agent-lifecycle), [Current versus historical t
 Participation history of i1. If i1 were Abandoned instead, a later Investigation of L1 has a new Instance ID and does
 not resume the progress of i1 ([Leads and Investigations](#leads-and-investigations)). This fixture does not choose
 the replacement Current assignments or turn timing.
-
-# Open decisions
-
-- TODO: Decide which specification states the Campaign instances present in the initial Campaign state, e.g. the
-  initial roster of Agents and the initial Factions, and the source of each of their initial values under
-  [Campaign instance creation](campaign-state.md#campaign-instance-creation). A complete answer names one owner per
-  Campaign instance Type, including the Agency.

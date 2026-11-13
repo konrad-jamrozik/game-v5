@@ -98,14 +98,15 @@ What a Session has selected, and the complete Campaign state the engine commits.
 | Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                   |
 | Current save     | The Campaign save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                          |
 
-## Identifiers
+## Reproducibility
 
-How the engine scopes unique identifiers.
+What makes a Campaign reproducible, and how the engine scopes unique identifiers.
 
-| Term                       | Definition                                                                                                                                   |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign-scoped identifier | A unique identifier that replaying the same committed commands from the same Campaign state must reproduce exactly.                          |
-| Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, e.g. one identifying a stored record or a runtime operation. |
+| Term                       | Definition                                                                                                                                                                                                                                                      |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign seed              | The value from which every random outcome of one Campaign derives. It is set when the Campaign is created, supplied by the Session controller or otherwise chosen by the engine, and never changes. It is Campaign state and is not Player-visible information. |
+| Campaign-scoped identifier | A unique identifier that replaying the same committed commands from the same Campaign state must reproduce exactly.                                                                                                                                             |
+| Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, e.g. one identifying a stored record or a runtime operation.                                                                                                                    |
 
 # API hierarchy
 
@@ -221,7 +222,8 @@ Session (runtime, never persisted)
 | Session              | [Campaign lifecycle](#campaign-lifecycle)                                                                        |
 | New-Campaign setup   | [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                       |
 
-Campaign state holds everything game behavior consults and nothing else. It excludes everything a Session holds,
+Campaign state holds everything game behavior consults and nothing else. It includes the Campaign seed, under
+[Campaign seed](#campaign-seed). It excludes everything a Session holds,
 e.g. Dev mode; Global configuration, e.g. interface preferences; and the Timeline and Autopilot memory, which a
 Campaign save keeps beside Campaign state because continuing to control a Campaign needs them although game behavior
 never consults them.
@@ -246,12 +248,14 @@ A Session starts when the game starts and ends when the game exits. A newly open
 and Dev mode is disabled. This is the main-menu state in Web UI. What a Session holds is stated under
 [Data ownership](#data-ownership).
 
-`session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status.
+`session.getStatus()` reports whether a Current campaign exists, the Campaign seed of the Current campaign, and the
+Session's access and Autopilot status.
 `session.campaigns.create(options)` creates a Campaign using the current Game build, the Session's new-Campaign setup,
-and explicit initialization inputs sufficient for reproducibility. The new-Campaign setup is the selected preset and
+and a Campaign seed. `options` carries the Campaign seed when the Session controller supplies one; otherwise the
+engine chooses it, under [Campaign seed](#campaign-seed). The new-Campaign setup is the selected preset and
 its Preset edits, read and changed through `session.newCampaign` as
 [Preset selection and edits](configuration.md#preset-selection-and-edits) specifies; the Session holds it and it is
-never persisted. `session.campaigns.load(save)` restores a Campaign save and selects its Campaign
+never persisted. The Campaign seed is not part of the new-Campaign setup. `session.campaigns.load(save)` restores a Campaign save and selects its Campaign
 as the Current campaign, as [Saves](saves.md) specifies. Successful creation or load selects the Current campaign and
 disables Dev mode. A newly created Campaign has a Timeline with no committed actions and no Autopilot memory.
 
@@ -327,19 +331,59 @@ is engaged and the Autopilot AI never receives them. Dev mode transitions are un
 
 # Determinism
 
-For equal initial Campaign state, the same Game build, and the same ordered committed commands, execution must
-produce equal resulting Campaign state and retained reports. Gameplay consults nothing outside Campaign state, e.g.
-wall-clock time or Autopilot memory, so Campaign state holds every input consulted by game behavior, including
-relevant retained data about past Campaign state or events.
+Given the same Game build, the same initial Campaign configuration, the same Campaign seed, and the same ordered
+committed commands, exactly the same things must happen: Campaign state and retained reports are equal at every
+Timeline position. This holds whenever, and in whichever Session, each Campaign is created and played. The Game
+build includes its GDRs, and the committed commands are the committed actions of the Session controller and the
+Autopilot AI. The Campaign seed is what makes a Campaign reproducible, and so makes undo, redo, load, and debugging
+possible.
+
+The guarantee has two parts:
+
+- **Creation:** The same Game build, initial Campaign configuration, and Campaign seed must produce equal initial
+  Campaign state.
+- **Play:** For equal Campaign state, the same Game build, and the same ordered committed commands, execution must
+  produce equal resulting Campaign state and retained reports.
+
+Gameplay consults nothing outside Campaign state, e.g. wall-clock time or Autopilot memory, so Campaign state holds
+every input consulted by game behavior, including the Campaign seed and relevant retained data about past Campaign
+state or events.
 
 Consequently, outcomes after undo, redo, or load equal those of uninterrupted play, and a query, a rejected action,
 or an action with no effect never changes a later outcome.
 
 Determinism is required within one implementation and Game build, not across different implementations of the
-specification. Consequently, the order of random draws, the order in which Campaign instances are created within one
-command, and the sequence and format of generated Campaign-scoped identifiers are the implementer's choice, provided the equality
-guarantee above holds. Two implementations may therefore produce different outcomes from the same initial Campaign
-state and commands; each must reproduce its own outcomes exactly.
+specification or different Game builds. Consequently, how random outcomes are derived from the Campaign seed, the
+order of random draws, the order in which Campaign instances are created within one command, and the sequence and
+format of generated Campaign-scoped identifiers are the implementer's choice, provided the equality guarantee above
+holds. Two implementations may therefore produce different outcomes from the same Campaign seed and commands; each
+must reproduce its own outcomes exactly.
+
+## Campaign seed
+
+Every Campaign has exactly one Campaign seed. The following rules are complete:
+
+- **Supplied:** The Session controller may supply the Campaign seed in `session.campaigns.create(options)`. A
+  supplied value that is not a permitted Campaign seed fails creation, under
+  [Campaign lifecycle](#campaign-lifecycle). [Randomness contract](numbers-and-randomness.md#randomness-contract)
+  in Numbers and Randomness owns the permitted values.
+- **Chosen:** When none is supplied, the engine chooses a permitted Campaign seed. Which one it chooses is
+  unspecified and need not be reproducible; it is the only engine decision exempt from the guarantee under
+  [Determinism](#determinism).
+- **Fixed:** The Campaign seed never changes after creation. No action, Timeline navigation, save, or load changes it.
+- **Kept:** The Campaign seed is Campaign state, part of Current world state under
+  [Campaign state composition](campaign-state.md#campaign-state-composition). It is not Campaign configuration,
+  because no Campaign configuration preset supplies it. Every Campaign save therefore holds it.
+- **Readable:** `session.getStatus()` reports the Campaign seed of the Current campaign to the Session controller,
+  in every Dev mode setting and whether it was supplied or chosen, in a form `create(options)` accepts; e.g., the
+  Session controller can share it or create another Campaign with it.
+- **Not Player-visible:** The Campaign seed is not Player-visible information, because together with the Game build
+  it determines facts hidden from the player. Player API never exposes it, so an Autopilot AI never receives it.
+- **Sole source of randomness:** Every random outcome of a Campaign derives from its Campaign seed. No outcome
+  depends on anything outside Campaign state; e.g., not on wall-clock time, on when or in which Session the Campaign
+  is created, loaded, or played, on a second seed, or on a random source that differs from one run to another. This
+  is observable: any such dependence makes two Campaigns that the guarantee under [Determinism](#determinism)
+  requires to be equal differ.
 
 ## Unique identifiers
 
@@ -404,6 +448,16 @@ Exact error representations and asynchronous operation results belong to TypeScr
   and Advance turn. Repeat the same commands from S with queries and a rejected action interleaved. Complete Campaign
   state and retained reports equal the original results ([Determinism](#determinism),
   [Derived value consistency](#derived-value-consistency)).
+- **Same seed, same Campaign:** Create Campaign A supplying Campaign seed K, commit gameplay actions including
+  Advance turn, and record Campaign state and retained reports at each Timeline position. End the Session. In a new
+  Session, create Campaign B with the same new-Campaign setup and K, and commit the same actions. B equals A at
+  every Timeline position ([Determinism](#determinism), [Campaign seed](#campaign-seed)).
+- **Seed chosen by the engine:** Create Campaign C supplying no Campaign seed. `session.getStatus()` reports its
+  Campaign seed K2. Create Campaign D with the same new-Campaign setup supplying K2, and commit the same actions in
+  both. D equals C at every Timeline position ([Campaign seed](#campaign-seed)).
+- **Seed fixed and hidden:** After committed actions, undo, redo, save, and load, `session.getStatus()` reports the
+  same Campaign seed. No Player API query returns it, with Dev mode enabled or disabled
+  ([Campaign seed](#campaign-seed), [Information boundary](#information-boundary)).
 - **Defects:** A broken internal reference reports an engine defect without publishing intermediate Campaign state.
   Returned inspection data cannot mutate the engine ([Committed state integrity](#committed-state-integrity),
   [Information boundary](#information-boundary)).

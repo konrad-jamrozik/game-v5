@@ -366,7 +366,8 @@ Retention in World history does not replace named lifecycle states; e.g., Killed
 
 When specifying a game concept, state its applicable modeling role and mutability. Use prose,
 property tables, and diagrams for conceptual descriptions; a programming-language declaration is not required. State
-multiplicity with an explicit scope, creation and historical transitions, Authoritative values versus Derived values, and
+multiplicity with an explicit scope, the conditions under which it comes into existence, its lifecycle states when it
+has any, Authoritative values versus Derived values, and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
 these dimensions differ within one Campaign instance. Link to the owning specification for details; explicitly retain
 unresolved decisions rather than filling them with assumptions.
