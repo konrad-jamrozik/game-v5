@@ -367,7 +367,7 @@ rather than one that was undone.
 
 Player API always exposes only Player-visible information. Developer API adds a distinct full-state inspection path
 for an authorized Session controller. The boundary applies to query results, action discovery, validation errors,
-reports, subscriptions, and Timeline status. Hidden identifiers and error details must follow the same boundary.
+reports, and Timeline status. Hidden identifiers and error details must follow the same boundary.
 Returned views must not provide mutable references into Campaign state. The engine guarantees the information it
 supplies to Autopilot AI; it cannot erase information independently disclosed by a human outside the API.
 A Campaign save contains information that is not Player-visible information and is never exposed to an Autopilot AI.

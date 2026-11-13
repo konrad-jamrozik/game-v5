@@ -76,5 +76,7 @@ fixtures instead of introducing implicit balance values.
 # Open decisions
 
 - TODO: Choose every formula and probability interpretation; explicitly resolve how history and team changes affect uncertainty.
+- TODO: Decide which InvestigationArchetypes exist, how one is selected when an Investigation starts, and which
+  combinations with Leads are permitted.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

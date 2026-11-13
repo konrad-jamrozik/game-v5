@@ -72,9 +72,9 @@ refines one part of it with formulas and transitions.
 
 ## Numbers and Randomness
 
-[Numbers and Randomness](numbers-and-randomness.md) answers _how are numbers and random draws made reproducible?_ It
-owns numeric operations, units, generator state, and draw consumption, so that a campaign replays identically on every
-supported runtime.
+[Numbers and Randomness](numbers-and-randomness.md) answers _how are numbers calculated and random outcomes decided?_
+It owns numeric operations, units, and the designer-authored distributions of random outcomes. How an implementation
+produces random outcomes is the implementer's choice, under [Determinism](engine-contract.md#determinism).
 
 # How they relate
 

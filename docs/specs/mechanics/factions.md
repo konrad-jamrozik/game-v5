@@ -72,5 +72,8 @@ fixtures instead of introducing implicit balance values.
 # Open decisions
 
 - TODO: Choose activity/Faction operation occurrence rules and defeated-faction cleanup semantics.
+- TODO: Decide how many Faction Campaign instances may share one Archetype within a Campaign.
+- TODO: Decide which data of Factions must remain in World history once they no longer participate in current
+  gameplay.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

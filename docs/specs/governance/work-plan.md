@@ -17,8 +17,8 @@ The specifications are the durable design artifacts. Code and tests will be deri
 The [Game Design Brief](../../game-design-brief.md) supplies strategic intent and architectural constraints, while the
 [specification index](../README.md) registers document IDs, Families, and ownership.
 
-**Current work:** [Core Concepts](../foundation/core-concepts.md), [Domain Model](../foundation/domain-model.md), [Campaign State](../foundation/campaign-state.md),
-[Game Data Records](../foundation/game-data-records.md), and [Engine Contract](../foundation/engine-contract.md) are **In review** for batch 1. Review their
+**Current work:** Batch 1 is partially complete. [Core Concepts](../foundation/core-concepts.md), [Campaign State](../foundation/campaign-state.md), and
+[Game Data Records](../foundation/game-data-records.md) are Accepted. [Engine Contract](../foundation/engine-contract.md) and [Domain Model](../foundation/domain-model.md) are **In review**. Review their
 contracts and unresolved design questions before advancing. Later batches have not started.
 
 # Relationships
@@ -48,7 +48,7 @@ instead of marking the whole batch Complete.
 
 # Current baseline
 
-- Batch 1 is In review; later batches are Queued.
+- Batch 1 is In review, with three of its five specifications Accepted; later batches are Queued.
 - The 10-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
@@ -61,8 +61,8 @@ batches.
 
 Inventory migration is **Complete** for the current specification set. Explicit relationships use mirrored flat
 directional lists; implicit relationships are omitted from those lists. Substantive reliance is explained in owning
-contract prose. The three foundation documents' relationships form no
-cycle. Core Concepts supplies shared vocabulary; Engine Contract uses Core Concepts, and Campaign State refines Engine Contract. Domain Model uses Core Concepts and Campaign State. Domain Model retains the
+contract prose. The relationships of the batch 1 specifications form no
+cycle. Core Concepts supplies shared vocabulary; Engine Contract uses Core Concepts, and Campaign State refines Engine Contract. Game Data Records uses Core Concepts, Engine Contract, and Campaign State. Domain Model uses Core Concepts, Engine Contract, Campaign State, and Game Data Records. Domain Model retains the
 game-specific identity scope; Engine Contract retains execution guarantees. Operational specifications use modeling
 conventions and refine the corresponding engine behavior.
 
@@ -117,8 +117,11 @@ public signatures are finalized in their owning specifications during batch 8.
 
 ## Incremental timing refinement
 
-Refine turn timing and shared contracts as mechanics are drafted. Batch 7 reconciles the complete turn
-schedule; earlier drafts must still state their local timing requirements and any unresolved cross-system ordering.
+Refine turn timing and shared contracts as mechanics are drafted. No specification lists the order in which rules
+are applied during Advance turn; each rule states which values it uses, under
+[Turn advancement](../foundation/engine-contract.md#turn-advancement). Batch 7 checks that the stated exceptions of
+all Mechanics specifications form no cycle; earlier drafts must still state their own exceptions and any unresolved
+dependency on a rule of another specification.
 
 # Review and completion workflow
 
@@ -149,11 +152,9 @@ deferred until those stages are requested.
 
 # First implementation milestone assessment
 
-## First implementation milestone assessment
-
 After the batch 4 review, assess whether the accepted contracts support a small headless playable slice.
 Propose its concrete scope and identify missing contracts, GDRs, or acceptance scenarios before implementation is
-authorized. Do not assume completing batch 4 guarantees readiness, or that all 21 subject specifications must be accepted
+authorized. Do not assume completing batch 4 guarantees readiness, or that all 25 subject specifications must be accepted
 before any implementation can begin. If contracts are missing, schedule their resolution before implementing the slice.
 
 # Edge cases and failure behavior
@@ -192,6 +193,6 @@ These are workflow checks, not gameplay tests:
   relevant multi-turn scenarios. This does not mark the entire GDR catalog or scenario suite Accepted.
 - **Later conflict ([Earlier-specification gaps](#earlier-specification-gaps)):** A mission rule conflicts with an Accepted Timeline rule. The discrepancy is documented and
   a revision is proposed to the owner; neither implementation nor a second specification silently overrides the accepted rule.
-- **Milestone assessment ([Separate implementation authorization](#separate-implementation-authorization), [First implementation milestone assessment](#first-implementation-milestone-assessment-1)):** After batch 4 is reviewed, assess the accepted contracts for a headless
+- **Milestone assessment ([Separate implementation authorization](#separate-implementation-authorization), [First implementation milestone assessment](#first-implementation-milestone-assessment)):** After batch 4 is reviewed, assess the accepted contracts for a headless
   slice. If its required turn timing or API contract is unresolved, list the gap and propose the necessary specification
   work; do not invent the missing rule in code or treat the assessment as implementation authorization.
