@@ -25,10 +25,10 @@ appropriate to this document.
 
 # Relationships
 
-- Uses [Agents](./agents.md)
+- Uses [Agents](./agents-spec.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
-- Used by [Agents](./agents.md)
+- Used by [Agents](./agents-spec.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
 

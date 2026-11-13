@@ -16,7 +16,6 @@ flowchart TD
   AGENT["AGENT — Agents (Stub)"]
   API["API — TypeScript Player API (Stub)"]
   AUTO["AUTO — Autopilot (Draft)"]
-  CAMP["CAMP — Campaign (Stub)"]
   CLI["CLI — Terminal CLI (Stub)"]
   COMBAT["COMBAT — Combat (Stub)"]
   CONFIG["CONFIG — Configuration (Draft)"]
@@ -25,11 +24,11 @@ flowchart TD
   DEPDIR["DEPDIR — Gameplay Dependency Direction (Draft)"]
   DEV["DEV — Developer API (Stub)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
+  ENDING["ENDING — Panic and Endings (Stub)"]
   ENG["ENG — Engine Contract (Draft)"]
   FACTION["FACTION — Factions (Stub)"]
   GDR["GDR — Game Data Records (Accepted)"]
   INFO["INFO — Player Information (Stub)"]
-  INIT["INIT — Initial Campaign Content (Stub)"]
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
@@ -53,26 +52,23 @@ flowchart TD
   AUTO --> CLI
   AUTO --> INFO
   AUTO --> WEB
-  CAMP --> INFO
-  CAMP --> INIT
   CLI --> SCEN
   COMBAT --> AGENT
   COMBAT --> INFO
   COMBAT --> MISSION
   CORE --> API
   CORE --> AUTO
-  CORE --> CAMP
   CORE --> CLI
   CORE --> CONFIG
   CORE --> CSTATE
   CORE --> DEPDIR
   CORE --> DEV
   CORE --> DOM
+  CORE --> ENDING
   CORE --> ENG
   CORE --> FACTION
   CORE --> GDR
   CORE --> INFO
-  CORE --> INIT
   CORE --> INVSTG
   CORE --> LEAD
   CORE --> MISSION
@@ -82,34 +78,30 @@ flowchart TD
   CORE --> TIMELINE
   CORE --> WEB
   CSTATE --> API
-  CSTATE --> CAMP
   CSTATE --> CONFIG
   CSTATE --> DEPDIR
   CSTATE --> DEV
   CSTATE --> DOM
   CSTATE --> GDR
   CSTATE --> INFO
-  CSTATE --> INIT
   CSTATE --> NUMRNG
   CSTATE --> TIMELINE
   DEV --> API
   DOM --> API
-  DOM --> CONFIG
   DOM --> DEV
   DOM --> INFO
-  DOM --> INIT
   ECON --> AGENT
   ECON --> INFO
-  ECON --> INIT
   ECON --> MISSION
+  ENDING --> INFO
   ENG --> AGENT
   ENG --> AUTO
-  ENG --> CAMP
   ENG --> CLI
   ENG --> CONFIG
   ENG --> DEPDIR
   ENG --> DOM
   ENG --> ECON
+  ENG --> ENDING
   ENG --> FACTION
   ENG --> GDR
   ENG --> INVSTG
@@ -119,30 +111,19 @@ flowchart TD
   ENG --> TIMELINE
   ENG --> WEB
   FACTION --> INFO
-  FACTION --> INIT
   FACTION --> LEAD
   FACTION --> MISSION
   GDR --> DOM
   GDR --> INFO
-  GDR --> INIT
   INFO --> API
   INFO --> CLI
   INFO --> INVSTG
   INFO --> WEB
-  INIT --> AGENT
-  INIT --> CAMP
-  INIT --> ECON
-  INIT --> FACTION
-  INIT --> LEAD
-  INIT --> MISSION
-  INIT --> SCEN
   INVSTG --> INFO
   LEAD --> FACTION
   LEAD --> INFO
-  LEAD --> INIT
   LEAD --> INVSTG
   MISSION --> INFO
-  MISSION --> INIT
   MISSION --> LEAD
   NUMRNG --> AGENT
   NUMRNG --> COMBAT
@@ -157,8 +138,8 @@ flowchart TD
   SAVES --> WEB
   TIMELINE --> API
   TIMELINE --> AUTO
-  TIMELINE --> CAMP
   TIMELINE --> CLI
+  TIMELINE --> CONFIG
   TIMELINE --> DEV
   TIMELINE --> INFO
   TIMELINE --> SAVES

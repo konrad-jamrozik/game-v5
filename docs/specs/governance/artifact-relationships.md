@@ -211,7 +211,7 @@ The following table gives the complete expected classifications for this accepta
 | Agents supplies transitions for the lifecycle described by [Agent lifecycle](../foundation/domain-model.md#agent-lifecycle)   | Refines Domain Model; it adds detail to the same lifecycle                                          |
 | Numbers and Randomness specifies reproducible calculation under [Determinism](../foundation/engine-contract.md#determinism)   | Refines Engine Contract; it details how calculation stays reproducible                              |
 | Timeline preserves references under [References](../foundation/campaign-state.md#references) while restoring Campaign state   | Uses Campaign State; satisfying the reference invariant alone is not refinement                     |
-| Initial Campaign Content supplies prices under Economy's purchase rules                                                       | Uses Economy and Upgrades; data values do not elaborate purchase behavior                           |
+| Saves persists the Timeline whose navigation Timeline defines                                                                 | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
 | Terminal CLI maps commands to Player API                                                                                      | Uses TypeScript Player API; an adapter contract applies existing operations                         |
 | A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields | Intended refinement is permitted; the fields remain unspecified and status stays Stub               |
 | A document merely says it must obey [Campaign instances](../foundation/campaign-state.md#campaign-instances)                  | Uses, not Refines; no added detail about the identity convention is identified                      |
@@ -235,7 +235,7 @@ Given Agents refines Domain Model for lifecycle constraints, Agents contains:
 
 Domain Model contains the mirror:
 
-- Refined by [Agents](../mechanics/agents.md)
+- Refined by [Agents](../mechanics/agents-spec.md)
 
 Both entries describe Domain Model → Agents. The lifecycle constraints belong in the contract prose.
 Removing or changing either entry requires the corresponding change in the other.

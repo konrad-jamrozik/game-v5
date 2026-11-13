@@ -7,19 +7,19 @@
 Mechanics specifications own the player-facing game systems: their rules, transitions, formulas, and effects. Each one
 refines part of the [Domain Model](../foundation/domain-model.md) with the detailed behavior of one system, using
 [Numbers and Randomness](../foundation/numbers-and-randomness.md) for arithmetic and draws. Exact balance values and
-catalogs come from the Content family; which values a rule uses during Advance turn follows
+catalogs are Game Data Records (GDRs); which values a rule uses during Advance turn follows
 [Turn advancement](../foundation/engine-contract.md#turn-advancement).
 
 # Documents
 
-## Campaign
+## Panic and Endings
 
-[Campaign](campaign.md) answers _how does a campaign start, change, and end?_ It owns campaign initialization,
-adjustable Campaign configuration, global panic, and the victory and defeat predicates.
+[Panic and Endings](panic-and-endings.md) answers _how does a campaign end?_ It owns global panic, the victory and defeat
+predicates, and what remains possible after an ending.
 
 ## Agents
 
-[Agents](agents.md) answers _what can an agent do, and how does an agent change over time?_ It owns agent capability,
+[Agents](agents-spec.md) answers _what can an agent do, and how does an agent change over time?_ It owns agent capability,
 task availability, development, exhaustion, and recovery.
 
 ## Economy and Upgrades
@@ -57,7 +57,7 @@ operation occurrence generation, suppression, and permanent defeat.
 Agents is the hub: Combat, Economy and Upgrades, Investigations, and Missions all use agent capabilities. Missions sits
 where several systems meet, combining Agents, Combat, Economy and Upgrades, and Factions. Leads and Progression and
 Factions use each other, since faction state unlocks progression and progression effects shape factions. Every
-Mechanics document is refined from the Foundation family and supplies the meanings that the Content family fills with
+Mechanics document is refined from the Foundation family and supplies the meanings that Game Data Records (GDRs) fill with
 values.
 
 <!-- generated:family-diagram:start -->
@@ -69,9 +69,9 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 ```mermaid
 flowchart TD
   AGENT["AGENT — Agents (Stub)"]
-  CAMP["CAMP — Campaign (Stub)"]
   COMBAT["COMBAT — Combat (Stub)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
+  ENDING["ENDING — Panic and Endings (Stub)"]
   FACTION["FACTION — Factions (Stub)"]
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
@@ -96,39 +96,27 @@ flowchart TD
 ```mermaid
 flowchart LR
   AGENT["AGENT — Agents (Stub)"]
-  CAMP["CAMP — Campaign (Stub)"]
   COMBAT["COMBAT — Combat (Stub)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
+  ENDING["ENDING — Panic and Endings (Stub)"]
   FACTION["FACTION — Factions (Stub)"]
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
   family_foundation["Foundation family"]:::external
-  family_content["Content family"]:::external
   family_interfaces["Interfaces family"]:::external
   AGENT -->|used by| family_interfaces
-  CAMP -->|used by| family_content
-  CAMP -->|used by| family_interfaces
   COMBAT -->|used by| family_interfaces
-  ECON -->|used by| family_content
   ECON -->|used by| family_interfaces
-  FACTION -->|used by| family_content
+  ENDING -->|used by| family_interfaces
   FACTION -->|used by| family_interfaces
   INVSTG -->|used by| family_interfaces
-  LEAD -->|used by| family_content
   LEAD -->|used by| family_interfaces
-  MISSION -->|used by| family_content
   MISSION -->|used by| family_interfaces
-  family_content -->|used by| AGENT
-  family_content -->|used by| CAMP
-  family_content -->|used by| ECON
-  family_content -->|used by| FACTION
-  family_content -->|used by| LEAD
-  family_content -->|used by| MISSION
   family_foundation -->|refined by, used by| AGENT
-  family_foundation -->|refined by, used by| CAMP
   family_foundation -->|refined by, used by| COMBAT
   family_foundation -->|refined by, used by| ECON
+  family_foundation -->|refined by, used by| ENDING
   family_foundation -->|refined by, used by| FACTION
   family_foundation -->|refined by, used by| INVSTG
   family_foundation -->|refined by, used by| LEAD
@@ -145,14 +133,13 @@ flowchart LR
   tested and tuned without the campaign around it.
 - **Leads and Progression versus Investigations:** what is available is separated from how the player pursues it, so
   the progression graph can change without touching investigation mathematics.
-- **Campaign versus the rest:** campaign-wide state (configuration, panic, and the ending predicates) belongs to no
+- **Panic and Endings versus the rest:** campaign-wide state (panic and the ending predicates) belongs to no
   single system.
-- **Formulas versus values:** each document owns formulas and meanings; [Initial Campaign
-  Content](../content/initial-campaign.md) owns the numbers, so balancing does not change behavior specifications.
+- **Formulas versus values:** each document owns formulas and meanings; the numbers are GDRs, so balancing does not change behavior specifications.
 
 # Reading order
 
-Start with [Agents](agents.md), then [Combat](combat.md) and [Missions](missions.md). Read
+Start with [Agents](agents-spec.md), then [Combat](combat.md) and [Missions](missions.md). Read
 [Leads and Progression](leads-and-progression.md) before [Investigations](investigations.md), and
-[Factions](factions.md) after both. [Economy and Upgrades](economy-and-upgrades.md) and [Campaign](campaign.md) can be
+[Factions](factions.md) after both. [Economy and Upgrades](economy-and-upgrades.md) and [Panic and Endings](panic-and-endings.md) can be
 read at any point.

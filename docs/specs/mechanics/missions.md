@@ -18,7 +18,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 This specification intends to refine Domain Model's mission contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with creation, deployment, deadlines,
 resolution, and campaign consequences. Agents supplies participant eligibility, Combat supplies Battle results,
 Economy and Upgrades supplies capacities and resource effects, and Factions supplies operation provenance and
-suppression semantics. Initial Campaign Content supplies mission Game Data Records (GDRs) and numeric values under this contract.
+suppression semantics. Game Data Records (GDRs) supply the mission catalog and numeric values under this contract.
 The lifecycle and consequence choices remain TODOs below.
 
 TODO: Specify Initiative mission, Response mission, Faction operation occurrence, deadline, deployment, Battle result, mission outcome, and partial success.
@@ -27,15 +27,13 @@ appropriate to this document.
 
 # Relationships
 
-- Uses [Agents](./agents.md)
+- Uses [Agents](./agents-spec.md)
 - Uses [Combat](./combat.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Economy and Upgrades](./economy-and-upgrades.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Factions](./factions.md)
-- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Refines [Domain Model](../foundation/domain-model.md)
-- Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Player Information](../interfaces/player-information.md)
 

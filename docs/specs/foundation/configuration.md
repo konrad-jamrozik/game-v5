@@ -10,31 +10,34 @@
 
 # Overview
 
-This document defines the kinds of setting the game has, what Global configuration holds, the configuration
-cascade that gives every setting its effective value, and how the player selects and edits a Campaign configuration
-preset before creating a Campaign.
+This document defines the kinds of setting the game has, what Global configuration holds, the Campaign configuration
+presets a Game build supplies, the configuration cascade that gives every setting its effective value, how the player
+selects and edits a Campaign configuration preset before creating a Campaign, and how Campaign configuration changes
+during play.
 
 It owns where a setting lives and which value applies. Which Campaign configuration values exist and what they do is
-owned by the specifications using them, e.g. [Campaign](../mechanics/campaign.md).
+owned by the Mechanics specifications using them, under
+[What each Campaign configuration value must state](#what-each-campaign-configuration-value-must-state).
 
 # Relationships
 
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
-- Uses [Domain Model](./domain-model.md)
 - Uses [Engine Contract](./engine-contract.md)
+- Uses [Timeline](./timeline.md)
 
 # Glossary
 
 Global configuration, Game storage, Campaign save, and Dev mode are defined by the
 [Engine Contract glossary](engine-contract.md#glossary). Campaign configuration is defined by the
-[Campaign State glossary](campaign-state.md#glossary). Campaign configuration preset and Game build default preset are
-defined by the [Domain Model glossary](domain-model.md#glossary).
+[Campaign State glossary](campaign-state.md#glossary).
 
-| Term               | Definition                                                                                                                                                  |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Game build default | The value the Game build supplies for a Global configuration setting when nothing overrides it.                                                             |
-| Preset edit        | A value the player sets before creating a Campaign to override one Campaign configuration value of one Campaign configuration preset. The Session holds it. |
+| Term                          | Definition                                                                                                                                                                                                        |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Game build default            | The value the Game build supplies for a Global configuration setting when nothing overrides it.                                                                                                                   |
+| Campaign configuration preset | A GDR supplying a value for every Campaign configuration value, from which campaign creation obtains the initial Campaign configuration, under [Campaign configuration presets](#campaign-configuration-presets). |
+| Game build default preset     | The one Campaign configuration preset that the Game build designates as selected when the player has selected no other.                                                                                           |
+| Preset edit                   | A value the player sets before creating a Campaign to override one Campaign configuration value of one Campaign configuration preset. The Session holds it.                                                       |
 
 # Kinds of setting
 
@@ -60,6 +63,24 @@ stored value.
 Global configuration holds nothing that campaign creation uses: creating a Campaign neither reads nor changes it.
 Campaign-specific overrides of global preferences are out of scope.
 
+# Campaign configuration presets
+
+The Game build supplies one or more Campaign configuration presets. Each preset is one GDR serving the Campaign
+configuration preset purpose under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs) and supplies a value for
+every Campaign configuration value. A preset is never partial, and presets do not combine. Exactly one preset is the
+Game build default preset.
+
+A value is a Campaign configuration value if and only if the presets supply it. E.g., starting money, enemy
+difficulty, and which factions are enabled can be Campaign configuration values. Whatever no preset can change about
+a new Campaign is game behavior and is not Campaign configuration; e.g., a starting turn that is the same for every
+Campaign. A preset supplies both the values that are adjustable during play and the values that are fixed after
+creation, under [Campaign state composition](campaign-state.md#campaign-state-composition).
+
+Presets are immutable: a Preset edit, or a later change to Campaign configuration, never changes a preset. Campaign
+state retains the values copied at creation, as the [Configuration cascade](#configuration-cascade) states, and no
+reference to the selected preset. Creation of a Campaign instance that needs a Campaign configuration value reads it
+from Campaign configuration; e.g., Agency creation reads starting money.
+
 # Configuration cascade
 
 The effective value of each setting follows this complete rule set:
@@ -70,9 +91,10 @@ The effective value of each setting follows this complete rule set:
 | New Campaign      | A Preset edit for the selected Campaign configuration preset overrides that preset's value.                                      |
 | Existing Campaign | Its own Campaign configuration applies, including changes committed during play and the values restored by undo, redo, and load. |
 
+Changes committed during play follow [Changing Campaign configuration during play](#changing-campaign-configuration-during-play).
+
 Which preset is selected, and which Preset edits exist, follows [Preset selection and edits](#preset-selection-and-edits).
-Presets and the completeness of each preset are owned by
-[Campaign configuration ownership](domain-model.md#campaign-configuration-ownership).
+Presets and the completeness of each preset follow [Campaign configuration presets](#campaign-configuration-presets).
 
 Campaign creation resolves every Campaign configuration value through this cascade and records the complete result in
 the initial Campaign state; no Campaign configuration value is left to be resolved later. Values are copied at
@@ -105,6 +127,43 @@ The preset selection and the Preset edits are not settings: they are none of the
 Storing a selected preset or Preset edits beyond the Session is out of scope; e.g., a player-saved custom preset or a
 remembered last selection.
 
+# Changing Campaign configuration during play
+
+Difficulty is represented by Campaign configuration. Players must be able to change difficulty during an ongoing
+Campaign without restarting it or enabling Dev mode, so the Campaign configuration values representing difficulty are
+adjustable during play.
+
+A Campaign configuration change follows these complete rules:
+
+- **Only adjustable values:** A change may name only values that are adjustable during play. A request naming a value
+  that is fixed after creation is invalid.
+- **All or nothing:** The complete requested change is validated before it is committed. An invalid request leaves
+  Campaign state unchanged.
+- **One action:** An accepted change is committed atomically as one Timeline entry and does not advance the turn.
+- **No change:** A request that leaves Campaign configuration unchanged follows the rule for an action with no effect
+  under [Player queries and actions](engine-contract.md#player-queries-and-actions).
+- **No rewriting:** Changing Campaign configuration alone never regenerates existing World state, rewrites past
+  outcomes, or redraws random outcomes. Any such effect requires an explicit rule in the Mechanics specification
+  owning the value.
+
+The public command and report signatures remain an open decision. Interface specifications must expose these rules
+and must not introduce different validation or timing.
+
+# What each Campaign configuration value must state
+
+The Mechanics specification owning a Campaign configuration value states all of the following:
+
+- its Type and its permitted values;
+- whether it is adjustable during play or fixed after creation, under
+  [Campaign state composition](campaign-state.md#campaign-state-composition);
+- for a value fixed after creation, how campaign creation uses it; e.g., starting money becomes the Agency's initial
+  money;
+- for a value adjustable during play, when a change takes effect and whether it affects existing World state, future
+  calculations or generation, or both, including how activities already underway are treated.
+
+Examples of possible values are enemy count and an investigation difficulty multiplier; they establish no inventory
+and no balance values. The values themselves are supplied by the Campaign configuration presets, which are GDRs.
+
 # Edge cases and failure behavior
 
 If a value stored in Global configuration is invalid in the current Game build, the Game build default applies and
@@ -131,8 +190,22 @@ and investigation difficulty multiplier 1; and Hard, with starting money 60 and 
 - **Invalid edit:** Set a Preset edit of starting money to a value that Campaign configuration value does not permit.
   The request is rejected, and Hard still shows its previous starting money
   ([Preset selection and edits](#preset-selection-and-edits)).
+- **Adjustment during play:** In an ongoing Campaign, submit valid values for adjustable Campaign configuration values,
+  different from the current ones. The requested values commit together, the turn remains unchanged, and the change
+  is one Timeline entry ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
+- **Invalid adjustment:** Submit a change containing a value outside its permitted values. The whole request fails,
+  and both Campaign configuration and World state remain unchanged
+  ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
+- **Fixed value:** Submit a change containing a valid value for an adjustable value and a different value for a value
+  that is fixed after creation. The whole request fails, and both Campaign configuration and World state remain
+  unchanged ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
 - **Unset setting follows the Game build:** The player never sets the language. A later Game build changes the Game
   build default language, and the game starts in the new default ([Global configuration](#global-configuration)).
 - **Invalid stored value:** Global configuration stores a volume that the current Game build does not allow. The game
   starts with the Game build default volume and reports the problem
   ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)).
+
+# Open decisions
+
+- TODO: Define the inventory of Campaign configuration values that are adjustable during play, the Mechanics
+  specification owning each, and the public command and report signatures in the Interfaces specifications.

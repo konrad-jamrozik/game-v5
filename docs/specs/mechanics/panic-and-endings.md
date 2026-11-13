@@ -1,0 +1,66 @@
+# Panic and Endings
+
+| Metadata    | Value                                                          |
+| ----------- | -------------------------------------------------------------- |
+| Spec ID     | ENDING                                                         |
+| Family      | Mechanics                                                      |
+| Status      | Stub                                                           |
+| Audience    | Engine designer, Content designer, AI designer, Implementer    |
+| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+
+# Overview
+
+This document defines global panic, the conditions that end a Campaign in victory or defeat, and what remains possible
+after an ending.
+
+TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
+Separate inherited game-ts behavior, required v5 changes, and new proposals.
+
+This specification intends to refine Domain Model's Campaign contract ([Agency per Campaign](../foundation/domain-model.md#agency-per-campaign)) with
+panic and ending behavior. It supplies the ending predicates and states which values they use under
+[Turn advancement](../foundation/engine-contract.md#turn-advancement). Campaign creation and Campaign configuration
+are owned by [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets) in
+Configuration, not by this document. Panic and ending rules remain TODOs below.
+
+TODO: Specify ongoing/won/lost lifecycle, panic, funding/money boundary, and victory objective.
+Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
+appropriate to this document.
+
+# Relationships
+
+- Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
+- Refines [Domain Model](../foundation/domain-model.md)
+- Used by [Player Information](../interfaces/player-information.md)
+
+# Glossary
+
+Campaign and Campaign state are defined by [Core Concepts](../foundation/core-concepts.md#glossary).
+
+TODO: Define the local terms here, e.g. panic, or link their authoritative definitions.
+
+# Panic and endings
+
+TODO: Specify panic representation, clamping, contributing effects, victory and defeat predicates, and simultaneous win/loss precedence. Decide whether v5 retains the final Peace on Earth investigation.
+
+# Terminal behavior
+
+TODO: Define allowed Player-visible information and commands after an ending and how undo restores an ongoing campaign.
+
+# Edge cases and failure behavior
+
+TODO: Define behavior for Zero money versus negative money, panic at its limit, all factions defeated, same-turn victory/defeat, and post-ending commands.
+State whether ending predicates use turn-start values or the values after the other rules of the same Advance turn, under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
+State exact thresholds and effect ordering where relevant.
+
+# Acceptance examples
+
+TODO: Give ending scenarios with exact expected state and outcome reasons.
+Identify initial conditions, inputs/actions, expected results, and hyperlinks to the requirement sections exercised. Reference shared
+fixtures instead of introducing implicit balance values.
+
+# Open decisions
+
+- TODO: Choose victory objectives, panic behavior, and terminal-condition precedence.
+- TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
+  deferred features as out of scope rather than leaving ambiguous gaps.

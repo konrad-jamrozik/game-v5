@@ -17,7 +17,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including [Attribute bounds](../foundation/domain-model.md#attribute-bounds))
 with resource flows, purchase eligibility, and upgrade effects. Agents supplies personnel state and capabilities;
-Numbers and Randomness supplies arithmetic. Initial Campaign Content supplies prices and increments, while this
+Numbers and Randomness supplies arithmetic. GDRs supply prices and increments, while this
 document supplies their meanings and formulas. This document states which values its formulas use under
 [Turn advancement](../foundation/engine-contract.md#turn-advancement). These rules remain TODOs.
 
@@ -27,13 +27,11 @@ appropriate to this document.
 
 # Relationships
 
-- Uses [Agents](./agents.md)
+- Uses [Agents](./agents-spec.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
-- Used by [Agents](./agents.md)
-- Used by [Initial Campaign Content](../content/initial-campaign.md)
+- Used by [Agents](./agents-spec.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
 
@@ -52,7 +50,7 @@ TODO: Specify all eight categories: agent capacity, transport capacity, training
 
 # Purchase and capacity rules
 
-TODO: Specify affordability, purchase atomicity, capacity accounting/reservation/release, and whether an upgrade changes current allocations. Link prices and increments to INIT.
+TODO: Specify affordability, purchase atomicity, capacity accounting/reservation/release, and whether an upgrade changes current allocations. Name the GDR values that supply prices and increments.
 
 # Edge cases and failure behavior
 

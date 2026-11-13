@@ -29,9 +29,8 @@ Historical explanations preserve [Historical fact preservation](../foundation/ca
 
 # Relationships
 
-- Uses [Agents](../mechanics/agents.md)
+- Uses [Agents](../mechanics/agents-spec.md)
 - Uses [Autopilot](../foundation/autopilot.md)
-- Uses [Campaign](../mechanics/campaign.md)
 - Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Combat](../mechanics/combat.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
@@ -42,6 +41,7 @@ Historical explanations preserve [Historical fact preservation](../foundation/ca
 - Uses [Investigations](../mechanics/investigations.md)
 - Uses [Leads and Progression](../mechanics/leads-and-progression.md)
 - Uses [Missions](../mechanics/missions.md)
+- Uses [Panic and Endings](../mechanics/panic-and-endings.md)
 - Uses [Timeline](../foundation/timeline.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
 - Used by [Investigations](../mechanics/investigations.md)

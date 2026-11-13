@@ -55,7 +55,8 @@ loading, the Save size limit, and which Campaign saves a Game build loads.
 ## Configuration
 
 [Configuration](configuration.md) answers _where does each setting live, and which value applies?_ It owns the kinds
-of setting, Global configuration, and the configuration cascade.
+of setting, Global configuration, the Campaign configuration presets a Game build supplies, and the configuration
+cascade.
 
 ## Autopilot
 
@@ -65,7 +66,7 @@ Autopilot AI receives, how an Autopilot engagement ends, and Autopilot memory.
 ## Domain Model
 
 [Domain Model](domain-model.md) answers _what exists in this game?_ It owns the game concepts and how they relate: the
-agency, Agents, Leads, Investigations, Missions, Combat, Factions, weapons, upgrades, and reports. It applies Core
+Agency, Agents, Leads, Investigations, Missions, Combat, Factions, weapons, upgrades, and Reports. It applies Core
 Concepts' vocabulary and Campaign State's rules to these concepts, and each Mechanics specification
 refines one part of it with formulas and transitions.
 
@@ -115,7 +116,6 @@ flowchart TD
   CSTATE -->|used by| GDR
   CSTATE -->|used by| NUMRNG
   CSTATE -->|used by| TIMELINE
-  DOM -->|used by| CONFIG
   ENG -->|used by| AUTO
   ENG -->|used by| CONFIG
   ENG -->|refined by| CSTATE
@@ -126,6 +126,7 @@ flowchart TD
   ENG -->|used by| TIMELINE
   GDR -->|used by| DOM
   TIMELINE -->|used by| AUTO
+  TIMELINE -->|used by| CONFIG
   TIMELINE -->|used by| SAVES
 ```
 
@@ -143,27 +144,21 @@ flowchart LR
   SAVES["SAVES — Saves (Draft)"]
   TIMELINE["TIMELINE — Timeline (Draft)"]
   family_mechanics["Mechanics family"]:::external
-  family_content["Content family"]:::external
   family_interfaces["Interfaces family"]:::external
   family_acceptance["Acceptance family"]:::external
   family_implementation["Implementation family"]:::external
   AUTO -->|refined by, used by| family_interfaces
   CORE -->|used by| family_acceptance
-  CORE -->|used by| family_content
   CORE -->|used by| family_implementation
   CORE -->|used by| family_interfaces
   CORE -->|used by| family_mechanics
-  CSTATE -->|used by| family_content
   CSTATE -->|used by| family_implementation
   CSTATE -->|used by| family_interfaces
-  CSTATE -->|used by| family_mechanics
-  DOM -->|used by| family_content
   DOM -->|used by| family_interfaces
   DOM -->|refined by| family_mechanics
   ENG -->|used by| family_implementation
   ENG -->|refined by, used by| family_interfaces
   ENG -->|used by| family_mechanics
-  GDR -->|used by| family_content
   GDR -->|used by| family_interfaces
   NUMRNG -->|used by| family_mechanics
   SAVES -->|used by| family_acceptance
@@ -172,7 +167,6 @@ flowchart LR
   TIMELINE -->|used by| family_acceptance
   TIMELINE -->|used by| family_implementation
   TIMELINE -->|used by| family_interfaces
-  TIMELINE -->|used by| family_mechanics
   classDef external stroke-dasharray: 5 5
 ```
 

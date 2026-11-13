@@ -17,7 +17,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's faction and Faction operation occurrence provenance contract ([Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with escalation,
 Faction operation occurrence generation, suppression, and defeat behavior. Numbers and Randomness supplies distributions and draws;
-Initial Campaign Content supplies catalogs of Game Data Records (GDRs) for Faction operation occurrences and parameter values. Leads and Progression supplies earned
+Game Data Records (GDRs) supply the catalogs for Faction operation occurrences and the parameter values. Leads and Progression supplies earned
 unlock effects and prerequisites; this document supplies faction state and defeat facts consumed by that progression.
 Exact thresholds and transitions remain TODOs below.
 
@@ -29,11 +29,9 @@ appropriate to this document.
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
-- Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Missions](./missions.md)
 - Used by [Player Information](../interfaces/player-information.md)
@@ -49,7 +47,7 @@ TODO: Specify starting activity, progression thresholds/distributions, update or
 
 # Faction operation occurrence generation
 
-TODO: Specify countdown timing, severity distribution, mission GDR selection, repeat rules, and behavior with existing active Faction operation occurrences. Link tables to INIT.
+TODO: Specify countdown timing, severity distribution, mission GDR selection, repeat rules, and behavior with existing active Faction operation occurrences. Name the GDRs that supply the tables.
 
 # Suppression and defeat
 

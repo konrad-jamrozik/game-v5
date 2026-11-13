@@ -18,7 +18,6 @@ This document defines the purposes a Game Data Record (GDR) can serve relative t
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Domain Model](./domain-model.md)
-- Used by [Initial Campaign Content](../content/initial-campaign.md)
 - Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary

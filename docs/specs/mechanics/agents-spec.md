@@ -18,7 +18,7 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 This specification intends to refine Domain Model's agent contract ([Agent lifecycle](../foundation/domain-model.md#agent-lifecycle), [Orders and Task phase](../foundation/domain-model.md#orders-and-task-phase), [Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams), and [Attribute bounds](../foundation/domain-model.md#attribute-bounds)) with eligibility, Current assignment,
 travel, attribute, and lifecycle transitions. It uses Numbers and Randomness for arithmetic and reproducibility.
 Combat supplies battle-earned experience, Economy and Upgrades supplies economic effects on personnel and
-capabilities, and Initial Campaign Content supplies balance values. Those inputs are applied to agent transitions;
+capabilities, and GDRs supply balance values. Those inputs are applied to agent transitions;
 this document supplies the agent capabilities used by Combat and Economy and Upgrades in return.
 The formulas and transition choices below remain TODOs; the domain constraints still apply.
 
@@ -31,7 +31,6 @@ appropriate to this document.
 - Uses [Combat](./combat.md)
 - Uses [Economy and Upgrades](./economy-and-upgrades.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Numbers and Randomness](../foundation/numbers-and-randomness.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Combat](./combat.md)
@@ -78,6 +77,6 @@ fixtures instead of introducing implicit balance values.
 
 # Open decisions
 
-- TODO: Choose transition delays, attribute formulas, and recovery rules; balance values belong to INIT.
+- TODO: Choose transition delays, attribute formulas, and recovery rules; balance values are GDRs.
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

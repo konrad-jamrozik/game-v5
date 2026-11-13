@@ -27,7 +27,7 @@ This is currently a stub: the concrete test cases await the detailed rules and G
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification uses Initial Campaign Content for reproducible inputs, the Mechanics family for same-turn effects, and Timeline
+This specification uses GDRs for reproducible inputs, the Mechanics family for same-turn effects, and Timeline
 and Saves for undo, redo, save, and load scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
 under test. Specific checked requirements acquire implicit verifies relationships when scenarios identify them;
 these document-level uses entries do not claim that tests already exist or pass.
@@ -40,7 +40,6 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Initial Campaign Content](../content/initial-campaign.md)
 - Uses [Saves](../foundation/saves.md)
 - Uses [Terminal CLI](../interfaces/cli.md)
 - Uses [Timeline](../foundation/timeline.md)
@@ -77,6 +76,7 @@ equality or use fixed injected random outcomes; they never assert outcomes that 
 TODO: Define scenario IDs, exact starting state, GDR fixture, injected random outcomes or replay baseline, ordered commands, expected results, and references
 to owning requirements. Record the game revision when needed for reproducibility. Identify any test-only reduced scenario
 explicitly.
+Fixtures use symbolic Instance IDs, e.g. `agency_1`, that tests bind to the Instance IDs the implementation generates.
 
 # Integration scenarios
 

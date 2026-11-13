@@ -27,7 +27,7 @@ appropriate to this document.
 
 # Relationships
 
-- Uses [Agents](./agents.md)
+- Uses [Agents](./agents-spec.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
@@ -48,6 +48,7 @@ TODO: Specify eligibility, hidden-difficulty distribution and sampling time, age
 TODO: Define InvestigationArchetype selection and allowed combinations with Lead Game Data Records (GDRs). Preserve the
 separate Archetype and immutable Lead reference established by Domain Model; apply the at-most-one-Active-Investigation-per-Lead
 constraint across archetypes. The illustrative InvestigationArchetype GDRs in Game Data Records do not select mechanics.
+Lead GDRs and InvestigationArchetype GDRs are separate catalogs; a Lead is not automatically an InvestigationArchetype.
 
 # Completion probability
 

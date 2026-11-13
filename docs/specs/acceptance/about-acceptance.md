@@ -17,7 +17,7 @@ reference their owning rules.
 
 # How they relate
 
-Its scenarios use the Foundation family for timing, undo and redo, and saves, the Content family for starting data, and the
+Its scenarios use the Foundation family for timing, undo and redo, and saves, Game Data Records (GDRs) for starting data, and the
 Interfaces family for the surfaces they exercise. Nothing depends on it in return.
 
 <!-- generated:family-diagram:start -->
@@ -34,9 +34,7 @@ This family has a single specification, so there are no relationships within it.
 flowchart LR
   SCEN["SCEN — Campaign Integration and Acceptance Tests (Stub)"]
   family_foundation["Foundation family"]:::external
-  family_content["Content family"]:::external
   family_interfaces["Interfaces family"]:::external
-  family_content -->|used by| SCEN
   family_foundation -->|used by| SCEN
   family_interfaces -->|used by| SCEN
   classDef external stroke-dasharray: 5 5

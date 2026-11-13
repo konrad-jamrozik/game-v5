@@ -31,7 +31,7 @@ appropriate to this document.
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Refines [Engine Contract](./engine-contract.md)
-- Used by [Agents](../mechanics/agents.md)
+- Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Combat](../mechanics/combat.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Factions](../mechanics/factions.md)

@@ -17,9 +17,8 @@ It owns cross-cutting guarantees, not the behavior of one subsystem or their ref
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
-- Used by [Agents](../mechanics/agents.md)
+- Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
-- Used by [Campaign](../mechanics/campaign.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
@@ -28,6 +27,7 @@ It owns cross-cutting guarantees, not the behavior of one subsystem or their ref
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
 - Used by [Investigations](../mechanics/investigations.md)
 - Used by [Missions](../mechanics/missions.md)
+- Used by [Panic and Endings](../mechanics/panic-and-endings.md)
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Terminal CLI](../interfaces/cli.md)

@@ -11,7 +11,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | Status     | Specifications |
 | ---------- | -------------- |
-| Stub       | 17             |
+| Stub       | 16             |
 | Draft      | 10             |
 | Accepted   | 5              |
 | Superseded | 0              |
@@ -23,7 +23,7 @@ These informative views are derived from the registered Markdown specifications.
 | Governance     | 5              |
 | Foundation     | 10             |
 | Mechanics      | 8              |
-| Content        | 1              |
+| Content        | 0              |
 | Interfaces     | 5              |
 | Acceptance     | 1              |
 | Implementation | 2              |
@@ -57,10 +57,10 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID      | Document                                                             | Status | Owns                                                                                                  |
 | ------- | -------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------- |
-| AGENT   | [Agents](../specs/mechanics/agents.md)                               | Stub   | Define agent capability, task availability, development, exhaustion, and recovery.                    |
-| CAMP    | [Campaign](../specs/mechanics/campaign.md)                           | Stub   | Define campaign initialization, global panic, and the conditions that start and end play.             |
+| AGENT   | [Agents](../specs/mechanics/agents-spec.md)                          | Stub   | Define agent capability, task availability, development, exhaustion, and recovery.                    |
 | COMBAT  | [Combat](../specs/mechanics/combat.md)                               | Stub   | Define fully automatic battles and their reproducible results independently of campaign rewards.      |
 | ECON    | [Economy and Upgrades](../specs/mechanics/economy-and-upgrades.md)   | Stub   | Define resource flows, personnel purchases, and agency improvements.                                  |
+| ENDING  | [Panic and Endings](../specs/mechanics/panic-and-endings.md)         | Stub   | Define global panic, the conditions that end a Campaign, and what remains possible after an ending.   |
 | FACTION | [Factions](../specs/mechanics/factions.md)                           | Stub   | Define escalating faction pressure, operation generation, suppression, and permanent defeat.          |
 | INVSTG  | [Investigations](../specs/mechanics/investigations.md)               | Stub   | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs. |
 | LEAD    | [Leads and Progression](../specs/mechanics/leads-and-progression.md) | Stub   | Define the progression graph and the lifecycle of Leads, separately from Investigations.              |
@@ -68,9 +68,8 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Content
 
-| ID   | Document                                                         | Status | Owns                                                                                    |
-| ---- | ---------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------- |
-| INIT | [Initial Campaign Content](../specs/content/initial-campaign.md) | Stub   | Provide the complete, versioned numeric and GDR inputs for the first playable campaign. |
+| ID  | Document | Status | Owns |
+| --- | -------- | ------ | ---- |
 
 ## Interfaces
 

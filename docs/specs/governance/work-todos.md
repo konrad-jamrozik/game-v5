@@ -342,7 +342,7 @@ specifications. The wording, however, describes a mechanism (snapshots and reads
 
 **Category and priority:** Borderline, low priority.
 
-**Affected:** Domain Model (DOM), [Progression facts](../foundation/domain-model.md#progression-facts); Campaign
+**Affected:** Domain Model (DOM), [Progression facts](../foundation/domain-model.md#progression-facts); Campaign State
 Modeling Contract (CSTATE, Accepted), [Value classification](../foundation/campaign-state.md#value-classification).
 
 **Batches:** DOM and CSTATE are batch 1.
@@ -366,38 +366,6 @@ observable; neither passage says so.
 [Campaign instance structure](../foundation/campaign-state.md#campaign-instance-structure) does for the
 four-property shape, or drop the requirement if that justification is not wanted. This is a revision of an Accepted
 specification.
-
-### TODO-016: Storage disclaimers in Domain Model
-
-**Category and priority:** Borderline, low priority.
-
-**Affected:** Domain Model (DOM), [Overview](../foundation/domain-model.md#overview),
-[Agent](../foundation/domain-model.md#agent), and
-[Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams).
-
-**Batches:** DOM is batch 1.
-
-**Current wording:**
-
-> Conceptual records may be embedded, separately stored, or reconstructed provided their identity and meaning are preserved.
-
-(DOM, Overview.)
-
-> [...] this model does not require duplicate stored records.
-
-(DOM, Agent.)
-
-> If both agent-side and team-side links are stored, they must agree in Committed state.
-
-(DOM, Current versus historical teams.)
-
-**Why it is an issue:** These sentences are permissive rather than prescriptive, but they discuss storage, which the
-scope rule now leaves to the implementer without any need for disclaimers. The third sentence is conditional on a
-storage choice; its observable content is that every view of the relationship agrees.
-
-**Suggested resolution:** Drop the first two sentences. Reword the third as an observable consistency requirement, e.g.
-that Agent-side and team-side views of current membership agree, or drop it if Current versus historical
-teams already implies it.
 
 ## Other
 
@@ -423,29 +391,6 @@ reserves "must" for requirements.
 **Suggested resolution:** Replace "must" with "should" and label the section as guidance, or state in DEPDIR what
 "must" means inside an Implementation document.
 
-### TODO-019: Campaign treated as a Campaign instance in Initial Campaign Content
-
-**Category and priority:** Other.
-
-**Affected:** Initial Campaign Content (INIT), [Acceptance examples](../content/initial-campaign.md#acceptance-examples).
-
-**Batches:** INIT has no batch; it is the Content parallel track in
-[Parallel GDR and acceptance work](work-plan.md#parallel-gdr-and-acceptance-work), with the playable campaign reviewed
-after batch 7.
-
-**Current wording:**
-
-> TODO: Include the required archetypes, all four properties, and Instance IDs for every Campaign instance, including Campaign
-> and Agency, in initial-state validation.
-
-**Why it is an issue:** Campaign state is not a Campaign instance and has no Instance ID or Archetype, under
-[Types, multiplicity, and lifecycle](../foundation/domain-model.md#types-multiplicity-and-lifecycle) in Domain Model.
-Also, because the sequence and format of Instance IDs are the implementer's choice under
-[Determinism](../foundation/engine-contract.md#determinism), fixtures cannot state concrete Instance IDs.
-
-**Suggested resolution:** Remove "Campaign and" from the list, and say that fixtures use symbolic Instance IDs, e.g.
-`agency_1`, that tests bind to whatever Instance IDs the implementation generates.
-
 # Edge cases and failure behavior
 
 If the quoted wording of a Work item changes without resolving it, update the quotation. If an affected section is
@@ -468,6 +413,6 @@ These are workflow checks, not gameplay tests:
 - **New issue ([Adding and removing Work items](#adding-and-removing-work-items), [Work item format](#work-item-format)):**
   A reviewer finds an out-of-scope storage statement in Missions. They add TODO-021 under Clear violations, naming
   Missions and batch 6 from [Batch sequence](work-plan.md#batch-sequence), with the exact quoted wording.
-- **Accepted owner ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)):** TODO-015 affects Campaign
-  Modeling Contract, which is Accepted. Its Value classification wording remains in force until the project owner
+- **Accepted owner ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)):** TODO-015 affects Campaign State,
+  which is Accepted. Its Value classification wording remains in force until the project owner
   accepts a revision.

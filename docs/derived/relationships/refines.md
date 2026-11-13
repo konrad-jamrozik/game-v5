@@ -15,19 +15,19 @@ flowchart LR
   AGENT["AGENT — Agents (Stub)"]
   API["API — TypeScript Player API (Stub)"]
   AUTO["AUTO — Autopilot (Draft)"]
-  CAMP["CAMP — Campaign (Stub)"]
   COMBAT["COMBAT — Combat (Stub)"]
   DOM["DOM — Domain Model (Draft)"]
   ECON["ECON — Economy and Upgrades (Stub)"]
+  ENDING["ENDING — Panic and Endings (Stub)"]
   FACTION["FACTION — Factions (Stub)"]
   INVSTG["INVSTG — Investigations (Stub)"]
   LEAD["LEAD — Leads and Progression (Stub)"]
   MISSION["MISSION — Missions (Stub)"]
   AUTO --> API
   DOM --> AGENT
-  DOM --> CAMP
   DOM --> COMBAT
   DOM --> ECON
+  DOM --> ENDING
   DOM --> FACTION
   DOM --> INVSTG
   DOM --> LEAD

@@ -22,7 +22,7 @@ new rules. Linked specifications and their current metadata remain authoritative
 
 The application is still a browser placeholder. Game contracts are being developed before gameplay implementation.
 The accepted work plan keeps batch 1 In review and subsequent batches Queued. Batch 1 now comprises Core Concepts,
-Engine Contract, Campaign Modeling Contract, and Domain Model. Campaign Modeling Contract is Accepted; Core Concepts,
+Engine Contract, Campaign State, Game Data Records, and Domain Model. Campaign State and Game Data Records are Accepted; Core Concepts,
 Engine Contract, and Domain Model are Draft. Partial acceptance does not complete the batch.
 
 The foundation split, engine API hierarchy, scoped Delegated AI, and Campaign configuration terminology are already
