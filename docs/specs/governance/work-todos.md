@@ -237,35 +237,6 @@ specifications. The wording, however, describes a mechanism (snapshots and reads
 [Turn advancement](../foundation/engine-contract.md#turn-advancement), e.g. "uses values as of turn start" or
 "uses the value after training", rather than snapshots and reads.
 
-### TODO-015: Authoritative versus Derived as a storage decision
-
-**Category and priority:** Borderline, low priority.
-
-**Affected:** Domain Model (DOM), [Progression facts](../foundation/domain-model.md#progression-facts); Campaign State
-Modeling Contract (CSTATE, Accepted), [Value classification](../foundation/campaign-state.md#value-classification).
-
-**Batches:** DOM and CSTATE are batch 1.
-
-**Current wording:**
-
-> Wins and earned unlocks must be explicit Authoritative values in Campaign state with source references where applicable.
-
-(DOM, Progression facts.)
-
-> Each specification using these
-> concepts must declare which of its values are Authoritative values and which are Derived values.
-
-(CSTATE, Value classification.)
-
-**Why it is an issue:** What is stored versus computed is normally the implementer's choice. The classification is in
-scope only because Developer API full Campaign state inspection exposes Authoritative values, which makes it
-observable; neither passage says so.
-
-**Suggested resolution:** State that justification explicitly in CSTATE Value classification, as
-[Campaign instance structure](../foundation/campaign-state.md#campaign-instance-structure) does for the
-four-property shape, or drop the requirement if that justification is not wanted. This is a revision of an Accepted
-specification.
-
 ## Other
 
 ### TODO-018: Must in Gameplay Dependency Direction
@@ -312,6 +283,6 @@ These are workflow checks, not gameplay tests:
 - **New issue ([Adding and removing Work items](#adding-and-removing-work-items), [Work item format](#work-item-format)):**
   A reviewer finds an out-of-scope storage statement in Missions. They add TODO-021 under Clear violations, naming
   Missions and batch 6 from [Batch sequence](work-plan.md#batch-sequence), with the exact quoted wording.
-- **Accepted owner ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)):** TODO-015 affects Campaign State,
-  which is Accepted. Its Value classification wording remains in force until the project owner
+- **Accepted owner ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)):** TODO-013 affects Specification
+  Conventions, which is Accepted. Its Writing exact requirements wording remains in force until the project owner
   accepts a revision.

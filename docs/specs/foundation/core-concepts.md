@@ -73,10 +73,10 @@ divides into components.
 
 Classifications of a value, whether a GDR or Campaign state supplies it.
 
-| Term                | Definition                                                                                                    |
-| ------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Authoritative value | A value treated as established truth rather than recomputed from other values.                                |
-| Derived value       | A value calculated deterministically by game behavior from Authoritative values, including those GDRs supply. |
+| Term                | Definition                                                                                                                                                                                            |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authoritative value | A value that a GDR supplies, or a value of Campaign state that specifications define by its initial value and the changes game behavior makes to it, rather than by a formula over other values.      |
+| Derived value       | A value that specifications define by a formula over the Authoritative values of one Campaign state and of GDRs. It always equals that formula applied to the Campaign state as it is at that moment. |
 
 # Vocabulary and contract ownership
 
@@ -97,10 +97,36 @@ starts and ends, and what is persisted. This distinction does not prescribe an i
 
 # Authoritative and Derived values
 
-An Authoritative value is treated as established truth. A Derived value is calculated deterministically by game
-behavior from Authoritative values, including those GDRs supply. This classification is independent of mutability:
-e.g., a GDR's shared base health is an Authoritative value even though it never changes during gameplay. It is also independent of player
-visibility: either kind may be hidden from the player.
+The classification states how specifications define a value. An Authoritative value is a value that a GDR supplies,
+or a value of Campaign state defined by its initial value and the changes game behavior makes to it. A Derived value
+is defined by a formula over the Authoritative values of one Campaign state and of GDRs.
+
+The formula of a Derived value uses only one Campaign state, as it is at one moment. It never uses an earlier
+Campaign state or the commands that led to the current one. The game is deterministic, so replaying a Campaign's
+commands from its start would reproduce every value; that does not make a value a Derived value. E.g., an Agent's
+skill is an Authoritative value although replaying the Campaign would reproduce it, because no formula over the
+current Campaign state defines it.
+
+The classification has the following complete set of consequences:
+
+- **A Derived value follows its inputs:** whenever an Authoritative value its formula uses changes, the Derived value
+  changes with it, without any rule stating so. E.g., total upkeep is the upkeep rate times the number of serving
+  Agents, so it rises as soon as an Agent is hired.
+- **An Authoritative value changes only when game behavior changes it:** it does not follow the values it was once
+  calculated from. E.g., an unlock recorded as earned remains earned after the condition that earned it stops
+  holding.
+- **Campaign state consists of Authoritative values:** a Derived value adds no information to Campaign state, so two
+  Campaign states are equal exactly when their Authoritative values are equal.
+
+Which values are Authoritative values and which are Derived values is the Engine designer's decision, because the
+first two consequences are observable game behavior. When several values determine one another, e.g. maximum health,
+current health, and damage taken, the specification owning them chooses which are Authoritative values and defines
+the others as Derived values. The classification does not state what an implementation stores; e.g., an
+implementation may keep a calculated copy of a Derived value, provided no observable result differs.
+
+The classification is independent of mutability: e.g., a GDR's shared base health is an Authoritative value even
+though it never changes during gameplay. It is also independent of player visibility: either kind may be hidden from
+the player.
 
 E.g., each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
 value. With two enemies at health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Hiding either the

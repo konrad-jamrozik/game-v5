@@ -260,6 +260,8 @@ Investigation is not resumed. Investigations owns eligibility and progress-loss 
 ## Progression facts
 
 Wins and earned unlocks must be explicit Authoritative values in Campaign state with source references where applicable.
+Once recorded, a win or earned unlock therefore remains, even when the condition that earned it no longer holds, under
+[Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts.
 A Lead's completion count is a Derived value, calculated from Investigation Campaign instances as
 [Value classification](campaign-state.md#value-classification) describes; Lead progression holds no completion
 record. Faction defeat and a Lead's Faction affiliation must not depend on specially spelled identifiers. Leads and

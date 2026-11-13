@@ -423,6 +423,10 @@ After any action or restoration, every query result, report, and Player-visible 
 computed from the current Campaign state. After restoration, that is the Campaign state at the restored position
 rather than one that was undone.
 
+Two Campaign states are equal exactly when their Authoritative values are equal, under
+[Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. Equal Campaign
+states under the same Game build therefore have equal Derived values.
+
 # Information boundary
 
 Player API always exposes only Player-visible information. Developer API adds a distinct full-state inspection path
