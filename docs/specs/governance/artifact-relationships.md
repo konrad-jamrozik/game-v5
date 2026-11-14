@@ -1,12 +1,13 @@
 # Artifact Relationships
 
-| Metadata    | Value                                            |
-| ----------- | ------------------------------------------------ |
-| Spec ID     | REL                                              |
-| Family      | Governance                                       |
-| Status      | Draft                                            |
-| Audience    | Engine designer, Implementer                     |
-| Conventions | [Specification Conventions](spec-conventions.md) |
+| Metadata    | Value                                                                            |
+| ----------- | -------------------------------------------------------------------------------- |
+| Spec ID     | REL                                                                              |
+| Family      | Governance                                                                       |
+| Status      | Draft                                                                            |
+| Audience    | Engine designer, Implementer                                                     |
+| Owns        | Artifact relationship terminology, direction, inventories, and graph validation. |
+| Conventions | [Specification Conventions](spec-conventions.md)                                 |
 
 # Overview
 
@@ -207,7 +208,7 @@ The following table gives the complete expected classifications for this accepta
 | Case                                                                                                                          | Expected classification and reason                                                                  |
 | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Domain Model describes agents using Campaign instance and GDR                                                                 | Uses Campaign State; it applies campaign composition constraints without elaborating their meanings |
-| Agents supplies the lifecycle of the Agent described by [Agent](../foundation/domain-model.md#agent)                          | Refines Domain Model; it adds detail to the same concept                                            |
+| Agents supplies the lifecycle of the Agent described by [Agent](../mechanics/domain-model.md#agent)                           | Refines Domain Model; it adds detail to the same concept                                            |
 | Combat rounds a damage value with a rounding operation that Numbers defines                                                   | Uses Numbers; applying a rounding operation does not elaborate its meaning                          |
 | Timeline preserves references under [References](../foundation/campaign-state.md#references) while restoring Campaign state   | Uses Campaign State; satisfying the reference invariant alone is not refinement                     |
 | Saves persists the Timeline whose navigation Timeline defines                                                                 | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
@@ -230,7 +231,7 @@ The following table gives the complete expected classifications for this accepta
 
 Given Agents refines Domain Model for the Agent concept, Agents contains:
 
-- Refines [Domain Model](../foundation/domain-model.md)
+- Refines [Domain Model](../mechanics/domain-model.md)
 
 Domain Model contains the mirror:
 

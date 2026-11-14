@@ -5,12 +5,11 @@
 # What this family is for
 
 Foundation specifications hold the cross-cutting contracts that every other part of the game builds on: shared
-vocabulary, engine guarantees, campaign-data structure, the engine subsystems, the domain itself, and the numeric
-machinery. Mechanics, Content, and Implementation documents all depend on them; none of
+vocabulary, engine guarantees, campaign-data structure, the engine subsystems, and the numeric machinery. Mechanics, Content, and Implementation documents all depend on them; none of
 them is about a single game system.
 
 The family reads from abstract to concrete: words, then engine promises, then data rules, then one document per engine
-subsystem, then game concepts.
+subsystem. The game's own concepts and rules are in the Mechanics family, which builds on this one.
 
 # Documents
 
@@ -59,12 +58,6 @@ ordinary play?_ It owns Dev mode, full Campaign state inspection, cheat operatio
 determinism guarantee, the Campaign seed, the rules every random outcome obeys, and how unique identifiers behave under
 replay. Each Mechanics specification still owns the distributions of its own random outcomes.
 
-## Turn Advancement
-
-[Turn Advancement](turn-advancement.md) answers _what happens during Advance turn, and in which order?_ It owns the
-complete, ordered list of Turn advancement steps and which values each step uses. It is the canonical order: a
-Mechanics specification that contradicts it is corrected to match it.
-
 ## Saves
 
 [Saves](saves.md) answers _what do saving and loading do, and what does the engine save by itself?_ It owns what a
@@ -88,14 +81,6 @@ cascade.
 [Autopilot](autopilot.md) answers _how does an AI play on the player's behalf?_ It owns Autopilot limits, what an
 Autopilot AI receives, how an Autopilot engagement ends, and Autopilot memory.
 
-## Domain Model
-
-[Domain Model](domain-model.md) answers _what exists in this game?_ It owns the game concepts and how they relate: the
-Agency, Agents, Leads, Investigations, Missions, Combat, Factions, weapons, upgrades, and Reports. It applies Core
-Concepts' vocabulary and Campaign State's rules to these concepts. It defines each concept briefly and states the
-rules that span several concepts; each Mechanics specification refines one concept with what that concept has, its
-lifecycle, formulas, and transitions.
-
 ## Numbers
 
 [Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns which quantities are whole numbers, the
@@ -107,11 +92,11 @@ Mechanics specification owns the distributions of its own random outcomes.
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
 State refines those guarantees and Determinism and Randomness. Numbers stands alone and is used by Mechanics. Campaign
-Lifecycle, Saves, Timeline, Configuration, Autopilot, Developer Access, Determinism and Randomness, Turn Advancement,
-and Numbers each own one engine subsystem outright, and all but Numbers use Engine Contract; Timeline also uses Saves, and Turn Advancement also uses Domain Model and is used by the
-Mechanics specifications whose rules apply during Advance turn. Game Data Records builds on Campaign State. Domain
-Model uses Campaign State and Game Data Records to describe the actual game, and the Mechanics family refines Domain
-Model in turn.
+Lifecycle, Saves, Timeline, Configuration, Autopilot, Developer Access, Determinism and Randomness, and Numbers each
+own one engine subsystem outright, and all but Numbers use Engine Contract; Timeline also uses Saves. Game Data
+Records builds on Campaign State. No Foundation specification depends on a Mechanics specification; the
+[Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base and Turn
+Advancement, the owner of the Turn advancement engine subsystem, as its tip.
 
 <!-- generated:family-diagram:start -->
 
@@ -131,6 +116,9 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 - **Core Concepts versus the rest:** vocabulary is shared by every family, so it cannot live inside any one of its
   users.
+- **Foundation versus Mechanics:** Foundation holds what would hold for any game on this engine; Mechanics holds
+  this game. E.g., Factions can be redesigned without touching Campaign State, and reference integrity can be
+  tightened without touching Domain Model.
 - **Engine Contract versus Campaign State:** engine behavior (e.g. sessions and access) and
   data shape (e.g. identity and references) change for different reasons. Keeping data rules in their own refinement lets
   Engine Contract stay about guarantees.
@@ -143,31 +131,19 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
   It needs nothing from Timeline. Timeline holds all undo and redo and builds on Saves. Undo and redo within a Turn
   work without any Campaign save; undo and redo across Turns load Autosaves, so Timeline uses Saves rather than the
   reverse.
-- **Campaign State versus Domain Model:** the first holds rules that would apply to any game on this engine;
-  the second holds the concepts of this game. E.g., Factions can be redesigned without touching Campaign State,
-  and reference integrity can be tightened without touching Domain Model.
-- **Domain Model versus the Mechanics family:** Domain Model holds each concept's definition and the rules relating
-  one concept to another; what a single concept has and does on its own belongs to the Mechanics specification that
-  refines it. E.g., that an Agent's Current assignment places the Agent in a Current team is in Domain Model, and the
-  Agent lifecycle states are in Agents.
 - **Numbers:** several Mechanics documents depend on the same arithmetic, e.g. the same rounding operations, so it
   does not belong inside a single mechanic.
 - **Determinism and Randomness versus Engine Contract:** determinism, the Campaign seed, random outcomes, and unique
   identifiers share one test, whether replay must reproduce a result, and change together, so one document holds them
   in detail. Each Mechanics document owns the distributions of its own random outcomes, and how a random rule is
   written is owned by Specification Conventions.
-- **Turn Advancement versus the Mechanics family:** Advance turn applies rules from many Mechanics documents, and the
-  order in which they apply changes outcomes. One document states that order canonically, so it can be read and
-  checked in one place; each Mechanics document keeps the formulas and effects of its own rules, and is corrected when
-  it contradicts the order. This repeats a little of each rule in Turn Advancement, which is accepted.
 
 # Reading order
 
 1. [Core Concepts](core-concepts.md) for the vocabulary.
 2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns.
 3. [Campaign State](campaign-state.md) and [Game Data Records](game-data-records.md) for how campaign data is shaped.
-4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md), [Developer Access](developer-access.md),
-   [Determinism and Randomness](determinism-and-randomness.md), and [Turn Advancement](turn-advancement.md) for the
-   engine subsystems.
-5. [Domain Model](domain-model.md) for the game's concepts.
-6. [Numbers](numbers.md) as needed.
+4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md), [Developer Access](developer-access.md), and
+   [Determinism and Randomness](determinism-and-randomness.md) for the engine subsystems.
+5. [Numbers](numbers.md) as needed.
+6. The [Mechanics family](../mechanics/about-mechanics.md) for the game itself.

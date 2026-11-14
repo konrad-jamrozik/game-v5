@@ -1,12 +1,13 @@
 # Agent Recovery
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | RECOVER                                                        |
-| Family      | Mechanics                                                      |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                                                                         |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | RECOVER                                                                                                                                       |
+| Family      | Mechanics                                                                                                                                     |
+| Status      | Stub                                                                                                                                          |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                   |
+| Owns        | Define how an Agent's health goes up and exhaustion goes down, and the result when several rules change one of those values in the same turn. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                |
 
 # Overview
 
@@ -21,7 +22,7 @@ This specification intends to refine Agents' health and exhaustion contract
 [Modifiable values](./agents-spec.md#modifiable-values)) with the rules that raise health and lower exhaustion, within
 the meanings and bounds Agents states for those values. It reads the recovery rates as the modifiable values Agents
 lists and does not depend on how upgrades change them. It uses Missions for when a returning Agent starts recovering,
-and applies its rules in the Agent recovery step under [Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps).
+and applies its rules in the Agent recovery step under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 The rules that lower health or raise exhaustion belong to the specifications owning the activity, e.g. Combat. The
 recovery rules remain TODOs below.
 
@@ -34,8 +35,8 @@ appropriate to this document.
 
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Missions](./missions.md)
-- Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Agents](./agents-spec.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary
 
@@ -58,7 +59,7 @@ differs by Current assignment.
 
 TODO: State the combined result when a value is both raised and lowered in the same Advance turn, e.g. an Agent that
 gains exhaustion from an activity and recovers exhaustion in that turn, following the order under
-[Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps).
+[Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
 # Player-visible information
 
@@ -71,7 +72,7 @@ how the player tells an unknown value apart from zero or absence, under
 TODO: Define behavior for recovery reaching the maximum exactly, an Agent that returns from a Mission during Advance
 turn, recovery interrupted by a new Current assignment, and a recovery rate changed by an upgrade while recovery is
 underway.
-State when Mission survivors begin recovering, consistent with the order under [Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps).
+State when Mission survivors begin recovering, consistent with the order under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

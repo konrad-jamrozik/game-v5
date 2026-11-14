@@ -1,12 +1,13 @@
 # Investigations
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | INVSTG                                                         |
-| Family      | Mechanics                                                      |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                                 |
+| ----------- | ----------------------------------------------------------------------------------------------------- |
+| Spec ID     | INVSTG                                                                                                |
+| Family      | Mechanics                                                                                             |
+| Status      | Stub                                                                                                  |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                           |
+| Owns        | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                        |
 
 # Overview
 
@@ -15,7 +16,7 @@ This document defines exact investigation progress, stochastic completion, playe
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification refines Domain Model's investigation contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with what an Investigation has and the
+This specification refines Domain Model's investigation contract ([Current versus historical teams](domain-model.md#current-versus-historical-teams)/[Leads and Investigations](domain-model.md#leads-and-investigations)/[Progression facts](domain-model.md#progression-facts)) with what an Investigation has and the
 Investigation lifecycle states, and intends to refine it further with start, progress, completion,
 team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
 and Numbers' arithmetic, and it owns the distributions of its own random outcomes. This document supplies estimate mathematics over inputs it names itself. This document also states which of those inputs and results the player
@@ -33,8 +34,8 @@ appropriate to this document.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers](../foundation/numbers.md)
-- Uses [Turn Advancement](../foundation/turn-advancement.md)
-- Refines [Domain Model](../foundation/domain-model.md)
+- Refines [Domain Model](domain-model.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary
 
@@ -44,14 +45,14 @@ duplicating shared definitions.
 # Investigation aspects
 
 An Investigation has a reference to one Lead, progress, hidden difficulty, a lifecycle, timing facts, a Current team,
-and Participation history. [Leads and Investigations](../foundation/domain-model.md#leads-and-investigations) in
+and Participation history. [Leads and Investigations](domain-model.md#leads-and-investigations) in
 Domain Model owns how an Investigation relates to its Lead and to the Agents in its Current team.
 
 # Investigation lifecycle
 
 An Investigation must distinguish the lifecycle states Active, Completed, and Abandoned. Completed and Abandoned are
 the two states of an Investigation that is not Active under
-[Leads and Investigations](../foundation/domain-model.md#leads-and-investigations).
+[Leads and Investigations](domain-model.md#leads-and-investigations).
 
 Starting an Investigation of a Lead whose earlier Investigation was Abandoned creates another Investigation; the
 progress of the Abandoned Investigation is not resumed.
@@ -89,7 +90,7 @@ how the player tells an unknown value apart from zero or absence, under
 # Edge cases and failure behavior
 
 TODO: Define behavior for Zero total effective skill, fractional progress, threshold crossing, removing all or some agents, completion and exhaustion together, and restarting abandoned leads.
-State which rules of the same Advance turn apply to a Mission that a completed Investigation creates, under [Values a step uses](../foundation/turn-advancement.md#values-a-step-uses).
+State which rules of the same Advance turn apply to a Mission that a completed Investigation creates, under [Values a step uses](turn-advancement.md#values-a-step-uses).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples
@@ -100,12 +101,12 @@ fixtures instead of introducing implicit balance values.
 
 ## Restarting an Abandoned Investigation
 
-Given the fixture of [A. Valid relationships](../foundation/domain-model.md#a-valid-relationships) in Domain Model,
+Given the fixture of [A. Valid relationships](domain-model.md#a-valid-relationships) in Domain Model,
 i1 is Active. If i1 becomes Abandoned and the player later starts an Investigation of L1, the result is a new
 Investigation with its own Instance ID that does not resume the progress of i1, which satisfies
 [Investigation lifecycle](#investigation-lifecycle). If i1 becomes Completed instead, i1 has an empty Current team
 and retains a1 in its Participation history, as
-[C. Completion and later Participation history](../foundation/domain-model.md#c-completion-and-later-participation-history)
+[C. Completion and later Participation history](domain-model.md#c-completion-and-later-participation-history)
 in Domain Model shows.
 
 # Open decisions

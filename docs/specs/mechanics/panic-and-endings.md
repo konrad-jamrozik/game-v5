@@ -1,12 +1,13 @@
 # Panic and Endings
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | ENDING                                                         |
-| Family      | Mechanics                                                      |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                               |
+| ----------- | --------------------------------------------------------------------------------------------------- |
+| Spec ID     | ENDING                                                                                              |
+| Family      | Mechanics                                                                                           |
+| Status      | Stub                                                                                                |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                         |
+| Owns        | Define global panic, the conditions that end a Campaign, and what remains possible after an ending. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                      |
 
 # Overview
 
@@ -16,9 +17,9 @@ after an ending.
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification intends to refine Domain Model's Campaign contract ([Agency per Campaign](../foundation/domain-model.md#agency-per-campaign)) with
+This specification intends to refine Domain Model's Campaign contract ([Agency per Campaign](domain-model.md#agency-per-campaign)) with
 panic and ending behavior. It supplies the ending predicates, which apply in the Panic and Ending check steps under
-[Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps). Campaign creation and Campaign configuration
+[Turn advancement steps](turn-advancement.md#turn-advancement-steps). Campaign creation and Campaign configuration
 are owned by [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets) in
 Configuration, not by this document. Panic and ending rules remain TODOs below.
 
@@ -30,8 +31,8 @@ appropriate to this document.
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Turn Advancement](../foundation/turn-advancement.md)
-- Refines [Domain Model](../foundation/domain-model.md)
+- Refines [Domain Model](domain-model.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary
 
@@ -56,7 +57,7 @@ how the player tells an unknown value apart from zero or absence, under
 # Edge cases and failure behavior
 
 TODO: Define behavior for Zero money versus negative money, panic at its limit, all factions defeated, same-turn victory/defeat, and post-ending commands.
-State the ending predicates in terms of the values after the earlier steps of the same Advance turn, under [Values a step uses](../foundation/turn-advancement.md#values-a-step-uses).
+State the ending predicates in terms of the values after the earlier steps of the same Advance turn, under [Values a step uses](turn-advancement.md#values-a-step-uses).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

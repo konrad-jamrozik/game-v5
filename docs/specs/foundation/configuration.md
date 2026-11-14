@@ -1,12 +1,13 @@
 # Configuration
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | CONFIG                                                         |
-| Family      | Foundation                                                     |
-| Status      | Draft                                                          |
-| Audience    | Engine designer, UI designer, Implementer                      |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                  |
+| ----------- | ---------------------------------------------------------------------- |
+| Spec ID     | CONFIG                                                                 |
+| Family      | Foundation                                                             |
+| Status      | Draft                                                                  |
+| Audience    | Engine designer, UI designer, Implementer                              |
+| Owns        | Kinds of setting, Global configuration, and the configuration cascade. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)         |
 
 # Overview
 
@@ -27,6 +28,7 @@ owned by the Mechanics specifications using them, under
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Timeline](./timeline.md)
+- Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 
 # Glossary
 
@@ -93,7 +95,7 @@ difficulty, and a multiplier of how often Missions appear can be Campaign config
 change about a new Campaign is not Campaign configuration. It is either a GDR serving another purpose, e.g. a recruit
 skill value, or game behavior, e.g. a starting turn that is the same for every Campaign, and the rule determining
 which Campaign instances the initial Campaign state contains, under
-[Initial Campaign state](domain-model.md#initial-campaign-state). The Campaign seed is the one exception: no preset
+[Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state). The Campaign seed is the one exception: no preset
 supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor
 part of the new-Campaign setup; campaign creation receives it separately, under
 [Campaign seed](determinism-and-randomness.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after

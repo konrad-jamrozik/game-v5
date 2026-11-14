@@ -88,19 +88,16 @@ function validCorpus(): SourceFile[] {
         '| Family | Governance |',
         '| Status | Draft |',
         '| Audience | Engine designer, Implementer |',
+        '| Owns | Registry. |',
 
         '',
         '# Overview',
         '',
         'Registry.',
         '',
-        '# Specification register',
+        '# Navigation',
         '',
-        '| ID | Family | Document | Owns |',
-        '| --- | --- | --- | --- |',
-        '| INDEX | Governance | [Game Specification Index](README.md) | Registry. |',
-        '| CONV | Governance | [Specification Conventions](governance/spec-conventions.md) | Conventions. |',
-        '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
+        'Links to every specification.',
       ]),
     },
     {
@@ -114,6 +111,7 @@ function validCorpus(): SourceFile[] {
         '| Family | Governance |',
         '| Status | Draft |',
         '| Audience | Engine designer, Implementer |',
+        '| Owns | Conventions. |',
 
         '',
         '# Overview',
@@ -142,6 +140,7 @@ function validCorpus(): SourceFile[] {
         '| Family | Foundation |',
         '| Status | Draft |',
         '| Audience | Engine designer, Implementer |',
+        '| Owns | Alpha rules. |',
 
         '',
         '# Overview',
@@ -183,12 +182,7 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
     ['Overview'],
     '# Relationships\n\n- ' + active + ' [Alpha](alpha.md)\n- ' + passive + ' [Alpha](alpha.md)',
   )
-  const withBeta = mutate(
-    files,
-    'docs/specs/README.md',
-    '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |',
-    '| AAA | Foundation | [Alpha](foundation/alpha.md) | Alpha rules. |\n| BBB | Foundation | [Beta](foundation/beta.md) | Beta rules. |',
-  )
+  const withBeta = files
   return [
     ...withRelationships(withBeta, alpha.path, '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)'),
     { path: 'docs/specs/foundation/beta.md', content: betaContent },
@@ -313,8 +307,8 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '| Audience | Engine designer, Implementer |',
-      value ? '| Audience | ' + value + ' |' : '',
+      '| Audience | Engine designer, Implementer |\n',
+      value ? '| Audience | ' + value + ' |\n' : '',
     )
     expect(diagnosticCodes(files)).toEqual(['SPEC112'])
   })
@@ -664,15 +658,15 @@ describe('specification linter', () => {
 
   test.each([
     [
-      'unregistered file',
-      (files: SourceFile[]) => [...files, { path: 'docs/specs/orphan.md', content: files[2]?.content ?? '' }],
-      'SPEC013',
-    ],
-    [
       'metadata status',
       (files: SourceFile[]) =>
         mutate(files, 'docs/specs/foundation/alpha.md', '| Status | Draft |', '| Status | Final |'),
       'SPEC105',
+    ],
+    [
+      'missing Owns metadata',
+      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '| Owns | Alpha rules. |\n', ''),
+      'SPEC113',
     ],
     [
       'redundant Scope metadata',
@@ -686,23 +680,6 @@ describe('specification linter', () => {
       'SPEC111',
     ],
     [
-      'invalid register family',
-      (files: SourceFile[]) =>
-        mutate(
-          files,
-          'docs/specs/README.md',
-          '| AAA | Foundation | [Alpha](foundation/alpha.md)',
-          '| AAA | Unknown | [Alpha](foundation/alpha.md)',
-        ),
-      'SPEC017',
-    ],
-    [
-      'metadata and register family disagreement',
-      (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Mechanics |'),
-      'SPEC018',
-    ],
-    [
       'invalid metadata family',
       (files: SourceFile[]) =>
         mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Unknown |'),
@@ -711,18 +688,8 @@ describe('specification linter', () => {
     [
       'family and directory disagreement',
       (files: SourceFile[]) =>
-        mutate(
-          mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Mechanics |'),
-          'docs/specs/README.md',
-          '| AAA | Foundation | [Alpha](foundation/alpha.md)',
-          '| AAA | Mechanics | [Alpha](foundation/alpha.md)',
-        ),
+        mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Mechanics |'),
       'SPEC110',
-    ],
-    [
-      'title agreement',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '# Alpha', '# ALPHA'),
-      'SPEC015',
     ],
     [
       'standard heading order',

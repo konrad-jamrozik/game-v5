@@ -1,12 +1,13 @@
 # Campaign Lifecycle
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | LIFE                                                           |
-| Family      | Foundation                                                     |
-| Status      | Draft                                                          |
-| Audience    | Engine designer, UI designer, AI designer, Implementer         |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                                      |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| Spec ID     | LIFE                                                                                                       |
+| Family      | Foundation                                                                                                 |
+| Status      | Draft                                                                                                      |
+| Audience    | Engine designer, UI designer, AI designer, Implementer                                                     |
+| Owns        | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                             |
 
 # Overview
 
@@ -28,6 +29,7 @@ Determinism and Randomness owns. What a Session holds and that nothing it holds 
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Developer Access](./developer-access.md)
 - Used by [Saves](./saves.md)
+- Used by [Web UI](../ui/web-ui.md)
 
 # Glossary
 

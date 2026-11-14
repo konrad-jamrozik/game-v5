@@ -1,12 +1,13 @@
 # Core Concepts
 
-| Metadata    | Value                                                                    |
-| ----------- | ------------------------------------------------------------------------ |
-| Spec ID     | CORE                                                                     |
-| Family      | Foundation                                                               |
-| Status      | Accepted                                                                 |
-| Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)           |
+| Metadata    | Value                                                                                        |
+| ----------- | -------------------------------------------------------------------------------------------- |
+| Spec ID     | CORE                                                                                         |
+| Family      | Foundation                                                                                   |
+| Status      | Accepted                                                                                     |
+| Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer                     |
+| Owns        | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                               |
 
 # Overview
 
@@ -25,7 +26,7 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Developer Access](./developer-access.md)
-- Used by [Domain Model](./domain-model.md)
+- Used by [Domain Model](../mechanics/domain-model.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Engine Contract](./engine-contract.md)
 - Used by [Factions](../mechanics/factions.md)
@@ -38,7 +39,7 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Timeline](./timeline.md)
-- Used by [Turn Advancement](./turn-advancement.md)
+- Used by [Turn Advancement](../mechanics/turn-advancement.md)
 
 # Glossary
 

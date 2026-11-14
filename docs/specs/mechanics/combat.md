@@ -1,12 +1,13 @@
 # Combat
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | COMBAT                                                         |
-| Family      | Mechanics                                                      |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------ |
+| Spec ID     | COMBAT                                                                                           |
+| Family      | Mechanics                                                                                        |
+| Status      | Stub                                                                                             |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                      |
+| Owns        | Define fully automatic battles and their reproducible results independently of campaign rewards. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                   |
 
 # Overview
 
@@ -15,7 +16,7 @@ This document defines fully automatic battles and their reproducible results ind
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification refines Domain Model's combatant and battle-result contract ([Attribute bounds](../foundation/domain-model.md#attribute-bounds)/[Combat and consequences](../foundation/domain-model.md#combat-and-consequences)) with what an Enemy has and what a
+This specification refines Domain Model's combatant and battle-result contract ([Attribute bounds](domain-model.md#attribute-bounds)/[Combat and consequences](domain-model.md#combat-and-consequences)) with what an Enemy has and what a
 Battle result holds, and intends to refine it further with battle transitions,
 calculations, and termination rules. It uses Agents' combatant capabilities and Numbers' arithmetic, and it
 owns the distributions of its own random outcomes. It also intends to refine Agents'
@@ -34,8 +35,9 @@ appropriate to this document.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Refines [Agents](./agents-spec.md)
-- Refines [Domain Model](../foundation/domain-model.md)
+- Refines [Domain Model](domain-model.md)
 - Used by [Missions](./missions.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary
 
@@ -44,9 +46,9 @@ duplicating shared definitions.
 
 # Combatants and Battle results
 
-Agent and Enemy adopt the [Combatant Role Type](../foundation/domain-model.md#combatant-role-type). An Enemy has its
+Agent and Enemy adopt the [Combatant Role Type](domain-model.md#combatant-role-type). An Enemy has its
 own values of the properties the Combatant Role Type requires, within
-[Attribute bounds](../foundation/domain-model.md#attribute-bounds).
+[Attribute bounds](domain-model.md#attribute-bounds).
 
 TODO: State the exhaustive set of properties a Combatant gains for the duration of a battle, e.g. morale and
 incapacitated, with the Type, initial value, and meaning of each. State whether any of them is ever part of Committed
@@ -54,7 +56,7 @@ state, or whether every battle begins and ends within one Player action.
 
 A Battle result holds the participants, the outcome, combat facts, and the measures needed for Mission consequences.
 A Battle result must retain the facts that the partial-success formula requires; [Missions](./missions.md) owns that
-formula. [Combat and consequences](../foundation/domain-model.md#combat-and-consequences) in Domain Model owns how a
+formula. [Combat and consequences](domain-model.md#combat-and-consequences) in Domain Model owns how a
 Battle result relates to its Mission.
 
 # Battle flow

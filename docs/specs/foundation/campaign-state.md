@@ -1,12 +1,13 @@
 # Campaign State
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | CSTATE                                                         |
-| Family      | Foundation                                                     |
-| Status      | Draft                                                          |
-| Audience    | Engine designer, Content designer, Implementer                 |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | CSTATE                                                                                                                                   |
+| Family      | Foundation                                                                                                                               |
+| Status      | Draft                                                                                                                                    |
+| Audience    | Engine designer, Content designer, Implementer                                                                                           |
+| Owns        | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                           |
 
 # Overview
 
@@ -21,11 +22,11 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 - Refines [Engine Contract](./engine-contract.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Developer Access](./developer-access.md)
-- Used by [Domain Model](./domain-model.md)
+- Used by [Domain Model](../mechanics/domain-model.md)
 - Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
 - Used by [Timeline](./timeline.md)
-- Used by [Turn Advancement](./turn-advancement.md)
+- Used by [Turn Advancement](../mechanics/turn-advancement.md)
 
 # Glossary
 

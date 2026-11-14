@@ -4,14 +4,22 @@
 
 # What this family is for
 
-Mechanics specifications own the player-facing game systems: their rules, transitions, formulas, and effects. Each one
-refines part of the [Domain Model](../foundation/domain-model.md) with what its concepts have and the detailed
+Mechanics specifications own the player-facing game systems: their rules, transitions, formulas, and effects. [Domain Model](domain-model.md) defines the game's
+concepts and how they relate, and each other one refines part of it with what its concepts have and the detailed
 behavior of one system, using
 [Numbers](../foundation/numbers.md) for arithmetic. Each one owns the distributions of its own random outcomes. Exact balance values and
-catalogs are Game Data Records (GDRs); when a rule applies during Advance turn, and which values it uses, follows
-[Turn Advancement](../foundation/turn-advancement.md).
+catalogs are Game Data Records (GDRs); [Turn Advancement](turn-advancement.md) states when each rule applies during Advance turn,
+and which values it uses.
 
 # Documents
+
+## Domain Model
+
+[Domain Model](domain-model.md) answers _what exists in this game?_ It owns the game concepts and how they relate: the
+Agency, Agents, Leads, Investigations, Missions, Combat, Factions, weapons, upgrades, and Reports. It applies Core
+Concepts' vocabulary and Campaign State's rules to these concepts. It defines each concept briefly and states the
+rules that span several concepts; each other Mechanics specification refines one concept with what that concept has,
+its lifecycle, formulas, and transitions.
 
 ## Panic and Endings
 
@@ -58,9 +66,15 @@ owns mission commitments and turns Battle results into campaign consequences.
 [Factions](factions.md) answers _how do the opponents push back?_ It owns escalating faction pressure, Faction
 operation occurrence generation, suppression, and permanent defeat.
 
+## Turn Advancement
+
+[Turn Advancement](turn-advancement.md) answers _what happens during Advance turn, and in which order?_ It owns the
+complete, ordered list of Turn advancement steps and which values each step uses, and so the Turn advancement engine
+subsystem. It is the canonical order: a Mechanics specification that contradicts it is corrected to match it.
+
 # How they relate
 
-The family is arranged in layers with Agents as the base. Every Mechanics document is refined from the Foundation
+The family is arranged in layers with Domain Model as the base and Turn Advancement as the tip. Every Mechanics document is refined from the Foundation
 family and supplies the meanings that Game Data Records (GDRs) fill with values.
 
 ## The layer rule
@@ -79,8 +93,8 @@ A document refines an earlier one when it adds detail to the same subject, e.g. 
 goes down. It uses an earlier one when it reads that subject to describe its own, e.g. Combat uses Agent skill to
 resolve a Battle.
 
-Panic and Endings declares no relationship to another Mechanics document yet, so it is drawn in layer 1; its layer is
-decided when its predicates are written.
+Panic and Endings depends only on Domain Model so far, so it is drawn in layer 2; its layer is decided when its
+predicates are written.
 
 <!-- generated:family-diagram:start -->
 
@@ -106,6 +120,14 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
   the progression graph can change without touching investigation mathematics.
 - **Panic and Endings versus the rest:** campaign-wide state (panic and the ending predicates) belongs to no
   single system.
+- **Domain Model versus the other Mechanics documents:** Domain Model holds each concept's definition and the rules
+  relating one concept to another; what a single concept has and does on its own belongs to the Mechanics document
+  that refines it. E.g., that an Agent's Current assignment places the Agent in a Current team is in Domain Model, and
+  the Agent lifecycle states are in Agents.
+- **Turn Advancement versus the rest:** Advance turn applies rules from many Mechanics documents, and the order in
+  which they apply changes outcomes. Turn Advancement states that order canonically and depends on every document
+  whose rules it orders; those documents only point to it, keep the formulas and effects of their own rules, and are
+  corrected when they contradict the order. This repeats a little of each rule in Turn Advancement, which is accepted.
 - **Formulas versus values:** each document owns formulas and meanings; the numbers are GDRs, so balancing does not change behavior specifications.
 
 # Reading order

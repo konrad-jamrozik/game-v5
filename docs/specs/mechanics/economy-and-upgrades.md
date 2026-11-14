@@ -1,12 +1,13 @@
 # Economy and Upgrades
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | ECON                                                           |
-| Family      | Mechanics                                                      |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                |
+| ----------- | -------------------------------------------------------------------- |
+| Spec ID     | ECON                                                                 |
+| Family      | Mechanics                                                            |
+| Status      | Stub                                                                 |
+| Audience    | Engine designer, Content designer, AI designer, Implementer          |
+| Owns        | Define resource flows, personnel purchases, and agency improvements. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)       |
 
 # Overview
 
@@ -15,13 +16,13 @@ This document defines resource flows, personnel purchases, and agency improvemen
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including [Attribute bounds](../foundation/domain-model.md#attribute-bounds))
+This specification intends to refine Domain Model's Agency, Weapons and upgrades, and attribute contracts (including [Attribute bounds](domain-model.md#attribute-bounds))
 with resource flows, purchase eligibility, and upgrade effects. Agents supplies personnel state and capabilities.
 This specification also intends to refine Agents' [Modifiable values](./agents-spec.md#modifiable-values) with how
 each upgrade changes them;
 Numbers supplies arithmetic. GDRs supply prices and increments, while this
 document supplies their meanings and formulas. Its turn rules apply in the Agency income and Upkeep steps under
-[Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps). These rules remain TODOs.
+[Turn advancement steps](turn-advancement.md#turn-advancement-steps). These rules remain TODOs.
 
 TODO: Specify Spendable money, recurring funding, upkeep, contracting income, hiring, dismissal, capacity, and upgrades.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
@@ -31,12 +32,13 @@ appropriate to this document.
 
 - Uses [Agents](./agents-spec.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Developer Access](../foundation/developer-access.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
-- Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Agents](./agents-spec.md)
-- Refines [Domain Model](../foundation/domain-model.md)
+- Refines [Domain Model](domain-model.md)
 - Used by [Missions](./missions.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary
 
@@ -45,7 +47,7 @@ duplicating shared definitions.
 
 # Income and costs
 
-TODO: Specify formulas for hiring, dismissal, upkeep, contracting, and recurring funding; follow the order under [Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps), e.g. that upkeep uses Agency money after the Agency income step, and state when a funding change starts producing income; and distinguish cash from income rate.
+TODO: Specify formulas for hiring, dismissal, upkeep, contracting, and recurring funding; follow the order under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), e.g. that upkeep uses Agency money after the Agency income step, and state when a funding change starts producing income; and distinguish cash from income rate.
 
 # Upgrade effects
 
@@ -71,6 +73,12 @@ TODO: Declare the remaining Turn series this specification owns, e.g. upgrades p
 paid in each turn. For each, state the recorded value, its unit, and the recorded moment of each turn. State which
 money value the two Turn series above record once Spendable money is specified.
 
+# Cheat operations
+
+TODO: Specify `developer.actions.addMoney(amount)`, which adds `amount` to the Agency's money: its input Type,
+allowed range, validation, and effects. It follows [Cheat operations](../foundation/developer-access.md#cheat-operations)
+in Developer Access.
+
 # Player-visible information
 
 TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
@@ -91,6 +99,6 @@ fixtures instead of introducing implicit balance values.
 # Open decisions
 
 - TODO: Resolve upgrade stacking, retroactivity, capacity semantics, and income/cost timing.
-- TODO: State the rule determining the Agency Campaign instances that the initial Campaign state contains, and name the GDRs supplying their initial values, under [Initial Campaign state](../foundation/domain-model.md#initial-campaign-state).
+- TODO: State the rule determining the Agency Campaign instances that the initial Campaign state contains, and name the GDRs supplying their initial values, under [Initial Campaign state](domain-model.md#initial-campaign-state).
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

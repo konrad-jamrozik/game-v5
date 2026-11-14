@@ -1,18 +1,19 @@
 # Engine Contract
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | ENG                                                            |
-| Family      | Foundation                                                     |
-| Status      | Draft                                                          |
-| Audience    | Engine designer, UI designer, AI designer, Implementer         |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | ENG                                                                                                                                      |
+| Family      | Foundation                                                                                                                               |
+| Status      | Draft                                                                                                                                    |
+| Audience    | Engine designer, UI designer, AI designer, Implementer                                                                                   |
+| Owns        | API hierarchy, Principal authority, data ownership, the Engine subsystem inventory, and the guarantees shared by every engine subsystem. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                           |
 
 # Overview
 
 This document defines the engine's API hierarchy, the data the engine owns, and the guarantees that hold across every engine subsystem when running the game and exposing information.
 
-It owns only cross-cutting guarantees and owns no engine subsystem. The behavior of each subsystem belongs to the one specification that [Engine subsystems](#engine-subsystems) names, e.g. [Campaign Lifecycle](./campaign-lifecycle.md) or [Turn Advancement](./turn-advancement.md), and refinements of these guarantees belong to their refining specifications, e.g. [Campaign State](./campaign-state.md).
+It owns only cross-cutting guarantees and owns no engine subsystem. The behavior of each subsystem belongs to the one specification that [Engine subsystems](#engine-subsystems) names, e.g. [Campaign Lifecycle](./campaign-lifecycle.md) or [Turn Advancement](../mechanics/turn-advancement.md), and refinements of these guarantees belong to their refining specifications, e.g. [Campaign State](./campaign-state.md).
 
 # Relationships
 
@@ -25,7 +26,7 @@ It owns only cross-cutting guarantees and owns no engine subsystem. The behavior
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Developer Access](./developer-access.md)
-- Used by [Domain Model](./domain-model.md)
+- Used by [Domain Model](../mechanics/domain-model.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Factions](../mechanics/factions.md)
 - Used by [Game Data Records](./game-data-records.md)
@@ -37,7 +38,8 @@ It owns only cross-cutting guarantees and owns no engine subsystem. The behavior
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Timeline](./timeline.md)
-- Used by [Turn Advancement](./turn-advancement.md)
+- Used by [Turn Advancement](../mechanics/turn-advancement.md)
+- Used by [Web UI](../ui/web-ui.md)
 - Refined by [Campaign State](./campaign-state.md)
 
 # Glossary
@@ -204,9 +206,9 @@ Engine subsystem, under [Engine subsystems](#engine-subsystems).
 | `session.developer`           | Enabling and disabling Dev mode.                                                                                                                                                                   | [Dev mode](developer-access.md#dev-mode) in Developer Access                                                                                                                                  |
 | `session.autopilot`           | Listing the Autopilot AIs available for engagement, engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                            | [Available Autopilot AIs](autopilot.md#available-autopilot-ais) and [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot                      |
 | `player.queries`              | Read-only Player-visible information and ordinary action discovery. Its `getCampaignState()` returns only the Player-visible information of Campaign state.                                        | [Player queries and actions](#player-queries-and-actions), and the specification owning each value                                                                                            |
-| `player.actions`              | Normal gameplay mutations, including Advance turn.                                                                                                                                                 | The mechanics specification owning each action, under [Player queries and actions](#player-queries-and-actions); [Turn Advancement](turn-advancement.md) for Advance turn                     |
+| `player.actions`              | Normal gameplay mutations, including Advance turn.                                                                                                                                                 | The mechanics specification owning each action, under [Player queries and actions](#player-queries-and-actions); [Turn Advancement](../mechanics/turn-advancement.md) for Advance turn        |
 | `developer.queries`           | Read-only inspection of full Campaign state. Its `getCampaignState()` returns Campaign state in full, unlike the Player API query of the same name.                                                | [Inspection contract](developer-access.md#inspection-contract) in Developer Access                                                                                                            |
-| `developer.actions`           | Validated, recorded cheat mutations; e.g., adding money or adding Agents.                                                                                                                          | [Cheat command details](developer-access.md#cheat-command-details) in Developer Access                                                                                                        |
+| `developer.actions`           | Validated, recorded cheat mutations; e.g., adding money or adding Agents.                                                                                                                          | [Cheat operations](developer-access.md#cheat-operations) in Developer Access, and the Mechanics specification owning each cheat operation                                                     |
 | `autopilotMemory`             | Autopilot memory for the active Autopilot AI, independent of gameplay resolution.                                                                                                                  | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                                                                                                |
 
 The complete Principal access matrix is:
@@ -285,13 +287,16 @@ the complete Engine subsystem inventory.
 | Configuration              | API subsystem        | [Configuration](configuration.md)                           | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration.             |
 | Autopilot                  | API subsystem        | [Autopilot](autopilot.md)                                   | Bounded play by an Autopilot AI, and its Autopilot memory.                                               |
 | Developer access           | API subsystem        | [Developer Access](developer-access.md)                     | Dev mode, full Campaign state inspection, and validated cheat actions for the Session controller.        |
-| Turn advancement           | API subsystem        | [Turn Advancement](turn-advancement.md)                     | The canonical order of everything Advance turn applies, and which values each part uses.                 |
+| Turn advancement           | API subsystem        | [Turn Advancement](../mechanics/turn-advancement.md)        | The canonical order of everything Advance turn applies, and which values each part uses.                 |
 | Determinism and randomness | Supporting subsystem | [Determinism and Randomness](determinism-and-randomness.md) | Reproducible Campaigns, the Campaign seed, random outcomes, and unique identifiers.                      |
 | Numbers                    | Supporting subsystem | [Numbers](numbers.md)                                       | Which quantities are whole numbers, the precision of the rest, and rounding.                             |
 
-Every Engine API operation belongs to exactly one API subsystem, except gameplay queries and gameplay actions other
-than Advance turn: `player.queries` returns the Player-visible information that the specifications owning each value
-declare, and the Mechanics specification owning each gameplay action owns that action, under [Player queries and actions](#player-queries-and-actions).
+Every Engine API operation belongs to exactly one API subsystem, except gameplay queries, gameplay actions other
+than Advance turn, and cheat operations: `player.queries` returns the Player-visible information that the
+specifications owning each value declare, the Mechanics specification owning each gameplay action owns that action,
+under [Player queries and actions](#player-queries-and-actions), and the Mechanics specification owning the value a
+cheat operation changes owns that operation, under the rules that
+[Cheat operations](developer-access.md#cheat-operations) in Developer Access states for every cheat operation.
 Gameplay is not an Engine subsystem. Specifications of vocabulary and data rules, e.g.
 [Core Concepts](core-concepts.md) and [Campaign State](campaign-state.md), are not Engine subsystems either.
 
@@ -312,7 +317,7 @@ same Player-visible information for the Session controller and Autopilot AI, ind
 
 A player may commit any sequence of eligible Player API actions during a turn. `player.actions.advanceTurn()` is
 itself one Player action, applied atomically: no intermediate result is separately committed.
-[Turn Advancement](turn-advancement.md) owns what it applies and in which order. Each successful state-changing Player API action is one Player action.
+[Turn Advancement](../mechanics/turn-advancement.md) owns what it applies and in which order. Each successful state-changing Player API action is one Player action.
 [Timeline entries](timeline.md#timeline-entries) in Timeline states which Player actions the Timeline records; Advance
 turn is a Player action that the Timeline does not record. A rejected action or an action with no effect is not a
 Player action and changes nothing, under [Committed state integrity](#committed-state-integrity).

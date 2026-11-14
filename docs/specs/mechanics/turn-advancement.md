@@ -1,12 +1,13 @@
 # Turn Advancement
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | TURN                                                           |
-| Family      | Foundation                                                     |
-| Status      | Draft                                                          |
-| Audience    | Engine designer, AI designer, Implementer                      |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                          |
+| ----------- | ------------------------------------------------------------------------------ |
+| Spec ID     | TURN                                                                           |
+| Family      | Mechanics                                                                      |
+| Status      | Draft                                                                          |
+| Audience    | Engine designer, AI designer, Implementer                                      |
+| Owns        | The canonical order of Turn advancement steps and which values each step uses. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                 |
 
 # Overview
 
@@ -17,29 +18,32 @@ It is the canonical statement of the order in which things happen during Advance
 the formulas and effects of the rules that one step applies, e.g. how much health an Agent recovers. This document owns
 when each of those rules applies relative to every other rule, as stated under [Canonical order](#canonical-order).
 Each step below restates in one sentence what its rules do, so that the whole of Advance turn can be read in one place.
+It uses every Mechanics specification whose rules it orders, so it sits above all of them; they only point to it.
 
 It does not own, e.g., that Advance turn is one atomic Player action, which
-[Player queries and actions](engine-contract.md#player-queries-and-actions) in Engine Contract owns, or what Advance
-turn does to the Timeline, which [Timeline entries](timeline.md#timeline-entries) in Timeline owns.
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract owns, or what Advance
+turn does to the Timeline, which [Timeline entries](../foundation/timeline.md#timeline-entries) in Timeline owns.
 
 # Relationships
 
-- Uses [Campaign State](./campaign-state.md)
-- Uses [Core Concepts](./core-concepts.md)
+- Uses [Agent Recovery](./agent-recovery.md)
+- Uses [Agents](./agents-spec.md)
+- Uses [Campaign State](../foundation/campaign-state.md)
+- Uses [Combat](./combat.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Domain Model](./domain-model.md)
-- Uses [Engine Contract](./engine-contract.md)
-- Used by [Agent Recovery](../mechanics/agent-recovery.md)
-- Used by [Agents](../mechanics/agents-spec.md)
-- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
-- Used by [Factions](../mechanics/factions.md)
-- Used by [Investigations](../mechanics/investigations.md)
-- Used by [Missions](../mechanics/missions.md)
-- Used by [Panic and Endings](../mechanics/panic-and-endings.md)
+- Uses [Economy and Upgrades](./economy-and-upgrades.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
+- Uses [Factions](./factions.md)
+- Uses [Investigations](./investigations.md)
+- Uses [Leads and Progression](./leads-and-progression.md)
+- Uses [Missions](./missions.md)
+- Uses [Panic and Endings](./panic-and-endings.md)
 
 # Glossary
 
-Campaign and Campaign state are defined by the [Core Concepts glossary](core-concepts.md#glossary). Player action, Committed state, Turn, and Turn-start state are defined by the
-[Engine Contract glossary](engine-contract.md#glossary). The game concepts named by the steps, e.g. Agent and Mission,
+Campaign and Campaign state are defined by the [Core Concepts glossary](../foundation/core-concepts.md#glossary). Player action, Committed state, Turn, and Turn-start state are defined by the
+[Engine Contract glossary](../foundation/engine-contract.md#glossary). The game concepts named by the steps, e.g. Agent and Mission,
 are defined by the [Domain Model glossary](domain-model.md#glossary).
 
 | Term                  | Definition                                                                                                                                    |
@@ -69,20 +73,20 @@ to, the order of the steps, and which values each step uses. The following rules
 **Proposed rule:** Advance turn applies the following Turn advancement steps, each exactly once, in this order. The
 list is exhaustive.
 
-| Order | Turn advancement step  | What its rules do                                                                                                                                             | Rules owned by                                                                                                   |
-| ----- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| 1     | Transit                | Agents In transit advance toward their destination; an Agent that arrives changes its Task phase to At assignment.                                            | [Agents](../mechanics/agents-spec.md)                                                                            |
-| 2     | Agency income          | The Agency gains money from contracting and from recurring funding.                                                                                           | [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                                     |
-| 3     | Upkeep                 | The Agency pays upkeep for its Agents.                                                                                                                        | [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                                     |
-| 4     | Training               | Agents in training, At assignment, gain skill.                                                                                                                | [Agents](../mechanics/agents-spec.md)                                                                            |
-| 5     | Investigation progress | Active Investigations progress and may complete; a completed Investigation applies its Lead's completion effects, which may unlock Leads and create Missions. | [Investigations](../mechanics/investigations.md); [Leads and Progression](../mechanics/leads-and-progression.md) |
-| 6     | Mission resolution     | Each Mission whose Current team is At assignment resolves its battle and applies its consequences; surviving Agents start returning.                          | [Missions](../mechanics/missions.md); [Combat](../mechanics/combat.md)                                           |
-| 7     | Mission expiration     | Missions that were not resolved age, and a Mission that expires applies the consequences of being ignored.                                                    | [Missions](../mechanics/missions.md)                                                                             |
-| 8     | Faction activity       | Factions escalate and generate Faction operation occurrences, each with its Response Mission.                                                                 | [Factions](../mechanics/factions.md)                                                                             |
-| 9     | Agent recovery         | Agents recover health and exhaustion.                                                                                                                         | [Agent Recovery](../mechanics/agent-recovery.md)                                                                 |
-| 10    | Panic                  | Panic changes according to this turn's outcomes.                                                                                                              | [Panic and Endings](../mechanics/panic-and-endings.md)                                                           |
-| 11    | Ending check           | The Campaign ends when an ending condition holds.                                                                                                             | [Panic and Endings](../mechanics/panic-and-endings.md)                                                           |
-| 12    | Turn close             | Each [Turn series](campaign-state.md#turn-series) records its value for the Turn, the Reports of the Turn are retained, and the Turn ends.                    | [Economy and Upgrades](../mechanics/economy-and-upgrades.md); [Reports](domain-model.md#reports)                 |
+| Order | Turn advancement step  | What its rules do                                                                                                                                             | Rules owned by                                                                         |
+| ----- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| 1     | Transit                | Agents In transit advance toward their destination; an Agent that arrives changes its Task phase to At assignment.                                            | [Agents](agents-spec.md)                                                               |
+| 2     | Agency income          | The Agency gains money from contracting and from recurring funding.                                                                                           | [Economy and Upgrades](economy-and-upgrades.md)                                        |
+| 3     | Upkeep                 | The Agency pays upkeep for its Agents.                                                                                                                        | [Economy and Upgrades](economy-and-upgrades.md)                                        |
+| 4     | Training               | Agents in training, At assignment, gain skill.                                                                                                                | [Agents](agents-spec.md)                                                               |
+| 5     | Investigation progress | Active Investigations progress and may complete; a completed Investigation applies its Lead's completion effects, which may unlock Leads and create Missions. | [Investigations](investigations.md); [Leads and Progression](leads-and-progression.md) |
+| 6     | Mission resolution     | Each Mission whose Current team is At assignment resolves its battle and applies its consequences; surviving Agents start returning.                          | [Missions](missions.md); [Combat](combat.md)                                           |
+| 7     | Mission expiration     | Missions that were not resolved age, and a Mission that expires applies the consequences of being ignored.                                                    | [Missions](missions.md)                                                                |
+| 8     | Faction activity       | Factions escalate and generate Faction operation occurrences, each with its Response Mission.                                                                 | [Factions](factions.md)                                                                |
+| 9     | Agent recovery         | Agents recover health and exhaustion.                                                                                                                         | [Agent Recovery](agent-recovery.md)                                                    |
+| 10    | Panic                  | Panic changes according to this turn's outcomes.                                                                                                              | [Panic and Endings](panic-and-endings.md)                                              |
+| 11    | Ending check           | The Campaign ends when an ending condition holds.                                                                                                             | [Panic and Endings](panic-and-endings.md)                                              |
+| 12    | Turn close             | Each [Turn series](../foundation/campaign-state.md#turn-series) records its value for the Turn, the Reports of the Turn are retained, and the Turn ends.      | [Economy and Upgrades](economy-and-upgrades.md); [Reports](domain-model.md#reports)    |
 
 TODO: For each step, state its exact rules once the owning Mechanics specification defines them, including which
 Campaign instances the step applies to and what the step does when it has nothing to apply to, e.g. no Active
@@ -107,7 +111,7 @@ The following rules are complete:
 
 The order in which an implementation processes the Campaign instances within one step is the implementer's choice,
 because the rules above make its result the same for every order. Only the Committed state after Advance turn is
-observable, under [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract.
+observable, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 # Edge cases and failure behavior
 

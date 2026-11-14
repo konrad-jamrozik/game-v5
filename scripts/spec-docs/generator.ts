@@ -23,6 +23,7 @@ import type {
   SpecificationRecord,
   SpecificationStatus,
 } from '../spec-linter/types.ts'
+import { computeFamilyArchitecture, FAMILY_ARCHITECTURE_PATH, renderFamilyArchitecture } from './family-architecture.ts'
 import { renderStackDiagram, STACK_DIAGRAM_PATH } from './stack-diagram.ts'
 import { computeLayers, estimateBoxWidth, renderSvgDiagram, type DiagramEdge, type DiagramNode } from './svg-diagram.ts'
 
@@ -557,6 +558,16 @@ export function renderFamilyDiagramFiles(
       outputs.set(imagePath(familySvgFileName(family, 'across')), renderAcrossFamiliesSvg(family, data))
     }
   }
+  // The family architecture diagram is generated only when the specification index links it.
+  const index = sources.get('docs/specs/README.md')
+  if (index?.includes(FAMILY_ARCHITECTURE_PATH.slice('docs/'.length)) === true) {
+    const families = FAMILY_ORDER.filter(
+      (family) =>
+        corpus.specifications.some((specification) => specification.family === family) ||
+        sources.has(`docs/specs/${familyDirectoryName(family)}/${familyOverviewFileName(family)}`),
+    )
+    outputs.set(FAMILY_ARCHITECTURE_PATH, renderFamilyArchitecture(corpus, computeFamilyArchitecture(corpus, families)))
+  }
   return outputs
 }
 
@@ -569,6 +580,7 @@ export function isGeneratedDiagramFilePath(path: string): boolean {
   if (fileName === undefined || fileName.includes('/')) return false
   return (
     `${IMAGES_DIRECTORY}/${fileName}` === STACK_DIAGRAM_PATH ||
+    `${IMAGES_DIRECTORY}/${fileName}` === FAMILY_ARCHITECTURE_PATH ||
     /^[a-z0-9-]+-family-(within|across)\.svg$/.test(fileName) ||
     RELATIONSHIP_ORDER.some((kind) => fileName.startsWith(`${kind}-`) && /^[a-z0-9-]+\.svg$/.test(fileName))
   )

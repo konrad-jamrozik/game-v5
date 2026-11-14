@@ -1,12 +1,13 @@
 # Gameplay Dependency Direction
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | DEPDIR                                                         |
-| Family      | Implementation                                                 |
-| Status      | Draft                                                          |
-| Audience    | Implementer                                                    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                                    |
+| ----------- | -------------------------------------------------------------------------------------------------------- |
+| Spec ID     | DEPDIR                                                                                                   |
+| Family      | Implementation                                                                                           |
+| Status      | Draft                                                                                                    |
+| Audience    | Implementer                                                                                              |
+| Owns        | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                           |
 
 # Overview
 
@@ -19,6 +20,7 @@ Committed state integrity and determinism guarantees remain owned by Engine Cont
 - Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
+- Uses [Web UI](../ui/web-ui.md)
 
 # Glossary
 
@@ -31,6 +33,9 @@ Committed state integrity and determinism guarantees remain owned by Engine Cont
 Gameplay functions must receive only the inputs and dependencies they need; they must not reach any other part of
 Campaign state, directly or indirectly. This includes the code that creates Campaign instances during gameplay.
 Campaign instances must not hold references to the Campaign state that contains them. These restrictions exclude Session API and Developer API operations, which may access complete Campaign state.
+
+User interface code, e.g. the code of the [Web UI](../ui/web-ui.md), depends on game behavior only through the engine
+API: it never reads Campaign state directly and never calls a Gameplay function.
 
 # Supported observable contract
 

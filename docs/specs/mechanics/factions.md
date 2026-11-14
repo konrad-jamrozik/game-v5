@@ -1,12 +1,13 @@
 # Factions
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | FACTION                                                        |
-| Family      | Mechanics                                                      |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                        |
+| ----------- | -------------------------------------------------------------------------------------------- |
+| Spec ID     | FACTION                                                                                      |
+| Family      | Mechanics                                                                                    |
+| Status      | Stub                                                                                         |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                  |
+| Owns        | Define escalating faction pressure, operation generation, suppression, and permanent defeat. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                               |
 
 # Overview
 
@@ -15,7 +16,7 @@ This document defines escalating faction pressure, Faction operation occurrence 
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification refines Domain Model's faction and Faction operation occurrence provenance contract ([Faction and Faction operation occurrences](../foundation/domain-model.md#faction-and-faction-operation-occurrences)/[Mission kind and provenance](../foundation/domain-model.md#mission-kind-and-provenance)) with what a Faction has, and intends to refine it further with escalation,
+This specification refines Domain Model's faction and Faction operation occurrence provenance contract ([Faction and Faction operation occurrences](domain-model.md#faction-and-faction-operation-occurrences)/[Mission kind and provenance](domain-model.md#mission-kind-and-provenance)) with what a Faction has, and intends to refine it further with escalation,
 Faction operation occurrence generation, suppression, and defeat behavior. Numbers supplies arithmetic, and this document owns the distributions of its own random outcomes;
 Game Data Records (GDRs) supply the catalogs for Faction operation occurrences and the parameter values. This document states what a
 Faction is and what can happen to it, e.g. discovery, suppression, and defeat, without stating what causes it.
@@ -33,10 +34,10 @@ appropriate to this document.
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
-- Uses [Turn Advancement](../foundation/turn-advancement.md)
-- Refines [Domain Model](../foundation/domain-model.md)
+- Refines [Domain Model](domain-model.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Missions](./missions.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 - Refined by [Leads and Progression](./leads-and-progression.md)
 - Refined by [Missions](./missions.md)
 
@@ -48,7 +49,7 @@ duplicating shared definitions.
 # Faction aspects
 
 A Faction has activity, Faction operation occurrence clocks, suppression, and defeat and progression facts.
-[Faction and Faction operation occurrences](../foundation/domain-model.md#faction-and-faction-operation-occurrences)
+[Faction and Faction operation occurrences](domain-model.md#faction-and-faction-operation-occurrences)
 in Domain Model owns how a Faction operation occurrence relates a Faction to a Response Mission.
 
 # Escalation
@@ -72,7 +73,7 @@ how the player tells an unknown value apart from zero or absence, under
 # Edge cases and failure behavior
 
 TODO: Define behavior for Suppression gained on a spawn turn, maximum activity, no eligible GDRs for Faction operation occurrences, repeated Faction operation occurrences, and defeat concurrent with a Faction operation occurrence.
-State how several Missions affecting one Faction in the same Advance turn combine, under [Values a step uses](../foundation/turn-advancement.md#values-a-step-uses).
+State how several Missions affecting one Faction in the same Advance turn combine, under [Values a step uses](turn-advancement.md#values-a-step-uses).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples
@@ -87,6 +88,6 @@ fixtures instead of introducing implicit balance values.
 - TODO: Decide how many Faction Campaign instances may share one Archetype within a Campaign.
 - TODO: Decide which data of Factions must remain in World history once they no longer participate in current
   gameplay.
-- TODO: State the rule determining the Faction Campaign instances that the initial Campaign state contains, and name the GDRs supplying their initial values, under [Initial Campaign state](../foundation/domain-model.md#initial-campaign-state).
+- TODO: State the rule determining the Faction Campaign instances that the initial Campaign state contains, and name the GDRs supplying their initial values, under [Initial Campaign state](domain-model.md#initial-campaign-state).
 - TODO: Identify remaining implementation-affecting decisions and their dependent specifications; mark explicitly
   deferred features as out of scope rather than leaving ambiguous gaps.

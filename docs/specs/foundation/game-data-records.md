@@ -1,12 +1,13 @@
 # Game Data Records
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | GDR                                                            |
-| Family      | Foundation                                                     |
-| Status      | Draft                                                          |
-| Audience    | Engine designer, Content designer, Implementer                 |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                                     |
+| ----------- | --------------------------------------------------------------------------------------------------------- |
+| Spec ID     | GDR                                                                                                       |
+| Family      | Foundation                                                                                                |
+| Status      | Draft                                                                                                     |
+| Audience    | Engine designer, Content designer, Implementer                                                            |
+| Owns        | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                            |
 
 # Overview
 
@@ -17,7 +18,8 @@ This document defines the purposes a Game Data Record (GDR) can serve relative t
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
-- Used by [Domain Model](./domain-model.md)
+- Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
+- Used by [Domain Model](../mechanics/domain-model.md)
 
 # Glossary
 

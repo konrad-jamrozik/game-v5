@@ -6,11 +6,12 @@
 | Family   | Governance                                                               |
 | Status   | Draft                                                                    |
 | Audience | Engine designer, Content designer, UI designer, AI designer, Implementer |
+| Owns     | Specification registration, navigation, and ownership summaries.         |
 
 # Overview
 
-This index registers every specification's stable ID, Family, title, and ownership scope. It also provides navigation and
-the current specification-development status. It does not define gameplay behavior.
+This index is the navigation entry point to the specifications. Each specification registers itself through its own
+metadata, and the generated catalog lists them all. It does not define gameplay behavior.
 
 # Start here
 
@@ -22,16 +23,6 @@ the current specification-development status. It does not define gameplay behavi
   their contract meanings, and future removal criteria.
 - [Specification work plan and backlog](governance/work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 - [Outstanding work items](governance/work-todos.md): known issues in the specifications awaiting scheduling, each with its affected batches.
-
-# Specification layers
-
-The Foundation and Mechanics specifications form layers, each depending only on the layers below it.
-`npm run docs:generate` draws the following diagram from the specifications' Relationships sections; do not edit it by
-hand. A Foundation specification is at the bottom when it depends on nothing and every other Foundation specification
-that depends on anything depends on it directly. A Mechanics specification is at the tip when nothing depends on it and
-it depends directly on every other Mechanics specification.
-
-![Specification layers](../images/specification-stack.svg)
 
 # Family overviews
 
@@ -45,49 +36,36 @@ the boundaries between them sit where they do. Each overview includes generated 
 - [About the UI family](ui/about-ui.md)
 - [About the Implementation family](implementation/about-implementation.md)
 
-# Specification register
+# Family architecture
 
-| ID       | Family         | Document                                                                         | Owns                                                                                                                                          |
-| -------- | -------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| INDEX    | Governance     | [Game Specification Index](README.md)                                            | Specification registration, navigation, and ownership summaries.                                                                              |
-| CONV     | Governance     | [Specification Conventions](governance/spec-conventions.md)                      | How specifications are written, reviewed, and maintained.                                                                                     |
-| REL      | Governance     | [Artifact Relationships](governance/artifact-relationships.md)                   | Artifact relationship terminology, direction, inventories, and graph validation.                                                              |
-| PLAN     | Governance     | [Specification Work Plan and Backlog](governance/work-plan.md)                   | Specification authoring order, review checkpoints, and work tracking.                                                                         |
-| TODOS    | Governance     | [Outstanding Work Items](governance/work-todos.md)                               | Known outstanding specification issues awaiting scheduling, with their affected batches.                                                      |
-| DOM      | Foundation     | [Domain Model](foundation/domain-model.md)                                       | Game concepts, how they relate, and the structural invariants that span several concepts.                                                     |
-| CORE     | Foundation     | [Core Concepts](foundation/core-concepts.md)                                     | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                  |
-| CSTATE   | Foundation     | [Campaign State](foundation/campaign-state.md)                                   | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.      |
-| GDR      | Foundation     | [Game Data Records](foundation/game-data-records.md)                             | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                     |
-| ENG      | Foundation     | [Engine Contract](foundation/engine-contract.md)                                 | API hierarchy, Principal authority, data ownership, the Engine subsystem inventory, and the guarantees shared by every engine subsystem.      |
-| LIFE     | Foundation     | [Campaign Lifecycle](foundation/campaign-lifecycle.md)                           | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status.                                    |
-| DEV      | Foundation     | [Developer Access](foundation/developer-access.md)                               | Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides.                                                     |
-| DETERM   | Foundation     | [Determinism and Randomness](foundation/determinism-and-randomness.md)           | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay.                            |
-| TURN     | Foundation     | [Turn Advancement](foundation/turn-advancement.md)                               | The canonical order of Turn advancement steps and which values each step uses.                                                                |
-| NUMBERS  | Foundation     | [Numbers](foundation/numbers.md)                                                 | Which quantities are whole numbers, the precision of those that are not, and how rounding works.                                              |
-| TIMELINE | Foundation     | [Timeline](foundation/timeline.md)                                               | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees.          |
-| SAVES    | Foundation     | [Saves](foundation/saves.md)                                                     | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                        |
-| CONFIG   | Foundation     | [Configuration](foundation/configuration.md)                                     | Kinds of setting, Global configuration, and the configuration cascade.                                                                        |
-| AUTO     | Foundation     | [Autopilot](foundation/autopilot.md)                                             | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                        |
-| ENDING   | Mechanics      | [Panic and Endings](mechanics/panic-and-endings.md)                              | Define global panic, the conditions that end a Campaign, and what remains possible after an ending.                                           |
-| AGENT    | Mechanics      | [Agents](mechanics/agents-spec.md)                                               | Define what an Agent has and can do: agent capability, task availability, development, and the meaning of health, exhaustion, and experience. |
-| ECON     | Mechanics      | [Economy and Upgrades](mechanics/economy-and-upgrades.md)                        | Define resource flows, personnel purchases, and agency improvements.                                                                          |
-| LEAD     | Mechanics      | [Leads and Progression](mechanics/leads-and-progression.md)                      | Define the progression graph and the lifecycle of Leads, separately from Investigations.                                                      |
-| INVSTG   | Mechanics      | [Investigations](mechanics/investigations.md)                                    | Define exact investigation progress, stochastic completion, player uncertainty, and commitment costs.                                         |
-| COMBAT   | Mechanics      | [Combat](mechanics/combat.md)                                                    | Define fully automatic battles and their reproducible results independently of campaign rewards.                                              |
-| MISSION  | Mechanics      | [Missions](mechanics/missions.md)                                                | Define mission commitments and translate combat results into campaign consequences.                                                           |
-| FACTION  | Mechanics      | [Factions](mechanics/factions.md)                                                | Define escalating faction pressure, operation generation, suppression, and permanent defeat.                                                  |
-| RECOVER  | Mechanics      | [Agent Recovery](mechanics/agent-recovery.md)                                    | Define how an Agent's health goes up and exhaustion goes down, and the result when several rules change one of those values in the same turn. |
-| DEPDIR   | Implementation | [Gameplay Dependency Direction](implementation/gameplay-dependency-direction.md) | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs.                                      |
-| SCHEMA   | Implementation | [Storage Schema](implementation/storage-schema.md)                               | Non-behavioural guidance on the physical layout of everything the game persists.                                                              |
+Foundation and Mechanics together form the game engine. Content and UI build on the game engine, and Implementation
+builds on the game engine, Content, and UI, as the Builds on column of the Families table in
+[Specification families and paths](governance/spec-conventions.md#specification-families-and-paths) states. Every
+specification also follows the Governance family. `npm run docs:generate` draws the following diagram from the
+relationships the specifications declare: an arrow from one Family to another means a specification of the first uses
+or refines a specification of the second. Do not edit it by hand.
+
+![Family architecture](../images/family-architecture.svg)
+
+# Specification layers
+
+The Foundation and Mechanics specifications form layers, each depending only on the layers below it.
+`npm run docs:generate` draws the following diagram from the specifications' Relationships sections; do not edit it by
+hand. Every specification is in its Family's rectangle, in the row of its layer: one above the highest layer of the specifications of the same rectangle it depends on, so that a
+specification depending on none of them is in the bottom row. A specification that neither depends on nor is depended
+on by anything in its rectangle is drawn in the top row, nearest the specifications above that use it.
+
+![Specification layers](../images/specification-stack.svg)
+
+# Specification catalog
+
+Each specification registers itself through its own metadata table, including its Spec ID, Family, and an Owns
+summary of what it owns. The generated [derived specification catalog](../derived/README.md) lists every
+specification by Family with its ID, title, status, and Owns summary, and links the derived glossary and relationship
+graphs.
 
 # Work plan
 
 The [work plan and backlog](governance/work-plan.md) owns the accepted authoring sequence and review checkpoints. Start with
 the batch 1 specifications; grow GDRs alongside the reviewed mechanics. See that document for
 the full sequence, current work states, and treatment of cross-specification dependencies.
-
-# Index completion TODOs
-
-- TODO: Link separately agreed implementation milestones once the first playable slice is selected; authoring order is tracked in the work plan.
-- TODO: Update this register if a document is split, renamed, or superseded.
-- TODO: Maintain links to the final requirement owners and integration scenarios as draft rules replace placeholders.

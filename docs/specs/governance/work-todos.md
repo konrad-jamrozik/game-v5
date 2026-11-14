@@ -1,12 +1,13 @@
 # Outstanding Work Items
 
-| Metadata    | Value                                            |
-| ----------- | ------------------------------------------------ |
-| Spec ID     | TODOS                                            |
-| Family      | Governance                                       |
-| Status      | Draft                                            |
-| Audience    | Engine designer                                  |
-| Conventions | [Specification conventions](spec-conventions.md) |
+| Metadata    | Value                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------- |
+| Spec ID     | TODOS                                                                                    |
+| Family      | Governance                                                                               |
+| Status      | Draft                                                                                    |
+| Audience    | Engine designer                                                                          |
+| Owns        | Known outstanding specification issues awaiting scheduling, with their affected batches. |
+| Conventions | [Specification conventions](spec-conventions.md)                                         |
 
 # Overview
 
@@ -180,7 +181,7 @@ Investigations (INVSTG), [Team changes and commitment](../mechanics/investigatio
 specifications. The wording, however, describes a mechanism (snapshots and reads) rather than the outcome.
 
 **Suggested resolution:** Keep the content, and reword it in terms of outcomes, following
-[Values a step uses](../foundation/turn-advancement.md#values-a-step-uses), e.g. "uses the value after the Training step", rather than snapshots and reads.
+[Values a step uses](../mechanics/turn-advancement.md#values-a-step-uses), e.g. "uses the value after the Training step", rather than snapshots and reads.
 
 ## Other
 

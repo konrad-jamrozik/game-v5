@@ -12,8 +12,9 @@ define no gameplay. Every other registered specification implicitly follows
 
 ## Game Specification Index
 
-[Game Specification Index](../README.md) answers _which specifications exist, and what does each own?_ It registers
-every specification's ID, Family, title, and ownership summary, and is the navigation entry point. It lives at the root
+[Game Specification Index](../README.md) answers _which specifications exist, and what does each own?_ It is the
+navigation entry point and points to the generated catalog of every specification's ID, Family, title, and Owns
+summary. It lives at the root
 of the specifications directory rather than in this one.
 
 ## Specification Conventions
@@ -62,7 +63,7 @@ No relationships are declared with specifications in other families.
   only specifications, so it is owned separately from specification layout.
 - **Work plan versus work items:** the plan owns the schedule; the work-item register only records issues, so adding an
   issue never changes the schedule.
-- **Index versus everything else:** the index only registers and navigates; ownership stays with each registered
+- **Index versus everything else:** the index only navigates; ownership stays with each registered
   document.
 
 # Reading order

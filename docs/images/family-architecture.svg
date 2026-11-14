@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Implementation builds on Foundation and Content and UI. Foundation and Mechanics form the game engine.">
+  <title>Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Implementation builds on Foundation and Content and UI. Foundation and Mechanics form the game engine.</title>
+  <style>
+    :root { --bg: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #8a94a6; --box: #f6f7f9;
+      --engine-bg: #f1f2f5; --found-bg: #dfe5f7; --found-fg: #2d3f8f; --mech-bg: #f7dceb; --mech-fg: #8c2a5d; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161d; --fg: #e6eaf0; --muted: #9aa5b5; --line: #7c8698; --box: #1a2029;
+        --engine-bg: #1b2029; --found-bg: #222b4a; --found-fg: #b3c2ff; --mech-bg: #43233b; --mech-fg: #f5afd3; }
+    }
+    text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; text-anchor: middle; }
+    .bg { fill: var(--bg); }
+    .box { fill: var(--box); stroke: var(--line); stroke-width: 1.3; }
+    .engine { fill: var(--engine-bg); stroke: var(--line); stroke-width: 1.3; }
+    .title { fill: var(--fg); font-size: 17px; font-weight: 600; }
+    .count { fill: var(--muted); font-size: 12.5px; }
+    .engine-title { fill: var(--fg); font-size: 18px; font-weight: 600; }
+    .band-found { fill: var(--found-bg); } .ink-found { fill: var(--found-fg); }
+    .band-mech { fill: var(--mech-bg); } .ink-mech { fill: var(--mech-fg); }
+    .band-name { font-size: 15px; font-weight: 600; }
+    .band-count { font-size: 12.5px; }
+    .arrow { stroke: var(--line); stroke-width: 1.6; fill: none; }
+    .head { fill: var(--line); }
+    .caption { fill: var(--muted); font-size: 12.5px; }
+  </style>
+  <rect class="bg" x="0" y="0" width="1000" height="560"/>
+  <rect class="box" x="385" y="28" width="230" height="66" rx="10"/>
+  <text class="title" x="500" y="56">Implementation</text>
+  <text class="count" x="500" y="77">2 specifications</text>
+  <rect class="box" x="246" y="164" width="230" height="66" rx="10"/>
+  <text class="title" x="361" y="192">Content</text>
+  <text class="count" x="361" y="213">1 specification</text>
+  <rect class="box" x="524" y="164" width="230" height="66" rx="10"/>
+  <text class="title" x="639" y="192">UI</text>
+  <text class="count" x="639" y="213">1 specification</text>
+  <rect class="engine" x="180" y="300" width="640" height="166" rx="12"/>
+  <text class="engine-title" x="500" y="327">Game engine</text>
+  <rect class="band-mech" x="234" y="340" width="532" height="52" rx="8"/>
+  <text class="band-name ink-mech" x="500" y="362">Mechanics</text>
+  <text class="band-count ink-mech" x="500" y="380">11 specifications</text>
+  <rect class="band-found" x="194" y="400" width="612" height="52" rx="8"/>
+  <text class="band-name ink-found" x="500" y="422">Foundation</text>
+  <text class="band-count ink-found" x="500" y="440">12 specifications</text>
+  <path class="arrow" d="M 361 230 L 361 292"/>
+  <path class="head" d="M 355 290 L 367 290 L 361 300 Z"/>
+  <path class="arrow" d="M 639 230 L 639 292"/>
+  <path class="head" d="M 633 290 L 645 290 L 639 300 Z"/>
+  <path class="arrow" d="M 500 94 L 500 292"/>
+  <path class="head" d="M 494 290 L 506 290 L 500 300 Z"/>
+  <path class="arrow" d="M 500 94 L 446 156"/>
+  <path class="head" d="M 440 154 L 452 154 L 446 164 Z"/>
+  <path class="arrow" d="M 500 94 L 554 156"/>
+  <path class="head" d="M 548 154 L 560 154 L 554 164 Z"/>
+  <text class="caption" x="500" y="500">Arrows point from a Family to the Families its specifications use or refine.</text>
+  <text class="caption" x="500" y="522">Every specification also follows the Governance family, which is not drawn.</text>
+</svg>

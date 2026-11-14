@@ -1,12 +1,13 @@
 # Developer Access
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | DEV                                                            |
-| Family      | Foundation                                                     |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Implementer                                   |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                     |
+| ----------- | ----------------------------------------------------------------------------------------- |
+| Spec ID     | DEV                                                                                       |
+| Family      | Foundation                                                                                |
+| Status      | Stub                                                                                      |
+| Audience    | Engine designer, Implementer                                                              |
+| Owns        | Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                            |
 
 # Overview
 
@@ -25,9 +26,10 @@ It does not own, e.g., which Principal may reach Developer API, which the access
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
-- Uses [Domain Model](./domain-model.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Timeline](./timeline.md)
+- Used by [Agents](../mechanics/agents-spec.md)
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 
 # Glossary
 
@@ -41,9 +43,7 @@ TODO: Define inspection-specific terms without duplicating shared definitions.
 Only the Session controller can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
 a Current campaign and no active Autopilot engagement. Inspection returns detached, read-only full
 Campaign state. It never reveals hidden facts through ordinary game behavior.
-`developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)` are required starter cheat operations,
-under [Cheat command details](#cheat-command-details). Future cheat operations belong in that namespace. Cheat
-operations must preserve model invariants, and each successful one is one atomic Player action in the Timeline.
+Every cheat operation belongs in `developer.actions` and follows [Cheat operations](#cheat-operations).
 
 Dev mode starts disabled and is disabled on successful creation, load, or closure, under
 [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle. Timeline
@@ -68,11 +68,21 @@ Include complete Campaign state and distinguish full-state inspection from gamep
 must not expose mutable Campaign references or change any later outcome, under
 [Derived value consistency](engine-contract.md#derived-value-consistency).
 
-# Cheat command details
+# Cheat operations
 
-TODO: Specify `developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)`, with exact input Types,
-allowed ranges, initialization, validation, and effects. These required starter operations preserve model invariants
-and each commits one Timeline entry. Additional cheat operations use the same namespace and guarantees.
+A cheat operation changes Campaign state in a way ordinary play does not allow. This document states the rules every
+cheat operation follows; the Mechanics specification that owns the changed value owns each concrete cheat operation,
+e.g. its inputs, validation, and effects. The following rules are complete:
+
+- **Who and when:** Only the Session controller can call a cheat operation, only with Dev mode enabled, under
+  [Dev mode](#dev-mode). An Autopilot AI never can.
+- **Validated:** A cheat operation rejects invalid inputs and then changes nothing, under
+  [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract.
+- **Recorded:** Each successful cheat operation is one atomic Player action, recorded as one Timeline entry.
+- **Invariants kept:** A cheat operation preserves every invariant that a specification states.
+
+TODO: State which further cheat operations are needed beyond the required starter operations that Engine Contract's
+[API hierarchy](engine-contract.md#api-hierarchy) lists.
 
 # Random outcome overrides
 
@@ -83,7 +93,7 @@ Agent's next attack to "hit" and then commits Advance turn. The random outcomes 
 random outcomes that each Mechanics specification states for its rules. This makes every random outcome controllable
 by hand, without relying on a prepared acceptance test.
 
-An override is a cheat operation under [Dev mode](#dev-mode): it belongs in
+An override is a cheat operation under [Cheat operations](#cheat-operations): it belongs in
 `developer.actions`, and each successful one is one atomic Player action in the Timeline. The guarantee under
 [Determinism](determinism-and-randomness.md#determinism) therefore still holds, because replaying the same ordered
 Player actions replays the same overrides.
@@ -117,6 +127,5 @@ and cheat-command undo/redo and save/load round trips. Identify the requirement 
 
 # Open decisions
 
-- TODO: Choose full-state result Types and precise cheat-command validation and effects.
+- TODO: Choose full-state result Types.
 - TODO: Choose the identification, lifetime, and validation of random outcome overrides.
-- TODO: Decide which additional developer operations are needed beyond the required starter inventory.

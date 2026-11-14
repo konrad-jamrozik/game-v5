@@ -1,83 +1,144 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="584" viewBox="0 0 1000 584" role="img" aria-label="Specification layers from top to bottom. Game concepts and mechanics: Agent Recovery, Agents, Combat, Economy and Upgrades, Factions, Investigations, Leads and Progression, Missions, Panic and Endings. The engine: Autopilot, Campaign Lifecycle, Campaign State, Configuration, Determinism and Randomness, Developer Access, Domain Model, Engine Contract, Game Data Records, Numbers, Saves, Timeline, Turn Advancement. Core Concepts: Core Concepts.">
-  <title>Specification layers from top to bottom. Game concepts and mechanics: Agent Recovery, Agents, Combat, Economy and Upgrades, Factions, Investigations, Leads and Progression, Missions, Panic and Endings. The engine: Autopilot, Campaign Lifecycle, Campaign State, Configuration, Determinism and Randomness, Developer Access, Domain Model, Engine Contract, Game Data Records, Numbers, Saves, Timeline, Turn Advancement. Core Concepts: Core Concepts.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="948" viewBox="0 0 1000 948" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Agent Recovery, Leads and Progression; Missions; Combat, Economy and Upgrades; Agents, Factions, Panic and Endings; Domain Model. Foundation, from its top layer to its bottom layer: Autopilot, Configuration, Developer Access, Numbers; Game Data Records, Timeline; Campaign State, Saves; Determinism and Randomness; Campaign Lifecycle; Engine Contract; Core Concepts.">
+  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Agent Recovery, Leads and Progression; Missions; Combat, Economy and Upgrades; Agents, Factions, Panic and Endings; Domain Model. Foundation, from its top layer to its bottom layer: Autopilot, Configuration, Developer Access, Numbers; Game Data Records, Timeline; Campaign State, Saves; Determinism and Randomness; Campaign Lifecycle; Engine Contract; Core Concepts.</title>
   <style>
-    :root { --bg: #ffffff; --muted: #5b6676;
-      --tip-bg: #fbe9d9; --tip-fg: #8a4a12; --mech-bg: #e3f2ea; --mech-fg: #1d6b4c;
-      --found-bg: #dfe8fb; --found-fg: #23428f; --bottom-bg: #e9edf5; --bottom-fg: #3b4458; }
+    :root { --bg: #ffffff; --muted: #5b6676; --frame: #c3c9d4; --frame-fill: #f8f9fb;
+      --r0-bg: #e9ebef; --r0-fg: #3d4452;
+      --r1-bg: #e5e9f1; --r1-fg: #384265;
+      --r2-bg: #e2e7f3; --r2-fg: #334178;
+      --r3-bg: #dee5f5; --r3-fg: #2e3f8a;
+      --r4-bg: #e0e2f6; --r4-fg: #373b8f;
+      --r5-bg: #e3e0f6; --r5-fg: #453590;
+      --r6-bg: #e6def6; --r6-fg: #533091;
+      --r7-bg: #eaddf4; --r7-fg: #622d89;
+      --r8-bg: #eedcf0; --r8-fg: #712c79;
+      --r9-bg: #f3dbed; --r9-fg: #802b69;
+      --r10-bg: #f7dbe6; --r10-fg: #8d2c56;
+      --r11-bg: #f9dad8; --r11-fg: #91333c;
+      --r12-bg: #fbdac9; --r12-fg: #963b21;
+      --r13-bg: #fdd9bb; --r13-fg: #9a4206; }
     @media (prefers-color-scheme: dark) {
-      :root { --bg: #12161d; --muted: #9aa5b5;
-        --tip-bg: #3a2a1a; --tip-fg: #f2b780; --mech-bg: #17302a; --mech-fg: #7fd8b1;
-        --found-bg: #1c2742; --found-fg: #a9c0ff; --bottom-bg: #232a36; --bottom-fg: #c3cad6; }
+      :root { --bg: #12161d; --muted: #9aa5b5; --frame: #3a4352; --frame-fill: #171c24;
+        --r0-bg: #262b34; --r0-fg: #c6ccd6;
+        --r1-bg: #252b3b; --r1-fg: #c0c9e3;
+        --r2-bg: #242b42; --r2-fg: #bac6ef;
+        --r3-bg: #222b48; --r3-fg: #b4c3fc;
+        --r4-bg: #262a4a; --r4-fg: #bbc0ff;
+        --r5-bg: #2b284b; --r5-fg: #c5bdff;
+        --r6-bg: #30274b; --r6-fg: #cfbaff;
+        --r7-bg: #352649; --r7-fg: #d9b7f8;
+        --r8-bg: #3a2544; --r8-fg: #e3b4eb;
+        --r9-bg: #3f243f; --r9-fg: #edb1dd;
+        --r10-bg: #442438; --r10-fg: #f6b0cd;
+        --r11-bg: #46262c; --r11-fg: #f9b5b5;
+        --r12-bg: #49291f; --r12-fg: #fcba9d;
+        --r13-bg: #4b2c13; --r13-fg: #ffbf85; }
     }
     text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; text-anchor: middle; }
     .bg { fill: var(--bg); }
+    .frame { fill: var(--frame-fill); stroke: var(--frame); stroke-width: 1.2; }
     .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; }
     .name { font-size: 19px; font-weight: 600; }
-    .note { font-size: 13.5px; }
+    .row-label { font-size: 11px; letter-spacing: 0.05em; text-anchor: start; }
     .chip-text { font-size: 13.5px; }
     .chip { fill: none; stroke-width: 1.2; }
     .connector, .caption { fill: var(--muted); font-size: 12.5px; }
-    .band-tip { fill: var(--tip-bg); } .ink-tip { fill: var(--tip-fg); } .stroke-tip { stroke: var(--tip-fg); }
-    .band-mech { fill: var(--mech-bg); } .ink-mech { fill: var(--mech-fg); } .stroke-mech { stroke: var(--mech-fg); }
-    .band-found { fill: var(--found-bg); } .ink-found { fill: var(--found-fg); } .stroke-found { stroke: var(--found-fg); }
-    .band-bottom { fill: var(--bottom-bg); } .ink-bottom { fill: var(--bottom-fg); } .stroke-bottom { stroke: var(--bottom-fg); }
+    .fill-r0 { fill: var(--r0-bg); } .ink-r0 { fill: var(--r0-fg); } .stroke-r0 { stroke: var(--r0-fg); }
+    .fill-r1 { fill: var(--r1-bg); } .ink-r1 { fill: var(--r1-fg); } .stroke-r1 { stroke: var(--r1-fg); }
+    .fill-r2 { fill: var(--r2-bg); } .ink-r2 { fill: var(--r2-fg); } .stroke-r2 { stroke: var(--r2-fg); }
+    .fill-r3 { fill: var(--r3-bg); } .ink-r3 { fill: var(--r3-fg); } .stroke-r3 { stroke: var(--r3-fg); }
+    .fill-r4 { fill: var(--r4-bg); } .ink-r4 { fill: var(--r4-fg); } .stroke-r4 { stroke: var(--r4-fg); }
+    .fill-r5 { fill: var(--r5-bg); } .ink-r5 { fill: var(--r5-fg); } .stroke-r5 { stroke: var(--r5-fg); }
+    .fill-r6 { fill: var(--r6-bg); } .ink-r6 { fill: var(--r6-fg); } .stroke-r6 { stroke: var(--r6-fg); }
+    .fill-r7 { fill: var(--r7-bg); } .ink-r7 { fill: var(--r7-fg); } .stroke-r7 { stroke: var(--r7-fg); }
+    .fill-r8 { fill: var(--r8-bg); } .ink-r8 { fill: var(--r8-fg); } .stroke-r8 { stroke: var(--r8-fg); }
+    .fill-r9 { fill: var(--r9-bg); } .ink-r9 { fill: var(--r9-fg); } .stroke-r9 { stroke: var(--r9-fg); }
+    .fill-r10 { fill: var(--r10-bg); } .ink-r10 { fill: var(--r10-fg); } .stroke-r10 { stroke: var(--r10-fg); }
+    .fill-r11 { fill: var(--r11-bg); } .ink-r11 { fill: var(--r11-fg); } .stroke-r11 { stroke: var(--r11-fg); }
+    .fill-r12 { fill: var(--r12-bg); } .ink-r12 { fill: var(--r12-fg); } .stroke-r12 { stroke: var(--r12-fg); }
+    .fill-r13 { fill: var(--r13-bg); } .ink-r13 { fill: var(--r13-fg); } .stroke-r13 { stroke: var(--r13-fg); }
   </style>
-  <rect class="bg" x="0" y="0" width="1000" height="584"/>
-  <rect class="band-mech" x="138.2" y="24" width="723.5" height="150" rx="10"/>
-  <text class="eyebrow ink-mech" x="500" y="52">MECHANICS</text>
-  <text class="name ink-mech" x="500" y="78">Game concepts and mechanics</text>
-  <rect class="chip stroke-mech" x="213.8" y="92" width="132.4" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="280" y="111">Agent Recovery</text>
-  <rect class="chip stroke-mech" x="354.2" y="92" width="71.6" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="390" y="111">Agents</text>
-  <rect class="chip stroke-mech" x="433.8" y="92" width="71.6" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="469.6" y="111">Combat</text>
-  <rect class="chip stroke-mech" x="513.4" y="92" width="178" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="602.4" y="111">Economy and Upgrades</text>
-  <rect class="chip stroke-mech" x="699.4" y="92" width="86.8" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="742.8" y="111">Factions</text>
-  <rect class="chip stroke-mech" x="208" y="128" width="132.4" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="274.2" y="147">Investigations</text>
-  <rect class="chip stroke-mech" x="348.4" y="128" width="185.6" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="441.2" y="147">Leads and Progression</text>
-  <rect class="chip stroke-mech" x="542" y="128" width="86.8" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="585.4" y="147">Missions</text>
-  <rect class="chip stroke-mech" x="636.8" y="128" width="155.2" height="28" rx="14"/>
-  <text class="chip-text ink-mech" x="714.4" y="147">Panic and Endings</text>
-  <text class="connector" x="500" y="195">depends on ↓</text>
-  <rect class="band-found" x="71.6" y="208" width="856.8" height="186" rx="10"/>
-  <text class="eyebrow ink-found" x="500" y="236">FOUNDATION</text>
-  <text class="name ink-found" x="500" y="262">The engine</text>
-  <rect class="chip stroke-found" x="115" y="276" width="94.4" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="162.2" y="295">Autopilot</text>
-  <rect class="chip stroke-found" x="217.4" y="276" width="162.8" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="298.8" y="295">Campaign Lifecycle</text>
-  <rect class="chip stroke-found" x="388.2" y="276" width="132.4" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="454.4" y="295">Campaign State</text>
-  <rect class="chip stroke-found" x="528.6" y="276" width="124.8" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="591" y="295">Configuration</text>
-  <rect class="chip stroke-found" x="661.4" y="276" width="223.6" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="773.2" y="295">Determinism and Randomness</text>
-  <rect class="chip stroke-found" x="128.4" y="312" width="147.6" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="202.2" y="331">Developer Access</text>
-  <rect class="chip stroke-found" x="284" y="312" width="117.2" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="342.6" y="331">Domain Model</text>
-  <rect class="chip stroke-found" x="409.2" y="312" width="140" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="479.2" y="331">Engine Contract</text>
-  <rect class="chip stroke-found" x="557.2" y="312" width="155.2" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="634.8" y="331">Game Data Records</text>
-  <rect class="chip stroke-found" x="720.4" y="312" width="79.2" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="760" y="331">Numbers</text>
-  <rect class="chip stroke-found" x="807.6" y="312" width="64" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="839.6" y="331">Saves</text>
-  <rect class="chip stroke-found" x="378.8" y="348" width="86.8" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="422.2" y="367">Timeline</text>
-  <rect class="chip stroke-found" x="473.6" y="348" width="147.6" height="28" rx="14"/>
-  <text class="chip-text ink-found" x="547.4" y="367">Turn Advancement</text>
-  <text class="connector" x="500" y="415">depends on ↓</text>
-  <rect class="band-bottom" x="24" y="428" width="952" height="78" rx="10"/>
-  <text class="eyebrow ink-bottom" x="500" y="456">FOUNDATION · BOTTOM</text>
-  <text class="name ink-bottom" x="500" y="482">Core Concepts</text>
-  <text class="caption" x="500" y="532">No Foundation specification depends on a Mechanics specification.</text>
-  <text class="caption" x="500" y="552">Implementation specifications sit beside the stack and are not drawn.</text>
+  <rect class="bg" x="0" y="0" width="1000" height="948"/>
+  <rect class="frame" x="90.6" y="24" width="818.7" height="406" rx="10"/>
+  <text class="eyebrow ink-r13" x="500" y="50">MECHANICS</text>
+  <text class="name ink-r13" x="500" y="77">Game concepts and mechanics</text>
+  <rect class="fill-r13" x="106.6" y="91" width="786.7" height="42" rx="7"/>
+  <text class="row-label ink-r13" x="116.6" y="116">LAYER 7</text>
+  <rect class="chip stroke-r13" x="426.2" y="98" width="147.6" height="28" rx="14"/>
+  <text class="chip-text ink-r13" x="500" y="117">Turn Advancement</text>
+  <rect class="fill-r12" x="106.6" y="139" width="786.7" height="42" rx="7"/>
+  <text class="row-label ink-r12" x="116.6" y="164">LAYER 6</text>
+  <rect class="chip stroke-r12" x="433.8" y="146" width="132.4" height="28" rx="14"/>
+  <text class="chip-text ink-r12" x="500" y="165">Investigations</text>
+  <rect class="fill-r11" x="106.6" y="187" width="786.7" height="42" rx="7"/>
+  <text class="row-label ink-r11" x="116.6" y="212">LAYER 5</text>
+  <rect class="chip stroke-r11" x="337" y="194" width="132.4" height="28" rx="14"/>
+  <text class="chip-text ink-r11" x="403.2" y="213">Agent Recovery</text>
+  <rect class="chip stroke-r11" x="477.4" y="194" width="185.6" height="28" rx="14"/>
+  <text class="chip-text ink-r11" x="570.2" y="213">Leads and Progression</text>
+  <rect class="fill-r10" x="106.6" y="235" width="786.7" height="42" rx="7"/>
+  <text class="row-label ink-r10" x="116.6" y="260">LAYER 4</text>
+  <rect class="chip stroke-r10" x="456.6" y="242" width="86.8" height="28" rx="14"/>
+  <text class="chip-text ink-r10" x="500" y="261">Missions</text>
+  <rect class="fill-r9" x="106.6" y="283" width="786.7" height="42" rx="7"/>
+  <text class="row-label ink-r9" x="116.6" y="308">LAYER 3</text>
+  <rect class="chip stroke-r9" x="371.2" y="290" width="71.6" height="28" rx="14"/>
+  <text class="chip-text ink-r9" x="407" y="309">Combat</text>
+  <rect class="chip stroke-r9" x="450.8" y="290" width="178" height="28" rx="14"/>
+  <text class="chip-text ink-r9" x="539.8" y="309">Economy and Upgrades</text>
+  <rect class="fill-r8" x="106.6" y="331" width="786.7" height="42" rx="7"/>
+  <text class="row-label ink-r8" x="116.6" y="356">LAYER 2</text>
+  <rect class="chip stroke-r8" x="335.2" y="338" width="71.6" height="28" rx="14"/>
+  <text class="chip-text ink-r8" x="371" y="357">Agents</text>
+  <rect class="chip stroke-r8" x="414.8" y="338" width="86.8" height="28" rx="14"/>
+  <text class="chip-text ink-r8" x="458.2" y="357">Factions</text>
+  <rect class="chip stroke-r8" x="509.6" y="338" width="155.2" height="28" rx="14"/>
+  <text class="chip-text ink-r8" x="587.2" y="357">Panic and Endings</text>
+  <rect class="fill-r7" x="106.6" y="379" width="786.7" height="42" rx="7"/>
+  <text class="row-label ink-r7" x="116.6" y="404">LAYER 1</text>
+  <rect class="chip stroke-r7" x="441.4" y="386" width="117.2" height="28" rx="14"/>
+  <text class="chip-text ink-r7" x="500" y="405">Domain Model</text>
+  <text class="connector" x="500" y="451">depends on ↓</text>
+  <rect class="frame" x="24" y="464" width="952" height="406" rx="10"/>
+  <text class="eyebrow ink-r6" x="500" y="490">FOUNDATION</text>
+  <text class="name ink-r6" x="500" y="517">The engine</text>
+  <rect class="fill-r6" x="40" y="531" width="920" height="42" rx="7"/>
+  <text class="row-label ink-r6" x="50" y="556">LAYER 7</text>
+  <rect class="chip stroke-r6" x="265" y="538" width="94.4" height="28" rx="14"/>
+  <text class="chip-text ink-r6" x="312.2" y="557">Autopilot</text>
+  <rect class="chip stroke-r6" x="367.4" y="538" width="124.8" height="28" rx="14"/>
+  <text class="chip-text ink-r6" x="429.8" y="557">Configuration</text>
+  <rect class="chip stroke-r6" x="500.2" y="538" width="147.6" height="28" rx="14"/>
+  <text class="chip-text ink-r6" x="574" y="557">Developer Access</text>
+  <rect class="chip stroke-r6" x="655.8" y="538" width="79.2" height="28" rx="14"/>
+  <text class="chip-text ink-r6" x="695.4" y="557">Numbers</text>
+  <rect class="fill-r5" x="40" y="579" width="920" height="42" rx="7"/>
+  <text class="row-label ink-r5" x="50" y="604">LAYER 6</text>
+  <rect class="chip stroke-r5" x="375" y="586" width="155.2" height="28" rx="14"/>
+  <text class="chip-text ink-r5" x="452.6" y="605">Game Data Records</text>
+  <rect class="chip stroke-r5" x="538.2" y="586" width="86.8" height="28" rx="14"/>
+  <text class="chip-text ink-r5" x="581.6" y="605">Timeline</text>
+  <rect class="fill-r4" x="40" y="627" width="920" height="42" rx="7"/>
+  <text class="row-label ink-r4" x="50" y="652">LAYER 5</text>
+  <rect class="chip stroke-r4" x="397.8" y="634" width="132.4" height="28" rx="14"/>
+  <text class="chip-text ink-r4" x="464" y="653">Campaign State</text>
+  <rect class="chip stroke-r4" x="538.2" y="634" width="64" height="28" rx="14"/>
+  <text class="chip-text ink-r4" x="570.2" y="653">Saves</text>
+  <rect class="fill-r3" x="40" y="675" width="920" height="42" rx="7"/>
+  <text class="row-label ink-r3" x="50" y="700">LAYER 4</text>
+  <rect class="chip stroke-r3" x="388.2" y="682" width="223.6" height="28" rx="14"/>
+  <text class="chip-text ink-r3" x="500" y="701">Determinism and Randomness</text>
+  <rect class="fill-r2" x="40" y="723" width="920" height="42" rx="7"/>
+  <text class="row-label ink-r2" x="50" y="748">LAYER 3</text>
+  <rect class="chip stroke-r2" x="418.6" y="730" width="162.8" height="28" rx="14"/>
+  <text class="chip-text ink-r2" x="500" y="749">Campaign Lifecycle</text>
+  <rect class="fill-r1" x="40" y="771" width="920" height="42" rx="7"/>
+  <text class="row-label ink-r1" x="50" y="796">LAYER 2</text>
+  <rect class="chip stroke-r1" x="430" y="778" width="140" height="28" rx="14"/>
+  <text class="chip-text ink-r1" x="500" y="797">Engine Contract</text>
+  <rect class="fill-r0" x="40" y="819" width="920" height="42" rx="7"/>
+  <text class="row-label ink-r0" x="50" y="844">LAYER 1</text>
+  <rect class="chip stroke-r0" x="437.6" y="826" width="124.8" height="28" rx="14"/>
+  <text class="chip-text ink-r0" x="500" y="845">Core Concepts</text>
+  <text class="caption" x="500" y="896">No Foundation specification depends on a Mechanics specification.</text>
+  <text class="caption" x="500" y="916">Content, Implementation and UI specifications sit beside the stack and are not drawn.</text>
 </svg>

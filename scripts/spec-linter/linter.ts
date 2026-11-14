@@ -4,7 +4,6 @@ import type { Node } from 'unist'
 import {
   columnOf,
   findHeading,
-  firstLink,
   headingsWithSlugs,
   headingText,
   headingSlugs,
@@ -87,7 +86,6 @@ interface RegistryEntry {
   readonly title: string
   readonly path: string
   readonly owns: string
-  readonly node: Node
 }
 
 type Inventory = 'Dependencies' | 'Dependents'
@@ -245,198 +243,45 @@ function parseInput(input: LintInput, diagnostics: Diagnostic[]): ParsedInput {
   return { specifications, overviews, allDocuments, exactPaths, casePaths, indexPath, specificationRoot }
 }
 
+/**
+ * Builds the specification registry from metadata: every specification under the specification root, other than a
+ * Family overview, is registered by its own metadata table.
+ */
 function registryEntries(
+  parsed: ParsedInput,
   index: Specification | undefined,
-  indexPath: string,
   diagnostics: Diagnostic[],
 ): readonly RegistryEntry[] {
   if (!index) {
-    addDiagnostic(diagnostics, indexPath, undefined, 'SPEC003', 'The specification index is missing.')
-    return []
-  }
-  const heading = findHeading(index.document, 1, 'Specification register')
-  if (!heading) {
-    addDiagnostic(
-      diagnostics,
-      index.path,
-      undefined,
-      'SPEC004',
-      'The specification index must contain a Specification register section.',
-    )
-    return []
-  }
-  const table = tablesIn(sectionNodes(index.document, heading))[0]
-  if (!table) {
-    addDiagnostic(
-      diagnostics,
-      index.path,
-      heading,
-      'SPEC005',
-      'The Specification register section must contain a table.',
-    )
-    return []
-  }
-  const rows = tableRows(table)
-  const header = rows[0]?.map((cell) => textOf(cell).trim())
-  if (
-    header?.[0] !== 'ID' ||
-    header[1] !== 'Family' ||
-    header[2] !== 'Document' ||
-    header[3] !== 'Owns' ||
-    header.length !== 4
-  ) {
-    addDiagnostic(
-      diagnostics,
-      index.path,
-      table,
-      'SPEC006',
-      'The specification register header must be "ID | Family | Document | Owns".',
-    )
+    addDiagnostic(diagnostics, parsed.indexPath, undefined, 'SPEC003', 'The specification index is missing.')
   }
   const entries: RegistryEntry[] = []
-  for (const row of rows.slice(1)) {
-    const id = row[0] ? textOf(row[0]).trim() : ''
-    const family = row[1] ? textOf(row[1]).trim() : ''
-    const documentCell = row[2]
-    const owns = row[3] ? textOf(row[3]).replace(/\s+/g, ' ').trim() : ''
-    const link = documentCell ? firstLink(documentCell) : undefined
-    if (!id || !family || !link || !owns) {
+  for (const specification of parsed.specifications) {
+    const owns = (specification.metadata.values.get('Owns') ?? '').replace(/\s+/g, ' ').trim()
+    if (!owns) {
       addDiagnostic(
         diagnostics,
-        index.path,
-        row[0] ?? table,
-        'SPEC007',
-        'Every specification register row must contain an ID, Family, one document link, and an Owns value.',
-      )
-      continue
-    }
-    const url = splitUrl(link.url)
-    const decodedPath = decodeUrlPart(url.path)
-    if (!decodedPath || isExternalUrl(link.url)) {
-      addDiagnostic(
-        diagnostics,
-        index.path,
-        link,
-        'SPEC008',
-        'A specification register document must be a local file link.',
-      )
-      continue
-    }
-    if (!ALLOWED_FAMILIES.has(family)) {
-      addDiagnostic(
-        diagnostics,
-        index.path,
-        row[1] ?? table,
-        'SPEC017',
-        'Register Family must be Governance, Foundation, Mechanics, Content, UI, or Implementation.',
+        specification.path,
+        specification.metadata.table,
+        'SPEC113',
+        'Metadata must define a nonempty Owns summary.',
       )
     }
+    if (!specification.id || !specification.family) continue
     entries.push({
-      id,
-      family,
-      title: textOf(link).trim(),
-      path: resolvePath(index.path, decodedPath),
+      id: specification.id,
+      family: specification.family,
+      title: specification.title,
+      path: specification.path,
       owns,
-      node: row[0] ?? table,
     })
   }
   return entries
 }
 
-function validateRegistryAndMetadata(
-  parsed: ParsedInput,
-  entries: readonly RegistryEntry[],
-  diagnostics: Diagnostic[],
-): void {
-  const specificationsByPath = new Map(
-    parsed.specifications.map((specification) => [specification.path, specification]),
-  )
-  const entriesByPath = new Map<string, RegistryEntry[]>()
-  const entriesById = new Map<string, RegistryEntry[]>()
-  for (const entry of entries) {
-    const pathEntries = entriesByPath.get(entry.path) ?? []
-    pathEntries.push(entry)
-    entriesByPath.set(entry.path, pathEntries)
-    const idEntries = entriesById.get(entry.id) ?? []
-    idEntries.push(entry)
-    entriesById.set(entry.id, idEntries)
-    if (!parsed.exactPaths.has(entry.path)) {
-      const actual = parsed.casePaths.get(entry.path.toLowerCase())
-      addDiagnostic(
-        diagnostics,
-        entry.path,
-        entry.node,
-        actual ? 'SPEC009' : 'SPEC010',
-        actual
-          ? `The registered path casing differs from "${actual}".`
-          : 'The registered specification file does not exist.',
-      )
-    }
-  }
-  for (const [id, duplicates] of entriesById) {
-    if (duplicates.length < 2) continue
-    for (const duplicate of duplicates) {
-      addDiagnostic(
-        diagnostics,
-        duplicate.path,
-        duplicate.node,
-        'SPEC011',
-        `Spec ID "${id}" is registered more than once.`,
-      )
-    }
-  }
-  for (const [filePath, duplicates] of entriesByPath) {
-    if (duplicates.length < 2) continue
-    for (const duplicate of duplicates) {
-      addDiagnostic(
-        diagnostics,
-        filePath,
-        duplicate.node,
-        'SPEC012',
-        'The specification file is registered more than once.',
-      )
-    }
-  }
+function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
   const metadataIds = new Map<string, Specification[]>()
   for (const specification of parsed.specifications) {
-    const registered = entriesByPath.get(specification.path) ?? []
-    if (registered.length === 0) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        specification.metadata.table,
-        'SPEC013',
-        'Every Markdown file under docs/specs must be registered exactly once.',
-      )
-    }
-    const entry = registered[0]
-    if (entry && specification.id !== entry.id) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        specification.metadata.table,
-        'SPEC014',
-        `Metadata Spec ID "${specification.id ?? ''}" does not match registered ID "${entry.id}".`,
-      )
-    }
-    if (entry && specification.title !== entry.title) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        specification.document.children[0],
-        'SPEC015',
-        `Document title "${specification.title}" does not match registered title "${entry.title}".`,
-      )
-    }
-    if (entry && specification.family !== entry.family) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        specification.metadata.table,
-        'SPEC018',
-        `Metadata Family "${specification.family ?? ''}" does not match registered Family "${entry.family}".`,
-      )
-    }
     if (!specification.id) {
       addDiagnostic(
         diagnostics,
@@ -522,17 +367,6 @@ function validateRegistryAndMetadata(
         duplicate.metadata.table,
         'SPEC108',
         `Metadata Spec ID "${id}" is used by more than one specification.`,
-      )
-    }
-  }
-  for (const entry of entries) {
-    if (!specificationsByPath.has(entry.path)) {
-      addDiagnostic(
-        diagnostics,
-        entry.path,
-        entry.node,
-        'SPEC016',
-        'The register entry does not resolve to a parsed specification.',
       )
     }
   }
@@ -1478,8 +1312,8 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   const diagnostics: Diagnostic[] = []
   const parsed = parseInput(input, diagnostics)
   const index = parsed.specifications.find((specification) => specification.path === parsed.indexPath)
-  const entries = registryEntries(index, parsed.indexPath, diagnostics)
-  validateRegistryAndMetadata(parsed, entries, diagnostics)
+  const entries = registryEntries(parsed, index, diagnostics)
+  validateMetadata(parsed, diagnostics)
   validateLayout(parsed.specifications, diagnostics)
   validateLinks(parsed, diagnostics)
   validateFamilyOverviews(parsed, diagnostics)

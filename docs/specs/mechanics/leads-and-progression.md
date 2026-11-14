@@ -1,12 +1,13 @@
 # Leads and Progression
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | LEAD                                                           |
-| Family      | Mechanics                                                      |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------- |
+| Spec ID     | LEAD                                                                                     |
+| Family      | Mechanics                                                                                |
+| Status      | Stub                                                                                     |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                              |
+| Owns        | Define the progression graph and the lifecycle of Leads, separately from Investigations. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                           |
 
 # Overview
 
@@ -15,7 +16,7 @@ This document defines the progression graph and the lifecycle of Leads, separate
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification refines Domain Model's lead and progression contract ([Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with what a Lead GDR describes and
+This specification refines Domain Model's lead and progression contract ([Leads and Investigations](domain-model.md#leads-and-investigations)/[Progression facts](domain-model.md#progression-facts)) with what a Lead GDR describes and
 what Lead progression records, and intends to refine it further with prerequisite semantics,
 availability, and unlock effects. It uses Factions' state and defeat facts and Missions' lifecycle/results to evaluate
 progression. It also intends to refine Factions'
@@ -32,9 +33,10 @@ appropriate to this document.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Factions](./factions.md)
 - Uses [Missions](./missions.md)
-- Refines [Domain Model](../foundation/domain-model.md)
+- Refines [Domain Model](domain-model.md)
 - Refines [Factions](./factions.md)
 - Used by [Investigations](./investigations.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary
 
@@ -46,7 +48,7 @@ duplicating shared definitions.
 A Lead GDR describes difficulty, repeatability, prerequisites, effects, and an optional explicit Faction reference.
 
 Lead progression records, for each Lead GDR, the earned facts that are not Derived values. Discovery, availability,
-and completion count are Derived values, under [Progression facts](../foundation/domain-model.md#progression-facts)
+and completion count are Derived values, under [Progression facts](domain-model.md#progression-facts)
 in Domain Model.
 
 # Prerequisites and lifecycle

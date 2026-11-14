@@ -18,8 +18,29 @@ e.g. to open the detailed view of an Agent that is recovering.
 
 # Documents
 
-This family has no specification yet. A UI specification is added when guidance for a screen or a cross-screen
-principle is ready to be written, e.g. a specification for the mission deployment screen described above.
+## Web UI
+
+[Web UI](web-ui.md) answers _which screens does the browser user interface need, and what does each show by default?_
+It owns that guidance for the game's browser user interface.
+
+# How they relate
+
+Web UI uses Engine Contract and Campaign Lifecycle from the Foundation family and Domain Model from the Mechanics
+family, and Gameplay Dependency Direction in the Implementation family uses it.
+
+<!-- generated:family-diagram:start -->
+
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
+
+## Within the family
+
+This family has a single specification, so there are no relationships within it.
+
+## Across families
+
+![UI family: relationships with other families](../../images/ui-family-across.svg)
+
+<!-- generated:family-diagram:end -->
 
 # Why these boundaries
 

@@ -11,6 +11,7 @@ import {
   renderFamilyDiagram,
   renderFamilyDiagramFiles,
 } from '../scripts/spec-docs/generator.ts'
+import { computeFamilyArchitecture, renderFamilyArchitecture } from '../scripts/spec-docs/family-architecture.ts'
 import { computeStackLayout, renderStackDiagram } from '../scripts/spec-docs/stack-diagram.ts'
 import { computeLayers, renderSvgDiagram, type DiagramInput } from '../scripts/spec-docs/svg-diagram.ts'
 import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
@@ -301,40 +302,68 @@ describe('specification stack diagram', () => {
     }
   }
 
-  test('puts the root at the bottom, the spec depending on every mechanic at the tip, and names layer bases', () => {
+  test('orders each Family by its layers', () => {
     const layout = computeStackLayout(stackCorpus())
-    expect(
-      layout.bands.map((band) => [
-        band.role,
-        band.family,
-        band.members.map((member) => member.id),
-        band.bases.map((base) => base.id),
-      ]),
-    ).toEqual([
-      ['tip', 'Mechanics', ['TURN'], []],
-      ['middle', 'Mechanics', ['DOM', 'ONE', 'TWO'], ['DOM']],
-      ['middle', 'Foundation', ['ENG', 'NUM'], []],
-      ['bottom', 'Foundation', ['CORE'], []],
+    expect(layout.bands.map((band) => [band.family, band.rows.map((row) => row.map((member) => member.id))])).toEqual([
+      ['Mechanics', [['TURN'], ['TWO'], ['ONE'], ['DOM']]],
+      ['Foundation', [['ENG', 'NUM'], ['CORE']]],
     ])
     expect(layout.foundationIndependent).toBe(true)
     expect(layout.besideFamilies).toEqual(['Implementation'])
   })
 
-  test('has no tip while a mechanic still depends on the last one', () => {
-    const corpus = stackCorpus()
-    const layout = computeStackLayout({
-      ...corpus,
-      relationships: [...corpus.relationships, relationship('TURN', 'TWO', 'uses')],
-    })
-    expect(layout.bands.map((band) => band.role)).toEqual(['middle', 'middle', 'bottom'])
-  })
-
   test('renders every layer and the layer captions', () => {
     const svg = renderStackDiagram(stackCorpus())
-    expect(svg).toContain('MECHANICS · TIP')
-    expect(svg).toContain('FOUNDATION · BOTTOM')
-    expect(svg).toContain('All build on Title DOM, the base of this layer')
+    expect(svg).toContain('LAYER 4')
+    expect(svg).toContain(
+      'Mechanics, from its top layer to its bottom layer: Title TURN; Title TWO; Title ONE; Title DOM',
+    )
+    expect(svg).toContain('Foundation, from its top layer to its bottom layer: Title ENG, Title NUM; Title CORE')
     expect(svg).toContain('No Foundation specification depends on a Mechanics specification.')
     expect(svg).toContain('Implementation specifications sit beside the stack and are not drawn.')
+  })
+})
+
+describe('family architecture diagram', () => {
+  const families = ['Governance', 'Foundation', 'Mechanics', 'Content', 'UI', 'Implementation']
+
+  function architectureCorpus(): SpecificationCorpus {
+    return {
+      specifications: [
+        specification('ENG', 'Foundation'),
+        specification('MECH', 'Mechanics'),
+        specification('SCREEN', 'UI'),
+        specification('IMPL', 'Implementation'),
+      ],
+      glossary: [],
+      relationships: [
+        relationship('ENG', 'MECH', 'uses'),
+        relationship('MECH', 'SCREEN', 'uses'),
+        relationship('SCREEN', 'IMPL', 'uses'),
+        relationship('ENG', 'IMPL', 'uses'),
+      ],
+    }
+  }
+
+  test('derives what each Family builds on from the relationships of its specifications', () => {
+    expect(computeFamilyArchitecture(architectureCorpus(), families)).toEqual([
+      { family: 'Governance', buildsOn: [] },
+      { family: 'Foundation', buildsOn: [] },
+      { family: 'Mechanics', buildsOn: ['Foundation'] },
+      { family: 'Content', buildsOn: [] },
+      { family: 'UI', buildsOn: ['Mechanics'] },
+      { family: 'Implementation', buildsOn: ['Foundation', 'UI'] },
+    ])
+  })
+
+  test('draws the game engine, the Families above it, and one arrow per Family it builds on', () => {
+    const corpus = architectureCorpus()
+    const svg = renderFamilyArchitecture(corpus, computeFamilyArchitecture(corpus, families))
+    expect(svg).toContain('>Game engine<')
+    expect(svg).toContain('>Implementation<')
+    expect(svg).toContain('Implementation builds on Foundation and UI')
+    expect(svg).toContain('Content has no specifications yet, so no relationships either.')
+    expect(svg).toContain('Every specification also follows the Governance family, which is not drawn.')
+    expect(svg.match(/class="arrow"/g)).toHaveLength(3)
   })
 })

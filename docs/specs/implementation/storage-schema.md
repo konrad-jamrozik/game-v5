@@ -1,12 +1,13 @@
 # Storage Schema
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | SCHEMA                                                         |
-| Family      | Implementation                                                 |
-| Status      | Stub                                                           |
-| Audience    | Implementer                                                    |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                            |
+| ----------- | -------------------------------------------------------------------------------- |
+| Spec ID     | SCHEMA                                                                           |
+| Family      | Implementation                                                                   |
+| Status      | Stub                                                                             |
+| Audience    | Implementer                                                                      |
+| Owns        | Non-behavioural guidance on the physical layout of everything the game persists. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                   |
 
 # Overview
 
@@ -18,6 +19,7 @@ and [Timeline](../foundation/timeline.md).
 
 # Relationships
 
+- Uses [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Determinism and Randomness](../foundation/determinism-and-randomness.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
@@ -29,6 +31,9 @@ and [Timeline](../foundation/timeline.md).
 TODO: Describe one physical layout covering every part of Game storage under
 [Data ownership](../foundation/engine-contract.md#data-ownership): Global configuration, and for each Campaign save
 its identifiers, Campaign state, Timeline, and Autopilot memory.
+
+GDRs, e.g. the [Bootstrap GDRs](../content/bootstrap-gdrs.md), belong to the Game build, so Game storage never holds a
+copy of them; Campaign state refers to a GDR by its identifier.
 
 TODO: Suggest how Autosaves are stored beside the other Campaign saves of their Campaign.
 

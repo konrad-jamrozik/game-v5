@@ -1,12 +1,13 @@
 # Numbers
 
-| Metadata    | Value                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Spec ID     | NUMBERS                                                        |
-| Family      | Foundation                                                     |
-| Status      | Stub                                                           |
-| Audience    | Engine designer, Implementer                                   |
-| Conventions | [Specification conventions](../governance/spec-conventions.md) |
+| Metadata    | Value                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------ |
+| Spec ID     | NUMBERS                                                                                          |
+| Family      | Foundation                                                                                       |
+| Status      | Stub                                                                                             |
+| Audience    | Engine designer, Implementer                                                                     |
+| Owns        | Which quantities are whole numbers, the precision of those that are not, and how rounding works. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                   |
 
 # Overview
 

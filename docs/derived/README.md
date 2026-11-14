@@ -11,7 +11,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | Status     | Specifications |
 | ---------- | -------------- |
-| Stub       | 12             |
+| Stub       | 14             |
 | Draft      | 17             |
 | Accepted   | 1              |
 | Superseded | 0              |
@@ -21,10 +21,10 @@ These informative views are derived from the registered Markdown specifications.
 | Family         | Specifications |
 | -------------- | -------------- |
 | Governance     | 5              |
-| Foundation     | 14             |
-| Mechanics      | 9              |
-| Content        | 0              |
-| UI             | 0              |
+| Foundation     | 12             |
+| Mechanics      | 11             |
+| Content        | 1              |
+| UI             | 1              |
 | Implementation | 2              |
 
 ## Governance
@@ -47,14 +47,12 @@ These informative views are derived from the registered Markdown specifications.
 | CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)                         | Draft    | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation. |
 | DETERM   | [Determinism and Randomness](../specs/foundation/determinism-and-randomness.md) | Draft    | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay.                       |
 | DEV      | [Developer Access](../specs/foundation/developer-access.md)                     | Stub     | Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides.                                                |
-| DOM      | [Domain Model](../specs/foundation/domain-model.md)                             | Draft    | Game concepts, how they relate, and the structural invariants that span several concepts.                                                |
 | ENG      | [Engine Contract](../specs/foundation/engine-contract.md)                       | Draft    | API hierarchy, Principal authority, data ownership, the Engine subsystem inventory, and the guarantees shared by every engine subsystem. |
 | GDR      | [Game Data Records](../specs/foundation/game-data-records.md)                   | Draft    | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                |
 | LIFE     | [Campaign Lifecycle](../specs/foundation/campaign-lifecycle.md)                 | Draft    | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status.                               |
 | NUMBERS  | [Numbers](../specs/foundation/numbers.md)                                       | Stub     | Which quantities are whole numbers, the precision of those that are not, and how rounding works.                                         |
 | SAVES    | [Saves](../specs/foundation/saves.md)                                           | Draft    | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                   |
 | TIMELINE | [Timeline](../specs/foundation/timeline.md)                                     | Draft    | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees.     |
-| TURN     | [Turn Advancement](../specs/foundation/turn-advancement.md)                     | Draft    | The canonical order of Turn advancement steps and which values each step uses.                                                           |
 
 ## Mechanics
 
@@ -62,6 +60,7 @@ These informative views are derived from the registered Markdown specifications.
 | ------- | -------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | AGENT   | [Agents](../specs/mechanics/agents-spec.md)                          | Stub   | Define what an Agent has and can do: agent capability, task availability, development, and the meaning of health, exhaustion, and experience. |
 | COMBAT  | [Combat](../specs/mechanics/combat.md)                               | Stub   | Define fully automatic battles and their reproducible results independently of campaign rewards.                                              |
+| DOM     | [Domain Model](../specs/mechanics/domain-model.md)                   | Draft  | Game concepts, how they relate, and the structural invariants that span several concepts.                                                     |
 | ECON    | [Economy and Upgrades](../specs/mechanics/economy-and-upgrades.md)   | Stub   | Define resource flows, personnel purchases, and agency improvements.                                                                          |
 | ENDING  | [Panic and Endings](../specs/mechanics/panic-and-endings.md)         | Stub   | Define global panic, the conditions that end a Campaign, and what remains possible after an ending.                                           |
 | FACTION | [Factions](../specs/mechanics/factions.md)                           | Stub   | Define escalating faction pressure, operation generation, suppression, and permanent defeat.                                                  |
@@ -69,16 +68,19 @@ These informative views are derived from the registered Markdown specifications.
 | LEAD    | [Leads and Progression](../specs/mechanics/leads-and-progression.md) | Stub   | Define the progression graph and the lifecycle of Leads, separately from Investigations.                                                      |
 | MISSION | [Missions](../specs/mechanics/missions.md)                           | Stub   | Define mission commitments and translate combat results into campaign consequences.                                                           |
 | RECOVER | [Agent Recovery](../specs/mechanics/agent-recovery.md)               | Stub   | Define how an Agent's health goes up and exhaustion goes down, and the result when several rules change one of those values in the same turn. |
+| TURN    | [Turn Advancement](../specs/mechanics/turn-advancement.md)           | Draft  | The canonical order of Turn advancement steps and which values each step uses.                                                                |
 
 ## Content
 
-| ID  | Document | Status | Owns |
-| --- | -------- | ------ | ---- |
+| ID   | Document                                             | Status | Owns                                                                                              |
+| ---- | ---------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------- |
+| BOOT | [Bootstrap GDRs](../specs/content/bootstrap-gdrs.md) | Stub   | Which Game Data Records (GDRs) a Game build supplies so that a first playable Campaign can start. |
 
 ## UI
 
-| ID  | Document | Status | Owns |
-| --- | -------- | ------ | ---- |
+| ID  | Document                        | Status | Owns                                                                                             |
+| --- | ------------------------------- | ------ | ------------------------------------------------------------------------------------------------ |
+| WEB | [Web UI](../specs/ui/web-ui.md) | Stub   | Guidance on the screens of the browser user interface and what each shows the Player by default. |
 
 ## Implementation
 
