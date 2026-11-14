@@ -16,8 +16,8 @@ that a first playable Campaign can be created, played, won, and lost. It is a de
 game-ts content, chosen so that every concept the [Domain Model](../mechanics/domain-model.md) declares has at least
 one GDR, while each kind of GDR has as few members as a complete Campaign allows.
 
-This document owns which GDRs exist, the identifier of each, its Type, the GDR purposes it serves, and how the GDRs
-reference one another, e.g. which Lead creates which Mission. It does not own, e.g.:
+This document owns which GDRs exist, the identifier of each, its Type, the GDR purposes it serves, the file that holds
+it, and how the GDRs reference one another, e.g. which Lead creates which Mission. It does not own, e.g.:
 
 - The values inside each GDR: each GDR's own YAML file is the only place its values are recorded, under
   [One owner per rule](../governance/spec-conventions.md#one-owner-per-rule).
@@ -187,6 +187,45 @@ Type owner: [Panic and Endings](../mechanics/panic-and-endings.md).
 | --------- | ---------------- | --------------------- | ---------------------------------------- |
 | `endings` | EndingParameters | Calculation parameter | The panic at which the Campaign is lost. |
 
+# Bootstrap GDR files
+
+The Bootstrap GDRs are authored in YAML files under the `content/` directory at the repository root. Their layout
+follows these rules:
+
+- **One file per Type:** each file holds every Bootstrap GDR of one Type and no GDR of another Type.
+- **Directory of the Type owner:** the file lies in the directory named after the file name of the Mechanics
+  specification that owns its Type, without the `.md` extension or a `-spec` suffix, e.g. `content/combat/` for Combat.
+- **File named after the Type:** the file name is the Type's name in lowercase words joined by underscores, in the
+  plural, e.g. `faction_activity_levels.yaml` for FactionActivityLevel.
+- **One YAML document per GDR:** documents are separated by `---`, and each states its GDR as
+  [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) shows, including its identifier and
+  its Type.
+
+The following table is exhaustive: it lists all 18 Bootstrap GDR files.
+
+| File                                                   | Type                    | GDRs                                                                                      |
+| ------------------------------------------------------ | ----------------------- | ----------------------------------------------------------------------------------------- |
+| `content/configuration/campaign_configurations.yaml`   | CampaignConfiguration   | `standard`                                                                                |
+| `content/agents/agent_archetypes.yaml`                 | AgentArchetype          | `field_agent`                                                                             |
+| `content/agents/agent_parameters.yaml`                 | AgentParameters         | `agent_parameters`                                                                        |
+| `content/economy-and-upgrades/agency_archetypes.yaml`  | AgencyArchetype         | `agency`                                                                                  |
+| `content/economy-and-upgrades/economy_parameters.yaml` | EconomyParameters       | `economy`                                                                                 |
+| `content/economy-and-upgrades/upgrades.yaml`           | Upgrade                 | `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`                             |
+| `content/leads-and-progression/leads.yaml`             | Lead                    | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`               |
+| `content/investigations/investigation_archetypes.yaml` | InvestigationArchetype  | `standard_investigation`                                                                  |
+| `content/investigations/investigation_parameters.yaml` | InvestigationParameters | `investigation_parameters`                                                                |
+| `content/missions/mission_archetypes.yaml`             | MissionArchetype        | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage` |
+| `content/combat/enemy_archetypes.yaml`                 | EnemyArchetype          | `initiate`, `soldier`, `cult_leader`                                                      |
+| `content/combat/weapons.yaml`                          | Weapon                  | `sidearm`, `rifle`, `heavy_rifle`                                                         |
+| `content/combat/combat_parameters.yaml`                | CombatParameters        | `combat_parameters`                                                                       |
+| `content/agent-recovery/recovery_parameters.yaml`      | RecoveryParameters      | `recovery`                                                                                |
+| `content/factions/faction_archetypes.yaml`             | FactionArchetype        | `red_dawn`                                                                                |
+| `content/factions/faction_activity_levels.yaml`        | FactionActivityLevel    | `faint`, `active`, `war`                                                                  |
+| `content/factions/faction_operation_levels.yaml`       | FactionOperationLevel   | `operation_level_1`, `operation_level_2`                                                  |
+| `content/panic-and-endings/ending_parameters.yaml`     | EndingParameters        | `endings`                                                                                 |
+
+A GDR added later goes into the file of its Type, and a file is added only for a new Type.
+
 # Victory path
 
 The Victory path consists of three Leads, each creating one Initiative Mission. A won Mission makes the next Lead
@@ -194,35 +233,7 @@ available, and winning `raid_hq` defeats Red Dawn. With Red Dawn defeated, every
 Campaign. Throughout the Campaign, Red Dawn's activity creates Faction operation occurrences, each with one Response
 Mission; ignoring or losing a Response Mission raises panic, and enough panic loses the Campaign.
 
-```mermaid
-flowchart TD
-    subgraph Path["Victory path"]
-        L1["Lead GDR locate_red_dawn_member<br/>no prerequisites"]
-        M1["Initiative Mission<br/>apprehend_member"]
-        L2["Lead GDR locate_red_dawn_safehouse"]
-        M2["Initiative Mission<br/>raid_safehouse"]
-        L3["Lead GDR locate_red_dawn_hq"]
-        M3["Initiative Mission<br/>raid_hq"]
-        Defeat["Faction red_dawn defeated"]
-        Won["Campaign won:<br/>every Faction defeated"]
-        L1 -->|Investigation completes, creates| M1
-        M1 -->|win makes available| L2
-        L2 -->|Investigation completes, creates| M2
-        M2 -->|win makes available| L3
-        L3 -->|Investigation completes, creates| M3
-        M3 -->|win defeats target Faction| Defeat
-        Defeat --> Won
-    end
-    subgraph Pressure["Throughout the Campaign"]
-        Activity["Faction red_dawn activity:<br/>faint, then active, then war"]
-        Response["Response Mission<br/>foil_recruitment_push or foil_sabotage"]
-        Panic["Panic rises"]
-        Lost["Campaign lost:<br/>panic reaches the endings limit"]
-        Activity -->|Faction operation occurrence creates| Response
-        Response -->|ignored or lost| Panic
-        Panic --> Lost
-    end
-```
+![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission, a won Mission makes the next Lead available, and winning raid_hq defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Missions whose loss raises panic until the Campaign is lost](../../images/bootstrap-victory-path.svg)
 
 An Initiative Mission that is lost or expires records no win, so its Lead becomes available again and the Agency can
 retry it. Every Lead of the Victory path therefore remains available until a Mission it created is won.

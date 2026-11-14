@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="732" viewBox="0 0 760 732" role="img" aria-label="Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission, a won Mission makes the next Lead available, and winning Raid HQ defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Missions whose loss raises panic until the Campaign is lost">
+  <!-- Hand-kept diagram for docs/specs/content/bootstrap-gdrs.md; not generated. -->
+  <style>
+    :root { --bg: #ffffff; --node: #f4f6f9; --fg: #18202b; --muted: #5a6573; --line: #d9dfe7; --accent: #2a5aa6; --accent-soft: #e4ecf8; --red: #a8322a; --red-soft: #f7e6e4; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161c; --node: #1a2029; --fg: #e3e8ef; --muted: #98a3b2; --line: #2c3542; --accent: #7fa6e8; --accent-soft: #1e2a3d; --red: #e7847b; --red-soft: #3a2220; }
+    }
+    text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; fill: var(--fg); }
+    .bg { fill: var(--bg); }
+    .title { font-size: 16px; font-weight: 600; }
+    .section { font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; fill: var(--accent); }
+    .section.red { fill: var(--red); }
+    .node { fill: var(--node); stroke: var(--line); stroke-width: 1; }
+    .winbg { fill: var(--accent-soft); stroke: var(--line); stroke-width: 1; }
+    .losebg { fill: var(--red-soft); stroke: var(--line); stroke-width: 1; }
+    .bar-lead, .bar-win { fill: var(--accent); }
+    .bar-mission { fill: var(--muted); }
+    .bar-faction, .bar-lose { fill: var(--red); }
+    .tag { font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; fill: var(--muted); }
+    .name { font-size: 14.5px; font-weight: 600; }
+    .id { font-family: Consolas, "SF Mono", ui-monospace, monospace; font-size: 11.5px; fill: var(--muted); }
+    .sub { font-size: 12px; fill: var(--muted); }
+    .lbl { font-size: 12px; fill: var(--muted); }
+    .mid { text-anchor: middle; }
+    .arc { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+    .arcred { fill: none; stroke: var(--red); stroke-width: 1.6; stroke-dasharray: 5 4; }
+    .head { fill: var(--accent); }
+    .headred { fill: var(--red); }
+    .rule { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 5; }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="head" d="M0 1 L10 5 L0 9z"/></marker>
+    <marker id="headred" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="headred" d="M0 1 L10 5 L0 9z"/></marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="760" height="732"/>
+  <text class="title" x="24" y="34">Bootstrap GDRs: the Victory path</text>
+  <text class="section" x="24" y="60">VICTORY PATH</text>
+  <rect class="node" x="24" y="76" width="280" height="64" rx="6"/>
+  <rect class="bar-lead" x="24" y="76" width="4" height="64" rx="2"/>
+  <text class="tag" x="40" y="95">LEAD</text>
+  <text class="name" x="40" y="115">Locate Red Dawn member</text>
+  <text class="id" x="40" y="132">locate_red_dawn_member</text>
+  <rect class="node" x="464" y="76" width="272" height="64" rx="6"/>
+  <rect class="bar-mission" x="464" y="76" width="4" height="64" rx="2"/>
+  <text class="tag" x="480" y="95">INITIATIVE MISSION</text>
+  <text class="name" x="480" y="115">Apprehend member</text>
+  <text class="id" x="480" y="132">apprehend_member</text>
+  <path class="arc" d="M304 108 H460" marker-end="url(#head)"/>
+  <text class="lbl mid" x="384" y="88">Investigation</text>
+  <text class="lbl mid" x="384" y="102">completes, creates</text>
+  <path class="arc" d="M600 140 V162 H164 V180" marker-end="url(#head)"/>
+  <text class="lbl mid" x="382" y="156">win makes the next Lead available</text>
+  <rect class="node" x="24" y="184" width="280" height="64" rx="6"/>
+  <rect class="bar-lead" x="24" y="184" width="4" height="64" rx="2"/>
+  <text class="tag" x="40" y="203">LEAD</text>
+  <text class="name" x="40" y="223">Locate Red Dawn safehouse</text>
+  <text class="id" x="40" y="240">locate_red_dawn_safehouse</text>
+  <rect class="node" x="464" y="184" width="272" height="64" rx="6"/>
+  <rect class="bar-mission" x="464" y="184" width="4" height="64" rx="2"/>
+  <text class="tag" x="480" y="203">INITIATIVE MISSION</text>
+  <text class="name" x="480" y="223">Raid safehouse</text>
+  <text class="id" x="480" y="240">raid_safehouse</text>
+  <path class="arc" d="M304 216 H460" marker-end="url(#head)"/>
+  <text class="lbl mid" x="384" y="196">Investigation</text>
+  <text class="lbl mid" x="384" y="210">completes, creates</text>
+  <path class="arc" d="M600 248 V270 H164 V288" marker-end="url(#head)"/>
+  <text class="lbl mid" x="382" y="264">win makes the next Lead available</text>
+  <rect class="node" x="24" y="292" width="280" height="64" rx="6"/>
+  <rect class="bar-lead" x="24" y="292" width="4" height="64" rx="2"/>
+  <text class="tag" x="40" y="311">LEAD</text>
+  <text class="name" x="40" y="331">Locate Red Dawn HQ</text>
+  <text class="id" x="40" y="348">locate_red_dawn_hq</text>
+  <rect class="node" x="464" y="292" width="272" height="64" rx="6"/>
+  <rect class="bar-mission" x="464" y="292" width="4" height="64" rx="2"/>
+  <text class="tag" x="480" y="311">INITIATIVE MISSION</text>
+  <text class="name" x="480" y="331">Raid HQ</text>
+  <text class="id" x="480" y="348">raid_hq</text>
+  <path class="arc" d="M304 324 H460" marker-end="url(#head)"/>
+  <text class="lbl mid" x="384" y="304">Investigation</text>
+  <text class="lbl mid" x="384" y="318">completes, creates</text>
+  <path class="arc" d="M600 356 V378 H164 V396" marker-end="url(#head)"/>
+  <text class="lbl mid" x="382" y="372">win defeats the target Faction</text>
+  <rect class="node" x="24" y="400" width="280" height="64" rx="6"/>
+  <rect class="bar-faction" x="24" y="400" width="4" height="64" rx="2"/>
+  <text class="tag" x="40" y="419">FACTION</text>
+  <text class="name" x="40" y="439">Red Dawn defeated</text>
+  <text class="id" x="40" y="456">red_dawn</text>
+  <rect class="winbg" x="464" y="400" width="272" height="64" rx="6"/>
+  <rect class="bar-win" x="464" y="400" width="4" height="64" rx="2"/>
+  <text class="tag" x="480" y="419">ENDING</text>
+  <text class="name" x="480" y="439">Campaign won</text>
+  <text class="sub" x="480" y="456">every Faction is defeated</text>
+  <path class="arc" d="M304 432 H460" marker-end="url(#head)"/>
+  <text class="lbl mid" x="384" y="412">every Faction</text>
+  <text class="lbl mid" x="384" y="426">defeated</text>
+  <line class="rule" x1="24" y1="492" x2="736" y2="492"/>
+  <text class="section red" x="24" y="520">THROUGHOUT THE CAMPAIGN</text>
+  <rect class="node" x="24" y="536" width="280" height="64" rx="6"/>
+  <rect class="bar-faction" x="24" y="536" width="4" height="64" rx="2"/>
+  <text class="tag" x="40" y="555">FACTION</text>
+  <text class="name" x="40" y="575">Red Dawn activity</text>
+  <text class="sub" x="40" y="592">faint, then active, then war</text>
+  <rect class="node" x="464" y="536" width="272" height="64" rx="6"/>
+  <rect class="bar-mission" x="464" y="536" width="4" height="64" rx="2"/>
+  <text class="tag" x="480" y="555">RESPONSE MISSION</text>
+  <text class="name" x="480" y="575">Foil recruitment push</text>
+  <text class="sub" x="480" y="592">or Foil sabotage, by operation level</text>
+  <path class="arcred" d="M304 568 H460" marker-end="url(#headred)"/>
+  <text class="lbl mid" x="384" y="548">Faction operation</text>
+  <text class="lbl mid" x="384" y="562">occurrence creates</text>
+  <path class="arcred" d="M600 600 V622 H164 V640" marker-end="url(#headred)"/>
+  <text class="lbl mid" x="382" y="616">ignored or lost</text>
+  <rect class="node" x="24" y="644" width="280" height="64" rx="6"/>
+  <rect class="bar-faction" x="24" y="644" width="4" height="64" rx="2"/>
+  <text class="tag" x="40" y="663">PANIC</text>
+  <text class="name" x="40" y="683">Panic rises</text>
+  <text class="sub" x="40" y="700">by the operation level’s amount</text>
+  <rect class="losebg" x="464" y="644" width="272" height="64" rx="6"/>
+  <rect class="bar-lose" x="464" y="644" width="4" height="64" rx="2"/>
+  <text class="tag" x="480" y="663">ENDING</text>
+  <text class="name" x="480" y="683">Campaign lost</text>
+  <text class="sub" x="480" y="700">panic reaches the endings limit</text>
+  <path class="arcred" d="M304 676 H460" marker-end="url(#headred)"/>
+  <text class="lbl mid" x="384" y="656">panic reaches</text>
+  <text class="lbl mid" x="384" y="670">the limit</text>
+</svg>
