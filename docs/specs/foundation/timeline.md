@@ -87,7 +87,7 @@ as a Campaign save may under [Save size limit](saves.md#save-size-limit), never 
 Each committed Player API or Developer API action is exactly one Timeline entry, under
 [Player queries and actions](engine-contract.md#player-queries-and-actions) and
 [Dev mode and developer operations](engine-contract.md#dev-mode-and-developer-operations). No other operation is a
-Timeline entry, e.g. a query or `session.campaigns.save()`.
+Timeline entry, e.g. a query or `session.campaign.save()`.
 
 Advance turn is one Timeline entry; its phases are not separate Timeline entries. An Autopilot AI's actions are the same
 individual Timeline entries as actions committed directly: an Autopilot engagement is not one undo unit.

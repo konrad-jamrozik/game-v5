@@ -72,16 +72,16 @@ every Campaign save holds it, including one written without its Timeline.
 Saving captures the Current campaign at its Timeline cursor. It is available at every Timeline position, including
 before the player advances the turn, and it is not a Timeline entry.
 
-`session.campaigns.save()` writes the Current campaign to its Current save, replacing that Campaign save's contents.
+`session.campaign.save()` writes the Current campaign to its Current save, replacing that Campaign save's contents.
 When the Current campaign has no Current save, it creates a new Campaign save and makes that the Current save.
 
-`session.campaigns.saveAsNew()` always creates a new Campaign save of the same Campaign and makes that the Current
+`session.campaign.saveAsNew()` always creates a new Campaign save of the same Campaign and makes that the Current
 save; every earlier Campaign save is unchanged. Forking a Timeline uses `saveAsNew()`: there is no separate fork
 operation, and a fork keeps the Campaign ID and receives a new Campaign save ID.
 
 # Loading
 
-A successful `session.campaigns.load(save)` atomically:
+A successful `session.campaign.load(save)` atomically:
 
 - restores the Campaign state, Timeline, and Autopilot memory held by the Campaign save;
 - selects that Campaign as the Current campaign and that Campaign save as the Current save;
