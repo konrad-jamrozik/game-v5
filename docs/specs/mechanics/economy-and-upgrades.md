@@ -31,12 +31,12 @@ appropriate to this document.
 
 - Uses [Agents](./agents-spec.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Missions](./missions.md)
-- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 
@@ -65,9 +65,17 @@ This specification declares the following Turn series, under
 | Money at the start of turn | The Committed state in which the turn starts, before any action of it.   |
 | Money at the end of turn   | The Committed state in which the Advance turn that ends the turn begins. |
 
+Both Turn series are Player-visible information.
+
 TODO: Declare the remaining Turn series this specification owns, e.g. upgrades purchased during each turn or upkeep
 paid in each turn. For each, state the recorded value, its unit, and the recorded moment of each turn. State which
 money value the two Turn series above record once Spendable money is specified.
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

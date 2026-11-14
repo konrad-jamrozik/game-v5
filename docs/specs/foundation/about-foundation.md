@@ -6,7 +6,7 @@
 
 Foundation specifications hold the cross-cutting contracts that every other part of the game builds on: shared
 vocabulary, engine guarantees, campaign-data structure, the engine subsystems, the domain itself, and the numeric
-machinery. Mechanics, Content, Interfaces, Acceptance, and Implementation documents all depend on them; none of
+machinery. Mechanics, Content, Acceptance, and Implementation documents all depend on them; none of
 them is about a single game system.
 
 The family reads from abstract to concrete: words, then engine promises, then data rules, then one document per engine
@@ -47,6 +47,11 @@ purposes a GDR can serve and a worked example of each.
 [Campaign Lifecycle](campaign-lifecycle.md) answers _how does a Session get, change, and lose its Current campaign?_ It
 owns when a Session starts and ends, creating, loading, selecting, and closing the Current campaign, what
 `session.getStatus()` reports, and which Session API operations need no Current campaign.
+
+## Developer Access
+
+[Developer Access](developer-access.md) answers _how can the Session controller inspect and change a Campaign beyond
+ordinary play?_ It owns Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides.
 
 ## Determinism and Randomness
 
@@ -102,9 +107,8 @@ Mechanics specification owns the distributions of its own random outcomes.
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
 State refines those guarantees and Determinism and Randomness. Numbers stands alone and is used by Mechanics. Campaign
-Lifecycle, Saves, Timeline, Configuration, Autopilot, Determinism and Randomness, Turn Advancement, and Numbers each
-own one engine subsystem outright, and all but Numbers use Engine Contract; [Developer API](../interfaces/developer-api.md)
-in the Interfaces family owns the Developer access subsystem; Timeline also uses Saves, and Turn Advancement also uses Domain Model and is used by the
+Lifecycle, Saves, Timeline, Configuration, Autopilot, Developer Access, Determinism and Randomness, Turn Advancement,
+and Numbers each own one engine subsystem outright, and all but Numbers use Engine Contract; Timeline also uses Saves, and Turn Advancement also uses Domain Model and is used by the
 Mechanics specifications whose rules apply during Advance turn. Game Data Records builds on Campaign State. Domain
 Model uses Campaign State and Game Data Records to describe the actual game, and the Mechanics family refines Domain
 Model in turn.
@@ -162,7 +166,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 1. [Core Concepts](core-concepts.md) for the vocabulary.
 2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns.
 3. [Campaign State](campaign-state.md) and [Game Data Records](game-data-records.md) for how campaign data is shaped.
-4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md),
+4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md), [Developer Access](developer-access.md),
    [Determinism and Randomness](determinism-and-randomness.md), and [Turn Advancement](turn-advancement.md) for the
    engine subsystems.
 5. [Domain Model](domain-model.md) for the game's concepts.

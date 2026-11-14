@@ -18,7 +18,6 @@ This document defines the purposes a Game Data Record (GDR) can serve relative t
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Domain Model](./domain-model.md)
-- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 
@@ -368,7 +367,9 @@ Display content follows these requirements:
   commands still produce equal Campaign state.
 - **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing
   something hidden from the player stays hidden until it becomes Player-visible.
-  [Player Information](../interfaces/player-information.md) owns those visibility conditions.
+  The specification owning the described value states when it becomes Player-visible, under
+  [Player queries and actions](engine-contract.md#player-queries-and-actions) in Engine Contract. TODO: State when
+  encyclopedia articles become Player-visible information.
 - **No inference:** Relationships and gameplay facts are never inferred from Display content, extending the rule under
   [References](campaign-state.md#references). The Thug article identifies its subject through its reference to the Thug GDR, not
   through its title.
@@ -383,7 +384,7 @@ flowchart LR
     Thug -->|health 10| Combat["Game behavior: Enemy creation and Combat"]
     Thug -->|display name and description| PlayerAPI["Player API:<br/>Player-visible information"]
     Article -->|article when Player-visible| PlayerAPI
-    PlayerAPI --> Interfaces["Interfaces render it for the player"]
+    PlayerAPI --> UserInterface["A user interface renders it for the player"]
 ```
 
 # Open decisions

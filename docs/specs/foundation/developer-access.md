@@ -1,61 +1,53 @@
-# Developer API
+# Developer Access
 
 | Metadata    | Value                                                          |
 | ----------- | -------------------------------------------------------------- |
 | Spec ID     | DEV                                                            |
-| Family      | Interfaces                                                     |
+| Family      | Foundation                                                     |
 | Status      | Stub                                                           |
-| Audience    | UI designer, Implementer                                       |
+| Audience    | Engine designer, Implementer                                   |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview
 
-This document defines full Campaign state inspection, cheat-command details, and random outcome overrides through Developer API, refining Engine Contract access and replay guarantees.
+This document defines the Developer access engine subsystem: Dev mode, full Campaign state inspection through
+`developer.queries`, cheat operations through `developer.actions`, and random outcome overrides. It gives the Session
+controller a way to inspect and change a Campaign beyond what ordinary play allows, without changing what Player API
+exposes or what an Autopilot AI receives.
 
-TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
-Separate inherited game-ts behavior, required v5 changes, and new proposals.
-
-This specification owns the Developer access engine subsystem: Dev mode, full Campaign state inspection, and cheat
-operations, under [Dev mode](#dev-mode). It refines [Information boundary](../foundation/engine-contract.md#information-boundary)
-with inspection schemas and cheat-command details. Session API controls Dev mode. Developer API exposes full Campaign state,
-including all Authoritative values, only to an authorized Session controller with Dev mode enabled and no active
-Autopilot engagement. Player API always exposes only Player-visible information; Autopilot AI never receives developer access.
-
-Engine Contract owns the Principal access matrix and high-level replay guarantees. Domain Model supplies inspected Campaign
-state and invariants. Timeline supplies undo and redo of committed cheat actions.
-[API hierarchy](../foundation/engine-contract.md#api-hierarchy) supplies the Developer API surface and its access
-results. The exact callable TypeScript signatures are owned by [TypeScript Player API](./typescript-api.md); this
-document does not rely on them.
+It does not own, e.g., which Principal may reach Developer API, which the access matrix under
+[API hierarchy](engine-contract.md#api-hierarchy) in Engine Contract owns, or how a committed cheat is undone, which
+[Timeline](timeline.md) owns.
 
 # Relationships
 
-- Uses [Campaign Lifecycle](../foundation/campaign-lifecycle.md)
-- Uses [Campaign State](../foundation/campaign-state.md)
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Determinism and Randomness](../foundation/determinism-and-randomness.md)
-- Uses [Domain Model](../foundation/domain-model.md)
-- Uses [Timeline](../foundation/timeline.md)
-- Refines [Engine Contract](../foundation/engine-contract.md)
-- Used by [TypeScript Player API](./typescript-api.md)
+- Uses [Campaign Lifecycle](./campaign-lifecycle.md)
+- Uses [Campaign State](./campaign-state.md)
+- Uses [Core Concepts](./core-concepts.md)
+- Uses [Determinism and Randomness](./determinism-and-randomness.md)
+- Uses [Domain Model](./domain-model.md)
+- Uses [Engine Contract](./engine-contract.md)
+- Uses [Timeline](./timeline.md)
 
 # Glossary
 
-API surface and Principal terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
+Developer API, Dev mode, Session controller, Autopilot AI, and Player action are defined by the
+[Engine Contract glossary](engine-contract.md#glossary).
 
 TODO: Define inspection-specific terms without duplicating shared definitions.
 
 # Dev mode
 
 Only the Session controller can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
-a Current campaign and no active Autopilot engagement. Developer API inspection returns detached, read-only full
+a Current campaign and no active Autopilot engagement. Inspection returns detached, read-only full
 Campaign state. It never reveals hidden facts through ordinary game behavior.
 `developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)` are required starter cheat operations,
 under [Cheat command details](#cheat-command-details). Future cheat operations belong in that namespace. Cheat
 operations must preserve model invariants, and each successful one is one atomic Player action in the Timeline.
 
 Dev mode starts disabled and is disabled on successful creation, load, or closure, under
-[Campaign selection](../foundation/campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle. Timeline
-navigation and [Autosave navigation](../foundation/timeline.md#autosave-navigation) leave the current Dev mode setting
+[Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle. Timeline
+navigation and [Autosave navigation](timeline.md#autosave-navigation) leave the current Dev mode setting
 unchanged. Dev mode is not Campaign state and is never restored from a Campaign save or the Timeline. Disabling Dev
 mode revokes subsequent Developer API access. Previously returned information cannot be erased from the Session
 controller's knowledge.
@@ -68,13 +60,13 @@ To inspect or cheat, the Session controller disengages Autopilot and waits for d
 
 Full Campaign state inspection presents each Campaign instance as its four properties, Instance ID, Archetype
 reference, Constants, and State, as required by
-[Campaign instance structure](../foundation/campaign-state.md#campaign-instance-structure). How an
+[Campaign instance structure](campaign-state.md#campaign-instance-structure). How an
 implementation stores Campaign instances internally is the implementer's choice.
 
 TODO: Specify the complete detached, read-only Campaign state query schema through `developer.queries.getCampaignState()`.
 Include complete Campaign state and distinguish full-state inspection from gameplay reveal conditions. Inspection
 must not expose mutable Campaign references or change any later outcome, under
-[Derived value consistency](../foundation/engine-contract.md#derived-value-consistency).
+[Derived value consistency](engine-contract.md#derived-value-consistency).
 
 # Cheat command details
 
@@ -93,7 +85,7 @@ by hand, without relying on a prepared acceptance test.
 
 An override is a cheat operation under [Dev mode](#dev-mode): it belongs in
 `developer.actions`, and each successful one is one atomic Player action in the Timeline. The guarantee under
-[Determinism](../foundation/determinism-and-randomness.md#determinism) therefore still holds, because replaying the same ordered
+[Determinism](determinism-and-randomness.md#determinism) therefore still holds, because replaying the same ordered
 Player actions replays the same overrides.
 
 TODO: Specify the override operations: how a random outcome is identified, validation that the supplied value is one
@@ -103,14 +95,14 @@ outcome is never decided, and whether a pending override is visible through insp
 # Isolation and Timeline navigation
 
 TODO: Specify authorization failures and access revocation under [Dev mode](#dev-mode). Undo and redo of a committed cheat action follow
-[Restored Committed states](../foundation/timeline.md#restored-committed-states): they do not require Dev mode and give an Autopilot AI no
+[Restored Committed states](timeline.md#restored-committed-states): they do not require Dev mode and give an Autopilot AI no
 way to commit a cheat action.
 
 # Edge cases and failure behavior
 
 TODO: Specify inspection and cheat errors with Dev mode disabled, during an Autopilot engagement, or with stale access.
 Invalid cheat inputs change nothing, under
-[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity).
+[Committed state integrity](engine-contract.md#committed-state-integrity).
 
 # Acceptance examples
 
@@ -120,8 +112,8 @@ and cheat-command undo/redo and save/load round trips. Identify the requirement 
 - **Developer isolation:** Enable Dev mode and inspect hidden difficulty H through Developer API. Player API still
   hides H. Engage Autopilot; its queries and errors hide H and its developer calls fail. Disable Dev mode after
   disengagement and verify Developer API access is revoked ([Dev mode](#dev-mode),
-  [API hierarchy](../foundation/engine-contract.md#api-hierarchy),
-  [Information boundary](../foundation/engine-contract.md#information-boundary)).
+  [API hierarchy](engine-contract.md#api-hierarchy),
+  [Information boundary](engine-contract.md#information-boundary)).
 
 # Open decisions
 

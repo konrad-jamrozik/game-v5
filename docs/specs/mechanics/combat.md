@@ -31,11 +31,11 @@ appropriate to this document.
 
 - Uses [Agents](./agents-spec.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Missions](./missions.md)
-- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 
@@ -68,6 +68,12 @@ TODO: Specify combat-rating, hit/contest, damage, exhaustion, experience, and ca
 # Termination and results
 
 TODO: Specify victory, retreat, wipe, non-progress/stalemate handling, final injuries and experience, and output needed for partial-success calculation. Campaign rewards belong to MISSION.
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

@@ -21,7 +21,8 @@ This document owns the definition of each concept and the rules that relate one 
 Agent's Current assignment places it in a Current team. It does not own what a single concept has or does on its
 own, e.g. its properties, lifecycle states, formulas, and transitions; these belong to the specification of the
 [Mechanics family](../mechanics/about-mechanics.md) that refines the concept. It does not own which properties the
-player sees, which belongs to [Player Information](../interfaces/player-information.md). A concept can include facts
+player sees, which the specification owning each value states, under
+[Player queries and actions](engine-contract.md#player-queries-and-actions) in Engine Contract. A concept can include facts
 hidden from the player.
 
 # Relationships
@@ -30,10 +31,8 @@ hidden from the player.
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Game Data Records](./game-data-records.md)
-- Used by [Developer API](../interfaces/developer-api.md)
-- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Developer Access](./developer-access.md)
 - Used by [Turn Advancement](./turn-advancement.md)
-- Used by [TypeScript Player API](../interfaces/typescript-api.md)
 - Refined by [Agents](../mechanics/agents-spec.md)
 - Refined by [Combat](../mechanics/combat.md)
 - Refined by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
@@ -333,7 +332,8 @@ effects.
 A Report links historical facts and explanations in World history to commands or turns and to Campaign instances. A
 Report explaining a retained Battle result uses the retained values, never current calculations, under
 [Historical fact preservation](campaign-state.md#historical-fact-preservation).
-[Player Information](../interfaces/player-information.md) owns the visible properties of a Report.
+TODO: State which properties of a Report are Player-visible information, including Reports about play that undo or
+redo restores.
 
 # Edge cases and failure behavior
 

@@ -29,9 +29,9 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
-- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 
@@ -46,6 +46,12 @@ TODO: Specify panic representation, clamping, contributing effects, victory and 
 # Terminal behavior
 
 TODO: Define allowed Player-visible information and commands after an ending and how undo restores an ongoing campaign.
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

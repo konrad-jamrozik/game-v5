@@ -26,9 +26,8 @@ Determinism and Randomness owns. What a Session holds and that nothing it holds 
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
-- Used by [Developer API](../interfaces/developer-api.md)
+- Used by [Developer Access](./developer-access.md)
 - Used by [Saves](./saves.md)
-- Refined by [TypeScript Player API](../interfaces/typescript-api.md)
 
 # Glossary
 
@@ -68,7 +67,7 @@ Every successful create, load, or close has these effects:
 
 - Access granted for the previous Current campaign ends; e.g., an Autopilot AI's access ends under
   [API hierarchy](engine-contract.md#api-hierarchy) in Engine Contract.
-- Dev mode is disabled, under [Dev mode](../interfaces/developer-api.md#dev-mode) in Developer API.
+- Dev mode is disabled, under [Dev mode](developer-access.md#dev-mode) in Developer Access.
 - The previous Current campaign is not saved; closing or replacing it never writes a Campaign save.
 
 A failed create or load leaves the Session exactly as it was, including its Current campaign.

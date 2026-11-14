@@ -29,12 +29,8 @@ owned by [Campaign State](campaign-state.md).
 - Used by [Autopilot](./autopilot.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Configuration](./configuration.md)
-- Used by [Developer API](../interfaces/developer-api.md)
-- Used by [Player Information](../interfaces/player-information.md)
+- Used by [Developer Access](./developer-access.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
-- Used by [Terminal CLI](../interfaces/cli.md)
-- Used by [TypeScript Player API](../interfaces/typescript-api.md)
-- Used by [Web UI](../interfaces/web-ui.md)
 
 # Glossary
 

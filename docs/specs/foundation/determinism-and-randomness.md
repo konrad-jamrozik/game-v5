@@ -28,12 +28,11 @@ owns. [Numbers](numbers.md) owns rounding and precision.
 - Used by [Autopilot](./autopilot.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Configuration](./configuration.md)
-- Used by [Developer API](../interfaces/developer-api.md)
+- Used by [Developer Access](./developer-access.md)
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Timeline](./timeline.md)
 - Refined by [Campaign State](./campaign-state.md)
-- Refined by [TypeScript Player API](../interfaces/typescript-api.md)
 
 # Glossary
 
@@ -96,7 +95,7 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
   [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle.
 - **Permitted values:** A permitted Campaign seed is any non-empty text. Two Campaign seeds are the same exactly
   when their texts are equal character for character; e.g., `abc` and `ABC` are different Campaign seeds.
-  [TypeScript Player API](../interfaces/typescript-api.md) owns the exact Type and the maximum length.
+  The maximum length is an open decision under [Open decisions](#open-decisions).
 - **Chosen:** When none is supplied, the engine chooses a permitted Campaign seed. Which one it chooses is
   unspecified and need not be reproducible; it is the only engine decision exempt from the guarantee under
   [Determinism](#determinism).
@@ -170,3 +169,8 @@ choice.
 - **Identifiers under replay:** Hire an Agent, undo, and redo. The redone Agent has the same Instance ID as before the
   undo. Save the Campaign twice with `saveAsNew()`; the two Campaign saves have different Campaign save IDs
   ([Unique identifiers](#unique-identifiers)).
+
+# Open decisions
+
+- **Campaign seed length:** Decide the maximum length of a permitted Campaign seed, or leave it to the
+  implementer.

@@ -93,32 +93,6 @@ The Work items below were measured against these recorded rules and decisions:
 The Work items below were recorded from an audit on 2026-11-11. Quotations were checked against the specifications at
 that time.
 
-## Clear violations
-
-### TODO-006: Campaign instance constructor leftover in TypeScript Player API
-
-**Category and priority:** Clear violation; also contradicts the creation decision.
-
-**Affected:** TypeScript Player API (API), [Overview](../interfaces/typescript-api.md#overview).
-
-**Batches:** API is batch 8.
-
-**Current wording:**
-
-> An operation creating a Campaign instance must satisfy
-> [Campaign instances](../foundation/campaign-state.md#campaign-instances), with a declared return Type and
-> initialization of Instance ID, Archetype, Constants, and State. Returning an existing Campaign instance or restoring
-> its earlier State does not itself create a new Campaign instance.
-
-**Why it is an issue:** This is the removed Campaign instance constructor concept without the word: it specifies code
-that creates Campaign instances and that code's return Type. Creation is specified by the specification that owns the
-creating behavior, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation), and
-[Canonical terminology](spec-conventions.md#canonical-terminology) says not to specify which code creates a Campaign
-instance or that code's signature.
-
-**Suggested resolution:** Delete both sentences, or replace them with a reference stating that public operations whose
-effects create Campaign instances do so as their owning specifications state under Campaign instance creation.
-
 ## Contradictions with the determinism decision
 
 ### TODO-009: Draw fixtures in Combat

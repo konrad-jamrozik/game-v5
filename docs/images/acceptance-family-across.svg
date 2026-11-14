@@ -34,12 +34,9 @@
   <text class="legend" x="66" y="36">used by</text>
   <rect class="box external" x="141.6" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="173.6" y="36">another family</text>
-  <path class="edge edge-uses" marker-end="url(#head-uses)" d="M 146.6 113 C 146.6 147.5 170.3 147.5 170.3 182"/>
-  <path class="edge edge-uses" marker-end="url(#head-uses)" d="M 340.4 113 C 340.4 147.5 316.7 147.5 316.7 182"/>
-  <rect class="box external" x="67.7" y="68" width="157.8" height="45" rx="6"/>
-  <text class="label" x="146.6" y="94">Foundation family</text>
-  <rect class="box external" x="261.5" y="68" width="157.8" height="45" rx="6"/>
-  <text class="label" x="340.4" y="94">Interfaces family</text>
+  <path class="edge edge-uses" marker-end="url(#head-uses)" d="M 243.5 113 C 243.5 147.5 243.5 147.5 243.5 182"/>
+  <rect class="box external" x="164.6" y="68" width="157.8" height="45" rx="6"/>
+  <text class="label" x="243.5" y="94">Foundation family</text>
   <rect class="box" x="24" y="185" width="439" height="45" rx="6"/>
   <text class="label" x="243.5" y="211">SCEN — Campaign Integration and Acceptance Tests (Stub)</text>
 </svg>

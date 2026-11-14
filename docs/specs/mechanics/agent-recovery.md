@@ -32,10 +32,10 @@ appropriate to this document.
 
 # Relationships
 
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Missions](./missions.md)
 - Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Agents](./agents-spec.md)
-- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 
@@ -59,6 +59,12 @@ differs by Current assignment.
 TODO: State the combined result when a value is both raised and lowered in the same Advance turn, e.g. an Agent that
 gains exhaustion from an activity and recovers exhaustion in that turn, following the order under
 [Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps).
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

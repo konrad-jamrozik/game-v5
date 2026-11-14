@@ -29,12 +29,12 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Factions](./factions.md)
 - Uses [Missions](./missions.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Refines [Factions](./factions.md)
 - Used by [Investigations](./investigations.md)
-- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 
@@ -60,6 +60,12 @@ TODO: Define the supported effect kinds for information, agency/agent improvemen
 # Progression GDR validation
 
 TODO: Define valid references, handling of cycles and unreachable GDRs, repeatable chains, and when availability is recomputed.
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

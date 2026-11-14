@@ -31,12 +31,12 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Missions](./missions.md)
-- Used by [Player Information](../interfaces/player-information.md)
 - Refined by [Leads and Progression](./leads-and-progression.md)
 - Refined by [Missions](./missions.md)
 
@@ -62,6 +62,12 @@ TODO: Specify countdown timing, severity distribution, mission GDR selection, re
 # Suppression and defeat
 
 TODO: Specify stacking, countdown effects, continued escalation during suppression, what defeat does to a Faction, and treatment of pending Faction operation occurrences/missions/leads after defeat. The predicates that cause defeat belong to Leads and Progression.
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

@@ -35,13 +35,13 @@ appropriate to this document.
 - Uses [Combat](./combat.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Economy and Upgrades](./economy-and-upgrades.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Factions](./factions.md)
 - Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Refines [Factions](./factions.md)
 - Used by [Agent Recovery](./agent-recovery.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
-- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 
@@ -67,6 +67,12 @@ TODO: Provide exact rewards and penalties for victory, retreat, wipe, and expira
 # Consequences and return
 
 TODO: Specify survivor return, casualty effects, resource changes, suppression, unlocks, and reports. Reference owning rules to prevent duplicate application.
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

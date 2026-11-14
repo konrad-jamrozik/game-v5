@@ -18,7 +18,7 @@ reference their owning rules.
 # How they relate
 
 Its scenarios use the Foundation family for timing, undo and redo, and saves, Game Data Records (GDRs) for starting data, and the
-Interfaces family for the surfaces they exercise. Nothing depends on it in return.
+Engine API for the surfaces they exercise. Nothing depends on it in return.
 
 <!-- generated:family-diagram:start -->
 

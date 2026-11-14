@@ -23,10 +23,6 @@ outside the specifications.
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Timeline](./timeline.md)
-- Used by [Player Information](../interfaces/player-information.md)
-- Used by [Terminal CLI](../interfaces/cli.md)
-- Used by [Web UI](../interfaces/web-ui.md)
-- Refined by [TypeScript Player API](../interfaces/typescript-api.md)
 
 # Glossary
 
@@ -48,7 +44,7 @@ Timeline entry and Undone action are defined by the [Timeline glossary](timeline
 least:
 
 - the `autopilotAiId` that `engage` accepts;
-- a name an interface can show; e.g., the Web UI offers these names for the player to choose from;
+- a name an interface can show; e.g., a user interface offers these names for the player to choose from;
 - whether it wrote the Autopilot memory of the Current campaign, when there is a Current campaign that has Autopilot
   memory. Engaging any other Autopilot AI discards that Autopilot memory, under [Autopilot memory](#autopilot-memory).
 
@@ -114,7 +110,7 @@ failed. A disengagement result identifies the reason, whether the Autopilot limi
 Campaign completion before the Autopilot limit is reached disengages with campaign ended; reaching the Autopilot limit on the same
 action takes precedence as limit reached. Autopilot disengages as AI failed when the Autopilot AI reports an error,
 produces no valid action, or exhausts its configured finite execution budget. That budget prevents indefinitely
-repeated invalid actions or an Autopilot AI that makes no progress; its exact limits belong to TypeScript Player API.
+repeated invalid actions or an Autopilot AI that makes no progress; its exact limits are an open decision.
 
 Campaign mutations are serialized. During an Autopilot engagement, the Session controller may read Player API queries,
 Session status, Timeline status, and Autopilot status, read and change Global configuration, and disengage Autopilot. All other Session API operations,
@@ -194,5 +190,6 @@ nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-recei
 
 # Open decisions
 
+- TODO: Choose the exact limits of the finite execution budget of an Autopilot AI.
 - TODO: Define which Autopilot AIs exist and how one becomes available, e.g. whether the Game build supplies them or
   the player registers them.

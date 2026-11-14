@@ -252,4 +252,4 @@ and investigation difficulty multiplier 1; and Hard, with starting money 60 and 
 # Open decisions
 
 - TODO: Define the inventory of Campaign configuration values that are adjustable during play, the Mechanics
-  specification owning each, and the public command and report signatures in the Interfaces specifications.
+  specification owning each, and the Engine API operations that change them.

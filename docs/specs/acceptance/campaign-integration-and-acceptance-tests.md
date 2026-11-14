@@ -14,8 +14,8 @@ This document defines test scenarios that verify how game systems work together.
 state, Player actions, and expected results derived from the game specifications. These scenarios guide automated
 integration and end-to-end tests.
 
-Most scenarios can exercise the game through the TypeScript Player API without a browser. A smaller set exercises the
-CLI or web UI to verify that equivalent actions produce equivalent results and respect the same information boundary.
+Most scenarios can exercise the game through the Engine API without a user interface. A smaller set exercises user
+interfaces, e.g. a terminal or browser interface, to verify that equivalent actions produce equivalent results and respect the same information boundary.
 This document describes the test cases; the executable tests and their test framework belong to implementation work.
 
 Individual mechanics specifications keep examples of their own rules. This document connects those rules across systems, e.g., investigation completion creating a mission whose result changes agent health, agency resources, and progression.
@@ -28,7 +28,7 @@ TODO: Confirm the precise included/excluded scope and rule ownership using the [
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification uses GDRs for reproducible inputs, the Mechanics family for same-turn effects, and Timeline
-and Saves for undo, redo, save, and load scenarios. TypeScript Player API, Terminal CLI, and Web UI supply the action surfaces
+and Saves for undo, redo, save, and load scenarios. The Engine API and the user interfaces built on it supply the action surfaces
 under test. Specific checked requirements acquire implicit verifies relationships when scenarios identify them;
 these document-level uses entries do not claim that tests already exist or pass.
 
@@ -42,10 +42,7 @@ appropriate to this document.
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Determinism and Randomness](../foundation/determinism-and-randomness.md)
 - Uses [Saves](../foundation/saves.md)
-- Uses [Terminal CLI](../interfaces/cli.md)
 - Uses [Timeline](../foundation/timeline.md)
-- Uses [TypeScript Player API](../interfaces/typescript-api.md)
-- Uses [Web UI](../interfaces/web-ui.md)
 
 # Glossary
 

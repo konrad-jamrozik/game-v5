@@ -50,7 +50,7 @@ instead of marking the whole batch Complete.
 
 - Batch 1 is In review, with three of its five specifications Accepted. Batch 2 is Drafting: four of its five
   specifications are Draft and none has been presented for review. Batches 3 to 10 are Queued.
-- The 10-batch sequence has been selected and later changes must be explicit.
+- The 8-batch sequence has been selected and later changes must be explicit.
 - No implementation milestones or delivery dates have been committed.
 
 # Relationship inventory migration
@@ -74,7 +74,7 @@ removal approaches do not select new gameplay rules or change the accepted revie
 
 ## Batch sequence
 
-Use the following 10-batch sequence, starting with Core Concepts, Engine Contract, Campaign State, Game Data Records, and Domain Model. If review reveals a better grouping,
+Use the following 8-batch sequence, starting with Core Concepts, Engine Contract, Campaign State, Game Data Records, and Domain Model. If review reveals a better grouping,
 propose the change explicitly and update this table when agreed rather than silently changing the order.
 
 | Batch | Specifications                                                                                                                                                                                                                                                  | Review objective and reason for this order                                                                                                                                                                                                                                                                                                                            | Work state |
@@ -86,9 +86,7 @@ propose the change explicitly and update this table when agreed rather than sile
 | 5     | [Combat](../mechanics/combat.md)                                                                                                                                                                                                                                | Define automatic battle resolution and its outputs. Present this for review before drafting the mission-consequence contract.                                                                                                                                                                                                                                         | Queued     |
 | 6     | [Missions](../mechanics/missions.md); [Agent Recovery](../mechanics/agent-recovery.md)                                                                                                                                                                          | Translate Battle results into deployment outcomes, expiration, rewards, and damage-related partial success. Hold a separate review. Then define health and exhaustion recovery, which relies on when Agents return from Missions.                                                                                                                                     | Queued     |
 | 7     | [Factions](../mechanics/factions.md); [Panic and Endings](../mechanics/panic-and-endings.md)                                                                                                                                                                    | Connect escalation, operations, panic, endings, and same-turn interactions into a coherent campaign loop.                                                                                                                                                                                                                                                             | Queued     |
-| 8     | [Player Information](../interfaces/player-information.md); [TypeScript API](../interfaces/typescript-api.md); [Developer API](../interfaces/developer-api.md)                                                                                                   | Finalize complete Player-visible information, command, and debugging contracts once the mechanics they expose are defined.                                                                                                                                                                                                                                            | Queued     |
-| 9     | [CLI](../interfaces/cli.md)                                                                                                                                                                                                                                     | Specify complete human and AI play through a thin terminal adapter over the API.                                                                                                                                                                                                                                                                                      | Queued     |
-| 10    | [Web UI](../interfaces/web-ui.md)                                                                                                                                                                                                                               | Specify grids, trees, charts, and interactions around the established player contract.                                                                                                                                                                                                                                                                                | Queued     |
+| 8     | [Developer Access](../foundation/developer-access.md)                                                                                                                                                                                                           | Finalize Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides once the mechanics they expose are defined.                                                                                                                                                                                                                         | Queued     |
 
 The table is an authoring sequence, not a declaration that every referenced specification is already accepted. Some dependencies
 are mutual. Drafts must identify unresolved dependencies explicitly rather than borrowing unstated rules from stubs.
@@ -115,8 +113,7 @@ Batch 1 states the player-information boundary and the API capabilities needed t
 [API hierarchy](../foundation/engine-contract.md#api-hierarchy) gives the required starter operation inventory, and
 [Information boundary](../foundation/engine-contract.md#information-boundary) gives the boundary. Both are part of the
 batch 1 deliverable and are reviewed with it. Extend the operation inventory with each mechanic; do not defer its
-design influence until batch 8. Exact Player-visible information fields and public signatures are finalized in their
-owning specifications during batch 8.
+design influence until batch 8. Each Mechanics specification states its own Player-visible information as it is drafted.
 
 ## Incremental timing refinement
 

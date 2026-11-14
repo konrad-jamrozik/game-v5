@@ -37,6 +37,7 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
@@ -44,7 +45,6 @@ appropriate to this document.
 - Used by [Economy and Upgrades](./economy-and-upgrades.md)
 - Used by [Investigations](./investigations.md)
 - Used by [Missions](./missions.md)
-- Used by [Player Information](../interfaces/player-information.md)
 - Refined by [Agent Recovery](./agent-recovery.md)
 - Refined by [Combat](./combat.md)
 - Refined by [Economy and Upgrades](./economy-and-upgrades.md)
@@ -121,6 +121,12 @@ TODO: Specify training, forced withdrawal, and career tracking, and state what g
 List, as ownership pointers, every specification that changes health, exhaustion, or experience: Combat for battle
 damage and battle-earned experience, Agent Recovery for health and exhaustion recovery, and each specification whose
 activity raises exhaustion.
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

@@ -18,8 +18,8 @@ Separate inherited game-ts behavior, required v5 changes, and new proposals.
 This specification refines Domain Model's investigation contract ([Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)/[Leads and Investigations](../foundation/domain-model.md#leads-and-investigations)/[Progression facts](../foundation/domain-model.md#progression-facts)) with what an Investigation has and the
 Investigation lifecycle states, and intends to refine it further with start, progress, completion,
 team-change, and abandonment behavior. It uses Agents' contributions, Leads and Progression's availability/effects,
-and Numbers' arithmetic, and it owns the distributions of its own random outcomes. This document supplies estimate mathematics over inputs it names itself. Which of those inputs and results the player
-sees is owned by [Player Information](../interfaces/player-information.md); this document does not rely on it. The exact mathematics
+and Numbers' arithmetic, and it owns the distributions of its own random outcomes. This document supplies estimate mathematics over inputs it names itself. This document also states which of those inputs and results the player
+sees, under [Player-visible information](#player-visible-information). The exact mathematics
 and transitions remain TODOs below.
 
 TODO: Specify Visible difficulty, hidden actual difficulty, effective team contribution, progress, cumulative completion probability, per-turn conditional probability, and player estimate.
@@ -30,11 +30,11 @@ appropriate to this document.
 
 - Uses [Agents](./agents-spec.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
-- Used by [Player Information](../interfaces/player-information.md)
 
 # Glossary
 
@@ -74,11 +74,17 @@ TODO: Provide unambiguous formulas and evaluation order for actual completion, i
 
 # Player uncertainty
 
-TODO: Define the mathematical meaning of displayed estimates/ranges, information used, rounding, and whether/how prior non-completion updates estimates. Which estimates are shown to the player belongs to Player Information.
+TODO: Define the mathematical meaning of displayed estimates/ranges, information used, rounding, and whether/how prior non-completion updates estimates. Which estimates are shown to the player belongs under [Player-visible information](#player-visible-information).
 
 # Team changes and commitment
 
 TODO: Specify effective-skill-weighted progress loss on removal, the weighting snapshot, exhaustion-driven removal, and abandonment when everyone leaves. Adding agents preserves progress; a new Investigation starts from zero.
+
+# Player-visible information
+
+TODO: State which values this specification owns are Player-visible information, the reveal conditions of each, and
+how the player tells an unknown value apart from zero or absence, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract.
 
 # Edge cases and failure behavior
 

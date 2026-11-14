@@ -12,28 +12,33 @@
 
 This document defines the engine's API hierarchy, the data the engine owns, and the guarantees that hold across every engine subsystem when running the game and exposing information.
 
-It owns only cross-cutting guarantees and owns no engine subsystem. The behavior of each subsystem belongs to the one specification that [Engine subsystems](#engine-subsystems) names, e.g. [Campaign Lifecycle](./campaign-lifecycle.md) or [Turn Advancement](./turn-advancement.md), and refinements of these guarantees belong to their refining specifications, e.g. [TypeScript Player API](../interfaces/typescript-api.md).
+It owns only cross-cutting guarantees and owns no engine subsystem. The behavior of each subsystem belongs to the one specification that [Engine subsystems](#engine-subsystems) names, e.g. [Campaign Lifecycle](./campaign-lifecycle.md) or [Turn Advancement](./turn-advancement.md), and refinements of these guarantees belong to their refining specifications, e.g. [Campaign State](./campaign-state.md).
 
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
+- Used by [Agent Recovery](../mechanics/agent-recovery.md)
+- Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
 - Used by [Campaign Lifecycle](./campaign-lifecycle.md)
+- Used by [Combat](../mechanics/combat.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
+- Used by [Developer Access](./developer-access.md)
 - Used by [Domain Model](./domain-model.md)
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
+- Used by [Factions](../mechanics/factions.md)
 - Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
+- Used by [Investigations](../mechanics/investigations.md)
+- Used by [Leads and Progression](../mechanics/leads-and-progression.md)
+- Used by [Missions](../mechanics/missions.md)
+- Used by [Panic and Endings](../mechanics/panic-and-endings.md)
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
-- Used by [Terminal CLI](../interfaces/cli.md)
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](./turn-advancement.md)
-- Used by [Web UI](../interfaces/web-ui.md)
 - Refined by [Campaign State](./campaign-state.md)
-- Refined by [Developer API](../interfaces/developer-api.md)
-- Refined by [Player Information](../interfaces/player-information.md)
-- Refined by [TypeScript Player API](../interfaces/typescript-api.md)
 
 # Glossary
 
@@ -53,12 +58,12 @@ The parts of the engine that each have one owning specification, listed under [E
 
 Kinds of engine API caller and the Session access settings that govern them.
 
-| Term               | Definition                                                                                                                                                                                                                                                                                                                                                                                         |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                                               |
-| Session controller | The Principal holding Session authority: managing the Session, changing Global configuration, selecting the Current campaign, navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using CLI or Web UI, or an LLM-based agent driving the API or CLI; the Principal's authority does not depend on which kind of caller holds it. |
-| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory. The name avoids using Agent for a Principal.                                                                                                                                                                                                          |
-| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                                                 |
+| Term               | Definition                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                                                          |
+| Session controller | The Principal holding Session authority: managing the Session, changing Global configuration, selecting the Current campaign, navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using a terminal or browser interface, or an LLM-based agent driving the API; the Principal's authority does not depend on which kind of caller holds it. |
+| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory. The name avoids using Agent for a Principal.                                                                                                                                                                                                                     |
+| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                                                            |
 
 ## Autopilot
 
@@ -109,15 +114,15 @@ What a Session has selected, the complete Campaign state the engine commits, and
 
 # API hierarchy
 
-The engine API is the source of truth for execution and access behavior. Terminal CLI and Web UI are required
-adapters over the same API. Both expose the Session controller workflow; neither independently implements gameplay,
-Timeline, visibility, or Autopilot rules. The engine grants Session controller authority by Principal, never by the kind of
+The engine API is the source of truth for execution and access behavior. Every user interface, e.g. a terminal or
+browser interface, is an adapter over the same API: it exposes the Session controller workflow and independently
+implements no gameplay, Timeline, visibility, or Autopilot rules. The engine grants Session controller authority by Principal, never by the kind of
 caller holding it. An Autopilot AI never inherits that authority, whatever model or software implements it.
 
 The complete namespace inventory is `session`, `player`, `developer`, and `autopilotMemory`. The following tree is the
 required starter operation inventory. Additional gameplay and developer operations may be added under the same
 ownership rules; the two gameplay operations and two cheat operations shown here do not exhaust future functionality.
-Names declare conceptual API operations; TypeScript Player API owns exact signatures, argument Types, and results.
+Names declare conceptual API operations; exact signatures, argument Types, and results are the implementer's choice.
 
 ```text
 Engine API
@@ -191,12 +196,12 @@ Engine subsystem, under [Engine subsystems](#engine-subsystems).
 | `session.saves`               | Listing the Campaign saves in Game storage, loading a Campaign save as the Current campaign, and saving the Current campaign.                                                                      | [Listing Campaign saves](saves.md#listing-campaign-saves), [Saving](saves.md#saving), and [Loading](saves.md#loading) in Saves                                                                |
 | `session.newCampaignSetup`    | Listing the Campaign configuration presets and the values of each, the new-Campaign setup, i.e. the selected preset and its Preset edits, and creating a Campaign from it as the Current campaign. | [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle for `create`; [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration |
 | `session.timeline`            | Timeline status, undo and redo of Player actions within the current turn, and undo and redo across turns.                                                                                          | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline                                                                     |
-| `session.developer`           | Enabling and disabling Dev mode.                                                                                                                                                                   | [Dev mode](../interfaces/developer-api.md#dev-mode) in Developer API                                                                                                                          |
+| `session.developer`           | Enabling and disabling Dev mode.                                                                                                                                                                   | [Dev mode](developer-access.md#dev-mode) in Developer Access                                                                                                                                  |
 | `session.autopilot`           | Listing the Autopilot AIs available for engagement, engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                            | [Available Autopilot AIs](autopilot.md#available-autopilot-ais) and [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot                      |
-| `player.queries`              | Read-only Player-visible information and ordinary action discovery. Its `getCampaignState()` returns only the Player-visible information of Campaign state.                                        | [Player Information](../interfaces/player-information.md)                                                                                                                                     |
+| `player.queries`              | Read-only Player-visible information and ordinary action discovery. Its `getCampaignState()` returns only the Player-visible information of Campaign state.                                        | [Player queries and actions](#player-queries-and-actions), and the specification owning each value                                                                                            |
 | `player.actions`              | Normal gameplay mutations, including Advance turn.                                                                                                                                                 | The mechanics specification owning each action, under [Player queries and actions](#player-queries-and-actions); [Turn Advancement](turn-advancement.md) for Advance turn                     |
-| `developer.queries`           | Read-only inspection of full Campaign state. Its `getCampaignState()` returns Campaign state in full, unlike the Player API query of the same name.                                                | [Inspection contract](../interfaces/developer-api.md#inspection-contract) in Developer API                                                                                                    |
-| `developer.actions`           | Validated, recorded cheat mutations; e.g., adding money or adding Agents.                                                                                                                          | [Cheat command details](../interfaces/developer-api.md#cheat-command-details) in Developer API                                                                                                |
+| `developer.queries`           | Read-only inspection of full Campaign state. Its `getCampaignState()` returns Campaign state in full, unlike the Player API query of the same name.                                                | [Inspection contract](developer-access.md#inspection-contract) in Developer Access                                                                                                            |
+| `developer.actions`           | Validated, recorded cheat mutations; e.g., adding money or adding Agents.                                                                                                                          | [Cheat command details](developer-access.md#cheat-command-details) in Developer Access                                                                                                        |
 | `autopilotMemory`             | Autopilot memory for the active Autopilot AI, independent of gameplay resolution.                                                                                                                  | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                                                                                                |
 
 The complete Principal access matrix is:
@@ -209,7 +214,7 @@ The complete Principal access matrix is:
 | Autopilot memory API | Unavailable                                                                             | Available only during its own active Autopilot engagement               |
 
 The engine enforces this matrix on every invocation. No operation available to an Autopilot AI reaches a Session API
-or Developer API operation, including through Terminal CLI or Web UI. An Autopilot AI's access ends when its Autopilot
+or Developer API operation, including through any user interface. An Autopilot AI's access ends when its Autopilot
 engagement ends or the Current campaign changes.
 
 # Data ownership
@@ -249,7 +254,7 @@ Session (runtime, never persisted)
 | Timeline                    | [Timeline](timeline.md)                                                                                          |
 | Autopilot memory            | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                   |
 | Session                     | [Campaign Lifecycle](campaign-lifecycle.md), for when it starts and ends and its Campaign selection              |
-| Dev mode                    | [Dev mode](../interfaces/developer-api.md#dev-mode) in Developer API                                             |
+| Dev mode                    | [Dev mode](developer-access.md#dev-mode) in Developer Access                                                     |
 | Active Autopilot engagement | [What an Autopilot engagement holds](autopilot.md#what-an-autopilot-engagement-holds) in Autopilot               |
 | New-Campaign setup          | [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                       |
 
@@ -274,14 +279,14 @@ the complete Engine subsystem inventory.
 | Timeline                   | API subsystem        | [Timeline](timeline.md)                                     | Undo and redo of the Player actions of the current turn, and undo and redo across turns.                 |
 | Configuration              | API subsystem        | [Configuration](configuration.md)                           | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration.             |
 | Autopilot                  | API subsystem        | [Autopilot](autopilot.md)                                   | Bounded play by an Autopilot AI, and its Autopilot memory.                                               |
-| Developer access           | API subsystem        | [Developer API](../interfaces/developer-api.md)             | Dev mode, full Campaign state inspection, and validated cheat actions for the Session controller.        |
+| Developer access           | API subsystem        | [Developer Access](developer-access.md)                     | Dev mode, full Campaign state inspection, and validated cheat actions for the Session controller.        |
 | Turn advancement           | API subsystem        | [Turn Advancement](turn-advancement.md)                     | The canonical order of everything Advance turn applies, and which values each part uses.                 |
 | Determinism and randomness | Supporting subsystem | [Determinism and Randomness](determinism-and-randomness.md) | Reproducible Campaigns, the Campaign seed, random outcomes, and unique identifiers.                      |
 | Numbers                    | Supporting subsystem | [Numbers](numbers.md)                                       | Which quantities are whole numbers, the precision of the rest, and rounding.                             |
 
 Every Engine API operation belongs to exactly one API subsystem, except gameplay queries and gameplay actions other
-than Advance turn: [Player Information](../interfaces/player-information.md) owns `player.queries`, and the Mechanics
-specification owning each gameplay action owns that action, under [Player queries and actions](#player-queries-and-actions).
+than Advance turn: `player.queries` returns the Player-visible information that the specifications owning each value
+declare, and the Mechanics specification owning each gameplay action owns that action, under [Player queries and actions](#player-queries-and-actions).
 Gameplay is not an Engine subsystem. Specifications of vocabulary and data rules, e.g.
 [Core Concepts](core-concepts.md) and [Campaign State](campaign-state.md), are not Engine subsystems either.
 
@@ -293,8 +298,9 @@ API operation lets a second player join, observe, or share a Session or a Campai
 
 # Player queries and actions
 
-Player-visible information describes deliberate ordinary-player exposure. The term does not specify a particular query
-schema or reveal condition; [Player Information](../interfaces/player-information.md) owns those conditions.
+Player-visible information describes deliberate ordinary-player exposure. The specification that owns a value states
+whether it is Player-visible information and under which reveal conditions, e.g. each Mechanics specification for the
+values it owns. A value that no specification declares Player-visible is not Player-visible information.
 
 Player API queries always return Player-visible information. The same query at equal Campaign state returns the
 same Player-visible information for the Session controller and Autopilot AI, independent of Dev mode.
@@ -331,6 +337,9 @@ path to information that is not Player-visible information, under [API hierarchy
 
 Returned views are detached: no returned value is a mutable reference into Campaign state.
 
+No user interface shows gameplay information that Player API does not return; e.g., graphics never add information
+that Player API withholds.
+
 A Campaign save contains information that is not Player-visible information, so no operation available to an
 Autopilot AI returns a Campaign save or its contents. The engine guarantees only the information it supplies to an
 Autopilot AI; it cannot erase information a human discloses outside the engine API.
@@ -348,7 +357,7 @@ Intermediate processing must not be exposed as Committed state; e.g., values com
 are never returned. Failed
 Timeline navigation or load preserves the entire prior Session. Broken references or internal invariants are reported
 as engine/data defects rather than silently repaired into different gameplay outcomes.
-Exact error representations and asynchronous operation results belong to TypeScript Player API.
+Exact error representations and asynchronous operation results are the implementer's choice.
 
 # Acceptance examples
 

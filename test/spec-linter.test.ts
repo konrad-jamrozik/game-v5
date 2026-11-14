@@ -254,7 +254,7 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance', 'Implementation'])(
+  test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'Acceptance', 'Implementation'])(
     'accepts topic sections for %s',
     (family) => {
       const directory = family.toLowerCase()
@@ -363,7 +363,7 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test.each(['Governance', 'Mechanics', 'Content', 'Interfaces', 'Acceptance', 'Implementation'])(
+  test.each(['Governance', 'Mechanics', 'Content', 'Acceptance', 'Implementation'])(
     'allows omitting the separate acceptance section for %s specifications',
     (family) => {
       const directory = family.toLowerCase()

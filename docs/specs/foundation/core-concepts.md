@@ -25,7 +25,7 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Combat](../mechanics/combat.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
-- Used by [Developer API](../interfaces/developer-api.md)
+- Used by [Developer Access](./developer-access.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Engine Contract](./engine-contract.md)
@@ -36,14 +36,10 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Leads and Progression](../mechanics/leads-and-progression.md)
 - Used by [Missions](../mechanics/missions.md)
 - Used by [Panic and Endings](../mechanics/panic-and-endings.md)
-- Used by [Player Information](../interfaces/player-information.md)
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
-- Used by [Terminal CLI](../interfaces/cli.md)
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](./turn-advancement.md)
-- Used by [TypeScript Player API](../interfaces/typescript-api.md)
-- Used by [Web UI](../interfaces/web-ui.md)
 
 # Glossary
 

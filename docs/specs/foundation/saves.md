@@ -25,10 +25,7 @@ Autosaves defined here.
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
-- Used by [Terminal CLI](../interfaces/cli.md)
 - Used by [Timeline](./timeline.md)
-- Used by [TypeScript Player API](../interfaces/typescript-api.md)
-- Used by [Web UI](../interfaces/web-ui.md)
 
 # Glossary
 
@@ -153,8 +150,8 @@ The following rules are complete.
 # Listing Campaign saves
 
 `session.saves.list()` reports every Campaign save in Game storage, of every Campaign, including every
-Autosave. It needs no Current campaign, so a Session can list Campaign saves before loading one; e.g., the Web UI
-main menu lists them for the player to choose from. For each Campaign save it reports at least:
+Autosave. It needs no Current campaign, so a Session can list Campaign saves before loading one; e.g., a user interface's
+Main menu lists them for the player to choose from. For each Campaign save it reports at least:
 
 - its Campaign save ID and its Campaign ID, so the Campaign saves of one Campaign can be grouped;
 - whether it is an Autosave, and of which kind;
@@ -163,8 +160,8 @@ main menu lists them for the player to choose from. For each Campaign save it re
 
 The Campaign save ID it reports is what `session.saves.load(save)` accepts. Listing changes nothing and is not a
 Player action. It does not verify that a Campaign save can be loaded: a listed Campaign save may still fail to
-load, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). The exact contents of an entry
-belong to TypeScript Player API and follow the [Information boundary](engine-contract.md#information-boundary).
+load, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). The exact form of an entry is
+the implementer's choice and follows the [Information boundary](engine-contract.md#information-boundary).
 
 # Save size limit
 
@@ -197,7 +194,7 @@ names the Campaign save concerned. The following list of reasons is complete.
 | Save      | Unwritable Campaign save | The Campaign save cannot be written, e.g. Game storage is full, unavailable, or refuses the write. |
 
 A failed operation is not retried automatically, and it is not an engine defect. An interface shows the reason and
-message and takes no further action; e.g., the Web UI shows an error message and stays on the screen
+message and takes no further action; e.g., a user interface shows an error message and stays on the screen
 the load or save was requested from. The message follows the
 [Information boundary](engine-contract.md#information-boundary).
 

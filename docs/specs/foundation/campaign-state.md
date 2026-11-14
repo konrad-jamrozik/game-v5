@@ -10,7 +10,7 @@
 
 # Overview
 
-This document defines campaign-data composition, Campaign instance creation, identity, reference integrity, value classification, and historical preservation. These constraints apply to Campaign state; the engine API is owned elsewhere, e.g. by [Engine Contract](engine-contract.md) and [TypeScript Player API](../interfaces/typescript-api.md).
+This document defines campaign-data composition, Campaign instance creation, identity, reference integrity, value classification, and historical preservation. These constraints apply to Campaign state; the engine API is owned elsewhere, by [Engine Contract](engine-contract.md).
 
 The Game Design Brief supplies strategic intent; mechanics specifications own detailed gameplay behavior.
 
@@ -20,14 +20,12 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 - Refines [Determinism and Randomness](./determinism-and-randomness.md)
 - Refines [Engine Contract](./engine-contract.md)
 - Used by [Configuration](./configuration.md)
-- Used by [Developer API](../interfaces/developer-api.md)
+- Used by [Developer Access](./developer-access.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
-- Used by [Player Information](../interfaces/player-information.md)
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](./turn-advancement.md)
-- Used by [TypeScript Player API](../interfaces/typescript-api.md)
 
 # Glossary
 
@@ -128,8 +126,8 @@ belongs in this specification under the vocabulary criterion of
 [What belongs in a specification](../governance/spec-conventions.md#what-belongs-in-a-specification) and must not be
 removed or weakened as an implementation detail.
 
-Developer API full Campaign state inspection presents each Campaign instance as its Instance ID, Archetype reference,
-Constants, and State. How an implementation stores Campaign instances internally is the implementer's choice.
+How full Campaign state inspection presents each Campaign instance is owned by
+[Inspection contract](developer-access.md#inspection-contract) in Developer Access.
 
 ## Campaign instance creation
 
@@ -235,9 +233,11 @@ A Turn series follows these complete rules:
   restores it together with the rest of Campaign state. After undo, redo, or load, each Turn series holds exactly the
   recorded values of the restored Committed state.
 
-Which Turn series are Player-visible information, and how the Player API returns them, is owned by
-[Player Information](../interfaces/player-information.md). A specification describing a chart names the Turn series
-the chart shows and declares none itself.
+A Turn series is Player-visible information exactly when the specification declaring it says so. Player API returns a
+Player-visible Turn series in full: every recorded value from campaign creation up to the current Committed state,
+each with the turn and the recorded moment it belongs to. The result is the same for the Session controller and an
+Autopilot AI, and after undo, redo, or load it holds the recorded values of the restored Committed state. A
+specification describing a chart names the Turn series the chart shows and declares none itself.
 
 # Acceptance examples
 
