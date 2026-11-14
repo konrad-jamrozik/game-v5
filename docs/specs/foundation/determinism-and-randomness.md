@@ -93,10 +93,12 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
 - **Supplied:** The Session controller may supply the Campaign seed in `session.campaign.create(options)`. A
   supplied value that is not a permitted Campaign seed fails creation, under
   [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle.
-- **Permitted values:** A permitted Campaign seed is any non-empty text. Two Campaign seeds are the same exactly
-  when their texts are equal character for character; e.g., `abc` and `ABC` are different Campaign seeds.
-  The maximum length is an open decision under [Open decisions](#open-decisions).
-- **Chosen:** When none is supplied, the engine chooses a permitted Campaign seed. Which one it chooses is
+- **Permitted values:** A permitted Campaign seed is text of 1 to 64 characters, each a printable ASCII character,
+  i.e. one with a code from 32, the space, to 126, the tilde, inclusive. Two Campaign seeds are the same exactly
+  when their texts are equal character for character; e.g., `abc` and `ABC` are different Campaign seeds, and so
+  are `run 3` and `run  3`. A supplied value that is empty, longer than 64 characters, or contains any other
+  character, e.g. `é` or a tab, is not a permitted Campaign seed.
+- **Chosen:** When none is supplied, the engine chooses a permitted Campaign seed of exactly 10 characters. Which one it chooses is
   unspecified and need not be reproducible; it is the only engine decision exempt from the guarantee under
   [Determinism](#determinism).
 - **Fixed:** The Campaign seed never changes after creation. No action, Timeline navigation, save, or load changes it.
@@ -161,7 +163,7 @@ choice.
   Game build, load that Campaign save and commit the same Player actions. The results equal those recorded on the first
   machine after every Player action ([Scope of the guarantee](#scope-of-the-guarantee)).
 - **Seed chosen by the engine:** Create Campaign C supplying no Campaign seed. `session.getStatus()` reports its
-  Campaign seed K2. Create Campaign D with the same new-Campaign setup supplying K2, and commit the same Player actions
+  Campaign seed K2, which is 10 printable ASCII characters long. Create Campaign D with the same new-Campaign setup supplying K2, and commit the same Player actions
   in both. D equals C after every Player action ([Campaign seed](#campaign-seed)).
 - **Seed fixed and hidden:** After Player actions, undo, redo, save, and load, `session.getStatus()` reports the
   same Campaign seed. No Player API query returns it, with Dev mode enabled or disabled
@@ -169,8 +171,6 @@ choice.
 - **Identifiers under replay:** Hire an Agent, undo, and redo. The redone Agent has the same Instance ID as before the
   undo. Save the Campaign twice with `saveAsNew()`; the two Campaign saves have different Campaign save IDs
   ([Unique identifiers](#unique-identifiers)).
-
-# Open decisions
-
-- **Campaign seed length:** Decide the maximum length of a permitted Campaign seed, or leave it to the
-  implementer.
+- **Seed length limits:** Creating a Campaign with a 64-character seed of printable ASCII characters succeeds;
+  creating one with a 65-character seed, an empty seed, or a seed containing `é` fails and leaves the Session as it
+  was ([Campaign seed](#campaign-seed)).
