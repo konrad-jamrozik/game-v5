@@ -11,7 +11,7 @@
 # Overview
 
 This document defines test scenarios that verify how game systems work together. Each scenario specifies a starting
-state, player actions, and expected results derived from the game specifications. These scenarios guide automated
+state, Player actions, and expected results derived from the game specifications. These scenarios guide automated
 integration and end-to-end tests.
 
 Most scenarios can exercise the game through the TypeScript Player API without a browser. A smaller set exercises the

@@ -60,14 +60,14 @@ each of them. It also brings Campaign saves closer to the [Save size limit](../f
 | Approach    | What is stored                                              | How undo restores a Committed state                                                           | Trade-off                                                                         |
 | ----------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | Full copies | A complete copy of Campaign state for each Committed state  | Selects the earlier copy                                                                      | Simplest; has the growth described above                                          |
-| Patches     | The Turn-start state and, for each Timeline entry, a change | Applies the change of the last Timeline entry in reverse                                      | Compact; every Committed action needs a correct reverse change, which is costly   |
+| Patches     | The Turn-start state and, for each Timeline entry, a change | Applies the change of the last Timeline entry in reverse                                      | Compact; every Player action needs a correct reverse change, which is costly      |
 | Replay      | The Turn-start state and the ordered Timeline entries       | Commits the Timeline entries again from the Turn-start state, stopping before the one to undo | Compact and needs no changes to be computed; costs computation instead of storage |
 
 Replay relies only on guarantees the specifications already give:
 
-- **Same result:** committing the same Committed actions from the same Campaign state gives the same Campaign state,
+- **Same result:** committing the same Player actions from the same Campaign state gives the same Campaign state,
   under [Determinism](../foundation/engine-contract.md#determinism).
-- **No Autopilot AI involved:** a Timeline entry an Autopilot AI chose is recorded as the Committed action itself, so
+- **No Autopilot AI involved:** a Timeline entry an Autopilot AI chose is recorded as the Player action itself, so
   committing it again never asks an Autopilot AI to choose, under
   [Restored Committed states](../foundation/timeline.md#restored-committed-states).
 - **Only inexpensive actions:** Advance turn is not a Timeline entry, under
@@ -81,7 +81,7 @@ Use a different representation in memory and in a Campaign save.
 
 - **In memory, share what did not change:** represent each Committed state as an immutable value that shares every
   unchanged part with the Committed state before it. Undo and redo then select another Committed state without copying
-  or computing anything, and 51 Committed states cost only what 50 Committed actions changed. A Turn series suits this
+  or computing anything, and 51 Committed states cost only what 50 Player actions changed. A Turn series suits this
   well: it only ever grows at its end, so the recorded values of all earlier turns are shared and only the recorded
   values of the current Turn differ.
 - **In a Campaign save, store the Turn-start state and the Timeline entries:** write one Campaign state, the
@@ -93,7 +93,7 @@ Use a different representation in memory and in a Campaign save.
   [Autopilot memory](../foundation/autopilot.md#autopilot-memory).
 
 Patches are not suggested: they give no smaller Campaign save than replay and add a reverse change to maintain for
-every Committed action.
+every Player action.
 
 TODO: Suggest whether Autosaves of one Campaign share stored data with each other, e.g. the recorded values of Turn
 series that several Autosaves have in common, and state the expected size of the default five Turn-end Autosaves.

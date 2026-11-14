@@ -51,7 +51,7 @@ Campaign saves a Game build loads.
 ## Timeline
 
 [Timeline](timeline.md) answers _how does the player go back and forward, within a turn and across turns?_ It owns
-undo and redo of the Committed actions of the current Turn, undo and redo across Turns by Autosave navigation, and
+undo and redo of the Player actions of the current Turn, undo and redo across Turns by Autosave navigation, and
 what a restored Committed state guarantees.
 
 ## Configuration

@@ -84,22 +84,22 @@ The data that survives the end of a Session. [Data ownership](#data-ownership) s
 | Game storage         | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves.                                                                                                                                                                                                                                                                                                                                                                                          |
 | Global configuration | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It never contains Campaign state.                                                                                                                                                                                                                                                                                                                                                          |
 | Campaign save        | A persisted copy of one Campaign at one Committed state, together with its Timeline and Autopilot memory. One Campaign may have several Campaign saves.                                                                                                                                                                                                                                                                                                                                                               |
-| Timeline             | The undo and redo record of the current turn of one Campaign: the Committed state the turn started in and the Committed actions committed since, some of which may be undone. Game behavior never consults it. [Timeline](timeline.md) owns its structure and navigation.                                                                                                                                                                                                                                             |
+| Timeline             | The undo and redo record of the current turn of one Campaign: the Committed state the turn started in and the Player actions committed since, some of which may be undone. Game behavior never consults it. [Timeline](timeline.md) owns its structure and navigation.                                                                                                                                                                                                                                                |
 | Autopilot memory     | Data an Autopilot AI writes through Autopilot memory API to carry its plans across Autopilot engagements. It belongs to one Campaign, is not Campaign state, and game behavior never consults it. A Campaign has at most one Autopilot memory at each Committed state: the one most recently written at or before that Committed state. Undo, redo, and load therefore restore the Autopilot memory of the Committed state they restore, as [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot specifies. |
 
 ## Campaign selection
 
 What a Session has selected, the complete Campaign state the engine commits, and the Turns it divides into.
 
-| Term             | Definition                                                                                                                                                                                                                                                                                       |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Committed action | One successful state-changing Player API or Developer API action. It takes the Campaign from one Committed state to the next. A rejected action, an action with no effect, and a query are not Committed actions.                                                                                |
-| Committed state  | Complete Campaign state, including every part of it, as it is before or after a Committed action rather than during the processing of one. It describes completeness and timing, not a part of Campaign state; the Campaign state that undo, redo, or load restores is always a Committed state. |
-| Turn             | The part of a Campaign from one Turn-start state up to the next committed Advance turn. Every Committed state belongs to exactly one Turn, and Advance turn ends it.                                                                                                                             |
-| Turn-start state | The Committed state immediately after campaign creation or immediately after a committed Advance turn. No other Committed action of its Turn has happened yet.                                                                                                                                   |
-| Turn-end state   | The Committed state in which a committed Advance turn began.                                                                                                                                                                                                                                     |
-| Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                                      |
-| Current save     | The Campaign save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                                             |
+| Term             | Definition                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Player action    | One successful state-changing action made through Player API or Developer API, whichever Principal makes it; e.g., an Autopilot AI assigning Agents, or the Session controller adding money through Developer API. It takes the Campaign from one Committed state to the next. A rejected action, an action with no effect, and a query are not Player actions. |
+| Committed state  | Complete Campaign state, including every part of it, as it is before or after a Player action rather than during the processing of one. It describes completeness and timing, not a part of Campaign state; the Campaign state that undo, redo, or load restores is always a Committed state.                                                                   |
+| Turn             | The part of a Campaign from one Turn-start state up to the next committed Advance turn. Every Committed state belongs to exactly one Turn, and Advance turn ends it.                                                                                                                                                                                            |
+| Turn-start state | The Committed state immediately after campaign creation or immediately after a committed Advance turn. No other Player action of its Turn has happened yet.                                                                                                                                                                                                     |
+| Turn-end state   | The Committed state in which a committed Advance turn began.                                                                                                                                                                                                                                                                                                    |
+| Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                                                                                                     |
+| Current save     | The Campaign save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                                                                                                            |
 
 ## Reproducibility
 
@@ -108,7 +108,7 @@ What makes a Campaign reproducible, and how the engine scopes unique identifiers
 | Term                       | Definition                                                                                                                                                                                                                                                      |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Campaign seed              | The value from which every random outcome of one Campaign derives. It is set when the Campaign is created, supplied by the Session controller or otherwise chosen by the engine, and never changes. It is Campaign state and is not Player-visible information. |
-| Campaign-scoped identifier | A unique identifier that replaying the same Committed actions from the same Campaign state must reproduce exactly.                                                                                                                                              |
+| Campaign-scoped identifier | A unique identifier that replaying the same Player actions from the same Campaign state must reproduce exactly.                                                                                                                                                 |
 | Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, e.g. one identifying a stored record or a runtime operation.                                                                                                                    |
 
 # API hierarchy
@@ -191,7 +191,7 @@ owns and where the behavior of its operations is specified.
 | `session.globalConfiguration` | Reading, setting, and resetting Global configuration settings.                                                                                                                                     | [Global configuration](configuration.md#global-configuration) in Configuration                                                                                            |
 | `session.campaign`            | Listing the Campaign saves in Game storage, loading a Campaign save as the Current campaign, saving the Current campaign, and closing the Current campaign.                                        | [Campaign lifecycle](#campaign-lifecycle); [Listing Campaign saves](saves.md#listing-campaign-saves), [Saving](saves.md#saving), and [Loading](saves.md#loading) in Saves |
 | `session.newCampaign`         | Listing the Campaign configuration presets and the values of each, the new-Campaign setup, i.e. the selected preset and its Preset edits, and creating a Campaign from it as the Current campaign. | [Campaign lifecycle](#campaign-lifecycle); [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                                     |
-| `session.timeline`            | Timeline status, undo and redo of Committed actions within the current turn, and undo and redo across turns.                                                                                       | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline                                                 |
+| `session.timeline`            | Timeline status, undo and redo of Player actions within the current turn, and undo and redo across turns.                                                                                          | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline                                                 |
 | `session.developer`           | Enabling and disabling Dev mode.                                                                                                                                                                   | [Dev mode and developer operations](#dev-mode-and-developer-operations)                                                                                                   |
 | `session.autopilot`           | Listing the Autopilot AIs available for engagement, engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                            | [Available Autopilot AIs](autopilot.md#available-autopilot-ais) and [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot  |
 | `player.queries`              | Read-only Player-visible information and ordinary action discovery. Its `getCampaignState()` returns only the Player-visible information of Campaign state.                                        | [Player Information](../interfaces/player-information.md)                                                                                                                 |
@@ -269,7 +269,7 @@ them. The following table is the complete subsystem inventory.
 | Subsystem     | Owner                             | What it provides                                                                                         |
 | ------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Saves         | [Saves](saves.md)                 | Saving a Campaign and loading it back at its saved Committed state, and the Autosaves the engine writes. |
-| Timeline      | [Timeline](timeline.md)           | Undo and redo of the Committed actions of the current turn, and undo and redo across turns.              |
+| Timeline      | [Timeline](timeline.md)           | Undo and redo of the Player actions of the current turn, and undo and redo across turns.                 |
 | Configuration | [Configuration](configuration.md) | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration.             |
 | Autopilot     | [Autopilot](autopilot.md)         | Bounded play by an Autopilot AI, and its Autopilot memory.                                               |
 
@@ -290,7 +290,7 @@ its Preset edits, read and changed through `session.newCampaign` as
 [Preset selection and edits](configuration.md#preset-selection-and-edits) specifies; the Session holds it and it is
 never persisted. The Campaign seed is not part of the new-Campaign setup. `session.campaign.load(save)` restores a Campaign save and selects its Campaign
 as the Current campaign, as [Saves](saves.md) specifies. Successful creation or load selects the Current campaign and
-disables Dev mode. A newly created Campaign has a Timeline with no Committed actions, no Autopilot memory, and no Campaign save.
+disables Dev mode. A newly created Campaign has a Timeline with no Player actions, no Autopilot memory, and no Campaign save.
 
 `session.campaign.close()` removes the Current campaign and disables Dev mode. Campaign-dependent operations fail
 when no Current campaign exists. The following Session API operations need no Current campaign: `session.getStatus()`,
@@ -315,10 +315,10 @@ Player API queries always return Player-visible information. The same query at e
 same Player-visible information for the Session controller and Autopilot AI, independent of Dev mode.
 
 A player may commit any sequence of eligible Player API actions during a turn. `player.actions.advanceTurn()` is
-itself one player action; it atomically applies the rules stated for turn advancement, under
-[Turn advancement](#turn-advancement), and no intermediate result is separately committed. Each successful state-changing Player API action is one Committed action.
-[Timeline entries](timeline.md#timeline-entries) in Timeline states which Committed actions the Timeline records; Advance
-turn is a Committed action that the Timeline does not record. A rejected action or an action with no effect is not a Committed action and changes no later outcome, under
+itself one Player action; it atomically applies the rules stated for turn advancement, under
+[Turn advancement](#turn-advancement), and no intermediate result is separately committed. Each successful state-changing Player API action is one Player action.
+[Timeline entries](timeline.md#timeline-entries) in Timeline states which Player actions the Timeline records; Advance
+turn is a Player action that the Timeline does not record. A rejected action or an action with no effect is not a Player action and changes no later outcome, under
 [Determinism](#determinism).
 
 The mechanics specification owning each gameplay action, e.g. `assignAgents(...)` or `purchaseUpgrade(...)`, states
@@ -355,7 +355,7 @@ a Current campaign and no active Autopilot engagement. Developer API inspection 
 state. It never reveals hidden facts through ordinary game behavior.
 `developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)` are required starter cheat operations;
 Developer API owns their exact inputs, validation, and effects. Future cheat operations belong in that namespace.
-Cheat operations must preserve model invariants, and each successful one is one atomic Committed action in the Timeline.
+Cheat operations must preserve model invariants, and each successful one is one atomic Player action in the Timeline.
 
 Dev mode starts disabled and is disabled on successful creation, load, or closure. Timeline navigation and
 [Autosave navigation](timeline.md#autosave-navigation) leave the current Dev mode setting unchanged. Dev mode is not Campaign state and is never restored from a Campaign save or the
@@ -368,11 +368,11 @@ is engaged and the Autopilot AI never receives them. Dev mode transitions are un
 # Determinism
 
 Given the same Game build, the same initial Campaign configuration, the same Campaign seed, and the same ordered
-Committed actions, exactly the same things must happen: Campaign state and retained reports are equal after every
-Committed action. This holds whenever, in whichever Session, and on whichever machine each Campaign is created and
+Player actions, exactly the same things must happen: Campaign state and retained reports are equal after every
+Player action. This holds whenever, in whichever Session, and on whichever machine each Campaign is created and
 played; e.g., a Campaign save made on one machine and loaded on another continues exactly as it would have on the
-first, given the same Committed actions. The Game
-build includes its GDRs, and the Committed actions are those of the Session controller and of the
+first, given the same Player actions. The Game
+build includes its GDRs, and the Player actions are those of the Session controller and of the
 Autopilot AI alike. The Campaign seed is what makes a Campaign reproducible, and so makes undo, redo, load, and debugging
 possible.
 
@@ -380,7 +380,7 @@ The guarantee has two parts:
 
 - **Creation:** The same Game build, initial Campaign configuration, and Campaign seed must produce equal initial
   Campaign state.
-- **Play:** For equal Campaign state, the same Game build, and the same ordered Committed actions, execution must
+- **Play:** For equal Campaign state, the same Game build, and the same ordered Player actions, execution must
   produce equal resulting Campaign state and retained reports.
 
 Gameplay consults nothing outside Campaign state, e.g. wall-clock time or Autopilot memory, so Campaign state holds
@@ -432,8 +432,8 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
   value of one says nothing about the value of any other. E.g., two attacks that each hit with probability 60% both
   hit with probability 36%; an implementation in which they always hit or miss together does not conform. A rule
   states a dependence explicitly, e.g. that a damage outcome exists only when the attack hits.
-- **Different commands, different outcomes:** Only the same ordered Committed actions guarantee the same outcomes,
-  under [Determinism](#determinism). After a different Committed action, any later random outcome may differ, even
+- **Different commands, different outcomes:** Only the same ordered Player actions guarantee the same outcomes,
+  under [Determinism](#determinism). After a different Player action, any later random outcome may differ, even
   one whose rule does not involve what that command changed. E.g., an attack misses; the Session controller loads
   the earlier Campaign save, hires an Agent, and commits the same attack, which may now hit. Whether it does is the
   implementer's choice.
@@ -441,7 +441,7 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
 ## Unique identifiers
 
 Every specification that introduces a unique identifier must classify it as a Campaign-scoped identifier or an
-Independent identifier. The test is whether replaying the same Committed actions from the same Campaign state,
+Independent identifier. The test is whether replaying the same Player actions from the same Campaign state,
 including through undo and redo, must reproduce the same identifier.
 
 | Kind                       | Replay reproduces it | Examples                                                       |
@@ -475,7 +475,7 @@ A Campaign save contains information that is not Player-visible information and 
 
 # Committed state integrity
 
-Committed state distinguishes complete Campaign state before or after a Committed action from intermediate processing.
+Committed state distinguishes complete Campaign state before or after a Player action from intermediate processing.
 E.g., the Campaign state restored by undo is a Committed state, while values computed partway through Advance turn
 processing are not.
 
@@ -506,21 +506,21 @@ Exact error representations and asynchronous operation results belong to TypeScr
   state and retained reports equal the original results ([Determinism](#determinism),
   [Derived value consistency](#derived-value-consistency)).
 - **Same seed, same Campaign:** Create Campaign A supplying Campaign seed K, commit gameplay actions including
-  Advance turn, and record Campaign state and retained reports after each Committed action. End the Session. In a new
+  Advance turn, and record Campaign state and retained reports after each Player action. End the Session. In a new
   Session, create Campaign B with the same new-Campaign setup and K, and commit the same actions. B equals A at
-  every Committed action ([Determinism](#determinism), [Campaign seed](#campaign-seed)).
+  every Player action ([Determinism](#determinism), [Campaign seed](#campaign-seed)).
 - **Same save, another machine:** Save Campaign A on one machine, then commit gameplay actions including Advance
-  turn and record Campaign state and retained reports after each Committed action. On another machine running the same
+  turn and record Campaign state and retained reports after each Player action. On another machine running the same
   Game build, load that Campaign save and commit the same actions. The results equal those recorded on the first
-  machine after every Committed action ([Determinism](#determinism)).
+  machine after every Player action ([Determinism](#determinism)).
 - **Seed chosen by the engine:** Create Campaign C supplying no Campaign seed. `session.getStatus()` reports its
   Campaign seed K2. Create Campaign D with the same new-Campaign setup supplying K2, and commit the same actions in
-  both. D equals C after every Committed action ([Campaign seed](#campaign-seed)).
-- **Seed fixed and hidden:** After Committed actions, undo, redo, save, and load, `session.getStatus()` reports the
+  both. D equals C after every Player action ([Campaign seed](#campaign-seed)).
+- **Seed fixed and hidden:** After Player actions, undo, redo, save, and load, `session.getStatus()` reports the
   same Campaign seed. No Player API query returns it, with Dev mode enabled or disabled
   ([Campaign seed](#campaign-seed), [Information boundary](#information-boundary)).
 - **Defects:** A broken internal reference reports an engine defect without publishing intermediate Campaign state.
   Returned inspection data cannot mutate the engine ([Committed state integrity](#committed-state-integrity),
   [Information boundary](#information-boundary)).
-- **Campaign integrity:** A Committed action and its undo and redo preserve declared campaign-data composition and identity,
+- **Campaign integrity:** A Player action and its undo and redo preserve declared campaign-data composition and identity,
   and required historical references remain resolvable ([Campaign data integrity](#campaign-data-integrity)).

@@ -30,7 +30,7 @@ Autosaves defined here.
 
 # Glossary
 
-Campaign save, Current save, Current campaign, Game storage, Global configuration, Timeline, Committed action,
+Campaign save, Current save, Current campaign, Game storage, Global configuration, Timeline, Player action,
 Committed state, Turn, Turn-end state, Autopilot engagement, Autopilot memory, and Independent identifier are defined
 by the [Engine Contract glossary](engine-contract.md#glossary).
 
@@ -83,7 +83,7 @@ distinct Campaign IDs. Because the Campaign seed is Campaign state, under
 # Saving
 
 Saving captures the Current campaign at its current Committed state. It is available at every Committed state,
-including before the player advances the turn, and it is not a Committed action.
+including before the player advances the turn, and it is not a Player action.
 
 `session.campaign.save()` writes the Current campaign to its Current save, replacing that Campaign save's contents.
 When the Current campaign has no Current save, it creates a new Campaign save and makes that the Current save.
@@ -132,7 +132,7 @@ The following rules are complete.
 
 - **The Current Autosave is always current:** The engine replaces the Current Autosave whenever the Campaign state,
   the Timeline, or the Autopilot memory of the Current campaign changes, whichever operation changes it; e.g., a
-  Committed action of the Session controller, each Committed action of an Autopilot AI, an undo, or a load. Loading
+  Player action of the Session controller, each Player action of an Autopilot AI, an undo, or a load. Loading
   the Current Autosave therefore resumes the Campaign exactly where the Session that wrote it left it, e.g. after
   the player quit without saving or the application stopped unexpectedly.
 - **The Current Autosave cannot be turned off:** No setting disables the Current Autosave, and it does not count
@@ -159,7 +159,7 @@ main menu lists them for the player to choose from. For each Campaign save it re
 - whether it is the Current save.
 
 The Campaign save ID it reports is what `session.campaign.load(save)` accepts. Listing changes nothing and is not a
-Committed action. It does not verify that a Campaign save can be loaded: a listed Campaign save may still fail to
+Player action. It does not verify that a Campaign save can be loaded: a listed Campaign save may still fail to
 load, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). The exact contents of an entry
 belong to TypeScript Player API and follow the [Information boundary](engine-contract.md#information-boundary).
 
@@ -225,7 +225,7 @@ replaced is removed rather than left holding an earlier Committed state.
   Campaign state after the last action, and the Current campaign then has no Current save
   ([Autosaves](#autosaves), [Loading](#loading)).
 - **The Current Autosave follows every change:** Commit an action, then engage Autopilot with `singleAction`. After
-  each of the two Committed actions the Current Autosave holds the Committed state just reached. The Campaign has one
+  each of the two Player actions the Current Autosave holds the Committed state just reached. The Campaign has one
   Current Autosave throughout ([Autosaves](#autosaves)).
 - **Autosave limit:** With the Autosave limit 5, Advance turn seven times from Turn 1. The Campaign has the Turn-end
   Autosaves of Turn 3 to Turn 7 ([Autosaves](#autosaves)).

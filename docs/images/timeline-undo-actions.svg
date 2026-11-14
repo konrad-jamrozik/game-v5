@@ -29,7 +29,7 @@
     <marker id="head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="head" d="M0 1 L10 5 L0 9z"/></marker>
   </defs>
   <rect class="bg" x="0" y="0" width="1000" height="380"/>
-  <text class="title" x="24" y="32">Undo within one Turn, starting after its fourth Committed action</text>
+  <text class="title" x="24" y="32">Undo within one Turn, starting after its fourth Player action</text>
   <text class="b mid" x="90" y="96">Turn-start state</text>
   <text class="m mid" x="90" y="112">no Timeline entry</text>
   <text class="mid" x="250" y="112">Hire an Agent</text>
@@ -65,10 +65,10 @@
   <polygon class="start" points="34,310 42,318 34,326 26,318"/>
   <text class="m" x="52" y="322">Turn-start state, held by the Timeline</text>
   <circle class="entry" cx="322" cy="318" r="6"/>
-  <text class="m" x="338" y="322">Timeline entry: one Committed action</text>
+  <text class="m" x="338" y="322">Timeline entry: one Player action</text>
   <circle class="badge" cx="606" cy="318" r="9"/><text class="b mid" x="606" y="322.5">1</text>
   <text class="m" x="622" y="322">to 4: successive undoAction() calls</text>
   <polygon class="end" points="34,338 42,346 34,354 26,346"/>
   <text class="m" x="52" y="350">Turn-end Autosave, owned by Saves</text>
-  <text class="m" x="322" y="350">An arrow ending at a circle restores the Committed state right after that Committed action.</text>
+  <text class="m" x="322" y="350">An arrow ending at a circle restores the Committed state right after that Player action.</text>
 </svg>

@@ -33,11 +33,11 @@ Autopilot, Autopilot AI, Autopilot engagement, Autopilot memory, Autopilot memor
 Player-visible information, Independent identifier, and Turn are defined by the [Engine Contract glossary](engine-contract.md#glossary).
 Timeline entry and Undone action are defined by the [Timeline glossary](timeline.md#glossary).
 
-| Term                    | Definition                                                                                                                                                                                           |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Autopilot limit         | The bound on an Autopilot engagement, fixed when Autopilot is engaged and measured in committed player actions or turn advancements.                                                                 |
-| Autopilot engagement ID | The Independent identifier identifying one Autopilot engagement, assigned when Autopilot is engaged.                                                                                                 |
-| Autopilot progress      | The committed player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |
+| Term                    | Definition                                                                                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Autopilot limit         | The bound on an Autopilot engagement, fixed when Autopilot is engaged and measured in Player actions or turn advancements.                                                                 |
+| Autopilot engagement ID | The Independent identifier identifying one Autopilot engagement, assigned when Autopilot is engaged.                                                                                       |
+| Autopilot progress      | The Player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |
 
 # Available Autopilot AIs
 
@@ -50,7 +50,7 @@ least:
 - whether it wrote the Autopilot memory of the Current campaign, when there is a Current campaign that has Autopilot
   memory. Engaging any other Autopilot AI discards that Autopilot memory, under [Autopilot memory](#autopilot-memory).
 
-Listing needs no Current campaign, changes nothing, and is not a Committed action. An Autopilot AI may become
+Listing needs no Current campaign, changes nothing, and is not a Player action. An Autopilot AI may become
 unavailable after it was listed, e.g. a remote service stops responding; `engage` then rejects it, under
 [Autopilot limits](#autopilot-limits). The list may be empty, and engaging Autopilot is then impossible.
 
@@ -62,10 +62,10 @@ Autopilot engagement may be active in a Session. The complete Autopilot limit in
 | Autopilot limit     | Input                      | Successful completion                                                                   |
 | ------------------- | -------------------------- | --------------------------------------------------------------------------------------- |
 | `singleAction`      | No action count            | One Player API action successfully commits, including Advance turn if chosen.           |
-| `untilTurnAdvanced` | No turn count              | The first Advance turn action successfully commits, after any preceding player actions. |
+| `untilTurnAdvanced` | No turn count              | The first Advance turn action successfully commits, after any preceding Player actions. |
 | `turnAdvancements`  | A positive integer `count` | Exactly `count` Advance turn actions successfully commit.                               |
 
-Only committed player actions or turn advancements count toward an Autopilot limit; e.g., a query or a rejected action
+Only Player actions or turn advancements count toward an Autopilot limit; e.g., a query or a rejected action
 counts toward none. Autopilot disengages immediately at its Autopilot limit; another mutation through that Autopilot
 engagement is rejected.
 
@@ -119,7 +119,7 @@ Session status, Timeline status, and Autopilot status, read and change Global co
 Session controller gameplay mutations, and Developer API operations are unavailable until disengagement completes.
 `session.autopilot.disengage(engagementId)` requests disengagement between atomic actions. An action already executing either
 commits completely or fails without effects. Disengagement never implicitly advances a turn or undoes earlier
-Committed actions. Failure of the Autopilot AI follows the same boundary rule. A late response from a completed Autopilot engagement
+Player actions. Failure of the Autopilot AI follows the same boundary rule. A late response from a completed Autopilot engagement
 cannot change Campaign state or write Autopilot memory. Timeline navigation remains available after disengagement.
 
 Engaging Autopilot writes an Autosave, and no Turn-end Autosave is written during an Autopilot engagement.
@@ -157,7 +157,7 @@ successful load restores it. This includes loading an Autosave through
 
 # Edge cases and failure behavior
 
-Autopilot disengagement and failure of the Autopilot AI preserve every Committed action. An Autopilot AI that calls
+Autopilot disengagement and failure of the Autopilot AI preserve every Player action. An Autopilot AI that calls
 an operation outside its access is rejected without changing anything, under
 [Committed state integrity](engine-contract.md#committed-state-integrity).
 
@@ -187,7 +187,7 @@ nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-recei
   Autopilot with Autopilot AI Y: Y reads absence. Disengage, undo to an earlier Committed state, and engage Autopilot
   with X: X also reads absence ([Autopilot memory](#autopilot-memory)).
 - **Disengagement during an action:** Disengage Autopilot during an action. The action either commits completely or
-  fails without effects; earlier Committed actions remain
+  fails without effects; earlier Player actions remain
   ([Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency)).
 
 # Open decisions

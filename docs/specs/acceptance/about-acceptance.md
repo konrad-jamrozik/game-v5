@@ -12,7 +12,7 @@ verify that the game systems work together and introduce no new mechanics.
 ## Campaign Integration and Acceptance Tests
 
 [Campaign Integration and Acceptance Tests](campaign-integration-and-acceptance-tests.md) answers _how do we know the
-systems work together?_ It owns test scenarios, each with a starting state, player actions, and expected results that
+systems work together?_ It owns test scenarios, each with a starting state, Player actions, and expected results that
 reference their owning rules.
 
 # How they relate

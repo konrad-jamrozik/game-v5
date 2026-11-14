@@ -67,5 +67,5 @@
   <text class="m" x="622" y="322">to 4: successive redoAction() calls</text>
   <polygon class="end" points="34,338 42,346 34,354 26,346"/>
   <text class="m" x="52" y="350">Turn-end Autosave, owned by Saves</text>
-  <text class="m" x="322" y="350">An arrow ending at a circle restores the Committed state right after that Committed action.</text>
+  <text class="m" x="322" y="350">An arrow ending at a circle restores the Committed state right after that Player action.</text>
 </svg>
