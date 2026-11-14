@@ -11,8 +11,8 @@ These informative views are derived from the registered Markdown specifications.
 
 | Status     | Specifications |
 | ---------- | -------------- |
-| Stub       | 14             |
-| Draft      | 17             |
+| Stub       | 13             |
+| Draft      | 18             |
 | Accepted   | 1              |
 | Superseded | 0              |
 
@@ -72,9 +72,9 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Content
 
-| ID   | Document                                             | Status | Owns                                                                                              |
-| ---- | ---------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------- |
-| BOOT | [Bootstrap GDRs](../specs/content/bootstrap-gdrs.md) | Stub   | Which Game Data Records (GDRs) a Game build supplies so that a first playable Campaign can start. |
+| ID   | Document                                             | Status | Owns                                                                                                                                        |
+| ---- | ---------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| BOOT | [Bootstrap GDRs](../specs/content/bootstrap-gdrs.md) | Draft  | Which Game Data Records (GDRs) a Game build supplies so that a first playable Campaign can start, and how those GDRs form the Victory path. |
 
 ## UI
 

@@ -35,14 +35,14 @@
   <rect class="box external" x="141.6" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="173.6" y="36">another family</text>
   <path class="edge edge-uses" marker-end="url(#head-uses)" d="M 198 230 C 198 264.5 198 264.5 198 299"/>
-  <path class="edge edge-uses" marker-end="url(#head-uses)" d="M 102.9 113 C 102.9 147.5 158.1 147.5 158.1 182"/>
-  <path class="edge edge-uses" marker-end="url(#head-uses)" d="M 293 113 C 293 147.5 237.8 147.5 237.8 182"/>
+  <path class="edge edge-uses" marker-end="url(#head-uses)" d="M 102.9 113 C 102.9 147.5 156.9 147.5 156.9 182"/>
+  <path class="edge edge-uses" marker-end="url(#head-uses)" d="M 293 113 C 293 147.5 239.1 147.5 239.1 182"/>
   <rect class="box external" x="24" y="68" width="157.8" height="45" rx="6"/>
   <text class="label" x="102.9" y="94">Foundation family</text>
   <rect class="box external" x="217.8" y="68" width="150.4" height="45" rx="6"/>
   <text class="label" x="293" y="94">Mechanics family</text>
-  <rect class="box" x="78.4" y="185" width="239.2" height="45" rx="6"/>
-  <text class="label" x="198" y="211">BOOT — Bootstrap GDRs (Stub)</text>
+  <rect class="box" x="74.7" y="185" width="246.6" height="45" rx="6"/>
+  <text class="label" x="198" y="211">BOOT — Bootstrap GDRs (Draft)</text>
   <rect class="box external" x="104.3" y="302" width="187.4" height="45" rx="6"/>
   <text class="label" x="198" y="328">Implementation family</text>
 </svg>
