@@ -17,8 +17,8 @@ TODO: Confirm the precise included/excluded scope and rule ownership using the [
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification intends to refine Domain Model's Campaign contract ([Agency per Campaign](../foundation/domain-model.md#agency-per-campaign)) with
-panic and ending behavior. It supplies the ending predicates and states which values they use under
-[Turn advancement](../foundation/engine-contract.md#turn-advancement). Campaign creation and Campaign configuration
+panic and ending behavior. It supplies the ending predicates, which apply in the Panic and Ending check steps under
+[Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps). Campaign creation and Campaign configuration
 are owned by [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets) in
 Configuration, not by this document. Panic and ending rules remain TODOs below.
 
@@ -29,7 +29,7 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
+- Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Player Information](../interfaces/player-information.md)
 
@@ -50,7 +50,7 @@ TODO: Define allowed Player-visible information and commands after an ending and
 # Edge cases and failure behavior
 
 TODO: Define behavior for Zero money versus negative money, panic at its limit, all factions defeated, same-turn victory/defeat, and post-ending commands.
-State whether ending predicates use turn-start values or the values after the other rules of the same Advance turn, under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
+State the ending predicates in terms of the values after the earlier steps of the same Advance turn, under [Values a step uses](../foundation/turn-advancement.md#values-a-step-uses).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

@@ -18,6 +18,7 @@ and [Timeline](../foundation/timeline.md).
 
 # Relationships
 
+- Uses [Determinism and Randomness](../foundation/determinism-and-randomness.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Saves](../foundation/saves.md)
 - Uses [Timeline](../foundation/timeline.md)
@@ -66,7 +67,7 @@ each of them. It also brings Campaign saves closer to the [Save size limit](../f
 Replay relies only on guarantees the specifications already give:
 
 - **Same result:** committing the same Player actions from the same Campaign state gives the same Campaign state,
-  under [Determinism](../foundation/engine-contract.md#determinism).
+  under [Determinism](../foundation/determinism-and-randomness.md#determinism).
 - **No Autopilot AI involved:** a Timeline entry an Autopilot AI chose is recorded as the Player action itself, so
   committing it again never asks an Autopilot AI to choose, under
   [Restored Committed states](../foundation/timeline.md#restored-committed-states).
@@ -101,5 +102,5 @@ series that several Autosaves have in common, and state the expected size of the
 # Supported observable contract
 
 **Informative rationale:** Any layout that satisfies [Saves](../foundation/saves.md),
-[Timeline](../foundation/timeline.md), and [Determinism](../foundation/engine-contract.md#determinism) satisfies
+[Timeline](../foundation/timeline.md), and [Determinism](../foundation/determinism-and-randomness.md#determinism) satisfies
 every specification, including one that ignores this document.

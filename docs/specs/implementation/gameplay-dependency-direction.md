@@ -36,6 +36,6 @@ Campaign instances must not hold references to the Campaign state that contains 
 
 **Informative rationale:** Narrow inputs make it easy to see which values a piece of game behavior consults, so an implementation can
 check that every such value is part of Campaign state. The observable property this supports, that execution has no
-hidden inputs, is already guaranteed by [Determinism](../foundation/engine-contract.md#determinism) in
-Engine Contract: equal initial Campaign state, the same Game build, and the same ordered Player actions produce
+hidden inputs, is already guaranteed by [Determinism](../foundation/determinism-and-randomness.md#determinism) in
+Determinism and Randomness: equal initial Campaign state, the same Game build, and the same ordered Player actions produce
 equal results. An implementation that satisfies that guarantee by other means also satisfies every specification.

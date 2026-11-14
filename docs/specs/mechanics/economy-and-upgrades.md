@@ -20,8 +20,8 @@ with resource flows, purchase eligibility, and upgrade effects. Agents supplies 
 This specification also intends to refine Agents' [Modifiable values](./agents-spec.md#modifiable-values) with how
 each upgrade changes them;
 Numbers supplies arithmetic. GDRs supply prices and increments, while this
-document supplies their meanings and formulas. This document states which values its formulas use under
-[Turn advancement](../foundation/engine-contract.md#turn-advancement). These rules remain TODOs.
+document supplies their meanings and formulas. Its turn rules apply in the Agency income and Upkeep steps under
+[Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps). These rules remain TODOs.
 
 TODO: Specify Spendable money, recurring funding, upkeep, contracting income, hiring, dismissal, capacity, and upgrades.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
@@ -30,8 +30,8 @@ appropriate to this document.
 # Relationships
 
 - Uses [Agents](./agents-spec.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Missions](./missions.md)
@@ -44,7 +44,7 @@ duplicating shared definitions.
 
 # Income and costs
 
-TODO: Specify formulas for hiring, dismissal, upkeep, contracting, and recurring funding; state each formula's exceptions to the turn-start default under [Turn advancement](../foundation/engine-contract.md#turn-advancement), e.g. whether upkeep uses an Agent's rank before or after the same turn's training and when a funding change starts producing income; and distinguish cash from income rate.
+TODO: Specify formulas for hiring, dismissal, upkeep, contracting, and recurring funding; follow the order under [Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps), e.g. that upkeep uses Agency money after the Agency income step, and state when a funding change starts producing income; and distinguish cash from income rate.
 
 # Upgrade effects
 

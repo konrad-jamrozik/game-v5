@@ -21,7 +21,7 @@ This specification intends to refine Agents' health and exhaustion contract
 [Modifiable values](./agents-spec.md#modifiable-values)) with the rules that raise health and lower exhaustion, within
 the meanings and bounds Agents states for those values. It reads the recovery rates as the modifiable values Agents
 lists and does not depend on how upgrades change them. It uses Missions for when a returning Agent starts recovering,
-and states which values its rules use under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
+and applies its rules in the Agent recovery step under [Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps).
 The rules that lower health or raise exhaustion belong to the specifications owning the activity, e.g. Combat. The
 recovery rules remain TODOs below.
 
@@ -32,8 +32,8 @@ appropriate to this document.
 
 # Relationships
 
-- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Missions](./missions.md)
+- Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Agents](./agents-spec.md)
 - Used by [Player Information](../interfaces/player-information.md)
 
@@ -57,15 +57,15 @@ differs by Current assignment.
 # Several changes in one turn
 
 TODO: State the combined result when a value is both raised and lowered in the same Advance turn, e.g. an Agent that
-gains exhaustion from an activity and recovers exhaustion in that turn, as required by
-[Turn advancement](../foundation/engine-contract.md#turn-advancement).
+gains exhaustion from an activity and recovers exhaustion in that turn, following the order under
+[Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps).
 
 # Edge cases and failure behavior
 
 TODO: Define behavior for recovery reaching the maximum exactly, an Agent that returns from a Mission during Advance
 turn, recovery interrupted by a new Current assignment, and a recovery rate changed by an upgrade while recovery is
 underway.
-State when Mission survivors begin recovering, as an exception to the turn-start default under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
+State when Mission survivors begin recovering, consistent with the order under [Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

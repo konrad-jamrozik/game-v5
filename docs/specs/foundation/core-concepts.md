@@ -21,6 +21,7 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Campaign State](./campaign-state.md)
 - Used by [Configuration](./configuration.md)
+- Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
 - Used by [Engine Contract](./engine-contract.md)
@@ -35,6 +36,7 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Saves](./saves.md)
 - Used by [Terminal CLI](../interfaces/cli.md)
 - Used by [Timeline](./timeline.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)
 - Used by [Web UI](../interfaces/web-ui.md)
 

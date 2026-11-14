@@ -23,6 +23,7 @@ owned by [Campaign State](campaign-state.md).
 
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
+- Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Saves](./saves.md)
 - Used by [Autopilot](./autopilot.md)
@@ -218,7 +219,7 @@ including its Campaign configuration and World history. This holds for Action na
 alike. Autopilot memory after navigation is stated under [Autopilot memory](autopilot.md#autopilot-memory).
 
 Play continued from a restored Committed state produces the outcomes of uninterrupted play, under
-[Determinism](engine-contract.md#determinism). Redo reproduces the Player action exactly:
+[Determinism](determinism-and-randomness.md#determinism). Redo reproduces the Player action exactly:
 
 - Redoing an action that an Autopilot AI chose does not ask any Autopilot AI to choose again.
 - A Developer API action is undone and redone whether or not Dev mode is enabled, and doing so grants no Developer

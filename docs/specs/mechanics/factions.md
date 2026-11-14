@@ -31,8 +31,8 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Missions](./missions.md)
@@ -66,7 +66,7 @@ TODO: Specify stacking, countdown effects, continued escalation during suppressi
 # Edge cases and failure behavior
 
 TODO: Define behavior for Suppression gained on a spawn turn, maximum activity, no eligible GDRs for Faction operation occurrences, repeated Faction operation occurrences, and defeat concurrent with a Faction operation occurrence.
-State how several Missions affecting one Faction in the same Advance turn combine, under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
+State how several Missions affecting one Faction in the same Advance turn combine, under [Values a step uses](../foundation/turn-advancement.md#values-a-step-uses).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

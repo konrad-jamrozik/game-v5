@@ -12,7 +12,7 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 17             |
-| Draft      | 14             |
+| Draft      | 16             |
 | Accepted   | 1              |
 | Superseded | 0              |
 
@@ -21,7 +21,7 @@ These informative views are derived from the registered Markdown specifications.
 | Family         | Specifications |
 | -------------- | -------------- |
 | Governance     | 5              |
-| Foundation     | 10             |
+| Foundation     | 12             |
 | Mechanics      | 9              |
 | Content        | 0              |
 | Interfaces     | 5              |
@@ -40,18 +40,20 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Foundation
 
-| ID       | Document                                                      | Status   | Owns                                                                                                                                                  |
-| -------- | ------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AUTO     | [Autopilot](../specs/foundation/autopilot.md)                 | Draft    | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                                |
-| CONFIG   | [Configuration](../specs/foundation/configuration.md)         | Draft    | Kinds of setting, Global configuration, and the configuration cascade.                                                                                |
-| CORE     | [Core Concepts](../specs/foundation/core-concepts.md)         | Accepted | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                          |
-| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)       | Draft    | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.              |
-| DOM      | [Domain Model](../specs/foundation/domain-model.md)           | Draft    | Game concepts, how they relate, and the structural invariants that span several concepts.                                                             |
-| ENG      | [Engine Contract](../specs/foundation/engine-contract.md)     | Draft    | API hierarchy, Principal authority, Session and campaign lifecycle, data ownership, determinism, and the guarantees shared by every engine subsystem. |
-| GDR      | [Game Data Records](../specs/foundation/game-data-records.md) | Draft    | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                             |
-| NUMBERS  | [Numbers](../specs/foundation/numbers.md)                     | Stub     | Which quantities are whole numbers, the precision of those that are not, and how rounding works.                                                      |
-| SAVES    | [Saves](../specs/foundation/saves.md)                         | Draft    | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                                |
-| TIMELINE | [Timeline](../specs/foundation/timeline.md)                   | Draft    | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees.                  |
+| ID       | Document                                                                        | Status   | Owns                                                                                                                                     |
+| -------- | ------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| AUTO     | [Autopilot](../specs/foundation/autopilot.md)                                   | Draft    | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                   |
+| CONFIG   | [Configuration](../specs/foundation/configuration.md)                           | Draft    | Kinds of setting, Global configuration, and the configuration cascade.                                                                   |
+| CORE     | [Core Concepts](../specs/foundation/core-concepts.md)                           | Accepted | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                             |
+| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)                         | Draft    | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation. |
+| DETERM   | [Determinism and Randomness](../specs/foundation/determinism-and-randomness.md) | Draft    | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay.                       |
+| DOM      | [Domain Model](../specs/foundation/domain-model.md)                             | Draft    | Game concepts, how they relate, and the structural invariants that span several concepts.                                                |
+| ENG      | [Engine Contract](../specs/foundation/engine-contract.md)                       | Draft    | API hierarchy, Principal authority, Session and campaign lifecycle, data ownership, and the guarantees shared by every engine subsystem. |
+| GDR      | [Game Data Records](../specs/foundation/game-data-records.md)                   | Draft    | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                |
+| NUMBERS  | [Numbers](../specs/foundation/numbers.md)                                       | Stub     | Which quantities are whole numbers, the precision of those that are not, and how rounding works.                                         |
+| SAVES    | [Saves](../specs/foundation/saves.md)                                           | Draft    | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                   |
+| TIMELINE | [Timeline](../specs/foundation/timeline.md)                                     | Draft    | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees.     |
+| TURN     | [Turn Advancement](../specs/foundation/turn-advancement.md)                     | Draft    | The canonical order of Turn advancement steps and which values each step uses.                                                           |
 
 ## Mechanics
 

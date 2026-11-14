@@ -75,8 +75,8 @@ The Work items below were measured against these recorded rules and decisions:
 - **Scope rule:** [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification). A statement
   belongs only if it is Observable (a black-box test through the engine API, a save, or a replay could fail),
   Designer-authored (a GDR or a description of game behavior), or Vocabulary. Everything else is the implementer's choice.
-- **Determinism decision:** [Determinism](../foundation/engine-contract.md#determinism) and
-  [Campaign seed](../foundation/engine-contract.md#campaign-seed). Every Campaign has a Campaign seed, supplied by
+- **Determinism decision:** [Determinism](../foundation/determinism-and-randomness.md#determinism) and
+  [Campaign seed](../foundation/determinism-and-randomness.md#campaign-seed). Every Campaign has a Campaign seed, supplied by
   the Session controller at campaign creation or chosen by the engine, and every random outcome derives from it and
   from nothing else. The same Game build, initial Campaign configuration, Campaign seed, and ordered committed
   commands reproduce the same Campaign state and retained reports. Determinism is required only within one
@@ -135,7 +135,7 @@ effects create Campaign instances do so as their owning specifications state und
 
 **Why it is an issue:** Random draws are not observable under the scope rule. Acceptance fixtures must use fixed
 injected random outcomes, each identified by the name its rule gives it, under
-[Determinism](../foundation/engine-contract.md#determinism) and
+[Determinism](../foundation/determinism-and-randomness.md#determinism) and
 [Examples, conformance, and evidence](spec-conventions.md#examples-conformance-and-evidence).
 
 **Suggested resolution:** Replace "draws" in the fixture TODO with "fixed injected random outcomes".
@@ -153,7 +153,7 @@ injected random outcomes, each identified by the name its rule gives it, under
 > TODO: Give seeded escalation/spawn timelines and compare temporary suppression with permanent defeat.
 
 **Why it is an issue:** Acceptance examples must never assert which outcome a particular Campaign seed produces,
-under [Determinism](../foundation/engine-contract.md#determinism), because how outcomes derive from the Campaign seed
+under [Determinism](../foundation/determinism-and-randomness.md#determinism), because how outcomes derive from the Campaign seed
 is the implementer's choice.
 
 **Suggested resolution:** Replace "seeded" with timelines that use fixed injected random outcomes.
@@ -180,7 +180,7 @@ and [Glossary](../acceptance/campaign-integration-and-acceptance-tests.md#glossa
 (SCEN, Glossary.)
 
 **Why it is an issue:** A Campaign seed is a legitimate fixture input for replay-equality scenarios, under
-[Campaign seed](../foundation/engine-contract.md#campaign-seed); RNG state is not, because it is the implementer's
+[Campaign seed](../foundation/determinism-and-randomness.md#campaign-seed); RNG state is not, because it is the implementer's
 choice.
 
 **Suggested resolution:** Replace "seed or RNG state" with "Campaign seed, injected random outcomes, or replay
@@ -234,8 +234,7 @@ Investigations (INVSTG), [Team changes and commitment](../mechanics/investigatio
 specifications. The wording, however, describes a mechanism (snapshots and reads) rather than the outcome.
 
 **Suggested resolution:** Keep the content, and reword it in terms of outcomes, following
-[Turn advancement](../foundation/engine-contract.md#turn-advancement), e.g. "uses values as of turn start" or
-"uses the value after training", rather than snapshots and reads.
+[Values a step uses](../foundation/turn-advancement.md#values-a-step-uses), e.g. "uses the value after the Training step", rather than snapshots and reads.
 
 ## Other
 

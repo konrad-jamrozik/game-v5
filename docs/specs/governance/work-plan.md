@@ -120,11 +120,10 @@ owning specifications during batch 8.
 
 ## Incremental timing refinement
 
-Refine turn timing and shared contracts as mechanics are drafted. No specification lists the order in which rules
-are applied during Advance turn; each rule states which values it uses, under
-[Turn advancement](../foundation/engine-contract.md#turn-advancement). Batch 7 checks that the stated exceptions of
-all Mechanics specifications form no cycle; earlier drafts must still state their own exceptions and any unresolved
-dependency on a rule of another specification.
+Refine turn timing and shared contracts as mechanics are drafted. [Turn Advancement](../foundation/turn-advancement.md) is the canonical order
+of the rules applied during Advance turn. Each Mechanics specification places its turn rules in a step under
+[Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps), and a draft that contradicts that order is corrected to
+match it.
 
 # Review and completion workflow
 

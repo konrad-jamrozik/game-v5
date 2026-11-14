@@ -23,6 +23,7 @@ owned by the Mechanics specifications using them, under
 
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
+- Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Timeline](./timeline.md)
 
@@ -94,7 +95,7 @@ which Campaign instances the initial Campaign state contains, under
 [Initial Campaign state](domain-model.md#initial-campaign-state). The Campaign seed is the one exception: no preset
 supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor
 part of the new-Campaign setup; campaign creation receives it separately, under
-[Campaign seed](engine-contract.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after
+[Campaign seed](determinism-and-randomness.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after
 creation, under [Campaign state composition](campaign-state.md#campaign-state-composition).
 
 Presets are immutable: a Preset edit, or a later change to Campaign configuration, never changes a preset. Campaign

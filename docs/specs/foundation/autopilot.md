@@ -20,6 +20,7 @@ outside the specifications.
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
+- Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Timeline](./timeline.md)
 - Used by [Player Information](../interfaces/player-information.md)
@@ -29,8 +30,9 @@ outside the specifications.
 
 # Glossary
 
-Autopilot, Autopilot AI, Autopilot engagement, Autopilot memory, Autopilot memory API, Session controller, and
-Player-visible information, Independent identifier, and Turn are defined by the [Engine Contract glossary](engine-contract.md#glossary).
+Autopilot, Autopilot AI, Autopilot engagement, Autopilot memory, Autopilot memory API, Session controller,
+Player-visible information, and Turn are defined by the [Engine Contract glossary](engine-contract.md#glossary).
+Independent identifier is defined by the [Determinism and Randomness glossary](determinism-and-randomness.md#glossary).
 Timeline entry and Undone action are defined by the [Timeline glossary](timeline.md#glossary).
 
 | Term                    | Definition                                                                                                                                                                                 |

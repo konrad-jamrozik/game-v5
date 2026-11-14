@@ -24,7 +24,7 @@ exposes Player-visible information and includes Advance turn. Session API is res
 Developer API is separately gated by Dev mode. Autopilot memory API supplies Autopilot memory for the active Autopilot AI.
 
 Public operations preserve [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency),
-[Determinism](../foundation/engine-contract.md#determinism),
+[Determinism](../foundation/determinism-and-randomness.md#determinism),
 [Information boundary](../foundation/engine-contract.md#information-boundary), and
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity).
 This specification refines those guarantees with exact query results, rejection behavior, and restoration-operation
@@ -49,6 +49,7 @@ its earlier State does not itself create a new Campaign instance. Public restora
 - Uses [Saves](../foundation/saves.md)
 - Uses [Timeline](../foundation/timeline.md)
 - Refines [Autopilot](../foundation/autopilot.md)
+- Refines [Determinism and Randomness](../foundation/determinism-and-randomness.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Terminal CLI](./cli.md)

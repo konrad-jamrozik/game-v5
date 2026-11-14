@@ -40,6 +40,7 @@ appropriate to this document.
 # Relationships
 
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Determinism and Randomness](../foundation/determinism-and-randomness.md)
 - Uses [Saves](../foundation/saves.md)
 - Uses [Terminal CLI](../interfaces/cli.md)
 - Uses [Timeline](../foundation/timeline.md)
@@ -70,7 +71,7 @@ Kinds of test, by what they exercise or check.
 # Deterministic fixtures
 
 Determinism is required only within one implementation and Game build under
-[Determinism](../foundation/engine-contract.md#determinism). Acceptance tests therefore assert replay
+[Determinism](../foundation/determinism-and-randomness.md#determinism). Acceptance tests therefore assert replay
 equality, including from the same Campaign seed, or use fixed injected random outcomes; they never assert which
 outcome a particular Campaign seed produces.
 

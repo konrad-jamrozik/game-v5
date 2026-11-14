@@ -17,6 +17,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
+- Refines [Determinism and Randomness](./determinism-and-randomness.md)
 - Refines [Engine Contract](./engine-contract.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Developer API](../interfaces/developer-api.md)
@@ -25,6 +26,7 @@ The Game Design Brief supplies strategic intent; mechanics specifications own de
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Timeline](./timeline.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)
 
 # Glossary
@@ -53,7 +55,7 @@ The composition of each Campaign instance, and Types that Campaign instance Type
 | Term              | Definition                                                                                                                                                                                                                                                 |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Campaign instance | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              |
-| Instance ID       | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](engine-contract.md#glossary).                                                       |
+| Instance ID       | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary).                                            |
 | Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
 | State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
 | Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
@@ -61,8 +63,9 @@ The composition of each Campaign instance, and Types that Campaign instance Type
 
 # Campaign data integrity refinement
 
-This document refines [Determinism](engine-contract.md#determinism) and
-[Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract by specifying the
+This document refines [Determinism](determinism-and-randomness.md#determinism) and
+[Unique identifiers](determinism-and-randomness.md#unique-identifiers) in Determinism and Randomness, and
+[Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract, by specifying the
 composition, initialization, identity, reference, and historical-preservation constraints that campaign creation,
 committed mutations, and restoration must preserve. It supplies campaign modeling detail without defining API authority
 or execution sequencing. Core Concepts supplies the shared vocabulary used to express these constraints.

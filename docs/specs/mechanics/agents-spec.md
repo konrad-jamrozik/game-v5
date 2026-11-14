@@ -36,8 +36,8 @@ appropriate to this document.
 
 # Relationships
 
-- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Combat](./combat.md)
 - Used by [Economy and Upgrades](./economy-and-upgrades.md)
@@ -124,7 +124,7 @@ activity raises exhaustion.
 # Edge cases and failure behavior
 
 TODO: Define behavior for Exact readiness/exhaustion thresholds, zero health, recovery completion, destination disappearing during transit, and conflicting Current assignments.
-State when an arriving Agent can work, as an exception to the turn-start default under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
+State when an arriving Agent can work, consistent with the Transit step under [Turn advancement steps](../foundation/turn-advancement.md#turn-advancement-steps).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

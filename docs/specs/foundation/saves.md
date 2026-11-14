@@ -20,6 +20,7 @@ Autosaves defined here.
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
+- Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
@@ -31,8 +32,9 @@ Autosaves defined here.
 # Glossary
 
 Campaign save, Current save, Current campaign, Game storage, Global configuration, Timeline, Player action,
-Committed state, Turn, Turn-end state, Autopilot engagement, Autopilot memory, and Independent identifier are defined
-by the [Engine Contract glossary](engine-contract.md#glossary).
+Committed state, Turn, Turn-end state, Autopilot engagement, and Autopilot memory are defined by the
+[Engine Contract glossary](engine-contract.md#glossary). Independent identifier is defined by the
+[Determinism and Randomness glossary](determinism-and-randomness.md#glossary).
 
 ## Identifiers
 
@@ -78,7 +80,7 @@ One Campaign may have several Campaign saves, which share its Campaign ID and ha
 player may keep a Campaign save from before a risky decision and another from after it. Two Campaigns created with
 equal creation inputs, including the same Campaign seed, and given equal commands have equal Campaign state but
 distinct Campaign IDs. Because the Campaign seed is Campaign state, under
-[Campaign seed](engine-contract.md#campaign-seed), every Campaign save holds it.
+[Campaign seed](determinism-and-randomness.md#campaign-seed), every Campaign save holds it.
 
 # Saving
 
@@ -108,7 +110,7 @@ Loading an Autosave differs in one respect: the Current campaign then has no Cur
 creates a new Campaign save and leaves the Autosave unchanged.
 
 Play continued after a load produces the outcomes of uninterrupted play, under
-[Determinism](engine-contract.md#determinism). An Autopilot engagement that was active when the Campaign was saved is
+[Determinism](determinism-and-randomness.md#determinism). An Autopilot engagement that was active when the Campaign was saved is
 not resumed.
 
 # Autosaves

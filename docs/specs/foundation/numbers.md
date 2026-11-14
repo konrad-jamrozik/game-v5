@@ -16,8 +16,8 @@ These rules are observable, e.g. through the amounts the engine API reports and 
 requirements on every implementation. This document is a placeholder: its scope is fixed, and its rules are not yet
 written.
 
-This document owns nothing about randomness. [Determinism](engine-contract.md#determinism) and
-[Campaign seed](engine-contract.md#campaign-seed) in Engine Contract own reproducibility and the Campaign seed, and
+This document owns nothing about randomness. [Determinism](determinism-and-randomness.md#determinism) and
+[Campaign seed](determinism-and-randomness.md#campaign-seed) in Determinism and Randomness own reproducibility and the Campaign seed, and
 each Mechanics specification owns the distributions of its own random outcomes. This document owns the precision of
 a probability only as it owns the precision of any other number.
 
@@ -46,7 +46,7 @@ progress, with the unit and allowed range of each kind.
 
 TODO: State the precision of every quantity that is not a whole number, including percentages and probabilities, so
 that every implementation computes equal values on every machine, as
-[Determinism](engine-contract.md#determinism) requires.
+[Determinism](determinism-and-randomness.md#determinism) requires.
 
 # Rounding
 

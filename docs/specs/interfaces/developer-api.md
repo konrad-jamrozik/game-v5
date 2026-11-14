@@ -31,6 +31,7 @@ document does not rely on them.
 
 - Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
+- Uses [Determinism and Randomness](../foundation/determinism-and-randomness.md)
 - Uses [Domain Model](../foundation/domain-model.md)
 - Uses [Timeline](../foundation/timeline.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
@@ -72,7 +73,7 @@ by hand, without relying on a prepared acceptance test.
 An override is a cheat operation under
 [Dev mode and developer operations](../foundation/engine-contract.md#dev-mode-and-developer-operations): it belongs in
 `developer.actions`, and each successful one is one atomic Player action in the Timeline. The guarantee under
-[Determinism](../foundation/engine-contract.md#determinism) therefore still holds, because replaying the same ordered
+[Determinism](../foundation/determinism-and-randomness.md#determinism) therefore still holds, because replaying the same ordered
 Player actions replays the same overrides.
 
 TODO: Specify the override operations: how a random outcome is identified, validation that the supplied value is one

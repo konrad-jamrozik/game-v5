@@ -26,7 +26,7 @@ definition.
 
 [Engine Contract](engine-contract.md) answers _what does the engine guarantee, whatever subsystem is involved?_ It owns
 the API hierarchy, the data the engine owns and what is persisted, the campaign lifecycle, player queries and actions,
-which values a rule uses during Advance turn, Dev mode, determinism and the Campaign seed, the information boundary, and Committed state integrity. It names the owner of each engine
+Dev mode, the information boundary, and Committed state integrity. It names the owner of each engine
 subsystem without stating that subsystem's behavior.
 
 ## Campaign State
@@ -41,6 +41,18 @@ would hold for any game built on this engine.
 
 [Game Data Records](game-data-records.md) answers _what can a Game Data Record (GDR) be used for?_ It owns the six
 purposes a GDR can serve and a worked example of each.
+
+## Determinism and Randomness
+
+[Determinism and Randomness](determinism-and-randomness.md) answers _what makes a Campaign reproducible?_ It owns the
+determinism guarantee, the Campaign seed, the rules every random outcome obeys, and how unique identifiers behave under
+replay. Each Mechanics specification still owns the distributions of its own random outcomes.
+
+## Turn Advancement
+
+[Turn Advancement](turn-advancement.md) answers _what happens during Advance turn, and in which order?_ It owns the
+complete, ordered list of Turn advancement steps and which values each step uses. It is the canonical order: a
+Mechanics specification that contradicts it is corrected to match it.
 
 ## Saves
 
@@ -76,15 +88,17 @@ lifecycle, formulas, and transitions.
 ## Numbers
 
 [Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns which quantities are whole numbers, the
-precision of those that are not, and how rounding works. It owns nothing about randomness: Engine Contract owns
-[Determinism](engine-contract.md#determinism) and the [Campaign seed](engine-contract.md#campaign-seed), and each
+precision of those that are not, and how rounding works. It owns nothing about randomness: Determinism and Randomness owns
+[Determinism](determinism-and-randomness.md#determinism) and the [Campaign seed](determinism-and-randomness.md#campaign-seed), and each
 Mechanics specification owns the distributions of its own random outcomes.
 
 # How they relate
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
-State refines those guarantees. Numbers stands alone and is used by Mechanics. Saves, Timeline, Configuration, and
-Autopilot each use Engine Contract and own one subsystem outright; Timeline also uses Saves. Game Data Records builds on Campaign State. Domain
+State refines those guarantees and Determinism and Randomness. Numbers stands alone and is used by Mechanics. Saves,
+Timeline, Configuration, Autopilot, Determinism and Randomness, and Turn Advancement each use Engine Contract and own
+one subsystem outright; Timeline also uses Saves, and Turn Advancement also uses Domain Model and is used by the
+Mechanics specifications whose rules apply during Advance turn. Game Data Records builds on Campaign State. Domain
 Model uses Campaign State and Game Data Records to describe the actual game, and the Mechanics family refines Domain
 Model in turn.
 
@@ -111,7 +125,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
   Engine Contract stay about guarantees.
 - **Campaign State versus Game Data Records:** the first holds the rules for data that changes during a Campaign; the
   second holds the uses of data that never changes during one.
-- **Engine Contract versus Timeline, Saves, Configuration, and Autopilot:** Engine Contract holds only what is true
+- **Engine Contract versus Timeline, Saves, Configuration, Autopilot, Determinism and Randomness, and Turn Advancement:** Engine Contract holds only what is true
   across all subsystems, and each subsystem has exactly one owner. E.g., the rule for which Committed state `undoAction()`
   restores is stated once, in Timeline.
 - **Saves versus Timeline:** Saves holds what most games have: saving, loading, and the Autosaves the engine writes.
@@ -127,18 +141,22 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
   Agent lifecycle states are in Agents.
 - **Numbers:** several Mechanics documents depend on the same arithmetic, e.g. the same rounding operations, so it
   does not belong inside a single mechanic.
-- **No randomness document:** reproducibility and the Campaign seed hold across all subsystems, so Engine Contract
-  owns them; each Mechanics document owns the distributions of its own random outcomes; and how a random rule is
-  written is owned by Specification Conventions. Nothing else about randomness is observable or designer-authored.
-- **No turn schedule:** the order of rules within Advance turn has no document. Engine Contract gives the default,
-  turn-start values, and each Mechanics document states its own exceptions, so the order follows from the rules.
+- **Determinism and Randomness versus Engine Contract:** determinism, the Campaign seed, random outcomes, and unique
+  identifiers share one test, whether replay must reproduce a result, and change together, so one document holds them
+  in detail. Each Mechanics document owns the distributions of its own random outcomes, and how a random rule is
+  written is owned by Specification Conventions.
+- **Turn Advancement versus the Mechanics family:** Advance turn applies rules from many Mechanics documents, and the
+  order in which they apply changes outcomes. One document states that order canonically, so it can be read and
+  checked in one place; each Mechanics document keeps the formulas and effects of its own rules, and is corrected when
+  it contradicts the order. This repeats a little of each rule in Turn Advancement, which is accepted.
 
 # Reading order
 
 1. [Core Concepts](core-concepts.md) for the vocabulary.
 2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns.
 3. [Campaign State](campaign-state.md) and [Game Data Records](game-data-records.md) for how campaign data is shaped.
-4. [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), and [Autopilot](autopilot.md) for
-   the engine subsystems.
+4. [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md),
+   [Determinism and Randomness](determinism-and-randomness.md), and [Turn Advancement](turn-advancement.md) for the
+   engine subsystems.
 5. [Domain Model](domain-model.md) for the game's concepts.
 6. [Numbers](numbers.md) as needed.

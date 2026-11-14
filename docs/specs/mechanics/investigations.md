@@ -30,9 +30,9 @@ appropriate to this document.
 
 - Uses [Agents](./agents-spec.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)
 - Used by [Player Information](../interfaces/player-information.md)
 
@@ -83,7 +83,7 @@ TODO: Specify effective-skill-weighted progress loss on removal, the weighting s
 # Edge cases and failure behavior
 
 TODO: Define behavior for Zero total effective skill, fractional progress, threshold crossing, removing all or some agents, completion and exhaustion together, and restarting abandoned leads.
-State which rules of the same Advance turn apply to a Mission that a completed Investigation creates, under [Turn advancement](../foundation/engine-contract.md#turn-advancement).
+State which rules of the same Advance turn apply to a Mission that a completed Investigation creates, under [Values a step uses](../foundation/turn-advancement.md#values-a-step-uses).
 State exact thresholds and effect ordering where relevant.
 
 # Acceptance examples

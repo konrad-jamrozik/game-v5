@@ -32,6 +32,7 @@ hidden from the player.
 - Uses [Game Data Records](./game-data-records.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Player Information](../interfaces/player-information.md)
+- Used by [Turn Advancement](./turn-advancement.md)
 - Used by [TypeScript Player API](../interfaces/typescript-api.md)
 - Refined by [Agents](../mechanics/agents-spec.md)
 - Refined by [Combat](../mechanics/combat.md)
