@@ -50,8 +50,8 @@ These informative views are derived from the registered Markdown specifications.
 | ENG      | [Engine Contract](../specs/foundation/engine-contract.md)     | Draft    | API hierarchy, Principal authority, Session and campaign lifecycle, data ownership, determinism, and the guarantees shared by every engine subsystem. |
 | GDR      | [Game Data Records](../specs/foundation/game-data-records.md) | Accepted | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                             |
 | NUMBERS  | [Numbers](../specs/foundation/numbers.md)                     | Stub     | Which quantities are whole numbers, the precision of those that are not, and how rounding works.                                                      |
-| SAVES    | [Saves](../specs/foundation/saves.md)                         | Draft    | Campaign save contents, saving, loading, the Save size limit, and Game build compatibility.                                                           |
-| TIMELINE | [Timeline](../specs/foundation/timeline.md)                   | Draft    | Undo and redo of Committed actions by action and by turn, and what a restored Timeline position guarantees.                                           |
+| SAVES    | [Saves](../specs/foundation/saves.md)                         | Draft    | Campaign save contents, saving, loading, Autosaves, undo and redo across Turns, the Save size limit, and Game build compatibility.                    |
+| TIMELINE | [Timeline](../specs/foundation/timeline.md)                   | Draft    | Undo and redo of the Committed actions of the current Turn, and what a restored Committed state guarantees.                                           |
 
 ## Mechanics
 

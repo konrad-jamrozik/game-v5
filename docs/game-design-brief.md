@@ -114,7 +114,7 @@ This is a v5 requirement rather than an inherited reward rule: existing mission 
 
 Missions are auto-battles. The player chooses whether to commit and which agents to send, then accepts automatic resolution without controlling individual attacks.
 
-Seeded determinism prevents replaying an identical attempt to obtain fresh rolls. Improving preparation may require revisiting earlier recruitment, training, recovery, and allocation decisions, abandoning the progress of that Timeline branch.
+Seeded determinism prevents replaying an identical attempt to obtain fresh rolls. Improving preparation may require revisiting earlier recruitment, training, recovery, and allocation decisions, abandoning the progress made since.
 
 This reduces the value of retrying combat, but does not eliminate foreknowledge from undo. Undo remains supported; no additional rewind penalty is introduced by this brief.
 
@@ -147,14 +147,16 @@ Management commands take immediate effect. **Advance turn** atomically resolves 
 - Under the same game revision, identical initial state and commands reproduce identical outcomes.
 - Random-generator state and deterministic Instance ID counters belong to Authoritative values in Campaign state.
 - Processing order and rounding are explicit. Queries, rendering, and wall-clock time do not influence gameplay.
-- Every accepted command, including an entire turn advancement, is one Timeline entry.
+- Every accepted command other than Advance turn is one Timeline entry. The Timeline covers the current turn only, and Advance turn starts a new one.
+- Undo and redo within a turn step through that turn's Timeline entries, back to the start of the turn at most.
+- Undo and redo across turns are a separate, explicit operation that loads an Autosave. The engine writes an Autosave at the end of every turn, keeping the latest 5 turns by default, and just before and after every Autopilot engagement.
 - Undo restores state, randomness, and reports. Redo restores the recorded result without rerolling.
-- A new command after undo discards the redo entries and starts a new Timeline branch.
+- A new command after undo discards the undone commands and the Autosaves of the play it abandons.
 - Rejected commands change neither state nor the Timeline.
-- UI preferences belong to Global configuration and remain outside the Timeline. Autopilot memory follows the Timeline cursor, so an Autopilot AI that is engaged again reads the memory it wrote at or before that Timeline position.
+- UI preferences belong to Global configuration and remain outside the Timeline. Autopilot memory follows undo, redo, and load, so an Autopilot AI that is engaged again reads the memory it wrote at or before the restored state.
 - World history, the past that game behavior and reports consult, is part of Campaign state and is separate from the Timeline.
 
-Begin with snapshots; optimize Timeline storage later.
+Begin with snapshots; optimize Timeline and Autosave storage later.
 
 ## 5. Delivery and acceptance
 

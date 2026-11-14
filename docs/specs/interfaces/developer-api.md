@@ -82,7 +82,7 @@ outcome is never decided, and whether a pending override is visible through insp
 # Isolation and Timeline navigation
 
 TODO: Specify authorization failures and access revocation under Engine Contract. Undo and redo of a committed cheat action follow
-[Restored Timeline positions](../foundation/timeline.md#restored-timeline-positions): they do not require Dev mode and give an Autopilot AI no
+[Restored Committed states](../foundation/timeline.md#restored-committed-states): they do not require Dev mode and give an Autopilot AI no
 way to commit a cheat action.
 
 # Edge cases and failure behavior

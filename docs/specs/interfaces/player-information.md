@@ -22,7 +22,7 @@ inspection never changes gameplay reveal conditions or information supplied to A
 
 Core Concepts supplies Player-visible information, Authoritative value, Derived value, and historical meanings.
 Campaign State supplies value-classification and historical-preservation constraints.
-Domain Model supplies represented concepts, and Timeline supplies Timeline positions and what undo and redo restore.
+Domain Model supplies represented concepts, and Timeline supplies what undo and redo restore.
 Mechanics supply facts and calculations to expose. Investigations owns estimate mathematics and permitted inputs;
 this specification owns the exposed Properties and reveal conditions, without duplicating formulas.
 Historical explanations preserve [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation).
@@ -93,4 +93,4 @@ including after Dev mode changes and Timeline navigation. Identify each exercise
 # Open decisions
 
 - TODO: Choose complete Player API query schemas, reveal conditions, and uncertainty presentation.
-- TODO: Choose historical-report visibility consistent with the Timeline cursor after undo and redo.
+- TODO: Choose historical-report visibility consistent with the Committed state restored by undo and redo.

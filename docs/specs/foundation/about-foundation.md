@@ -44,13 +44,14 @@ purposes a GDR can serve and a worked example of each.
 
 ## Timeline
 
-[Timeline](timeline.md) answers _how does the player go back and forward?_ It owns undo and redo by action and by turn,
-and what a restored Timeline position guarantees.
+[Timeline](timeline.md) answers _how does the player go back and forward within a turn?_ It owns undo and redo of the
+Committed actions of the current Turn, and what a restored Committed state guarantees.
 
 ## Saves
 
-[Saves](saves.md) answers _what do saving and loading do?_ It owns what a Campaign save holds, saving, saving as new,
-loading, the Save size limit, and which Campaign saves a Game build loads.
+[Saves](saves.md) answers _what do saving and loading do, and how does the player go back and forward across turns?_
+It owns what a Campaign save holds, saving, saving as new, loading, the Autosaves the engine writes, Autosave
+navigation, the Save size limit, and which Campaign saves a Game build loads.
 
 ## Configuration
 
@@ -110,10 +111,11 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 - **Campaign State versus Game Data Records:** the first holds the rules for data that changes during a Campaign; the
   second holds the uses of data that never changes during one.
 - **Engine Contract versus Timeline, Saves, Configuration, and Autopilot:** Engine Contract holds only what is true
-  across all subsystems, and each subsystem has exactly one owner. E.g., the rule for which Timeline position `undoTurn()`
+  across all subsystems, and each subsystem has exactly one owner. E.g., the rule for which Committed state `undoAction()`
   restores is stated once, in Timeline.
 - **Timeline versus Saves:** World history, the Timeline, and a Campaign save all keep a Campaign's past, for different
-  purposes. Undo and redo work without any Campaign save, and a Campaign save may omit its Timeline.
+  purposes. Undo and redo within a Turn belong to Timeline and work without any Campaign save. Undo and redo across
+  Turns load Autosaves, so they belong to Saves.
 - **Campaign State versus Domain Model:** the first holds rules that would apply to any game on this engine;
   the second holds the concepts of this game. E.g., Factions can be redesigned without touching Campaign State,
   and reference integrity can be tightened without touching Domain Model.

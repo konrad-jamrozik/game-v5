@@ -28,8 +28,9 @@ TODO: Describe one physical layout covering every part of Game storage under
 [Data ownership](../foundation/engine-contract.md#data-ownership): Global configuration, and for each Campaign save
 its identifiers, Campaign state, Timeline, and Autopilot memory.
 
-TODO: Suggest how Timeline positions are stored, e.g. as complete copies of Campaign state, as Timeline entries
-reapplied from the Baseline, or as a mix of both.
+TODO: Suggest how the Committed states a Timeline can restore are stored, e.g. as complete copies of Campaign state,
+as Timeline entries reapplied from the Turn-start state, or as a mix of both. Suggest how Autosaves are stored beside
+the other Campaign saves of their Campaign.
 
 TODO: Suggest a Campaign save encoding and how a Game build recognises a Campaign save it rejects under
 [Game build compatibility](../foundation/saves.md#game-build-compatibility).

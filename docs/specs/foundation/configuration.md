@@ -55,6 +55,8 @@ Three kinds of setting are distinct. This list is complete, and only the last tw
 Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is
 selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and a Campaign save does
 not contain it. Interface preferences belong to Global configuration, e.g. volume, language, and tutorial popups.
+So does a setting that governs the engine without being consulted by game behavior, e.g. the
+[Autosave limit](saves.md#glossary), which [Autosaves](saves.md#autosaves) in Saves owns.
 
 Global configuration stores only values the player has set. A setting the player has not set follows the current
 Game build default, so a changed Game build default in a later Game build reaches it. Resetting a setting removes its

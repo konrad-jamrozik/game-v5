@@ -30,8 +30,8 @@ outside the specifications.
 # Glossary
 
 Autopilot, Autopilot AI, Autopilot engagement, Autopilot memory, Autopilot memory API, Session controller, and
-Player-visible information are defined by the [Engine Contract glossary](engine-contract.md#glossary). Timeline
-position, Timeline cursor, and Timeline branch are defined by the [Timeline glossary](timeline.md#glossary).
+Player-visible information are defined by the [Engine Contract glossary](engine-contract.md#glossary). Turn,
+Timeline entry, and Undone action are defined by the [Timeline glossary](timeline.md#glossary).
 
 | Term               | Definition                                                                                                                                                                                           |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -68,8 +68,7 @@ Autopilot memory. The Autopilot AI never decides when an Autopilot engagement en
 reason under [Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency).
 
 Each Autopilot engagement starts with only Player-visible information and the Autopilot memory. Nothing else carries
-over into it, e.g. nothing from an earlier Autopilot engagement, a later Timeline position, or a discarded Timeline
-branch.
+over into it, e.g. nothing from an earlier Autopilot engagement or from an Undone action.
 
 # Autopilot lifecycle and concurrency
 
@@ -89,31 +88,37 @@ commits completely or fails without effects. Disengagement never implicitly adva
 Committed actions. Failure of the Autopilot AI follows the same boundary rule. A late response from a completed Autopilot engagement
 cannot change Campaign state or write Autopilot memory. Timeline navigation remains available after disengagement.
 
+Engaging Autopilot and completing its disengagement each write an Autosave, and no Turn-end Autosave is written
+during an Autopilot engagement. [Autosaves](saves.md#autosaves) in Saves owns these rules. An Autopilot engagement
+that advances the turn is therefore reversed as a whole through [Autosave navigation](saves.md#autosave-navigation),
+while the Timeline entries of its last Turn are reversed one by one.
+
 # Autopilot memory
 
 A Campaign has at most one Autopilot memory, and that Autopilot memory records which Autopilot AI wrote it. Keeping
 Autopilot memory for several Autopilot AIs in one Campaign is out of scope. A newly created Campaign has no Autopilot
 memory.
 
-`autopilotMemory.read()` returns the Autopilot memory most recently written at or before the Timeline cursor on the
-current Timeline branch, or an explicit absence when there is none. `autopilotMemory.write(memory)` atomically replaces
+`autopilotMemory.read()` returns the Autopilot memory most recently written at or before the current Committed state,
+or an explicit absence when there is none. `autopilotMemory.write(memory)` atomically replaces
 the Autopilot memory. Writing is not a Timeline entry, does not change Campaign state or any gameplay outcome, and does
 not count toward the Autopilot limit. Only the active Autopilot AI can read or write Autopilot memory; the Session
 controller cannot inject knowledge through Autopilot memory API.
 
 Engaging Autopilot with an Autopilot AI other than the one that wrote the Autopilot memory discards that Autopilot
-memory at engagement, at every Timeline position. The newly engaged Autopilot AI reads absence until it writes.
-Campaign saves written earlier are unchanged.
+memory at engagement, at every Committed state the Timeline can restore. The newly engaged Autopilot AI reads absence
+until it writes. Campaign saves written earlier are unchanged.
 
-Autopilot memory follows the Timeline cursor:
+Autopilot memory follows the Committed state that undo and redo restore:
 
-- After undo, `autopilotMemory.read()` returns the Autopilot memory as it was at the restored Timeline position, never
-  Autopilot memory written at a later Timeline position.
-- Redo restores the Autopilot memory of the Timeline position it moves to.
-- Starting a new Timeline branch discards the Autopilot memory written at the discarded Timeline entries.
+- After undo, `autopilotMemory.read()` returns the Autopilot memory as it was at the restored Committed state, never
+  Autopilot memory written at an Undone action.
+- Redo restores the Autopilot memory of the Committed state it restores.
+- Committing a new action after undo discards the Autopilot memory written at the discarded Undone actions.
 
 A Campaign save holds the Autopilot memory under [Campaign save contents](saves.md#campaign-save-contents), and a
-successful load restores it.
+successful load restores it. This includes loading an Autosave through
+[Autosave navigation](saves.md#autosave-navigation).
 
 # Edge cases and failure behavior
 
@@ -133,12 +138,12 @@ nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-recei
 - **Engagement ends at the first Advance turn:** Engage Autopilot with `untilTurnAdvanced`. Its first committed Advance
   turn disengages Autopilot, and a later action through that Autopilot engagement is rejected
   ([Autopilot limits](#autopilot-limits)).
-- **Autopilot memory follows the Timeline cursor:** At Timeline position P, Autopilot AI X writes plan M. Later at
-  Timeline position Q it observes a newly revealed outcome and writes M2. Undo to P and engage Autopilot with X again:
-  it reads M, and nothing from Q is supplied to it. Save at P with its redo entries, load, and redo to Q: X reads M2
-  ([Autopilot memory](#autopilot-memory), [What an Autopilot AI receives](#what-an-autopilot-ai-receives)).
+- **Autopilot memory follows undo and redo:** At Committed state P, Autopilot AI X writes plan M. Later in the same
+  Turn, at Committed state Q, it observes a newly revealed outcome and writes M2. Undo to P and engage Autopilot with X
+  again: it reads M, and nothing from Q is supplied to it. Save at P with its Undone actions, load, and redo to Q: X
+  reads M2 ([Autopilot memory](#autopilot-memory), [What an Autopilot AI receives](#what-an-autopilot-ai-receives)).
 - **A different Autopilot AI discards Autopilot memory:** Autopilot AI X writes plan M and Autopilot disengages. Engage
-  Autopilot with Autopilot AI Y: Y reads absence. Disengage, undo to an earlier Timeline position, and engage Autopilot
+  Autopilot with Autopilot AI Y: Y reads absence. Disengage, undo to an earlier Committed state, and engage Autopilot
   with X: X also reads absence ([Autopilot memory](#autopilot-memory)).
 - **Disengagement during an action:** Disengage Autopilot during an action. The action either commits completely or
   fails without effects; earlier Committed actions remain
