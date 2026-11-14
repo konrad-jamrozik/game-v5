@@ -46,76 +46,79 @@ hidden from the player.
 
 Campaign, Campaign state, Type, GDR, Authoritative value, and Derived value are defined by the
 [Core Concepts glossary](core-concepts.md#glossary). Campaign instance, Instance ID, Archetype, Constants, State,
-World history, and Campaign configuration are defined by the [Campaign State glossary](campaign-state.md#glossary). Committed state is defined by
-the [Engine Contract glossary](engine-contract.md#glossary).
+Role Type, World history, and Campaign configuration are defined by the
+[Campaign State glossary](campaign-state.md#glossary). Committed state is defined by the
+[Engine Contract glossary](engine-contract.md#glossary).
 
 ## Agency and Agents
 
 The player-controlled organization, its Agents, and what each Agent is doing.
 
-| Term               | Definition                                                                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Agency             | The player-controlled Campaign instance Type whose Campaign instance owns resources, upgrades, and the roster of Agents within a Campaign. |
-| Agent              | A Campaign instance Type whose Campaign instances have identity, attributes, Current assignments, and Participation history.               |
-| Current assignment | An Agent's current orders, with activity references and a destination when travelling.                                                     |
-| Task phase         | The distinction between At assignment and In transit, including travel timing facts.                                                       |
+| Term               | Definition                                                                                                             |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Agency             | The organization the player controls in a Campaign. It holds the money, funding, and upgrades, and employs the Agents. |
+| Agent              | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                           |
+| Current assignment | What an Agent is currently ordered to do, e.g. take part in a particular Investigation or Mission.                     |
+| Task phase         | Whether an Agent is carrying out its Current assignment (At assignment) or still travelling to it (In transit).        |
 
 ## Leads, Investigations, and Missions
 
 The work the Agency discovers and undertakes.
 
-| Term             | Definition                                                                                              |
-| ---------------- | ------------------------------------------------------------------------------------------------------- |
-| Lead             | A GDR representing a Lead to pursue and describing its progression rules.                               |
-| Lead progression | Campaign state keyed by Lead GDR, recording earned facts that are not Derived values.                   |
-| Investigation    | A Campaign instance Type whose Campaign instances each represent an Investigation of one Lead.          |
-| Mission          | A Campaign instance Type whose Campaign instances each have their own origin, participants, and result. |
-| Current team     | The Agents whose Current assignment references a given Investigation or Mission.                        |
+| Term             | Definition                                                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lead             | A line of inquiry the Agency can investigate. Investigating it can open further Leads and Missions.                                                                             |
+| Lead progression | What the Agency has earned on each Lead so far in a Campaign, e.g. wins and unlocks.                                                                                            |
+| Investigation    | One effort by a team of Agents to investigate one Lead, from its start until it concludes.                                                                                      |
+| Mission          | One operation on which the Agency deploys a team of Agents to fight Enemies, undertaken either on the Agency's own initiative or in response to a Faction operation occurrence. |
+| Current team     | The Agents currently assigned to a given Investigation or Mission.                                                                                                              |
 
 ## Combat
 
 The participants and retained results of combat.
 
-| Term          | Definition                                                                                                                                                                        |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Combatant     | Reusable structure described by a Type for combat-related Agent and Enemy state, describing skill, health, exhaustion, and weapon capability; it is not a Campaign instance Type. |
-| Enemy         | A Campaign instance Type whose Campaign instances are each owned by one Mission.                                                                                                  |
-| Battle result | Retained combat facts owned by a resolved Mission and used to determine its consequences for the Campaign.                                                                        |
+| Term                | Definition                                                                                                                                      |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Combatant           | An Agent or an Enemy as a participant in a Mission's combat. Both can fight because both have skill, health, exhaustion, and weapon capability. |
+| Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a battle lasts.                                         |
+| Enemy               | An opponent that the Agency's Agents fight in the combat of one Mission.                                                                        |
+| Battle result       | The record of how a Mission's combat went, kept after the Mission resolves and used to determine the Mission's consequences for the Campaign.   |
 
 ## Factions
 
 The opposing organizations and their operations.
 
-| Term                         | Definition                                                                                                    |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Faction                      | A Campaign instance Type whose Campaign instances record an opposing organization's activity and progression. |
-| Faction operation occurrence | The origin of one Response Mission, identified by that Mission rather than a separate Campaign instance.      |
+| Term                         | Definition                                                                                                |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Faction                      | An organization that opposes the Agency and carries out operations in the world.                          |
+| Faction operation occurrence | One operation carried out by a Faction, against which the Agency can intervene with one Response Mission. |
 
 ## Retained records
 
 Records kept to explain past gameplay.
 
-| Term                  | Definition                                                                                                 |
-| --------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Participation history | Immutable records linking Agents to Investigations and Missions in which they previously participated.     |
-| Report                | Historical facts and explanations in World history, linked to commands or turns and to Campaign instances. |
+| Term                  | Definition                                                                                                |
+| --------------------- | --------------------------------------------------------------------------------------------------------- |
+| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                 |
+| Report                | An account of something that happened in the Campaign, e.g. a battle, explaining its facts to the player. |
 
 # Game concepts
 
-The following table is the complete set of concepts this specification declares, each with its modeling role.
+The following table is the complete set of concepts this specification declares, each with its modeling role. The
+[Glossary](#glossary) states what each concept is; this table states how it is modeled.
 
-| Concept                                       | Modeling role                                                                                | Multiplicity within one Campaign                                                                                                             |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Agency                                        | Campaign instance Type                                                                       | Exactly one, under [Agency per Campaign](#agency-per-campaign)                                                                               |
-| Agent                                         | Campaign instance Type                                                                       | Any number; roster limits belong to Economy and Upgrades                                                                                     |
-| Investigation                                 | Campaign instance Type                                                                       | At most one Active Investigation per Lead, under [Leads and Investigations](#leads-and-investigations)                                       |
-| Mission                                       | Campaign instance Type                                                                       | Any number; exactly one Response Mission per Faction operation occurrence, under [Mission kind and provenance](#mission-kind-and-provenance) |
-| Enemy                                         | Campaign instance Type                                                                       | Any number, each belonging to exactly one Mission, under [Combat and consequences](#combat-and-consequences)                                 |
-| Faction                                       | Campaign instance Type                                                                       | Undecided; see [Open decisions](../mechanics/factions.md#open-decisions) in Factions                                                         |
-| Combatant                                     | Reusable structure described by a Type, within Agent and Enemy; not a Campaign instance Type | No Campaign instances                                                                                                                        |
-| Lead                                          | GDR serving the Referenced GDR and Key for campaign facts purposes                           | Not a Campaign instance                                                                                                                      |
-| Weapon and upgrade GDRs                       | GDRs                                                                                         | Not Campaign instances                                                                                                                       |
-| Archetypes of the six Campaign instance Types | GDRs serving the Archetype purpose                                                           | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist                                                |
+| Concept                                       | Modeling role                                                                                                         | Multiplicity within one Campaign                                                                                                             |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agency                                        | Campaign instance Type                                                                                                | Exactly one, under [Agency per Campaign](#agency-per-campaign)                                                                               |
+| Agent                                         | Campaign instance Type                                                                                                | Any number; roster limits belong to Economy and Upgrades                                                                                     |
+| Investigation                                 | Campaign instance Type                                                                                                | At most one Active Investigation per Lead, under [Leads and Investigations](#leads-and-investigations)                                       |
+| Mission                                       | Campaign instance Type                                                                                                | Any number; exactly one Response Mission per Faction operation occurrence, under [Mission kind and provenance](#mission-kind-and-provenance) |
+| Enemy                                         | Campaign instance Type                                                                                                | Any number, each belonging to exactly one Mission, under [Combat and consequences](#combat-and-consequences)                                 |
+| Faction                                       | Campaign instance Type                                                                                                | Undecided; see [Open decisions](../mechanics/factions.md#open-decisions) in Factions                                                         |
+| Combatant Role Type                           | Role Type adopted by Agent and Enemy, under [Combatant Role Type](#combatant-role-type); not a Campaign instance Type | No Campaign instances                                                                                                                        |
+| Lead                                          | GDR serving the Referenced GDR and Key for campaign facts purposes                                                    | Not a Campaign instance                                                                                                                      |
+| Weapon and upgrade GDRs                       | GDRs                                                                                                                  | Not Campaign instances                                                                                                                       |
+| Archetypes of the six Campaign instance Types | GDRs serving the Archetype purpose                                                                                    | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist                                                |
 
 GDR purposes are defined under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs). Every Campaign instance of
 the six Campaign instance Types has the four properties stated under
@@ -127,25 +130,25 @@ retained facts.
 
 ```mermaid
 flowchart TD
-    CampaignState["Campaign state"] --> Agency
-    Agency --> Agents
-    CampaignState --> Factions
-    CampaignState --> Progression["Lead progression"]
-    CampaignState --> Investigations
-    CampaignState --> Missions
-    Investigations --> Lead["One Lead GDR"]
-    Agents --> Assignment["Current assignment and Task phase"]
-    Assignment --> Investigations
-    Assignment --> Missions
-    Agents --> Participation["Participation history"]
-    Participation --> Investigations
-    Participation --> Missions
-    Missions --> Enemies
-    Missions --> Origin["Initiative origin or Faction operation occurrence origin"]
-    Missions --> Result["Battle result and consequences"]
+    CampaignState["Campaign state"] -->|contains one| Agency["Agency"]
+    Agency -->|employs| Agents["Agents"]
+    CampaignState -->|contains| Factions["Factions"]
+    CampaignState -->|contains| Progression["Lead progression"]
+    CampaignState -->|contains| Investigations["Investigations"]
+    CampaignState -->|contains| Missions["Missions"]
+    Investigations -->|each investigates| Lead["One Lead GDR"]
+    Agents -->|each has| Assignment["Current assignment and Task phase"]
+    Assignment -->|can reference| Investigations
+    Assignment -->|can reference| Missions
+    Agents -->|each has| Participation["Participation history"]
+    Participation -->|records past| Investigations
+    Participation -->|records past| Missions
+    Missions -->|each owns| Enemies["Enemies"]
+    Missions -->|each retains| Origin["Initiative origin or Faction operation occurrence origin"]
+    Missions -->|once resolved, owns| Result["Battle result and consequences"]
 ```
 
-Arrows show relationships, not inheritance.
+Arrows show the labelled relationships, not inheritance.
 
 # Campaign and Agency
 
@@ -156,8 +159,9 @@ Agency.
 
 ## Agency per Campaign
 
-Campaign state must contain exactly one Agency. Several Agencies in one Campaign, e.g. for multiplayer, and trading
-between Campaigns are out of scope.
+Campaign state must contain exactly one Agency, because a Campaign has exactly one player under
+[Single-player scope](engine-contract.md#single-player-scope) in Engine Contract. Trading between Campaigns is out of
+scope.
 
 ## Initial Campaign state
 
@@ -190,8 +194,8 @@ general identity rules; this section declares the scope those rules require.
 
 # Agent
 
-An Agent is a Campaign instance belonging to the Agency. Its combat-related values are structured as a Combatant,
-under [Attribute bounds](#attribute-bounds). Its Current assignment gives its current orders; an Investigation or
+An Agent is a Campaign instance belonging to the Agency. Agent adopts the Combatant Role Type, under
+[Combatant Role Type](#combatant-role-type). Its Current assignment gives its current orders; an Investigation or
 Mission Current assignment references that Investigation or Mission. Its Participation history links it to the
 Investigations and Missions it previously participated in.
 
@@ -217,7 +221,8 @@ Agent; e.g., a concluded Mission retains an Agent's Participation history after 
 A Lead is a GDR, and an Investigation is a Campaign instance for investigation of one Lead. A Lead is a Referenced
 GDR, distinct from the InvestigationArchetype that is the Investigation's Archetype, as
 [GDR purpose: referenced GDR](./game-data-records.md#gdr-purpose-referenced-gdr) illustrates. Lead progression is
-Campaign state keyed by Lead GDR.
+the part of Campaign state that records, for each Lead GDR, what the Agency has earned on that Lead; it holds only
+facts that are not Derived values.
 
 [Leads and Progression](../mechanics/leads-and-progression.md) owns what a Lead GDR describes, discovery, and unlock
 effects. [Investigations](../mechanics/investigations.md) owns what an Investigation has, the Investigation
@@ -248,8 +253,8 @@ Progression owns the predicates and effects of progression facts.
 
 A Mission is a Campaign instance that the Agency undertakes with a Current team against the Enemies the Mission owns;
 a resolved Mission owns one Battle result. An Enemy is a Campaign instance owned by one Mission; its Archetype is an
-EnemyArchetype. Combatant is the structure shared by the combat-related state of Agents and Enemies; it adds no
-Campaign instance Type.
+EnemyArchetype. Agents and Enemies are the Combatants of a Mission's combat: Agent and Enemy both adopt the
+Combatant Role Type.
 
 [Missions](../mechanics/missions.md) owns what a Mission has, the Mission lifecycle, deployment, deadlines, rewards,
 and partial success. [Combat](../mechanics/combat.md) owns battle resolution and what a Battle result holds.
@@ -266,9 +271,32 @@ same Faction are distinct Campaign instances. A Faction operation occurrence spa
 Response Mission, is out of scope. Target Faction and initiating Faction are explicit references, never inferred from
 a Mission's name.
 
+## Combatant Role Type
+
+The Combatant Role Type is a Role Type under [Role Types](campaign-state.md#role-types). It states what a Campaign
+instance Type must have for its Campaign instances to be Combatants, and what a Combatant gains while a battle lasts.
+
+- **Adoption condition:** a Campaign instance Type can adopt the Combatant Role Type if the State of its Campaign
+  instances has all of the following properties: skill, current health, maximum health, exhaustion, and equipped
+  weapon values. This set is exhaustive.
+- **Adopters:** Agent and Enemy adopt the Combatant Role Type. This set is exhaustive.
+- **Gained properties:** every Combatant taking part in a battle gains properties that mean something only while
+  that battle lasts, e.g. morale and incapacitated. It gains them when the battle begins and loses them when the
+  battle ends. [Combat](../mechanics/combat.md) owns the exhaustive set of gained properties.
+
+The properties named by the adoption condition persist outside combat; e.g., an Agent has health and exhaustion
+between Missions. What outlasts a battle is its Battle result and every change the battle made to those properties,
+e.g. lost health.
+
+The Combatant Role Type is not a Campaign instance Type, so a Combatant is never a Campaign instance separate from
+its Agent or Enemy. If it were, every Agent would be two Campaign instances with two Instance IDs, and health would
+belong to the second one instead of to the Agent. The Agent changed by combat is instead the same Agent that returns
+to the Agency, under [Combat and consequences](#combat-and-consequences).
+
 ## Attribute bounds
 
-The Combatant structure of every Agent and Enemy must obey these bounds: maximum health must be positive; current
+Every Campaign instance of a Campaign instance Type that adopts the Combatant Role Type, i.e. every Agent and Enemy,
+must obey these bounds: maximum health must be positive; current
 health must be between zero and maximum health inclusive; skill and exhaustion must be nonnegative. Agents owns the
 health an Agent has in each lifecycle state, dismissal eligibility, exhaustion caps, and rounding.
 
@@ -294,7 +322,7 @@ occurrence. It is not a separate Campaign instance.
 # Weapons and upgrades
 
 Weapon GDRs describe damage configuration. Equipped weapon values and their modifications during a Campaign belong to
-the Combatant structure of an Agent or Enemy; individual inventory items are out of scope. Upgrade GDRs supply shared
+the State of an Agent or Enemy, among the properties the Combatant Role Type requires; individual inventory items are out of scope. Upgrade GDRs supply shared
 upgrade data; acquisitions and their amount or level belong to the Agency.
 [Economy and Upgrades](../mechanics/economy-and-upgrades.md) owns acquisition costs, capacity accounting, and upgrade
 effects.
@@ -343,14 +371,14 @@ Given turn 3 and:
 Each Campaign instance has the following allocation of the properties this specification names; the properties that
 Mechanics specifications add are assumed valid:
 
-| Campaign instance | Instance ID         | Archetype | Constants                                                        | State                                                                       |
-| ----------------- | ------------------- | --------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| ag1               | ag1                 | G1        | Empty                                                            | Resources, upgrades, roster {a1, a2}                                        |
-| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                       | Current assignment, Task phase, Combatant values, and Participation history |
-| i1                | i1                  | I1        | Lead L1                                                          | Active, Current team {a1}, Participation history                            |
-| m1                | m1                  | M1        | Initiative kind; campaign-creation provenance; target Faction f1 | Current team {a2}, Enemies {e1}, and no Battle result until resolved        |
-| e1                | e1                  | E1        | Mission m1                                                       | Combatant values                                                            |
-| f1                | f1                  | F1        | Empty                                                            | The values Factions owns                                                    |
+| Campaign instance | Instance ID         | Archetype | Constants                                                        | State                                                                                                      |
+| ----------------- | ------------------- | --------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| ag1               | ag1                 | G1        | Empty                                                            | Resources, upgrades, roster {a1, a2}                                                                       |
+| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                       | Current assignment, Task phase, the properties the Combatant Role Type requires, and Participation history |
+| i1                | i1                  | I1        | Lead L1                                                          | Active, Current team {a1}, Participation history                                                           |
+| m1                | m1                  | M1        | Initiative kind; campaign-creation provenance; target Faction f1 | Current team {a2}, Enemies {e1}, and no Battle result until resolved                                       |
+| e1                | e1                  | E1        | Mission m1                                                       | The properties the Combatant Role Type requires                                                            |
+| f1                | f1                  | F1        | Empty                                                            | The values Factions owns                                                                                   |
 
 Campaign state c1 holds turn 3, Lead progression, and collections containing Agency ag1, Agents a1 and a2,
 Investigation i1, Mission m1, and Faction f1; e1 is reached through m1. Required references resolve in c1. Immutable

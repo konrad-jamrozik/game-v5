@@ -273,6 +273,12 @@ them. The following table is the complete subsystem inventory.
 | Configuration | [Configuration](configuration.md) | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration.             |
 | Autopilot     | [Autopilot](autopilot.md)         | Bounded play by an Autopilot AI, and its Autopilot memory.                                               |
 
+# Single-player scope
+
+The game is single-player; multiplayer in any form is out of scope. A Campaign has exactly one player, whether that
+player's Player actions are issued by the Session controller or by an Autopilot AI on the player's behalf. No engine
+API operation lets a second player join, observe, or share a Session or a Campaign.
+
 # Campaign lifecycle
 
 A Session starts when the game starts and ends when the game exits. A newly opened Session has no Current campaign

@@ -4,13 +4,13 @@
 | ----------- | -------------------------------------------------------------- |
 | Spec ID     | GDR                                                            |
 | Family      | Foundation                                                     |
-| Status      | Accepted                                                       |
+| Status      | Draft                                                          |
 | Audience    | Engine designer, Content designer, Implementer                 |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
 # Overview
 
-This document defines the purposes a Game Data Record (GDR) can serve relative to game behavior and Campaign state, and gives a worked example of each purpose. It owns no Campaign state structure; e.g., Campaign instances and their creation are owned by [Campaign State](campaign-state.md).
+This document defines the purposes a Game Data Record (GDR) can serve relative to game behavior and Campaign state, states the format GDRs are authored in, and gives a worked example of each purpose. It owns no Campaign state structure; e.g., Campaign instances and their creation are owned by [Campaign State](campaign-state.md).
 
 # Relationships
 
@@ -29,7 +29,7 @@ Campaign instance, Instance ID, Archetype, Constants, State, and Campaign config
 # Purposes of GDRs
 
 GDRs can serve the following seven purposes. The purposes can overlap; they do not define separate Types or required
-implementation interfaces. Each of the following sections is a worked example of one purpose.
+implementation interfaces. Each GDR purpose section below is a worked example of one purpose.
 
 | Purpose                          | How the engine uses the GDR                                                                                                                                                                              | Example                                                                                                                    |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
@@ -40,6 +40,16 @@ implementation interfaces. Each of the following sections is a worked example of
 | Referenced GDR                   | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                                                                                 | An Investigation holds a reference to the Lead GDR it pursues.                                                             |
 | Key for campaign facts           | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                                                                                    | The engine records completions against a Lead GDR’s identity.                                                              |
 | Display content                  | No game behavior reads the GDR's value; the engine exposes it to the player through Player API, subject to Player-visible information boundaries.                                                        | The Thug GDR's display name and description appear in the enemy list and the encyclopedia.                                 |
+
+# GDR authoring format
+
+GDRs are authored as YAML files that the Game build supplies. YAML is the authoring format only: how a Game build
+packages, loads, or represents GDRs while the game runs is the implementer's choice.
+
+Each of the following GDR purpose sections shows one GDR of its worked example as YAML. The snippets illustrate the
+format: each states an identifier, a Type, and the values of that Type's properties. Their property names and values
+are illustrative. The specification owning a Type decides its properties, and [Open decisions](#open-decisions) lists
+the parts of the format that are undecided.
 
 # GDR purpose: campaign instance initialization
 
@@ -53,6 +63,14 @@ Consider an illustrative creation of an Agent hired during play:
 | Agent               | Campaign instance                                                          | The newly created Agent Campaign instance, with skill 100 in State.                                                          |
 | Agent skill         | Authoritative value                                                        | Initially 100 in the Agent Campaign instance’s State.                                                                        |
 | New Committed state | Committed state                                                            | Contains the Agent Campaign instance when the hiring action completes.                                                       |
+
+E.g., the recruit-skill GDR as YAML:
+
+```yaml
+id: recruit_skill
+type: Skill
+value: 100
+```
 
 Recruit skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies
 to newly hired Agents of every Archetype without being repeated in each Archetype.
@@ -101,6 +119,15 @@ Consider an illustrative Game build with two presets and two Campaign configurat
 | Investigation difficulty multiplier | Authoritative value, adjustable during play                                | Initially 2 in Campaign configuration.                                                                                        |
 | Agency creation                     | [Campaign instance creation](campaign-state.md#campaign-instance-creation) | Campaign creation creates the Agency Campaign instance with money in State equal to starting money in Campaign configuration. |
 
+E.g., the Hard GDR as YAML:
+
+```yaml
+id: hard
+type: CampaignConfiguration
+starting_money: 60
+investigation_difficulty_multiplier: 2
+```
+
 Campaign creation copies the selected preset's values into the initial Campaign configuration, replacing each
 overridden value with the player's override. The initial Campaign configuration therefore holds starting money 80 and
 investigation difficulty multiplier 2, and the newly created Agency has money 80 in State. The Hard GDR still has
@@ -136,6 +163,14 @@ Consider an illustrative contracting income calculation for one Agent. Its compl
 | Contracting income             | Derived value       | 2 × 100 = 200 money for this turn.                                               |
 | Contracting payment            | State change        | Add contracting income to Agency money.                                          |
 
+E.g., the Standard contracting GDR as YAML:
+
+```yaml
+id: standard_contracting
+type: ContractingRate
+value: 2 # money per point of skill per turn
+```
+
 During "advance turn" computation, the engine reads the rate of 2 from the Standard contracting GDR, which conforms to
 Type ContractingRate, and the Agent's skill of 100, an Authoritative value in Campaign state. The engine applies the
 contracting income formula to these inputs, producing contracting income of 200, a Derived value. Applying the
@@ -158,14 +193,25 @@ flowchart LR
 
 Consider an illustrative creation of two Enemy Campaign instances whose Archetype is the same Thug GDR:
 
-| Element             | Modeling role                                                              | Meaning in this example                                                                                                                                                                  |
-| ------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Enemy               | Type                                                                       | Describes the Enemy Campaign instances.                                                                                                                                                  |
-| EnemyArchetype      | Type                                                                       | Describes the shared enemy characteristics and initial values.                                                                                                                           |
-| Thug                | GDR serving the Archetype purpose                                          | Has Type EnemyArchetype and base health 10.                                                                                                                                              |
-| Enemy creation      | [Campaign instance creation](campaign-state.md#campaign-instance-creation) | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty Constants, and current health in State equal to the Archetype's base health. |
-| enemy_1 and enemy_2 | Campaign instances                                                         | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                                 |
-| Current health      | Authoritative value                                                        | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                                    |
+| Element             | Modeling role                                                              | Meaning in this example                                                                                                                                                             |
+| ------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enemy               | Type                                                                       | Describes the Enemy Campaign instances.                                                                                                                                             |
+| EnemyArchetype      | Type                                                                       | Describes the shared enemy characteristics and initial values.                                                                                                                      |
+| Thug                | GDR serving the Archetype purpose                                          | Has Type EnemyArchetype and health 10.                                                                                                                                              |
+| Enemy creation      | [Campaign instance creation](campaign-state.md#campaign-instance-creation) | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty Constants, and current health in State equal to the Archetype's health. |
+| enemy_1 and enemy_2 | Campaign instances                                                         | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                            |
+| Current health      | Authoritative value                                                        | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                               |
+
+E.g., the Thug GDR as YAML, with further illustrative properties that this example does not use:
+
+```yaml
+id: thug
+type: EnemyArchetype
+health: 10
+skill: 40
+weapon_damage: 8
+is_officer: false
+```
 
 Each newly created Enemy Campaign instance whose Archetype is Thug has current health 10 in State and its own fresh
 Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to its owning Mission.
@@ -175,7 +221,7 @@ Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes it
 flowchart LR
     Creation["Enemy creation"] -->|specifies| Enemy1
     Creation -->|specifies| Enemy2
-    Thug["GDR: Thug · base health 10"] -->|Archetype and initial health| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>Instance ID: enemy_1<br/>Constants: empty<br/>State: health 10"]
+    Thug["GDR: Thug · health 10"] -->|Archetype and initial health| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>Instance ID: enemy_1<br/>Constants: empty<br/>State: health 10"]
     Thug -->|Archetype and initial health| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: health 10"]
 ```
 
@@ -189,6 +235,16 @@ Consider an illustrative Lead and an Investigation of that Lead. The complete co
 | Lead                   | GDR serving the Referenced GDR purpose, representing a Lead to pursue.                                                                          | Which Lead can be pursued?                                                 |
 | Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in State, and an immutable Lead reference in Constants. | Which Investigation concerns that Lead, and how has it progressed?         |
 | InvestigationArchetype | GDR used as an Investigation's Archetype, supplying shared characteristics and initial values independently of the referenced Lead.             | What shared characteristics and initial values does the Investigation use? |
+
+E.g., lead_1 as YAML, with illustrative properties that this example does not use:
+
+```yaml
+id: lead_1
+type: Lead
+name: Criminal organizations
+description: Investigate local criminal organizations to find cult connections.
+difficulty: 3
+```
 
 Suppose Lead lead_1 is referenced by Investigation investigation_1, created with InvestigationArchetype investigation_archetype_1. Its Instance ID is investigation_1; its Constants contains the
 immutable Lead reference, and its State contains lifecycle initialized to active and progress initialized to 0, as an illustrative specification of Investigation creation would state. The archetype remains the separate shared
@@ -241,6 +297,17 @@ within each Campaign instance’s Constants property and the lifecycle property 
 | Properties of completed investigations that denote to which leads they pertain | Authoritative values                           | The Lead reference property within the Constants property of the Completed Investigation Campaign instance investigation_2 identifies lead_1.             |
 | Completion count for lead_1                                                    | Derived value                                  | Count Investigation Campaign instances whose Lead reference property identifies lead_1 and whose lifecycle property has value Completed. The result is 1. |
 
+E.g., lead_1 as YAML. The GDR holds no completion count:
+
+```yaml
+id: lead_1
+type: Lead
+name: Criminal organizations
+difficulty: 3
+# No completion count: Campaign state holds the Investigations,
+# and the count is derived from them by matching this id.
+```
+
 How to determine the Derived value of the completion count for the Lead GDR lead_1 from Authoritative values:
 
 1. **Collect Investigations:** Start with all Investigation Campaign instances in the Campaign state.
@@ -274,11 +341,22 @@ enemy and its encyclopedia article:
 | Element             | Modeling role                                          | Meaning in this example                                                                                        |
 | ------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
 | EnemyArchetype      | Type                                                   | Describes the shared enemy characteristics and initial values, including a display name and a description.     |
-| Thug                | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, base health 10, display name "Thug", and a one-sentence description.                  |
+| Thug                | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, health 10, display name "Thug", and a one-sentence description.                       |
 | EncyclopediaArticle | Type                                                   | Describes an encyclopedia article: a title, body text, an image reference, and a reference to its subject GDR. |
 | Thug article        | GDR serving the Display content purpose                | Has Type EncyclopediaArticle, title "Thug", body text, an image reference, and a reference to the Thug GDR.    |
 
-Combat reads Thug's base health 10 as its Archetype initial value; no game behavior reads its display name, its description,
+E.g., the Thug article as YAML. It identifies its subject by the identifier of the Thug GDR:
+
+```yaml
+id: thug_article
+type: EncyclopediaArticle
+title: Thug
+body: A hired street enforcer with little training and less loyalty.
+image: images/enemies/thug.png
+subject: thug
+```
+
+Combat reads Thug's health 10 as its Archetype initial value; no game behavior reads its display name, its description,
 or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible
 view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the encyclopedia once the player is
 entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.
@@ -299,11 +377,20 @@ Display content follows these requirements:
 
 ```mermaid
 flowchart LR
-    Thug["GDR: Thug<br/>base health 10<br/>display name and description"]
+    Thug["GDR: Thug<br/>health 10<br/>display name and description"]
     Article["GDR: Thug article<br/>title, body text, image reference"]
     Article -->|subject reference| Thug
-    Thug -->|base health 10| Combat["Game behavior: Enemy creation and Combat"]
+    Thug -->|health 10| Combat["Game behavior: Enemy creation and Combat"]
     Thug -->|display name and description| PlayerAPI["Player API:<br/>Player-visible information"]
     Article -->|article when Player-visible| PlayerAPI
     PlayerAPI --> Interfaces["Interfaces render it for the player"]
 ```
+
+# Open decisions
+
+- **GDR file layout:** which directory holds the GDR files, and whether one file holds one GDR or several. Affects
+  [GDR authoring format](#gdr-authoring-format).
+- **GDR identifier format:** the permitted characters and casing of a GDR identifier, and the scope within which it
+  is unique. Affects [GDR authoring format](#gdr-authoring-format) and every reference to a GDR.
+- **YAML property naming:** how a GDR states its identifier and its Type, and the casing of property names. Affects
+  [GDR authoring format](#gdr-authoring-format) and the snippets in every GDR purpose section.

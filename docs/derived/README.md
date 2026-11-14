@@ -12,8 +12,8 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 17             |
-| Draft      | 10             |
-| Accepted   | 5              |
+| Draft      | 14             |
+| Accepted   | 1              |
 | Superseded | 0              |
 
 ## Counts by family
@@ -30,13 +30,13 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Governance
 
-| ID    | Document                                                                | Status   | Owns                                                                                     |
-| ----- | ----------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------- |
-| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Accepted | How specifications are written, reviewed, and maintained.                                |
-| INDEX | [Game Specification Index](../specs/README.md)                          | Draft    | Specification registration, navigation, and ownership summaries.                         |
-| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Accepted | Specification authoring order, review checkpoints, and work tracking.                    |
-| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft    | Artifact relationship terminology, direction, inventories, and graph validation.         |
-| TODOS | [Outstanding Work Items](../specs/governance/work-todos.md)             | Draft    | Known outstanding specification issues awaiting scheduling, with their affected batches. |
+| ID    | Document                                                                | Status | Owns                                                                                     |
+| ----- | ----------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------- |
+| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Draft  | How specifications are written, reviewed, and maintained.                                |
+| INDEX | [Game Specification Index](../specs/README.md)                          | Draft  | Specification registration, navigation, and ownership summaries.                         |
+| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Draft  | Specification authoring order, review checkpoints, and work tracking.                    |
+| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft  | Artifact relationship terminology, direction, inventories, and graph validation.         |
+| TODOS | [Outstanding Work Items](../specs/governance/work-todos.md)             | Draft  | Known outstanding specification issues awaiting scheduling, with their affected batches. |
 
 ## Foundation
 
@@ -45,10 +45,10 @@ These informative views are derived from the registered Markdown specifications.
 | AUTO     | [Autopilot](../specs/foundation/autopilot.md)                 | Draft    | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                                |
 | CONFIG   | [Configuration](../specs/foundation/configuration.md)         | Draft    | Kinds of setting, Global configuration, and the configuration cascade.                                                                                |
 | CORE     | [Core Concepts](../specs/foundation/core-concepts.md)         | Accepted | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                          |
-| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)       | Accepted | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.              |
+| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)       | Draft    | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.              |
 | DOM      | [Domain Model](../specs/foundation/domain-model.md)           | Draft    | Game concepts, how they relate, and the structural invariants that span several concepts.                                                             |
 | ENG      | [Engine Contract](../specs/foundation/engine-contract.md)     | Draft    | API hierarchy, Principal authority, Session and campaign lifecycle, data ownership, determinism, and the guarantees shared by every engine subsystem. |
-| GDR      | [Game Data Records](../specs/foundation/game-data-records.md) | Accepted | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                             |
+| GDR      | [Game Data Records](../specs/foundation/game-data-records.md) | Draft    | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                             |
 | NUMBERS  | [Numbers](../specs/foundation/numbers.md)                     | Stub     | Which quantities are whole numbers, the precision of those that are not, and how rounding works.                                                      |
 | SAVES    | [Saves](../specs/foundation/saves.md)                         | Draft    | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                                |
 | TIMELINE | [Timeline](../specs/foundation/timeline.md)                   | Draft    | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees.                  |

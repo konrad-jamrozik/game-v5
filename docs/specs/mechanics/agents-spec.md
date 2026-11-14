@@ -64,13 +64,13 @@ duplicating shared definitions.
 
 An Agent's identity persists through its Current assignments and combat. An Agent has these aspects:
 
-| Aspect                | Meaning                                                                                                                                                         |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lifecycle             | Serving, Killed, or Dismissed; distinct from the Agent's Current assignment                                                                                     |
-| Attributes            | Skill, health, exhaustion, and equipped weapon values, structured as a Combatant, and career statistics                                                         |
-| Current assignment    | The Agent's current orders, including the destination while travelling; an Investigation or Mission Current assignment references that Investigation or Mission |
-| Task phase            | At assignment or In transit, with the timing facts needed to describe travel                                                                                    |
-| Participation history | The Investigations and Missions the Agent previously participated in                                                                                            |
+| Aspect                | Meaning                                                                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lifecycle             | Serving, Killed, or Dismissed; distinct from the Agent's Current assignment                                                                                               |
+| Attributes            | Skill, health, exhaustion, and equipped weapon values, which the [Combatant Role Type](../foundation/domain-model.md#combatant-role-type) requires, and career statistics |
+| Current assignment    | The Agent's current orders, including the destination while travelling; an Investigation or Mission Current assignment references that Investigation or Mission           |
+| Task phase            | At assignment or In transit, with the timing facts needed to describe travel                                                                                              |
+| Participation history | The Investigations and Missions the Agent previously participated in                                                                                                      |
 
 The sections below state the rules for each aspect. [Current versus historical teams](../foundation/domain-model.md#current-versus-historical-teams)
 in Domain Model owns how Current assignment and Participation history relate an Agent to Investigations and Missions.

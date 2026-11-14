@@ -4,7 +4,7 @@
 | ----------- | -------------------------------------------------------------- |
 | Spec ID     | CSTATE                                                         |
 | Family      | Foundation                                                     |
-| Status      | Accepted                                                       |
+| Status      | Draft                                                          |
 | Audience    | Engine designer, Content designer, Implementer                 |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |
 
@@ -48,7 +48,7 @@ The components into which Campaign state divides, and whether model data stays a
 
 ## Campaign instances
 
-The composition of each Campaign instance.
+The composition of each Campaign instance, and Types that Campaign instance Types adopt.
 
 | Term              | Definition                                                                                                                                                                                                                                                 |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -57,6 +57,7 @@ The composition of each Campaign instance.
 | Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
 | State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
 | Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
+| Role Type         | A Type that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration.                                                              |
 
 # Campaign data integrity refinement
 
@@ -145,6 +146,23 @@ dependencies. It states the resulting facts instead, e.g. which Campaign instanc
 
 Instance IDs are unique within their explicitly declared scope and stable for the Campaign instance’s lifetime.
 Restoration, including undo/redo, preserves identity and immutable facts; uniqueness applies within the Campaign’s current timeline, excluding discarded futures.
+
+## Role Types
+
+A Role Type describes a capability that several Campaign instance Types share; e.g., a Role Type for taking part in
+combat, adopted by every Campaign instance Type whose Campaign instances can fight. The specification declaring a
+Role Type states all of the following:
+
+- **Adoption condition:** the exhaustive set of properties a Campaign instance Type must have to adopt the Role Type.
+- **Adopters:** the exhaustive set of Campaign instance Types that adopt it.
+- **Gained properties:** the properties that every Campaign instance of an adopting Campaign instance Type gains for
+  a stated duration, when the Role Type has any, and when that duration begins and ends.
+
+Adopting a Role Type creates no Campaign instance and no Instance ID, and adds no fifth property under
+[Campaign instance structure](#campaign-instance-structure). The properties named by the adoption condition are
+ordinary properties of the adopting Campaign instance Type and persist like any other. Gained properties belong to
+the Campaign instance that gains them and exist only for the stated duration. A Role Type has no Campaign instances
+of its own, so nothing references a Role Type's occurrence; references target the adopting Campaign instance.
 
 # References
 

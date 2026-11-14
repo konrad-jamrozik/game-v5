@@ -23,7 +23,7 @@ owns the distributions of its own random outcomes. It also intends to refine Age
 exhaustion, and awards experience, within the meanings and bounds Agents states for those values. The combat
 decisions below remain TODOs; campaign consequences remain owned by Missions.
 
-TODO: Specify Combatant, weapon, effective skill, combat rating, round, attack, damage, incapacitation, retreat, and Battle result.
+TODO: Specify weapon, effective skill, combat rating, round, attack, damage, incapacitation, retreat, and Battle result.
 Define relevant fields, inputs/outputs, units, allowed ranges, and visibility; use conceptual tables or exact types as
 appropriate to this document.
 
@@ -43,8 +43,13 @@ duplicating shared definitions.
 
 # Combatants and Battle results
 
-An Enemy has its own combat attributes, structured as a Combatant within
+Agent and Enemy adopt the [Combatant Role Type](../foundation/domain-model.md#combatant-role-type). An Enemy has its
+own values of the properties the Combatant Role Type requires, within
 [Attribute bounds](../foundation/domain-model.md#attribute-bounds).
+
+TODO: State the exhaustive set of properties a Combatant gains for the duration of a battle, e.g. morale and
+incapacitated, with the Type, initial value, and meaning of each. State whether any of them is ever part of Committed
+state, or whether every battle begins and ends within one Player action.
 
 A Battle result holds the participants, the outcome, combat facts, and the measures needed for Mission consequences.
 A Battle result must retain the facts that the partial-success formula requires; [Missions](./missions.md) owns that

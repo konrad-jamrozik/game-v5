@@ -4,7 +4,7 @@
 | ----------- | ------------------------------------------------ |
 | Spec ID     | PLAN                                             |
 | Family      | Governance                                       |
-| Status      | Accepted                                         |
+| Status      | Draft                                            |
 | Audience    | Engine designer                                  |
 | Conventions | [Specification conventions](spec-conventions.md) |
 
