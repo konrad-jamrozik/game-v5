@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="410" viewBox="0 0 1000 410" role="img" aria-label="Campaign lifecycle: a Session starts with no Current campaign; newCampaign.create(options) or campaign.load(save) selects a Current campaign; campaign.close() removes it; the Session ends when the game exits">
+  <!-- Hand-kept diagram for docs/specs/foundation/engine-contract.md; not generated. -->
+  <style>
+    :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --turn: #2f7f95; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161d; --surface: #1a2029; --block: #1a2029; --fg: #e6eaf0; --muted: #9aa5b5; --line: #323b49; --turn: #6fb3c7; }
+    }
+    text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 12.5px; fill: var(--fg); }
+    .bg { fill: var(--bg); }
+    .title { font-size: 14px; font-weight: 600; }
+    .b { font-weight: 600; }
+    .m { fill: var(--muted); }
+    .mid { text-anchor: middle; }
+    .state { fill: var(--block); stroke: var(--line); stroke-width: 1.5; }
+    .current { fill: var(--block); stroke: var(--turn); stroke-width: 2; }
+    .arc { fill: none; stroke: var(--turn); stroke-width: 1.8; }
+    .exit { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
+    .head { fill: var(--turn); }
+    .headexit { fill: var(--muted); }
+    .dot { fill: var(--fg); }
+    .ring { fill: none; stroke: var(--fg); stroke-width: 1.5; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="head" d="M0 1 L10 5 L0 9z"/></marker>
+    <marker id="headexit" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="headexit" d="M0 1 L10 5 L0 9z"/></marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1000" height="410"/>
+  <text class="title" x="24" y="32">Campaign lifecycle: the Current campaign of one Session</text>
+
+  <circle class="dot" cx="50" cy="170" r="7"/>
+  <text class="b mid" x="56" y="146">game starts</text>
+  <path class="arc" marker-end="url(#head)" d="M 57 170 H 128"/>
+
+  <rect class="state" x="130" y="125" width="260" height="90" rx="8"/>
+  <text class="b mid" x="260" y="158">No Current campaign</text>
+  <text class="m mid" x="260" y="178">main-menu state</text>
+  <text class="m mid" x="260" y="195">Dev mode disabled</text>
+
+  <rect class="current" x="650" y="125" width="260" height="90" rx="8"/>
+  <text class="b mid" x="780" y="158">Current campaign</text>
+  <text class="m mid" x="780" y="178">Campaign-dependent operations available</text>
+  <text class="m mid" x="780" y="195">Dev mode disabled until enabled</text>
+
+  <path class="arc" marker-end="url(#head)" d="M 390 152 H 648"/>
+  <text class="b mid" x="520" y="122">newCampaign.create(options)</text>
+  <text class="b mid" x="520" y="139">or campaign.load(save)</text>
+
+  <path class="arc" marker-end="url(#head)" d="M 650 190 H 392"/>
+  <text class="b mid" x="520" y="210">campaign.close()</text>
+
+  <path class="arc" marker-end="url(#head)" d="M 740 125 C 740 72 820 72 820 123"/>
+  <text class="b mid" x="780" y="72">create or load replaces the Current campaign</text>
+
+  <path class="exit" marker-end="url(#headexit)" d="M 260 215 C 260 300 400 300 506 300"/>
+  <path class="exit" marker-end="url(#headexit)" d="M 780 215 C 780 300 640 300 534 300"/>
+  <circle class="ring" cx="520" cy="300" r="11"/>
+  <circle class="dot" cx="520" cy="300" r="6"/>
+  <text class="b mid" x="520" y="278">game exits</text>
+  <text class="m mid" x="520" y="330">The Session ends; nothing it holds is persisted.</text>
+
+  <path class="rule" d="M 24 350 H 976"/>
+  <text class="m" x="24" y="372">Every successful create, load, and close disables Dev mode and invalidates prior campaign access; none of them saves the Current campaign.</text>
+  <text class="m" x="24" y="392">A failed create or load leaves the Session as it was.</text>
+</svg>

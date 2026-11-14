@@ -47,12 +47,12 @@ Shared vocabulary, including Session, is defined by [Core Concepts](core-concept
 
 Kinds of engine API caller and the Session access settings that govern them.
 
-| Term               | Definition                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                |
-| Session controller | The Principal holding Session authority: managing the Session, selecting the Current campaign, navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using CLI or Web UI, or an LLM-based agent driving the API or CLI; the Principal's authority does not depend on which kind of caller holds it. |
-| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory. The name avoids using Agent for a Principal.                                                                                                                                                                           |
-| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                  |
+| Term               | Definition                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                                               |
+| Session controller | The Principal holding Session authority: managing the Session, changing Global configuration, selecting the Current campaign, navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using CLI or Web UI, or an LLM-based agent driving the API or CLI; the Principal's authority does not depend on which kind of caller holds it. |
+| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory. The name avoids using Agent for a Principal.                                                                                                                                                                                                          |
+| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                                                 |
 
 ## Autopilot
 
@@ -67,13 +67,13 @@ Lending Player API control to an Autopilot AI for a bounded period.
 
 The separately authorized parts of the engine API, detailed in [API hierarchy](#api-hierarchy) together with which Principal can access each and when, and the information Player API exposes.
 
-| Term                       | Definition                                                                                                                                                   |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Session API                | The API surface for Session controller operations over campaign selection, new-Campaign setup, Campaign saves, Timeline navigation, Dev mode, and Autopilot. |
-| Player API                 | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode.               |
-| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                        |
-| Developer API              | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled. |
-| Autopilot memory API       | The API surface through which the active Autopilot AI reads and writes Autopilot memory.                                                                     |
+| Term                       | Definition                                                                                                                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session API                | The API surface for Session controller operations over Global configuration, campaign selection, new-Campaign setup, Campaign saves, Timeline navigation, Dev mode, and Autopilot. |
+| Player API                 | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode.                                     |
+| Player-visible information | Information deliberately exposed by the engine to an ordinary player.                                                                                                              |
+| Developer API              | The separate API surface for full Campaign state inspection and validated cheat actions, available only to the Session controller while Dev mode is enabled.                       |
+| Autopilot memory API       | The API surface through which the active Autopilot AI reads and writes Autopilot memory.                                                                                           |
 
 ## Persisted data
 
@@ -127,12 +127,19 @@ Names declare conceptual API operations; TypeScript Player API owns exact signat
 Engine API
 ├── session
 │   ├── getStatus()
+│   ├── globalConfiguration
+│   │   ├── get()
+│   │   ├── set(setting, value)
+│   │   └── reset(setting)
 │   ├── campaign
+│   │   ├── listSaves()
 │   │   ├── load(save)
 │   │   ├── save()
 │   │   ├── saveAsNew()
 │   │   └── close()
 │   ├── newCampaign
+│   │   ├── listPresets()
+│   │   ├── getPreset(preset)
 │   │   ├── getSetup()
 │   │   ├── selectPreset(preset)
 │   │   ├── setPresetEdit(preset, value)
@@ -156,7 +163,7 @@ Engine API
 │       └── disengage(engagementId)
 ├── player
 │   ├── queries
-│   │   ├── getCampaignStatus()
+│   │   ├── getCampaignState()
 │   │   ├── getReports()
 │   │   └── getAvailableActions()
 │   └── actions
@@ -177,19 +184,20 @@ Engine API
 The following table is the complete set of namespace placement rules. For each namespace it names what the namespace
 owns and where the behavior of its operations is specified.
 
-| Namespace             | Owns                                                                                                                                                                                           | Specified in                                                                                                                                                            |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `session`             | Session management and execution authority; it does not implement gameplay actions. Its own `getStatus()` reports the Session's Current campaign, Campaign seed, access, and Autopilot status. | [Campaign lifecycle](#campaign-lifecycle)                                                                                                                               |
-| `session.campaign`    | Loading a Campaign save as the Current campaign, saving the Current campaign, and closing the Current campaign.                                                                                | [Campaign lifecycle](#campaign-lifecycle); [Saving](saves.md#saving) and [Loading](saves.md#loading) in Saves                                                           |
-| `session.newCampaign` | The new-Campaign setup, i.e. the selected preset and its Preset edits, and creating a Campaign from it as the Current campaign.                                                                | [Campaign lifecycle](#campaign-lifecycle); [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                                   |
-| `session.timeline`    | Timeline status, undo and redo of Committed actions within the current turn, and undo and redo across turns.                                                                                   | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline                                               |
-| `session.developer`   | Enabling and disabling Dev mode.                                                                                                                                                               | [Dev mode and developer operations](#dev-mode-and-developer-operations)                                                                                                 |
-| `session.autopilot`   | Engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                                                                            | [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot                                                                    |
-| `player.queries`      | Read-only Player-visible information and ordinary action discovery.                                                                                                                            | [Player Information](../interfaces/player-information.md)                                                                                                               |
-| `player.actions`      | Normal gameplay mutations, including Advance turn.                                                                                                                                             | The mechanics specification owning each action, under [Player queries and actions](#player-queries-and-actions); [Turn advancement](#turn-advancement) for Advance turn |
-| `developer.queries`   | Read-only inspection of full Campaign state.                                                                                                                                                   | [Inspection contract](../interfaces/developer-api.md#inspection-contract) in Developer API                                                                              |
-| `developer.actions`   | Validated, recorded cheat mutations; e.g., adding money or adding Agents.                                                                                                                      | [Cheat command details](../interfaces/developer-api.md#cheat-command-details) in Developer API                                                                          |
-| `autopilotMemory`     | Autopilot memory for the active Autopilot AI, independent of gameplay resolution.                                                                                                              | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                                                                          |
+| Namespace                     | Owns                                                                                                                                                                                               | Specified in                                                                                                                                                              |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `session`                     | Session management and execution authority; it does not implement gameplay actions. Its own `getStatus()` reports the Session's Current campaign, Campaign seed, access, and Autopilot status.     | [Campaign lifecycle](#campaign-lifecycle)                                                                                                                                 |
+| `session.globalConfiguration` | Reading, setting, and resetting Global configuration settings.                                                                                                                                     | [Global configuration](configuration.md#global-configuration) in Configuration                                                                                            |
+| `session.campaign`            | Listing the Campaign saves in Game storage, loading a Campaign save as the Current campaign, saving the Current campaign, and closing the Current campaign.                                        | [Campaign lifecycle](#campaign-lifecycle); [Listing Campaign saves](saves.md#listing-campaign-saves), [Saving](saves.md#saving), and [Loading](saves.md#loading) in Saves |
+| `session.newCampaign`         | Listing the Campaign configuration presets and the values of each, the new-Campaign setup, i.e. the selected preset and its Preset edits, and creating a Campaign from it as the Current campaign. | [Campaign lifecycle](#campaign-lifecycle); [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                                     |
+| `session.timeline`            | Timeline status, undo and redo of Committed actions within the current turn, and undo and redo across turns.                                                                                       | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline                                                 |
+| `session.developer`           | Enabling and disabling Dev mode.                                                                                                                                                                   | [Dev mode and developer operations](#dev-mode-and-developer-operations)                                                                                                   |
+| `session.autopilot`           | Engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                                                                                | [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot                                                                      |
+| `player.queries`              | Read-only Player-visible information and ordinary action discovery. Its `getCampaignState()` returns only the Player-visible information of Campaign state.                                        | [Player Information](../interfaces/player-information.md)                                                                                                                 |
+| `player.actions`              | Normal gameplay mutations, including Advance turn.                                                                                                                                                 | The mechanics specification owning each action, under [Player queries and actions](#player-queries-and-actions); [Turn advancement](#turn-advancement) for Advance turn   |
+| `developer.queries`           | Read-only inspection of full Campaign state. Its `getCampaignState()` returns Campaign state in full, unlike the Player API query of the same name.                                                | [Inspection contract](../interfaces/developer-api.md#inspection-contract) in Developer API                                                                                |
+| `developer.actions`           | Validated, recorded cheat mutations; e.g., adding money or adding Agents.                                                                                                                          | [Cheat command details](../interfaces/developer-api.md#cheat-command-details) in Developer API                                                                            |
+| `autopilotMemory`             | Autopilot memory for the active Autopilot AI, independent of gameplay resolution.                                                                                                                  | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                                                                            |
 
 The complete Principal access matrix is:
 
@@ -223,21 +231,26 @@ Session (runtime, never persisted)
 ├── Current campaign selection
 ├── Current save
 ├── Dev mode
-├── Active Autopilot engagement
+├── Active Autopilot engagement (at most one)
+│   ├── Autopilot engagement ID
+│   ├── Autopilot AI
+│   ├── Autopilot limit
+│   └── Autopilot progress
 └── New-Campaign setup
     ├── Selected preset
     └── Preset edits
 ```
 
-| Part                 | Owner                                                                                                            |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Global configuration | [Configuration](configuration.md)                                                                                |
-| Campaign save        | [Saves](saves.md), including its identifiers and the Campaign saves the engine writes itself                     |
-| Campaign state       | [Campaign state composition](campaign-state.md#campaign-state-composition) in Campaign State, for its components |
-| Timeline             | [Timeline](timeline.md)                                                                                          |
-| Autopilot memory     | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                   |
-| Session              | [Campaign lifecycle](#campaign-lifecycle)                                                                        |
-| New-Campaign setup   | [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                       |
+| Part                        | Owner                                                                                                            |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Global configuration        | [Configuration](configuration.md)                                                                                |
+| Campaign save               | [Saves](saves.md), including its identifiers and the Campaign saves the engine writes itself                     |
+| Campaign state              | [Campaign state composition](campaign-state.md#campaign-state-composition) in Campaign State, for its components |
+| Timeline                    | [Timeline](timeline.md)                                                                                          |
+| Autopilot memory            | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                   |
+| Session                     | [Campaign lifecycle](#campaign-lifecycle)                                                                        |
+| Active Autopilot engagement | [What an Autopilot engagement holds](autopilot.md#what-an-autopilot-engagement-holds) in Autopilot               |
+| New-Campaign setup          | [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                       |
 
 Campaign state holds everything game behavior consults and nothing else. It includes the Campaign seed, under
 [Campaign seed](#campaign-seed). It excludes everything a Session holds,
@@ -265,6 +278,8 @@ A Session starts when the game starts and ends when the game exits. A newly open
 and Dev mode is disabled. This is the main-menu state in Web UI. What a Session holds is stated under
 [Data ownership](#data-ownership).
 
+![Campaign lifecycle: a Session starts with no Current campaign, create or load selects one, close removes it, and the Session ends when the game exits](../../images/campaign-lifecycle.svg)
+
 `session.getStatus()` reports whether a Current campaign exists, the Campaign seed of the Current campaign, and the
 Session's access and Autopilot status.
 `session.newCampaign.create(options)` creates a Campaign using the current Game build, the Session's new-Campaign setup,
@@ -277,7 +292,9 @@ as the Current campaign, as [Saves](saves.md) specifies. Successful creation or 
 disables Dev mode. A newly created Campaign has a Timeline with no Committed actions, no Autopilot memory, and no Campaign save.
 
 `session.campaign.close()` removes the Current campaign and disables Dev mode. Campaign-dependent operations fail
-when no Current campaign exists. Creation, load, and closure invalidate prior campaign access. Failure to create or
+when no Current campaign exists. The following Session API operations need no Current campaign: `session.getStatus()`,
+every `session.globalConfiguration` operation, `session.campaign.listSaves()`, `session.campaign.load(save)`, and
+every `session.newCampaign` operation. Creation, load, and closure invalidate prior campaign access. Failure to create or
 load preserves the existing Session. Closing or replacing the Current campaign does not implicitly save it.
 
 # Campaign data integrity

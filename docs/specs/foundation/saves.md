@@ -10,7 +10,7 @@
 
 # Overview
 
-This document defines Campaign saves: what a Campaign save holds, saving, saving as new, loading, the Autosaves the
+This document defines Campaign saves: what a Campaign save holds, saving, saving as new, loading, listing, the Autosaves the
 engine writes, the Save size limit, and which Campaign saves a Game build loads.
 
 It owns what saving and loading observably do. How a Campaign save is encoded and stored is the implementer's choice.
@@ -147,6 +147,22 @@ The following rules are complete.
   Autopilot engagement, including one that advances no turn and a second one in the same Turn. The Current Autosave
   is replaced during an Autopilot engagement as at any other time.
 
+# Listing Campaign saves
+
+`session.campaign.listSaves()` reports every Campaign save in Game storage, of every Campaign, including every
+Autosave. It needs no Current campaign, so a Session can list Campaign saves before loading one; e.g., the Web UI
+main menu lists them for the player to choose from. For each Campaign save it reports at least:
+
+- its Campaign save ID and its Campaign ID, so the Campaign saves of one Campaign can be grouped;
+- whether it is an Autosave, and of which kind;
+- the Turn its saved Committed state belongs to;
+- whether it is the Current save.
+
+The Campaign save ID it reports is what `session.campaign.load(save)` accepts. Listing changes nothing and is not a
+Committed action. It does not verify that a Campaign save can be loaded: a listed Campaign save may still fail to
+load, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). The exact contents of an entry
+belong to TypeScript Player API and follow the [Information boundary](engine-contract.md#information-boundary).
+
 # Save size limit
 
 The Save size limit is 100 MiB. It is a safety measure against unbounded storage use, not a gameplay rule.
@@ -200,6 +216,10 @@ replaced is removed rather than left holding an earlier Committed state.
 - **Campaign configuration isolation:** Save Campaign A, then load a Campaign save of Campaign B with different
   Campaign configuration. The saved values of B apply. Loading the Campaign save of A restores the saved values of A
   ([Loading](#loading)).
+- **Listing before loading:** Create Campaign A, `save()`, Advance turn, and `saveAsNew()`. End the Session and start
+  a new one. With no Current campaign, `listSaves()` reports both Campaign saves with the same Campaign ID and their
+  two Turns, together with the Autosaves of Campaign A, and none is the Current save. Load one of them, and
+  `listSaves()` reports it as the Current save ([Listing Campaign saves](#listing-campaign-saves)).
 - **Resuming without saving:** Create a Campaign, commit two actions, Advance turn, and commit one action, never
   calling `save()`. End the Session and start a new one. Loading the Current Autosave of that Campaign restores the
   Campaign state after the last action, and the Current campaign then has no Current save

@@ -62,6 +62,20 @@ Global configuration stores only values the player has set. A setting the player
 Game build default, so a changed Game build default in a later Game build reaches it. Resetting a setting removes its
 stored value.
 
+The Session controller reads and changes Global configuration through these operations. The list is complete.
+
+| Operation                                         | Effect                                                                                                                                          |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `session.globalConfiguration.get()`               | Reports every Global configuration setting with its effective value, its Game build default, and whether a stored value overrides that default. |
+| `session.globalConfiguration.set(setting, value)` | Stores `value` for `setting`. A value the setting does not permit is rejected and changes nothing.                                              |
+| `session.globalConfiguration.reset(setting)`      | Removes the stored value of `setting`, so the setting follows the Game build default.                                                           |
+
+A successful `set` or `reset` is persisted in Game storage at once and applies from then on, in this Session and in
+later ones. These operations need no Current campaign. They are not Committed actions and change no Campaign state,
+Timeline, or Campaign save, so undo, redo, and load never change Global configuration. They remain available during
+an Autopilot engagement, under [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency);
+e.g., the player can change the volume while an Autopilot AI plays.
+
 Global configuration holds nothing that campaign creation uses: creating a Campaign neither reads nor changes it.
 Campaign-specific overrides of global preferences are out of scope.
 
@@ -130,6 +144,19 @@ The preset selection and the Preset edits are not settings: they are none of the
 - **Lifetime:** The Session holds the preset selection and the Preset edits, under
   [Data ownership](engine-contract.md#data-ownership). They are never persisted, and they are discarded when the
   Session ends. Loading or closing a Campaign changes neither.
+
+The Session controller reads and changes the preset selection and the Preset edits through these operations. The
+list is complete, apart from `session.newCampaign.create(options)`, which
+[Campaign lifecycle](engine-contract.md#campaign-lifecycle) owns.
+
+| Operation                                             | Effect                                                                                                                                                                                                                                                             |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `session.newCampaign.listPresets()`                   | Reports every preset the Game build supplies, which one is the Game build default preset, which one is selected, and which have Preset edits.                                                                                                                      |
+| `session.newCampaign.getPreset(preset)`               | Reports every Campaign configuration value of `preset`: the preset's own value, its Preset edit if one exists, the permitted values a Preset edit may set, and whether the value is adjustable during play or fixed after creation. `preset` need not be selected. |
+| `session.newCampaign.getSetup()`                      | Reports the selected preset and the value campaign creation would use for each of its Campaign configuration values, i.e. its Preset edit where one exists and the preset's own value otherwise.                                                                   |
+| `session.newCampaign.selectPreset(preset)`            | Selects `preset`, under the Selection rule.                                                                                                                                                                                                                        |
+| `session.newCampaign.setPresetEdit(preset, value)`    | Sets a Preset edit of `preset`, under the Edits rule.                                                                                                                                                                                                              |
+| `session.newCampaign.removePresetEdit(preset, value)` | Removes a Preset edit of `preset`, under the Edits rule.                                                                                                                                                                                                           |
 
 Storing a selected preset or Preset edits beyond the Session is out of scope; e.g., a player-saved custom preset or a
 remembered last selection.
@@ -208,6 +235,14 @@ and investigation difficulty multiplier 1; and Hard, with starting money 60 and 
   unchanged ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
 - **Unset setting follows the Game build:** The player never sets the language. A later Game build changes the Game
   build default language, and the game starts in the new default ([Global configuration](#global-configuration)).
+- **Changing a setting without a Campaign:** In a Session with no Current campaign, set the volume through
+  `session.globalConfiguration.set`. `get()` reports the new volume as a stored value. End the Session and start a
+  new one: the volume is still the stored value. `reset` it, and `get()` reports the Game build default volume
+  ([Global configuration](#global-configuration)).
+- **Listing presets and their values:** `listPresets()` reports Standard and Hard, with Standard as both the Game
+  build default preset and the selected preset. Set a Preset edit of starting money 80 for Hard. `getPreset` for Hard
+  reports starting money with the preset's own value 60 and the Preset edit 80, and `listPresets()` reports that Hard
+  has Preset edits ([Preset selection and edits](#preset-selection-and-edits)).
 - **Invalid stored value:** Global configuration stores a volume that the current Game build does not allow. The game
   starts with the Game build default volume and reports the problem
   ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)).

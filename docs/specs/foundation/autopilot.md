@@ -30,13 +30,14 @@ outside the specifications.
 # Glossary
 
 Autopilot, Autopilot AI, Autopilot engagement, Autopilot memory, Autopilot memory API, Session controller, and
-Player-visible information, and Turn are defined by the [Engine Contract glossary](engine-contract.md#glossary).
+Player-visible information, Independent identifier, and Turn are defined by the [Engine Contract glossary](engine-contract.md#glossary).
 Timeline entry and Undone action are defined by the [Timeline glossary](timeline.md#glossary).
 
-| Term               | Definition                                                                                                                                                                                           |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Autopilot limit    | The bound on an Autopilot engagement, fixed when Autopilot is engaged and measured in committed player actions or turn advancements.                                                                 |
-| Autopilot progress | The committed player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |
+| Term                    | Definition                                                                                                                                                                                           |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Autopilot limit         | The bound on an Autopilot engagement, fixed when Autopilot is engaged and measured in committed player actions or turn advancements.                                                                 |
+| Autopilot engagement ID | The Independent identifier identifying one Autopilot engagement, assigned when Autopilot is engaged.                                                                                                 |
+| Autopilot progress      | The committed player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |
 
 # Autopilot limits
 
@@ -55,6 +56,24 @@ engagement is rejected.
 
 A malformed Autopilot limit or an unavailable Autopilot AI rejects engagement without changing Campaign state or
 creating an active Autopilot engagement.
+
+# What an Autopilot engagement holds
+
+An active Autopilot engagement is what a Session holds from a successful `session.autopilot.engage(autopilotAiId, limit)`
+until that Autopilot engagement ends, under [Data ownership](engine-contract.md#data-ownership). The following list of
+what it holds is complete.
+
+| Part                    | What it is                                                                                                                                                              |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Autopilot engagement ID | Assigned by the engine and returned by `engage`. The Session controller passes it as `engagementId` to `session.autopilot.getStatus` and `session.autopilot.disengage`. |
+| Autopilot AI            | The Autopilot AI that `autopilotAiId` named, which plays through Player API for this Autopilot engagement.                                                              |
+| Autopilot limit         | The Autopilot limit that `limit` supplied. It never changes during the Autopilot engagement.                                                                            |
+| Autopilot progress      | What has counted toward the Autopilot limit so far.                                                                                                                     |
+
+An active Autopilot engagement holds nothing else; e.g., it holds no wall-clock duration, and nothing the Autopilot AI
+has planned or observed, which only Autopilot memory carries. It is Session state: no Campaign save holds it, and
+loading a Campaign save leaves no active Autopilot engagement, under [Loading](saves.md#loading). When the Autopilot
+engagement ends, the Session holds no active Autopilot engagement.
 
 # What an Autopilot AI receives
 
@@ -81,7 +100,7 @@ produces no valid action, or exhausts its configured finite execution budget. Th
 repeated invalid actions or an Autopilot AI that makes no progress; its exact limits belong to TypeScript Player API.
 
 Campaign mutations are serialized. During an Autopilot engagement, the Session controller may read Player API queries,
-Session status, Timeline status, and Autopilot status, and disengage Autopilot. All other Session API operations,
+Session status, Timeline status, and Autopilot status, read and change Global configuration, and disengage Autopilot. All other Session API operations,
 Session controller gameplay mutations, and Developer API operations are unavailable until disengagement completes.
 `session.autopilot.disengage(engagementId)` requests disengagement between atomic actions. An action already executing either
 commits completely or fails without effects. Disengagement never implicitly advances a turn or undoes earlier
