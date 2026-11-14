@@ -1,0 +1,27 @@
+id: agent_cap
+type: Upgrade
+name: Agent cap
+price: 200
+effect: agent_cap
+increment: 4
+---
+id: transport_cap
+type: Upgrade
+name: Transport cap
+price: 1000
+effect: transport_cap
+increment: 2
+---
+id: training_cap
+type: Upgrade
+name: Training cap
+price: 200
+effect: training_cap
+increment: 4
+---
+id: weapon_damage
+type: Upgrade
+name: Weapon damage
+price: 500
+effect: agent_weapon_damage
+increment: 1

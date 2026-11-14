@@ -35,6 +35,7 @@ appropriate to this document.
 - Uses [Missions](./missions.md)
 - Refines [Domain Model](domain-model.md)
 - Refines [Factions](./factions.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Investigations](./investigations.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 

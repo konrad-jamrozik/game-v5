@@ -1,0 +1,3 @@
+id: investigation_parameters
+type: InvestigationParameters
+skill_scaling_exponent: 0.8

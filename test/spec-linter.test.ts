@@ -10,7 +10,7 @@ import {
   lintSectionReferences,
   lintSpecifications as lintSpecificationsRaw,
 } from '../scripts/spec-linter/linter.ts'
-import { FAMILY_DIAGRAM_END, FAMILY_DIAGRAM_START } from '../scripts/spec-linter/overviews.ts'
+import { FAMILY_DIAGRAM_END, FAMILY_DIAGRAM_START, familyDirectoryName } from '../scripts/spec-linter/overviews.ts'
 import type { LintInput, SourceFile } from '../scripts/spec-linter/types.ts'
 
 function lines(values: readonly string[]): string {
@@ -48,13 +48,13 @@ function withOverviews(files: readonly SourceFile[]): readonly SourceFile[] {
   const members = new Map<string, string[]>()
   for (const file of files) {
     if (!file.path.startsWith('docs/specs/') || /\/about-[^/]*\.md$/.test(file.path)) continue
-    const family = /^\|\s*Family\s*\|\s*([A-Za-z]+)\s*\|/m.exec(file.content)?.[1]
+    const family = /^\|\s*Family\s*\|\s*([A-Za-z]+(?: [A-Za-z]+)*)\s*\|/m.exec(file.content)?.[1]
     if (!family) continue
     members.set(family, [...(members.get(family) ?? []), file.path])
   }
   const added: SourceFile[] = []
   for (const [family, paths] of members) {
-    const path = `docs/specs/${family.toLowerCase()}/about-${family.toLowerCase()}.md`
+    const path = `docs/specs/${familyDirectoryName(family)}/about-${familyDirectoryName(family)}.md`
     if (files.some((file) => file.path === path)) continue
     added.push({ path, content: overviewFixture(family, paths, path) })
   }
@@ -248,10 +248,10 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'UI', 'Implementation'])(
+  test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'UI', 'Autopilot AIs', 'Implementation'])(
     'accepts topic sections for %s',
     (family) => {
-      const directory = family.toLowerCase()
+      const directory = familyDirectoryName(family)
       const files = validCorpus().map((file) => ({
         path: file.path.replace('foundation/alpha.md', directory + '/alpha.md'),
         content: file.content
@@ -357,10 +357,10 @@ describe('specification linter', () => {
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test.each(['Governance', 'Mechanics', 'Content', 'UI', 'Implementation'])(
+  test.each(['Governance', 'Mechanics', 'Content', 'UI', 'Autopilot AIs', 'Implementation'])(
     'allows omitting the separate acceptance section for %s specifications',
     (family) => {
-      const directory = family.toLowerCase()
+      const directory = familyDirectoryName(family)
       const files = validCorpus().map((file) => ({
         path: file.path.replace('foundation/alpha.md', `${directory}/alpha.md`),
         content: file.content

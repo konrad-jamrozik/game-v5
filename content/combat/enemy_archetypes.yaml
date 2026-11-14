@@ -1,0 +1,20 @@
+id: initiate
+type: EnemyArchetype
+name: Initiate
+skill: 40
+health: 20
+weapon: sidearm # game-ts: damage 8
+---
+id: soldier
+type: EnemyArchetype
+name: Soldier
+skill: 120
+health: 30
+weapon: rifle
+---
+id: cult_leader
+type: EnemyArchetype
+name: Cult leader
+skill: 300 # game-ts: 800
+health: 40 # game-ts: 80
+weapon: heavy_rifle

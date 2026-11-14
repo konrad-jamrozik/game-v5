@@ -1,0 +1,9 @@
+id: agent_parameters
+type: AgentParameters
+initial_roster_size: 4
+exhaustion_cap: 100
+exhaustion_free_points: 5 # exhaustion up to this has no effect on skill
+skill_penalty_pct_per_exhaustion: 1 # per point of exhaustion above exhaustion_free_points
+exhaustion_per_attack: 1
+exhaustion_per_defense: 1
+training_skill_gain_per_turn: 1

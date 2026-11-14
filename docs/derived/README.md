@@ -12,7 +12,7 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 13             |
-| Draft      | 18             |
+| Draft      | 19             |
 | Accepted   | 1              |
 | Superseded | 0              |
 
@@ -25,6 +25,7 @@ These informative views are derived from the registered Markdown specifications.
 | Mechanics      | 11             |
 | Content        | 1              |
 | UI             | 1              |
+| Autopilot AIs  | 1              |
 | Implementation | 2              |
 
 ## Governance
@@ -81,6 +82,12 @@ These informative views are derived from the registered Markdown specifications.
 | ID  | Document                        | Status | Owns                                                                                             |
 | --- | ------------------------------- | ------ | ------------------------------------------------------------------------------------------------ |
 | WEB | [Web UI](../specs/ui/web-ui.md) | Stub   | Guidance on the screens of the browser user interface and what each shows the Player by default. |
+
+## Autopilot AIs
+
+| ID      | Document                                                           | Status | Owns                                                                                                                    |
+| ------- | ------------------------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------- |
+| BASICAI | [Basic Autopilot AI](../specs/autopilot-ais/basic-autopilot-ai.md) | Draft  | The goals the Basic Autopilot AI pursues, how it prioritizes them within a turn, and what it deliberately leaves alone. |
 
 ## Implementation
 

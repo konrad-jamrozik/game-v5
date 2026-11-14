@@ -23,7 +23,9 @@ one physical layout for Game storage.
 # How they relate
 
 Both documents use the Foundation family: Gameplay Dependency Direction uses its vocabulary and determinism guarantees,
-and Storage Schema uses its data ownership, Campaign save, and Timeline contracts. No specification depends on either.
+and Storage Schema uses its data ownership, Campaign save, and Timeline contracts. Gameplay Dependency Direction also
+uses Web UI from the UI family and Basic Autopilot AI from the Autopilot AIs family, whose code it keeps behind the
+engine API. No specification depends on either.
 
 <!-- generated:family-diagram:start -->
 

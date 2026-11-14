@@ -140,5 +140,5 @@
   <rect class="chip stroke-r0" x="437.6" y="826" width="124.8" height="28" rx="14"/>
   <text class="chip-text ink-r0" x="500" y="845">Core Concepts</text>
   <text class="caption" x="500" y="896">No Foundation specification depends on a Mechanics specification.</text>
-  <text class="caption" x="500" y="916">Content, Implementation and UI specifications sit beside the stack and are not drawn.</text>
+  <text class="caption" x="500" y="916">Autopilot AIs, Content, Implementation and UI specifications sit beside the stack and are not drawn.</text>
 </svg>

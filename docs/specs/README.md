@@ -34,12 +34,13 @@ the boundaries between them sit where they do. Each overview includes generated 
 - [About the Mechanics family](mechanics/about-mechanics.md)
 - [About the Content family](content/about-content.md)
 - [About the UI family](ui/about-ui.md)
+- [About the Autopilot AIs family](autopilot-ais/about-autopilot-ais.md)
 - [About the Implementation family](implementation/about-implementation.md)
 
 # Family architecture
 
-Foundation and Mechanics together form the game engine. Content and UI build on the game engine, and Implementation
-builds on the game engine, Content, and UI, as the Builds on column of the Families table in
+Foundation and Mechanics together form the game engine. Content, UI, and Autopilot AIs build on the game engine, and
+Implementation builds on the game engine, Content, UI, and Autopilot AIs, as the Builds on column of the Families table in
 [Specification families and paths](governance/spec-conventions.md#specification-families-and-paths) states. Every
 specification also follows the Governance family. `npm run docs:generate` draws the following diagram from the
 relationships the specifications declare: an arrow from one Family to another means a specification of the first uses

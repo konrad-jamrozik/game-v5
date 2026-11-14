@@ -37,6 +37,7 @@ appropriate to this document.
 - Uses [Numbers](../foundation/numbers.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](domain-model.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Missions](./missions.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 

@@ -21,6 +21,7 @@ It owns only cross-cutting guarantees and owns no engine subsystem. The behavior
 - Used by [Agent Recovery](../mechanics/agent-recovery.md)
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Campaign Lifecycle](./campaign-lifecycle.md)
 - Used by [Combat](../mechanics/combat.md)
 - Used by [Configuration](./configuration.md)

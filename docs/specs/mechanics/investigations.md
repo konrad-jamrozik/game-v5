@@ -35,6 +35,7 @@ appropriate to this document.
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Refines [Domain Model](domain-model.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary

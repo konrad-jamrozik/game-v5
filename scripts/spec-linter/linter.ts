@@ -27,6 +27,7 @@ import {
   FAMILY_DIAGRAM_START,
   FAMILY_ORDER,
   FAMILY_OVERVIEW_HEADINGS,
+  familyDirectoryName,
   familyOverviewPath,
   familyOverviewTitle,
   isFamilyOverviewCandidate,
@@ -56,6 +57,7 @@ const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Mechanics',
   'Content',
   'UI',
+  'Autopilot AIs',
   'Implementation',
 ])
 const FRAMING_HEADINGS = ['Overview', 'Relationships', 'Glossary']
@@ -310,12 +312,12 @@ function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void 
         specification.path,
         specification.metadata.table,
         'SPEC109',
-        'Metadata Family must be Governance, Foundation, Mechanics, Content, UI, or Implementation.',
+        'Metadata Family must be Governance, Foundation, Mechanics, Content, UI, Autopilot AIs, or Implementation.',
       )
     } else {
       const relativePath = specification.path.slice(parsed.specificationRoot.length + 1)
       const actualDirectory = directoryOf(relativePath)
-      const expectedDirectory = specification.path === parsed.indexPath ? '' : specification.family.toLowerCase()
+      const expectedDirectory = specification.path === parsed.indexPath ? '' : familyDirectoryName(specification.family)
       if (
         actualDirectory !== expectedDirectory ||
         (specification.path === parsed.indexPath && specification.family !== 'Governance')

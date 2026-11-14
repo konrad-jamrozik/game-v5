@@ -1,0 +1,14 @@
+id: sidearm
+type: Weapon
+name: Sidearm
+damage: 10
+---
+id: rifle
+type: Weapon
+name: Rifle
+damage: 14
+---
+id: heavy_rifle
+type: Weapon
+name: Heavy rifle
+damage: 22

@@ -1,0 +1,55 @@
+id: apprehend_member
+type: MissionArchetype
+kind: initiative
+name: Apprehend member
+expires_in_turns: 5
+enemies:
+  initiate: 3 # game-ts: 2 initiate, 1 operative
+on_win:
+  money: 5
+  funding: 0
+  panic_reduction_pct: 1
+---
+id: raid_safehouse
+type: MissionArchetype
+kind: initiative
+name: Raid safehouse
+expires_in_turns: 8
+enemies:
+  initiate: 8 # game-ts: 4 initiate, 4 operative
+  soldier: 1 # game-ts: 1 handler
+on_win:
+  money: 100
+  funding: 5
+  panic_reduction_pct: 2
+---
+id: raid_hq
+type: MissionArchetype
+kind: initiative
+name: Raid HQ
+expires_in_turns: 20 # game-ts: 40
+enemies:
+  initiate: 6
+  soldier: 3
+  cult_leader: 1
+on_win:
+  defeat_target_faction: true
+---
+id: foil_recruitment_push
+type: MissionArchetype
+kind: response
+name: Foil recruitment push
+operation_level: 1
+expires_in_turns: 3
+enemies:
+  initiate: 5 # game-ts: 4 initiate, 1 operative
+---
+id: foil_sabotage
+type: MissionArchetype
+kind: response
+name: Foil sabotage
+operation_level: 2
+expires_in_turns: 4
+enemies:
+  initiate: 4
+  soldier: 2 # game-ts: 2 soldier, 1 handler, 1 lieutenant

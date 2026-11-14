@@ -15,8 +15,8 @@ This document defines Autopilot: how an Autopilot engagement is bounded, what an
 Autopilot engagement ends, and how Autopilot memory behaves.
 
 It owns the behavior of Autopilot only. Which API surfaces an Autopilot AI can call is owned by
-[API hierarchy](engine-contract.md#api-hierarchy) in Engine Contract, and how an Autopilot AI decides what to do is
-outside the specifications.
+[API hierarchy](engine-contract.md#api-hierarchy) in Engine Contract. How an Autopilot AI decides what to do is outside
+this document: each Autopilot AI a Game build offers is described in the Autopilot AIs family.
 
 # Relationships
 
@@ -24,6 +24,7 @@ outside the specifications.
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Timeline](./timeline.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 
 # Glossary
 
@@ -192,5 +193,5 @@ nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-recei
 # Open decisions
 
 - TODO: Choose the exact limits of the finite execution budget of an Autopilot AI.
-- TODO: Define which Autopilot AIs exist and how one becomes available, e.g. whether the Game build supplies them or
-  the player registers them.
+- TODO: Define how an Autopilot AI becomes available beyond those the Game build offers, e.g. whether the player can
+  register one.

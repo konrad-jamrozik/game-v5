@@ -1,0 +1,5 @@
+id: standard
+type: CampaignConfiguration
+game_build_default: true
+starting_money: 500 # fixed after creation
+starting_funding: 20 # the Agency's initial recurring funding

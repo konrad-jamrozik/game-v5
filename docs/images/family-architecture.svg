@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Implementation builds on Foundation and Content and UI. Foundation and Mechanics form the game engine.">
-  <title>Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Implementation builds on Foundation and Content and UI. Foundation and Mechanics form the game engine.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics. Implementation builds on Foundation and Content and UI and Autopilot AIs. Foundation and Mechanics form the game engine.">
+  <title>Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics. Implementation builds on Foundation and Content and UI and Autopilot AIs. Foundation and Mechanics form the game engine.</title>
   <style>
     :root { --bg: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #8a94a6; --box: #f6f7f9;
       --engine-bg: #f1f2f5; --found-bg: #dfe5f7; --found-fg: #2d3f8f; --mech-bg: #f7dceb; --mech-fg: #8c2a5d; }
@@ -26,12 +26,15 @@
   <rect class="box" x="385" y="28" width="230" height="66" rx="10"/>
   <text class="title" x="500" y="56">Implementation</text>
   <text class="count" x="500" y="77">2 specifications</text>
-  <rect class="box" x="246" y="164" width="230" height="66" rx="10"/>
-  <text class="title" x="361" y="192">Content</text>
-  <text class="count" x="361" y="213">1 specification</text>
-  <rect class="box" x="524" y="164" width="230" height="66" rx="10"/>
-  <text class="title" x="639" y="192">UI</text>
-  <text class="count" x="639" y="213">1 specification</text>
+  <rect class="box" x="107" y="164" width="230" height="66" rx="10"/>
+  <text class="title" x="222" y="192">Content</text>
+  <text class="count" x="222" y="213">1 specification</text>
+  <rect class="box" x="385" y="164" width="230" height="66" rx="10"/>
+  <text class="title" x="500" y="192">UI</text>
+  <text class="count" x="500" y="213">1 specification</text>
+  <rect class="box" x="663" y="164" width="230" height="66" rx="10"/>
+  <text class="title" x="778" y="192">Autopilot AIs</text>
+  <text class="count" x="778" y="213">1 specification</text>
   <rect class="engine" x="180" y="300" width="640" height="166" rx="12"/>
   <text class="engine-title" x="500" y="327">Game engine</text>
   <rect class="band-mech" x="234" y="340" width="532" height="52" rx="8"/>
@@ -40,16 +43,20 @@
   <rect class="band-found" x="194" y="400" width="612" height="52" rx="8"/>
   <text class="band-name ink-found" x="500" y="422">Foundation</text>
   <text class="band-count ink-found" x="500" y="440">12 specifications</text>
-  <path class="arrow" d="M 361 230 L 361 292"/>
-  <path class="head" d="M 355 290 L 367 290 L 361 300 Z"/>
-  <path class="arrow" d="M 639 230 L 639 292"/>
-  <path class="head" d="M 633 290 L 645 290 L 639 300 Z"/>
+  <path class="arrow" d="M 222 230 L 222 292"/>
+  <path class="head" d="M 216 290 L 228 290 L 222 300 Z"/>
+  <path class="arrow" d="M 500 230 L 500 292"/>
+  <path class="head" d="M 494 290 L 506 290 L 500 300 Z"/>
+  <path class="arrow" d="M 778 230 L 778 292"/>
+  <path class="head" d="M 772 290 L 784 290 L 778 300 Z"/>
   <path class="arrow" d="M 500 94 L 500 292"/>
   <path class="head" d="M 494 290 L 506 290 L 500 300 Z"/>
-  <path class="arrow" d="M 500 94 L 446 156"/>
-  <path class="head" d="M 440 154 L 452 154 L 446 164 Z"/>
-  <path class="arrow" d="M 500 94 L 554 156"/>
-  <path class="head" d="M 548 154 L 560 154 L 554 164 Z"/>
+  <path class="arrow" d="M 500 94 L 307 156"/>
+  <path class="head" d="M 301 154 L 313 154 L 307 164 Z"/>
+  <path class="arrow" d="M 500 94 L 500 156"/>
+  <path class="head" d="M 494 154 L 506 154 L 500 164 Z"/>
+  <path class="arrow" d="M 500 94 L 693 156"/>
+  <path class="head" d="M 687 154 L 699 154 L 693 164 Z"/>
   <text class="caption" x="500" y="500">Arrows point from a Family to the Families its specifications use or refine.</text>
   <text class="caption" x="500" y="522">Every specification also follows the Governance family, which is not drawn.</text>
 </svg>

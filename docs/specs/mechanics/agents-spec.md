@@ -42,6 +42,7 @@ appropriate to this document.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Refines [Domain Model](domain-model.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Combat](./combat.md)
 - Used by [Economy and Upgrades](./economy-and-upgrades.md)
 - Used by [Investigations](./investigations.md)

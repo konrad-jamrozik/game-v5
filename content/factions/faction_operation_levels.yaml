@@ -1,0 +1,21 @@
+id: operation_level_1
+type: FactionOperationLevel
+level: 1
+name: Soft operations
+on_win:
+  money: 10
+  funding: 0
+on_ignored_or_lost:
+  panic_increase_pct: 3 # game-ts: 0.02
+  funding: 0
+---
+id: operation_level_2
+type: FactionOperationLevel
+level: 2
+name: Violent but small-scale
+on_win:
+  money: 30
+  funding: 5
+on_ignored_or_lost:
+  panic_increase_pct: 8 # game-ts: 0.1
+  funding: -1

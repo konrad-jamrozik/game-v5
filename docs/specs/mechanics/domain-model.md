@@ -32,6 +32,7 @@ hidden from the player.
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Game Data Records](../foundation/game-data-records.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 - Used by [Web UI](../ui/web-ui.md)

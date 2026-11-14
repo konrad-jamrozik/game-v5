@@ -1,0 +1,6 @@
+id: combat_parameters
+type: CombatParameters
+weapon_damage_range: 0.5 # a damage roll is base damage ±50%
+retreat_below_agent_rating_fraction: 0.5 # of the team's starting combat rating
+retreat_at_enemy_to_agent_rating: 0.8
+incapacitation_skill_fraction: 0.1

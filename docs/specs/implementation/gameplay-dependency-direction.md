@@ -17,6 +17,7 @@ Committed state integrity and determinism guarantees remain owned by Engine Cont
 
 # Relationships
 
+- Uses [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
@@ -35,7 +36,9 @@ Campaign state, directly or indirectly. This includes the code that creates Camp
 Campaign instances must not hold references to the Campaign state that contains them. These restrictions exclude Session API and Developer API operations, which may access complete Campaign state.
 
 User interface code, e.g. the code of the [Web UI](../ui/web-ui.md), depends on game behavior only through the engine
-API: it never reads Campaign state directly and never calls a Gameplay function.
+API: it never reads Campaign state directly and never calls a Gameplay function. Autopilot AI code, e.g. the code of the
+[Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md), is held to the same restriction more narrowly: it reaches
+the game only through Player API and Autopilot memory API, so it cannot see beyond Player-visible information.
 
 # Supported observable contract
 

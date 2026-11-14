@@ -41,6 +41,7 @@ appropriate to this document.
 - Refines [Domain Model](domain-model.md)
 - Refines [Factions](./factions.md)
 - Used by [Agent Recovery](./agent-recovery.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 

@@ -1,0 +1,8 @@
+id: economy
+type: EconomyParameters
+hire_cost: 50
+upkeep_per_agent: 10 # per turn, every Serving Agent
+contracting_income_per_agent: 30 # per turn, each Agent on Contracting
+base_agent_cap: 20
+base_transport_cap: 4 # game-ts: 6
+base_training_cap: 4 # game-ts: 0

@@ -1,0 +1,29 @@
+id: faint
+type: FactionActivityLevel
+name: Faint
+lasts_turns: [60, 90]
+operation_every_turns: [15, 25]
+operation_level_weights:
+  1: 80
+  2: 20
+next: active
+---
+id: active
+type: FactionActivityLevel
+name: Active
+lasts_turns: [60, 90]
+operation_every_turns: [11, 21]
+operation_level_weights:
+  1: 40
+  2: 60
+next: war
+---
+id: war
+type: FactionActivityLevel
+name: War
+lasts_turns: null # final level
+operation_every_turns: [8, 18]
+operation_level_weights:
+  1: 20
+  2: 80
+next: null

@@ -96,8 +96,8 @@ The following table is the exhaustive set of Personas. The last column names the
 | Engine designer  | Human        | Designs the engine and its game behavior, decides which inputs to that behavior GDRs supply and so become content, and establishes these specification conventions. | Governance, Foundation, Mechanics; e.g. [Specification Conventions](spec-conventions.md), [Core Concepts](../foundation/core-concepts.md) |
 | Content designer | Human or LLM | Authors GDRs, including the initial campaign content and in-game encyclopedia articles, within the Types the Engine designer exposes for content.                   | Foundation, Mechanics; e.g. [Game Data Records](../foundation/game-data-records.md)                                                       |
 | UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                                        | UI, Foundation; e.g. [Engine Contract](../foundation/engine-contract.md), [Campaign Lifecycle](../foundation/campaign-lifecycle.md)       |
-| AI designer      | Human or LLM | Designs an AI that plays the game, e.g. an Autopilot AI.                                                                                                            | Foundation; e.g. [Autopilot](../foundation/autopilot.md), [Engine Contract](../foundation/engine-contract.md)                             |
-| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                        | Foundation, Mechanics, UI, Implementation                                                                                                 |
+| AI designer      | Human or LLM | Designs an AI that plays the game, e.g. an Autopilot AI.                                                                                                            | Autopilot AIs, Foundation; e.g. [Autopilot](../foundation/autopilot.md), [Engine Contract](../foundation/engine-contract.md)              |
+| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                        | Foundation, Mechanics, UI, Autopilot AIs, Implementation                                                                                  |
 | Player           | Human or LLM | Plays the game.                                                                                                                                                     | None directly; plays through a user interface                                                                                             |
 
 ## Status
@@ -142,21 +142,22 @@ Family classifies an artifact by the kind of authority it owns. It is independen
 folder location does not create a relationship.
 
 Every registered specification declares exactly one of these Families in metadata. With
-the exception of the root index, its file must be a direct child of the corresponding lowercase directory.
+the exception of the root index, its file must be a direct child of the directory the following table names for it.
 
-| Family         | Directory         | Ownership boundary                                                                                                | Builds on                          |
-| -------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| Governance     | `governance/`     | Specification conventions, relationship rules, and planning or process contracts                                  | Nothing                            |
-| Foundation     | `foundation/`     | Cross-cutting vocabulary, modeling, engine execution, numeric, undo and redo, and save contracts                  | Nothing                            |
-| Mechanics      | `mechanics/`      | Game concepts, player-facing game-system rules, transitions, formulas, and effects, and the order of Advance turn | Foundation                         |
-| Content        | `content/`        | Versioned GDRs, named parameters, catalogs, and starting configurations                                           | Foundation, Mechanics              |
-| UI             | `ui/`             | Non-behavioural guidance on how user interfaces present the engine API to the Player                              | Foundation, Mechanics              |
-| Implementation | `implementation/` | Non-behavioural steering for implementers, e.g. architecture or code-quality guidance                             | Foundation, Mechanics, Content, UI |
+| Family         | Directory         | Ownership boundary                                                                                                | Builds on                                         |
+| -------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| Governance     | `governance/`     | Specification conventions, relationship rules, and planning or process contracts                                  | Nothing                                           |
+| Foundation     | `foundation/`     | Cross-cutting vocabulary, modeling, engine execution, numeric, undo and redo, and save contracts                  | Nothing                                           |
+| Mechanics      | `mechanics/`      | Game concepts, player-facing game-system rules, transitions, formulas, and effects, and the order of Advance turn | Foundation                                        |
+| Content        | `content/`        | Versioned GDRs, named parameters, catalogs, and starting configurations                                           | Foundation, Mechanics                             |
+| UI             | `ui/`             | Non-behavioural guidance on how user interfaces present the engine API to the Player                              | Foundation, Mechanics                             |
+| Autopilot AIs  | `autopilot-ais/`  | The goals and priorities of each Autopilot AI a Game build offers                                                 | Foundation, Mechanics                             |
+| Implementation | `implementation/` | Non-behavioural steering for implementers, e.g. architecture or code-quality guidance                             | Foundation, Mechanics, Content, UI, Autopilot AIs |
 
 The Builds on column states which Families a Family builds on. A specification depends only on specifications of its
 own Family, of the Families its Family builds on, and of the Families those build on in turn; every specification also
-follows the Governance family implicitly. Foundation and Mechanics together form the game engine, which Content and UI
-build on; Implementation builds on the game engine, Content, and UI.
+follows the Governance family implicitly. Foundation and Mechanics together form the game engine, which Content, UI, and
+Autopilot AIs build on; Implementation builds on the game engine, Content, UI, and Autopilot AIs.
 [Family architecture](../README.md#family-architecture) in the specification index shows a diagram generated from
 the relationships the specifications actually declare, so it can be compared with this table.
 
@@ -171,6 +172,10 @@ UI documents are non-behavioural in the same way. They guide how a user interfac
 Player, e.g. which screens exist and what each shows by default, but they add no gameplay information, engine API
 operation, or GDR. What a user interface may show and call remains owned by
 [Engine Contract](../foundation/engine-contract.md) and the specification that owns each value.
+
+Autopilot AIs documents describe how an Autopilot AI chooses its Player actions, e.g. which goals it pursues and in
+what order, but they add no engine API operation, game behavior, or GDR. What every Autopilot AI receives and may call
+remains owned by [Autopilot](../foundation/autopilot.md) and [Engine Contract](../foundation/engine-contract.md).
 
 The Game Specification Index has Family Governance and remains at `docs/specs/README.md` as the navigation entry point.
 Family describes ownership; the Builds on column limits which Families a specification may depend on. Moving a specification between Families changes its declared ownership category and requires updating its
@@ -353,7 +358,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 
 | INSTEAD OF                                                           | USE                                                                                                                                                                                                      | Context                                                                                                                                                                                                                                                                                               |
 | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Delegated AI; Delegated agent; scoped AI                             | [Autopilot AI](../foundation/engine-contract.md#glossary)                                                                                                                                                | Referring to the AI that plays while Autopilot is engaged; Agent remains the game-domain concept.                                                                                                                                                                                                     |
+| Delegated AI; Delegated agent; scoped AI; intellect                  | [Autopilot AI](../foundation/engine-contract.md#glossary)                                                                                                                                                | Referring to the AI that plays while Autopilot is engaged; Agent remains the game-domain concept.                                                                                                                                                                                                     |
 | Delegation; Delegation run                                           | [Autopilot](../foundation/engine-contract.md#glossary) or [Autopilot engagement](../foundation/engine-contract.md#glossary)                                                                              | Referring to lending Player API control to an Autopilot AI, or to one such period.                                                                                                                                                                                                                    |
 | Delegation scope                                                     | [Autopilot limit](../foundation/autopilot.md#glossary)                                                                                                                                                   | Referring to the bound on an Autopilot engagement.                                                                                                                                                                                                                                                    |
 | Committed action; Developer action                                   | [Player action](../foundation/engine-contract.md#glossary)                                                                                                                                               | Referring to one successful state-changing action made through Player API or Developer API.                                                                                                                                                                                                           |

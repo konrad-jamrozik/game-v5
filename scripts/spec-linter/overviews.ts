@@ -6,6 +6,7 @@ export const FAMILY_ORDER: readonly SpecificationFamily[] = [
   'Mechanics',
   'Content',
   'UI',
+  'Autopilot AIs',
   'Implementation',
 ]
 
@@ -19,8 +20,9 @@ export const FAMILY_OVERVIEW_HEADINGS = [
   'Why these boundaries',
 ] as const
 
-export function familyDirectoryName(family: SpecificationFamily): string {
-  return family.toLowerCase()
+/** Lowercases the Family name and joins its words with hyphens, e.g. `autopilot-ais` for Autopilot AIs. */
+export function familyDirectoryName(family: string): string {
+  return family.toLowerCase().replaceAll(' ', '-')
 }
 
 export function familyOverviewFileName(family: SpecificationFamily): string {
