@@ -49,6 +49,7 @@ build, and recovery never depends on how an Agent was hurt.
 - Uses [Missions](./missions.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Refines [Agents](./agents-spec.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary

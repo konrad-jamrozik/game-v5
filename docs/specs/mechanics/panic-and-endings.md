@@ -48,6 +48,7 @@ effect of Panic other than Defeat, e.g. an effect on funding. This list is exhau
 - Uses [Factions](factions.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Refines [Domain Model](domain-model.md)
+- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Missions](./missions.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 
