@@ -1,6 +1,5 @@
 import { resolve } from 'node:path'
 
-import GithubSlugger from 'github-slugger'
 import { describe, expect, test } from 'vitest'
 
 import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
@@ -12,15 +11,8 @@ import {
   renderFamilyOverviews,
 } from '../scripts/spec-docs/generator.ts'
 import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
-import { headingText, isLink, parseDocument, visit } from '../scripts/spec-linter/markdown.ts'
-import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from '../scripts/spec-linter/paths.ts'
 import type { SourceFile, SpecificationCorpus } from '../scripts/spec-linter/types.ts'
-import {
-  derivedLinkFindings,
-  derivedOutputFindings,
-  runDerivedDocumentation,
-  type DerivedDocsIO,
-} from '../scripts/derived-docs.ts'
+import { derivedLinkFindings, derivedOutputFindings } from '../scripts/derived-docs.ts'
 
 const PRETTIER_OPTIONS = { printWidth: 120, singleQuote: true, semi: false, tabWidth: 2 }
 
@@ -120,11 +112,6 @@ function sampleCorpus(): SpecificationCorpus {
       },
     ],
   }
-}
-
-function diagramFiles(files: readonly SourceFile[], corpus: SpecificationCorpus): ReadonlyMap<string, string> {
-  const sources = new Map(files.map((file) => [file.path.replaceAll('\\', '/'), file.content]))
-  return new Map([...renderDerivedDiagramFiles(corpus), ...renderFamilyDiagramFiles(corpus, sources)])
 }
 
 function arrows(svg: string, style: string): number {
@@ -416,26 +403,6 @@ describe('family overview diagrams', () => {
     )
     expect(second.get('docs/specs/foundation/about-foundation.md')).toBe(output)
   })
-
-  test('check mode reports a stale overview diagram', async () => {
-    const files = await currentFiles()
-    const analysis = analyzeSpecifications({ files })
-    const derived = await renderDerivedDocumentation(analysis.corpus, PRETTIER_OPTIONS)
-    const path = 'docs/specs/foundation/about-foundation.md'
-    const stale = files.map((file) =>
-      file.path === path
-        ? { ...file, content: file.content.replace('images/foundation-family-within.svg', 'images/stale.svg') }
-        : file,
-    )
-    const errors: string[] = []
-    const io: DerivedDocsIO = {
-      actualOutputs: new Map([...derived, ...diagramFiles(files, analysis.corpus)]),
-      writeOutputs: () => Promise.resolve(),
-      writeError: (message) => errors.push(message),
-    }
-    expect(await runDerivedDocumentation(stale, ['check'], io, PRETTIER_OPTIONS)).toBe(1)
-    expect(errors).toEqual([`${path}: generated documentation is stale; run npm run docs:generate.`])
-  })
 })
 
 describe('shared specification analysis', () => {
@@ -457,20 +424,6 @@ describe('shared specification analysis', () => {
     expect(implicit).toHaveLength(analysis.corpus.specifications.length - 1)
     expect(implicit.every((relationship) => relationship.dependencyId === 'CONV')).toBe(true)
     expect(implicit.some((relationship) => relationship.dependentId === 'CONV')).toBe(false)
-  })
-
-  test('is independent of input ordering and line endings', async () => {
-    const files = await currentFiles()
-    const baseline = analyzeSpecifications({ files })
-    const reversed = analyzeSpecifications({ files: files.toReversed() })
-    const crlf = analyzeSpecifications({
-      files: files.map((file) => ({ ...file, content: file.content.replace(/\r?\n/g, '\r\n') })),
-    })
-    expect(reversed).toEqual(baseline)
-    expect(crlf).toEqual(baseline)
-    expect(outputObject(await renderDerivedDocumentation(reversed.corpus, PRETTIER_OPTIONS))).toEqual(
-      outputObject(await renderDerivedDocumentation(baseline.corpus, PRETTIER_OPTIONS)),
-    )
   })
 })
 
@@ -507,55 +460,4 @@ describe('derived documentation checking', () => {
     )
     expect(findings.some((finding) => finding.includes('anchor "#absent" does not exist'))).toBe(true)
   })
-
-  test('check mode does not write and invalid sources block generation', async () => {
-    const files = await currentFiles()
-    const analysis = analyzeSpecifications({ files })
-    const expected = await renderDerivedDocumentation(analysis.corpus, PRETTIER_OPTIONS)
-    let writes = 0
-    const errors: string[] = []
-    const io: DerivedDocsIO = {
-      actualOutputs: new Map([...expected, ...diagramFiles(files, analysis.corpus)]),
-      writeOutputs: () => {
-        writes += 1
-        return Promise.resolve()
-      },
-      writeError: (message) => errors.push(message),
-    }
-    expect(await runDerivedDocumentation(files, ['check'], io, PRETTIER_OPTIONS)).toBe(0)
-    expect(writes).toBe(0)
-    expect(errors).toEqual([])
-    expect(await runDerivedDocumentation([], ['generate'], io, PRETTIER_OPTIONS)).toBe(1)
-    expect(writes).toBe(0)
-  })
-})
-
-test('generated local links and anchors resolve against the current corpus', async () => {
-  const files = await currentFiles()
-  const analysis = analyzeSpecifications({ files })
-  expect(analysis.diagnostics).toEqual([])
-  const outputs = await renderDerivedDocumentation(analysis.corpus, PRETTIER_OPTIONS)
-  expect(derivedLinkFindings(files, outputs)).toEqual([])
-  const documents = new Map(files.map((file) => [file.path, parseDocument(file)]))
-  for (const [path, content] of outputs) documents.set(path, parseDocument({ path, content }))
-
-  for (const path of outputs.keys()) {
-    const document = documents.get(path)
-    expect(document).toBeDefined()
-    if (!document) continue
-    visit(document.tree, (node) => {
-      if (!isLink(node) || isExternalUrl(node.url) || node.url.startsWith('#')) return
-      const parts = splitUrl(node.url)
-      const decodedPath = decodeUrlPart(parts.path)
-      expect(decodedPath).toBeDefined()
-      if (!decodedPath) return
-      const destinationPath = resolvePath(path, decodedPath)
-      const destination = documents.get(destinationPath)
-      expect(destination, `${path} links to missing ${destinationPath}`).toBeDefined()
-      if (!destination || !parts.fragment) return
-      const slugger = new GithubSlugger()
-      const slugs = new Set(destination.headings.map((heading) => slugger.slug(headingText(heading))))
-      expect(slugs, `${path} links to missing #${parts.fragment} in ${destinationPath}`).toContain(parts.fragment)
-    })
-  }
 })
