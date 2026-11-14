@@ -23,8 +23,8 @@ signatures for Session API, Player API, Developer API, and Autopilot memory API.
 
 ## Developer API
 
-[Developer API](developer-api.md) answers _what can an authorized developer inspect or change?_ It owns full Campaign
-state inspection and cheat-command details, available only under authorized Dev mode access.
+[Developer API](developer-api.md) answers _what can an authorized developer inspect or change?_ It owns the Developer access engine subsystem: Dev mode, full Campaign
+state inspection, and cheat-command details.
 
 ## Terminal CLI
 

@@ -19,6 +19,7 @@ Autosaves defined here.
 
 # Relationships
 
+- Uses [Campaign Lifecycle](./campaign-lifecycle.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
@@ -104,7 +105,7 @@ A successful `session.campaign.load(save)` atomically:
 - restores the Campaign state, Timeline, and Autopilot memory held by the Campaign save;
 - selects that Campaign as the Current campaign and that Campaign save as the Current save;
 - leaves no active Autopilot engagement and Dev mode disabled, under
-  [Campaign lifecycle](engine-contract.md#campaign-lifecycle).
+  [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle.
 
 Loading an Autosave differs in one respect: the Current campaign then has no Current save, so a later `save()`
 creates a new Campaign save and leaves the Autosave unchanged.

@@ -22,6 +22,7 @@ owns. [Numbers](numbers.md) owns rounding and precision.
 
 # Relationships
 
+- Uses [Campaign Lifecycle](./campaign-lifecycle.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Autopilot](./autopilot.md)
@@ -92,7 +93,7 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
 
 - **Supplied:** The Session controller may supply the Campaign seed in `session.newCampaign.create(options)`. A
   supplied value that is not a permitted Campaign seed fails creation, under
-  [Campaign lifecycle](engine-contract.md#campaign-lifecycle) in Engine Contract.
+  [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle.
 - **Permitted values:** A permitted Campaign seed is any non-empty text. Two Campaign seeds are the same exactly
   when their texts are equal character for character; e.g., `abc` and `ABC` are different Campaign seeds.
   [TypeScript Player API](../interfaces/typescript-api.md) owns the exact Type and the maximum length.

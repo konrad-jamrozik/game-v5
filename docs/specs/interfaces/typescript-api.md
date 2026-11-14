@@ -16,7 +16,7 @@ TODO: Confirm the precise included/excluded scope and rule ownership using the [
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
 This specification refines [API hierarchy](../foundation/engine-contract.md#api-hierarchy) and
-[Campaign lifecycle](../foundation/engine-contract.md#campaign-lifecycle) in Engine Contract, and
+[Campaign selection](../foundation/campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle, and
 [Autopilot limits](../foundation/autopilot.md#autopilot-limits), and
 [Autopilot lifecycle and concurrency](../foundation/autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot,
 with exact callable signatures, argument Types, scoped access, Autopilot progress, and disengagement result Types. Player API always
@@ -49,6 +49,7 @@ its earlier State does not itself create a new Campaign instance. Public restora
 - Uses [Saves](../foundation/saves.md)
 - Uses [Timeline](../foundation/timeline.md)
 - Refines [Autopilot](../foundation/autopilot.md)
+- Refines [Campaign Lifecycle](../foundation/campaign-lifecycle.md)
 - Refines [Determinism and Randomness](../foundation/determinism-and-randomness.md)
 - Refines [Engine Contract](../foundation/engine-contract.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)

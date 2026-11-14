@@ -20,6 +20,7 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
+- Used by [Campaign Lifecycle](./campaign-lifecycle.md)
 - Used by [Campaign State](./campaign-state.md)
 - Used by [Combat](../mechanics/combat.md)
 - Used by [Configuration](./configuration.md)
@@ -98,8 +99,8 @@ Campaign identifies a playthrough; Campaign state describes its data. A Session 
 game and selects at most one Campaign at a time. The two differ in kind: a Campaign is a playthrough with its own
 Campaign state, while a Session is runtime context. A Session is not part of any Campaign, and selecting a Campaign
 does not make it part of the Session.
-[Campaign lifecycle](./engine-contract.md#campaign-lifecycle) in Engine Contract owns what a Session holds, when it
-starts and ends, and what is persisted. This distinction does not prescribe an internal class layout or save encoding.
+[Campaign Lifecycle](./campaign-lifecycle.md) owns when a Session starts and ends and how it selects a Campaign, and
+[Data ownership](./engine-contract.md#data-ownership) in Engine Contract owns what a Session holds and what is persisted. This distinction does not prescribe an internal class layout or save encoding.
 
 # Authoritative and Derived values
 

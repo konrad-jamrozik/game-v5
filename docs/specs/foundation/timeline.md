@@ -99,8 +99,8 @@ as Advance turn does under [Timeline entries](#timeline-entries), never removes 
 # Timeline entries
 
 Each committed Player API or Developer API action other than Advance turn is exactly one Timeline entry, under
-[Player queries and actions](engine-contract.md#player-queries-and-actions) and
-[Dev mode and developer operations](engine-contract.md#dev-mode-and-developer-operations). No other operation is a
+[Player queries and actions](engine-contract.md#player-queries-and-actions), which counts a successful Developer API
+action as a Player action. No other operation is a
 Timeline entry, e.g. a query or `session.campaign.save()`.
 
 Advance turn is a Player action and not a Timeline entry. A committed Advance turn discards the Timeline of the

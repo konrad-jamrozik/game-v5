@@ -25,9 +25,9 @@ definition.
 ## Engine Contract
 
 [Engine Contract](engine-contract.md) answers _what does the engine guarantee, whatever subsystem is involved?_ It owns
-the API hierarchy, the data the engine owns and what is persisted, the campaign lifecycle, player queries and actions,
-Dev mode, the information boundary, and Committed state integrity. It names the owner of each engine
-subsystem without stating that subsystem's behavior.
+the API hierarchy, the data the engine owns and what is persisted, player queries and actions, the information
+boundary, and Committed state integrity. It owns no engine subsystem: it names the one owner of each, without stating
+that subsystem's behavior.
 
 ## Campaign State
 
@@ -41,6 +41,12 @@ would hold for any game built on this engine.
 
 [Game Data Records](game-data-records.md) answers _what can a Game Data Record (GDR) be used for?_ It owns the six
 purposes a GDR can serve and a worked example of each.
+
+## Campaign Lifecycle
+
+[Campaign Lifecycle](campaign-lifecycle.md) answers _how does a Session get, change, and lose its Current campaign?_ It
+owns when a Session starts and ends, creating, loading, selecting, and closing the Current campaign, what
+`session.getStatus()` reports, and which Session API operations need no Current campaign.
 
 ## Determinism and Randomness
 
@@ -95,9 +101,10 @@ Mechanics specification owns the distributions of its own random outcomes.
 # How they relate
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
-State refines those guarantees and Determinism and Randomness. Numbers stands alone and is used by Mechanics. Saves,
-Timeline, Configuration, Autopilot, Determinism and Randomness, and Turn Advancement each use Engine Contract and own
-one subsystem outright; Timeline also uses Saves, and Turn Advancement also uses Domain Model and is used by the
+State refines those guarantees and Determinism and Randomness. Numbers stands alone and is used by Mechanics. Campaign
+Lifecycle, Saves, Timeline, Configuration, Autopilot, Determinism and Randomness, Turn Advancement, and Numbers each
+own one engine subsystem outright, and all but Numbers use Engine Contract; [Developer API](../interfaces/developer-api.md)
+in the Interfaces family owns the Developer access subsystem; Timeline also uses Saves, and Turn Advancement also uses Domain Model and is used by the
 Mechanics specifications whose rules apply during Advance turn. Game Data Records builds on Campaign State. Domain
 Model uses Campaign State and Game Data Records to describe the actual game, and the Mechanics family refines Domain
 Model in turn.
@@ -125,8 +132,8 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
   Engine Contract stay about guarantees.
 - **Campaign State versus Game Data Records:** the first holds the rules for data that changes during a Campaign; the
   second holds the uses of data that never changes during one.
-- **Engine Contract versus Timeline, Saves, Configuration, Autopilot, Determinism and Randomness, and Turn Advancement:** Engine Contract holds only what is true
-  across all subsystems, and each subsystem has exactly one owner. E.g., the rule for which Committed state `undoAction()`
+- **Engine Contract versus the engine subsystem specifications:** Engine Contract holds only what is true across all
+  engine subsystems, and each engine subsystem has exactly one owning specification, which owns no other. E.g., the rule for which Committed state `undoAction()`
   restores is stated once, in Timeline.
 - **Saves versus Timeline:** Saves holds what most games have: saving, loading, and the Autosaves the engine writes.
   It needs nothing from Timeline. Timeline holds all undo and redo and builds on Saves. Undo and redo within a Turn
@@ -155,7 +162,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 1. [Core Concepts](core-concepts.md) for the vocabulary.
 2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns.
 3. [Campaign State](campaign-state.md) and [Game Data Records](game-data-records.md) for how campaign data is shaped.
-4. [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md),
+4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md),
    [Determinism and Randomness](determinism-and-randomness.md), and [Turn Advancement](turn-advancement.md) for the
    engine subsystems.
 5. [Domain Model](domain-model.md) for the game's concepts.

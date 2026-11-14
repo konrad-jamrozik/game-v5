@@ -15,13 +15,13 @@ This document defines full Campaign state inspection, cheat-command details, and
 TODO: Confirm the precise included/excluded scope and rule ownership using the [game design brief](../../game-design-brief.md).
 Separate inherited game-ts behavior, required v5 changes, and new proposals.
 
-This specification refines [Information boundary](../foundation/engine-contract.md#information-boundary) and
-[Dev mode and developer operations](../foundation/engine-contract.md#dev-mode-and-developer-operations) with inspection
-schemas and cheat-command details. Session API controls Dev mode. Developer API exposes full Campaign state,
+This specification owns the Developer access engine subsystem: Dev mode, full Campaign state inspection, and cheat
+operations, under [Dev mode](#dev-mode). It refines [Information boundary](../foundation/engine-contract.md#information-boundary)
+with inspection schemas and cheat-command details. Session API controls Dev mode. Developer API exposes full Campaign state,
 including all Authoritative values, only to an authorized Session controller with Dev mode enabled and no active
 Autopilot engagement. Player API always exposes only Player-visible information; Autopilot AI never receives developer access.
 
-Engine Contract owns access transitions and high-level replay guarantees. Domain Model supplies inspected Campaign
+Engine Contract owns the Principal access matrix and high-level replay guarantees. Domain Model supplies inspected Campaign
 state and invariants. Timeline supplies undo and redo of committed cheat actions.
 [API hierarchy](../foundation/engine-contract.md#api-hierarchy) supplies the Developer API surface and its access
 results. The exact callable TypeScript signatures are owned by [TypeScript Player API](./typescript-api.md); this
@@ -29,6 +29,7 @@ document does not rely on them.
 
 # Relationships
 
+- Uses [Campaign Lifecycle](../foundation/campaign-lifecycle.md)
 - Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Determinism and Randomness](../foundation/determinism-and-randomness.md)
@@ -42,6 +43,26 @@ document does not rely on them.
 API surface and Principal terms are owned by the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
 
 TODO: Define inspection-specific terms without duplicating shared definitions.
+
+# Dev mode
+
+Only the Session controller can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
+a Current campaign and no active Autopilot engagement. Developer API inspection returns detached, read-only full
+Campaign state. It never reveals hidden facts through ordinary game behavior.
+`developer.actions.addMoney(amount)` and `developer.actions.addAgents(...)` are required starter cheat operations,
+under [Cheat command details](#cheat-command-details). Future cheat operations belong in that namespace. Cheat
+operations must preserve model invariants, and each successful one is one atomic Player action in the Timeline.
+
+Dev mode starts disabled and is disabled on successful creation, load, or closure, under
+[Campaign selection](../foundation/campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle. Timeline
+navigation and [Autosave navigation](../foundation/timeline.md#autosave-navigation) leave the current Dev mode setting
+unchanged. Dev mode is not Campaign state and is never restored from a Campaign save or the Timeline. Disabling Dev
+mode revokes subsequent Developer API access. Previously returned information cannot be erased from the Session
+controller's knowledge.
+
+Autopilot may be engaged while Dev mode is enabled, but Developer API operations remain unavailable while Autopilot
+is engaged and the Autopilot AI never receives them. Dev mode transitions are unavailable while Autopilot is engaged.
+To inspect or cheat, the Session controller disengages Autopilot and waits for disengagement to complete.
 
 # Inspection contract
 
@@ -70,8 +91,7 @@ Agent's next attack to "hit" and then commits Advance turn. The random outcomes 
 random outcomes that each Mechanics specification states for its rules. This makes every random outcome controllable
 by hand, without relying on a prepared acceptance test.
 
-An override is a cheat operation under
-[Dev mode and developer operations](../foundation/engine-contract.md#dev-mode-and-developer-operations): it belongs in
+An override is a cheat operation under [Dev mode](#dev-mode): it belongs in
 `developer.actions`, and each successful one is one atomic Player action in the Timeline. The guarantee under
 [Determinism](../foundation/determinism-and-randomness.md#determinism) therefore still holds, because replaying the same ordered
 Player actions replays the same overrides.
@@ -82,7 +102,7 @@ outcome is never decided, and whether a pending override is visible through insp
 
 # Isolation and Timeline navigation
 
-TODO: Specify authorization failures and access revocation under Engine Contract. Undo and redo of a committed cheat action follow
+TODO: Specify authorization failures and access revocation under [Dev mode](#dev-mode). Undo and redo of a committed cheat action follow
 [Restored Committed states](../foundation/timeline.md#restored-committed-states): they do not require Dev mode and give an Autopilot AI no
 way to commit a cheat action.
 
@@ -96,6 +116,12 @@ Invalid cheat inputs change nothing, under
 
 TODO: Provide scenarios proving separate Developer API access, unchanged Player API visibility, Autopilot AI exclusion,
 and cheat-command undo/redo and save/load round trips. Identify the requirement sections each scenario verifies.
+
+- **Developer isolation:** Enable Dev mode and inspect hidden difficulty H through Developer API. Player API still
+  hides H. Engage Autopilot; its queries and errors hide H and its developer calls fail. Disable Dev mode after
+  disengagement and verify Developer API access is revoked ([Dev mode](#dev-mode),
+  [API hierarchy](../foundation/engine-contract.md#api-hierarchy),
+  [Information boundary](../foundation/engine-contract.md#information-boundary)).
 
 # Open decisions
 

@@ -21,6 +21,7 @@ owned by the Mechanics specifications using them, under
 
 # Relationships
 
+- Uses [Campaign Lifecycle](./campaign-lifecycle.md)
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
@@ -148,7 +149,7 @@ The preset selection and the Preset edits are not settings: they are none of the
 
 The Session controller reads and changes the preset selection and the Preset edits through these operations. The
 list is complete, apart from `session.newCampaign.create(options)`, which
-[Campaign lifecycle](engine-contract.md#campaign-lifecycle) owns.
+[Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle owns.
 
 | Operation                                             | Effect                                                                                                                                                                                                                                                             |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
