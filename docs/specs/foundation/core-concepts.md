@@ -17,13 +17,16 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 
 # Relationships
 
+- Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
 - Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Campaign State](./campaign-state.md)
+- Used by [Combat](../mechanics/combat.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Developer API](../interfaces/developer-api.md)
 - Used by [Domain Model](./domain-model.md)
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Engine Contract](./engine-contract.md)
 - Used by [Factions](../mechanics/factions.md)
 - Used by [Game Data Records](./game-data-records.md)
@@ -34,6 +37,7 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 - Used by [Panic and Endings](../mechanics/panic-and-endings.md)
 - Used by [Player Information](../interfaces/player-information.md)
 - Used by [Saves](./saves.md)
+- Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Terminal CLI](../interfaces/cli.md)
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](./turn-advancement.md)

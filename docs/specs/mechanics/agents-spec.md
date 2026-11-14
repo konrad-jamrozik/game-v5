@@ -36,6 +36,7 @@ appropriate to this document.
 
 # Relationships
 
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Uses [Turn Advancement](../foundation/turn-advancement.md)
 - Refines [Domain Model](../foundation/domain-model.md)

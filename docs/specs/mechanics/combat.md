@@ -30,6 +30,7 @@ appropriate to this document.
 # Relationships
 
 - Uses [Agents](./agents-spec.md)
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](../foundation/domain-model.md)

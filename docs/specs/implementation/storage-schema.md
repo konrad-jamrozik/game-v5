@@ -18,6 +18,7 @@ and [Timeline](../foundation/timeline.md).
 
 # Relationships
 
+- Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Determinism and Randomness](../foundation/determinism-and-randomness.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Saves](../foundation/saves.md)
