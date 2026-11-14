@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="732" viewBox="0 0 760 732" role="img" aria-label="Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission, a won Mission makes the next Lead available, and winning Raid HQ defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Missions whose loss raises panic until the Campaign is lost">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="732" viewBox="0 0 760 732" role="img" aria-label="Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission site makes the next Lead available, and winning Raid HQ defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose loss raises panic until the Campaign is lost">
   <!-- Hand-kept diagram for docs/specs/content/bootstrap-gdrs.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --node: #f4f6f9; --fg: #18202b; --muted: #5a6573; --line: #d9dfe7; --accent: #2a5aa6; --accent-soft: #e4ecf8; --red: #a8322a; --red-soft: #f7e6e4; }
@@ -42,7 +42,7 @@
   <text class="id" x="40" y="132">locate_red_dawn_member</text>
   <rect class="node" x="464" y="76" width="272" height="64" rx="6"/>
   <rect class="bar-mission" x="464" y="76" width="4" height="64" rx="2"/>
-  <text class="tag" x="480" y="95">INITIATIVE MISSION</text>
+  <text class="tag" x="480" y="95">INITIATIVE MISSION SITE</text>
   <text class="name" x="480" y="115">Apprehend member</text>
   <text class="id" x="480" y="132">apprehend_member</text>
   <path class="arc" d="M304 108 H460" marker-end="url(#head)"/>
@@ -57,7 +57,7 @@
   <text class="id" x="40" y="240">locate_red_dawn_safehouse</text>
   <rect class="node" x="464" y="184" width="272" height="64" rx="6"/>
   <rect class="bar-mission" x="464" y="184" width="4" height="64" rx="2"/>
-  <text class="tag" x="480" y="203">INITIATIVE MISSION</text>
+  <text class="tag" x="480" y="203">INITIATIVE MISSION SITE</text>
   <text class="name" x="480" y="223">Raid safehouse</text>
   <text class="id" x="480" y="240">raid_safehouse</text>
   <path class="arc" d="M304 216 H460" marker-end="url(#head)"/>
@@ -72,7 +72,7 @@
   <text class="id" x="40" y="348">locate_red_dawn_hq</text>
   <rect class="node" x="464" y="292" width="272" height="64" rx="6"/>
   <rect class="bar-mission" x="464" y="292" width="4" height="64" rx="2"/>
-  <text class="tag" x="480" y="311">INITIATIVE MISSION</text>
+  <text class="tag" x="480" y="311">INITIATIVE MISSION SITE</text>
   <text class="name" x="480" y="331">Raid HQ</text>
   <text class="id" x="480" y="348">raid_hq</text>
   <path class="arc" d="M304 324 H460" marker-end="url(#head)"/>
@@ -102,7 +102,7 @@
   <text class="sub" x="40" y="592">faint, then active, then war</text>
   <rect class="node" x="464" y="536" width="272" height="64" rx="6"/>
   <rect class="bar-mission" x="464" y="536" width="4" height="64" rx="2"/>
-  <text class="tag" x="480" y="555">RESPONSE MISSION</text>
+  <text class="tag" x="480" y="555">RESPONSE MISSION SITE</text>
   <text class="name" x="480" y="575">Foil recruitment push</text>
   <text class="sub" x="480" y="592">or Foil sabotage, by operation level</text>
   <path class="arcred" d="M304 568 H460" marker-end="url(#headred)"/>

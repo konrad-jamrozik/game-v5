@@ -16,55 +16,59 @@ and which values it uses.
 ## Domain Model
 
 [Domain Model](domain-model.md) answers _what exists in this game?_ It owns the game concepts and how they relate: the
-Agency, Agents, Leads, Investigations, Missions, Combat, Factions, weapons, upgrades, and Reports. It applies Core
+Agency, Agents, Leads, Investigations, Mission sites, Missions, Combat, Factions, weapons, upgrades, and Reports. It applies Core
 Concepts' vocabulary and Campaign State's rules to these concepts. It defines each concept briefly and states the
 rules that span several concepts; each other Mechanics specification refines one concept with what that concept has,
 its lifecycle, formulas, and transitions.
 
 ## Panic and Endings
 
-[Panic and Endings](panic-and-endings.md) answers _how does a campaign end?_ It owns global panic, the victory and defeat
-predicates, and what remains possible after an ending.
+[Panic and Endings](panic-and-endings.md) answers _how does a Campaign end?_ It owns Panic and how each turn's changes
+to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign
+ending.
 
 ## Agents
 
-[Agents](agents-spec.md) answers _what can an agent do, and how does an agent change over time?_ It owns agent capability,
-task availability, development, and the meaning of health, exhaustion, and experience.
+[Agents](agents-spec.md) answers _what does an Agent have, and what can it be ordered to do?_ It owns what an Agent has,
+the Agent lifecycle, Current assignments and the transit rule, effective skill, Training, and Agent creation.
 
 ## Agent Recovery
 
-[Agent Recovery](agent-recovery.md) answers _how does an agent get back to full strength?_ It owns how health goes up
+[Agent Recovery](agent-recovery.md) answers _how does an Agent get back to full strength?_ It owns how health goes up
 and exhaustion goes down, and the result when several rules change one of those values in the same turn.
 
 ## Economy and Upgrades
 
-[Economy and Upgrades](economy-and-upgrades.md) answers _where does the agency's money come from and go?_ It owns
-resource flows, personnel purchases, and agency improvements.
+[Economy and Upgrades](economy-and-upgrades.md) answers _where does the Agency's money come from and go?_ It owns the
+Agency's money and funding, Agency income and upkeep, hiring and dismissing Agents, the Agency caps, and Upgrades.
 
 ## Leads and Progression
 
-[Leads and Progression](leads-and-progression.md) answers _what becomes available, and when?_ It owns the progression
-graph and the lifecycle of Leads, separately from the Investigations that pursue them.
+[Leads and Progression](leads-and-progression.md) answers _what becomes available, and when?_ It owns what a Lead
+describes, Lead progression, Lead availability, and the effect of completing a Lead, separately from the Investigations
+that pursue it.
 
 ## Investigations
 
-[Investigations](investigations.md) answers _how does pursuing a Lead progress and complete?_ It owns investigation
-progress, stochastic completion, player uncertainty, and commitment costs.
+[Investigations](investigations.md) answers _how does pursuing a Lead progress and complete?_ It owns Investigation
+progress, stochastic completion, leaving and abandonment, and the rule that a Lead has at most one Active Investigation.
 
 ## Combat
 
-[Combat](combat.md) answers _how does a battle play out?_ It owns fully automatic battles and their reproducible
-results, independently of what those results mean for the campaign.
+[Combat](combat.md) answers _how does a Battle play out?_ It owns Enemies, fully automatic Battles and their
+reproducible results, independently of what those results mean for the Campaign.
 
 ## Missions
 
-[Missions](missions.md) answers _what does committing agents to a mission cost, and what follows from its result?_ It
-owns mission commitments and turns Battle results into campaign consequences.
+[Missions](missions.md) answers _what happens at a place where Enemies are present, and what follows from its result?_
+It owns the Mission site and its Mission: a Mission site's creation, including which MissionSiteArchetype a Faction
+operation occurrence creates its Response Mission site from, its lifecycle, deploying Agents to it, and turning Battle
+results into Campaign consequences.
 
 ## Factions
 
-[Factions](factions.md) answers _how do the opponents push back?_ It owns escalating faction pressure, Faction
-operation occurrence generation, suppression, and permanent defeat.
+[Factions](factions.md) answers _how do the opponents push back?_ It owns escalating Faction pressure, Faction
+operation occurrence generation, and permanent defeat.
 
 ## Turn Advancement
 
@@ -93,8 +97,8 @@ A document refines an earlier one when it adds detail to the same subject, e.g. 
 goes down. It uses an earlier one when it reads that subject to describe its own, e.g. Combat uses Agent skill to
 resolve a Battle.
 
-Panic and Endings depends only on Domain Model so far, so it is drawn in layer 2; its layer is decided when its
-predicates are written.
+E.g., Panic and Endings uses Economy and Upgrades, which is in layer 3, so Panic and Endings is in layer 4, and Missions,
+which uses Panic and Endings, is in layer 5.
 
 <!-- generated:family-diagram:start -->
 
@@ -114,8 +118,8 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 - **Agents versus the documents that change an Agent:** Agents is the complete list of what an Agent has and which
   values can be modified, so no Agent property is introduced by a higher document.
-- **Combat versus Missions:** a battle's resolution is kept separate from its campaign consequences, so combat can be
-  tested and tuned without the campaign around it.
+- **Combat versus Missions:** a Battle's resolution is kept separate from its Campaign consequences, so Combat can be
+  tested and tuned without the Campaign around it.
 - **Leads and Progression versus Investigations:** what is available is separated from how the player pursues it, so
   the progression graph can change without touching investigation mathematics.
 - **Panic and Endings versus the rest:** campaign-wide state (panic and the ending predicates) belongs to no
@@ -132,7 +136,8 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 # Reading order
 
-Read in layer order: [Agents](agents-spec.md) and [Factions](factions.md); then [Combat](combat.md) and
-[Economy and Upgrades](economy-and-upgrades.md); then [Missions](missions.md); then
-[Agent Recovery](agent-recovery.md) and [Leads and Progression](leads-and-progression.md); then
-[Investigations](investigations.md). [Panic and Endings](panic-and-endings.md) can be read at any point.
+Read in layer order: [Domain Model](domain-model.md) (layer 1); then [Agents](agents-spec.md) and
+[Factions](factions.md) (layer 2); then [Combat](combat.md) and [Economy and Upgrades](economy-and-upgrades.md)
+(layer 3); then [Panic and Endings](panic-and-endings.md) (layer 4); then [Missions](missions.md) (layer 5); then
+[Agent Recovery](agent-recovery.md) and [Leads and Progression](leads-and-progression.md) (layer 6); then
+[Investigations](investigations.md) (layer 7); then [Turn Advancement](turn-advancement.md) (layer 8).

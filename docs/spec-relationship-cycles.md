@@ -14,10 +14,13 @@ The review also includes implicit follows relationships in a separate pass to id
 
 The complete result is one governance component with two documents and two internal edges of different Relationship
 kinds. No game specification occurs in a cyclic component: the combined explicit uses/refines graph is acyclic.
-Neither the refines graph nor the follows graph alone contains a cycle. These results were recomputed after the
-Mechanics family was arranged in layers, which removed five uses relationships: Agents uses Combat, Agents uses Economy
-and Upgrades, Factions uses Leads and Progression, Investigations uses Player Information, and Developer API uses
-TypeScript Player API.
+Neither the refines graph nor the follows graph alone contains a cycle. These results were recomputed after the nine Mechanics stubs became complete Drafts and Numbers became a complete Draft,
+and again after Missions began to use Game Data Records.
+The Mechanics family then has eight layers under [The layer rule](specs/mechanics/about-mechanics.md#the-layer-rule),
+and no document uses or refines a document in its own or a later layer. E.g., Panic and Endings uses Factions and
+Economy and Upgrades, Missions uses Panic and Endings, Investigations uses Missions, and Leads and Progression no
+longer refines Factions. Several Mechanics specifications use Numbers, Economy and Upgrades uses Configuration, and
+Missions uses Game Data Records; Numbers, Configuration, and Game Data Records use no Mechanics specification.
 
 When a relationship changes, recompute these components from the registered inventories, check the supporting prose,
 and update the diagrams, tables, counts, and removal criteria together. Include all internal edges, including edges

@@ -33,7 +33,7 @@ Global configuration, and what it keeps one step away.
 
 # Campaign screens
 
-TODO: List the screens the Player needs while a Campaign is current, e.g. an Agents screen and a mission deployment
+TODO: List the screens the Player needs while a Campaign is current, e.g. an Agents screen and a Mission site
 screen, and for each the game concepts under [Domain Model](../mechanics/domain-model.md) it shows by default and
 what it keeps one step away.
 

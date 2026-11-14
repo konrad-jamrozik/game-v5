@@ -1,4 +1,4 @@
 id: recovery
 type: RecoveryParameters
-health_recovery_pct_per_turn: 2 # of the Agent's base health
+health_recovery_pct_per_turn: 2 # of the Agent's Maximum health
 exhaustion_recovery_per_turn: 5

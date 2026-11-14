@@ -29,6 +29,7 @@ owned by the Mechanics specifications using them, under
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Timeline](./timeline.md)
 - Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
+- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 
 # Glossary
 
@@ -91,7 +92,7 @@ every Campaign configuration value. A preset is never partial, and presets do no
 Game build default preset.
 
 A value is a Campaign configuration value if and only if the presets supply it. E.g., starting money, enemy
-difficulty, and a multiplier of how often Missions appear can be Campaign configuration values. Whatever no preset can
+difficulty, and a multiplier of how often Mission sites appear can be Campaign configuration values. Whatever no preset can
 change about a new Campaign is not Campaign configuration. It is either a GDR serving another purpose, e.g. a recruit
 skill value, or game behavior, e.g. a starting turn that is the same for every Campaign, and the rule determining
 which Campaign instances the initial Campaign state contains, under
@@ -253,5 +254,8 @@ and investigation difficulty multiplier 1; and Hard, with starting money 60 and 
 
 # Open decisions
 
-- TODO: Define the inventory of Campaign configuration values that are adjustable during play, the Mechanics
-  specification owning each, and the Engine API operations that change them.
+- TODO: Define the inventory of Campaign configuration values that are adjustable during play, e.g. the values
+  representing difficulty, the Mechanics specification owning each, and the Engine API operations that change them.
+  Only two Campaign configuration values exist so far: starting money and starting funding, which
+  [Campaign configuration values](../mechanics/economy-and-upgrades.md#campaign-configuration-values) in Economy and
+  Upgrades owns and which are both fixed after Campaign creation, so neither is adjustable during play.

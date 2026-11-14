@@ -83,8 +83,8 @@ Autopilot AI receives, how an Autopilot engagement ends, and Autopilot memory.
 
 ## Numbers
 
-[Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns which quantities are whole numbers, the
-precision of those that are not, and how rounding works. It owns nothing about randomness: Determinism and Randomness owns
+[Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns that every stored quantity is a whole
+number, the two rounding operations, how percentages and probabilities are computed, and exact evaluation. It owns nothing about randomness: Determinism and Randomness owns
 [Determinism](determinism-and-randomness.md#determinism) and the [Campaign seed](determinism-and-randomness.md#campaign-seed), and each
 Mechanics specification owns the distributions of its own random outcomes.
 

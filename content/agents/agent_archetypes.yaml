@@ -2,5 +2,5 @@ id: field_agent
 type: AgentArchetype
 name: Field agent
 skill: 100
-health: 30 # sets both the Agent's base health and its health
+health: 30 # sets both the Agent's Maximum health and its health
 weapon: sidearm

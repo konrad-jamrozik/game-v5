@@ -6,7 +6,7 @@ faction: red_dawn
 difficulty: 3
 requires: []
 on_completion:
-  create_mission: apprehend_member
+  create_mission_site: apprehend_member
 ---
 id: locate_red_dawn_safehouse
 type: Lead
@@ -17,7 +17,7 @@ difficulty: 6
 requires:
   - mission_won_from_lead: locate_red_dawn_member
 on_completion:
-  create_mission: raid_safehouse
+  create_mission_site: raid_safehouse
 ---
 id: locate_red_dawn_hq
 type: Lead
@@ -28,4 +28,4 @@ difficulty: 10 # game-ts: 25
 requires:
   - mission_won_from_lead: locate_red_dawn_safehouse
 on_completion:
-  create_mission: raid_hq
+  create_mission_site: raid_hq

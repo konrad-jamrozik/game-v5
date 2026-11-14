@@ -1,5 +1,5 @@
 id: apprehend_member
-type: MissionArchetype
+type: MissionSiteArchetype
 kind: initiative
 name: Apprehend member
 expires_in_turns: 5
@@ -11,7 +11,7 @@ on_win:
   panic_reduction_pct: 1
 ---
 id: raid_safehouse
-type: MissionArchetype
+type: MissionSiteArchetype
 kind: initiative
 name: Raid safehouse
 expires_in_turns: 8
@@ -24,7 +24,7 @@ on_win:
   panic_reduction_pct: 2
 ---
 id: raid_hq
-type: MissionArchetype
+type: MissionSiteArchetype
 kind: initiative
 name: Raid HQ
 expires_in_turns: 20 # game-ts: 40
@@ -36,7 +36,7 @@ on_win:
   defeat_target_faction: true
 ---
 id: foil_recruitment_push
-type: MissionArchetype
+type: MissionSiteArchetype
 kind: response
 name: Foil recruitment push
 operation_level: 1
@@ -45,7 +45,7 @@ enemies:
   initiate: 5 # game-ts: 4 initiate, 1 operative
 ---
 id: foil_sabotage
-type: MissionArchetype
+type: MissionSiteArchetype
 kind: response
 name: Foil sabotage
 operation_level: 2

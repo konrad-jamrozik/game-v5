@@ -20,6 +20,7 @@ This document defines the purposes a Game Data Record (GDR) can serve relative t
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 - Used by [Domain Model](../mechanics/domain-model.md)
+- Used by [Missions](../mechanics/missions.md)
 
 # Glossary
 
@@ -51,6 +52,12 @@ Each of the following GDR purpose sections shows one GDR of its worked example a
 format: each states an identifier, a Type, and the values of that Type's properties. Their property names and values
 are illustrative. The specification owning a Type decides its properties, and [Open decisions](#open-decisions) lists
 the parts of the format that are undecided.
+
+**v5 requirement:** The key order of a mapping in a GDR file, as authored, is significant: it is preserved when the GDR
+is read, and a specification may rely on it. E.g., [Missions](../mechanics/missions.md) relies on the authored order of
+the `enemies` mapping of a MissionSiteArchetype for the fixed order of the Enemies of a Battle. A decimal value in a GDR
+file is read as the exact decimal number it is written as, never as a binary floating-point approximation, under
+[Whole-number quantities](numbers.md#whole-number-quantities) in Numbers.
 
 # GDR purpose: campaign instance initialization
 
@@ -215,7 +222,7 @@ is_officer: false
 ```
 
 Each newly created Enemy Campaign instance whose Archetype is Thug has current health 10 in State and its own fresh
-Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to its owning Mission.
+Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to its owning Mission site.
 Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes its health without changing enemy_2 or Thug.
 
 ```mermaid

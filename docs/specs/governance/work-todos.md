@@ -94,63 +94,6 @@ The Work items below were measured against these recorded rules and decisions:
 The Work items below were recorded from an audit on 2026-11-11. Quotations were checked against the specifications at
 that time.
 
-## Contradictions with the determinism decision
-
-### TODO-009: Draw fixtures in Combat
-
-**Category and priority:** Contradiction with a recorded decision.
-
-**Affected:** Combat (COMBAT), [Acceptance examples](../mechanics/combat.md#acceptance-examples).
-
-**Batches:** COMBAT is batch 5.
-
-**Current wording:**
-
-> TODO: Give deterministic round-by-round fixtures with attacks, draws, damage, experience, and expected Battle results.
-
-**Why it is an issue:** Random draws are not observable under the scope rule. Acceptance fixtures must use fixed
-injected random outcomes, each identified by the name its rule gives it, under
-[Determinism](../foundation/determinism-and-randomness.md#determinism) and
-[Examples, conformance, and evidence](spec-conventions.md#examples-conformance-and-evidence).
-
-**Suggested resolution:** Replace "draws" in the fixture TODO with "fixed injected random outcomes".
-
-### TODO-010: Seeded timelines in Factions
-
-**Category and priority:** Contradiction with a recorded decision.
-
-**Affected:** Factions (FACTION), [Acceptance examples](../mechanics/factions.md#acceptance-examples).
-
-**Batches:** FACTION is batch 7.
-
-**Current wording:**
-
-> TODO: Give seeded escalation/spawn timelines and compare temporary suppression with permanent defeat.
-
-**Why it is an issue:** Acceptance examples must never assert which outcome a particular Campaign seed produces,
-under [Determinism](../foundation/determinism-and-randomness.md#determinism), because how outcomes derive from the Campaign seed
-is the implementer's choice.
-
-**Suggested resolution:** Replace "seeded" with timelines that use fixed injected random outcomes.
-
-### TODO-012: Sampling time of hidden difficulty in Investigations
-
-**Category and priority:** Contradiction with a recorded decision.
-
-**Affected:** Investigations (INVSTG), [Start and progress](../mechanics/investigations.md#start-and-progress).
-
-**Batches:** INVSTG is batch 4.
-
-**Current wording:**
-
-> TODO: Specify eligibility, hidden-difficulty distribution and sampling time, agent contribution, sublinear team scaling, transit treatment, and when progress is added.
-
-**Why it is an issue:** The hidden-difficulty distribution is designer-authored, but when it is sampled is not
-observable, because hidden difficulty is not Player-visible information either way.
-
-**Suggested resolution:** Replace "and sampling time" with the observable consequence, e.g. whether hidden
-difficulty is fixed for the whole Investigation and which Campaign state it may depend on.
-
 ## Borderline
 
 ### TODO-013: Snapshot and read wording for turn timing
@@ -158,24 +101,15 @@ difficulty is fixed for the whole Investigation and which Campaign state it may 
 **Category and priority:** Borderline, low priority.
 
 **Affected:** Specification Conventions (CONV, Accepted),
-[Writing exact requirements](spec-conventions.md#writing-exact-requirements). Combat (COMBAT), [Battle flow](../mechanics/combat.md#battle-flow).
-Investigations (INVSTG), [Team changes and commitment](../mechanics/investigations.md#team-changes-and-commitment).
+[Writing exact requirements](spec-conventions.md#writing-exact-requirements).
 
-**Batches:** COMBAT is batch 5; INVSTG is batch 4. CONV has no batch.
+**Batches:** CONV has no batch.
 
 **Current wording:**
 
 > - Which state snapshot supplies each input and when each effect becomes visible.
 
 (CONV, Writing exact requirements checklist.)
-
-> TODO: Specify initial snapshots, participation, round/side order, [...]
-
-(COMBAT, Battle flow.)
-
-> TODO: Specify effective-skill-weighted progress loss on removal, the weighting snapshot, [...]
-
-(INVSTG, Team changes and commitment.)
 
 **Why it is an issue:** Which values an input uses changes outcomes, so it is designer-authored and belongs in the
 specifications. The wording, however, describes a mechanism (snapshots and reads) rather than the outcome.
