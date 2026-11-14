@@ -193,11 +193,11 @@ in Turn 5, took over again in Turn 9, and has committed three actions in Turn 10
 
 The first diagram shows `undoToAutosave()` called four times.
 
-![Autosave navigation going back: four undoToAutosave() calls from Turn 10](./autosave-navigation-undo.svg)
+![Autosave navigation going back: four undoToAutosave() calls from Turn 10](../../images/autosave-navigation-undo.svg)
 
 The second diagram starts where the first one ends and shows `redoToAutosave()` called four times.
 
-![Autosave navigation going forward: four redoToAutosave() calls back to Turn 10](./autosave-navigation-redo.svg)
+![Autosave navigation going forward: four redoToAutosave() calls back to Turn 10](../../images/autosave-navigation-redo.svg)
 
 The diagrams read as follows:
 

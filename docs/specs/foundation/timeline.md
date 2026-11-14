@@ -58,11 +58,11 @@ the [Glossary](#glossary) and the rules of the sections below, and they add no r
 
 The first diagram starts after the fourth Committed action and shows undo.
 
-![Undo within one Turn: four undoAction() calls, or one undoAllActions() call](./timeline-undo-actions.svg)
+![Undo within one Turn: four undoAction() calls, or one undoAllActions() call](../../images/timeline-undo-actions.svg)
 
 The second diagram starts where the first one ends, at the Turn-start state, and shows redo.
 
-![Redo within one Turn: four redoAction() calls, or one redoAllActions() call](./timeline-redo-actions.svg)
+![Redo within one Turn: four redoAction() calls, or one redoAllActions() call](../../images/timeline-redo-actions.svg)
 
 The diagrams read as follows:
 

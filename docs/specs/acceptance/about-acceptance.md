@@ -30,7 +30,7 @@ This family has a single specification, so there are no relationships within it.
 
 ## Across families
 
-![Acceptance family: relationships with other families](./acceptance-family-across.svg)
+![Acceptance family: relationships with other families](../../images/acceptance-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

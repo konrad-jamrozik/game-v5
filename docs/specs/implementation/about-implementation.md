@@ -31,13 +31,13 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ## Within the family
 
-![Implementation family: relationships within the family](./implementation-family-within.svg)
+![Implementation family: relationships within the family](../../images/implementation-family-within.svg)
 
 No relationships are declared within this family.
 
 ## Across families
 
-![Implementation family: relationships with other families](./implementation-family-across.svg)
+![Implementation family: relationships with other families](../../images/implementation-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

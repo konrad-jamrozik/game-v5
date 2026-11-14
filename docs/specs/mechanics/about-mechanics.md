@@ -88,11 +88,11 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ## Within the family
 
-![Mechanics family: relationships within the family](./mechanics-family-within.svg)
+![Mechanics family: relationships within the family](../../images/mechanics-family-within.svg)
 
 ## Across families
 
-![Mechanics family: relationships with other families](./mechanics-family-across.svg)
+![Mechanics family: relationships with other families](../../images/mechanics-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

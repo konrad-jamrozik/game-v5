@@ -170,18 +170,15 @@ describe('derived specification renderer', () => {
     expect(index).toContain('implicit `follows` relationship')
     expect(outputs.has('docs/derived/relationships/follows.md')).toBe(false)
     const diagrams = renderDerivedDiagramFiles(sampleCorpus())
-    expect([...diagrams.keys()]).toEqual([
-      'docs/derived/relationships/refines-all.svg',
-      'docs/derived/relationships/uses-all.svg',
-    ])
-    const refinesDiagram = diagrams.get('docs/derived/relationships/refines-all.svg') ?? ''
-    const usesDiagram = diagrams.get('docs/derived/relationships/uses-all.svg') ?? ''
+    expect([...diagrams.keys()]).toEqual(['docs/images/refines-all.svg', 'docs/images/uses-all.svg'])
+    const refinesDiagram = diagrams.get('docs/images/refines-all.svg') ?? ''
+    const usesDiagram = diagrams.get('docs/images/uses-all.svg') ?? ''
     expect(refines).toContain('A → B means A is refined by B.')
-    expect(refines).toContain('![Refines relationships](./refines-all.svg)')
+    expect(refines).toContain('![Refines relationships](../../images/refines-all.svg)')
     expect(refinesDiagram).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More (Draft)')
     expect(arrows(refinesDiagram, 'refines')).toBe(1)
     expect(uses).toContain('A → B means A is used by B.')
-    expect(uses).toContain('![Uses relationships](./uses-all.svg)')
+    expect(uses).toContain('![Uses relationships](../../images/uses-all.svg)')
     // AAA and ZZZ use each other, so they share a layer and both arrows are drawn.
     expect(arrows(usesDiagram, 'uses')).toBe(2)
     expect(usesDiagram).not.toContain('LAYER 2')
@@ -232,10 +229,14 @@ describe('derived specification renderer', () => {
     expect(refines).toContain('## Model and gameplay specifications')
     expect(refines).toContain('## Engine contract')
     expect(refines.match(/!\[Refines relationships: /g)).toHaveLength(2)
-    expect(refines.indexOf('(./refines-model-and-gameplay.svg)')).toBeLessThan(refines.indexOf('## Engine contract'))
-    expect(refines.indexOf('(./refines-engine-contract.svg)')).toBeGreaterThan(refines.indexOf('## Engine contract'))
-    const gameplay = diagrams.get('docs/derived/relationships/refines-model-and-gameplay.svg') ?? ''
-    const engine = diagrams.get('docs/derived/relationships/refines-engine-contract.svg') ?? ''
+    expect(refines.indexOf('(../../images/refines-model-and-gameplay.svg)')).toBeLessThan(
+      refines.indexOf('## Engine contract'),
+    )
+    expect(refines.indexOf('(../../images/refines-engine-contract.svg)')).toBeGreaterThan(
+      refines.indexOf('## Engine contract'),
+    )
+    const gameplay = diagrams.get('docs/images/refines-model-and-gameplay.svg') ?? ''
+    const engine = diagrams.get('docs/images/refines-engine-contract.svg') ?? ''
     expect(gameplay).toContain('ZZZ — Zulu (Stub)')
     expect(gameplay).not.toContain('ENG — ')
     expect(engine).toContain('ENG — Engine Contract (Draft)')
@@ -294,10 +295,10 @@ describe('derived specification renderer', () => {
     const diagrams = renderDerivedDiagramFiles(governanceCorpus)
     const uses = outputs.get('docs/derived/relationships/uses.md') ?? ''
     const governanceStart = uses.indexOf('## Relationship governance')
-    expect(uses.indexOf('(./uses-game.svg)')).toBeLessThan(governanceStart)
-    expect(uses.indexOf('(./uses-governance.svg)')).toBeGreaterThan(governanceStart)
-    const game = diagrams.get('docs/derived/relationships/uses-game.svg') ?? ''
-    const governance = diagrams.get('docs/derived/relationships/uses-governance.svg') ?? ''
+    expect(uses.indexOf('(../../images/uses-game.svg)')).toBeLessThan(governanceStart)
+    expect(uses.indexOf('(../../images/uses-governance.svg)')).toBeGreaterThan(governanceStart)
+    const game = diagrams.get('docs/images/uses-game.svg') ?? ''
+    const governance = diagrams.get('docs/images/uses-governance.svg') ?? ''
     expect(game).toContain('DOM — Domain Model (Draft)')
     expect(game).not.toContain('REL — ')
     expect(governance).toContain('REL — Artifact Relationships (Draft)')
@@ -331,13 +332,15 @@ describe('family overview diagrams', () => {
   ].join('\n')
 
   const foundationOverview = 'docs/specs/foundation/about-foundation.md'
-  const withinPath = 'docs/specs/foundation/foundation-family-within.svg'
-  const acrossPath = 'docs/specs/foundation/foundation-family-across.svg'
+  const withinPath = 'docs/images/foundation-family-within.svg'
+  const acrossPath = 'docs/images/foundation-family-across.svg'
 
   test('collapses other Families, combines kinds, and omits implicit follows', () => {
     const diagram = renderFamilyDiagram(sampleCorpus(), 'Foundation')
     expect(diagram).toContain('This family has a single specification')
-    expect(diagram).toContain('![Foundation family: relationships with other families](./foundation-family-across.svg)')
+    expect(diagram).toContain(
+      '![Foundation family: relationships with other families](../../images/foundation-family-across.svg)',
+    )
     expect(diagram).not.toContain('```mermaid')
     const files = renderFamilyDiagramFiles(sampleCorpus(), new Map([[foundationOverview, overview]]))
     expect([...files.keys()]).toEqual([acrossPath])
@@ -399,7 +402,7 @@ describe('family overview diagrams', () => {
     expect(output).not.toContain('stale content')
     expect(output).toContain('Prose.')
     expect(output).toContain('Reasons.')
-    expect(output).toContain('(./foundation-family-across.svg)')
+    expect(output).toContain('(../../images/foundation-family-across.svg)')
     expect(output).not.toContain('```mermaid')
     expect(first.has('docs/specs/mechanics/about-mechanics.md')).toBe(false)
     const second = await renderFamilyOverviews(
@@ -417,7 +420,7 @@ describe('family overview diagrams', () => {
     const path = 'docs/specs/foundation/about-foundation.md'
     const stale = files.map((file) =>
       file.path === path
-        ? { ...file, content: file.content.replace('./foundation-family-within.svg', './stale.svg') }
+        ? { ...file, content: file.content.replace('images/foundation-family-within.svg', 'images/stale.svg') }
         : file,
     )
     const errors: string[] = []

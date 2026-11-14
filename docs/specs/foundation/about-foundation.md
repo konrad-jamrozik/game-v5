@@ -93,11 +93,11 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ## Within the family
 
-![Foundation family: relationships within the family](./foundation-family-within.svg)
+![Foundation family: relationships within the family](../../images/foundation-family-within.svg)
 
 ## Across families
 
-![Foundation family: relationships with other families](./foundation-family-across.svg)
+![Foundation family: relationships with other families](../../images/foundation-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

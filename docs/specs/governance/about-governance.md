@@ -48,7 +48,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ## Within the family
 
-![Governance family: relationships within the family](./governance-family-within.svg)
+![Governance family: relationships within the family](../../images/governance-family-within.svg)
 
 ## Across families
 

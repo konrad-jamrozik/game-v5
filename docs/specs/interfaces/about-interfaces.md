@@ -48,11 +48,11 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ## Within the family
 
-![Interfaces family: relationships within the family](./interfaces-family-within.svg)
+![Interfaces family: relationships within the family](../../images/interfaces-family-within.svg)
 
 ## Across families
 
-![Interfaces family: relationships with other families](./interfaces-family-across.svg)
+![Interfaces family: relationships with other families](../../images/interfaces-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

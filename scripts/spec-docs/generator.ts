@@ -304,8 +304,15 @@ function relationshipSections(corpus: SpecificationCorpus, kind: RelationshipKin
   return [{ heading: undefined, slug: 'all', relationships: kindRelationships }]
 }
 
+/** The directory that holds every image of the documentation, generated or hand-made. */
+export const IMAGES_DIRECTORY = 'docs/images'
+
 function relationshipSvgFileName(kind: RelationshipKind, section: RelationshipSection): string {
   return `${kind}-${section.slug}.svg`
+}
+
+function imagePath(fileName: string): string {
+  return `${IMAGES_DIRECTORY}/${fileName}`
 }
 
 function relationshipSvgLabel(kind: RelationshipKind, section: RelationshipSection): string {
@@ -359,7 +366,8 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
   ]
   for (const section of relationshipSections(corpus, kind)) {
     if (section.heading !== undefined) lines.push('', `## ${section.heading}`)
-    lines.push('', `![${relationshipSvgLabel(kind, section)}](./${relationshipSvgFileName(kind, section)})`)
+    const svgPath = imagePath(relationshipSvgFileName(kind, section))
+    lines.push('', `![${relationshipSvgLabel(kind, section)}](${relativeLink(relationshipOutputPath(kind), svgPath)})`)
   }
   return `${lines.join('\n')}\n`
 }
@@ -369,10 +377,7 @@ export function renderDerivedDiagramFiles(corpus: SpecificationCorpus): Readonly
   const outputs = new Map<string, string>()
   for (const kind of renderedRelationshipKinds(corpus)) {
     for (const section of relationshipSections(corpus, kind)) {
-      outputs.set(
-        `docs/derived/relationships/${relationshipSvgFileName(kind, section)}`,
-        renderRelationshipSvg(corpus, kind, section),
-      )
+      outputs.set(imagePath(relationshipSvgFileName(kind, section)), renderRelationshipSvg(corpus, kind, section))
     }
   }
   return outputs
@@ -527,8 +532,8 @@ function renderAcrossFamiliesSvg(family: SpecificationFamily, data: FamilyDiagra
   return renderSvgDiagram({ label: familySvgLabel(family, 'across'), nodes, edges, showLayerLabels: false })
 }
 
-function imageLink(family: SpecificationFamily, scope: DiagramScope): string {
-  return `![${familySvgLabel(family, scope)}](./${familySvgFileName(family, scope)})`
+function imageLink(family: SpecificationFamily, scope: DiagramScope, overviewPath: string): string {
+  return `![${familySvgLabel(family, scope)}](${relativeLink(overviewPath, imagePath(familySvgFileName(family, scope)))})`
 }
 
 /**
@@ -544,34 +549,44 @@ export function renderFamilyDiagramFiles(
     const overviewPath = familyOverviewOutputPath(corpus, family)
     if (overviewPath === undefined || !sources.has(overviewPath)) continue
     const data = familyDiagramData(corpus, family)
-    const directory = directoryOf(overviewPath)
     if (data.members.length > 1) {
-      outputs.set(`${directory}/${familySvgFileName(family, 'within')}`, renderWithinFamilySvg(family, data))
+      outputs.set(imagePath(familySvgFileName(family, 'within')), renderWithinFamilySvg(family, data))
     }
     if (data.crossEdges.length > 0) {
-      outputs.set(`${directory}/${familySvgFileName(family, 'across')}`, renderAcrossFamiliesSvg(family, data))
+      outputs.set(imagePath(familySvgFileName(family, 'across')), renderAcrossFamiliesSvg(family, data))
     }
   }
   return outputs
 }
 
-/** Returns true for a path that `renderFamilyDiagramFiles` may produce. */
-export function isFamilyDiagramFilePath(path: string): boolean {
-  return /^docs\/specs\/[^/]+\/[^/]+-family-(within|across)\.svg$/.test(path)
+/**
+ * Returns true for a path that `renderFamilyDiagramFiles` or `renderDerivedDiagramFiles` may produce. Other files in
+ * the images directory are hand-made and are not checked as generated output.
+ */
+export function isGeneratedDiagramFilePath(path: string): boolean {
+  const fileName = path.startsWith(`${IMAGES_DIRECTORY}/`) ? path.slice(IMAGES_DIRECTORY.length + 1) : undefined
+  if (fileName === undefined || fileName.includes('/')) return false
+  return (
+    /^[a-z0-9-]+-family-(within|across)\.svg$/.test(fileName) ||
+    RELATIONSHIP_ORDER.some((kind) => fileName.startsWith(`${kind}-`) && /^[a-z0-9-]+\.svg$/.test(fileName))
+  )
 }
 
 export function renderFamilyDiagram(corpus: SpecificationCorpus, family: SpecificationFamily): string {
   const { members, internalEdges, crossEdges } = familyDiagramData(corpus, family)
+  const overviewPath =
+    familyOverviewOutputPath(corpus, family) ??
+    `docs/specs/${familyDirectoryName(family)}/${familyOverviewFileName(family)}`
   const sections = ['## Within the family', '']
   if (members.length > 1) {
-    sections.push(imageLink(family, 'within'))
+    sections.push(imageLink(family, 'within', overviewPath))
     if (internalEdges.length === 0) sections.push('', 'No relationships are declared within this family.')
   } else {
     sections.push('This family has a single specification, so there are no relationships within it.')
   }
   sections.push('', '## Across families', '')
   if (crossEdges.length > 0) {
-    sections.push(imageLink(family, 'across'))
+    sections.push(imageLink(family, 'across', overviewPath))
   } else {
     sections.push('No relationships are declared with specifications in other families.')
   }

@@ -6,7 +6,7 @@ import { resolveConfig, type Options } from 'prettier'
 
 import { collectMarkdownFiles } from './lint-specs.ts'
 import {
-  isFamilyDiagramFilePath,
+  isGeneratedDiagramFilePath,
   renderDerivedDiagramFiles,
   renderDerivedDocumentation,
   renderFamilyDiagramFiles,
@@ -211,7 +211,7 @@ async function main(): Promise<void> {
   const [files, derivedOutputs, diagramOutputs, prettierOptions] = await Promise.all([
     collectMarkdownFiles(root, docsDirectory),
     collectOutputFiles(root, outputDirectory),
-    collectOutputFiles(root, resolve(docsDirectory, 'specs'), isFamilyDiagramFilePath),
+    collectOutputFiles(root, resolve(docsDirectory, 'images'), isGeneratedDiagramFilePath),
     resolveConfig(root),
   ])
   const actualOutputs = new Map([...derivedOutputs, ...diagramOutputs])

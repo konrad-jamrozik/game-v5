@@ -10,8 +10,8 @@ A → B means A is used by B. Layer 1 holds the specifications that depend on no
 
 ## Game specifications
 
-![Uses relationships: Game specifications](./uses-game.svg)
+![Uses relationships: Game specifications](../../images/uses-game.svg)
 
 ## Relationship governance
 
-![Uses relationships: Relationship governance](./uses-governance.svg)
+![Uses relationships: Relationship governance](../../images/uses-governance.svg)

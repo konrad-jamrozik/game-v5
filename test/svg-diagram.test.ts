@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import { runDerivedDocumentation, type DerivedDocsIO } from '../scripts/derived-docs.ts'
 import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
 import {
-  isFamilyDiagramFilePath,
+  isGeneratedDiagramFilePath,
   renderDerivedDiagramFiles,
   renderDerivedDocumentation,
   renderFamilyDiagram,
@@ -199,23 +199,27 @@ describe('family SVG diagrams', () => {
 
   test('links the SVG files from the overview of a family that uses them', () => {
     const diagram = renderFamilyDiagram(mechanicsCorpus(), 'Mechanics')
-    expect(diagram).toContain('![Mechanics family: relationships within the family](./mechanics-family-within.svg)')
-    expect(diagram).toContain('![Mechanics family: relationships with other families](./mechanics-family-across.svg)')
+    expect(diagram).toContain(
+      '![Mechanics family: relationships within the family](../../images/mechanics-family-within.svg)',
+    )
+    expect(diagram).toContain(
+      '![Mechanics family: relationships with other families](../../images/mechanics-family-across.svg)',
+    )
     expect(diagram).not.toContain('```mermaid')
   })
 
   test('renders both files with layers, grouped members, and other families', () => {
     const files = renderFamilyDiagramFiles(mechanicsCorpus(), sources)
     expect([...files.keys()]).toEqual([
-      'docs/specs/mechanics/mechanics-family-within.svg',
-      'docs/specs/mechanics/mechanics-family-across.svg',
+      'docs/images/mechanics-family-within.svg',
+      'docs/images/mechanics-family-across.svg',
     ])
-    for (const path of files.keys()) expect(isFamilyDiagramFilePath(path)).toBe(true)
-    const within = files.get('docs/specs/mechanics/mechanics-family-within.svg') ?? ''
+    for (const path of files.keys()) expect(isGeneratedDiagramFilePath(path)).toBe(true)
+    const within = files.get('docs/images/mechanics-family-within.svg') ?? ''
     expect(within).toContain('LAYER 3')
     expect(within).toContain('TOP — Title TOP (Stub)')
     expect(within).not.toContain(' family<')
-    const across = files.get('docs/specs/mechanics/mechanics-family-across.svg') ?? ''
+    const across = files.get('docs/images/mechanics-family-across.svg') ?? ''
     expect(across).toContain('>Foundation family<')
     expect(across).toContain('>Interfaces family<')
     expect(across).toContain('>another family<')
@@ -227,7 +231,7 @@ describe('family SVG diagrams', () => {
   test('renders files only for a family whose overview exists', () => {
     expect(renderFamilyDiagramFiles(mechanicsCorpus(), new Map()).size).toBe(0)
     const paths = [...renderFamilyDiagramFiles(mechanicsCorpus(), sources).keys()]
-    expect(paths.every((path) => path.startsWith('docs/specs/mechanics/'))).toBe(true)
+    expect(paths.every((path) => path.startsWith('docs/images/mechanics-family-'))).toBe(true)
   })
 
   test('check mode reports a stale, a missing, and an unexpected diagram file', async () => {
@@ -240,8 +244,8 @@ describe('family SVG diagrams', () => {
     ])
     const fileSources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
     const diagrams = renderFamilyDiagramFiles(analysis.corpus, fileSources)
-    const within = 'docs/specs/mechanics/mechanics-family-within.svg'
-    const across = 'docs/specs/mechanics/mechanics-family-across.svg'
+    const within = 'docs/images/mechanics-family-within.svg'
+    const across = 'docs/images/mechanics-family-across.svg'
     expect(diagrams.has(within) && diagrams.has(across)).toBe(true)
     const run = async (actualOutputs: ReadonlyMap<string, string>): Promise<readonly string[]> => {
       const errors: string[] = []
@@ -261,7 +265,7 @@ describe('family SVG diagrams', () => {
     expect(await run(new Map([...derived, ...withoutAcross]))).toEqual([
       `${across}: generated documentation is missing; run npm run docs:generate.`,
     ])
-    const extra = 'docs/specs/mechanics/old-family-within.svg'
+    const extra = 'docs/images/old-family-within.svg'
     expect(await run(new Map([...derived, ...diagrams, [extra, '<svg/>']]))).toEqual([
       `${extra}: unexpected generated documentation file; remove or relocate it.`,
     ])
