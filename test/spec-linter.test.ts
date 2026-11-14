@@ -4,6 +4,7 @@ import { posix } from 'node:path'
 
 import { describe, expect, test } from 'vitest'
 
+import { runDerivedDocumentation, type DerivedDocsIO } from '../scripts/derived-docs.ts'
 import { runSpecificationLint as runSpecificationLintRaw } from '../scripts/lint-specs.ts'
 import {
   analyzeSpecifications as analyzeSpecificationsRaw,
@@ -1193,4 +1194,74 @@ test('the current specification corpus is clean', async () => {
   const root = process.cwd()
   const files = await collectMarkdown(root, resolve(root, 'docs'))
   expect(lintSpecifications({ files })).toEqual([])
+})
+
+describe('derived documentation on a sample corpus', () => {
+  const prettierOptions = { printWidth: 120, singleQuote: true, semi: false, tabWidth: 2 }
+
+  test('analysis is independent of input ordering and line endings', () => {
+    const files = withOverviews(validCorpus())
+    const baseline = analyzeSpecificationsRaw({ files })
+    expect(baseline.diagnostics).toEqual([])
+    expect(analyzeSpecificationsRaw({ files: files.toReversed() })).toEqual(baseline)
+    const crlf = files.map((file) => ({ ...file, content: file.content.replace(/\r?\n/g, '\r\n') }))
+    expect(analyzeSpecificationsRaw({ files: crlf })).toEqual(baseline)
+  })
+
+  test('check mode accepts fresh output, reports a stale overview diagram, and never writes', async () => {
+    const sources = withOverviews(validCorpus())
+    let generated: ReadonlyMap<string, string> = new Map()
+    const errors: string[] = []
+    const generateIo: DerivedDocsIO = {
+      actualOutputs: new Map(),
+      writeOutputs: (outputs) => {
+        generated = new Map(outputs)
+        return Promise.resolve()
+      },
+      writeError: (message) => errors.push(message),
+    }
+    expect(await runDerivedDocumentation(sources, ['generate'], generateIo, prettierOptions)).toBe(0)
+    expect(errors).toEqual([])
+
+    const overviewPaths = sources.map((file) => file.path).filter((path) => /\/about-[^/]*\.md$/.test(path))
+    expect(overviewPaths.length).toBeGreaterThan(0)
+    const fresh = sources.map((file) => ({ ...file, content: generated.get(file.path) ?? file.content }))
+    let writes = 0
+    const checkIo: DerivedDocsIO = {
+      actualOutputs: new Map([...generated].filter(([path]) => !overviewPaths.includes(path))),
+      writeOutputs: () => {
+        writes += 1
+        return Promise.resolve()
+      },
+      writeError: (message) => errors.push(message),
+    }
+    expect(await runDerivedDocumentation(fresh, ['check'], checkIo, prettierOptions)).toBe(0)
+    expect(errors).toEqual([])
+
+    const stalePath = overviewPaths[0] ?? ''
+    const stale = fresh.map((file) =>
+      file.path === stalePath
+        ? { ...file, content: file.content.replace(FAMILY_DIAGRAM_END, `Stale content.\n\n${FAMILY_DIAGRAM_END}`) }
+        : file,
+    )
+    expect(await runDerivedDocumentation(stale, ['check'], checkIo, prettierOptions)).toBe(1)
+    expect(errors).toEqual([`${stalePath}: generated documentation is stale; run npm run docs:generate.`])
+    expect(writes).toBe(0)
+  })
+
+  test('invalid sources block generation without writing', async () => {
+    let writes = 0
+    const errors: string[] = []
+    const io: DerivedDocsIO = {
+      actualOutputs: new Map(),
+      writeOutputs: () => {
+        writes += 1
+        return Promise.resolve()
+      },
+      writeError: (message) => errors.push(message),
+    }
+    expect(await runDerivedDocumentation([], ['generate'], io, prettierOptions)).toBe(1)
+    expect(writes).toBe(0)
+    expect(errors.length).toBeGreaterThan(0)
+  })
 })
