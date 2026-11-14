@@ -125,7 +125,6 @@ Engine API
 ├── session
 │   ├── getStatus()
 │   ├── campaign
-│   │   ├── create(options)
 │   │   ├── load(save)
 │   │   ├── save()
 │   │   ├── saveAsNew()
@@ -134,7 +133,8 @@ Engine API
 │   │   ├── getSetup()
 │   │   ├── selectPreset(preset)
 │   │   ├── setPresetEdit(preset, value)
-│   │   └── removePresetEdit(preset, value)
+│   │   ├── removePresetEdit(preset, value)
+│   │   └── create(options)
 │   ├── timeline
 │   │   ├── getStatus()
 │   │   ├── undoAction()
@@ -174,8 +174,8 @@ owns and where the behavior of its operations is specified.
 | Namespace             | Owns                                                                                                                                                                                           | Specified in                                                                                                                                                            |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `session`             | Session management and execution authority; it does not implement gameplay actions. Its own `getStatus()` reports the Session's Current campaign, Campaign seed, access, and Autopilot status. | [Campaign lifecycle](#campaign-lifecycle)                                                                                                                               |
-| `session.campaign`    | Selecting the Current campaign by creating or loading a Campaign, saving it, and closing it.                                                                                                   | [Campaign lifecycle](#campaign-lifecycle); [Saving](saves.md#saving) and [Loading](saves.md#loading) in Saves                                                           |
-| `session.newCampaign` | The new-Campaign setup that Campaign creation uses: the selected preset and its Preset edits.                                                                                                  | [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                                                                              |
+| `session.campaign`    | Loading a Campaign save as the Current campaign, saving the Current campaign, and closing it.                                                                                                  | [Campaign lifecycle](#campaign-lifecycle); [Saving](saves.md#saving) and [Loading](saves.md#loading) in Saves                                                           |
+| `session.newCampaign` | The new-Campaign setup, i.e. the selected preset and its Preset edits, and creating a Campaign from it as the Current campaign.                                                                | [Campaign lifecycle](#campaign-lifecycle); [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                                   |
 | `session.timeline`    | Timeline status, and undo and redo by action or by turn.                                                                                                                                       | [Action navigation](timeline.md#action-navigation) and [Turn navigation](timeline.md#turn-navigation) in Timeline                                                       |
 | `session.developer`   | Enabling and disabling Dev mode.                                                                                                                                                               | [Dev mode and developer operations](#dev-mode-and-developer-operations)                                                                                                 |
 | `session.autopilot`   | Engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                                                                            | [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot                                                                    |
@@ -256,7 +256,7 @@ and Dev mode is disabled. This is the main-menu state in Web UI. What a Session 
 
 `session.getStatus()` reports whether a Current campaign exists, the Campaign seed of the Current campaign, and the
 Session's access and Autopilot status.
-`session.campaign.create(options)` creates a Campaign using the current Game build, the Session's new-Campaign setup,
+`session.newCampaign.create(options)` creates a Campaign using the current Game build, the Session's new-Campaign setup,
 and a Campaign seed. `options` carries the Campaign seed when the Session controller supplies one; otherwise the
 engine chooses it, under [Campaign seed](#campaign-seed). The new-Campaign setup is the selected preset and
 its Preset edits, read and changed through `session.newCampaign` as
@@ -372,7 +372,7 @@ must reproduce its own outcomes exactly.
 
 Every Campaign has exactly one Campaign seed. The following rules are complete:
 
-- **Supplied:** The Session controller may supply the Campaign seed in `session.campaign.create(options)`. A
+- **Supplied:** The Session controller may supply the Campaign seed in `session.newCampaign.create(options)`. A
   supplied value that is not a permitted Campaign seed fails creation, under
   [Campaign lifecycle](#campaign-lifecycle).
 - **Permitted values:** A permitted Campaign seed is any non-empty text. Two Campaign seeds are the same exactly
