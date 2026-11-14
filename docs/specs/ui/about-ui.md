@@ -24,5 +24,5 @@ principle is ready to be written, e.g. a specification for the mission deploymen
 # Why these boundaries
 
 UI guidance is kept apart from Foundation and Mechanics so that changing how the game is presented never changes game
-behavior. Which Agents are ready for a mission is owned by [Agents](../mechanics/agents-spec.md) and
+behavior. E.g. which Agents are ready for a mission is owned by [Agents](../mechanics/agents-spec.md) and
 [Missions](../mechanics/missions.md); a UI specification only decides how prominently each Agent appears.
