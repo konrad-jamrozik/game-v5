@@ -44,6 +44,7 @@ The components into which Campaign state divides, and whether model data stays a
 | World history          | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and reports may consult World history.                                               |
 | Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation.     |
 | Retained               | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; World history describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
+| Turn series            | Retained data in World history recording one value at stated moments of every turn of the Campaign, from campaign creation onward, under [Turn series](#turn-series). The specification owning the value declares it.                                          |
 
 ## Campaign instances
 
@@ -176,7 +177,9 @@ A past value cannot always be recovered from its current replacement. E.g., a re
 health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
 replacement for that historical fact. When a rule or report needs the historical basis, the original inputs or historical
 value must be preserved; required historical values must not be overwritten with current calculations. This does not
-require retaining every intermediate calculation or every possible chart.
+require retaining every intermediate calculation or every possible chart. The values that a chart or a comparison
+across turns needs are retained exactly where a specification declares a Turn series, under
+[Turn series](#turn-series).
 
 When a Campaign instance no longer participates in current gameplay, data required by rules, reports, or retained
 references must remain in World history rather than being deleted. E.g., if enemy_1 no longer participates in a Mission,
@@ -187,6 +190,35 @@ retained references must be preserved under [Campaign instances](#campaign-insta
 An evolving collection can contain immutable historical records: e.g., adding a Battle result does not permit rewriting
 an earlier retained Battle result.
 
+# Turn series
+
+A Turn series keeps the past values of one value available for the whole Campaign, so that game behavior and reports
+can use them long after the value has changed; e.g., a chart of money over the last 200 turns. Such past values cannot
+be recovered from the current value, so they are retained in World history under
+[Historical fact preservation](#historical-fact-preservation).
+
+A Turn series follows these complete rules:
+
+- **Declared by the owner of the value:** A value has a Turn series only when the specification owning that value
+  declares one. The declaration states the value and the moments of each turn at which it is recorded; e.g., at the
+  start of each turn and at the end of each turn. No other specification declares a Turn series for that value.
+- **One recorded value for each moment:** For every turn of the Campaign and every declared moment of it that the
+  Campaign has reached, the Turn series holds exactly one recorded value: the value as it was at that moment.
+- **Kept from campaign creation:** A Turn series starts at campaign creation and is never shortened. It has no limit on
+  the number of turns it covers, and its recorded values are never removed, merged, or replaced by a summary.
+- **Recorded values are historical facts:** A recorded value is an Authoritative value, including when the value it
+  records is a Derived value. It is never recomputed from current Campaign state.
+- **Moments within the current turn:** A declaration may name a moment that is not yet final while the turn is in
+  progress; e.g., the number of upgrades purchased during the turn so far. The recorded value for the current turn is
+  then the value in the current Committed state, and it becomes final when the turn ends.
+- **Part of Campaign state:** A Turn series is World history, so every Campaign save holds it in full, and restoration
+  restores it together with the rest of Campaign state. After undo, redo, or load, each Turn series holds exactly the
+  recorded values of the restored Committed state.
+
+Which Turn series are Player-visible information, and how the Player API returns them, is owned by
+[Player Information](../interfaces/player-information.md). A specification describing a chart names the Turn series
+the chart shows and declares none itself.
+
 # Acceptance examples
 
 - **Configuration and world:** A Campaign's investigation difficulty multiplier is Campaign configuration; its
@@ -194,3 +226,11 @@ an earlier retained Battle result.
 - **World history within world:** A retained record of a past difficulty change belongs to World history within World state;
   the current difficulty value belongs to Campaign configuration. Both are Campaign state
   ([Campaign state composition](#campaign-state-composition)).
+- **A Turn series covers the whole Campaign:** A specification declares a Turn series of money at the end of each
+  turn. In turn 205 the Turn series holds 204 recorded values, one for each of turn 1 to turn 204, and each equals the
+  money the Campaign had when that turn ended. Saving and loading the Campaign keeps all 204
+  ([Turn series](#turn-series)).
+- **Undo restores a Turn series:** A specification declares a Turn series of the upgrades purchased during each turn.
+  In one turn the player purchases 7 upgrades, and the recorded value for that turn is 7. The player undoes 2 of the
+  purchases: the recorded value is 5, and the recorded values of earlier turns are unchanged. Redoing both purchases
+  makes it 7 again ([Turn series](#turn-series)).

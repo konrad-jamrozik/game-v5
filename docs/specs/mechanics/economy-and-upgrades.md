@@ -54,6 +54,20 @@ TODO: Specify all eight categories: agent capacity, transport capacity, training
 
 TODO: Specify affordability, purchase atomicity, capacity accounting/reservation/release, and whether an upgrade changes current allocations. Name the GDR values that supply prices and increments.
 
+# Turn series of money and purchases
+
+This specification declares the following Turn series, under
+[Turn series](../foundation/campaign-state.md#turn-series) in Campaign State. Each records the Agency's money.
+
+| Turn series                | Recorded moment of each turn                                             |
+| -------------------------- | ------------------------------------------------------------------------ |
+| Money at the start of turn | The Committed state in which the turn starts, before any action of it.   |
+| Money at the end of turn   | The Committed state in which the Advance turn that ends the turn begins. |
+
+TODO: Declare the remaining Turn series this specification owns, e.g. upgrades purchased during each turn or upkeep
+paid in each turn. For each, state the recorded value, its unit, and the recorded moment of each turn. State which
+money value the two Turn series above record once Spendable money is specified.
+
 # Edge cases and failure behavior
 
 TODO: Define behavior for Exact affordability, insufficient funds, cap reached, zero funding, agents dying during upkeep resolution, and max-health upgrades on wounded agents.

@@ -69,7 +69,27 @@ conditions under which Display content describing hidden state becomes Player-vi
 # Derived values and reports
 
 TODO: Specify complete query and report inventories, including historical Player-visible information at the current
-cursor. Reference owning mechanics for calculations. Restored views and reports must not reveal discarded-future facts.
+Committed state. Reference owning mechanics for calculations. Restored views and reports must not reveal
+discarded-future facts.
+
+# Turn series visibility
+
+A Turn series, under [Turn series](../foundation/campaign-state.md#turn-series) in Campaign State, is Player-visible
+information exactly when this specification lists it. Player API returns a listed Turn series in full: every recorded
+value from campaign creation up to the current Committed state, each with the turn and the recorded moment it
+belongs to. The result is the same for the Session controller and an Autopilot AI, and after undo, redo, or load it
+holds the recorded values of the restored Committed state.
+
+The following Turn series are Player-visible information:
+
+| Turn series                | Declared by                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Money at the start of turn | [Turn series of money and purchases](../mechanics/economy-and-upgrades.md#turn-series-of-money-and-purchases) |
+| Money at the end of turn   | [Turn series of money and purchases](../mechanics/economy-and-upgrades.md#turn-series-of-money-and-purchases) |
+
+TODO: List every other declared Turn series that is Player-visible information, and name the Player API query that
+returns each. State what a Turn series returns for a turn in which its value was not yet Player-visible information,
+distinguishing unknown from zero.
 
 # Boundary consistency
 
