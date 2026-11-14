@@ -335,8 +335,13 @@ effects.
 A Report links historical facts and explanations in World history to commands or turns and to Campaign instances. A
 Report explaining a retained Battle result uses the retained values, never current calculations, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation).
-TODO: State which properties of a Report are Player-visible information, including Reports about play that undo or
-redo restores.
+
+A Report is Player-visible information, and it contains only facts that are Player-visible information under the
+specification that owns each fact, as [Information boundary](../foundation/engine-contract.md#information-boundary) in
+Engine Contract requires; e.g., a battle Report states the damage an Enemy took only if [Combat](combat.md) makes that
+damage Player-visible. Reports are retained in World history, so restoring a Committed state restores exactly the
+Reports of that Committed state, under
+[Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract.
 
 # Edge cases and failure behavior
 
