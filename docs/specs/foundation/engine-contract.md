@@ -4,7 +4,7 @@
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | ENG                                                                                                                                      |
 | Family      | Foundation                                                                                                                               |
-| Status      | Draft                                                                                                                                    |
+| Status      | Accepted                                                                                                                                 |
 | Audience    | Engine designer, UI designer, AI designer, Implementer                                                                                   |
 | Owns        | API hierarchy, Principal authority, data ownership, the Engine subsystem inventory, and the guarantees shared by every engine subsystem. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                           |

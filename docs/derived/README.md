@@ -12,8 +12,8 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 13             |
-| Draft      | 19             |
-| Accepted   | 1              |
+| Draft      | 17             |
+| Accepted   | 3              |
 | Superseded | 0              |
 
 ## Counts by family
@@ -45,10 +45,10 @@ These informative views are derived from the registered Markdown specifications.
 | AUTO     | [Autopilot](../specs/foundation/autopilot.md)                                   | Draft    | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                   |
 | CONFIG   | [Configuration](../specs/foundation/configuration.md)                           | Draft    | Kinds of setting, Global configuration, and the configuration cascade.                                                                   |
 | CORE     | [Core Concepts](../specs/foundation/core-concepts.md)                           | Accepted | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                             |
-| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)                         | Draft    | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation. |
+| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)                         | Accepted | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation. |
 | DETERM   | [Determinism and Randomness](../specs/foundation/determinism-and-randomness.md) | Draft    | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay.                       |
 | DEV      | [Developer Access](../specs/foundation/developer-access.md)                     | Stub     | Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides.                                                |
-| ENG      | [Engine Contract](../specs/foundation/engine-contract.md)                       | Draft    | API hierarchy, Principal authority, data ownership, the Engine subsystem inventory, and the guarantees shared by every engine subsystem. |
+| ENG      | [Engine Contract](../specs/foundation/engine-contract.md)                       | Accepted | API hierarchy, Principal authority, data ownership, the Engine subsystem inventory, and the guarantees shared by every engine subsystem. |
 | GDR      | [Game Data Records](../specs/foundation/game-data-records.md)                   | Draft    | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                |
 | LIFE     | [Campaign Lifecycle](../specs/foundation/campaign-lifecycle.md)                 | Draft    | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status.                               |
 | NUMBERS  | [Numbers](../specs/foundation/numbers.md)                                       | Stub     | Which quantities are whole numbers, the precision of those that are not, and how rounding works.                                         |

@@ -4,7 +4,7 @@
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | CSTATE                                                                                                                                   |
 | Family      | Foundation                                                                                                                               |
-| Status      | Draft                                                                                                                                    |
+| Status      | Accepted                                                                                                                                 |
 | Audience    | Engine designer, Content designer, Implementer                                                                                           |
 | Owns        | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                           |
