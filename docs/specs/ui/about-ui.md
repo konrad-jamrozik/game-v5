@@ -21,11 +21,6 @@ e.g. to open the detailed view of an Agent that is recovering.
 This family has no specification yet. A UI specification is added when guidance for a screen or a cross-screen
 principle is ready to be written, e.g. a specification for the mission deployment screen described above.
 
-# How they relate
-
-<!-- generated:family-diagram:start -->
-<!-- generated:family-diagram:end -->
-
 # Why these boundaries
 
 UI guidance is kept apart from Foundation and Mechanics so that changing how the game is presented never changes game
