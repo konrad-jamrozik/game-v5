@@ -61,8 +61,7 @@ The composition of each Campaign instance, and Types that Campaign instance Type
 
 # Campaign data integrity refinement
 
-This document refines [Campaign data integrity](engine-contract.md#campaign-data-integrity),
-[Determinism](engine-contract.md#determinism), and
+This document refines [Determinism](engine-contract.md#determinism) and
 [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract by specifying the
 composition, initialization, identity, reference, and historical-preservation constraints that campaign creation,
 committed mutations, and restoration must preserve. It supplies campaign modeling detail without defining API authority

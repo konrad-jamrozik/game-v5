@@ -95,7 +95,7 @@ using a vocabulary, consuming a result, or supplying Game Data Record (GDR) valu
 Being more concrete or appearing later in an authoring sequence is also insufficient.
 
 E.g., Domain Model uses Core Concepts vocabulary and Campaign State composition constraints to describe game concepts.
-Campaign State refines Engine Contract campaign-data integrity; vocabulary use alone is not refinement. Timeline uses the Campaign State identity and historical-preservation conventions and Engine Contract guarantees;
+Campaign State refines Engine Contract Committed state integrity; vocabulary use alone is not refinement. Timeline uses the Campaign State identity and historical-preservation conventions and Engine Contract guarantees;
 obeying them while restoring Campaign state is not refinement. These classifications concern the particular contract
 meaning, not a prohibition on refinement between any document families.
 

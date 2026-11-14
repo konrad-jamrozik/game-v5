@@ -304,14 +304,6 @@ every `session.globalConfiguration` operation, `session.campaign.listSaves()`, `
 every `session.newCampaign` operation, and `session.autopilot.listAutopilotAis()`. Creation, load, and closure invalidate prior campaign access. Failure to create or
 load preserves the existing Session. Closing or replacing the Current campaign does not implicitly save it.
 
-# Campaign data integrity
-
-Campaign creation, committed Player API and Developer API actions, and restoration must preserve the declared
-campaign-data composition, identity, reference, and historical-fact invariants.
-Detailed campaign-data structures and the constraints preserving them belong to refining specifications.
-A specification stating an invariant states its condition and its scope; every Committed state satisfies it, and
-[Committed state integrity](#committed-state-integrity) states how a violation is reported.
-
 # Player queries and actions
 
 Player-visible information describes deliberate ordinary-player exposure. The term does not specify a particular query
@@ -389,12 +381,17 @@ The guarantee has two parts:
 - **Play:** For equal Campaign state, the same Game build, and the same ordered Player actions, execution must
   produce equal resulting Campaign state and retained reports.
 
+Two Campaign states are equal exactly when their Authoritative values are equal, under
+[Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. Equal Campaign
+states under the same Game build therefore have equal Derived values.
+
 Gameplay consults nothing outside Campaign state, e.g. wall-clock time or Autopilot memory, so Campaign state holds
 every input consulted by game behavior, including the Campaign seed and relevant retained data about past Campaign
 state or events.
 
-Consequently, outcomes after undo, redo, or load equal those of uninterrupted play, and a query, a rejected action,
-or an action with no effect never changes a later outcome.
+Queries, computing Derived values, and checking action preconditions change neither Campaign state nor any later
+outcome. Consequently, outcomes after undo, redo, or load equal those of uninterrupted play, and a query, a rejected
+action, or an action with no effect never changes a later outcome.
 
 Determinism is required within one implementation and Game build, not across different implementations of the
 specification or different Game builds. Within one implementation and Game build it is required across machines:
@@ -460,34 +457,34 @@ every identifier is the implementer's choice.
 
 # Derived value consistency
 
-Queries, computing Derived values, and checking action preconditions must neither change Campaign state nor change
-any later outcome.
 After any action or restoration, every query result, report, and Player-visible information equals what would be
-computed from the current Campaign state. After restoration, that is the restored Committed state
-rather than one that was undone.
-
-Two Campaign states are equal exactly when their Authoritative values are equal, under
-[Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. Equal Campaign
-states under the same Game build therefore have equal Derived values.
+computed from the current Campaign state. After restoration, that is the restored Committed state rather than one
+that was undone; e.g., no result may come from a value computed before an undo.
 
 # Information boundary
 
-Player API always exposes only Player-visible information. Developer API adds a distinct full-state inspection path
-for an authorized Session controller. The boundary applies to query results, action discovery, validation errors,
-reports, and Timeline status. Hidden identifiers and error details must follow the same boundary.
-Returned views must not provide mutable references into Campaign state. The engine guarantees the information it
-supplies to Autopilot AI; it cannot erase information independently disclosed by a human outside the API.
-A Campaign save contains information that is not Player-visible information and is never exposed to an Autopilot AI.
+The boundary of Player-visible information applies to every channel through which Player API returns information,
+not only query results: action discovery, validation errors, reports, Timeline status, and identifiers. E.g., the
+error for a rejected action must not reveal a hidden value that the matching query hides. Developer API is the only
+path to information that is not Player-visible information, under [API hierarchy](#api-hierarchy).
+
+Returned views are detached: no returned value is a mutable reference into Campaign state.
+
+A Campaign save contains information that is not Player-visible information, so no operation available to an
+Autopilot AI returns a Campaign save or its contents. The engine guarantees only the information it supplies to an
+Autopilot AI; it cannot erase information a human discloses outside the engine API.
 
 # Committed state integrity
 
-Committed state distinguishes complete Campaign state before or after a Player action from intermediate processing.
-E.g., the Campaign state restored by undo is a Committed state, while values computed partway through Advance turn
-processing are not.
+Every Committed state satisfies every invariant that a specification states. A specification stating an invariant
+states its condition and its scope; [Campaign State](campaign-state.md) states the campaign-data invariants, e.g.
+composition, identity, reference, and historical-fact constraints. Campaign creation, committed Player API and
+Developer API actions, and restoration therefore each produce a Committed state that satisfies them.
 
 Rejected requests leave Campaign state, reports, the Timeline, and Autopilot memory unchanged. This covers every
 rejection, e.g. no Current campaign, an unavailable Timeline navigation target, or an unauthorized call.
-Intermediate processing must not be exposed as Committed state. Failed
+Intermediate processing must not be exposed as Committed state; e.g., values computed partway through Advance turn
+are never returned. Failed
 Timeline navigation or load preserves the entire prior Session. Broken references or internal invariants are reported
 as engine/data defects rather than silently repaired into different gameplay outcomes.
 Exact error representations and asynchronous operation results belong to TypeScript Player API.
@@ -509,8 +506,7 @@ Exact error representations and asynchronous operation results belong to TypeScr
   [Information boundary](#information-boundary)).
 - **Equal outcomes:** Starting at Campaign state S, add money through Developer API, commit ordinary gameplay actions,
   and Advance turn. Repeat the same commands from S with queries and a rejected action interleaved. Complete Campaign
-  state and retained reports equal the original results ([Determinism](#determinism),
-  [Derived value consistency](#derived-value-consistency)).
+  state and retained reports equal the original results ([Determinism](#determinism)).
 - **Same seed, same Campaign:** Create Campaign A supplying Campaign seed K, commit gameplay actions including
   Advance turn, and record Campaign state and retained reports after each Player action. End the Session. In a new
   Session, create Campaign B with the same new-Campaign setup and K, and commit the same actions. B equals A at
@@ -529,4 +525,4 @@ Exact error representations and asynchronous operation results belong to TypeScr
   Returned inspection data cannot mutate the engine ([Committed state integrity](#committed-state-integrity),
   [Information boundary](#information-boundary)).
 - **Campaign integrity:** A Player action and its undo and redo preserve declared campaign-data composition and identity,
-  and required historical references remain resolvable ([Campaign data integrity](#campaign-data-integrity)).
+  and required historical references remain resolvable ([Committed state integrity](#committed-state-integrity)).

@@ -12,7 +12,7 @@
 
 This document steers implementers to keep gameplay code isolated from the Campaign state that contains it. It is
 a non-behavioural Implementation document: it owns no game behavior, observable contract, or GDR, and no acceptance test depends on it.
-Campaign data integrity and determinism guarantees remain owned by Engine Contract and Campaign State.
+Committed state integrity and determinism guarantees remain owned by Engine Contract and Campaign State.
 
 # Relationships
 

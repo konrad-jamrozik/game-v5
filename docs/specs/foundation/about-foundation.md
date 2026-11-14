@@ -34,7 +34,7 @@ subsystem without stating that subsystem's behavior.
 [Campaign State](campaign-state.md) answers _how must campaign data be structured?_ It owns
 Campaign state composition, with its World state, Current world state, World history, and Campaign configuration terms,
 Campaign instance structure, creation and identity, references, value classification, and historical fact preservation.
-It refines Engine Contract's campaign-data integrity requirement into concrete data rules. It stays generic: the rules
+It refines Engine Contract's Committed state integrity requirement into concrete data rules. It stays generic: the rules
 would hold for any game built on this engine.
 
 ## Game Data Records
