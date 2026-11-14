@@ -119,6 +119,11 @@ browser interface, is an adapter over the same API: it exposes the Session contr
 implements no gameplay, Timeline, visibility, or Autopilot rules. The engine grants Session controller authority by Principal, never by the kind of
 caller holding it. An Autopilot AI never inherits that authority, whatever model or software implements it.
 
+Every user interface is equivalent to the engine API it adapts: an action taken through any user interface has exactly
+the result that the same operation called directly through the engine API has, and every user interface respects the
+same [Information boundary](#information-boundary). E.g., assigning the same Agents to the same mission through the
+terminal interface, the browser interface, and the engine API produces equal Campaign state and equal reports.
+
 The complete namespace inventory is `session`, `player`, `developer`, and `autopilotMemory`. The following tree is the
 required starter operation inventory. Additional gameplay and developer operations may be added under the same
 ownership rules; the two gameplay operations and two cheat operations shown here do not exhaust future functionality.

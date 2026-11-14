@@ -11,7 +11,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | Status     | Specifications |
 | ---------- | -------------- |
-| Stub       | 13             |
+| Stub       | 12             |
 | Draft      | 17             |
 | Accepted   | 1              |
 | Superseded | 0              |
@@ -25,7 +25,6 @@ These informative views are derived from the registered Markdown specifications.
 | Mechanics      | 9              |
 | Content        | 0              |
 | UI             | 0              |
-| Acceptance     | 1              |
 | Implementation | 2              |
 
 ## Governance
@@ -80,12 +79,6 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID  | Document | Status | Owns |
 | --- | -------- | ------ | ---- |
-
-## Acceptance
-
-| ID   | Document                                                                                                      | Status | Owns                                                              |
-| ---- | ------------------------------------------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------- |
-| SCEN | [Campaign Integration and Acceptance Tests](../specs/acceptance/campaign-integration-and-acceptance-tests.md) | Stub   | Define test scenarios that verify how game systems work together. |
 
 ## Implementation
 

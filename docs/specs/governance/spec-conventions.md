@@ -96,7 +96,7 @@ The following table is the exhaustive set of Personas. The last column names the
 | Content designer | Human or LLM | Authors GDRs, including the initial campaign content and in-game encyclopedia articles, within the Types the Engine designer exposes for content.                   | Foundation, Mechanics; e.g. [Game Data Records](../foundation/game-data-records.md)                                                       |
 | UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                                        | UI, Foundation; e.g. [Engine Contract](../foundation/engine-contract.md), [Campaign Lifecycle](../foundation/campaign-lifecycle.md)       |
 | AI designer      | Human or LLM | Designs an AI that plays the game, e.g. an Autopilot AI.                                                                                                            | Foundation; e.g. [Autopilot](../foundation/autopilot.md), [Engine Contract](../foundation/engine-contract.md)                             |
-| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                        | Foundation, Mechanics, UI, Acceptance, Implementation                                                                                     |
+| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                        | Foundation, Mechanics, UI, Implementation                                                                                                 |
 | Player           | Human or LLM | Plays the game.                                                                                                                                                     | None directly; plays through a user interface                                                                                             |
 
 ## Status
@@ -150,7 +150,6 @@ the exception of the root index, its file must be a direct child of the correspo
 | Mechanics      | `mechanics/`      | Player-facing game-system rules, transitions, formulas, and effects                           |
 | Content        | `content/`        | Versioned GDRs, named parameters, catalogs, and starting configurations                       |
 | UI             | `ui/`             | Non-behavioural guidance on how user interfaces present the engine API to the Player          |
-| Acceptance     | `acceptance/`     | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability             |
 | Implementation | `implementation/` | Non-behavioural steering for implementers, e.g. architecture or code-quality guidance         |
 
 Implementation documents are non-behavioural. They steer implementers toward code that is easier to maintain and to check
@@ -196,8 +195,8 @@ The following relationships exist without explicit table rows:
 
 1. Every registered specification implicitly depends on Specification Conventions through `follows` for document structure, lifecycle, and writing rules.
 2. Specification Conventions consequently has every other registered specification as an implicit Dependent.
-3. An acceptance example or test scenario that explicitly identifies requirements it checks implicitly depends on those requirements through `verifies`.
-4. The checked requirements consequently have that acceptance example or test scenario as an implicit Dependent.
+3. An acceptance example that explicitly identifies requirements it checks implicitly depends on those requirements through `verifies`.
+4. The checked requirements consequently have that acceptance example as an implicit Dependent.
 5. No other relationship is implicit unless Specification Conventions adds and defines it.
 
 Implicit relationships are exempt from mirrored table rows.
@@ -384,7 +383,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | Computed value; calculated value                                     | [Derived value](../foundation/core-concepts.md#glossary)                                                                                                                                                 | Naming the formal category of values calculated from other values.                                                                                                                                                                                                                                    |
 | Archived; archival                                                   | Retained in [World history](../foundation/campaign-state.md#glossary)                                                                                                                                    | Describing retained past data; this phrase does not name a lifecycle state.                                                                                                                                                                                                                           |
 | Became historical; deconstructed; destroyed                          | Retained in [World history](../foundation/campaign-state.md#glossary)                                                                                                                                    | Describing retention of Campaign instance data, rather than an actual destruction mechanic. Specify retention as a requirement, not a separate transition term.                                                                                                                                       |
-| Scenario (campaign setup); scenario GDR; scenario setup              | [Campaign configuration](../foundation/campaign-state.md#glossary); Campaign configuration preset; campaign creation                                                                                     | Describing how a new Campaign starts; see [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets). Test scenario remains valid.                                                                                                                               |
+| Scenario (campaign setup); scenario GDR; scenario setup              | [Campaign configuration](../foundation/campaign-state.md#glossary); Campaign configuration preset; campaign creation                                                                                     | Describing how a new Campaign starts; see [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets).                                                                                                                                                            |
 | Fatigue                                                              | [Exhaustion](../mechanics/agents-spec.md#glossary)                                                                                                                                                       | Naming the combatant attribute, its accumulation, or recovery.                                                                                                                                                                                                                                        |
 | Hit points; hit-point                                                | [Health](../mechanics/agents-spec.md#glossary)                                                                                                                                                           | Naming the combatant health attribute.                                                                                                                                                                                                                                                                |
 | Past participation                                                   | [Participation history](../foundation/domain-model.md#glossary)                                                                                                                                          | Naming Participation history facts.                                                                                                                                                                                                                                                                   |
@@ -585,7 +584,7 @@ validation, or invoice layout", a long list of phrases that no Glossary defines 
 
 # Examples, conformance, and evidence
 
-Every substantial rule must be covered by an acceptance example or a referenced test scenario. Foundation specifications
+Every substantial rule must be covered by an acceptance example. Foundation specifications
 using embedded examples may instead explain their modeling contracts through self-contained illustrations alongside
 the concepts, linking to the applicable requirements. These illustrations introduce no production gameplay rules and
 need not be organized as test fixtures or command sequences. Every acceptance example must identify all applicable
@@ -599,11 +598,9 @@ items in this checklist:
 - Expected state, output, visibility, history, and random behavior where relevant.
 - Exact comparisons or explicitly specified numeric tolerances.
 
-Examples of one specification's rules stay in that specification. Cross-system scenarios belong in [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) and reference their owners.
+Examples of one specification's rules stay in that specification. An example of an interaction between several game systems belongs to the specification that owns that interaction, e.g. the specification that owns the order of same-turn effects, and links the rules of the other specifications it exercises. How the implementation verifies conformance, e.g. its integration or end-to-end tests, is the implementer's choice.
 
 Test derivation must follow the specification; current code output is not an independent oracle. If code, tests, and the specification disagree, identify the discrepancy and resolve it explicitly. Do not rewrite a specification merely to bless existing behavior. Do not silently replace an accepted rule to match a newer brief passage; record the design conflict and proposed revision.
-
-Separate exact conformance criteria from strategic playtesting goals. A game being interesting or having multiple viable strategies requires playtesting; it cannot be established by a deterministic unit test alone.
 
 Use relative Markdown links between specifications. For inherited-game evidence, identify relevant paths and, when a behavioral claim is carried into a drafted specification, the inspected revision where practical.
 
@@ -638,7 +635,7 @@ Before acceptance, verify:
 - There are no unresolved implementation-affecting TODOs or decisions within scope.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
-- Worked examples and acceptance scenarios agree with the rules.
+- Worked examples and acceptance examples agree with the rules.
 - Related contracts and GDR tables are consistent.
 - Deferred features are explicitly out of scope, not holes in an allegedly complete contract.
 - The project owner has explicitly accepted the document.

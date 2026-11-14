@@ -50,7 +50,7 @@ function mechanicsCorpus(): SpecificationCorpus {
       specification('MID', 'Mechanics'),
       specification('TOP', 'Mechanics'),
       specification('FOUND', 'Foundation'),
-      specification('FACE', 'Acceptance'),
+      specification('FACE', 'Implementation'),
     ],
     glossary: [],
     relationships: [
@@ -221,7 +221,7 @@ describe('family SVG diagrams', () => {
     expect(within).not.toContain(' family<')
     const across = files.get('docs/images/mechanics-family-across.svg') ?? ''
     expect(across).toContain('>Foundation family<')
-    expect(across).toContain('>Acceptance family<')
+    expect(across).toContain('>Implementation family<')
     expect(across).toContain('>another family<')
     expect(across).not.toContain('LAYER')
     // BASE and MID relate to other families identically, so they share one box.

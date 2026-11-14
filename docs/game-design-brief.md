@@ -175,4 +175,10 @@ Future validation should establish that:
 - UI and AI clients use engine-provided rules and information.
 - Playtesting rewards preparedness and prioritization while allowing viable alternatives to a single dominant allocation strategy.
 
+Ultimately, the game has to be fun. Exact checks can show that the implementation does what the specifications say,
+but not that the game is interesting, balanced, or worth playing; e.g., every rule can be implemented exactly while one
+allocation strategy still dominates every Campaign. Playtesting is therefore the ultimate judge of whether the design
+and its implementation succeeded, and its findings feed back into the specifications rather than being settled by
+tests.
+
 Use `game-ts` models, rules, turn resolution, APIs, history, and documentation as references. Mark inherited behavior, v5 requirements, and future design questions distinctly; do not preserve bugs or incidental implementation quirks as requirements.

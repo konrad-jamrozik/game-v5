@@ -27,7 +27,6 @@ owned by [Campaign State](campaign-state.md).
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Saves](./saves.md)
 - Used by [Autopilot](./autopilot.md)
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Developer Access](./developer-access.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)

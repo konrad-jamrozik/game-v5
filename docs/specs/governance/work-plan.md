@@ -93,19 +93,18 @@ are mutual. Drafts must identify unresolved dependencies explicitly rather than 
 
 # Work that grows alongside the batches
 
-## Parallel GDR and acceptance work
+## Parallel GDR work
 
-Develop the following documents incrementally with the mechanics they support. They are part of the backlog,
+Develop the following work incrementally with the mechanics they support. They are part of the backlog,
 not work postponed until after the interfaces.
 
 Initial campaign scope and balance decisions are recorded as GDRs, not in a specification. Propose parameter values and GDRs
 incrementally alongside each mechanic, then review the complete playable campaign after batch 7. Their later resolution
 is scheduled work, not an unresolved decision about this work plan.
 
-| Track      | Document                                                                                                | When and what to add                                                                                                                                                                                                                                                                           | Work state |
-| ---------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| Content    | GDRs; no specification                                                                                  | Add exact named parameters and small example GDRs as each mechanics specification needs them. Complete the playable campaign GDRs after batch 7 and review it explicitly.                                                                                                                      | Queued     |
-| Acceptance | [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md) | Add precise cross-system examples with each batch from batch 3, the first batch that defines gameplay. Batches 1 and 2 state their checks in each specification's own Acceptance examples. Review campaign-loop coverage after batch 7 and add API/CLI/web parity scenarios with batches 8–10. | Queued     |
+| Track   | Document               | When and what to add                                                                                                                                                      | Work state |
+| ------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| Content | GDRs; no specification | Add exact named parameters and small example GDRs as each mechanics specification needs them. Complete the playable campaign GDRs after batch 7 and review it explicitly. | Queued     |
 
 ## Early information and API boundaries
 
@@ -188,7 +187,7 @@ These are workflow checks, not gameplay tests:
   In review while affected notes and examples are updated.
 - **Separate combat/mission checkpoints ([Batch sequence](#batch-sequence), [Oversized batches](#oversized-batches)):** Accepting Combat completes batch 5, not batch 6. The damage-related
   campaign benefit of a failed mission remains a Missions decision.
-- **Incremental GDRs ([Parallel GDR and acceptance work](#parallel-gdr-and-acceptance-work), [Unresolved dependencies](#unresolved-dependencies)):** Drafting Investigations adds its parameters as GDRs and
+- **Incremental GDRs ([Parallel GDR work](#parallel-gdr-work), [Unresolved dependencies](#unresolved-dependencies)):** Drafting Investigations adds its parameters as GDRs and
   relevant multi-turn scenarios. This does not mark the entire GDR catalog or scenario suite Accepted.
 - **Later conflict ([Earlier-specification gaps](#earlier-specification-gaps)):** A mission rule conflicts with an Accepted Timeline rule. The discrepancy is documented and
   a revision is proposed to the owner; neither implementation nor a second specification silently overrides the accepted rule.

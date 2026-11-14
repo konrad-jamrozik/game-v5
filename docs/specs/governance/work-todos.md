@@ -82,7 +82,7 @@ The Work items below were measured against these recorded rules and decisions:
   commands reproduce the same Campaign state and retained reports. Determinism is required only within one
   implementation and Game build. How random outcomes are derived from the Campaign seed, the order of random draws,
   the order of Campaign instance creation within one command, and the sequence and format of generated Instance IDs
-  are the implementer's choice. Acceptance tests assert replay equality, including from the same Campaign seed, or
+  are the implementer's choice. Acceptance examples assert replay equality, including from the same Campaign seed, or
   use fixed injected random outcomes, never which outcome a particular Campaign seed produces.
 - **Creation decision:** creation of Campaign instances is specified by the specification that owns the creating
   behavior, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation).
@@ -131,34 +131,6 @@ under [Determinism](../foundation/determinism-and-randomness.md#determinism), be
 is the implementer's choice.
 
 **Suggested resolution:** Replace "seeded" with timelines that use fixed injected random outcomes.
-
-### TODO-011: Seed or RNG state in Campaign Integration and Acceptance Tests
-
-**Category and priority:** Contradiction with a recorded decision.
-
-**Affected:** Campaign Integration and Acceptance Tests (SCEN), [Overview](../acceptance/campaign-integration-and-acceptance-tests.md#overview)
-and [Glossary](../acceptance/campaign-integration-and-acceptance-tests.md#glossary).
-
-**Batches:** SCEN has no batch; it is the Acceptance parallel track in
-[Parallel GDR and acceptance work](work-plan.md#parallel-gdr-and-acceptance-work), grown with each batch.
-
-**Current wording:**
-
-> TODO: Specify Scenario fixture, game revision when needed for reproducibility, seed or RNG state, command sequence,
-> expected state/view, and requirement reference.
-
-(SCEN, Overview.)
-
-> | Fixture | The GDRs, Campaign state, and fixed injected random outcomes or RNG state needed to reproduce a scenario |
-
-(SCEN, Glossary.)
-
-**Why it is an issue:** A Campaign seed is a legitimate fixture input for replay-equality scenarios, under
-[Campaign seed](../foundation/determinism-and-randomness.md#campaign-seed); RNG state is not, because it is the implementer's
-choice.
-
-**Suggested resolution:** Replace "seed or RNG state" with "Campaign seed, injected random outcomes, or replay
-baseline", and drop "or RNG state" from the Fixture definition.
 
 ### TODO-012: Sampling time of hidden difficulty in Investigations
 

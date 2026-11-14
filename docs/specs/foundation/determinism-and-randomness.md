@@ -26,7 +26,6 @@ owns. [Numbers](numbers.md) owns rounding and precision.
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Autopilot](./autopilot.md)
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Developer Access](./developer-access.md)
 - Used by [Saves](./saves.md)

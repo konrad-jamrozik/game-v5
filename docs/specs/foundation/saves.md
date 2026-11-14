@@ -23,7 +23,6 @@ Autosaves defined here.
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Timeline](./timeline.md)
 

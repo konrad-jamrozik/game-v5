@@ -19,7 +19,6 @@ terms describe are owned by the specifications that use them, e.g. [Engine Contr
 
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
-- Used by [Campaign Integration and Acceptance Tests](../acceptance/campaign-integration-and-acceptance-tests.md)
 - Used by [Campaign Lifecycle](./campaign-lifecycle.md)
 - Used by [Campaign State](./campaign-state.md)
 - Used by [Combat](../mechanics/combat.md)

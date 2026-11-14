@@ -6,7 +6,7 @@
 
 Foundation specifications hold the cross-cutting contracts that every other part of the game builds on: shared
 vocabulary, engine guarantees, campaign-data structure, the engine subsystems, the domain itself, and the numeric
-machinery. Mechanics, Content, Acceptance, and Implementation documents all depend on them; none of
+machinery. Mechanics, Content, and Implementation documents all depend on them; none of
 them is about a single game system.
 
 The family reads from abstract to concrete: words, then engine promises, then data rules, then one document per engine
