@@ -11,6 +11,7 @@ import {
   renderFamilyDiagram,
   renderFamilyDiagramFiles,
 } from '../scripts/spec-docs/generator.ts'
+import { computeStackLayout, renderStackDiagram } from '../scripts/spec-docs/stack-diagram.ts'
 import { computeLayers, renderSvgDiagram, type DiagramInput } from '../scripts/spec-docs/svg-diagram.ts'
 import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
 import type {
@@ -270,4 +271,70 @@ describe('family SVG diagrams', () => {
       `${extra}: unexpected generated documentation file; remove or relocate it.`,
     ])
   }, 60_000)
+})
+
+describe('specification stack diagram', () => {
+  function stackCorpus(): SpecificationCorpus {
+    return {
+      specifications: [
+        specification('CORE', 'Foundation'),
+        specification('ENG', 'Foundation'),
+        specification('NUM', 'Foundation'),
+        specification('DOM', 'Mechanics'),
+        specification('ONE', 'Mechanics'),
+        specification('TWO', 'Mechanics'),
+        specification('TURN', 'Mechanics'),
+        specification('IMPL', 'Implementation'),
+      ],
+      glossary: [],
+      relationships: [
+        relationship('CORE', 'ENG', 'uses'),
+        relationship('ENG', 'DOM', 'uses'),
+        relationship('DOM', 'ONE', 'refines'),
+        relationship('DOM', 'TWO', 'refines'),
+        relationship('ONE', 'TWO', 'uses'),
+        relationship('DOM', 'TURN', 'uses'),
+        relationship('ONE', 'TURN', 'uses'),
+        relationship('TWO', 'TURN', 'uses'),
+        relationship('ENG', 'IMPL', 'uses'),
+      ],
+    }
+  }
+
+  test('puts the root at the bottom, the spec depending on every mechanic at the tip, and names layer bases', () => {
+    const layout = computeStackLayout(stackCorpus())
+    expect(
+      layout.bands.map((band) => [
+        band.role,
+        band.family,
+        band.members.map((member) => member.id),
+        band.bases.map((base) => base.id),
+      ]),
+    ).toEqual([
+      ['tip', 'Mechanics', ['TURN'], []],
+      ['middle', 'Mechanics', ['DOM', 'ONE', 'TWO'], ['DOM']],
+      ['middle', 'Foundation', ['ENG', 'NUM'], []],
+      ['bottom', 'Foundation', ['CORE'], []],
+    ])
+    expect(layout.foundationIndependent).toBe(true)
+    expect(layout.besideFamilies).toEqual(['Implementation'])
+  })
+
+  test('has no tip while a mechanic still depends on the last one', () => {
+    const corpus = stackCorpus()
+    const layout = computeStackLayout({
+      ...corpus,
+      relationships: [...corpus.relationships, relationship('TURN', 'TWO', 'uses')],
+    })
+    expect(layout.bands.map((band) => band.role)).toEqual(['middle', 'middle', 'bottom'])
+  })
+
+  test('renders every layer and the layer captions', () => {
+    const svg = renderStackDiagram(stackCorpus())
+    expect(svg).toContain('MECHANICS · TIP')
+    expect(svg).toContain('FOUNDATION · BOTTOM')
+    expect(svg).toContain('All build on Title DOM, the base of this layer')
+    expect(svg).toContain('No Foundation specification depends on a Mechanics specification.')
+    expect(svg).toContain('Implementation specifications sit beside the stack and are not drawn.')
+  })
 })

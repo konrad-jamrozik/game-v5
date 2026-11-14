@@ -170,7 +170,11 @@ describe('derived specification renderer', () => {
     expect(index).toContain('implicit `follows` relationship')
     expect(outputs.has('docs/derived/relationships/follows.md')).toBe(false)
     const diagrams = renderDerivedDiagramFiles(sampleCorpus())
-    expect([...diagrams.keys()]).toEqual(['docs/images/refines-all.svg', 'docs/images/uses-all.svg'])
+    expect([...diagrams.keys()]).toEqual([
+      'docs/images/specification-stack.svg',
+      'docs/images/refines-all.svg',
+      'docs/images/uses-all.svg',
+    ])
     const refinesDiagram = diagrams.get('docs/images/refines-all.svg') ?? ''
     const usesDiagram = diagrams.get('docs/images/uses-all.svg') ?? ''
     expect(refines).toContain('A → B means A is refined by B.')

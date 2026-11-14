@@ -23,6 +23,7 @@ import type {
   SpecificationRecord,
   SpecificationStatus,
 } from '../spec-linter/types.ts'
+import { renderStackDiagram, STACK_DIAGRAM_PATH } from './stack-diagram.ts'
 import { computeLayers, estimateBoxWidth, renderSvgDiagram, type DiagramEdge, type DiagramNode } from './svg-diagram.ts'
 
 export const DERIVED_BASE_OUTPUT_PATHS = [
@@ -372,9 +373,9 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
   return `${lines.join('\n')}\n`
 }
 
-/** Returns the SVG diagram files linked from the derived relationship pages. */
+/** Returns the SVG diagram files linked from the derived relationship pages and the specification index. */
 export function renderDerivedDiagramFiles(corpus: SpecificationCorpus): ReadonlyMap<string, string> {
-  const outputs = new Map<string, string>()
+  const outputs = new Map<string, string>([[STACK_DIAGRAM_PATH, renderStackDiagram(corpus)]])
   for (const kind of renderedRelationshipKinds(corpus)) {
     for (const section of relationshipSections(corpus, kind)) {
       outputs.set(imagePath(relationshipSvgFileName(kind, section)), renderRelationshipSvg(corpus, kind, section))
@@ -567,6 +568,7 @@ export function isGeneratedDiagramFilePath(path: string): boolean {
   const fileName = path.startsWith(`${IMAGES_DIRECTORY}/`) ? path.slice(IMAGES_DIRECTORY.length + 1) : undefined
   if (fileName === undefined || fileName.includes('/')) return false
   return (
+    `${IMAGES_DIRECTORY}/${fileName}` === STACK_DIAGRAM_PATH ||
     /^[a-z0-9-]+-family-(within|across)\.svg$/.test(fileName) ||
     RELATIONSHIP_ORDER.some((kind) => fileName.startsWith(`${kind}-`) && /^[a-z0-9-]+\.svg$/.test(fileName))
   )

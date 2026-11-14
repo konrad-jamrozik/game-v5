@@ -23,6 +23,16 @@ the current specification-development status. It does not define gameplay behavi
 - [Specification work plan and backlog](governance/work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
 - [Outstanding work items](governance/work-todos.md): known issues in the specifications awaiting scheduling, each with its affected batches.
 
+# Specification layers
+
+The Foundation and Mechanics specifications form layers, each depending only on the layers below it.
+`npm run docs:generate` draws the following diagram from the specifications' Relationships sections; do not edit it by
+hand. A Foundation specification is at the bottom when it depends on nothing and every other Foundation specification
+that depends on anything depends on it directly. A Mechanics specification is at the tip when nothing depends on it and
+it depends directly on every other Mechanics specification.
+
+![Specification layers](../images/specification-stack.svg)
+
 # Family overviews
 
 Each Family has an informative overview that explains what each of its specifications is for, how they relate, and why
