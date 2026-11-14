@@ -91,7 +91,7 @@ reproduce its own outcomes exactly.
 
 Every Campaign has exactly one Campaign seed. The following rules are complete:
 
-- **Supplied:** The Session controller may supply the Campaign seed in `session.newCampaign.create(options)`. A
+- **Supplied:** The Session controller may supply the Campaign seed in `session.campaign.create(options)`. A
   supplied value that is not a permitted Campaign seed fails creation, under
   [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle.
 - **Permitted values:** A permitted Campaign seed is any non-empty text. Two Campaign seeds are the same exactly

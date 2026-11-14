@@ -56,10 +56,12 @@ about the Campaign seed.
 
 The following operations are the complete set that change the Campaign selection:
 
-- **Create:** `session.newCampaign.create(options)` creates a Campaign using the current Game build and the
+- **Create:** `session.campaign.create(options)` creates a Campaign using the current Game build and the
   Session's new-Campaign setup, and selects it as the Current campaign. A newly created Campaign has a Timeline with no
   Player actions, no Autopilot memory, and no Campaign save, so the Session has no Current save.
-- **Load:** `session.campaign.load(save)` restores a Campaign save and selects its Campaign as the Current campaign.
+- **Load:** `session.saves.load(save)` restores a Campaign save and selects its Campaign as the Current campaign.
+  It is a Saves operation, under [Loading](saves.md#loading) in Saves; this document states only its effect on the
+  Campaign selection.
 - **Close:** `session.campaign.close()` removes the Current campaign and returns the Session to the Main menu.
 
 Every successful create, load, or close has these effects:
@@ -74,8 +76,8 @@ A failed create or load leaves the Session exactly as it was, including its Curr
 # Operations without a Current campaign
 
 The following Session API operations need no Current campaign, and this list is complete: `session.getStatus()`,
-every `session.globalConfiguration` operation, `session.campaign.listSaves()`, `session.campaign.load(save)`, every
-`session.newCampaign` operation, and `session.autopilot.listAutopilotAis()`. Every other operation that depends on a
+every `session.globalConfiguration` operation, `session.saves.list()`, `session.saves.load(save)`, `session.campaign.create(options)`, every
+`session.newCampaignSetup` operation, and `session.autopilot.listAutopilotAis()`. Every other operation that depends on a
 Campaign fails when no Current campaign exists, and the failure changes nothing, under
 [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract.
 

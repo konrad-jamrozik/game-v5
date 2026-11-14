@@ -88,10 +88,10 @@ distinct Campaign IDs. Because the Campaign seed is Campaign state, under
 Saving captures the Current campaign at its current Committed state. It is available at every Committed state,
 including before the player advances the turn, and it is not a Player action.
 
-`session.campaign.save()` writes the Current campaign to its Current save, replacing that Campaign save's contents.
+`session.saves.save()` writes the Current campaign to its Current save, replacing that Campaign save's contents.
 When the Current campaign has no Current save, it creates a new Campaign save and makes that the Current save.
 
-`session.campaign.saveAsNew()` always creates a new Campaign save of the same Campaign and makes that the Current
+`session.saves.saveAsNew()` always creates a new Campaign save of the same Campaign and makes that the Current
 save; every earlier Campaign save is unchanged. Keeping a line of play that later play would replace uses
 `saveAsNew()`: there is no separate fork operation, and the new Campaign save keeps the Campaign ID and receives a
 new Campaign save ID.
@@ -100,7 +100,7 @@ Neither operation ever writes to an Autosave.
 
 # Loading
 
-A successful `session.campaign.load(save)` atomically:
+A successful `session.saves.load(save)` atomically:
 
 - restores the Campaign state, Timeline, and Autopilot memory held by the Campaign save;
 - selects that Campaign as the Current campaign and that Campaign save as the Current save;
@@ -118,7 +118,7 @@ not resumed.
 
 An Autosave is a Campaign save and holds what every Campaign save holds, under
 [Campaign save contents](#campaign-save-contents). It belongs to the Campaign it was written from. Only the engine
-writes, replaces, or removes an Autosave; the Session controller can load one with `session.campaign.load(save)`.
+writes, replaces, or removes an Autosave; the Session controller can load one with `session.saves.load(save)`.
 
 The following list of the Autosaves this document defines is complete.
 
@@ -152,7 +152,7 @@ The following rules are complete.
 
 # Listing Campaign saves
 
-`session.campaign.listSaves()` reports every Campaign save in Game storage, of every Campaign, including every
+`session.saves.list()` reports every Campaign save in Game storage, of every Campaign, including every
 Autosave. It needs no Current campaign, so a Session can list Campaign saves before loading one; e.g., the Web UI
 main menu lists them for the player to choose from. For each Campaign save it reports at least:
 
@@ -161,7 +161,7 @@ main menu lists them for the player to choose from. For each Campaign save it re
 - the Turn its saved Committed state belongs to;
 - whether it is the Current save.
 
-The Campaign save ID it reports is what `session.campaign.load(save)` accepts. Listing changes nothing and is not a
+The Campaign save ID it reports is what `session.saves.load(save)` accepts. Listing changes nothing and is not a
 Player action. It does not verify that a Campaign save can be loaded: a listed Campaign save may still fail to
 load, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). The exact contents of an entry
 belong to TypeScript Player API and follow the [Information boundary](engine-contract.md#information-boundary).
@@ -220,9 +220,9 @@ replaced is removed rather than left holding an earlier Committed state.
   Campaign configuration. The saved values of B apply. Loading the Campaign save of A restores the saved values of A
   ([Loading](#loading)).
 - **Listing before loading:** Create Campaign A, `save()`, Advance turn, and `saveAsNew()`. End the Session and start
-  a new one. With no Current campaign, `listSaves()` reports both Campaign saves with the same Campaign ID and their
+  a new one. With no Current campaign, `session.saves.list()` reports both Campaign saves with the same Campaign ID and their
   two Turns, together with the Autosaves of Campaign A, and none is the Current save. Load one of them, and
-  `listSaves()` reports it as the Current save ([Listing Campaign saves](#listing-campaign-saves)).
+  `session.saves.list()` reports it as the Current save ([Listing Campaign saves](#listing-campaign-saves)).
 - **Resuming without saving:** Create a Campaign, commit two actions, Advance turn, and commit one action, never
   calling `save()`. End the Session and start a new one. Loading the Current Autosave of that Campaign restores the
   Campaign state after the last action, and the Current campaign then has no Current save
