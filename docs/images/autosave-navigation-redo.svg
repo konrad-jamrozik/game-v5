@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="330" viewBox="0 0 1000 330" role="img" aria-label="Autosave navigation going forward: four redoToAutosave() calls from the Turn-end Autosave of Turn 3 load the Turn-end Autosave of Turn 4, the Engagement Autosave, the Turn-end Autosave of Turn 9, and the Return Autosave in Turn 10">
-  <!-- Hand-kept diagram for docs/specs/foundation/saves.md; not generated. -->
+  <!-- Hand-kept diagram for docs/specs/foundation/timeline.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --turn: #2f7f95; --auto: #b26a00; --tint: #fbefd9; }
     @media (prefers-color-scheme: dark) {
@@ -21,7 +21,6 @@
     .end { fill: var(--turn); stroke: var(--turn); stroke-width: 2; }
     .ret { fill: var(--surface); stroke: var(--turn); stroke-width: 2; }
     .eng { fill: var(--auto); stroke: var(--auto); stroke-width: 2; }
-    .dis { fill: var(--surface); stroke: var(--auto); stroke-width: 2; }
     .arc { fill: none; stroke: var(--turn); stroke-width: 1.8; }
     .arcauto { fill: none; stroke: var(--auto); stroke-width: 1.8; }
     .head { fill: var(--turn); }
@@ -38,7 +37,6 @@
   <text class="title" x="24" y="32">Autosave navigation going forward: redoToAutosave() called four times after going back</text>
   <text class="b mid" x="130" y="78">current Committed state</text>
   <text class="ta mid" x="490" y="78">Engagement Autosave</text>
-  <text class="ta mid" x="700" y="78">Disengagement Autosave</text>
   <text class="b endt" x="985" y="78">Return Autosave</text>
   <text class="b mid" x="70" y="110">Turn 3</text>
   <text class="b mid" x="277" y="110">Turn 4</text>
@@ -60,7 +58,6 @@
   <polygon class="end" points="130,116 139,125 130,134 121,125"/>
   <polygon class="end" points="325,116 334,125 325,134 316,125"/>
   <polygon class="eng" points="490,116 499,125 490,134 481,125"/>
-  <polygon class="dis" points="700,116 709,125 700,134 691,125"/>
   <polygon class="end" points="765,116 774,125 765,134 756,125"/>
   <polygon class="ret" points="957,115 967,125 957,135 947,125"/>
   <circle class="entry" cx="55" cy="125" r="5"/><circle class="entry" cx="90" cy="125" r="5"/>
@@ -81,12 +78,10 @@
   <text class="m" x="52" y="272">Turn-end Autosave</text>
   <polygon class="eng" points="214,260 222,268 214,276 206,268"/>
   <text class="m" x="232" y="272">Engagement Autosave</text>
-  <polygon class="dis" points="414,260 422,268 414,276 406,268"/>
-  <text class="m" x="432" y="272">Disengagement Autosave, never a target</text>
-  <polygon class="ret" points="706,260 714,268 706,276 698,268"/>
-  <text class="m" x="724" y="272">Return Autosave</text>
-  <circle class="entry" cx="866" cy="268" r="5"/>
-  <text class="m" x="880" y="272">Timeline entry</text>
+  <polygon class="ret" points="414,260 422,268 414,276 406,268"/>
+  <text class="m" x="432" y="272">Return Autosave</text>
+  <circle class="entry" cx="574" cy="268" r="5"/>
+  <text class="m" x="588" y="272">Timeline entry</text>
   <circle class="badge" cx="34" cy="298" r="9"/><text class="b mid" x="34" y="302.5">1</text>
   <text class="m" x="52" y="302">to 4: successive redoToAutosave() calls. Call 4 loads the Return Autosave, restoring Turn 10 as it was left.</text>
 </svg>

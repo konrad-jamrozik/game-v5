@@ -89,12 +89,15 @@ The data that survives the end of a Session. [Data ownership](#data-ownership) s
 
 ## Campaign selection
 
-What a Session has selected, and the complete Campaign state the engine commits.
+What a Session has selected, the complete Campaign state the engine commits, and the Turns it divides into.
 
 | Term             | Definition                                                                                                                                                                                                                                                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Committed action | One successful state-changing Player API or Developer API action. It takes the Campaign from one Committed state to the next. A rejected action, an action with no effect, and a query are not Committed actions.                                                                                |
 | Committed state  | Complete Campaign state, including every part of it, as it is before or after a Committed action rather than during the processing of one. It describes completeness and timing, not a part of Campaign state; the Campaign state that undo, redo, or load restores is always a Committed state. |
+| Turn             | The part of a Campaign from one Turn-start state up to the next committed Advance turn. Every Committed state belongs to exactly one Turn, and Advance turn ends it.                                                                                                                             |
+| Turn-start state | The Committed state immediately after campaign creation or immediately after a committed Advance turn. No other Committed action of its Turn has happened yet.                                                                                                                                   |
+| Turn-end state   | The Committed state in which a committed Advance turn began.                                                                                                                                                                                                                                     |
 | Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                                      |
 | Current save     | The Campaign save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                                             |
 
@@ -128,9 +131,6 @@ Engine API
 │   │   ├── load(save)
 │   │   ├── save()
 │   │   ├── saveAsNew()
-│   │   ├── getAutosaveStatus()
-│   │   ├── undoToAutosave()
-│   │   ├── redoToAutosave()
 │   │   └── close()
 │   ├── newCampaign
 │   │   ├── getSetup()
@@ -143,7 +143,10 @@ Engine API
 │   │   ├── undoAction()
 │   │   ├── redoAction()
 │   │   ├── undoAllActions()
-│   │   └── redoAllActions()
+│   │   ├── redoAllActions()
+│   │   ├── getAutosaveStatus()
+│   │   ├── undoToAutosave()
+│   │   └── redoToAutosave()
 │   ├── developer
 │   │   ├── enable()
 │   │   └── disable()
@@ -177,9 +180,9 @@ owns and where the behavior of its operations is specified.
 | Namespace             | Owns                                                                                                                                                                                           | Specified in                                                                                                                                                            |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `session`             | Session management and execution authority; it does not implement gameplay actions. Its own `getStatus()` reports the Session's Current campaign, Campaign seed, access, and Autopilot status. | [Campaign lifecycle](#campaign-lifecycle)                                                                                                                               |
-| `session.campaign`    | Loading a Campaign save as the Current campaign, saving the Current campaign, undo and redo across turns, and closing the Current campaign.                                                    | [Campaign lifecycle](#campaign-lifecycle); [Saving](saves.md#saving), [Loading](saves.md#loading), and [Autosave navigation](saves.md#autosave-navigation) in Saves     |
+| `session.campaign`    | Loading a Campaign save as the Current campaign, saving the Current campaign, and closing the Current campaign.                                                                                | [Campaign lifecycle](#campaign-lifecycle); [Saving](saves.md#saving) and [Loading](saves.md#loading) in Saves                                                           |
 | `session.newCampaign` | The new-Campaign setup, i.e. the selected preset and its Preset edits, and creating a Campaign from it as the Current campaign.                                                                | [Campaign lifecycle](#campaign-lifecycle); [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                                   |
-| `session.timeline`    | Timeline status, and undo and redo of Committed actions within the current turn.                                                                                                               | [Action navigation](timeline.md#action-navigation) in Timeline                                                                                                          |
+| `session.timeline`    | Timeline status, undo and redo of Committed actions within the current turn, and undo and redo across turns.                                                                                   | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline                                               |
 | `session.developer`   | Enabling and disabling Dev mode.                                                                                                                                                               | [Dev mode and developer operations](#dev-mode-and-developer-operations)                                                                                                 |
 | `session.autopilot`   | Engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                                                                            | [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot                                                                    |
 | `player.queries`      | Read-only Player-visible information and ordinary action discovery.                                                                                                                            | [Player Information](../interfaces/player-information.md)                                                                                                               |
@@ -217,8 +220,13 @@ Game storage (persisted)
         └── Autopilot memory
 
 Session (runtime, never persisted)
-    Current campaign selection · Current save · Dev mode · active Autopilot engagement
-    new-Campaign setup: selected preset · Preset edits
+├── Current campaign selection
+├── Current save
+├── Dev mode
+├── Active Autopilot engagement
+└── New-Campaign setup
+    ├── Selected preset
+    └── Preset edits
 ```
 
 | Part                 | Owner                                                                                                            |
@@ -244,12 +252,12 @@ Nothing a Session holds is persisted, and loading a Campaign save never restores
 Each engine subsystem has one owning specification. This document states only the guarantees that hold across all of
 them. The following table is the complete subsystem inventory.
 
-| Subsystem     | Owner                             | What it provides                                                                                    |
-| ------------- | --------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Timeline      | [Timeline](timeline.md)           | Undo and redo of the Committed actions of the current turn.                                         |
-| Saves         | [Saves](saves.md)                 | Saving a Campaign and loading it back at its saved Committed state, and undo and redo across turns. |
-| Configuration | [Configuration](configuration.md) | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration.        |
-| Autopilot     | [Autopilot](autopilot.md)         | Bounded play by an Autopilot AI, and its Autopilot memory.                                          |
+| Subsystem     | Owner                             | What it provides                                                                                         |
+| ------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Saves         | [Saves](saves.md)                 | Saving a Campaign and loading it back at its saved Committed state, and the Autosaves the engine writes. |
+| Timeline      | [Timeline](timeline.md)           | Undo and redo of the Committed actions of the current turn, and undo and redo across turns.              |
+| Configuration | [Configuration](configuration.md) | Settings shared by all Campaigns, and how a new Campaign obtains its Campaign configuration.             |
+| Autopilot     | [Autopilot](autopilot.md)         | Bounded play by an Autopilot AI, and its Autopilot memory.                                               |
 
 # Campaign lifecycle
 
@@ -332,7 +340,7 @@ Developer API owns their exact inputs, validation, and effects. Future cheat ope
 Cheat operations must preserve model invariants, and each successful one is one atomic Committed action in the Timeline.
 
 Dev mode starts disabled and is disabled on successful creation, load, or closure. Timeline navigation and
-[Autosave navigation](saves.md#autosave-navigation) leave the current Dev mode setting unchanged. Dev mode is not Campaign state and is never restored from a Campaign save or the
+[Autosave navigation](timeline.md#autosave-navigation) leave the current Dev mode setting unchanged. Dev mode is not Campaign state and is never restored from a Campaign save or the
 Timeline. Disabling Dev mode revokes subsequent Developer API access. Previously returned information
 cannot be erased from the Session controller's knowledge.
 

@@ -149,7 +149,8 @@ Management commands take immediate effect. **Advance turn** atomically resolves 
 - Processing order and rounding are explicit. Queries, rendering, and wall-clock time do not influence gameplay.
 - Every accepted command other than Advance turn is one Timeline entry. The Timeline covers the current turn only, and Advance turn starts a new one.
 - Undo and redo within a turn step through that turn's Timeline entries, back to the start of the turn at most.
-- Undo and redo across turns are a separate, explicit operation that loads an Autosave. The engine writes an Autosave at the end of every turn, keeping the latest 5 turns by default, and just before and after every Autopilot engagement.
+- Undo and redo across turns are a separate, explicit operation that loads an Autosave. The engine writes an Autosave at the end of every turn, keeping the latest 5 turns by default, and just before every Autopilot engagement.
+- The engine also keeps one Autosave of the current state at all times, which cannot be turned off, so the player can resume after quitting or a crash.
 - Undo restores state, randomness, and reports. Redo restores the recorded result without rerolling.
 - A new command after undo discards the undone commands and the Autosaves of the play it abandons.
 - Rejected commands change neither state nor the Timeline.

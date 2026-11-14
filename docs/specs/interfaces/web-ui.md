@@ -54,7 +54,7 @@ and an encyclopedia view of the articles Player Information exposes.
 # Interaction and accessibility
 
 TODO: Specify creation/load/save, gameplay actions, Advance turn, Timeline navigation within the Turn,
-[Autosave navigation](../foundation/saves.md#autosave-navigation) across Turns as a control separate from it,
+[Autosave navigation](../foundation/timeline.md#autosave-navigation) across Turns as a control separate from it,
 Dev mode controls, and Autopilot limit/progress/disengagement. Define keyboard access, focus behavior, and refresh
 after commits or restoration. Controller mutation controls follow Engine Contract Autopilot restrictions.
 

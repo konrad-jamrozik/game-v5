@@ -45,7 +45,7 @@ TODO: Define CLI-specific terms without duplicating shared definitions.
 
 TODO: Specify grammar, parsing, help/discovery, persistence, and mappings to Engine Contract's required starter
 operations. Cover campaign lifecycle, Timeline navigation within the Turn,
-[Autosave navigation](../foundation/saves.md#autosave-navigation) across Turns as separate commands, all Autopilot limits and
+[Autosave navigation](../foundation/timeline.md#autosave-navigation) across Turns as separate commands, all Autopilot limits and
 disengagement reasons, and separate developer inspection and cheats. Expose Autopilot memory only in its restricted
 execution context; it is not a human gameplay command.
 

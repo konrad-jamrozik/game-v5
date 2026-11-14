@@ -42,16 +42,17 @@ would hold for any game built on this engine.
 [Game Data Records](game-data-records.md) answers _what can a Game Data Record (GDR) be used for?_ It owns the six
 purposes a GDR can serve and a worked example of each.
 
-## Timeline
-
-[Timeline](timeline.md) answers _how does the player go back and forward within a turn?_ It owns undo and redo of the
-Committed actions of the current Turn, and what a restored Committed state guarantees.
-
 ## Saves
 
-[Saves](saves.md) answers _what do saving and loading do, and how does the player go back and forward across turns?_
-It owns what a Campaign save holds, saving, saving as new, loading, the Autosaves the engine writes, Autosave
-navigation, the Save size limit, and which Campaign saves a Game build loads.
+[Saves](saves.md) answers _what do saving and loading do, and what does the engine save by itself?_ It owns what a
+Campaign save holds, saving, saving as new, loading, the Autosaves the engine writes, the Save size limit, and which
+Campaign saves a Game build loads.
+
+## Timeline
+
+[Timeline](timeline.md) answers _how does the player go back and forward, within a turn and across turns?_ It owns
+undo and redo of the Committed actions of the current Turn, undo and redo across Turns by Autosave navigation, and
+what a restored Committed state guarantees.
 
 ## Configuration
 
@@ -82,8 +83,8 @@ Mechanics specification owns the distributions of its own random outcomes.
 # How they relate
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
-State refines those guarantees. Numbers stands alone and is used by Mechanics. Timeline, Saves, Configuration, and
-Autopilot each use Engine Contract and own one subsystem outright. Game Data Records builds on Campaign State. Domain
+State refines those guarantees. Numbers stands alone and is used by Mechanics. Saves, Timeline, Configuration, and
+Autopilot each use Engine Contract and own one subsystem outright; Timeline also uses Saves. Game Data Records builds on Campaign State. Domain
 Model uses Campaign State and Game Data Records to describe the actual game, and the Mechanics family refines Domain
 Model in turn.
 
@@ -113,9 +114,10 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 - **Engine Contract versus Timeline, Saves, Configuration, and Autopilot:** Engine Contract holds only what is true
   across all subsystems, and each subsystem has exactly one owner. E.g., the rule for which Committed state `undoAction()`
   restores is stated once, in Timeline.
-- **Timeline versus Saves:** World history, the Timeline, and a Campaign save all keep a Campaign's past, for different
-  purposes. Undo and redo within a Turn belong to Timeline and work without any Campaign save. Undo and redo across
-  Turns load Autosaves, so they belong to Saves.
+- **Saves versus Timeline:** Saves holds what most games have: saving, loading, and the Autosaves the engine writes.
+  It needs nothing from Timeline. Timeline holds all undo and redo and builds on Saves. Undo and redo within a Turn
+  work without any Campaign save; undo and redo across Turns load Autosaves, so Timeline uses Saves rather than the
+  reverse.
 - **Campaign State versus Domain Model:** the first holds rules that would apply to any game on this engine;
   the second holds the concepts of this game. E.g., Factions can be redesigned without touching Campaign State,
   and reference integrity can be tightened without touching Domain Model.
@@ -136,7 +138,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 1. [Core Concepts](core-concepts.md) for the vocabulary.
 2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns.
 3. [Campaign State](campaign-state.md) and [Game Data Records](game-data-records.md) for how campaign data is shaped.
-4. [Timeline](timeline.md), [Saves](saves.md), [Configuration](configuration.md), and [Autopilot](autopilot.md) for
+4. [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), and [Autopilot](autopilot.md) for
    the engine subsystems.
 5. [Domain Model](domain-model.md) for the game's concepts.
 6. [Numbers](numbers.md) as needed.

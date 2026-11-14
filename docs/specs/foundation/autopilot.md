@@ -30,8 +30,8 @@ outside the specifications.
 # Glossary
 
 Autopilot, Autopilot AI, Autopilot engagement, Autopilot memory, Autopilot memory API, Session controller, and
-Player-visible information are defined by the [Engine Contract glossary](engine-contract.md#glossary). Turn,
-Timeline entry, and Undone action are defined by the [Timeline glossary](timeline.md#glossary).
+Player-visible information, and Turn are defined by the [Engine Contract glossary](engine-contract.md#glossary).
+Timeline entry and Undone action are defined by the [Timeline glossary](timeline.md#glossary).
 
 | Term               | Definition                                                                                                                                                                                           |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -88,10 +88,11 @@ commits completely or fails without effects. Disengagement never implicitly adva
 Committed actions. Failure of the Autopilot AI follows the same boundary rule. A late response from a completed Autopilot engagement
 cannot change Campaign state or write Autopilot memory. Timeline navigation remains available after disengagement.
 
-Engaging Autopilot and completing its disengagement each write an Autosave, and no Turn-end Autosave is written
-during an Autopilot engagement. [Autosaves](saves.md#autosaves) in Saves owns these rules. An Autopilot engagement
-that advances the turn is therefore reversed as a whole through [Autosave navigation](saves.md#autosave-navigation),
-while the Timeline entries of its last Turn are reversed one by one.
+Engaging Autopilot writes an Autosave, and no Turn-end Autosave is written during an Autopilot engagement.
+[Autosaves](saves.md#autosaves) in Saves owns these rules. An Autopilot engagement that advances the turn is
+therefore reversed as a whole through [Autosave navigation](timeline.md#autosave-navigation), while the Timeline
+entries of its last Turn are reversed one by one. Completing disengagement writes no Autosave of its own: the Current
+Autosave already holds the Committed state in which the Autopilot engagement ended.
 
 # Autopilot memory
 
@@ -118,7 +119,7 @@ Autopilot memory follows the Committed state that undo and redo restore:
 
 A Campaign save holds the Autopilot memory under [Campaign save contents](saves.md#campaign-save-contents), and a
 successful load restores it. This includes loading an Autosave through
-[Autosave navigation](saves.md#autosave-navigation).
+[Autosave navigation](timeline.md#autosave-navigation).
 
 # Edge cases and failure behavior
 

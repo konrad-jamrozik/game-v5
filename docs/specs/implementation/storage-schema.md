@@ -30,6 +30,9 @@ its identifiers, Campaign state, Timeline, and Autopilot memory.
 
 TODO: Suggest how Autosaves are stored beside the other Campaign saves of their Campaign.
 
+TODO: Suggest how the Current Autosave is kept up to date after every change without rewriting a whole Campaign save
+each time.
+
 TODO: Suggest a Campaign save encoding and how a Game build recognises a Campaign save it rejects under
 [Game build compatibility](../foundation/saves.md#game-build-compatibility).
 
