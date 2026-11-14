@@ -94,9 +94,9 @@ The following table is the exhaustive set of Personas. The last column names the
 | ---------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Engine designer  | Human        | Designs the engine and its game behavior, decides which inputs to that behavior GDRs supply and so become content, and establishes these specification conventions. | Governance, Foundation, Mechanics; e.g. [Specification Conventions](spec-conventions.md), [Core Concepts](../foundation/core-concepts.md) |
 | Content designer | Human or LLM | Authors GDRs, including the initial campaign content and in-game encyclopedia articles, within the Types the Engine designer exposes for content.                   | Foundation, Mechanics; e.g. [Game Data Records](../foundation/game-data-records.md)                                                       |
-| UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                                        | Foundation; e.g. [Engine Contract](../foundation/engine-contract.md), [Campaign Lifecycle](../foundation/campaign-lifecycle.md)           |
+| UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                                        | UI, Foundation; e.g. [Engine Contract](../foundation/engine-contract.md), [Campaign Lifecycle](../foundation/campaign-lifecycle.md)       |
 | AI designer      | Human or LLM | Designs an AI that plays the game, e.g. an Autopilot AI.                                                                                                            | Foundation; e.g. [Autopilot](../foundation/autopilot.md), [Engine Contract](../foundation/engine-contract.md)                             |
-| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                        | Foundation, Mechanics, Acceptance, Implementation                                                                                         |
+| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                        | Foundation, Mechanics, UI, Acceptance, Implementation                                                                                     |
 | Player           | Human or LLM | Plays the game.                                                                                                                                                     | None directly; plays through a user interface                                                                                             |
 
 ## Status
@@ -149,6 +149,7 @@ the exception of the root index, its file must be a direct child of the correspo
 | Foundation     | `foundation/`     | Cross-cutting domain, modeling, execution, numeric, timing, undo and redo, and save contracts |
 | Mechanics      | `mechanics/`      | Player-facing game-system rules, transitions, formulas, and effects                           |
 | Content        | `content/`        | Versioned GDRs, named parameters, catalogs, and starting configurations                       |
+| UI             | `ui/`             | Non-behavioural guidance on how user interfaces present the engine API to the Player          |
 | Acceptance     | `acceptance/`     | Cross-system fixtures, scenarios, expected outcomes, and requirement traceability             |
 | Implementation | `implementation/` | Non-behavioural steering for implementers, e.g. architecture or code-quality guidance         |
 
@@ -158,6 +159,11 @@ them. An implementation that ignores an Implementation document can still satisf
 document may explain which observable contract its guidance supports; that contract remains owned and guaranteed by
 its own specification. Implementation documents are registered so that they participate in relationship inventories,
 generated views, and graph validation like every other specification.
+
+UI documents are non-behavioural in the same way. They guide how a user interface presents the engine API to the
+Player, e.g. which screens exist and what each shows by default, but they add no gameplay information, engine API
+operation, or GDR. What a user interface may show and call remains owned by
+[Engine Contract](../foundation/engine-contract.md) and the specification that owns each value.
 
 The Game Specification Index has Family Governance and remains at `docs/specs/README.md` as the navigation entry point.
 Family describes ownership, not dependencies; e.g., a Foundation specification may depend on Mechanics specifications without

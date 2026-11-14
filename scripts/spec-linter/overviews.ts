@@ -5,6 +5,7 @@ export const FAMILY_ORDER: readonly SpecificationFamily[] = [
   'Foundation',
   'Mechanics',
   'Content',
+  'UI',
   'Acceptance',
   'Implementation',
 ]

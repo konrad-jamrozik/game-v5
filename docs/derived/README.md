@@ -24,6 +24,7 @@ These informative views are derived from the registered Markdown specifications.
 | Foundation     | 14             |
 | Mechanics      | 9              |
 | Content        | 0              |
+| UI             | 0              |
 | Acceptance     | 1              |
 | Implementation | 2              |
 
@@ -71,6 +72,11 @@ These informative views are derived from the registered Markdown specifications.
 | RECOVER | [Agent Recovery](../specs/mechanics/agent-recovery.md)               | Stub   | Define how an Agent's health goes up and exhaustion goes down, and the result when several rules change one of those values in the same turn. |
 
 ## Content
+
+| ID  | Document | Status | Owns |
+| --- | -------- | ------ | ---- |
+
+## UI
 
 | ID  | Document | Status | Owns |
 | --- | -------- | ------ | ---- |
