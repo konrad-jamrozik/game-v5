@@ -158,6 +158,7 @@ Engine API
 │   │   ├── enable()
 │   │   └── disable()
 │   └── autopilot
+│       ├── listAutopilotAis()
 │       ├── engage(autopilotAiId, limit)
 │       ├── getStatus(engagementId)
 │       └── disengage(engagementId)
@@ -192,7 +193,7 @@ owns and where the behavior of its operations is specified.
 | `session.newCampaign`         | Listing the Campaign configuration presets and the values of each, the new-Campaign setup, i.e. the selected preset and its Preset edits, and creating a Campaign from it as the Current campaign. | [Campaign lifecycle](#campaign-lifecycle); [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration                                     |
 | `session.timeline`            | Timeline status, undo and redo of Committed actions within the current turn, and undo and redo across turns.                                                                                       | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline                                                 |
 | `session.developer`           | Enabling and disabling Dev mode.                                                                                                                                                                   | [Dev mode and developer operations](#dev-mode-and-developer-operations)                                                                                                   |
-| `session.autopilot`           | Engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                                                                                | [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot                                                                      |
+| `session.autopilot`           | Listing the Autopilot AIs available for engagement, engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                            | [Available Autopilot AIs](autopilot.md#available-autopilot-ais) and [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot  |
 | `player.queries`              | Read-only Player-visible information and ordinary action discovery. Its `getCampaignState()` returns only the Player-visible information of Campaign state.                                        | [Player Information](../interfaces/player-information.md)                                                                                                                 |
 | `player.actions`              | Normal gameplay mutations, including Advance turn.                                                                                                                                                 | The mechanics specification owning each action, under [Player queries and actions](#player-queries-and-actions); [Turn advancement](#turn-advancement) for Advance turn   |
 | `developer.queries`           | Read-only inspection of full Campaign state. Its `getCampaignState()` returns Campaign state in full, unlike the Player API query of the same name.                                                | [Inspection contract](../interfaces/developer-api.md#inspection-contract) in Developer API                                                                                |
@@ -293,8 +294,8 @@ disables Dev mode. A newly created Campaign has a Timeline with no Committed act
 
 `session.campaign.close()` removes the Current campaign and disables Dev mode. Campaign-dependent operations fail
 when no Current campaign exists. The following Session API operations need no Current campaign: `session.getStatus()`,
-every `session.globalConfiguration` operation, `session.campaign.listSaves()`, `session.campaign.load(save)`, and
-every `session.newCampaign` operation. Creation, load, and closure invalidate prior campaign access. Failure to create or
+every `session.globalConfiguration` operation, `session.campaign.listSaves()`, `session.campaign.load(save)`,
+every `session.newCampaign` operation, and `session.autopilot.listAutopilotAis()`. Creation, load, and closure invalidate prior campaign access. Failure to create or
 load preserves the existing Session. Closing or replacing the Current campaign does not implicitly save it.
 
 # Campaign data integrity

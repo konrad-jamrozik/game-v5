@@ -39,6 +39,21 @@ Timeline entry and Undone action are defined by the [Timeline glossary](timeline
 | Autopilot engagement ID | The Independent identifier identifying one Autopilot engagement, assigned when Autopilot is engaged.                                                                                                 |
 | Autopilot progress      | The committed player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |
 
+# Available Autopilot AIs
+
+`session.autopilot.listAutopilotAis()` reports every Autopilot AI that is available, i.e. that
+`session.autopilot.engage(autopilotAiId, limit)` would accept at the time of the call. For each one it reports at
+least:
+
+- the `autopilotAiId` that `engage` accepts;
+- a name an interface can show; e.g., the Web UI offers these names for the player to choose from;
+- whether it wrote the Autopilot memory of the Current campaign, when there is a Current campaign that has Autopilot
+  memory. Engaging any other Autopilot AI discards that Autopilot memory, under [Autopilot memory](#autopilot-memory).
+
+Listing needs no Current campaign, changes nothing, and is not a Committed action. An Autopilot AI may become
+unavailable after it was listed, e.g. a remote service stops responding; `engage` then rejects it, under
+[Autopilot limits](#autopilot-limits). The list may be empty, and engaging Autopilot is then impossible.
+
 # Autopilot limits
 
 `session.autopilot.engage(autopilotAiId, limit)` engages Autopilot for the Current campaign. At most one
@@ -151,6 +166,12 @@ nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-recei
 
 # Acceptance examples
 
+- **Listing Autopilot AIs:** With Autopilot AIs X and Y available and no Current campaign, `listAutopilotAis()`
+  reports X and Y. Create a Campaign, engage Autopilot with X, which writes Autopilot memory, and wait for
+  disengagement. `listAutopilotAis()` reports X as the one that wrote the Autopilot memory. `engage` with an
+  `autopilotAiId` that was not listed is rejected ([Available Autopilot AIs](#available-autopilot-ais),
+  [Autopilot limits](#autopilot-limits)).
+
 - **Limit accounting:** In `singleAction`, repeated queries and a rejected action do not reach the Autopilot limit;
   one committed gameplay action does. In `turnAdvancements` with count 2, ordinary actions do not increase Autopilot
   progress; the second committed Advance turn disengages Autopilot before a third can execute
@@ -168,3 +189,8 @@ nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-recei
 - **Disengagement during an action:** Disengage Autopilot during an action. The action either commits completely or
   fails without effects; earlier Committed actions remain
   ([Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency)).
+
+# Open decisions
+
+- TODO: Define which Autopilot AIs exist and how one becomes available, e.g. whether the Game build supplies them or
+  the player registers them.
