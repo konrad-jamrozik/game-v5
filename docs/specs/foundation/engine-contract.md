@@ -65,7 +65,7 @@ Lending Player API control to an Autopilot AI for a bounded period.
 
 ## API surfaces
 
-The separately authorized parts of the engine API, and the information Player API exposes.
+The separately authorized parts of the engine API, detailed in [API hierarchy](#api-hierarchy) together with which Principal can access each and when, and the information Player API exposes.
 
 | Term                       | Definition                                                                                                                                                   |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
