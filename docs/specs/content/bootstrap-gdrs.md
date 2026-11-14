@@ -109,8 +109,8 @@ Type owner: [Leads and Progression](../mechanics/leads-and-progression.md).
 | GDR                         | Type | GDR purpose                            | What it supplies                                                                            |
 | --------------------------- | ---- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
 | `locate_red_dawn_member`    | Lead | Referenced GDR, Key for campaign facts | The first Lead of the Victory path; it has no prerequisites and creates `apprehend_member`. |
-| `locate_red_dawn_safehouse` | Lead | Referenced GDR, Key for campaign facts | Requires a Won Mission site created by `locate_red_dawn_member`; creates `raid_safehouse`.  |
-| `locate_red_dawn_hq`        | Lead | Referenced GDR, Key for campaign facts | Requires a Won Mission site created by `locate_red_dawn_safehouse`; creates `raid_hq`.      |
+| `locate_red_dawn_safehouse` | Lead | Referenced GDR, Key for campaign facts | Requires a Won Mission from `locate_red_dawn_member`; creates `raid_safehouse`.             |
+| `locate_red_dawn_hq`        | Lead | Referenced GDR, Key for campaign facts | Requires a Won Mission from `locate_red_dawn_safehouse`; creates `raid_hq`.                 |
 
 Each Lead references its Faction, `red_dawn`, explicitly through its `faction` property, and names its prerequisite
 Leads and the MissionSiteArchetype it creates by GDR identifier, so no relationship is inferred from identifier text under
@@ -138,6 +138,7 @@ Type owner: [Missions](../mechanics/missions.md).
 | `raid_hq`               | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry and its Enemies by EnemyArchetype and count; a win defeats its target Faction. |
 | `foil_recruitment_push` | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 1: its expiry and its Enemies by EnemyArchetype and count.         |
 | `foil_sabotage`         | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 2: its expiry and its Enemies by EnemyArchetype and count.         |
+| `standard_mission`      | MissionArchetype     | Archetype   | The Archetype of every Mission.                                                                                       |
 
 No MissionSiteArchetype references a Faction. A Mission site's target Faction is a value in its Constants: for an
 Initiative Mission site it is the Faction whose Archetype is the creating Lead's `faction`, and for a Response Mission
@@ -170,14 +171,14 @@ Type owner: [Agent Recovery](../mechanics/agent-recovery.md).
 
 Type owner: [Factions](../mechanics/factions.md).
 
-| GDR                 | Type                  | GDR purpose           | What it supplies                                                                                                                          |
-| ------------------- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `red_dawn`          | FactionArchetype      | Archetype             | The only Faction: its name and its initial Faction activity level, `faint`.                                                               |
-| `faint`             | FactionActivityLevel  | Calculation parameter | How long the level lasts, how often an operation occurs, the weight of each Faction operation level, and the next level, `active`.        |
-| `active`            | FactionActivityLevel  | Calculation parameter | As `faint`; the next level is `war`.                                                                                                      |
-| `war`               | FactionActivityLevel  | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level.                                                                      |
-| `operation_level_1` | FactionOperationLevel | Calculation parameter | The money and funding gained when a Response Mission site of level 1 is Won, and the Panic and funding change when it is Expired or Lost. |
-| `operation_level_2` | FactionOperationLevel | Calculation parameter | As `operation_level_1`, for level 2.                                                                                                      |
+| GDR                 | Type                  | GDR purpose           | What it supplies                                                                                                                                                           |
+| ------------------- | --------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `red_dawn`          | FactionArchetype      | Archetype             | The only Faction: its name and its initial Faction activity level, `faint`.                                                                                                |
+| `faint`             | FactionActivityLevel  | Calculation parameter | How long the level lasts, how often an operation occurs, the weight of each Faction operation level, and the next level, `active`.                                         |
+| `active`            | FactionActivityLevel  | Calculation parameter | As `faint`; the next level is `war`.                                                                                                                                       |
+| `war`               | FactionActivityLevel  | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level.                                                                                                       |
+| `operation_level_1` | FactionOperationLevel | Calculation parameter | The money and funding gained when the Mission at a Response Mission site of level 1 is Won, and the Panic and funding change when the site is Expired or its Mission Lost. |
+| `operation_level_2` | FactionOperationLevel | Calculation parameter | As `operation_level_1`, for level 2.                                                                                                                                       |
 
 Each MissionSiteArchetype of kind response states its Faction operation level. A Faction selects a level by weight, and
 [MissionSiteArchetype selection](../mechanics/missions.md#missionsitearchetype-selection) in Missions then selects a MissionSiteArchetype of kind response
@@ -218,6 +219,7 @@ The following table is exhaustive: it lists all 17 Bootstrap GDR files.
 | `content/leads-and-progression/leads.yaml`             | Lead                   | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`               |
 | `content/investigations/investigation_archetypes.yaml` | InvestigationArchetype | `standard_investigation`                                                                  |
 | `content/missions/mission_site_archetypes.yaml`        | MissionSiteArchetype   | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage` |
+| `content/missions/mission_archetypes.yaml`             | MissionArchetype       | `standard_mission`                                                                        |
 | `content/combat/enemy_archetypes.yaml`                 | EnemyArchetype         | `initiate`, `soldier`, `cult_leader`                                                      |
 | `content/combat/weapons.yaml`                          | Weapon                 | `sidearm`, `rifle`, `heavy_rifle`                                                         |
 | `content/combat/combat_parameters.yaml`                | CombatParameters       | `combat_parameters`                                                                       |
@@ -231,24 +233,24 @@ A GDR added later goes into the file of its Type, and a file is added only for a
 
 # Victory path
 
-The Victory path consists of three Leads, each creating one Initiative Mission site. A Won Mission site makes the next
+The Victory path consists of three Leads, each creating one Initiative Mission site. A Won Mission there makes the next
 Lead available, and winning `raid_hq` defeats Red Dawn. With Red Dawn defeated, every Faction is defeated, which wins
 the Campaign. Throughout the Campaign, Red Dawn's activity creates Faction operation occurrences, each with one Response
-Mission site; a Response Mission site that is Expired or Lost raises Panic, and enough Panic loses the Campaign.
+Mission site; a Response Mission site that is Expired, or whose Mission is Lost, raises Panic, and enough Panic loses the Campaign.
 
-![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission site makes the next Lead available, and winning raid_hq defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiry or loss raises Panic until the Campaign is lost](../../images/bootstrap-victory-path.svg)
+![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiry or loss raises Panic until the Campaign is lost](../../images/bootstrap-victory-path.svg)
 
-An Initiative Mission site that is Lost or Expired records no win, so its Lead becomes available again and the Agency
+An Initiative Mission site that is Expired, or whose Mission is Lost, records no win, so its Lead becomes available again and the Agency
 can obtain a new Mission site from it. A Mission site cannot be attempted twice. Every Lead of the Victory path
-therefore remains available until a Mission site it created is Won.
+therefore remains available until a Mission at a Mission site it created is Won.
 
 The rules that make the Victory path work are owned by Mechanics specifications; this document states none of them:
 
 - Lead availability, under [Lead availability](../mechanics/leads-and-progression.md#lead-availability); recording a
-  win, under [Recording a Won Mission site](../mechanics/leads-and-progression.md#recording-a-won-mission-site); and the
+  win, under [Recording a Won Mission](../mechanics/leads-and-progression.md#recording-a-won-mission); and the
   effect of completing a Lead, under [Completion effect](../mechanics/leads-and-progression.md#completion-effect), all in
   [Leads and Progression](../mechanics/leads-and-progression.md).
-- Mission site creation, expiry, and the consequences of a win or a loss, under
+- Mission site creation, expiry, and the consequences of a Mission's win or loss, under
   [Mission site creation](../mechanics/missions.md#mission-site-creation),
   [Mission site expiration](../mechanics/missions.md#mission-site-expiration), and
   [Consequences](../mechanics/missions.md#consequences) in [Missions](../mechanics/missions.md).
@@ -272,6 +274,7 @@ states those facts for the Bootstrap GDRs. This document states none of them.
 | Faction                | [Initial Factions](../mechanics/factions.md#initial-factions) in Factions                                                                           |
 | Investigation          | [Investigation creation](../mechanics/investigations.md#investigation-creation) in Investigations                                                   |
 | Mission site           | [Initial Mission sites](../mechanics/missions.md#initial-mission-sites) in Missions                                                                 |
+| Mission                | [Initial Mission sites](../mechanics/missions.md#initial-mission-sites) in Missions, which states that no Mission exists initially                  |
 | Enemy                  | [Enemy creation](../mechanics/combat.md#enemy-creation) in Combat, applied by [Enemy creation](../mechanics/missions.md#enemy-creation) in Missions |
 
 The turn, Panic, and Lead progression start from values that no GDR supplies. [Turn number](../mechanics/turn-advancement.md#turn-number)
@@ -285,13 +288,13 @@ The Bootstrap GDRs exclude the following game-ts content. The list is exhaustive
 which it is expected to return:
 
 - The Factions Exalt and Black Lotus, each with its own Leads reusing the existing MissionSiteArchetypes.
-- Faction suppression after a Won Mission site.
+- Faction suppression after a Won Mission.
 - Skill gained by surviving a Mission and by attacking and defending in a Battle.
 - The Upgrades raising training skill gain, exhaustion recovery, health recovery, and Agent health.
 - Initiative Mission sites of game-ts levels 3 to 7, and the interrogation Leads between them.
 - Faction operation levels 3 to 6, including the level whose loss ends the Campaign, and their Response Mission sites.
 - The Faction activity levels Dormant, Emerging, Expanding, Escalating, and Total war.
-- Partial success of a Lost Mission site, which [Combat and consequences](../mechanics/domain-model.md#combat-and-consequences)
+- Partial success of a Lost Mission, which [Combat and consequences](../mechanics/domain-model.md#combat-and-consequences)
   in Domain Model already allows for.
 - The Leads Criminal organizations, Deep state, and Peace on Earth, and Faction discovery through a profile Lead.
 

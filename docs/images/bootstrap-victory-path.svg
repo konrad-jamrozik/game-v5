@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="732" viewBox="0 0 760 732" role="img" aria-label="Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission site makes the next Lead available, and winning Raid HQ defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose loss raises panic until the Campaign is lost">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="732" viewBox="0 0 760 732" role="img" aria-label="Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning Raid HQ defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose loss raises panic until the Campaign is lost">
   <!-- Hand-kept diagram for docs/specs/content/bootstrap-gdrs.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --node: #f4f6f9; --fg: #18202b; --muted: #5a6573; --line: #d9dfe7; --accent: #2a5aa6; --accent-soft: #e4ecf8; --red: #a8322a; --red-soft: #f7e6e4; }

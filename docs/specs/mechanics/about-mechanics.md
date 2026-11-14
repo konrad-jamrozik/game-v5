@@ -61,9 +61,9 @@ reproducible results, independently of what those results mean for the Campaign.
 ## Missions
 
 [Missions](missions.md) answers _what happens at a place where Enemies are present, and what follows from its result?_
-It owns the Mission site and its Mission: a Mission site's creation, including which MissionSiteArchetype a Faction
-operation occurrence creates its Response Mission site from, its lifecycle, deploying Agents to it, and turning Battle
-results into Campaign consequences.
+It owns the Mission site and the Mission: a Mission site's creation, including which MissionSiteArchetype a Faction
+operation occurrence creates its Response Mission site from, the lifecycles of both, deploying Agents to a Mission site,
+which creates its Mission, and turning Battle results into Campaign consequences.
 
 ## Factions
 

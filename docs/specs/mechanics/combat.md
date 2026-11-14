@@ -26,9 +26,9 @@ It owns:
 
 Combat is specified and testable without the rest of the Campaign. Its input is a list of Agents, a list of Enemies,
 their current values, and the GDRs it reads; its output is the Battle result and the changed values of those Agents and
-Enemies. What a Battle result means for the Campaign, e.g. whether the Mission site is Won or Lost, its rewards, and
+Enemies. What a Battle result means for the Campaign, e.g. whether the Mission is Won or Lost, its rewards, and
 where the surviving Agents go next, is owned by [Missions](missions.md). When a Battle is fought, i.e. in which Turn
-advancement step and for which Mission sites, is owned by [Missions](missions.md) and
+advancement step and for which Missions, is owned by [Missions](missions.md) and
 [Turn Advancement](turn-advancement.md). These are ownership pointers; this document relies on neither.
 
 This document refines Domain Model's combatant contract: it states the exhaustive set of gained properties of the
@@ -43,7 +43,7 @@ Among the Mechanics specifications, this document depends only on Domain Model a
 
 The following features are out of scope and are not specified here, e.g. skill or experience gained by attacking and
 defending, morale, and target selection that matches attackers to defenders by skill. With them out of scope, a Battle
-changes only the health and exhaustion of its Combatants. Partial success of a Lost Mission site is also out of scope;
+changes only the health and exhaustion of its Combatants. Partial success of a Lost Mission is also out of scope;
 [Missions](missions.md) owns its deferral.
 
 # Relationships
@@ -543,7 +543,7 @@ when the Battle ended at its start.
 | Retreated      | After a Round, Agents and Enemies are both able to fight and the Retreated check of [End-of-round checks](#end-of-round-checks) holds. |
 
 A Battle outcome is final. Every Agent of a Battle that ends as Retreated or Wiped keeps the values the Battle left it;
-the Battle outcome itself changes no Combatant value. Whether a Mission site is then Won or Lost, and what becomes of
+the Battle outcome itself changes no Combatant value. Whether the Mission is then Won or Lost, and what becomes of
 each surviving Agent, belongs to [Missions](missions.md).
 
 ## Termination
@@ -599,7 +599,7 @@ A participant's skill, maximum health, and weapon damage do not change in a Batt
 them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above.
 
 The Battle result is an Authoritative value. [Combat and consequences](domain-model.md#combat-and-consequences) in Domain
-Model places it in the Mission of the Mission site at which the Battle was fought. Once produced, it is never rewritten,
+Model places it in the Mission whose Battle it is. Once produced, it is never rewritten,
 recomputed, or shortened, even when the values of its participants change later, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. Whatever
 presents a Battle later uses the retained values.

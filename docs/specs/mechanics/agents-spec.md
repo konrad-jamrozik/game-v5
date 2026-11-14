@@ -79,8 +79,8 @@ defined by the [Turn Advancement glossary](turn-advancement.md#glossary). Battle
 [Combat glossary](combat.md#glossary), and Agent cap, Transport cap, and Training cap by the
 [Economy and Upgrades glossary](economy-and-upgrades.md#glossary). The Turn advancement step named Training, under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps), applies the rule under
-[Training growth](#training-growth). The Mission site state named Deployed is owned by [Missions](missions.md); a
-Mission site is Deployed exactly when the Agents of its Mission's Current team are Deployed to it.
+[Training growth](#training-growth). The Mission state named Deployed is owned by [Missions](missions.md); a
+Mission is Deployed exactly when the Agents of its Current team are Deployed on it.
 
 ## Combatant attributes
 
@@ -99,13 +99,13 @@ What makes an Agent or an Enemy able to work and to fight, and how worn down it 
 
 The Current assignments that are neither an Investigation nor a Mission, and the one that places an Agent in a Mission.
 
-| Term        | Definition                                                                                                                                                                                  |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Standby     | The Current assignment of an Agent waiting for orders.                                                                                                                                      |
-| Contracting | The Current assignment of an Agent earning money for the Agency.                                                                                                                            |
-| Training    | The Current assignment of an Agent gaining skill.                                                                                                                                           |
-| Recovery    | The Current assignment of an Agent regaining health.                                                                                                                                        |
-| Deployed    | Sent to a Mission site as a member of its Mission's Current team, and fighting there in the next Advance turn. An Agent becomes Deployed the moment the player deploys it, without transit. |
+| Term        | Definition                                                                                                                                                                                     |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Standby     | The Current assignment of an Agent waiting for orders.                                                                                                                                         |
+| Contracting | The Current assignment of an Agent earning money for the Agency.                                                                                                                               |
+| Training    | The Current assignment of an Agent gaining skill.                                                                                                                                              |
+| Recovery    | The Current assignment of an Agent regaining health.                                                                                                                                           |
+| Deployed    | Sent on a Mission at a Mission site as a member of its Current team, and fighting there in the next Advance turn. An Agent becomes Deployed the moment the player deploys it, without transit. |
 
 # Agent GDRs
 
@@ -176,20 +176,20 @@ and the violation is reported as a data defect, never repaired into different ga
 when it is created and never changes. Its Constants and State have exactly the following properties. This table is
 exhaustive.
 
-| Property              | Part      | Value                                                                                                                                                                                                  | Classification and range                                                                                                                                   |
-| --------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Agency                | Constants | An Immutable reference to the Agency that employs the Agent.                                                                                                                                           | Authoritative value. Always the Campaign's one Agency.                                                                                                     |
-| Turn hired            | Constants | The turn number of the Turn in which the Agent was created.                                                                                                                                            | Authoritative value. A whole number of at least 1.                                                                                                         |
-| Lifecycle             | State     | Serving, Killed, or Dismissed, under [Agent lifecycle](#agent-lifecycle).                                                                                                                              | Authoritative value.                                                                                                                                       |
-| Skill                 | State     | The Agent's skill.                                                                                                                                                                                     | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). |
-| Health                | State     | The Agent's current health.                                                                                                                                                                            | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
-| Maximum health        | State     | The Agent's maximum health.                                                                                                                                                                            | Authoritative value. A whole number of at least 1. No rule in scope changes it after creation.                                                             |
-| Exhaustion            | State     | The Agent's exhaustion.                                                                                                                                                                                | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
-| Weapon                | State     | A reference to the Weapon GDR the Agent is equipped with.                                                                                                                                              | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule in scope changes it after creation.                                  |
-| Weapon damage         | State     | The Agent's weapon damage.                                                                                                                                                                             | Authoritative value. A whole number of at least 1. Only the rules under [Modifiable values](#modifiable-values) change it.                                 |
-| Current assignment    | State     | Present exactly when the Agent is Serving: one of Standby, Contracting, Training, Recovery, an Investigation with a Mutable reference to it, or Deployed with a Mutable reference to the Mission site. | Authoritative value, under [Orders and Task phase](#orders-and-task-phase).                                                                                |
-| Task phase            | State     | Present exactly when the Agent is Serving: At assignment or In transit.                                                                                                                                | Authoritative value, under [Orders and Task phase](#orders-and-task-phase).                                                                                |
-| Participation history | State     | The Investigations and Missions the Agent took part in and has left.                                                                                                                                   | Authoritative value, under [Participation history records](#participation-history-records).                                                                |
+| Property              | Part      | Value                                                                                                                                                                                             | Classification and range                                                                                                                                   |
+| --------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agency                | Constants | An Immutable reference to the Agency that employs the Agent.                                                                                                                                      | Authoritative value. Always the Campaign's one Agency.                                                                                                     |
+| Turn hired            | Constants | The turn number of the Turn in which the Agent was created.                                                                                                                                       | Authoritative value. A whole number of at least 1.                                                                                                         |
+| Lifecycle             | State     | Serving, Killed, or Dismissed, under [Agent lifecycle](#agent-lifecycle).                                                                                                                         | Authoritative value.                                                                                                                                       |
+| Skill                 | State     | The Agent's skill.                                                                                                                                                                                | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). |
+| Health                | State     | The Agent's current health.                                                                                                                                                                       | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
+| Maximum health        | State     | The Agent's maximum health.                                                                                                                                                                       | Authoritative value. A whole number of at least 1. No rule in scope changes it after creation.                                                             |
+| Exhaustion            | State     | The Agent's exhaustion.                                                                                                                                                                           | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
+| Weapon                | State     | A reference to the Weapon GDR the Agent is equipped with.                                                                                                                                         | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule in scope changes it after creation.                                  |
+| Weapon damage         | State     | The Agent's weapon damage.                                                                                                                                                                        | Authoritative value. A whole number of at least 1. Only the rules under [Modifiable values](#modifiable-values) change it.                                 |
+| Current assignment    | State     | Present exactly when the Agent is Serving: one of Standby, Contracting, Training, Recovery, an Investigation with a Mutable reference to it, or Deployed with a Mutable reference to the Mission. | Authoritative value, under [Orders and Task phase](#orders-and-task-phase).                                                                                |
+| Task phase            | State     | Present exactly when the Agent is Serving: At assignment or In transit.                                                                                                                           | Authoritative value, under [Orders and Task phase](#orders-and-task-phase).                                                                                |
+| Participation history | State     | The Investigations and Missions the Agent took part in and has left.                                                                                                                              | Authoritative value, under [Participation history records](#participation-history-records).                                                                |
 
 Skill, health, maximum health, exhaustion, Weapon, and weapon damage are the properties the
 [Combatant Role Type](domain-model.md#combatant-role-type) requires; Weapon and weapon damage together are the equipped
@@ -323,14 +323,14 @@ Agent, not an Agency value. [Economy and Upgrades](economy-and-upgrades.md) refi
 
 **Proposed rule:** The Current assignment of a Serving Agent is exactly one of the following, and this list is
 exhaustive: Standby; Contracting; Training; Recovery; an Investigation, with a reference to that Investigation; and
-Deployed, with a reference to the Mission site the Agent is Deployed to. Task phase is either At assignment or In
+Deployed, with a reference to the Mission the Agent is Deployed on. Task phase is either At assignment or In
 transit. An Agent In transit keeps the Current assignment it is travelling to; transit is not a second Current
 assignment. An Agent belongs to the Current team of an Investigation or of a Mission exactly as
 [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model states, including
 while In transit.
 
 A Deployed Agent is always At assignment, because deployment has no transit under [Transit rule](#transit-rule). In
-every Committed state, the Mission site that a Deployed Agent's Current assignment references has a Mission whose
+every Committed state, the Mission that a Deployed Agent's Current assignment references is Deployed, and its
 Current team contains that Agent.
 
 ## Agents that can be ordered
@@ -358,7 +358,7 @@ table means an Investigation with its reference.
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | Standby, Contracting, Training, or an Investigation; At assignment | Standby, Contracting, or Training, other than the current one; In transit | The player orders it, through the `assignAgents` Player action.                                                     | This document, under [Assigning Agents](#assigning-agents) |
 | Standby, Contracting, Training, or an Investigation; At assignment | An Investigation; In transit                                              | The player starts an Investigation with it or adds it to one, through a Player action of Investigations.            | [Investigations](investigations.md)                        |
-| Standby, Contracting, Training, or an Investigation; At assignment | Deployed to a Mission site; At assignment                                 | The player deploys it, through the `deployAgents` Player action.                                                    | [Missions](missions.md)                                    |
+| Standby, Contracting, Training, or an Investigation; At assignment | Deployed on a Mission; At assignment                                      | The player deploys it, through the `deployAgents` Player action.                                                    | [Missions](missions.md)                                    |
 | Any Current assignment; In transit                                 | The same Current assignment; At assignment                                | Advance turn, in the Transit step.                                                                                  | This document, under [Transit rule](#transit-rule)         |
 | An Investigation; At assignment                                    | Standby; In transit                                                       | Advance turn: the Investigation completes in the Investigation progress step.                                       | [Investigations](investigations.md)                        |
 | Deployed; At assignment                                            | Recovery; In transit                                                      | Advance turn: the Agent survives the Battle in the Mission resolution step with health below its maximum health.    | [Missions](missions.md)                                    |
@@ -405,7 +405,7 @@ statement 2:
   [Investigations](investigations.md).
 
 **Deployed:** Deploying to a Mission site is the one order that does not start In transit. The moment the player
-deploys, the selected Agents are Deployed to that Mission site At assignment, and the Battle is fought in the next
+deploys, a new Mission at that Mission site is created and the selected Agents are Deployed on it At assignment, and the Battle is fought in the next
 Advance turn, under [Missions](missions.md). The way back does take transit: survivors become In transit during that
 Advance turn, so under statement 3 they are still In transit when it ends, and they arrive in the Advance turn after it.
 
@@ -550,7 +550,7 @@ every Agent whatever its lifecycle state.
 | An Agent's lifecycle state                                                                                       | Yes                        |
 | An Agent's skill, health, maximum health, exhaustion, Weapon, and weapon damage                                  | Yes                        |
 | An Agent's effective skill                                                                                       | Yes                        |
-| An Agent's Current assignment, including the Investigation or Mission site it references, and its Task phase     | Yes                        |
+| An Agent's Current assignment, including the Investigation or Mission it references, and its Task phase          | Yes                        |
 | Whether an Agent can be ordered                                                                                  | Yes                        |
 | An Agent's Participation history                                                                                 | Yes                        |
 | Every property of the AgentArchetype and of AgentParameters                                                      | Yes                        |
@@ -704,11 +704,11 @@ Advance turn ending turn 5, a5 arrives in the Transit step and is counted in Upk
 This example exercises [Current assignment changes](#current-assignment-changes), [Transit rule](#transit-rule), and
 [Agents that can be ordered](#agents-that-can-be-ordered). Agents a1 and a2, each on Standby, At assignment, with
 health 30 of 30, are deployed to Mission site s1 during Turn 5 through the `deployAgents` Player action of
-[Missions](missions.md).
+[Missions](missions.md), which creates the Mission m1 at s1.
 
 | Moment                         | a1                                                                           | a2                                                                            |
 | ------------------------------ | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Right after deployment, Turn 5 | Deployed to s1, At assignment                                                | Deployed to s1, At assignment                                                 |
+| Right after deployment, Turn 5 | Deployed on m1, At assignment                                                | Deployed on m1, At assignment                                                 |
 | Advance turn ending turn 5     | Fights in the Battle; ends with health 30 of 30; becomes Standby, In transit | Fights in the Battle; ends with health 18 of 30; becomes Recovery, In transit |
 | Turn 6                         | Standby, In transit; cannot be ordered                                       | Recovery, In transit; cannot be ordered                                       |
 | Advance turn ending turn 6     | Arrives in Transit; recovers no exhaustion                                   | Arrives in Transit; recovers no health                                        |
@@ -717,7 +717,7 @@ health 30 of 30, are deployed to Mission site s1 during Turn 5 through the `depl
 
 During Turn 5, after deployment, `assignAgents([a1], Standby)` is rejected because a1 is Deployed and cannot be ordered.
 In the Advance turn ending turn 5, a1 and a2 became In transit during the Advance turn, so both are still In transit
-when it ends. Each has s1's Mission in its Participation history from the Advance turn ending turn 5 on.
+when it ends. Each has m1 in its Participation history from the Advance turn ending turn 5 on.
 
 ## Transit: Deployed at once
 
@@ -789,7 +789,7 @@ are rejected and change nothing.
 This example exercises [Agent lifecycle](#agent-lifecycle) and [Orders and Task phase](#orders-and-task-phase). Given
 the fixture of [A. Valid relationships](domain-model.md#a-valid-relationships) in Domain Model, with a1 and a2 both
 Serving, the fixture satisfies both sections: each Agent has exactly one Current assignment, an Investigation for a1 and
-Deployed to s1 for a2, exactly one Task phase, In transit for a1 and At assignment for a2, and positive health.
+Deployed on m1 for a2, exactly one Task phase, In transit for a1 and At assignment for a2, and positive health.
 
 Each row independently changes that fixture and describes an invalid state.
 
@@ -798,7 +798,7 @@ Each row independently changes that fixture and describes an invalid state.
 | Mark a1 Killed while keeping its Current assignment and Task phase | [Agent lifecycle](#agent-lifecycle)                                                     |
 | Give a1 both a Training and an Investigation Current assignment    | [Agent lifecycle](#agent-lifecycle) and [Orders and Task phase](#orders-and-task-phase) |
 | Set the health of a1 to zero while a1 is Serving                   | [Agent lifecycle](#agent-lifecycle)                                                     |
-| Make a2 Deployed to s1 and In transit                              | [Orders and Task phase](#orders-and-task-phase)                                         |
+| Make a2 Deployed on m1 and In transit                              | [Orders and Task phase](#orders-and-task-phase)                                         |
 | Set the exhaustion of a1 above `exhaustion_cap`                    | [Attribute ranges](#attribute-ranges)                                                   |
 
 After [C. Completion and later Participation history](domain-model.md#c-completion-and-later-participation-history)

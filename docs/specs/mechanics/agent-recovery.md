@@ -125,7 +125,7 @@ does a Killed or Dismissed Agent.
 | Contracting                      | No              | No                  |
 | Training                         | No              | No                  |
 | An Investigation                 | No              | No                  |
-| Deployed to a Mission site       | No              | No                  |
+| Deployed on a Mission            | No              | No                  |
 
 The table applies to an Agent that satisfies statements 1 to 3 above. The list of rows is exhaustive. An Agent on Standby
 does not regain health in the Agent recovery step: only Recovery restores health, and [Missions](missions.md) sends an

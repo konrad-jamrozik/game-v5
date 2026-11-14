@@ -694,7 +694,7 @@ difficulty 3 Lead, adds 130 per Advance turn of work, giving the completion prob
 This example exercises [Leaving an Investigation](#leaving-an-investigation),
 [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation), [Progress gain](#progress-gain),
 [Completion](#completion), and [Projected completion probability](#projected-completion-probability). Initial state:
-Lead progression records a Won Mission site created by `locate_red_dawn_member`, the prerequisite of
+Lead progression records a Won Mission at a Mission site created by `locate_red_dawn_member`, the prerequisite of
 `locate_red_dawn_safehouse`, so `locate_red_dawn_safehouse` is available under
 [Lead availability](leads-and-progression.md#lead-availability), and it has no Active Investigation. During Turn 10 the
 player calls `startInvestigation(locate_red_dawn_safehouse, [a1, a2])`, creating Investigation i4 (difficulty 6).
@@ -768,7 +768,7 @@ kind initiative. Investigation i10 of L3 has working member a1 (effective skill 
 turn ending turn 50 begins.
 
 - Advance turn ending turn 50: in Investigation progress, i10 reaches 200, completion probability 200 / 400 = 1/2,
-  injected outcome "does not complete". In Mission resolution, a Won Mission site makes F1 Defeated, under
+  injected outcome "does not complete". In Mission resolution, a Won Mission makes F1 Defeated, under
   [Missions](missions.md). The Campaign does not end, because F2 is not Defeated.
 - Turn 51: i10 is still Active, with Current team {a1} and projected completion probability (200 + 100) / 400 = 3/4. A
   `startInvestigation(L3, [a2])` is rejected, because L3 is not available, its Faction being Defeated, and also because

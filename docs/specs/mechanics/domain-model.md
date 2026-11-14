@@ -74,12 +74,14 @@ The work the Agency discovers and undertakes.
 | Term                    | Definition                                                                                                                  |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | Lead                    | A line of inquiry the Agency can investigate. Investigating it can open further Leads and Mission sites.                    |
-| Lead progression        | What the Agency has earned on each Lead so far in a Campaign: the Mission sites that Lead created which were Won.           |
+| Lead progression        | What the Agency has earned on each Lead so far in a Campaign: the Won Missions at the Mission sites that Lead created.      |
 | Investigation           | One effort by a team of Agents to investigate one Lead, from its start until it concludes.                                  |
 | Mission site            | A place where Enemies of one Faction are present for a limited time, and to which the Agency can deploy one team of Agents. |
 | Initiative Mission site | A Mission site the Agency found by completing an Investigation of a Lead.                                                   |
 | Response Mission site   | A Mission site created by a Faction operation occurrence, where the Agency can stop that operation.                         |
-| Mission                 | The operation carried out at one Mission site by the one team of Agents deployed to it.                                     |
+| Mission                 | One deployment of a team of Agents to one Mission site, together with its outcome.                                          |
+| Initiative Mission      | A Mission at an Initiative Mission site.                                                                                    |
+| Response Mission        | A Mission at a Response Mission site.                                                                                       |
 | Current team            | The Agents currently assigned to a given Investigation or Mission.                                                          |
 
 ## Combat
@@ -116,22 +118,22 @@ Records kept to explain past gameplay.
 The following table is the complete set of concepts this specification declares, each with its modeling role. The
 [Glossary](#glossary) states what each concept is; this table states how it is modeled.
 
-| Concept                                       | Modeling role                                                                                                                                                                                    | Multiplicity within one Campaign                                                                                                                                                                                                                         |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Agency                                        | Campaign instance Type                                                                                                                                                                           | Exactly one, under [Agency per Campaign](#agency-per-campaign)                                                                                                                                                                                           |
-| Agent                                         | Campaign instance Type                                                                                                                                                                           | Any number; roster limits belong to Economy and Upgrades                                                                                                                                                                                                 |
-| Investigation                                 | Campaign instance Type                                                                                                                                                                           | At most one Active Investigation per Lead, under [Leads and Investigations](#leads-and-investigations)                                                                                                                                                   |
-| Mission site                                  | Campaign instance Type                                                                                                                                                                           | Any number; none in the initial Campaign state, under [Initial Campaign state](#initial-campaign-state); exactly one Response Mission site per Faction operation occurrence, under [Mission site kind and provenance](#mission-site-kind-and-provenance) |
-| Mission                                       | Part of the State of the Mission site that owns it, existing from deployment on, under [Mission at a Mission site](#mission-at-a-mission-site); neither a Campaign instance Type nor a Role Type | At most one per Mission site                                                                                                                                                                                                                             |
-| Enemy                                         | Campaign instance Type                                                                                                                                                                           | Any number, each belonging to exactly one Mission site, under [Combat and consequences](#combat-and-consequences)                                                                                                                                        |
-| Faction                                       | Campaign instance Type                                                                                                                                                                           | Exactly one per FactionArchetype supplied by the Game build, under [Initial Campaign state](#initial-campaign-state)                                                                                                                                     |
-| Combatant Role Type                           | Role Type adopted by Agent and Enemy, under [Combatant Role Type](#combatant-role-type); not a Campaign instance Type                                                                            | No Campaign instances                                                                                                                                                                                                                                    |
-| Lead                                          | GDR serving the Referenced GDR and Key for campaign facts purposes                                                                                                                               | Not a Campaign instance                                                                                                                                                                                                                                  |
-| Weapon and upgrade GDRs                       | GDRs                                                                                                                                                                                             | Not Campaign instances                                                                                                                                                                                                                                   |
-| Archetypes of the six Campaign instance Types | GDRs serving the Archetype purpose                                                                                                                                                               | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist                                                                                                                                                            |
+| Concept                                         | Modeling role                                                                                                         | Multiplicity within one Campaign                                                                                                                                                                                                                         |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agency                                          | Campaign instance Type                                                                                                | Exactly one, under [Agency per Campaign](#agency-per-campaign)                                                                                                                                                                                           |
+| Agent                                           | Campaign instance Type                                                                                                | Any number; roster limits belong to Economy and Upgrades                                                                                                                                                                                                 |
+| Investigation                                   | Campaign instance Type                                                                                                | At most one Active Investigation per Lead, under [Leads and Investigations](#leads-and-investigations)                                                                                                                                                   |
+| Mission site                                    | Campaign instance Type                                                                                                | Any number; none in the initial Campaign state, under [Initial Campaign state](#initial-campaign-state); exactly one Response Mission site per Faction operation occurrence, under [Mission site kind and provenance](#mission-site-kind-and-provenance) |
+| Mission                                         | Campaign instance Type                                                                                                | Any number; at most one per Mission site, under [Mission at a Mission site](#mission-at-a-mission-site)                                                                                                                                                  |
+| Enemy                                           | Campaign instance Type                                                                                                | Any number, each belonging to exactly one Mission site, under [Combat and consequences](#combat-and-consequences)                                                                                                                                        |
+| Faction                                         | Campaign instance Type                                                                                                | Exactly one per FactionArchetype supplied by the Game build, under [Initial Campaign state](#initial-campaign-state)                                                                                                                                     |
+| Combatant Role Type                             | Role Type adopted by Agent and Enemy, under [Combatant Role Type](#combatant-role-type); not a Campaign instance Type | No Campaign instances                                                                                                                                                                                                                                    |
+| Lead                                            | GDR serving the Referenced GDR and Key for campaign facts purposes                                                    | Not a Campaign instance                                                                                                                                                                                                                                  |
+| Weapon and upgrade GDRs                         | GDRs                                                                                                                  | Not Campaign instances                                                                                                                                                                                                                                   |
+| Archetypes of the seven Campaign instance Types | GDRs serving the Archetype purpose                                                                                    | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist                                                                                                                                                            |
 
 GDR purposes are defined under [Purposes of GDRs](../foundation/game-data-records.md#purposes-of-gdrs). Every Campaign instance of
-the six Campaign instance Types has the four properties stated under
+the seven Campaign instance Types has the four properties stated under
 [Campaign instance structure](../foundation/campaign-state.md#campaign-instance-structure). Each concept's section below states how
 the concept relates to the other concepts and names the Mechanics specification that refines it. That Mechanics
 specification owns what the concept has on its own. Being a property of a concept does not determine whether a value
@@ -146,16 +148,17 @@ flowchart TD
     CampaignState -->|contains| Progression["Lead progression"]
     CampaignState -->|contains| Investigations["Investigations"]
     CampaignState -->|contains| MissionSites["Mission sites"]
+    CampaignState -->|contains| Missions["Missions"]
     Investigations -->|each investigates| Lead["One Lead GDR"]
     Agents -->|each has| Assignment["Current assignment and Task phase"]
     Assignment -->|can reference| Investigations
-    Assignment -->|when Deployed, references| MissionSites
+    Assignment -->|when Deployed, references| Missions
     Agents -->|each has| Participation["Participation history"]
     Participation -->|records past| Investigations
-    Participation -->|records past| Missions["Missions"]
+    Participation -->|records past| Missions
     MissionSites -->|each owns| Enemies["Enemies"]
     MissionSites -->|each retains| Origin["Investigation origin or Faction operation occurrence origin"]
-    MissionSites -->|once Agents are deployed, each owns one| Missions
+    Missions -->|each takes place at one| MissionSites
     Missions -->|each holds| Team["Current team"]
     Missions -->|once the Battle is fought, each holds| Result["Battle result"]
 ```
@@ -166,7 +169,7 @@ Arrows show the labelled relationships, not inheritance.
 
 A Campaign contains one Agency, the current turn, [Panic](panic-and-endings.md#glossary) and the
 [Campaign ending](panic-and-endings.md#glossary), Lead progression, Agents, Factions,
-Investigations, and Mission sites. The Agency owns money, recurring funding, upgrade acquisitions, and its roster of
+Investigations, Mission sites, and Missions. The Agency owns money, recurring funding, upgrade acquisitions, and its roster of
 Agents. Campaign-wide properties, e.g. the current turn and Panic, belong directly to Campaign state, not to the
 Agency.
 
@@ -202,11 +205,10 @@ Campaign state contains, not which code creates it.
 
 ## Campaign instance identity scope
 
-Agency, Agent, Investigation, Mission site, Enemy, and Faction share one Instance ID scope: Instance IDs must be unique
-across all six Types within one Campaign. A repeated Investigation of one Lead, or a second Mission site with the same
-Archetype, is therefore a distinct Campaign instance with its own Instance ID. A Mission has no Instance ID of its own;
-the Instance ID of the Mission site that owns it identifies it, under
-[Mission at a Mission site](#mission-at-a-mission-site). [Campaign instance identity](../foundation/campaign-state.md#campaign-instance-identity) owns the
+Agency, Agent, Investigation, Mission site, Mission, Enemy, and Faction share one Instance ID scope: Instance IDs must
+be unique across all seven Types within one Campaign. A repeated Investigation of one Lead, or a second Mission site
+with the same Archetype, is therefore a distinct Campaign instance with its own Instance ID. A Mission and its Mission
+site have different Instance IDs. [Campaign instance identity](../foundation/campaign-state.md#campaign-instance-identity) owns the
 general identity rules; this section declares the scope those rules require.
 
 # Agent
@@ -214,7 +216,7 @@ general identity rules; this section declares the scope those rules require.
 An Agent is a Campaign instance belonging to the Agency. Agent adopts the Combatant Role Type, under
 [Combatant Role Type](#combatant-role-type). Its Current assignment gives its current orders; an Investigation
 Current assignment references that Investigation, and the Current assignment of a Deployed Agent references the Mission
-site it is Deployed to, so that the Agent takes part in that Mission site's Mission. Its Participation history links it
+it is Deployed on, so that the Agent takes part in that Mission. Its Participation history links it
 to the Investigations and Missions it previously participated in.
 
 [Agents](agents-spec.md) owns what an Agent has, the Agent lifecycle, the Current assignments an Agent
@@ -226,16 +228,15 @@ history with its final values and Participation history, under
 
 The Current team of an Investigation or Mission must agree with Current assignments: an Agent whose Current assignment
 references Investigation I belongs to the Current team of I, including while In transit, and an Agent whose Current
-assignment references Mission site S belongs to the Current team of the Mission of S. Whether an Agent In transit
+assignment references Mission M belongs to the Current team of M. Whether an Agent In transit
 contributes is owned by Agents and [Investigations](investigations.md). An Agent cannot belong to more
 than one Current team. In Committed state, the Agent-side and team-side views of Current team membership agree, and
-no Current assignment references a Mission site that has no Mission.
+no Current assignment references a Mission that is no longer Deployed.
 
 Participation history describes the same relationship for the past: an Agent's Participation history and the past
 participants of an Investigation or Mission are one relationship seen from opposite sides. Agents recorded in
 Participation history are not members of the Current team, and Participation history neither assigns nor reserves an
-Agent; e.g., the Mission of a Mission site that is Won retains an Agent's Participation history after that Agent is
-assigned elsewhere.
+Agent; e.g., a Won Mission retains an Agent's Participation history after that Agent is assigned elsewhere.
 
 # Lead and Investigation
 
@@ -262,7 +263,7 @@ same Lead is another Campaign instance, under [Campaign instance identity scope]
 
 ## Progression facts
 
-Wins, i.e. the Mission sites a Lead created which were Won, must be explicit Authoritative values in Campaign state
+Wins, i.e. the Won Missions at the Mission sites a Lead created, must be explicit Authoritative values in Campaign state
 with source references. Once recorded, a win therefore remains, even when the condition that earned it no longer holds, under
 [Authoritative and Derived values](../foundation/core-concepts.md#authoritative-and-derived-values) in Core Concepts.
 A Lead's completion count is a Derived value, calculated from Investigation Campaign instances as
@@ -272,14 +273,15 @@ Progression owns the predicates and effects of progression facts.
 
 # Mission site, Mission, Enemy, and Combat
 
-A Mission site is a Campaign instance whose Archetype is a MissionSiteArchetype. It owns the Enemies present at it and,
-once the player deploys a team of Agents to it, one Mission. A Mission holds its Current team and, once the
-[Battle](combat.md#glossary) is fought, its Battle result. An Enemy is a Campaign instance owned by one Mission site;
+A Mission site is a Campaign instance whose Archetype is a MissionSiteArchetype. It owns the Enemies present at it. A
+Mission is a Campaign instance whose Archetype is a MissionArchetype. It takes place at one Mission site, and it comes
+into existence when the player deploys a team of Agents to that Mission site. A Mission holds its Current team and,
+once the [Battle](combat.md#glossary) is fought, its Battle result. An Enemy is a Campaign instance owned by one Mission site;
 its Archetype is an EnemyArchetype. The Agents in a Mission's Current team and the Enemies of its Mission site are the
 Combatants of its Battle: Agent and Enemy both adopt the Combatant Role Type.
 
-[Missions](missions.md) owns what a Mission site and its Mission have, the Mission site lifecycle, deployment, expiry,
-and the consequences for the Campaign. [Combat](combat.md) owns Battle resolution and what a Battle result holds.
+[Missions](missions.md) owns what a Mission site and a Mission have, the Mission site lifecycle, the Mission
+lifecycle, deployment, expiry, and the consequences for the Campaign. [Combat](combat.md) owns Battle resolution and what a Battle result holds.
 
 ## Mission site kind and provenance
 
@@ -294,27 +296,32 @@ from the same Faction are distinct Campaign instances. A Faction operation occur
 or having no Response Mission site, is out of scope. Target Faction and initiating Faction are explicit references,
 never inferred from a Mission site's name.
 
+A Mission has the kind of its Mission site: a Mission at an Initiative Mission site is an Initiative Mission, and a
+Mission at a Response Mission site is a Response Mission. The kind of a Mission is a Derived value read through its
+Mission site reference; a Mission stores no kind of its own.
+
 ## Mission at a Mission site
 
-A Mission is not a Campaign instance Type: it has no Instance ID, no lifecycle, and no Archetype of its own. It is the
-part of a Mission site's State that exists from the moment the player deploys Agents to that Mission site, and the
-Mission site owns it. This is the same ownership by which a Mission owns its Battle result: a Battle result is not a
-Campaign instance but a part of the Mission that holds it, and a Mission is not a Campaign instance but a part of the
-Mission site that holds it.
+A Mission is a Campaign instance Type. Mission Constants must retain an Immutable reference to the one Mission site at
+which the Mission takes place: no Mission exists without a Mission site. A Mission comes into existence only when the
+player deploys a team of Agents to its Mission site; no other rule creates one.
 
 A Mission site has at most one Mission, because the Agency can deploy only one team of Agents to it, once. A Mission
-site that no team is ever deployed to never has a Mission. Once a Mission site has a Mission, it keeps that Mission
-permanently, and the Mission is retained in World history with its Mission site, under
-[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation).
+site that no team is ever deployed to never has a Mission. The Mission of a Mission site is a Derived value: the
+Mission whose Mission site reference identifies that Mission site. Both are retained in World history for the whole
+Campaign with their final values, under
+[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation), so the reference always
+resolves.
 
-A Mission resembles the properties a Combatant gains while a Battle lasts, under
-[Combatant Role Type](#combatant-role-type), with two differences: only a Mission site ever gains a Mission, and it
-keeps the Mission permanently. A Mission is therefore neither a Role Type nor a second Campaign instance.
+A Mission is its own Campaign instance, not a part of its Mission site's State, because it carries facts the Mission
+site does not have, e.g. the Turn it was deployed in, the team sent, its own lifecycle from deployment to its outcome,
+and its Battle result; and because Current assignments, Participation history, and Lead progression reference it
+directly. A Battle result, by contrast, is not a Campaign instance: it is a part of the Mission that holds it.
 
-Because a Mission does not exist before deployment, no Mission corresponds to a Mission site that no team has been
-deployed to, and no state of a Mission is needed to describe one. The state of the Mission site describes its Mission
-too; e.g., a Mission in progress is the Mission of a Mission site that is Deployed, and a Won Mission is the Mission of
-a Mission site that is Won. Missions owns these state names and the transitions between them.
+The Mission site and its Mission have separate lifecycles. The Mission site's lifecycle describes the opportunity,
+e.g. whether a team can still be deployed to it or whether it expired unattended; the Mission's lifecycle describes the
+attempt, e.g. whether its Battle is still to be fought and whether it was Won or Lost. Missions owns both sets of
+state names and the transitions between them.
 
 ## Combatant Role Type
 
@@ -351,7 +358,7 @@ An Enemy must belong to exactly one Mission site. Enemies sharing an Archetype s
 Battle changes the participating Agent and Enemy Campaign instances themselves: the Agent changed by a Battle is the
 same Agent that returns to the Agency. A Battle result is distinct from the consequences for the Campaign that Missions
 determines from it, so a later scope can give damage-related benefits to a Battle the team did not prevail in; in this
-scope [Missions](missions.md) gives none, and a Lost Mission site yields nothing. A retained Battle
+scope [Missions](missions.md) gives none, and a Lost Mission yields nothing. A retained Battle
 result is never rewritten, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation). Combat owns which facts a Battle
 result retains.
@@ -378,7 +385,7 @@ effects.
 
 **Proposed rule:** In this scope no Mechanics specification creates a Report, so the set of Reports of a Campaign is
 empty and `getReports()` returns none. Everything a Report would explain is already retained as Player-visible
-information: a Mission's Battle result, each Mission site's lifecycle state and Turn created, each Investigation's
+information: a Mission's Battle result and lifecycle state, each Mission site's lifecycle state and Turn created, each Investigation's
 lifecycle state and Investigation progress, each Faction's Faction activity level, the Campaign ending and its Ending
 reasons, and the Turn series of money. The following rules state how a Report must behave if a later scope creates one.
 
@@ -398,17 +405,17 @@ A rule that creates Reports, and what each Report states, is deferred beyond thi
 
 # Edge cases and failure behavior
 
-| Case                                                                                          | Result and owner                                                                                                                                                                                                                                                                                                |
-| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| An Agent is In transit to an Investigation                                                    | The Agent belongs to its Current team; arrival and progress timing belong to Agents and Investigations                                                                                                                                                                                                          |
-| The last Agent leaves the Current team of an Active Investigation                             | No Committed state contains an Active Investigation with an empty Current team; the resulting lifecycle and numerical effects belong to Investigations                                                                                                                                                          |
-| An Investigation concludes while members of its Current team are In transit                   | In the next Committed state no Current assignment references it; the replacement Current assignments belong to Agents and Investigations                                                                                                                                                                        |
-| The player deploys Agents to a Mission site                                                   | The Mission site gains its Mission, whose Current team is those Agents, and each of them is Deployed with a Current assignment that references the Mission site, under [Current versus historical teams](#current-versus-historical-teams); preconditions, rejection, and transit belong to Missions and Agents |
-| A team is to be deployed to a Mission site that already has a Mission                         | Never valid: a Mission site has at most one Mission, under [Mission at a Mission site](#mission-at-a-mission-site); Missions owns the rejection                                                                                                                                                                 |
-| A Mission site is never deployed to, e.g. it is Expired                                       | It never has a Mission or a Battle result, under [Mission at a Mission site](#mission-at-a-mission-site); Missions owns the consequences                                                                                                                                                                        |
-| A Mission retains an Agent in its Participation history after its Mission site is Won or Lost | The Agent's Current assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams)                                                                                                                                                                                       |
-| The roster is empty, or no Mission sites or Investigations exist                              | Valid; [Panic and Endings](panic-and-endings.md) owns defeat conditions                                                                                                                                                                                                                                         |
-| A Faction is Defeated while Mission sites targeting it or Leads affiliated with it remain     | References remain resolvable under [References](../foundation/campaign-state.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes                                                                                                                          |
+| Case                                                                                      | Result and owner                                                                                                                                                                                                                                                                                                                |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| An Agent is In transit to an Investigation                                                | The Agent belongs to its Current team; arrival and progress timing belong to Agents and Investigations                                                                                                                                                                                                                          |
+| The last Agent leaves the Current team of an Active Investigation                         | No Committed state contains an Active Investigation with an empty Current team; the resulting lifecycle and numerical effects belong to Investigations                                                                                                                                                                          |
+| An Investigation concludes while members of its Current team are In transit               | In the next Committed state no Current assignment references it; the replacement Current assignments belong to Agents and Investigations                                                                                                                                                                                        |
+| The player deploys Agents to a Mission site                                               | A new Mission at that Mission site comes into existence, whose Current team is those Agents, and each of them is Deployed with a Current assignment that references the Mission, under [Current versus historical teams](#current-versus-historical-teams); preconditions, rejection, and transit belong to Missions and Agents |
+| A team is to be deployed to a Mission site that already has a Mission                     | Never valid: a Mission site has at most one Mission, under [Mission at a Mission site](#mission-at-a-mission-site); Missions owns the rejection                                                                                                                                                                                 |
+| A Mission site is never deployed to, e.g. it is Expired                                   | It never has a Mission or a Battle result, under [Mission at a Mission site](#mission-at-a-mission-site); Missions owns the consequences                                                                                                                                                                                        |
+| A Mission retains an Agent in its Participation history after it is Won or Lost           | The Agent's Current assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams)                                                                                                                                                                                                       |
+| The roster is empty, or no Mission sites or Investigations exist                          | Valid; [Panic and Endings](panic-and-endings.md) owns defeat conditions                                                                                                                                                                                                                                                         |
+| A Faction is Defeated while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-state.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes                                                                                                                                          |
 
 # Acceptance examples
 
@@ -422,15 +429,15 @@ Given turn 3 and:
 
 - Campaign state c1 with its single Agency ag1.
 - Archetypes supplied by the current Game build: G1 (Agency), A1 (Agent), I1 (Investigation), S1 (Mission site),
-  F1 (Faction), and E1 (Enemy), plus the GDRs L1 and L2 (Leads) and W1 (weapon). These are test GDRs with no other
+  M1 (Mission), F1 (Faction), and E1 (Enemy), plus the GDRs L1 and L2 (Leads) and W1 (weapon). These are test GDRs with no other
   required properties in this fixture.
 - Faction f1 with Archetype F1.
 - Agent a1 whose Current assignment references Investigation i1, In transit.
-- Agent a2, Deployed to Mission site s1, so that its Current assignment references s1, At assignment.
+- Agent a2, Deployed on Mission m1, so that its Current assignment references m1, At assignment.
 - Investigation i0 referring to L2, no longer Active, with an empty Current team.
 - Active Investigation i1 referring to L1, Current team {a1}.
-- Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Deployed, with a
-  Mission whose Current team is {a2}.
+- Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Attempted.
+- Mission m1 with Archetype M1 at Mission site s1, deployed in turn 3, Deployed, with Current team {a2}.
 - Enemy e1 owned by s1, with Archetype E1.
 - Each Agent and Enemy has skill 100, health 10 of maximum health 10, exhaustion 0, and equipped values referring to W1.
 - Other collections empty.
@@ -438,21 +445,20 @@ Given turn 3 and:
 Each Campaign instance has the following allocation of the properties this specification names; the properties that
 Mechanics specifications add are assumed valid:
 
-| Campaign instance | Instance ID         | Archetype | Constants                                                              | State                                                                                                       |
-| ----------------- | ------------------- | --------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| ag1               | ag1                 | G1        | Empty                                                                  | Resources, upgrades, roster {a1, a2}                                                                        |
-| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                             | Current assignment, Task phase, the properties the Combatant Role Type requires, and Participation history  |
-| i0                | i0                  | I1        | Lead L2                                                                | Not Active, empty Current team, Participation history                                                       |
-| i1                | i1                  | I1        | Lead L1                                                                | Active, Current team {a1}, Participation history                                                            |
-| s1                | s1                  | S1        | Initiative kind; origin Investigation i0 of Lead L2; target Faction f1 | Deployed, Enemies {e1}, and its Mission: Current team {a2}, and no Battle result until the Battle is fought |
-| e1                | e1                  | E1        | Mission site s1                                                        | The properties the Combatant Role Type requires                                                             |
-| f1                | f1                  | F1        | Empty                                                                  | The values Factions owns                                                                                    |
-
-The Mission of s1 has no row of its own, because it is not a Campaign instance: it has no Instance ID, Archetype, or
-Constants, and it is part of the State of s1.
+| Campaign instance | Instance ID         | Archetype | Constants                                                              | State                                                                                                      |
+| ----------------- | ------------------- | --------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| ag1               | ag1                 | G1        | Empty                                                                  | Resources, upgrades, roster {a1, a2}                                                                       |
+| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                             | Current assignment, Task phase, the properties the Combatant Role Type requires, and Participation history |
+| i0                | i0                  | I1        | Lead L2                                                                | Not Active, empty Current team, Participation history                                                      |
+| i1                | i1                  | I1        | Lead L1                                                                | Active, Current team {a1}, Participation history                                                           |
+| s1                | s1                  | S1        | Initiative kind; origin Investigation i0 of Lead L2; target Faction f1 | Attempted, Enemies {e1}                                                                                    |
+| m1                | m1                  | M1        | Mission site s1; turn deployed 3; team sent {a2}                       | Deployed, Current team {a2}, and no Battle result until the Battle is fought                               |
+| e1                | e1                  | E1        | Mission site s1                                                        | The properties the Combatant Role Type requires                                                            |
+| f1                | f1                  | F1        | Empty                                                                  | The values Factions owns                                                                                   |
 
 Campaign state c1 holds turn 3, Lead progression, and collections containing Agency ag1, Agents a1 and a2,
-Investigations i0 and i1, Mission site s1, and Faction f1; e1 and the Mission of s1 are reached through s1. Required
+Investigations i0 and i1, Mission site s1, Mission m1, and Faction f1; e1 is reached through s1, and the Mission of
+s1 is m1, the Mission whose Mission site reference identifies s1. Required
 references resolve in c1. Immutable affiliation, origin, and target references are assumptions of this fixture, not
 lifecycle rules.
 
@@ -473,33 +479,34 @@ Each row independently changes fixture A and describes an invalid state.
 | Change                                                                                    | Violation                                                             |
 | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | Give e1 the same Instance ID as a1                                                        | [Campaign instance identity scope](#campaign-instance-identity-scope) |
-| Give the Mission of s1 an Instance ID of its own                                          | [Campaign instance identity scope](#campaign-instance-identity-scope) |
+| Give m1 the same Instance ID as s1                                                        | [Campaign instance identity scope](#campaign-instance-identity-scope) |
 | Add a second Agency                                                                       | [Agency per Campaign](#agency-per-campaign)                           |
-| List a1 in the Current team of the Mission of s1 while a1 is assigned to i1               | [Current versus historical teams](#current-versus-historical-teams)   |
-| Remove the Mission of s1 while the Current assignment of a2 references s1                 | [Current versus historical teams](#current-versus-historical-teams)   |
+| List a1 in the Current team of m1 while a1 is assigned to i1                              | [Current versus historical teams](#current-versus-historical-teams)   |
+| Make m1 Won while the Current assignment of a2 still references m1                        | [Current versus historical teams](#current-versus-historical-teams)   |
 | Set the health of a1 or e1 to 11 with maximum health 10, or set its exhaustion below zero | [Attribute bounds](#attribute-bounds)                                 |
 | Add another Active Investigation for L1, or leave i1 Active with an empty Current team    | [Leads and Investigations](#leads-and-investigations)                 |
 | Mark s1 as a Response Mission site without a Faction operation occurrence origin          | [Mission site kind and provenance](#mission-site-kind-and-provenance) |
-| Give s1 a second Mission                                                                  | [Mission at a Mission site](#mission-at-a-mission-site)               |
+| Add a second Mission whose Mission site reference identifies s1                           | [Mission at a Mission site](#mission-at-a-mission-site)               |
+| Remove the Mission site reference of m1                                                   | [Mission at a Mission site](#mission-at-a-mission-site)               |
 | Assign e1 a second owning Mission site                                                    | [Combat and consequences](#combat-and-consequences)                   |
 
 ## C. Completion and later Participation history
 
-Given i1 is Completed and the Battle of the Mission of s1 is fought and s1 becomes Won, under their owning
-specifications, a valid resulting state has:
+Given i1 is Completed and the Battle of m1 is fought and m1 becomes Won, under their owning specifications, a valid
+resulting state has:
 
 - i1 no longer Active, with an empty Current team, and a1 retained in its Participation history.
-- s1 still holding its Mission, which now holds a retained Battle result, has an empty Current team, and has a2 in its
-  Participation history; no Current assignment of a2 references s1.
-- a1 and a2 each with a Current assignment that references neither i1 nor s1.
-- An explicit progression fact recording the win of s1 against L2, which created s1 through i0, and completion counts
+- s1 still Attempted, and m1 still its Mission; m1 now holds a retained Battle result, has an empty Current team, and
+  has a2 in its Participation history; no Current assignment of a2 references m1.
+- a1 and a2 each with a Current assignment that references neither i1 nor m1.
+- An explicit progression fact recording the win of m1 against L2, which created s1 through i0, and completion counts
   of 1 for L1 and 1 for L2, derived from i1 and i0 respectively.
 
 This satisfies [Current versus historical teams](#current-versus-historical-teams),
 [Leads and Investigations](#leads-and-investigations), [Progression facts](#progression-facts),
 [Mission at a Mission site](#mission-at-a-mission-site), and [Combat and consequences](#combat-and-consequences).
 Assigning a1 to another Investigation does not rewrite the Participation history of i1, and assigning a2 elsewhere
-does not rewrite the Participation history of the Mission of s1. A later Investigation of L1 has a new Instance ID
+does not rewrite the Participation history of m1. A later Investigation of L1 has a new Instance ID
 ([Leads and Investigations](#leads-and-investigations)). This fixture does not choose the replacement Current
 assignments or turn timing.
 

@@ -28,7 +28,7 @@ This document does not own, e.g.:
 
 - The Response Mission site a Faction operation occurrence creates: the MissionSiteArchetype it is created from, its
   creation, its lifecycle, and its consequences belong to [Missions](missions.md).
-- What causes a Faction to become Defeated: the Mission site consequence that defeats a Faction belongs to
+- What causes a Faction to become Defeated: the Mission consequence that defeats a Faction belongs to
   [Missions](missions.md).
 - When Faction activity happens relative to the rest of Advance turn: [Turn Advancement](turn-advancement.md) owns the
   order of every Turn advancement step.
@@ -63,8 +63,8 @@ Game build, Derived value, and Authoritative value are defined by the
 state, Turn, Session controller, Autopilot AI, Player API, and Developer API are defined by the
 [Engine Contract glossary](../foundation/engine-contract.md#glossary). Probability is defined by the
 [Numbers glossary](../foundation/numbers.md#glossary). Turn advancement step is defined by the
-[Turn Advancement glossary](turn-advancement.md#glossary). The Mission site states, e.g. Active and Won, are defined by
-[Missions](missions.md), and Campaign ending by [Panic and Endings](panic-and-endings.md).
+[Turn Advancement glossary](turn-advancement.md#glossary). The Mission site states, e.g. Active and Expired, and the Mission states, e.g. Won, are
+defined by [Missions](missions.md), and Campaign ending by [Panic and Endings](panic-and-endings.md).
 
 | Term                    | Definition                                                                                                                                |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -110,8 +110,8 @@ A FactionOperationLevel describes one Faction operation level. The following pro
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `level`              | The Faction operation level as a whole number; it is the key that `operation_level_weights` uses, and the value that the MissionSiteArchetype property `operation_level`, owned by Missions, names. | [Operation level](#operation-level); [Missions](missions.md), which owns how a Response Mission site's MissionSiteArchetype is selected |
 | `name`               | The level's display name.                                                                                                                                                                           | [Player-visible information](#player-visible-information)                                                                               |
-| `on_win`             | What the Agency gains when a Response Mission site of this level is Won.                                                                                                                            | [Missions](missions.md), which owns its meaning                                                                                         |
-| `on_ignored_or_lost` | What changes when a Response Mission site of this level is Expired or Lost.                                                                                                                         | [Missions](missions.md), which owns its meaning                                                                                         |
+| `on_win`             | What the Agency gains when a Response Mission at a site of this level is Won.                                                                                                                       | [Missions](missions.md), which owns its meaning                                                                                         |
+| `on_ignored_or_lost` | What changes when a Response Mission site of this level is Expired or its Mission Lost.                                                                                                             | [Missions](missions.md), which owns its meaning                                                                                         |
 
 ## Faction GDR validation
 
@@ -326,7 +326,7 @@ rule; the game-ts values and its avoidance of repeated operations are not carrie
 
 **Proposed rule:** Defeated is a permanent fact of a Faction. It changes exactly once at most, from no to yes, and
 never back. This document defines the effect of making a Faction Defeated; [Missions](missions.md) owns the Mission
-site consequence that applies it. No other rule makes a Faction Defeated.
+consequence that applies it. No other rule makes a Faction Defeated.
 
 Making a Faction F Defeated during an Advance turn has the following complete effects on F, applied at once:
 
@@ -339,9 +339,9 @@ turn keeps its first value.
 
 The following table states every change of Defeated. Every change not listed, e.g. from yes to no, is impossible.
 
-| From | To  | Trigger                                                                          | Condition |
-| ---- | --- | -------------------------------------------------------------------------------- | --------- |
-| No   | Yes | A Mission site consequence owned by [Missions](missions.md) defeats the Faction. | None.     |
+| From | To  | Trigger                                                                     | Condition |
+| ---- | --- | --------------------------------------------------------------------------- | --------- |
+| No   | Yes | A Mission consequence owned by [Missions](missions.md) defeats the Faction. | None.     |
 
 A Faction whose Defeated is yes no longer does any of the following; the list is exhaustive for this document's rules:
 
@@ -400,7 +400,7 @@ Developer API.
 - **Defeated earlier in the same Advance turn:** A Faction made Defeated in Mission resolution does not apply Faction
   activity in the same Advance turn, even if a countdown of it would have reached zero ([Faction activity](#faction-activity)).
 - **Defeated twice:** Applying the effect of [Defeat](#defeat) to a Faction that is already Defeated changes nothing.
-- **Existing Response Mission sites:** An Active or Deployed Response Mission site of the same Faction does not affect a
+- **Existing Response Mission sites:** An Active Response Mission site of the same Faction, or a Deployed Mission at one, does not affect a
   new occurrence, and the same Faction operation level may occur again
   ([Faction operation occurrence generation](#faction-operation-occurrence-generation)).
 - **Several Factions:** Each Faction applies Faction activity independently; several Faction operation occurrences, one

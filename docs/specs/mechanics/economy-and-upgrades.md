@@ -262,7 +262,7 @@ cap = base + sum over every Upgrade U whose effect is the cap's effect identifie
 | Cap           | base                 | Effect identifier | What it limits                                                                                                             | Applied by                                                                              |
 | ------------- | -------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | Agent cap     | `base_agent_cap`     | `agent_cap`       | The number of Serving Agents, whatever their Current assignment and Task phase.                                            | [Hiring Agents](#hiring-agents), in this document                                       |
-| Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Current assignment is Deployed, over every Mission site together. | The `deployAgents` Player action of [Missions](missions.md)                             |
+| Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Current assignment is Deployed, over every Mission together.      | The `deployAgents` Player action of [Missions](missions.md)                             |
 | Training cap  | `base_training_cap`  | `training_cap`    | The number of Serving Agents whose Current assignment is Training, counting both those At assignment and those In transit. | [Training cap on assigning Agents](#training-cap-on-assigning-agents), in this document |
 
 Inputs: base is a whole number of Agents of at least 0; each increment is a whole number of Agents of at least 0; each
@@ -664,7 +664,7 @@ value. The values they read are:
 
 "The Advance turn ending turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. Unless an
 example states otherwise, no rule of [Missions](missions.md) changes money or funding in the Advance turns it describes,
-i.e. no Mission site is Won, Lost, or Expired in them.
+i.e. no Mission is Won or Lost and no Mission site is Expired in them.
 
 ## Campaign creation
 
@@ -738,8 +738,8 @@ Turn-end state.
 ## Upkeep counts every Serving Agent
 
 This example exercises [Upkeep](#upkeep) and [Agency income](#agency-income). The Turn-end state of Turn 9 has money 300
-and funding 20, and these Agents: a1 on Standby, At assignment; a2 on Contracting, In transit; a3 Deployed to Mission
-site s1; a4 on Recovery, At assignment; a5 on Contracting, At assignment; a6 on Training, In transit; a7 Killed in an
+and funding 20, and these Agents: a1 on Standby, At assignment; a2 on Contracting, In transit; a3 Deployed on a Mission at
+Mission site s1; a4 on Recovery, At assignment; a5 on Contracting, At assignment; a6 on Training, In transit; a7 Killed in an
 earlier Turn; and a8 Dismissed. Projected income is 20 + 30 × 1 = 50 and projected upkeep is 10 × 6 = 60.
 
 In the Advance turn ending turn 9, Agency income counts only a5, because a2 arrives in the Transit step: money
@@ -763,15 +763,15 @@ money 0, and `addMoney(75)` after it makes money 75; `hireAgent()` then succeeds
 This example exercises [Funding changes](#funding-changes) and [Agency income](#agency-income), with the amounts of
 `operation_level_2`; [Missions](missions.md) owns when each applies.
 
-- **Win:** With funding 20, a Response Mission site of Faction operation level 2 is Won in the Mission resolution step
+- **Win:** With funding 20, a Response Mission at a site of Faction operation level 2 is Won in the Mission resolution step
   of the Advance turn ending turn 6. That Advance turn's Agency income step already used funding 20. Money rises by 30,
   and funding becomes max(0, 20 + 5) = 25. The Agency income step of the Advance turn ending turn 7 uses funding 25, and
   projected income in Turn 7 includes it.
 - **Loss at the floor:** With funding 0, such a Mission site is Expired in the Mission site expiration step. Funding
   becomes max(0, 0 − 1) = 0.
-- **Two changes in one step:** With funding 0, in one Mission resolution step one such Mission site is Won and another
-  is Lost. The amounts +5 and −1 are added first: funding becomes max(0, 0 + 5 − 1) = 4, not 5, whichever Mission site
-  an implementation resolves first.
+- **Two changes in one step:** With funding 0, in one Mission resolution step one such Mission is Won and another is
+  Lost. The amounts +5 and −1 are added first: funding becomes max(0, 0 + 5 − 1) = 4, not 5, whichever Mission an
+  implementation resolves first.
 
 ## Hiring at the Agent cap
 
@@ -814,7 +814,7 @@ nothing:
 
 This example exercises [Agency caps](#agency-caps) and [Cap effects](#cap-effects); the rejection itself belongs to the
 `deployAgents` Player action of [Missions](missions.md). During Turn 15 the Agency has money 1000, three Agents
-Deployed to Mission site s1, and six Agents that can be ordered. The Transport cap is 4 and the number of Deployed
+Deployed on a Mission at Mission site s1, and six Agents that can be ordered. The Transport cap is 4 and the number of Deployed
 Agents is 3, so deploying two Agents to Mission site s2 would make 5, more than 4, and Missions rejects it; deploying
 one would make 4 and is within the Transport cap. Instead the player calls `purchaseUpgrade(transport_cap)`: money
 becomes 0, acquisitions of `transport_cap` become 1, and the Transport cap becomes 4 + 2 × 1 = 6 at once, so deploying

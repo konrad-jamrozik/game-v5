@@ -27,7 +27,7 @@ quantities and the Percent value.
 This document does not own, e.g.:
 
 - Any single increase or reduction of Panic: each rule that raises or lowers Panic, e.g. the consequence of a Mission site
-  being Expired or Won, belongs to [Missions](missions.md). This document owns only the interface those rules add
+  being Expired or of a Mission being Won, belongs to [Missions](missions.md). This document owns only the interface those rules add
   to, under [Pending panic change](#pending-panic-change).
 - What makes a Faction Defeated: that belongs to [Factions](factions.md) and [Missions](missions.md).
 - The order of the Turn advancement steps, or which step a rule belongs to: [Turn Advancement](turn-advancement.md) owns
@@ -59,7 +59,7 @@ Campaign, Campaign state, GDR, Game build, Authoritative value, and Derived valu
 are defined by the [Campaign State glossary](../foundation/campaign-state.md#glossary). Player action, Committed state,
 Turn, Player API, Developer API, Session controller, and Player-visible information are defined by the
 [Engine Contract glossary](../foundation/engine-contract.md#glossary). Percent value is defined by the
-[Numbers glossary](../foundation/numbers.md#glossary). Faction, Agency, Mission site, and Response Mission site are
+[Numbers glossary](../foundation/numbers.md#glossary). Faction, Agency, Mission site, Response Mission site, and Mission are
 defined by the [Domain Model glossary](domain-model.md#glossary). Turn advancement step is defined by the
 [Turn Advancement glossary](turn-advancement.md#glossary). Defeated is a fact of a Faction that
 [Defeat](factions.md#defeat) in Factions owns.
@@ -408,14 +408,14 @@ Advance turn ending turn t" is the Advance turn committed during Turn t.
 This example exercises [Pending panic change](#pending-panic-change), [Panic step](#panic-step), [Defeat](#defeat), and
 [Recording the ending](#recording-the-ending).
 
-Initial state: Turn 12, Panic 97, money 40, funding 0, and exactly 4 Agents, all Deployed to one `raid_safehouse`
+Initial state: Turn 12, Panic 97, money 40, funding 0, and exactly 4 Agents, all Deployed on one Mission at a `raid_safehouse`
 Mission site. A Response Mission site of Faction operation level 2 is Active and expires in this Advance turn. In the
 Advance turn ending turn 12:
 
 - Agency income adds 0, because funding is 0 and no Agent is on Contracting.
 - Upkeep takes `10 × 4 = 40`, so money is 0.
-- In Mission resolution, the Battle of the `raid_safehouse` Mission site is stipulated to be Prevailed, so the site is
-  Won. It adds money 100 and funding 5, so money is 100 and funding is 5, and it adds a Panic reduction of 2.
+- In Mission resolution, the Battle of the Mission at the `raid_safehouse` Mission site is stipulated to be Prevailed, so
+  the Mission is Won. It adds money 100 and funding 5, so money is 100 and funding is 5, and it adds a Panic reduction of 2.
 - In Mission site expiration, the Response Mission site is Expired and adds a Panic increase of 8, and funding falls
   from 5 to 4.
 
@@ -498,16 +498,16 @@ Initial state: Panic 95, money -5 after the Upkeep step. A Panic increase of 8 i
 This example exercises [Victory](#victory), [Defeat](#defeat), and [Ending check step](#ending-check-step).
 
 Initial state: Turn 150, Panic 95, money 30, funding 0, and Red Dawn, the only Faction, not Defeated. The Agency has
-exactly 4 Agents, which equals the Transport cap: Agents a1 and a2 are Deployed to a `raid_hq` Mission site, and Agents a3
-and a4 are Deployed to a Response Mission site of `operation_level_2` of Red Dawn. No Agent is on Contracting.
+exactly 4 Agents, which equals the Transport cap: Agents a1 and a2 are Deployed on a Mission at a `raid_hq` Mission site, and
+Agents a3 and a4 are Deployed on a Mission at a Response Mission site of `operation_level_2` of Red Dawn. No Agent is on Contracting.
 
 In the Advance turn ending turn 150:
 
 - Agency income adds 0, because funding is 0 and no Agent is on Contracting.
 - Upkeep takes `10 × 4 = 40`, so money is -10.
-- In Mission resolution, the Battle of the `raid_hq` Mission site is stipulated to be Prevailed, so the site is Won and
-  makes Red Dawn Defeated, with the Defeated turn 150, under [Defeat](factions.md#defeat) in Factions. In the same step,
-  the Battle of the Response Mission site is stipulated to be Wiped, so that site is Lost and adds a Panic increase of 8
+- In Mission resolution, the Battle of the Mission at the `raid_hq` Mission site is stipulated to be Prevailed, so that
+  Mission is Won and makes Red Dawn Defeated, with the Defeated turn 150, under [Defeat](factions.md#defeat) in Factions. In the same step,
+  the Battle of the Response Mission is stipulated to be Wiped, so that Mission is Lost and adds a Panic increase of 8
   to the Pending panic change. Funding stays 0, because a funding change of -1 is floored at 0.
 - The Panic step gives `max(0, min(100, 95 + 8)) = 100`.
 
