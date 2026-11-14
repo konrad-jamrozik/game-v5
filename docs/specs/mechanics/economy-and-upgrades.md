@@ -11,43 +11,14 @@
 
 # Overview
 
-This document defines where the Agency's money comes from and where it goes: what the
-[Agency](domain-model.md#glossary) has, how the Agency is created, the Agency income and Upkeep rules applied during
-Advance turn, the Agent cap, Transport cap, and Training cap, what each Upgrade does, the Player actions `hireAgent`,
-`dismissAgents`, and `purchaseUpgrade`, the cheat operation `addMoney`, the two Turn series of money, the two Campaign
-configuration values it owns, which of these values are Player-visible information, and the validation rules for the
-Game Data Records (GDRs) it owns.
+The [Agency](domain-model.md#glossary) has money, funding, and acquisitions of Upgrades. In every Advance turn it
+receives income, its funding plus contracting income for each Agent working on Contracting, and then pays upkeep for
+each Serving Agent. Money may become negative; funding is never below 0.
 
-It refines Domain Model's Agency and Weapons and upgrades contracts, i.e.
-[Campaign and Agency](domain-model.md#campaign-and-agency) and [Weapons and upgrades](domain-model.md#weapons-and-upgrades),
-with the Agency's properties, its creation, its resource flows, the caps, and the Upgrade effects. It refines Agents
-with two details about subjects that Agents owns: the Training cap precondition of the `assignAgents` Player action
-under [Assigning Agents](agents-spec.md#assigning-agents), and how the weapon damage Upgrade effect changes the one
-value listed under [Modifiable values](agents-spec.md#modifiable-values), including the initial weapon damage under
-[Agent creation](agents-spec.md#agent-creation). It uses Agents to count Agents by lifecycle state, Current assignment,
-and Task phase, and to create the Agent that hiring adds. It uses Configuration for the rules every Campaign
-configuration value follows, and [Numbers](../foundation/numbers.md) for whole-number arithmetic. Among the
-Mechanics specifications, this document depends only on Domain Model and Agents.
-
-It does not own, e.g.:
-
-- The money and funding that a Mission site's consequences add or remove, and the `deployAgents` Player action that
-  the Transport cap constrains: [Missions](missions.md) owns both. Missions changes funding only through
-  [Funding changes](#funding-changes) and applies the Transport cap as [Agency caps](#agency-caps) defines it.
-- Whether negative money ends the Campaign: [Panic and Endings](panic-and-endings.md) owns the Campaign ending
-  predicates and the rejection of every Player action after a Campaign ending. This document states only that money may
-  be negative.
-- The order of the Turn advancement steps: [Turn Advancement](turn-advancement.md) owns it.
-
-These are ownership pointers; this document relies on none of them.
-
-The following features are out of scope and are not specified here: the Upgrades raising training skill gain,
-exhaustion recovery, health recovery, and maximum health; contracting income that depends on an Agent's skill; prices
-that rise with each acquisition; a limit on the acquisitions of an Upgrade; selling an Upgrade or lowering a cap; a
-refund on dismissal; and Campaign configuration values of this document that are adjustable during play. This list is
-exhaustive. With them out
-of scope, an Upgrade's price never changes, a cap never falls, and both Campaign configuration values of this document
-are fixed after creation.
+The player spends money to hire Agents and to purchase Upgrades, and may dismiss Agents on Standby, At assignment, for
+no refund. Three caps limit the Agency: the Agent cap on Serving Agents, the Transport cap on Deployed Agents, and the
+Training cap on Agents on Training. Each Upgrade either raises one cap or raises the weapon damage of Agents, and it may
+be purchased any number of times at the same price.
 
 # Relationships
 
@@ -66,19 +37,9 @@ are fixed after creation.
 
 # Glossary
 
-Agency, Agent, Current assignment, Task phase, Mission site, Mission, and Current team are defined by the
-[Domain Model glossary](domain-model.md#glossary). Standby, Contracting, Training, Recovery, Deployed, and Weapon damage
-are defined by the [Agents glossary](agents-spec.md#glossary); Serving, Killed, and Dismissed are the Agent lifecycle
-states under [Agent lifecycle](agents-spec.md#agent-lifecycle). Campaign instance, Instance ID, Archetype, Constants,
-State, World history, Campaign configuration, and Turn series are defined by the
-[Campaign State glossary](../foundation/campaign-state.md#glossary). GDR, Game build, Authoritative value, and Derived
-value are defined by the [Core Concepts glossary](../foundation/core-concepts.md#glossary). Player-visible information,
-Player action, Committed state, Turn, Turn-start state, Turn-end state, Session controller, Player API, and Developer
-API are defined by the [Engine Contract glossary](../foundation/engine-contract.md#glossary). Campaign configuration
-preset and Preset edit are defined by the [Configuration glossary](../foundation/configuration.md#glossary). Turn
-advancement step and Step-start value are defined by the [Turn Advancement glossary](turn-advancement.md#glossary).
-Money, funding, upkeep, and income are plain words for the Agency's properties and their changes, as Domain Model's
-Agency definition uses them; they are not glossary terms.
+These terms are specific to the Agency's economy. General terms are in the
+[Domain Model glossary](domain-model.md#glossary); terms about Agents are in the
+[Agents glossary](agents-spec.md#glossary).
 
 | Term          | Definition                                                                 |
 | ------------- | -------------------------------------------------------------------------- |
@@ -89,14 +50,13 @@ Agency definition uses them; they are not glossary terms.
 
 # Economy GDRs
 
-This document owns the three GDR Types below and states which rule reads each property. A rule in this document names
-the property it reads and never copies a GDR value; only the [Acceptance examples](#acceptance-examples) show values.
-The GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the
-YAML files it names. Every property table below is exhaustive apart from the `id` and `type` that every GDR has.
+The Game Data Records (GDRs) a Game build supplies, and their values, are listed by
+[Bootstrap GDRs](../content/bootstrap-gdrs.md) and the YAML files it names. Every property table below is exhaustive
+apart from the `id` and `type` that every GDR has.
 
 ## EconomyParameters
 
-EconomyParameters bundles the scalar values this document's rules read.
+EconomyParameters bundles the scalar values that hiring, upkeep, Agency income, and the caps read.
 
 | Property                       | Meaning                                                                | Read by                         |
 | ------------------------------ | ---------------------------------------------------------------------- | ------------------------------- |
@@ -133,9 +93,9 @@ An AgencyArchetype is the Archetype of the Agency. It supplies no initial value;
 
 ## Economy GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the GDRs
-this document owns. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it,
-and the violation is reported as a data defect, never repaired into different gameplay, under
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for
+EconomyParameters, Upgrade, and AgencyArchetype GDRs. A Game build whose GDRs violate one of these rules is defective:
+no Campaign is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **One AgencyArchetype:** The Game build supplies exactly one AgencyArchetype, so no rule selects among
@@ -155,7 +115,8 @@ Upgrade with the same `effect`.
 
 # Campaign configuration values
 
-**Proposed rule:** This document owns exactly two Campaign configuration values, each stated as
+**Proposed rule:** The Agency's economy has exactly two Campaign configuration values, Starting money and Starting
+funding, each stated as
 [What each Campaign configuration value must state](../foundation/configuration.md#what-each-campaign-configuration-value-must-state)
 in Configuration requires. Each Campaign configuration preset supplies both, as the properties named below.
 
@@ -196,11 +157,11 @@ have none.
 
 The following table is the exhaustive list of rules that change the Agency's State:
 
-| Value        | Raised by                                                                                                                            | Lowered by                                                                                                        |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| Money        | [Agency income](#agency-income); [Adding money](#adding-money); the consequences of a Mission site, owned by [Missions](missions.md) | [Upkeep](#upkeep); [Hiring Agents](#hiring-agents); [Purchasing Upgrades](#purchasing-upgrades)                   |
-| Funding      | The consequences of a Mission site, owned by [Missions](missions.md), through [Funding changes](#funding-changes)                    | The consequences of a Mission site, owned by [Missions](missions.md), through [Funding changes](#funding-changes) |
-| Acquisitions | [Purchasing Upgrades](#purchasing-upgrades)                                                                                          | No rule                                                                                                           |
+| Value        | Raised by                                                                                                                      | Lowered by                                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| Money        | [Agency income](#agency-income); [Adding money](#adding-money); the [Consequences](missions.md#consequences) of a Mission site | [Upkeep](#upkeep); [Hiring Agents](#hiring-agents); [Purchasing Upgrades](#purchasing-upgrades)             |
+| Funding      | The [Consequences](missions.md#consequences) of a Mission site, through [Funding changes](#funding-changes)                    | The [Consequences](missions.md#consequences) of a Mission site, through [Funding changes](#funding-changes) |
+| Acquisitions | [Purchasing Upgrades](#purchasing-upgrades)                                                                                    | No rule                                                                                                     |
 
 A rule of another specification that changes money adds a whole amount to it, positive or negative, and the result is
 never clamped. The Agency is retained for the whole Campaign and never removed.
@@ -227,8 +188,8 @@ Turn, under [Turn series of money](#turn-series-of-money).
 
 ## Funding changes
 
-**Proposed rule:** Funding is never below 0. This document owns funding, and every rule of another specification that
-changes funding does so through this rule: it names a whole amount, positive, zero, or negative, by which funding
+**Proposed rule:** Funding is never below 0. Every rule of another specification that changes funding does so through
+this rule: it names a whole amount, positive, zero, or negative, by which funding
 changes, and funding becomes:
 
 ```text
@@ -245,9 +206,9 @@ at least 0.
 E.g., with funding 3, one change of −10 gives 0, and two changes of +5 and −10 in the same step give
 max(0, 3 + 5 − 10) = 0, whichever is applied first.
 
-A funding change starts producing income in the first Agency income step that follows it. In scope only the
-consequences of Mission sites change funding, and they apply after the Agency income step of the same Advance turn
-under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), so a funding change first affects income in
+A funding change starts producing income in the first Agency income step that follows it. Only the
+[Consequences](missions.md#consequences) of Mission sites change funding, and they apply after the Agency income step
+of the same Advance turn under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), so a funding change first affects income in
 the next Advance turn.
 
 # Agency caps
@@ -261,9 +222,9 @@ cap = base + sum over every Upgrade U whose effect is the cap's effect identifie
 
 | Cap           | base                 | Effect identifier | What it limits                                                                                                             | Applied by                                                                              |
 | ------------- | -------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Agent cap     | `base_agent_cap`     | `agent_cap`       | The number of Serving Agents, whatever their Current assignment and Task phase.                                            | [Hiring Agents](#hiring-agents), in this document                                       |
-| Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Current assignment is Deployed, over every Mission together.      | The `deployAgents` Player action of [Missions](missions.md)                             |
-| Training cap  | `base_training_cap`  | `training_cap`    | The number of Serving Agents whose Current assignment is Training, counting both those At assignment and those In transit. | [Training cap on assigning Agents](#training-cap-on-assigning-agents), in this document |
+| Agent cap     | `base_agent_cap`     | `agent_cap`       | The number of Serving Agents, whatever their Current assignment and Task phase.                                            | [Hiring Agents](#hiring-agents)                                                         |
+| Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Current assignment is Deployed, over every Mission together.      | The `deployAgents` Player action under [Deploying Agents](missions.md#deploying-agents) |
+| Training cap  | `base_training_cap`  | `training_cap`    | The number of Serving Agents whose Current assignment is Training, counting both those At assignment and those In transit. | [Training cap on assigning Agents](#training-cap-on-assigning-agents)                   |
 
 Inputs: base is a whole number of Agents of at least 0; each increment is a whole number of Agents of at least 0; each
 acquisitions is a whole number of at least 0. A cap with no Upgrade of its effect identifier equals its base. No
@@ -283,7 +244,7 @@ Each cap is computed from the current acquisitions whenever a rule reads it, so 
 ## Counts above a cap
 
 A cap limits only the actions that add to the count it limits: hiring for the Agent cap, ordering to Training for the
-Training cap, and deployment for the Transport cap. In scope no rule lowers a cap, because acquisitions only rise, but a
+Training cap, and deployment for the Transport cap. No rule lowers a cap, because acquisitions only rise, but a
 count can exceed its cap through a cheat operation, e.g. `addAgents` under [Adding Agents](agents-spec.md#adding-agents)
 in Agents, which ignores the Agent cap. When a count exceeds its cap, nothing is removed and no Agent's Current
 assignment changes; only further additions are rejected until the count is below the cap again. A count above a cap is
@@ -340,9 +301,9 @@ of an Advance turn was Serving in the Upkeep step of that same Advance turn, so 
 in no later one. No rounding occurs. Upkeep is a whole number of at least 0.
 
 **Negative money:** Upkeep is always paid in full. Money may become negative, and it is neither clamped nor is the
-Advance turn rejected; e.g., money 15 and upkeep 40 give money −25. What negative money means for the Campaign is owned
-by [Panic and Endings](panic-and-endings.md). While money is negative, every Player action of this document that spends
-money is rejected, because its precondition requires money of at least its cost.
+Advance turn rejected; e.g., money 15 and upkeep 40 give money −25. Whether negative money ends the Campaign is
+decided under [Defeat](panic-and-endings.md#defeat). While money is negative, `hireAgent` and `purchaseUpgrade`, the Player actions
+that spend money, are rejected, because each precondition requires money of at least its cost.
 
 ## Projected income and upkeep
 
@@ -370,16 +331,17 @@ Agent from Contracting to Standby lowers projected income by `contracting_income
 
 **Proposed rule:** The Player action `player.actions.hireAgent()` hires one Agent. It has no parameters.
 
-Preconditions owned by this document. The action is rejected when either of the following holds:
+Preconditions: the action is rejected when either of the following holds:
 
 1. The Agency's money is less than `hire_cost` of EconomyParameters.
 2. The number of Serving Agents is equal to or greater than the Agent cap, under [Agency caps](#agency-caps).
 
-Other preconditions on every Player action, e.g. that the Campaign has no Campaign ending, are owned by
-[Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md).
+Other preconditions apply to every Player action, e.g. that the Campaign has no Campaign ending, under
+[After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) and
+[Engine Contract](../foundation/engine-contract.md).
 
 Rejection: when a precondition fails, the action is rejected with an error that identifies at least one failed
-precondition; the exact error representation is the implementer's choice. A rejected action changes nothing, under
+precondition; the exact error representation is the Implementer's choice. A rejected action changes nothing, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 State changes: when both preconditions hold, the action is one Player action that applies at once, within the same
@@ -402,7 +364,7 @@ Hiring several Agents takes one `hireAgent` action each.
 | --------- | ------------------------------------------------------------------------- |
 | `agents`  | A list of Instance IDs, each meant to identify one Agent of the Campaign. |
 
-Preconditions owned by this document. The action is rejected, as a whole, when any of the following holds:
+Preconditions: the action is rejected, as a whole, when any of the following holds:
 
 1. `agents` is empty.
 2. `agents` contains the same Instance ID more than once.
@@ -413,12 +375,13 @@ Preconditions owned by this document. The action is rejected, as a whole, when a
 
 Together, conditions 4 to 6 mean that every listed Agent must be Serving, At assignment, and on Standby. An Agent on
 Contracting, Training, Recovery, or an Investigation, and a Deployed Agent, must first reach Standby, At assignment.
-Other preconditions on every Player action are owned by [Panic and Endings](panic-and-endings.md) and
+Other preconditions apply to every Player action, under
+[After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) and
 [Engine Contract](../foundation/engine-contract.md).
 
 Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at
 least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation
-is the implementer's choice. A rejected action changes nothing, under
+is the Implementer's choice. A rejected action changes nothing, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same
@@ -429,9 +392,9 @@ Upkeep step. It stays in the Agency's roster and in World history with its final
 
 # Training cap on assigning Agents
 
-**Proposed rule:** This section refines the Player action `assignAgents` under
-[Assigning Agents](agents-spec.md#assigning-agents) in Agents with one further precondition. When its `assignment` is
-`Training`, the action is also rejected, as a whole, when:
+**Proposed rule:** The Player action `assignAgents` under [Assigning Agents](agents-spec.md#assigning-agents) in
+Agents has one further precondition. When its `assignment` is `Training`, the action is also rejected, as a whole,
+when:
 
 ```text
 T + number of Agents in agents  >  Training cap
@@ -439,7 +402,8 @@ T + number of Agents in agents  >  Training cap
 
 where T is the number of Serving Agents whose Current assignment is Training, At assignment or In transit, in the
 Committed state in which the action is requested, and the Training cap is under [Agency caps](#agency-caps). Every Agent
-in `agents` adds one, because the preconditions of Agents already reject an Agent whose Current assignment is Training.
+in `agents` adds one, because the preconditions under [Assigning Agents](agents-spec.md#assigning-agents) already
+reject an Agent whose Current assignment is Training.
 The action is accepted when the sum is equal to or less than the Training cap.
 
 The rejection follows the rejection behavior of `assignAgents` in Agents: the whole action is rejected, no listed Agent
@@ -457,17 +421,18 @@ away from Training frees its place at once, within the same Turn.
 | --------- | ---------------------------------------------------------------------- |
 | `upgrade` | A GDR identifier, meant to identify one Upgrade GDR of the Game build. |
 
-Preconditions owned by this document. The action is rejected when either of the following holds:
+Preconditions: the action is rejected when either of the following holds:
 
 1. `upgrade` identifies no Upgrade GDR of the Game build.
 2. The Agency's money is less than the `price` of that Upgrade.
 
-Other preconditions on every Player action are owned by [Panic and Endings](panic-and-endings.md) and
+Other preconditions apply to every Player action, under
+[After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) and
 [Engine Contract](../foundation/engine-contract.md). No limit applies to how many times an Upgrade is purchased, in one
 Turn or in the whole Campaign.
 
 Rejection: when a precondition fails, the action is rejected with an error that identifies at least one failed
-precondition; the exact error representation is the implementer's choice. A rejected action changes nothing, under
+precondition; the exact error representation is the Implementer's choice. A rejected action changes nothing, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 State changes: when both preconditions hold, the action is one Player action that applies at once, within the same
@@ -501,9 +466,9 @@ purchase sees the raised cap. A cap effect changes no Agent's Current assignment
 
 ### Weapon damage effect
 
-This section refines [Modifiable values](agents-spec.md#modifiable-values) in Agents, which makes weapon damage the
-only Agent value an Upgrade may change. An acquisition of an Upgrade whose `effect` is `agent_weapon_damage` has two
-consequences:
+Weapon damage is the only Agent value an Upgrade may change, under
+[Modifiable values](agents-spec.md#modifiable-values) in Agents. An acquisition of an Upgrade whose `effect` is
+`agent_weapon_damage` has two consequences:
 
 1. **Serving Agents:** When the purchase is committed, the weapon damage of every Serving Agent rises by that Upgrade's
    `increment`, whatever the Agent's Current assignment and Task phase; e.g., a Deployed Agent, an Agent In transit, and
@@ -528,7 +493,7 @@ Agents. The effect changes no other Agent value, no Weapon GDR, and no Enemy.
 
 # Turn series of money
 
-**Proposed rule:** This document declares exactly the following two Turn series, under
+**Proposed rule:** The Agency's money has exactly the following two Turn series, under
 [Turn series](../foundation/campaign-state.md#turn-series) in Campaign State. Each records the Agency's money, a whole
 number of money that may be negative.
 
@@ -574,9 +539,9 @@ recorded in the Turn series are unchanged. Money that was negative may become ze
 
 # Player-visible information
 
-**Proposed rule:** The following table states, for every value this document owns, whether it is Player-visible
-information under [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine
-Contract. It is exhaustive. Every value is Player-visible from the moment it exists, without a reveal condition.
+**Proposed rule:** Every value below is Player-visible information under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, from the
+moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value                                                                                    | Player-visible information |
 | ---------------------------------------------------------------------------------------- | -------------------------- |
@@ -590,10 +555,11 @@ Contract. It is exhaustive. Every value is Player-visible from the moment it exi
 | Every property of EconomyParameters and of each Upgrade GDR                              | Yes                        |
 | The Campaign configuration values Starting money and Starting funding                    | Yes                        |
 
-**Unknown versus absent:** No value this document owns is hidden, so Player API never reports one as unknown. An
+**Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. An
 Upgrade never purchased is reported with acquisitions 0, not as absent. Money at the end of turn has no recorded value
-for the current Turn, which Player API reports as absent for that Turn. Because every value this document owns is
-Player-visible information, no rejection error of its actions reveals anything hidden.
+for the current Turn, which Player API reports as absent for that Turn. Because every value in the table above is
+Player-visible information, no rejection error of `hireAgent`, `dismissAgents`, `purchaseUpgrade`, or `addMoney`
+reveals anything hidden.
 
 # Edge cases and failure behavior
 
@@ -614,16 +580,15 @@ Player-visible information, no rejection error of its actions reveals anything h
   [Funding changes](#funding-changes)).
 - **Several funding changes in one step:** They are added up before the floor is applied, so their order does not
   matter ([Funding changes](#funding-changes)).
-- **Upkeep making money negative:** Upkeep is paid in full and money may become negative; the Campaign ending it may
-  cause is owned by [Panic and Endings](panic-and-endings.md) ([Upkeep](#upkeep)).
+- **Upkeep making money negative:** Upkeep is paid in full and money may become negative ([Upkeep](#upkeep)).
 - **Agent Killed in the same Advance turn:** An Agent Killed in the Mission resolution step was counted in the Upkeep
   step before it, and is not counted in any later Advance turn ([Upkeep](#upkeep)).
 - **Arriving Agents:** An Agent arriving at Contracting in the Transit step earns nothing in that Advance turn but is
   counted in Upkeep ([Agency income](#agency-income), [Upkeep](#upkeep)).
 - **Dismissing an Agent that is not on Standby, At assignment:** Rejected as a whole; e.g., an Agent on Standby but In
   transit, an Agent on Contracting, and a Deployed Agent cannot be dismissed ([Dismissing Agents](#dismissing-agents)).
-- **Dismissing every Agent:** Valid; an Agency with no Serving Agent pays no upkeep. Defeat conditions belong to
-  [Panic and Endings](panic-and-endings.md) ([Dismissing Agents](#dismissing-agents)).
+- **Dismissing every Agent:** Valid; an Agency with no Serving Agent pays no upkeep. Whether the Campaign ends is
+  decided under [Defeat](panic-and-endings.md#defeat) ([Dismissing Agents](#dismissing-agents)).
 - **Unknown Upgrade:** `purchaseUpgrade` with an identifier that names no Upgrade GDR, including one naming a GDR of
   another Type, is rejected ([Purchasing Upgrades](#purchasing-upgrades)).
 - **Weapon damage of Agents who are not Serving:** A Killed or Dismissed Agent keeps its weapon damage when a weapon
@@ -635,11 +600,12 @@ Player-visible information, no rejection error of its actions reveals anything h
 - **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a
   second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is
   created from it ([Economy GDR validation](#economy-gdr-validation),
-  [Campaign configuration values](#campaign-configuration-values)). A Committed state violating an invariant of this
-  document, e.g. negative funding, is an internal invariant violation, reported under
+  [Campaign configuration values](#campaign-configuration-values)). A Committed state violating an invariant of the
+  Agency, e.g. negative funding, is an internal invariant violation, reported under
   [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 - **Campaign ended:** Once the Campaign has a Campaign ending, `hireAgent`, `dismissAgents`, `purchaseUpgrade`,
-  `addMoney`, and Advance turn are rejected; [Panic and Endings](panic-and-endings.md) owns that rejection.
+  `addMoney`, and Advance turn are rejected, under
+  [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
 
 # Acceptance examples
 
@@ -761,7 +727,7 @@ money 0, and `addMoney(75)` after it makes money 75; `hireAgent()` then succeeds
 ## Funding changes from Mission sites
 
 This example exercises [Funding changes](#funding-changes) and [Agency income](#agency-income), with the amounts of
-`operation_level_2`; [Missions](missions.md) owns when each applies.
+`operation_level_2`, each applied under [Consequences](missions.md#consequences).
 
 - **Win:** With funding 20, a Response Mission at a site of Faction operation level 2 is Won in the Mission resolution step
   of the Advance turn ending turn 6. That Advance turn's Agency income step already used funding 20. Money rises by 30,
@@ -812,9 +778,9 @@ nothing:
 
 ## Transport cap
 
-This example exercises [Agency caps](#agency-caps) and [Cap effects](#cap-effects); the rejection itself belongs to the
-`deployAgents` Player action of [Missions](missions.md). During Turn 15 the Agency has money 1000, three Agents
-Deployed on a Mission at Mission site s1, and six Agents that can be ordered. The Transport cap is 4 and the number of Deployed
+This example exercises [Agency caps](#agency-caps) and [Cap effects](#cap-effects); the rejection itself is made by the
+`deployAgents` Player action under [Deploying Agents](missions.md#deploying-agents). During Turn 15 the Agency has
+money 1000, three Agents Deployed on a Mission at Mission site s1, and six Agents that can be ordered. The Transport cap is 4 and the number of Deployed
 Agents is 3, so deploying two Agents to Mission site s2 would make 5, more than 4, and Missions rejects it; deploying
 one would make 4 and is within the Transport cap. Instead the player calls `purchaseUpgrade(transport_cap)`: money
 becomes 0, acquisitions of `transport_cap` become 1, and the Transport cap becomes 4 + 2 × 1 = 6 at once, so deploying
@@ -885,3 +851,18 @@ build defective, so no Campaign is created from it: setting `weapon_damage`'s `e
 `transport_cap`'s `increment`; adding a property `max_acquisitions` to `agent_cap`; setting `training_cap`'s `price` to
 −1; setting `economy`'s `hire_cost` to 12.5; adding a second EconomyParameters GDR; and setting `standard`'s
 `starting_money` to −100.
+
+# TODOs
+
+- TODO (later): An Upgrade that raises training skill gain, under [Upgrade effects](#upgrade-effects).
+- TODO (later): An Upgrade that raises exhaustion recovery, under [Upgrade effects](#upgrade-effects).
+- TODO (later): An Upgrade that raises health recovery, under [Upgrade effects](#upgrade-effects).
+- TODO (later): An Upgrade that raises maximum health, under [Upgrade effects](#upgrade-effects).
+- TODO (later): Contracting income that depends on an Agent's skill, under [Agency income](#agency-income).
+- TODO (later): Upgrade prices that rise with each acquisition, under [Purchasing Upgrades](#purchasing-upgrades).
+- TODO (later): A limit on the acquisitions of an Upgrade, under [Purchasing Upgrades](#purchasing-upgrades).
+- TODO (later): Selling an Upgrade, under [Upgrades](#upgrades).
+- TODO (later): Lowering a cap, under [Agency caps](#agency-caps).
+- TODO (later): A refund on dismissal, under [Dismissing Agents](#dismissing-agents).
+- TODO (later): Campaign configuration values of the Agency's economy that are adjustable during play, under
+  [Campaign configuration values](#campaign-configuration-values).

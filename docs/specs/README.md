@@ -10,8 +10,8 @@
 
 # Overview
 
-This index is the navigation entry point to the specifications. Each specification registers itself through its own
-metadata, and the generated catalog lists them all. It does not define gameplay behavior.
+The game specifications are grouped into Families. Each specification registers itself through its own metadata, and the
+generated catalog lists them all.
 
 # Start here
 
@@ -67,6 +67,6 @@ graphs.
 
 # Work plan
 
-The [work plan and backlog](governance/work-plan.md) owns the accepted authoring sequence and review checkpoints. Start with
+The [work plan and backlog](governance/work-plan.md) sets the accepted authoring sequence and review checkpoints. Start with
 the batch 1 specifications; grow GDRs alongside the reviewed mechanics. See that document for
 the full sequence, current work states, and treatment of cross-specification dependencies.

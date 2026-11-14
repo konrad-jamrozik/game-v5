@@ -11,18 +11,15 @@
 
 # Overview
 
-This document is the register of known outstanding issues in the registered specifications that should be addressed
-eventually but are not yet scheduled. Each Work item records one issue completely enough that a reader with no other
-context can act on it.
+The outstanding Work items are the known issues in the registered specifications that should be addressed eventually
+but are not yet scheduled. Each Work item records one issue completely enough that a reader with no other context can
+act on it.
 
-The [Specification Work Plan and Backlog](work-plan.md) owns the authoring sequence, the review batches, and their
-work states. This document owns only the list of known issues awaiting scheduling. It names the batch of each affected
-specification, as listed in [Batch sequence](work-plan.md#batch-sequence), so that a Work item can be handled when that
-batch is drafted or reviewed. Recording a Work item here neither schedules it nor changes any batch or document status.
-
-This document defines no game behavior, observable contract, or GDR, and it does not change the specifications it
-cites. Each owning specification remains authoritative until it is revised. Links from Work items to other
-specifications are ordinary citations, not relationships.
+Each Work item names the batch of each affected specification, as listed in
+[Batch sequence](work-plan.md#batch-sequence) in the [Specification Work Plan and Backlog](work-plan.md), so that it can
+be handled when that batch is drafted or reviewed. Recording a Work item neither schedules it nor changes any batch or
+document status. Each specification remains authoritative until it is revised. A link from a Work item to a
+specification is a citation, not a relationship.
 
 # Relationships
 
@@ -30,7 +27,7 @@ specifications are ordinary citations, not relationships.
 
 # Glossary
 
-Batch is defined by the [Specification Work Plan and Backlog glossary](work-plan.md#glossary).
+Batch is defined in the [Specification Work Plan and Backlog glossary](work-plan.md#glossary).
 
 | Term      | Definition                                                                                                                              |
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
@@ -85,7 +82,7 @@ The Work items below were measured against these recorded rules and decisions:
   the order of Campaign instance creation within one command, and the sequence and format of generated Instance IDs
   are the implementer's choice. Acceptance examples assert replay equality, including from the same Campaign seed, or
   use fixed injected random outcomes, never which outcome a particular Campaign seed produces.
-- **Creation decision:** creation of Campaign instances is specified by the specification that owns the creating
+- **Creation decision:** creation of Campaign instances is specified by the specification of the creating
   behavior, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation).
   The former Campaign instance constructor concept was removed.
 

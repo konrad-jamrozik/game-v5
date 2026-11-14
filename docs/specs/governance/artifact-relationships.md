@@ -11,15 +11,13 @@
 
 # Overview
 
-This document defines how specifications, requirements, implementations, tests, and other artifacts describe their relationships.
-Every relationship runs from a Dependency to a Dependent and has one of five Relationship kinds: `follows`, `refines`, `uses`,
-`implements`, or `verifies`.
+Specifications, requirements, implementations, tests, and other artifacts are connected by relationships. Every
+relationship runs from a Dependency to a Dependent and has one of five Relationship kinds: `follows`, `refines`, `uses`,
+`implements`, or `verifies`. Explicit relationships are recorded in mirrored lists, and the relationships of each kind
+form a graph that is checked for cycles.
 
-This specification owns the relationship model. Specification Conventions owns the required specification layout and
-the implicit relationships that apply to registered specifications. A relationship does not change an artifact's
-status, accept a proposed rule, prove that an implementation is correct, or report a passing test run.
-
-Examples explain the model; they do not declare relationships for the named artifacts.
+A relationship does not change an artifact's status, accept a proposed rule, prove that an implementation is correct,
+or report a passing test run.
 
 # Relationships
 
@@ -91,7 +89,7 @@ passes.
 # Choosing uses or refines
 
 For each proposed refinement, identify the parent contract and the additional detail about that same subject or
-behavior. Record both in the owning contract prose, linking to the relevant sections by title. Obeying an invariant,
+behavior. Record both in the contract prose, linking to the relevant sections by title. Obeying an invariant,
 using a vocabulary, consuming a result, or supplying Game Data Record (GDR) values is insufficient by itself: those are uses.
 Being more concrete or appearing later in an authoring sequence is also insufficient.
 
@@ -105,7 +103,7 @@ both Relationship kinds for a pair only when the prose identifies separate Relat
 parents only when it identifies additional detail about each parent's subject.
 
 A Stub may declare an intended refinement when its prose names the parent contract and the detail its TODOs will
-provide. This records planned ownership, not completed detail or acceptance. Preserve unresolved decisions and
+provide. This records a planned refinement, not completed detail or acceptance. Preserve unresolved decisions and
 reassess the relationship when actual rules replace the TODOs. Merely referring to a future document is not enough.
 
 # Links that create no relationship
@@ -120,14 +118,14 @@ for what a Session holds, although Engine Contract uses Core Concepts.
 
 The following kinds of link create no relationship when they pass the test:
 
-- **Ownership pointers:** say which artifact owns something the linking artifact does not define.
+- **Owner links:** say which artifact owns something the linking artifact does not define.
 - **Navigation links:** help a reader find related material.
 - **Migration records:** say where content moved.
 - **Citations and evidence acknowledgements:** credit material inspected while drafting.
 - **Examples:** name other artifacts to explain a rule; they do not declare relationships for the named artifacts.
 - **Process information:** review order, work-plan rows, and folder location.
 
-Calling a link an ownership pointer, navigation link, or informative citation must not conceal substantive reliance.
+Calling a link an owner link, navigation link, or informative citation must not conceal substantive reliance.
 When the artifact's rules, definitions, or examples cannot be understood without the linked content, the link is a
 relationship and must be recorded under Relationships. Specification Conventions may restrict such links further for
 particular documents.
@@ -138,7 +136,7 @@ Validate each Relationship kind graph separately. The `follows` graph and the `r
 Writing rules must not govern each other through a cycle, and refinements must not form a cycle of increasingly
 detailed definitions.
 
-The `uses` graph may contain cycles when the owning contracts identify distinct supplied meanings and no definition
+The `uses` graph may contain cycles when the contracts identify distinct supplied meanings and no definition
 depends circularly on itself. The `implements` and `verifies` graphs are acyclic under their permitted-artifact rules.
 A graph combining different Relationship kinds need not be acyclic, and such a cycle is not by itself a defect.
 
@@ -159,10 +157,10 @@ pair may have multiple Relationship kinds when each expresses distinct reliance.
 Each explicit relationship is recorded twice: once in the Dependent's Relationships section and once, as its mirror
 with the reverse-facing phrase, in the Dependency's. Both entries must resolve to the same Dependency, Dependent, and
 Relationship kind. Implicit relationships are defined centrally by Specification Conventions and are not listed.
-[Relationship inventories](spec-conventions.md#relationship-inventories) in Specification Conventions owns the layout
-of a specification's Relationships section: its phrases, order, and links.
+The layout of a specification's Relationships section, including its phrases, order, and links, is given under
+[Relationship inventories](spec-conventions.md#relationship-inventories).
 
-Relationship entries have no Scope field. Substantive constraints and requirement references belong in the owning
+Relationship entries have no Scope field. Substantive constraints and requirement references belong in the
 contract prose; a link to an artifact does not imply reliance on every rule in that artifact.
 
 Adding, changing, or removing an explicit relationship must update both entries. A missing or disagreeing entry is a
@@ -184,26 +182,26 @@ check links, and validate the graphs. Do not invent implementation or test relat
 
 # Edge cases and failure behavior
 
-| Case                                                           | Required result                                                                                                          |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| A depends on B                                                 | Record `B → A`; B is the Dependency and A is the Dependent                                                               |
-| Two Relationship kinds connect the same artifacts              | Keep both when they express distinct Relationship kinds                                                                  |
-| Only implicit relationships apply                              | Omit the Relationships section                                                                                           |
-| Explicit relationships exist                                   | List all explicit relationships; omit implicit ones                                                                      |
-| No explicit relationships exist                                | Omit the Relationships section                                                                                           |
-| One mirrored entry is missing or disagrees                     | Treat the inventory as defective and update both entries                                                                 |
-| No implementation or test has been identified                  | Do not invent an `implements` or `verifies` relationship                                                                 |
-| A requirement moves                                            | Update both entries, links, and requirement references in contract prose                                                 |
-| A referenced specification remains a Stub                      | Preserve its status and record concrete unresolved contract work without inferring missing rules                         |
-| A Dependency links to a Dependent only to say who owns a topic | Record nothing; it is an ownership pointer under [Links that create no relationship](#links-that-create-no-relationship) |
-| A work-plan row orders reviews                                 | Record nothing; it is process information under [Links that create no relationship](#links-that-create-no-relationship)  |
+| Case                                                           | Required result                                                                                                         |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| A depends on B                                                 | Record `B → A`; B is the Dependency and A is the Dependent                                                              |
+| Two Relationship kinds connect the same artifacts              | Keep both when they express distinct Relationship kinds                                                                 |
+| Only implicit relationships apply                              | Omit the Relationships section                                                                                          |
+| Explicit relationships exist                                   | List all explicit relationships; omit implicit ones                                                                     |
+| No explicit relationships exist                                | Omit the Relationships section                                                                                          |
+| One mirrored entry is missing or disagrees                     | Treat the inventory as defective and update both entries                                                                |
+| No implementation or test has been identified                  | Do not invent an `implements` or `verifies` relationship                                                                |
+| A requirement moves                                            | Update both entries, links, and requirement references in contract prose                                                |
+| A referenced specification remains a Stub                      | Preserve its status and record concrete unresolved contract work without inferring missing rules                        |
+| A Dependency links to a Dependent only to say who owns a topic | Record nothing; it is an owner link under [Links that create no relationship](#links-that-create-no-relationship)       |
+| A work-plan row orders reviews                                 | Record nothing; it is process information under [Links that create no relationship](#links-that-create-no-relationship) |
 
 # Acceptance examples
 
 ## Classification cases
 
-The following table gives the complete expected classifications for this acceptance scenario. These cases exercise
-[Recording relationships](#recording-relationships), [Direction](#direction), and [Status and evidence](#status-and-evidence); they do not add relationships to the named documents.
+These cases exercise [Recording relationships](#recording-relationships), [Direction](#direction), and
+[Status and evidence](#status-and-evidence); they add no relationships to the named documents. The table is exhaustive.
 
 | Case                                                                                                                          | Expected classification and reason                                                                  |
 | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |

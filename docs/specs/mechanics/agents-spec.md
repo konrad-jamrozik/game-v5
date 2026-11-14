@@ -11,42 +11,15 @@
 
 # Overview
 
-This document defines what an [Agent](domain-model.md#glossary) has and can do on its own: every property of an Agent,
-the Agent lifecycle, the Current assignments an Agent can have and every allowed change between them, the transit rule
-that decides when an Agent starts working, the effective skill formula that every Combatant uses, how Training raises
-skill, how every Agent is created, the initial roster, the Player action `assignAgents`, the cheat operation
-`addAgents`, which of these values are Player-visible information, and the validation rules for the Game Data Records
-(GDRs) it owns.
+An [Agent](domain-model.md#agent) is a Combatant that the Agency employs. A Serving Agent has one Current
+assignment at a time: Standby, Contracting to earn money, Training to gain skill, Recovery to regain health, an
+Investigation, or Deployed on a Mission at a Mission site. Every order takes one Advance turn of transit before the
+Agent starts working, except deployment, which is immediate.
 
-It refines Domain Model's Agent contract, i.e. [Agent](domain-model.md#agent),
-[Current versus historical teams](domain-model.md#current-versus-historical-teams),
-[Combatant Role Type](domain-model.md#combatant-role-type), and [Attribute bounds](domain-model.md#attribute-bounds),
-with the properties, lifecycle, Current assignment changes, exhaustion cap, and formulas listed above.
-[Numbers](../foundation/numbers.md) supplies whole-number arithmetic and the rounding operations. Among the Mechanics
-specifications, this document depends only on Domain Model.
-
-This document states what each Agent value is, its range, and its effect, and it lists every rule of another
-specification that may change an Agent value. It does not own, e.g.:
-
-- When and by how much a Battle changes an Agent: [Combat](combat.md) owns how a Battle lowers health and raises
-  exhaustion and when an Agent is Killed in a Battle.
-- How an Agent recovers: [Agent Recovery](agent-recovery.md) owns how health rises and exhaustion falls, and the move
-  from Recovery to Standby.
-- Hiring, dismissal, and the Agency's caps: [Economy and Upgrades](economy-and-upgrades.md) owns the `hireAgent` and
-  `dismissAgents` Player actions, the [Agent cap](economy-and-upgrades.md#glossary), [Transport cap](economy-and-upgrades.md#glossary),
-  and [Training cap](economy-and-upgrades.md#glossary), and the
-  [Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect) of the weapon damage Upgrade.
-
-It also does not own, e.g., deployment to a Mission site, i.e. the `deployAgents` Player action and the return of
-survivors, which belongs to [Missions](missions.md); assigning Agents to Investigations, which belongs to
-[Investigations](investigations.md); or the order of every Turn advancement step, which belongs to
-[Turn Advancement](turn-advancement.md). These are ownership pointers; this document relies on none of them.
-
-The following features are out of scope and are not specified here: skill gained from Missions and Battles, exhaustion
-gained from any Current assignment, readiness thresholds, forced withdrawal of an exhausted Agent, career statistics
-beyond Participation history, transit durations that differ between Current assignments, and selection among several
-AgentArchetypes. This list is exhaustive. With them out of scope, Training is the only way an Agent gains skill, only a Battle raises
-exhaustion, and every transit takes one Advance turn.
+How well an Agent works and fights is its effective skill: its skill, lowered by lost health and by exhaustion above a
+free amount. Training is the only way an Agent gains skill, and only a Battle raises exhaustion. Every Agent is created
+from the one AgentArchetype, and a Campaign starts with an initial roster of Agents. An Agent is Serving until it is
+Killed in a Battle or Dismissed, and it is never removed.
 
 # Relationships
 
@@ -67,20 +40,9 @@ exhaustion, and every transit takes one Advance turn.
 
 # Glossary
 
-Agency, Agent, Current assignment, Task phase, Investigation, Mission site, Mission, Current team, Combatant, Combatant
-Role Type, Enemy, and Participation history are defined by the [Domain Model glossary](domain-model.md#glossary).
-Campaign instance, Instance ID, Archetype, Constants, State, and World history are defined by the
-[Campaign State glossary](../foundation/campaign-state.md#glossary). GDR, Game build, Authoritative value, and Derived
-value are defined by the [Core Concepts glossary](../foundation/core-concepts.md#glossary). Player-visible information,
-Player action, Committed state, Turn, Turn-end state, Session controller, Autopilot AI, Player API, and Developer API
-are defined by the [Engine Contract glossary](../foundation/engine-contract.md#glossary). Round down, Round up, and
-Percent value are defined by the [Numbers glossary](../foundation/numbers.md#glossary). Turn advancement step is
-defined by the [Turn Advancement glossary](turn-advancement.md#glossary). Battle is defined by the
-[Combat glossary](combat.md#glossary), and Agent cap, Transport cap, and Training cap by the
-[Economy and Upgrades glossary](economy-and-upgrades.md#glossary). The Turn advancement step named Training, under
-[Turn advancement steps](turn-advancement.md#turn-advancement-steps), applies the rule under
-[Training growth](#training-growth). The Mission state named Deployed is owned by [Missions](missions.md); a
-Mission is Deployed exactly when the Agents of its Current team are Deployed on it.
+These terms are specific to Agents. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
+about regaining health, Battles, and the Agency's caps are in the [Agent Recovery](agent-recovery.md#glossary),
+[Combat](combat.md#glossary), and [Economy and Upgrades](economy-and-upgrades.md#glossary) glossaries.
 
 ## Combatant attributes
 
@@ -109,15 +71,13 @@ The Current assignments that are neither an Investigation nor a Mission, and the
 
 # Agent GDRs
 
-This document owns the two GDR Types below and states which rule reads each property. A rule in this document names
-the property it reads and never copies a GDR value; only the [Acceptance examples](#acceptance-examples) show values.
-The GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the
+The Game Data Records (GDRs) a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the
 YAML files it names.
 
 ## AgentArchetype
 
-An AgentArchetype is the Archetype of every Agent. The following property table is exhaustive apart from the `id` and
-`type` that every GDR has.
+An AgentArchetype is the Archetype of every Agent. The table below is exhaustive apart from the `id` and `type` that
+every GDR has.
 
 | Property | Meaning                                                               | Read by                                                   |
 | -------- | --------------------------------------------------------------------- | --------------------------------------------------------- |
@@ -128,8 +88,8 @@ An AgentArchetype is the Archetype of every Agent. The following property table 
 
 ## AgentParameters
 
-AgentParameters bundles the scalar values this document's rules read, and two values that [Combat](combat.md) reads.
-The following property table is exhaustive apart from `id` and `type`.
+AgentParameters bundles the scalar values that the Agent rules read, and two values that [Combat](combat.md) reads.
+The table below is exhaustive apart from `id` and `type`.
 
 | Property                           | Meaning                                                                                                 | Read by                                     |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
@@ -143,14 +103,14 @@ The following property table is exhaustive apart from `id` and `type`.
 
 ## Weapon properties this document reads
 
-A Weapon GDR describes damage configuration, under [Weapons and upgrades](domain-model.md#weapons-and-upgrades) in
-Domain Model; [Combat](combat.md) owns the Weapon Type. This document reads only its `damage` property, the weapon
-damage of a newly created Agent equipped with that Weapon, under [Agent creation](#agent-creation).
+A [Weapon](combat.md#weapon) GDR describes damage configuration, under
+[Weapons and upgrades](domain-model.md#weapons-and-upgrades) in Domain Model. The Agent rules read only its `damage`
+property: the weapon damage of a newly created Agent equipped with that Weapon, under [Agent creation](#agent-creation).
 
 ## Agent GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the GDRs
-this document owns. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it,
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for
+AgentArchetype and AgentParameters. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it,
 and the violation is reported as a data defect, never repaired into different gameplay, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
@@ -165,9 +125,8 @@ and the violation is reported as a data defect, never repaired into different ga
    `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, and
    `training_skill_gain_per_turn` is a whole number of at least 0.
 
-[Combat](combat.md) may state further rules on `exhaustion_per_attack` and `exhaustion_per_defense` and on the Weapon
-`damage` it owns, e.g. that `damage` is a whole number of at least 1 under
-[Combat GDR validation](combat.md#combat-gdr-validation). These rules guarantee that every newly created Agent satisfies
+[Combat GDR validation](combat.md#combat-gdr-validation) adds further rules, e.g. that the Weapon `damage` is a whole
+number of at least 1. These rules guarantee that every newly created Agent satisfies
 [Attribute bounds](domain-model.md#attribute-bounds) and that the effective skill formula never divides by zero.
 
 # Agent properties
@@ -210,17 +169,17 @@ reason, that Investigation or Mission is added to the Agent's Participation hist
 the reason may be that the player orders the Agent elsewhere, that the Investigation completes, or that the Mission's
 Battle is fought. Nothing is ever removed from a Participation history, and recording it neither assigns nor
 reserves the Agent, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain
-Model. [Investigations](investigations.md) and [Missions](missions.md) own when an Agent leaves each Current team.
+Model.
 
 # Agent lifecycle
 
 **Proposed rule:** An Agent is in exactly one of the lifecycle states Serving, Killed, and Dismissed. The set is
 exhaustive. Every Agent is Serving when it is created. The transition table is:
 
-| Source state | Target state | Trigger                                                | Condition                                                                                                             |
-| ------------ | ------------ | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| Serving      | Killed       | The Agent's health reaches zero in a Battle.           | The Agent is Deployed. [Combat](combat.md) owns when health reaches zero.                                             |
-| Serving      | Dismissed    | The `dismissAgents` Player action dismisses the Agent. | The preconditions of `dismissAgents`, which [Economy and Upgrades](economy-and-upgrades.md) owns, hold for the Agent. |
+| Source state | Target state | Trigger                                                                                                            | Condition                                                                                                  |
+| ------------ | ------------ | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| Serving      | Killed       | The Agent's health reaches zero in a Battle, under [Killed and Incapacitated](combat.md#killed-and-incapacitated). | The Agent is Deployed.                                                                                     |
+| Serving      | Dismissed    | The `dismissAgents` Player action dismisses the Agent.                                                             | The preconditions under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents) hold for the Agent. |
 
 Every transition not listed is impossible; e.g., a Killed Agent never becomes Serving again, and a Dismissed Agent
 cannot be Killed. Killed and Dismissed are final.
@@ -249,8 +208,7 @@ in addition to [Attribute bounds](domain-model.md#attribute-bounds) in Domain Mo
 Any rule of any specification that would raise exhaustion above `exhaustion_cap` raises it to exactly `exhaustion_cap`
 instead, and any rule that would lower it below 0 lowers it to exactly 0 instead. Any rule that would lower health
 below 0 lowers it to exactly 0 instead, and any rule that would raise health above maximum health raises it to exactly
-maximum health instead. These clamps are part of this document's contract; the rule that changes the value applies
-them as part of its own change. E.g., a Combatant with exhaustion 99 that would gain 3 exhaustion with an
+maximum health instead. The rule that changes the value applies these clamps as part of its own change. E.g., a Combatant with exhaustion 99 that would gain 3 exhaustion with an
 `exhaustion_cap` of 100 has exhaustion 100.
 
 ## Effective skill
@@ -292,7 +250,8 @@ effective skill equal to its skill. A Combatant with zero health, e.g. a Killed 
 Effective skill is never stored. Whenever a rule reads it, it is computed from the Combatant's values at that moment, so
 it follows every change of skill, health, or exhaustion at once, under
 [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. Which
-moment's values a Turn advancement step reads is owned by [Turn Advancement](turn-advancement.md).
+moment's values a Turn advancement step reads is stated under
+[Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
 ## Changes to attributes
 
@@ -301,7 +260,7 @@ creation. A rule not listed here changes none of them.
 
 | Value          | Raised by                                                                                                               | Lowered by                          |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| Skill          | [Training growth](#training-growth), in this document                                                                   | No rule                             |
+| Skill          | [Training growth](#training-growth)                                                                                     | No rule                             |
 | Health         | [Agent Recovery](agent-recovery.md)                                                                                     | [Combat](combat.md), in a Battle    |
 | Maximum health | No rule                                                                                                                 | No rule                             |
 | Exhaustion     | [Combat](combat.md), in a Battle, by `exhaustion_per_attack` and `exhaustion_per_defense`                               | [Agent Recovery](agent-recovery.md) |
@@ -313,9 +272,8 @@ unchanged. Each specification named in the table applies the clamps under [Attri
 # Modifiable values
 
 **Proposed rule:** Weapon damage is the only Agent value that an Upgrade may change. It is an individual value of each
-Agent, not an Agency value. [Economy and Upgrades](economy-and-upgrades.md) refines this section with how the
-[Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect) raises the weapon damage of Serving Agents and of Agents created later, under
-[Agent creation](#agent-creation). No Upgrade changes skill, health, maximum health, exhaustion, or Weapon.
+Agent, not an Agency value. The [Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect) raises the
+weapon damage of Serving Agents and of Agents created later, under [Agent creation](#agent-creation). No Upgrade changes skill, health, maximum health, exhaustion, or Weapon.
 
 # Current assignments and transit
 
@@ -331,7 +289,8 @@ while In transit.
 
 A Deployed Agent is always At assignment, because deployment has no transit under [Transit rule](#transit-rule). In
 every Committed state, the Mission that a Deployed Agent's Current assignment references is Deployed, and its
-Current team contains that Agent.
+Current team contains that Agent. A Mission is Deployed, under [Mission lifecycle](missions.md#mission-lifecycle),
+exactly when the Agents of its Current team are Deployed on it.
 
 ## Agents that can be ordered
 
@@ -345,13 +304,13 @@ An Agent on Recovery, an Agent In transit, and a Deployed Agent therefore cannot
 Dismissed Agent. Whether an Agent can be ordered is a Derived value. Every Player action that changes an Agent's Current
 assignment requires that the Agent can be ordered: `assignAgents` under [Assigning Agents](#assigning-agents), and the
 Player actions of [Investigations](investigations.md) and [Missions](missions.md) that assign Agents to an Investigation
-or deploy them to a Mission site, which link this section. `dismissAgents`, which ends the Current assignment instead of
-changing it, has its own precondition, owned by [Economy and Upgrades](economy-and-upgrades.md).
+or deploy them to a Mission site. `dismissAgents`, which ends the Current assignment instead of changing it, has its
+own precondition, under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents).
 
 ## Current assignment changes
 
 **Proposed rule:** The following table lists every allowed change of a Serving Agent's Current assignment or Task
-phase, with what triggers it and which specification owns the trigger. A Current assignment of "Investigation" in the
+phase, with its trigger and the owner of the trigger. A Current assignment of "Investigation" in the
 table means an Investigation with its reference.
 
 | From                                                               | To                                                                        | Trigger and who triggers it                                                                                         | Owner of the trigger and its conditions                    |
@@ -371,15 +330,14 @@ or an Investigation is ordering it to Standby.
 
 A Serving Agent's Current assignment and Task phase also end, without a replacement, when it leaves the Serving
 lifecycle state under [Agent lifecycle](#agent-lifecycle): a Deployed Agent that is Killed in a Battle, and an Agent
-that is dismissed under the preconditions of `dismissAgents`, which [Economy and Upgrades](economy-and-upgrades.md)
-owns. A new Agent starts on Standby: At assignment when it belongs to the
+that is dismissed under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents). A new Agent starts on Standby: At assignment when it belongs to the
 [Initial roster](#initial-roster), and In transit when it is created during play under [Agent creation](#agent-creation).
 
 ## Transit rule
 
-**Proposed rule:** This rule decides when an Agent with a new Current assignment starts working. It is owned here and
-applied by every Turn advancement step under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), which
-[Turn Advancement](turn-advancement.md) owns. The following statements are complete:
+**Proposed rule:** This rule decides when an Agent with a new Current assignment starts working. Every Turn advancement
+step under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) applies it. The following statements
+are complete:
 
 1. **Starting In transit:** Every new Current assignment starts In transit, with three exceptions: an Agent becomes
    Deployed At assignment at once; an Agent on Recovery whose health reaches maximum health becomes Standby At
@@ -395,9 +353,9 @@ Wherever the rule of a Turn advancement step after Transit applies to Agents At 
 At assignment in the Turn-end state and that are still At assignment when the step begins. There are two exceptions to
 statement 2:
 
-- **Upkeep:** An Agent that arrives in the Transit step is still counted in the Upkeep step, because upkeep is a cost the
-  Agency pays for every Serving Agent, not something the Agent does. [Economy and Upgrades](economy-and-upgrades.md) owns
-  that rule.
+- **Upkeep:** An Agent that arrives in the Transit step is still counted in the Upkeep step, because
+  upkeep, under [Upkeep](economy-and-upgrades.md#upkeep), is a cost the Agency pays for every Serving Agent, not something the Agent
+  does.
 - **Destination ends:** When the Current assignment an Agent has just arrived at ends because of something other than
   the Agent's own work, its Current assignment still changes as the owning rule states. E.g., an Agent that arrives at an
   Investigation in the Transit step adds no progress, but when the other members' progress completes that Investigation
@@ -457,9 +415,8 @@ Campaign State. This table is exhaustive.
 | Task phase            | At assignment for an Agent of the initial roster; In transit for every Agent created during play. | This rule, under [Transit rule](#transit-rule).                                  |
 | Participation history | Empty.                                                                                            | This rule.                                                                       |
 
-Economy and Upgrades refines the initial weapon damage for an Agent created after an Upgrade has been acquired, under
-[Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect); that is an ownership pointer, and the table above
-states the value before any Upgrade has been acquired. The new Agent joins the Agency's roster of Agents. No Campaign configuration value changes any initial value above.
+The table above states the initial weapon damage before any Upgrade has been acquired; for an Agent created after an
+Upgrade has been acquired, the [Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect) refines it. The new Agent joins the Agency's roster of Agents. No Campaign configuration value changes any initial value above.
 Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
 ## Initial roster
@@ -483,7 +440,7 @@ Parameters:
 | `agents`     | A list of Instance IDs, each meant to identify one Agent of the Campaign.                          |
 | `assignment` | The target Current assignment: exactly one of the values `Standby`, `Contracting`, and `Training`. |
 
-Preconditions owned by this document. The action is rejected, as a whole, when any of the following holds:
+Preconditions: the action is rejected, as a whole, when any of the following holds:
 
 1. `agents` is empty.
 2. `agents` contains the same Instance ID more than once.
@@ -492,17 +449,19 @@ Preconditions owned by this document. The action is rejected, as a whole, when a
 5. An Agent in `agents` cannot be ordered, under [Agents that can be ordered](#agents-that-can-be-ordered).
 6. An Agent in `agents` already has `assignment` as its Current assignment.
 
-**Training cap:** [Economy and Upgrades](economy-and-upgrades.md) refines this action with one further precondition,
-that ordering the Agents to Training does not raise the number of Agents whose Current assignment is Training above the
-[Training cap](economy-and-upgrades.md#glossary). That document owns the precondition, the value of the cap, and which
-Agents it counts. Other preconditions on every Player action, e.g. that the Campaign has no Campaign ending, are owned
-by [Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md).
+**Training cap:** One further precondition applies, under
+[Training cap on assigning Agents](economy-and-upgrades.md#training-cap-on-assigning-agents): ordering the Agents to
+Training does not raise the number of Agents whose Current assignment is Training above the
+[Training cap](economy-and-upgrades.md#glossary). Other preconditions apply to every Player action, e.g. that the
+Campaign has no Campaign ending, under [Panic and Endings](panic-and-endings.md) and
+[Engine Contract](../foundation/engine-contract.md).
 
 Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at
 least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation
-is the implementer's choice. A rejected action changes nothing, under
+is the Implementer's choice. A rejected action changes nothing, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract. Because
-every value this document owns is Player-visible information, the error reveals nothing hidden.
+every value under [Player-visible information](#player-visible-information) is Player-visible, the error reveals
+nothing hidden.
 
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same
 Turn, to every Agent in `agents`:
@@ -510,8 +469,9 @@ Turn, to every Agent in `agents`:
 - Its Current assignment becomes `assignment` and its Task phase becomes In transit, under
   [Transit rule](#transit-rule).
 - If its Current assignment was an Investigation, it leaves that Investigation's Current team, and the Investigation is
-  recorded under [Participation history records](#participation-history-records). What leaving does to the
-  Investigation, e.g. that it is Abandoned when its last member leaves, is owned by [Investigations](investigations.md).
+  recorded under [Participation history records](#participation-history-records). Leaving also affects the
+  Investigation under [Leaving an Investigation](investigations.md#leaving-an-investigation), e.g. it is Abandoned
+  when its last member leaves.
 
 Nothing else changes; e.g., no money is spent, and skill, health, and exhaustion are unchanged. The Agents arrive in
 the next Advance turn and start working in the Advance turn after it, under [Transit rule](#transit-rule).
@@ -539,10 +499,9 @@ Agency already employs as many Agents as the Agent cap allows. Nothing else chan
 
 # Player-visible information
 
-**Proposed rule:** The following table states, for every value this document owns, whether it is Player-visible
-information under [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine
-Contract. It is exhaustive. Every value is Player-visible from the moment it exists, without a reveal condition, for
-every Agent whatever its lifecycle state.
+**Proposed rule:** Every value below is Player-visible information under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, from the
+moment it exists, without a reveal condition, for every Agent whatever its lifecycle state. The table is exhaustive.
 
 | Value                                                                                                            | Player-visible information |
 | ---------------------------------------------------------------------------------------------------------------- | -------------------------- |
@@ -555,7 +514,7 @@ every Agent whatever its lifecycle state.
 | An Agent's Participation history                                                                                 | Yes                        |
 | Every property of the AgentArchetype and of AgentParameters                                                      | Yes                        |
 
-**Unknown versus absent:** No value this document owns is hidden, so Player API never reports one as unknown. A Killed
+**Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. A Killed
 or Dismissed Agent has no Current assignment and no Task phase; Player API reports them as absent, and the visible
 lifecycle state explains why. An empty Participation history is reported as empty, not as absent.
 
@@ -570,11 +529,11 @@ lifecycle state explains why. An empty Participation history is reported as empt
 - **Exhaustion at the cap:** A rule that would raise exhaustion above `exhaustion_cap` leaves it at `exhaustion_cap`
   ([Attribute ranges](#attribute-ranges)).
 - **Zero health:** A Serving Agent never has zero health in a Committed state: the Battle that brings its health to zero
-  makes it Killed ([Agent lifecycle](#agent-lifecycle)). An Enemy with zero health has an effective skill of 0, and what
-  that means in a Battle belongs to [Combat](combat.md).
-- **Recovery completion:** An Agent on Recovery whose health reaches maximum health becomes Standby, At assignment, at
-  once, without transit, under [Current assignment changes](#current-assignment-changes); how and when health rises
-  belongs to [Agent Recovery](agent-recovery.md).
+  makes it Killed ([Agent lifecycle](#agent-lifecycle)). An Enemy with zero health has an effective skill of 0
+  ([Effective skill](#effective-skill)).
+- **Recovery completion:** An Agent on Recovery whose health reaches maximum health under
+  [Agent Recovery](agent-recovery.md) becomes Standby, At assignment, at once, without transit, under
+  [Current assignment changes](#current-assignment-changes).
 - **Destination ends during transit:** An Agent In transit to an Investigation in the Turn-end state arrives in the
   Transit step before any Investigation can complete, so no Agent is In transit to an Investigation that ends. An Agent
   that arrives and whose Investigation then completes goes to Standby, In transit ([Transit rule](#transit-rule)).
@@ -589,15 +548,15 @@ lifecycle state explains why. An empty Participation history is reported as empt
   ([Assigning Agents](#assigning-agents)).
 - **Deployed Agents:** A Deployed Agent is At assignment but cannot be ordered, cannot be dismissed, and is not recalled
   by any Player action ([Agents that can be ordered](#agents-that-can-be-ordered)).
-- **Empty roster:** A Campaign with no Serving Agent is valid; `assignAgents` then has no Agent it can order. Defeat
-  conditions belong to [Panic and Endings](panic-and-endings.md).
+- **Empty roster:** A Campaign with no Serving Agent is valid; `assignAgents` then has no Agent it can order. Whether
+  the Campaign ends is decided under [Defeat](panic-and-endings.md#defeat).
 - **Invalid GDRs:** A Game build with no AgentArchetype, two AgentArchetypes, an AgentArchetype `health` of 0, a missing or extra property, or an
   unresolved `weapon` fails [Agent GDR validation](#agent-gdr-validation), and no Campaign is created from it. A
-  Committed state violating an invariant of this document, e.g. a Serving Agent with no Current assignment, is an
+  Committed state violating an Agent invariant, e.g. a Serving Agent with no Current assignment, is an
   internal invariant violation, reported under
   [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 - **Campaign ended:** Once the Campaign has a Campaign ending, `assignAgents`, `addAgents`, and Advance turn are
-  rejected; [Panic and Endings](panic-and-endings.md) owns that rejection.
+  rejected, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
 
 # Acceptance examples
 
@@ -612,8 +571,8 @@ values they read are:
 | `sidearm`          | `damage` 10                                                                                                                                                                                              |
 
 "The Advance turn ending turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. No
-Upgrade has been acquired in any example. Effects owned by other specifications, e.g. income, are named only to show
-when they apply; their amounts belong to those specifications.
+Upgrade has been acquired in any example. Effects of other specifications' rules, e.g. income, appear only to show
+when they apply, without their amounts.
 
 ## Effective skill computations
 
@@ -763,17 +722,17 @@ This example exercises [Assigning Agents](#assigning-agents) and
 on Standby, In transit; a3 is on Recovery, At assignment; a4 is Deployed; a6 is Killed; a7 is on Investigation i1, At
 assignment, together with a8. Each call is made on its own from this state, and each rejected call changes nothing:
 
-| Call                               | Result                                                                                                                                                                                             |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `assignAgents([], Standby)`        | Rejected: `agents` is empty.                                                                                                                                                                       |
-| `assignAgents([a1, a1], Standby)`  | Rejected: a1 is listed twice.                                                                                                                                                                      |
-| `assignAgents([a1], Contracting)`  | Rejected: a1 is already on Contracting.                                                                                                                                                            |
-| `assignAgents([a1, a2], Training)` | Rejected as a whole: a2 is In transit. a1 stays on Contracting, At assignment.                                                                                                                     |
-| `assignAgents([a3], Standby)`      | Rejected: a3 is on Recovery.                                                                                                                                                                       |
-| `assignAgents([a4], Standby)`      | Rejected: a4 is Deployed.                                                                                                                                                                          |
-| `assignAgents([a6], Standby)`      | Rejected: a6 is Killed.                                                                                                                                                                            |
-| `assignAgents([a1], Standby)`      | Succeeds: a1 is recalled to Standby, In transit.                                                                                                                                                   |
-| `assignAgents([a7], Training)`     | Succeeds: a7 is on Training, In transit, has left i1's Current team, and has i1 in its Participation history. i1 keeps a8; what else happens to i1 belongs to [Investigations](investigations.md). |
+| Call                               | Result                                                                                                                                                                                          |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `assignAgents([], Standby)`        | Rejected: `agents` is empty.                                                                                                                                                                    |
+| `assignAgents([a1, a1], Standby)`  | Rejected: a1 is listed twice.                                                                                                                                                                   |
+| `assignAgents([a1], Contracting)`  | Rejected: a1 is already on Contracting.                                                                                                                                                         |
+| `assignAgents([a1, a2], Training)` | Rejected as a whole: a2 is In transit. a1 stays on Contracting, At assignment.                                                                                                                  |
+| `assignAgents([a3], Standby)`      | Rejected: a3 is on Recovery.                                                                                                                                                                    |
+| `assignAgents([a4], Standby)`      | Rejected: a4 is Deployed.                                                                                                                                                                       |
+| `assignAgents([a6], Standby)`      | Rejected: a6 is Killed.                                                                                                                                                                         |
+| `assignAgents([a1], Standby)`      | Succeeds: a1 is recalled to Standby, In transit.                                                                                                                                                |
+| `assignAgents([a7], Training)`     | Succeeds: a7 is on Training, In transit, has left i1's Current team, and has i1 in its Participation history. i1 keeps a8; what else happens to i1 follows [Investigations](investigations.md). |
 
 ## Adding Agents
 
@@ -813,3 +772,14 @@ supplies, and exactly one AgentParameters GDR, whose seven values are whole numb
 following test changes independently makes the Game build defective, so no Campaign is created from it: adding a
 second AgentArchetype; setting `field_agent`'s `health` to 0; setting its `weapon` to an identifier that no Weapon GDR
 has; adding a property `rank` to `field_agent`; and setting `training_skill_gain_per_turn` to 0.5.
+
+# TODOs
+
+- TODO (later): Skill gained from Missions and Battles, under [Changes to attributes](#changes-to-attributes).
+- TODO (later): Exhaustion gained from a Current assignment, under [Changes to attributes](#changes-to-attributes).
+- TODO (later): Readiness thresholds, under [Agents that can be ordered](#agents-that-can-be-ordered).
+- TODO (later): Forced withdrawal of an exhausted Agent, under [Current assignment changes](#current-assignment-changes).
+- TODO (later): Career statistics beyond Participation history, under
+  [Participation history records](#participation-history-records).
+- TODO (later): Transit durations that differ between Current assignments, under [Transit rule](#transit-rule).
+- TODO (later): Selection among several AgentArchetypes, under [Agent GDR validation](#agent-gdr-validation).

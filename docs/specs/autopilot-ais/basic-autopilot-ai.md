@@ -11,21 +11,14 @@
 
 # Overview
 
-This document describes the Basic Autopilot AI: the Autopilot AI that a Game build offers so that a Campaign can be
-played without a human making every decision. It plays a sound, cautious Campaign rather than an optimal one. It keeps
-the Agency solvent, lets Agents rest after a Battle before it gives them new work, deploys Agents to Mission sites only
-when they have a good chance of succeeding, keeps Investigations going so that new Mission sites appear, and spends
-surplus money on growing and improving the Agency.
+The Basic Autopilot AI is the [Autopilot AI](../foundation/engine-contract.md#glossary) that a Game build offers so that
+a Campaign can be played without a human making every decision. It plays a sound, cautious Campaign rather than an
+optimal one. It keeps the Agency solvent, lets Agents rest after a Battle before it gives them new work, deploys Agents
+to Mission sites only when they have a good chance of succeeding, keeps Investigations going so that new Mission sites
+appear, and spends surplus money on growing and improving the Agency.
 
-This document owns the Basic Autopilot AI's goals and the order in which it pursues them. It describes them at the level
-of intent: the exact thresholds, e.g. how large a safety margin is, are the Implementer's choice, and the informative
-[Appendix: Derivation from game-ts](#appendix-derivation-from-game-ts) gives proven starting values. It does not own:
-
-- What an Autopilot AI receives, may call, and how an Autopilot engagement ends: [Autopilot](../foundation/autopilot.md)
-  and [API hierarchy](../foundation/engine-contract.md#api-hierarchy) in Engine Contract.
-- The meaning of any game value it reads, e.g. exhaustion, upkeep, or the Transport cap: the Mechanics specification
-  that owns that value.
-- Whether an action it attempts succeeds: the engine decides, and a rejected action changes nothing.
+During each turn it makes its Player actions in a fixed order and then advances the turn. It decides each Player action
+from the current Player-visible information alone and keeps no plan across turns.
 
 # Relationships
 
@@ -44,22 +37,9 @@ of intent: the exact thresholds, e.g. how large a safety margin is, are the Impl
 
 # Glossary
 
-Autopilot AI, Autopilot memory, Player action, Player-visible information, and Turn are defined by the
-[Engine Contract glossary](../foundation/engine-contract.md#glossary). Agency, Agent, Current assignment, Task phase,
-Investigation, Lead, Mission site, Initiative Mission site, Response Mission site, Faction, and Enemy are defined by the
-[Domain Model glossary](../mechanics/domain-model.md#glossary). Exhaustion, Standby, Contracting, Training, Recovery,
-and Deployed are defined by the [Agents glossary](../mechanics/agents-spec.md#glossary), and an Agent that can be
-ordered is defined under [Agents that can be ordered](../mechanics/agents-spec.md#agents-that-can-be-ordered) in Agents.
-Combat rating is defined by the [Combat glossary](../mechanics/combat.md#glossary). Upgrade, Agent cap, Transport cap,
-and Training cap are defined by the [Economy and Upgrades glossary](../mechanics/economy-and-upgrades.md#glossary), and
-projected income and projected upkeep under
-[Projected income and upkeep](../mechanics/economy-and-upgrades.md#projected-income-and-upkeep) in Economy and Upgrades.
-The Mission site states Active and Expired are defined by
-[Mission site lifecycle](../mechanics/missions.md#mission-site-lifecycle) in Missions, the Mission states Won and Lost by
-[Mission lifecycle](../mechanics/missions.md#mission-lifecycle) in Missions, and the Investigation states
-Active and Abandoned by [Investigation lifecycle](../mechanics/investigations.md#investigation-lifecycle) in
-Investigations. Defeat and Money below zero are defined by the
-[Panic and Endings glossary](../mechanics/panic-and-endings.md#glossary).
+These terms are specific to the Basic Autopilot AI. General terms are in the
+[Domain Model glossary](../mechanics/domain-model.md#glossary) and the
+[Engine Contract glossary](../foundation/engine-contract.md#glossary).
 
 | Term               | Definition                                                                                                                                                                                            |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -72,7 +52,9 @@ Investigations. Defeat and Money below zero are defined by the
 # Goals
 
 The Basic Autopilot AI pursues the following goals. The list is exhaustive. The goals can conflict, e.g. a Deployed
-Agent earns no contracting income, so [Turn routine](#turn-routine) states which goal wins.
+Agent earns no contracting income, so [Turn routine](#turn-routine) states which goal wins. The exact thresholds of the
+goals, e.g. how large a safety margin is, are the Implementer's choice; the informative
+[Appendix: Derivation from game-ts](#appendix-derivation-from-game-ts) gives proven starting values.
 
 | Goal                         | What the Basic Autopilot AI aims for                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -172,10 +154,10 @@ and [Player-visible information](../mechanics/combat.md#player-visible-informati
 | A Player action it attempts is rejected                                              | It does not retry the same Player action in that turn and continues with the next step, so a rejection cannot make it repeat itself until it fails.          |
 | Only Leads that create Mission sites it cannot currently win remain                  | It leaves those Leads uninvestigated until the Agency is strong enough.                                                                                      |
 
-# Open decisions
+# TODOs
 
 - TODO: Decide whether the Basic Autopilot AI's thresholds, e.g. its safety margin and Savings floor, stay
-  implementation constants or become values a Player can tune.
+  implementation constants or become values a Player can tune, under [Goals](#goals).
 
 # Appendix: Derivation from game-ts
 
@@ -196,7 +178,7 @@ stated exhaustion in percent; the same numbers are exhaustion points here.
 | Target roster size                             | 8, plus 4 per Upgrade bought            |
 | Transport cap and Training cap                 | 25% and 30% of the roster               |
 
-game-ts differs from this document in the following deliberate ways. The list is exhaustive.
+game-ts differs from the Basic Autopilot AI in the following deliberate ways. The list is exhaustive.
 
 - game-ts broke ties at random; the Basic Autopilot AI breaks them in a fixed order so that its Player actions are
   reproducible.

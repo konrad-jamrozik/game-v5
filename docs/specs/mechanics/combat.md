@@ -11,40 +11,16 @@
 
 # Overview
 
-This document defines how a [Battle](#glossary) is fought and what it produces. A Battle is fully automatic: the player
-chooses who is deployed, under [Missions](missions.md), and this document decides everything that happens after that.
-It owns:
+A [Battle](#glossary) is one armed clash between the [Agents](agents-spec.md) deployed to a Mission site and the
+[Enemies](domain-model.md#glossary) there, resolved in full within one Advance turn. It is fully automatic. Each Enemy
+is created from its EnemyArchetype together with its Mission site, and it never recovers.
 
-- What an [Enemy](domain-model.md#glossary) has, how each Enemy is created from its EnemyArchetype, and that Enemies
-  never recover.
-- The Game Data Record (GDR) Types EnemyArchetype, Weapon, and CombatParameters, the meaning of the two AgentParameters
-  values `exhaustion_per_attack` and `exhaustion_per_defense`, and the validation rules for all of them.
-- The fixed order of each side, the structure of a Round, target selection, the attack with its two named random
-  outcomes, when a Combatant dies or becomes Incapacitated, Combat rating, the end-of-round checks that give the Battle
-  outcome, and the guarantee that every Battle ends.
-- What a Battle result holds, and which of these values are Player-visible information.
-
-Combat is specified and testable without the rest of the Campaign. Its input is a list of Agents, a list of Enemies,
-their current values, and the GDRs it reads; its output is the Battle result and the changed values of those Agents and
-Enemies. What a Battle result means for the Campaign, e.g. whether the Mission is Won or Lost, its rewards, and
-where the surviving Agents go next, is owned by [Missions](missions.md). When a Battle is fought, i.e. in which Turn
-advancement step and for which Missions, is owned by [Missions](missions.md) and
-[Turn Advancement](turn-advancement.md). These are ownership pointers; this document relies on neither.
-
-This document refines Domain Model's combatant contract: it states the exhaustive set of gained properties of the
-[Combatant Role Type](domain-model.md#combatant-role-type), what an Enemy has within
-[Attribute bounds](domain-model.md#attribute-bounds), and which facts a Battle result retains under
-[Combat and consequences](domain-model.md#combat-and-consequences). It also refines Agents'
-[Changes to attributes](agents-spec.md#changes-to-attributes) with how a Battle lowers health and raises exhaustion and
-when an Agent's health reaches zero, within the ranges of [Attribute ranges](agents-spec.md#attribute-ranges). It uses
-Agents' [Effective skill](agents-spec.md#effective-skill) unchanged, and [Numbers](../foundation/numbers.md) for exact
-arithmetic, rounding, Probabilities, and [Uniform whole-number outcomes](../foundation/numbers.md#uniform-whole-number-outcomes).
-Among the Mechanics specifications, this document depends only on Domain Model and Agents.
-
-The following features are out of scope and are not specified here, e.g. skill or experience gained by attacking and
-defending, morale, and target selection that matches attackers to defenders by skill. With them out of scope, a Battle
-changes only the health and exhaustion of its Combatants. Partial success of a Lost Mission is also out of scope;
-[Missions](missions.md) owns its deferral.
+A Battle is fought in Rounds. In each Round every Agent and then every Enemy able to fight attacks the opponent with the
+highest effective skill. An attack hits with a Probability set by the effective skills of attacker and defender, and a
+hit removes a random amount of health around the attacker's weapon damage. Every attack, hit or miss, raises
+exhaustion. A Combatant whose health reaches zero is dead, and one whose effective skill falls to a small fraction of
+its skill is Incapacitated and stops fighting. A Battle ends as Prevailed, Wiped, or Retreated, every Battle ends, and
+its Battle result records every attack.
 
 # Relationships
 
@@ -61,15 +37,8 @@ changes only the health and exhaustion of its Combatants. Partial success of a L
 
 # Glossary
 
-Agent, Enemy, Combatant, Combatant Role Type, Battle result, Mission site, Mission, and Current team are defined by the
-[Domain Model glossary](domain-model.md#glossary). Skill, Effective skill, Health, Maximum health, Exhaustion, Weapon
-damage, and Deployed are defined by the [Agents glossary](agents-spec.md#glossary); the Agent lifecycle state Killed is
-owned by [Agent lifecycle](agents-spec.md#agent-lifecycle). Campaign instance, Instance ID, Archetype, Constants,
-State, and World history are defined by the [Campaign State glossary](../foundation/campaign-state.md#glossary). GDR,
-Authoritative value, and Derived value are defined by the [Core Concepts glossary](../foundation/core-concepts.md#glossary).
-Player-visible information and Committed state are defined by the
-[Engine Contract glossary](../foundation/engine-contract.md#glossary). Round down, Round up, and Probability are defined
-by the [Numbers glossary](../foundation/numbers.md#glossary).
+These terms are specific to Combat. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
+about skill, health, exhaustion, and weapon damage are in the [Agents glossary](agents-spec.md#glossary).
 
 ## Battles
 
@@ -93,15 +62,14 @@ Whether a Combatant still takes part in a Battle, and how strong it and its side
 
 # Combat GDRs
 
-This document owns the three GDR Types below and the meaning of two AgentParameters values, and states which rule reads
-each property. A rule in this document names the property it reads and never copies a GDR value; only the
-[Acceptance examples](#acceptance-examples) show values. The GDRs a Game build supplies, and their values, are listed by
-[Bootstrap GDRs](../content/bootstrap-gdrs.md) and the YAML files it names.
+Enemies and Battles are configured by the three Game Data Record (GDR) Types below and by five AgentParameters values.
+The GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the
+YAML files it names.
 
 ## EnemyArchetype
 
-An EnemyArchetype is the Archetype of an Enemy. The following property table is exhaustive apart from the `id` and
-`type` that every GDR has.
+An EnemyArchetype is the Archetype of an Enemy. The table below is exhaustive apart from the `id` and `type` that every
+GDR has.
 
 | Property | Meaning                                                               | Read by                                                   |
 | -------- | --------------------------------------------------------------------- | --------------------------------------------------------- |
@@ -111,13 +79,12 @@ An EnemyArchetype is the Archetype of an Enemy. The following property table is 
 | `weapon` | A reference to the Weapon GDR a newly created Enemy is equipped with. | [Enemy creation](#enemy-creation)                         |
 
 Which EnemyArchetypes a Mission site's Enemies have, and how many of each, is supplied by the Mission site's
-MissionSiteArchetype, which [Missions](missions.md) owns.
+MissionSiteArchetype, under [Missions](missions.md).
 
 ## Weapon
 
 A Weapon GDR describes damage configuration, under [Weapons and upgrades](domain-model.md#weapons-and-upgrades) in
-Domain Model. This document owns the Weapon Type. The following property table is exhaustive apart from `id` and
-`type`.
+Domain Model. The table below is exhaustive apart from `id` and `type`.
 
 | Property | Meaning                                                                                     | Read by                                                                                                  |
 | -------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -130,8 +97,8 @@ under [Modifiable values](agents-spec.md#modifiable-values) in Agents.
 
 ## CombatParameters
 
-CombatParameters bundles the scalar values this document's rules read. The following property table is exhaustive apart
-from `id` and `type`. Each value is a ratio, not a stored quantity, and is read as the exact decimal number it is
+CombatParameters bundles the scalar values that Battles read. The table below is exhaustive apart from `id` and `type`.
+Each value is a ratio, not a stored quantity, and is read as the exact decimal number it is
 written as, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities) in Numbers.
 
 | Property                              | Meaning                                                                                                                                         | Read by                                               |
@@ -143,23 +110,23 @@ written as, under [Whole-number quantities](../foundation/numbers.md#whole-numbe
 
 ## AgentParameters values this document reads
 
-[AgentParameters](agents-spec.md#agentparameters) is owned by Agents. This document owns the meaning of two of its
-values and reads three more:
+Battles read five values of [AgentParameters](agents-spec.md#agentparameters):
 
-| Property                           | Meaning and use                                                                                     | Read by                                                                                        |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `exhaustion_per_attack`            | The exhaustion an attacking Combatant gains from each of its attacks, hit or miss. Owned here.      | [Effects of an attack](#effects-of-an-attack)                                                  |
-| `exhaustion_per_defense`           | The exhaustion a defending Combatant gains from each attack made on it, hit or miss. Owned here.    | [Effects of an attack](#effects-of-an-attack)                                                  |
-| `exhaustion_cap`                   | Owned by Agents; the clamp of exhaustion under [Attribute ranges](agents-spec.md#attribute-ranges). | [Effects of an attack](#effects-of-an-attack); [Combat GDR validation](#combat-gdr-validation) |
-| `exhaustion_free_points`           | Owned by Agents; an input of [Effective skill](agents-spec.md#effective-skill).                     | [Combat GDR validation](#combat-gdr-validation)                                                |
-| `skill_penalty_pct_per_exhaustion` | Owned by Agents; an input of [Effective skill](agents-spec.md#effective-skill).                     | [Combat GDR validation](#combat-gdr-validation)                                                |
+| Property                           | Meaning and use                                                                      | Read by                                                                                        |
+| ---------------------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `exhaustion_per_attack`            | The exhaustion an attacking Combatant gains from each of its attacks, hit or miss.   | [Effects of an attack](#effects-of-an-attack)                                                  |
+| `exhaustion_per_defense`           | The exhaustion a defending Combatant gains from each attack made on it, hit or miss. | [Effects of an attack](#effects-of-an-attack)                                                  |
+| `exhaustion_cap`                   | The clamp of exhaustion under [Attribute ranges](agents-spec.md#attribute-ranges).   | [Effects of an attack](#effects-of-an-attack); [Combat GDR validation](#combat-gdr-validation) |
+| `exhaustion_free_points`           | An input of [Effective skill](agents-spec.md#effective-skill).                       | [Combat GDR validation](#combat-gdr-validation)                                                |
+| `skill_penalty_pct_per_exhaustion` | An input of [Effective skill](agents-spec.md#effective-skill).                       | [Combat GDR validation](#combat-gdr-validation)                                                |
 
 ## Combat GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the GDRs and
-values this document owns, and it adds to [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game
-build whose GDRs violate one of these rules is defective: no Campaign is created from it, and the violation is reported
-as a data defect, never repaired into different gameplay, under
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for
+EnemyArchetype, Weapon, CombatParameters, `exhaustion_per_attack`, and `exhaustion_per_defense`, and it adds to
+[Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these
+rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into
+different gameplay, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **One CombatParameters:** The Game build supplies exactly one CombatParameters GDR.
@@ -225,8 +192,8 @@ Enemy is ever removed.
 
 ## Enemy creation
 
-**Proposed rule:** Every Enemy is created together with the Mission site at which it is present; [Missions](missions.md)
-owns when that happens, which EnemyArchetypes are used, and how many Enemies of each. Each new Enemy has a fresh
+**Proposed rule:** Every Enemy is created together with the Mission site at which it is present, under
+[Missions](missions.md). Each new Enemy has a fresh
 Instance ID under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model,
 and the following initial values, under
 [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in Campaign State. This table is
@@ -261,7 +228,8 @@ site is never fought over keeps its initial values.
 
 ## Battle inputs and outputs
 
-**Proposed rule:** A Battle is a function of the following inputs only. This list is exhaustive.
+**Proposed rule:** A Battle is fully automatic: the player chooses who is deployed, under [Missions](missions.md), and
+makes no choice during the Battle. A Battle is a function of the following inputs only. This list is exhaustive.
 
 1. **The Agents' side:** a list of one or more distinct Agents, each Serving. This is the Mission's Current team.
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
@@ -358,12 +326,11 @@ exhaustion.
 
 **Proposed rule:** Each side has a fixed order for the whole Battle: the order of its input list under
 [Battle inputs and outputs](#battle-inputs-and-outputs). The Agents' side is ordered as the Current team's list is given,
-and the Enemies' side as the Mission site's list of Enemies is given. [Missions](missions.md) owns the order in which it
-supplies each list. The fixed order never changes during the Battle; a Combatant that dies or becomes Incapacitated
-keeps its position and is skipped. The Battle result records both orders.
+and the Enemies' side as the Mission site's list of Enemies is given. The fixed order never changes during the Battle;
+a Combatant that dies or becomes Incapacitated keeps its position and is skipped. The Battle result records both orders.
 
 **Informative rationale:** The order is not derived from Instance IDs, because the format of an Instance ID is the
-implementer's choice and so defines no order.
+Implementer's choice and so defines no order.
 
 ## Battle start
 
@@ -411,7 +378,7 @@ the Victory path is winnable; this is evidence for the choice, not a requirement
 # Attacks
 
 An attack is made by one attacker on one defender, its target. It has one hit outcome and, when the hit outcome is a
-hit, one damage outcome. These are its only random outcomes; no other rule of this document is random. Each outcome
+hit, one damage outcome. These are its only random outcomes; no other part of a Battle is random. Each outcome
 depends only on the values its section names, and is independent of every other random outcome, except that a damage
 outcome exists only for an attack whose hit outcome is a hit. No random outcome of a Battle is hidden from the player.
 
@@ -483,8 +450,7 @@ defender is affected.
 of these that holds:
 
 1. **Dead:** Its health is 0. It is dead and is not Incapacitated. A dead Agent becomes Killed at this moment, under
-   [Agent lifecycle](agents-spec.md#agent-lifecycle) in Agents, which owns what else becomes of a Killed Agent. A dead
-   Enemy stays an Enemy with health 0.
+   [Agent lifecycle](agents-spec.md#agent-lifecycle) in Agents. A dead Enemy stays an Enemy with health 0.
 2. **Incapacitated:** It meets the [Incapacitation condition](#incapacitation-condition). Its Incapacitated property
    becomes yes, if it was not already.
 3. Otherwise nothing changes.
@@ -544,7 +510,7 @@ when the Battle ended at its start.
 
 A Battle outcome is final. Every Agent of a Battle that ends as Retreated or Wiped keeps the values the Battle left it;
 the Battle outcome itself changes no Combatant value. Whether the Mission is then Won or Lost, and what becomes of
-each surviving Agent, belongs to [Missions](missions.md).
+each surviving Agent, follows from the Battle outcome under [Missions](missions.md).
 
 ## Termination
 
@@ -606,9 +572,9 @@ presents a Battle later uses the retained values.
 
 # Player-visible information
 
-**Proposed rule:** The following table states, for every value this document owns, whether it is Player-visible
-information under [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine
-Contract. It is exhaustive. Every value is Player-visible from the moment it exists, without a reveal condition.
+**Proposed rule:** Every value below is Player-visible information under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract from the
+moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value                                                                                                                                            | Player-visible information |
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
@@ -619,7 +585,7 @@ Contract. It is exhaustive. Every value is Player-visible from the moment it exi
 | Every property of each EnemyArchetype, Weapon, and CombatParameters GDR, and the meaning of `exhaustion_per_attack` and `exhaustion_per_defense` | Yes                        |
 
 Incapacitated and a Battle in progress never exist in a Committed state, under [Battle timing](#battle-timing), so the
-player observes them only through the Battle result. **Unknown versus absent:** No value this document owns is hidden,
+player observes them only through the Battle result. **Unknown versus absent:** No value in the table above is hidden,
 so Player API never reports one as unknown. A damage outcome is absent, not zero, for an attack whose hit outcome is a
 miss; its health removed is 0. A Mission whose Battle has not been fought has no Battle result; Player API reports it as
 absent.
@@ -922,3 +888,11 @@ Each of the following test changes independently makes the Game build defective,
 
 With `incapacitation_skill_fraction` 0.05 the Game build is valid, because 5 ≤ 5: a Combatant at exhaustion 100 with full
 health has an effective skill of at most 0.05 × skill.
+
+# TODOs
+
+- TODO (later): Skill or experience gained by attacking and defending, under
+  [Effects of an attack](#effects-of-an-attack).
+- TODO (later): Morale.
+- TODO (later): Target selection that matches attackers to defenders by skill, under
+  [Target selection](#target-selection).

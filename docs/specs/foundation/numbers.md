@@ -11,25 +11,15 @@
 
 # Overview
 
-This document defines how the game's numbers behave: every stored quantity is a whole number, a formula that produces
-a fraction names the rounding operation that turns it into a whole number, and a probability is an exact ratio of whole
-numbers that is never stored and never rounded. Together these make every computed value, and every comparison of a
-random outcome against a probability, identical on every machine.
+Every stored quantity in the game is a whole number, e.g. an amount of money, a count, or a number of percent. A
+formula is evaluated exactly, as if with unlimited-precision rational arithmetic, and a formula that can produce a
+fraction names where it applies one of the two rounding operations, Round down or Round up. A percentage is a Percent
+value: a whole number of percent.
 
-These rules are observable, e.g. through the amounts the engine API reports and a Campaign save holds, so they are
-requirements on every implementation. They are **v5 requirements**: the inherited game stored some quantities as
-fixed-point decimals and rounded at several different places, and v5 replaces that with the single scheme below so that
-every acceptance example is exact.
-
-This document is a Foundation specification and depends on no Mechanics specification. It therefore describes kinds of
-quantity generically; each Mechanics specification states the range of each quantity it owns and the rounding of each
-formula it owns, and links this document for the operations. Game quantities appear here only inside examples.
-
-This document owns nothing about randomness beyond the arithmetic of probabilities. [Determinism](determinism-and-randomness.md#determinism)
-and [Campaign seed](determinism-and-randomness.md#campaign-seed) in Determinism and Randomness own reproducibility and
-the Campaign seed, and each Mechanics specification owns the distributions of its own random outcomes. This document
-owns what a probability is as a number, and the one distribution that other specifications reference by name, the
-[Uniform whole-number outcomes](#uniform-whole-number-outcomes).
+A Probability is an exact ratio of two whole numbers that is never stored and never rounded, so deciding whether a
+random outcome takes a stated value gives the same result on every machine. A uniform whole-number outcome gives each
+whole number in an inclusive range the same Probability. The random outcomes themselves are drawn as
+[Determinism and Randomness](determinism-and-randomness.md) states.
 
 # Relationships
 
@@ -45,9 +35,9 @@ owns what a probability is as a number, and the one distribution that other spec
 
 # Glossary
 
-Campaign state, GDR, and Derived value are defined by the [Core Concepts glossary](core-concepts.md#glossary). Campaign
-save and Player action are defined by the [Engine Contract glossary](engine-contract.md#glossary). Campaign seed is
-defined by the [Determinism and Randomness glossary](determinism-and-randomness.md#glossary).
+These terms are specific to numbers. General terms are in the [Core Concepts glossary](core-concepts.md#glossary);
+terms about saves, actions, and the seed are in the [Engine Contract](engine-contract.md#glossary) and
+[Determinism and Randomness](determinism-and-randomness.md#glossary) glossaries.
 
 | Term          | Definition                                                                                                                                                                                          |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -61,22 +51,27 @@ defined by the [Determinism and Randomness glossary](determinism-and-randomness.
 **v5 requirement:** Every stored quantity is a whole number, with no exception. A stored quantity is any value that
 Campaign state holds or that a Campaign save keeps, whatever it measures, e.g. an amount of money, a count, or a number
 of percent. E.g., a stored quantity of 12 percent is stored as the whole number 12, never as 0.12 or 12.0 with a
-fractional part. A whole number is an integer: it has no
-fractional part and no limit on its size is set by this document.
+fractional part. A whole number is an integer: it has no fractional part, and its size is limited only by a range
+stated for its quantity.
+
+**Informative rationale:** The inherited game stored some quantities as fixed-point decimals and rounded at several
+different places. v5 replaces that with the single scheme of whole numbers, named rounding, and exact evaluation, so
+that every acceptance example is exact.
 
 No Campaign state, Campaign save, or engine API value that represents a stored quantity may hold a fractional part, and
 no implementation may hold one in an unrounded form between Player actions. A value that is not stored may have a
 fractional part only as an intermediate result inside a single formula, under [Exact evaluation](#exact-evaluation).
 
-**Ranges.** This document sets one general rule: unless the Mechanics specification that owns a quantity states
-otherwise, a stored quantity is a nonnegative whole number. A Mechanics specification that allows a quantity to be
-negative, or bounds it above, states so where it owns the quantity. E.g., one quantity may be allowed to be negative,
-another may be capped at 100, and another may count from 1. Arithmetic that would take a stored quantity outside its stated range is handled by the owning
-specification's rule, e.g. by clamping or by rejecting a Player action; this document never silently clamps.
+**Ranges.** Unless the Mechanics specification that defines a quantity states otherwise, a stored quantity is a
+nonnegative whole number. A Mechanics specification that allows a quantity to be negative, or bounds it above, states
+so where it defines the quantity. E.g., one quantity may be allowed to be negative, another may be capped at 100, and
+another may count from 1. Arithmetic that would take a stored quantity outside its stated range is handled by a rule of
+the specification that defines the quantity, e.g. by clamping or by rejecting a Player action; it is never silently
+clamped.
 
-**Fractional GDR values.** A GDR value that is a ratio rather than a quantity, e.g. a damage range of 0.5, is not a
-stored quantity. It is read as the exact decimal number it is written as, i.e. as the ratio of whole numbers it denotes
-(0.5 is 1 over 2), never as a binary floating-point approximation. **Proposed rule:** a formula that reads such a
+**Fractional GDR values.** A Game Data Record (GDR) value that is a ratio rather than a quantity, e.g. a damage range
+of 0.5, is not a stored quantity. It is read as the exact decimal number it is written as, i.e. as the ratio of whole
+numbers it denotes (0.5 is 1 over 2), never as a binary floating-point approximation. **Proposed rule:** a formula that reads such a
 value computes with it exactly, under [Exact evaluation](#exact-evaluation).
 
 # Rounding
@@ -97,10 +92,10 @@ is 8.
 **Every formula names its rounding.** **v5 requirement:** A formula that can produce a fraction must state which
 operation it applies and at which point of the expression. A formula that omits the rounding of a possible fraction is
 incomplete and must not be implemented by guessing. A formula whose every possible result is a whole number states
-that no rounding occurs. E.g., `round down((8 × 2) / 3)` is 5, but rounding 8 / 3 first and then multiplying by 2 gives 4, so the formula's own
-wording decides where rounding occurs.
+that no rounding occurs. E.g., `round down((8 × 2) / 3)` is 5, but rounding 8 / 3 first and then multiplying by 2
+gives 4, so the formula's own wording decides where rounding occurs.
 
-In this document and in every specification that links it, the notation `round down( … )` and `round up( … )` names
+In every specification, the notation `round down( … )` and `round up( … )` names
 these operations, and the rounding is applied exactly once at the point where the notation encloses the expression, to
 the exact value of that expression.
 
@@ -114,7 +109,7 @@ only where the formula names a rounding. The result must equal the result of tha
 - Multiplication happens before division within a term, so that no precision is lost, and the order in which the
   formula states its terms does not change the result, because exact arithmetic is associative and commutative for the
   operations used.
-- The size of a result is not limited by this document. An implementation must compute exactly for every value that can
+- The size of a result has no limit. An implementation must compute exactly for every value that can
   arise in a Campaign. It must not wrap around, saturate, or approximate; a stored quantity and an intermediate result
   that exceed what its machine representation holds must be handled with a wider exact representation.
 - A division whose divisor is zero has no value. A formula whose divisor can be zero states what happens in that case;
@@ -124,7 +119,7 @@ only where the formula names a rounding. The result must equal the result of tha
 # Percent values
 
 **v5 requirement:** A percentage is a Percent value: a whole number of percent. A fraction of percent does not exist.
-A Percent value may exceed 100 or be negative only where the owning specification states so.
+A Percent value may exceed 100 or be negative only where the specification that defines it states so.
 
 **p percent of x** means `(p × x) / 100`, evaluated exactly: multiply first, then divide by 100, then apply the
 rounding the formula names. E.g., 2 percent of 30 is `(2 × 30) / 100 = 0.6`; with Round up it is 1, and with Round down
@@ -134,8 +129,8 @@ the only source of imprecision.
 **A Percent value is not always a multiplier.** "p percent of x" is multiplicative: the Percent value p scales another
 quantity x. A quantity that is itself measured in percentage points is different: it is a whole number of percentage
 points, and a rule changes it by adding or subtracting a whole number of percentage points, never by multiplying it.
-E.g., a quantity from 0 to 100 that rises by 3 goes from 40 to 43, and does not become 3 percent of 40. A Game Data
-Record (GDR) property that holds percentage points is a Percent value only in this additive sense, and the rule that
+E.g., a quantity from 0 to 100 that rises by 3 goes from 40 to 43, and does not become 3 percent of 40. A GDR
+property that holds percentage points is a Percent value only in this additive sense, and the rule that
 reads it states which of the two meanings it has.
 
 A formula never divides by 100 first and rounds the result before multiplying, unless it states so; the order above is
@@ -165,9 +160,9 @@ glossary defines. The following rules are complete:
 
 # Uniform whole-number outcomes
 
-A uniform whole-number outcome over the inclusive range from `lo` to `hi` is a random outcome defined as follows, for
-other specifications to reference. It states a distribution only; when the outcome is drawn, in which order, and from
-which source are the implementer's choice under [Scope of the guarantee](determinism-and-randomness.md#scope-of-the-guarantee).
+A uniform whole-number outcome over the inclusive range from `lo` to `hi` is a random outcome defined as follows. It is
+a distribution only; when the outcome is drawn, in which order, and from which source are the Implementer's choice under
+[Scope of the guarantee](determinism-and-randomness.md#scope-of-the-guarantee).
 
 - `lo` and `hi` are whole numbers with `lo` less than or equal to `hi`. A range with `hi` less than `lo` is an internal
   invariant violation.
@@ -197,7 +192,7 @@ to 15.
   that does not and meets a zero divisor is an internal invariant violation, not an expected rejection of a Player
   action.
 - **Result outside its range:** An exact result that falls outside the stated range of its quantity is handled only by
-  the owning specification's rule. This document does not clamp it.
+  a rule of the specification that defines the quantity; it is not clamped otherwise.
 - **Probability outside 0 to 1:** Handled by a clamp that the formula states; otherwise an internal invariant violation.
 - **Degenerate range:** A uniform whole-number outcome with `lo` equal to `hi` is valid and has one possible value.
 - **Large values:** Results larger than a machine word are valid. Wrapping, saturating, or approximating them is a

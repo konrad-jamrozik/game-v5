@@ -319,7 +319,7 @@ describe('specification linter', () => {
   })
 
   test.each([
-    ['# Open decisions\n\nNone.', 'None'],
+    ['# TODOs\n\nNone.', 'None'],
     ['# Edge cases and failure behavior\n\nNot applicable — this document defines no operations.', 'Not applicable'],
     ['# Notes\n\nN/A', 'N/A'],
   ])('rejects a placeholder section instead of omission (%s)', (section, _name) => {
@@ -332,14 +332,14 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toContain('SPEC205')
   })
 
-  test('rejects a misplaced optional Open decisions section', () => {
+  test('rejects a misplaced optional TODOs section', () => {
     const misplaced = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
       '# Alpha behavior',
-      '# Open decisions\n\nChoose the numeric representation.\n\n# Alpha behavior',
+      '# TODOs\n\n- TODO: Choose the numeric representation.\n\n# Alpha behavior',
     )
-    expect(diagnosticCodes(misplaced)).toContain('SPEC209')
+    expect(diagnosticCodes(misplaced)).toEqual(['SPEC209'])
   })
 
   test('accepts Foundation examples embedded beside concepts', () => {
@@ -834,6 +834,184 @@ describe('specification linter', () => {
       lines(['# Glossary', '', '| Term | Definition |', '| --- | --- |', '| Incomplete | |']),
     )
     expect(diagnosticCodes(files)).toContain('SPEC504')
+  })
+
+  describe('TODOs', () => {
+    const alpha = 'docs/specs/foundation/alpha.md'
+    const acceptanceEnd = '[Rule](#rule): the same input has the same result.'
+
+    function withTodos(status: string, items: readonly string[]): SourceFile[] {
+      return mutate(
+        mutate(validCorpus(), alpha, '| Status | Draft |', `| Status | ${status} |`),
+        alpha,
+        acceptanceEnd,
+        lines([acceptanceEnd, '', '# TODOs', '', ...items]),
+      )
+    }
+
+    test.each([
+      ['Draft', ['- TODO: Choose the numeric representation.']],
+      ['Draft', ['- TODO (later): Skill gained from a Battle.']],
+      ['Stub', ['- TODO: Choose the numeric representation.', '- TODO (later): Skill gained from a Battle.']],
+      ['Accepted', ['- TODO (later): Skill gained from a Battle.']],
+    ])('accepts a %s specification with TODO items %j', (status, items) => {
+      expect(diagnosticCodes(withTodos(status, items))).toEqual([])
+    })
+
+    test('rejects an item beginning "TODO:" in an Accepted specification', () => {
+      expect(diagnosticCodes(withTodos('Accepted', ['- TODO: Choose the numeric representation.']))).toEqual([
+        'SPEC604',
+      ])
+    })
+
+    test('rejects a Stub specification without an item beginning "TODO:"', () => {
+      expect(diagnosticCodes(withTodos('Stub', ['- TODO (later): Skill gained from a Battle.']))).toEqual(['SPEC603'])
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, '| Status | Draft |', '| Status | Stub |'))).toEqual([
+        'SPEC603',
+      ])
+    })
+
+    test.each([
+      ['paragraph', 'TODO: Complete the contract.'],
+      ['later paragraph', 'TODO (later): Complete the contract.'],
+      ['list item', '- TODO: Complete the contract.'],
+    ])('rejects a TODO %s outside the TODOs section', (_name, todo) => {
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', todo))).toEqual(['SPEC607'])
+    })
+
+    test.each([
+      ['a blockquote', '> TODO: Define the per-turn completion probability.'],
+      ['a code span', '`TODO:` marks an item that blocks acceptance.'],
+      ['a fenced code block', '```text\nTODO: Define the probability.\n```'],
+      ['inline quoted text', 'Avoid vague placeholders; e.g., "TODO: implement investigations."'],
+    ])('does not treat TODO text in %s as a TODO', (_name, text) => {
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', text))).toEqual([])
+    })
+
+    test.each([
+      ['a non-TODO item', ['- TODO: Choose the representation.', '- Choose the rounding.']],
+      ['prose', ['Choose the representation.', '', '- TODO: Choose the representation.']],
+      ['no TODO item', ['- Choose the representation.']],
+    ])('rejects a TODOs section with %s', (_name, items) => {
+      expect(diagnosticCodes(withTodos('Draft', items))).toContain('SPEC608')
+    })
+
+    test('rejects an empty TODOs section', () => {
+      expect(diagnosticCodes(withTodos('Draft', []))).toEqual(['SPEC204'])
+    })
+
+    test('requires renaming Open decisions to TODOs', () => {
+      const files = mutate(
+        validCorpus(),
+        alpha,
+        acceptanceEnd,
+        lines([acceptanceEnd, '', '# Open decisions', '', '- Choose the numeric representation.']),
+      )
+      const diagnostics = lintSpecifications({ files })
+      expect(diagnostics.map((diagnostic) => diagnostic.code)).toEqual(['SPEC213'])
+      expect(diagnostics[0]?.message).toContain('rename it to "# TODOs"')
+    })
+  })
+
+  describe('subject before document', () => {
+    const alpha = 'docs/specs/foundation/alpha.md'
+
+    const overviewParagraph =
+      'Alpha purpose. See [Implicit relationships](../governance/spec-conventions.md#implicit-relationships).'
+
+    /** Builds an Overview of the given word count, including one code span, plus fenced code that is not counted. */
+    function overviewOf(words: number): SourceFile[] {
+      const text = Array.from({ length: words - 1 }, (_, index) => `word${index}`).join(' ')
+      return mutate(
+        validCorpus(),
+        alpha,
+        overviewParagraph,
+        `${text} \`code\`\n\n\`\`\`text\nignored fenced words\n\`\`\``,
+      )
+    }
+
+    test('accepts an Overview of 200 words and rejects one of 201 words', () => {
+      expect(diagnosticCodes(overviewOf(200))).toEqual([])
+      const diagnostics = lintSpecifications({ files: overviewOf(201) })
+      expect(diagnostics.map((diagnostic) => diagnostic.code)).toEqual(['SPEC214'])
+      expect(diagnostics[0]?.message).toBe('Overview has 201 words; it must have at most 200.')
+    })
+
+    test('counts Overview words in lists and tables', () => {
+      const filler = Array.from({ length: 100 }, (_, index) => `word${index}`).join(' ')
+      const files = mutate(
+        validCorpus(),
+        alpha,
+        overviewParagraph,
+        lines([`- ${filler}`, '', '| Column |', '| --- |', `| ${filler} |`]),
+      )
+      expect(diagnosticCodes(files)).toEqual(['SPEC214'])
+    })
+
+    test.each([
+      'This document defines',
+      'this document states',
+      'This document owns',
+      'This document describes',
+      'This document specifies',
+      'Alpha does not own',
+      'The ownership pointer',
+    ])('rejects the document-describing phrase "%s"', (phrase) => {
+      const files = mutate(validCorpus(), alpha, 'Contract.', `${phrase} the contract.`)
+      expect(diagnosticCodes(files)).toEqual(['SPEC215'])
+    })
+
+    test.each([
+      ['straight quotes', 'Do not write "this document defines the contract".'],
+      ['curly quotes', 'Do not write “Alpha does not own payment”.'],
+      ['a code span', 'Do not write `this document owns`.'],
+      ['a blockquote', '> This document describes the contract.'],
+    ])('does not flag a document-describing phrase inside %s', (_name, text) => {
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', text))).toEqual([])
+    })
+
+    test('flags a document-describing phrase in Overview and tables', () => {
+      const files = mutate(
+        mutate(validCorpus(), alpha, 'Alpha purpose.', 'This document owns Alpha.'),
+        alpha,
+        'Contract.',
+        '| Column |\n| --- |\n| Alpha does not own Beta. |',
+      )
+      expect(diagnosticCodes(files)).toEqual(['SPEC215', 'SPEC215'])
+    })
+
+    test.each([
+      ['no introduction', []],
+      ['one sentence', ['These terms are specific to Alpha.']],
+      [
+        'two sentences with e.g. and i.e.',
+        [
+          'These terms, e.g. Apple, are specific to Alpha, i.e. its rules.',
+          'General terms are in the [Specification Conventions glossary](../governance/spec-conventions.md#glossary).',
+        ],
+      ],
+    ])('accepts a Glossary introduction with %s', (_name, introduction) => {
+      expect(glossaryCodes([...introduction, '', ...glossaryTable('Apple')])).toEqual([])
+    })
+
+    test.each([
+      ['three sentences', ['These terms are specific to Alpha. General terms are elsewhere. Refunds are elsewhere.']],
+      ['three paragraphs', ['One sentence.', '', 'Another sentence.', '', 'A third without a period']],
+      [
+        'three sentences before groups',
+        [
+          'One sentence. Another sentence! A third?',
+          '',
+          ...glossaryGroup('Fruit', 'Apple', 'Pear'),
+          ...glossaryGroup('Tools', 'Hammer', 'Saw'),
+        ],
+      ],
+    ])('rejects a Glossary introduction with %s', (_name, introduction) => {
+      const glossary = introduction.some((line) => line.startsWith('## '))
+        ? introduction
+        : [...introduction, '', ...glossaryTable('Apple')]
+      expect(glossaryCodes(glossary)).toEqual(['SPEC506'])
+    })
   })
 
   describe('glossary groups', () => {

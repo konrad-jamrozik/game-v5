@@ -11,24 +11,17 @@
 
 # Overview
 
-This document defines what Advance turn does: the complete, ordered list of Turn advancement steps, which Campaign
-instances each step applies to, which values each step uses, how the transit rule of Agents applies across the steps,
-and how a Campaign instance created during Advance turn takes part in later steps.
+Advance turn is the Player action that ends a Turn, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract. It applies
+twelve Turn advancement steps, each exactly once and in a fixed order: Transit, Agency income, Upkeep, Training,
+Investigation progress, Mission resolution, Mission site expiration, Faction activity, Agent recovery, Panic, Ending
+check, and Turn close. Each step applies the rules of one subject, e.g. in Upkeep the Agency pays for every Serving
+Agent.
 
-It is the canonical statement of the order in which things happen during Advance turn. A Mechanics specification owns
-the formulas and effects of the rules that one step applies, e.g. how much health an Agent recovers. This document owns
-when each of those rules applies relative to every other rule, as stated under [Canonical order](#canonical-order).
-Each step below restates in one or two sentences what its rules do and links the section that owns them, so that the
-whole of Advance turn can be read in one place. It uses every Mechanics specification whose rules it orders, so it
-sits above all of them; they only point to it. The examples of interactions between several game systems within one
-Advance turn belong here, under [Acceptance examples](#acceptance-examples).
-
-It does not own, e.g., that Advance turn is one atomic Player action, which
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract owns, or what
-Advance turn does to the Timeline, which [Timeline entries](../foundation/timeline.md#timeline-entries) in Timeline owns.
-It owns no Campaign state value and no Player action, so it states no Player-visible information of its own: only the
-Committed state after Advance turn is observable, and each value in it is made Player-visible or hidden by the
-specification that owns it.
+A step uses every value as the earlier steps of the same Advance turn left it. Within one step, every rule uses
+Step-start values, apart from a few listed exceptions, so the order in which Campaign instances are processed never
+changes the result. Every transit takes one Advance turn, and a Mission site created during Advance turn does not count
+down in it. Only the Committed state after Advance turn is observable.
 
 # Relationships
 
@@ -48,23 +41,9 @@ specification that owns it.
 
 # Glossary
 
-Campaign and Campaign state are defined by the [Core Concepts glossary](../foundation/core-concepts.md#glossary).
-Campaign instance is defined by the [Campaign State glossary](../foundation/campaign-state.md#glossary). Player action,
-Committed state, Turn, Turn-start state, and Turn-end state are defined by the
-[Engine Contract glossary](../foundation/engine-contract.md#glossary). The game concepts named by the steps, e.g. Agent,
-Mission site, and Mission, are defined by the [Domain Model glossary](domain-model.md#glossary). Deployed, Standby,
-Contracting, Training, and Recovery are defined by the [Agents glossary](agents-spec.md#glossary); Serving and Killed are
-the Agent lifecycle states under [Agent lifecycle](agents-spec.md#agent-lifecycle). Battle and Battle outcome are defined
-by the [Combat glossary](combat.md#glossary). Transport cap is defined by the
-[Economy and Upgrades glossary](economy-and-upgrades.md#glossary), Investigation progress by the
-[Investigations glossary](investigations.md#glossary), Faction activity level by the
-[Factions glossary](factions.md#glossary), and Recovery turns remaining by the
-[Agent Recovery glossary](agent-recovery.md#glossary). Turn series is defined by the
-[Campaign State glossary](../foundation/campaign-state.md#glossary). Panic, Pending panic change, Campaign ending, and
-Ending reason are defined by the [Panic and Endings glossary](panic-and-endings.md#glossary). The Mission site states, e.g. Active and Expired, are defined
-under [Mission site lifecycle](missions.md#mission-site-lifecycle), the Mission states, e.g. Deployed and Won, under
-[Mission lifecycle](missions.md#mission-lifecycle), and Defeated is a fact of a Faction that
-[Defeat](factions.md#defeat) owns.
+These terms are specific to Turn advancement. Terms about Turns and Player actions are in the
+[Engine Contract glossary](../foundation/engine-contract.md#glossary); the game concepts the steps name are in the
+[Domain Model glossary](domain-model.md#glossary) and the glossaries of the Mechanics specifications that refine it.
 
 | Term                  | Definition                                                                                                                                    |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,17 +52,18 @@ under [Mission site lifecycle](missions.md#mission-site-lifecycle), the Mission 
 
 # Canonical order
 
-This document is the canonical statement of which Turn advancement step each rule applied during Advance turn belongs
-to, the order of the steps, and which values each step uses. The following rules are complete:
+Which Turn advancement step each rule applied during Advance turn belongs to, the order of the steps, and which values
+each step uses are stated canonically under [Turn advancement steps](#turn-advancement-steps) and
+[Values a step uses](#values-a-step-uses). The following rules are complete:
 
 - **One step per rule:** Every rule that a specification states is applied during Advance turn belongs to exactly one
   Turn advancement step under [Turn advancement steps](#turn-advancement-steps). A rule that belongs to no step is not
   applied during Advance turn.
-- **This document prevails:** When another specification contradicts this document about which step a rule belongs
-  to, the order of steps, or which values a rule uses, that specification is defective and must be corrected to match
-  this document. Until it is corrected, this document governs.
-- **New rules:** A specification that adds a rule applied during Advance turn is complete only when this document
-  places the rule in an existing step or adds a step for it.
+- **The canonical order prevails:** When another specification contradicts these sections about which step a rule
+  belongs to, the order of steps, or which values a rule uses, that specification is defective and must be corrected to
+  match them. Until it is corrected, these sections govern.
+- **New rules:** A specification that adds a rule applied during Advance turn is complete only when
+  [Turn advancement steps](#turn-advancement-steps) places the rule in an existing step or gains a step for it.
 - **Restatements:** The description of each step restates rules that the owning Mechanics specification states in
   full. Where the two differ about what a rule computes or changes, rather than about when it applies, the owning
   Mechanics specification governs that content and the description is corrected.
@@ -122,8 +102,8 @@ explain are retained as stated under [Reports](domain-model.md#reports) in Domai
 
 ## Transit across the steps
 
-**Proposed rule:** Every step applies the [Transit rule](agents-spec.md#transit-rule) of Agents, which Agents owns. The
-following statements are complete, and they agree with how each owning specification states its eligibility:
+**Proposed rule:** Every step applies the [Transit rule](agents-spec.md#transit-rule) of Agents. The following
+statements are complete:
 
 1. **At assignment in a step:** Wherever the rule of a step after Transit applies to Agents that are At assignment, it
    applies to an Agent exactly when that Agent was At assignment in the Turn-end state, i.e. in the Committed state in
@@ -161,7 +141,7 @@ arrives in the Advance turn ending turn 5 and earns its first income in the Adva
 ## Same-turn interactions
 
 **Proposed rule:** The following statements are complete for the interactions between steps of the same Advance turn
-that the owning specifications leave to this document:
+that no other specification states:
 
 - **Mission sites created during Advance turn do not count down in it:** Only Mission sites that existed in the Turn-end
   state count down in step 7. An Initiative Mission site created in step 5 did not exist in the Turn-end state, and a
@@ -195,17 +175,17 @@ The following rules are complete:
 - **Earlier steps are visible:** A Turn advancement step uses every value as it is after every earlier step of the
   same Advance turn has been applied. E.g., Mission resolution uses each Agent's skill after the Training step of
   the same Advance turn.
-- **Step-start values within a step:** Every rule of one step uses Step-start values, unless this document states an
-  exception for that step under [Exceptions to Step-start values](#exceptions-to-step-start-values). E.g., when two
+- **Step-start values within a step:** Every rule of one step uses Step-start values, unless
+  [Exceptions to Step-start values](#exceptions-to-step-start-values) states an exception for that step. E.g., when two
   Agents gain skill in Training, neither gain depends on the other, whichever Agent an implementation processes first.
 - **Several changes to one value:** When more than one rule changes the same value within a step, or when contributions
-  of several steps combine into one change, this document states the combined result under
-  [Combined results](#combined-results).
+  of several steps combine into one change, the combined result is stated under [Combined results](#combined-results).
 - **Campaign instances created during Advance turn:** A Campaign instance created during a step takes part in a later
-  step of the same Advance turn only when this document states so for that later step, under
-  [Campaign instances created during Advance turn](#campaign-instances-created-during-advance-turn).
+  step of the same Advance turn only when
+  [Campaign instances created during Advance turn](#campaign-instances-created-during-advance-turn) states so for that
+  later step.
 
-The order in which an implementation processes the Campaign instances within one step is the implementer's choice,
+The order in which an implementation processes the Campaign instances within one step is the Implementer's choice,
 because the rules above make its result the same for every order. Only the Committed state after Advance turn is
 observable, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
@@ -336,14 +316,14 @@ All examples use the Bootstrap GDR values from `content/configuration/campaign_c
 
 The Campaign has the one Faction Red Dawn, from `red_dawn`. "The Advance turn ending turn t" is the Advance turn
 committed during Turn t; the Campaign starts in Turn 1. Every Agent is a `field_agent`, and no Upgrade has been acquired
-unless an example says so. The injected named random outcomes are named as their owners name them: the Investigation
+unless an example says so. The injected named random outcomes are named as their rules name them: the Investigation
 completion outcome under [Completion probability](investigations.md#completion-probability), the Level duration,
 Operation interval, and Operation level outcomes under
 [Faction random outcomes](factions.md#faction-random-outcomes), the MissionSiteArchetype selection outcome under
 [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection), and the hit and damage outcomes of each Battle under
 [Hit outcome](combat.md#hit-outcome) and [Damage outcome](combat.md#damage-outcome). Where an example states a Battle
 outcome and the values a Battle leaves, the hit and damage outcomes are injected so that Combat's rules produce exactly
-those results, and the example does not repeat the Battle trace, which [Combat](combat.md) owns.
+those results, and the example does not repeat the Battle trace.
 
 ## The first two Advance turns of a Campaign
 

@@ -11,9 +11,10 @@
 
 # Overview
 
-This document steers implementers to keep gameplay code isolated from the Campaign state that contains it. It is
-a non-behavioural Implementation document: it owns no game behavior, observable contract, or GDR, and no acceptance test depends on it.
-Committed state integrity and determinism guarantees remain owned by Engine Contract and Campaign State.
+Gameplay code stays isolated from the [Campaign state](../foundation/campaign-state.md) that contains it. A Gameplay
+function receives only the inputs and dependencies it needs, and a Campaign instance holds no reference to the Campaign
+state that contains it. User interface code and Autopilot AI code reach the game only through the engine API of the
+[Engine Contract](../foundation/engine-contract.md).
 
 # Relationships
 
@@ -33,7 +34,8 @@ Committed state integrity and determinism guarantees remain owned by Engine Cont
 
 Gameplay functions must receive only the inputs and dependencies they need; they must not reach any other part of
 Campaign state, directly or indirectly. This includes the code that creates Campaign instances during gameplay.
-Campaign instances must not hold references to the Campaign state that contains them. These restrictions exclude Session API and Developer API operations, which may access complete Campaign state.
+Campaign instances must not hold references to the Campaign state that contains them. These restrictions exclude
+Session API and Developer API operations, which may access complete Campaign state.
 
 User interface code, e.g. the code of the [Web UI](../ui/web-ui.md), depends on game behavior only through the engine
 API: it never reads Campaign state directly and never calls a Gameplay function. Autopilot AI code, e.g. the code of the
@@ -42,8 +44,8 @@ the game only through Player API and Autopilot memory API, so it cannot see beyo
 
 # Supported observable contract
 
-**Informative rationale:** Narrow inputs make it easy to see which values a piece of game behavior consults, so an implementation can
-check that every such value is part of Campaign state. The observable property this supports, that execution has no
-hidden inputs, is already guaranteed by [Determinism](../foundation/determinism-and-randomness.md#determinism) in
-Determinism and Randomness: equal initial Campaign state, the same Game build, and the same ordered Player actions produce
-equal results. An implementation that satisfies that guarantee by other means also satisfies every specification.
+**Informative rationale:** Narrow inputs make it easy to see which values a piece of game behavior consults, so an
+implementation can check that every such value is part of Campaign state. The observable property this supports, that
+execution has no hidden inputs, is guaranteed by [Determinism](../foundation/determinism-and-randomness.md#determinism):
+equal initial Campaign state, the same Game build, and the same ordered Player actions produce equal results. An
+implementation that satisfies that guarantee by other means also satisfies every specification.

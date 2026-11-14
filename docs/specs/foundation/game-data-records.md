@@ -11,7 +11,11 @@
 
 # Overview
 
-This document defines the purposes a Game Data Record (GDR) can serve relative to game behavior and Campaign state, states the format GDRs are authored in, and gives a worked example of each purpose. It owns no Campaign state structure; e.g., Campaign instances and their creation are owned by [Campaign State](campaign-state.md).
+A Game Data Record (GDR) is a record of game data that the Game build supplies, authored as YAML. It can serve seven
+purposes relative to game behavior and Campaign state: initializing a Campaign instance, presetting Campaign
+configuration, parameterizing a calculation, serving as an Archetype, being referenced by a Campaign instance, keying
+campaign facts, and supplying display content. It builds on [Campaign State](campaign-state.md): Campaign instances and
+their creation are stated there.
 
 # Relationships
 
@@ -21,12 +25,6 @@ This document defines the purposes a Game Data Record (GDR) can serve relative t
 - Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 - Used by [Domain Model](../mechanics/domain-model.md)
 - Used by [Missions](../mechanics/missions.md)
-
-# Glossary
-
-GDR, Type, Authoritative value, and Derived value are defined by [Core Concepts](core-concepts.md#glossary).
-Committed state, Player API, and Player-visible information are defined by the [Engine Contract glossary](engine-contract.md#glossary).
-Campaign instance, Instance ID, Archetype, Constants, State, and Campaign configuration are defined by [Campaign State](campaign-state.md#glossary).
 
 # Purposes of GDRs
 
@@ -46,12 +44,12 @@ implementation interfaces. Each GDR purpose section below is a worked example of
 # GDR authoring format
 
 GDRs are authored as YAML files that the Game build supplies. YAML is the authoring format only: how a Game build
-packages, loads, or represents GDRs while the game runs is the implementer's choice.
+packages, loads, or represents GDRs while the game runs is the Implementer's choice.
 
 Each of the following GDR purpose sections shows one GDR of its worked example as YAML. The snippets illustrate the
 format: each states an identifier, a Type, and the values of that Type's properties. Their property names and values
-are illustrative. The specification owning a Type decides its properties, and [Open decisions](#open-decisions) lists
-the parts of the format that are undecided.
+are illustrative. The properties of a Type are decided where the Type is specified, and [TODOs](#todos) lists the
+parts of the format that are undecided.
 
 **v5 requirement:** The key order of a mapping in a GDR file, as authored, is significant: it is preserved when the GDR
 is read, and a specification may rely on it. E.g., [Missions](../mechanics/missions.md) relies on the authored order of
@@ -83,8 +81,7 @@ value: 100
 Recruit skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies
 to newly hired Agents of every Archetype without being repeated in each Archetype.
 
-The example shows only the skill initial value; the specification owning Agent hiring also states the Agent's
-other initial values. When the hiring action completes, the new Committed state contains an Agent Campaign instance
+The example shows only the skill initial value; Agent hiring also sets the Agent's other initial values. When the hiring action completes, the new Committed state contains an Agent Campaign instance
 with a fresh Instance ID and skill 100 in State, the value of the recruit-skill GDR.
 
 ```mermaid
@@ -222,7 +219,7 @@ is_officer: false
 ```
 
 Each newly created Enemy Campaign instance whose Archetype is Thug has current health 10 in State and its own fresh
-Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to its owning Mission site.
+Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to a Mission site.
 Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes its health without changing enemy_2 or Thug.
 
 ```mermaid
@@ -376,9 +373,8 @@ Display content follows these requirements:
   commands still produce equal Campaign state.
 - **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing
   something hidden from the player stays hidden until it becomes Player-visible.
-  The specification owning the described value states when it becomes Player-visible, under
-  [Player queries and actions](engine-contract.md#player-queries-and-actions) in Engine Contract. TODO: State when
-  encyclopedia articles become Player-visible information.
+  The value described states when it becomes Player-visible, under
+  [Player queries and actions](engine-contract.md#player-queries-and-actions).
 - **No inference:** Relationships and gameplay facts are never inferred from Display content, extending the rule under
   [References](campaign-state.md#references). The Thug article identifies its subject through its reference to the Thug GDR, not
   through its title.
@@ -396,11 +392,13 @@ flowchart LR
     PlayerAPI --> UserInterface["A user interface renders it for the player"]
 ```
 
-# Open decisions
+# TODOs
 
-- **GDR file layout:** which directory holds the GDR files, and whether one file holds one GDR or several. Affects
-  [GDR authoring format](#gdr-authoring-format).
-- **GDR identifier format:** the permitted characters and casing of a GDR identifier, and the scope within which it
-  is unique. Affects [GDR authoring format](#gdr-authoring-format) and every reference to a GDR.
-- **YAML property naming:** how a GDR states its identifier and its Type, and the casing of property names. Affects
-  [GDR authoring format](#gdr-authoring-format) and the snippets in every GDR purpose section.
+- TODO: State when encyclopedia articles become Player-visible information, under
+  [GDR purpose: display content](#gdr-purpose-display-content).
+- TODO: Decide the GDR file layout: which directory holds the GDR files, and whether one file holds one GDR or several.
+  Affects [GDR authoring format](#gdr-authoring-format).
+- TODO: Decide the GDR identifier format: the permitted characters and casing of a GDR identifier, and the scope within
+  which it is unique. Affects [GDR authoring format](#gdr-authoring-format) and every reference to a GDR.
+- TODO: Decide the YAML property naming: how a GDR states its identifier and its Type, and the casing of property
+  names. Affects [GDR authoring format](#gdr-authoring-format) and the snippets in every GDR purpose section.

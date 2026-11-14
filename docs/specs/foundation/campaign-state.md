@@ -11,9 +11,9 @@
 
 # Overview
 
-This document defines campaign-data composition, Campaign instance creation, identity, reference integrity, value classification, and historical preservation. These constraints apply to Campaign state; the engine API is owned elsewhere, by [Engine Contract](engine-contract.md).
-
-The Game Design Brief supplies strategic intent; mechanics specifications own detailed gameplay behavior.
+Campaign state follows constraints on campaign-data composition, Campaign instance creation, identity, reference
+integrity, value classification, and historical preservation. These constraints refine
+[Engine Contract](engine-contract.md).
 
 # Relationships
 

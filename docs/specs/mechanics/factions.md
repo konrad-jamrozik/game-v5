@@ -11,35 +11,14 @@
 
 # Overview
 
-This document defines what a [Faction](domain-model.md#glossary) has and does on its own: its State, how each initial
-Faction is created, how a Faction escalates from one Faction activity level to the next, how it generates Faction
-operation occurrences, the Defeated fact and what a Defeated Faction no longer does, which of these values are
-Player-visible information, and the validation rules for the Game Data Records (GDRs) it reads.
+A [Faction](domain-model.md#glossary) is an organization that opposes the Agency and carries out operations in the
+world. The initial Campaign state has exactly one Faction for each FactionArchetype, and no Faction is created later.
 
-It refines [Faction and Faction operation occurrences](domain-model.md#faction-and-faction-operation-occurrences) in
-Domain Model, which defines what a Faction and a Faction operation occurrence are and how a Faction operation
-occurrence relates a Faction to its [Response Mission site](domain-model.md#glossary), with the properties and rules
-listed above. It reads only the three GDR Types it owns, FactionArchetype, FactionActivityLevel, and
-FactionOperationLevel. [Numbers](../foundation/numbers.md) supplies whole-number arithmetic and the arithmetic of
-probabilities; this document owns the distributions of its own random outcomes. Domain Model, which it refines, is the
-only Mechanics specification it depends on.
-
-This document does not own, e.g.:
-
-- The Response Mission site a Faction operation occurrence creates: the MissionSiteArchetype it is created from, its
-  creation, its lifecycle, and its consequences belong to [Missions](missions.md).
-- What causes a Faction to become Defeated: the Mission consequence that defeats a Faction belongs to
-  [Missions](missions.md).
-- When Faction activity happens relative to the rest of Advance turn: [Turn Advancement](turn-advancement.md) owns the
-  order of every Turn advancement step.
-
-These are ownership pointers; this document relies on none of them.
-
-The following features are out of scope and are not specified here: Faction suppression, Faction discovery, dormant
-Faction activity levels from which a Faction carries out no operations, and avoiding a repeat of a Faction's previous
-operation. The list is exhaustive: it names every deferred feature that would change a rule of this document. With them
-out of scope, every Faction is known to the player from campaign creation, and nothing slows a
-Faction's escalation or its operations except becoming Defeated.
+A Faction escalates through Faction activity levels: after a random number of Advance turns at one level, it moves to
+that level's next one, until it reaches a final level. At random intervals that its current level sets, it carries out
+a Faction operation occurrence of a randomly chosen Faction operation level, which creates one
+[Response Mission site](domain-model.md#glossary). A Faction that becomes Defeated stops escalating and carrying out
+operations for the rest of the Campaign, and no Faction is ever removed.
 
 # Relationships
 
@@ -55,16 +34,7 @@ Faction's escalation or its operations except becoming Defeated.
 
 # Glossary
 
-Faction, Faction operation occurrence, Mission site, Initiative Mission site, Response Mission site, and Report are
-defined by the [Domain Model glossary](domain-model.md#glossary). Campaign instance, Instance ID, Archetype, Constants,
-State, and World history are defined by the [Campaign State glossary](../foundation/campaign-state.md#glossary). GDR,
-Game build, Derived value, and Authoritative value are defined by the
-[Core Concepts glossary](../foundation/core-concepts.md#glossary). Player-visible information, Player action, Committed
-state, Turn, Session controller, Autopilot AI, Player API, and Developer API are defined by the
-[Engine Contract glossary](../foundation/engine-contract.md#glossary). Probability is defined by the
-[Numbers glossary](../foundation/numbers.md#glossary). Turn advancement step is defined by the
-[Turn Advancement glossary](turn-advancement.md#glossary). The Mission site states, e.g. Active and Expired, and the Mission states, e.g. Won, are
-defined by [Missions](missions.md), and Campaign ending by [Panic and Endings](panic-and-endings.md).
+These terms are specific to Factions. General terms are in the [Domain Model glossary](domain-model.md#glossary).
 
 | Term                    | Definition                                                                                                                                |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,15 +43,14 @@ defined by [Missions](missions.md), and Campaign ending by [Panic and Endings](p
 
 # Faction GDRs
 
-This document owns the following three GDR Types and states which rule reads each property. A rule in this document
-names the property it reads and never copies a GDR value; only the [Acceptance examples](#acceptance-examples) show
-values. The GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
-and the YAML files it names.
+Factions are described by three Game Data Record (GDR) Types: FactionArchetype, FactionActivityLevel, and
+FactionOperationLevel. The GDRs a Game build supplies, and their values, are listed by
+[Bootstrap GDRs](../content/bootstrap-gdrs.md) and the YAML files it names.
 
 ## FactionArchetype
 
-A FactionArchetype is the Archetype of one Faction. The following property table is exhaustive apart from the `id` and
-`type` that every GDR has.
+A FactionArchetype is the Archetype of one Faction. This property table is exhaustive apart from the `id` and `type`
+that every GDR has.
 
 | Property                 | Meaning                                                          | Read by                                                   |
 | ------------------------ | ---------------------------------------------------------------- | --------------------------------------------------------- |
@@ -90,8 +59,8 @@ A FactionArchetype is the Archetype of one Faction. The following property table
 
 ## FactionActivityLevel
 
-A FactionActivityLevel describes one Faction activity level. It is shared by every Faction at that level. The
-following property table is exhaustive apart from `id` and `type`.
+A FactionActivityLevel describes one Faction activity level. It is shared by every Faction at that level. This
+property table is exhaustive apart from `id` and `type`.
 
 | Property                  | Meaning                                                                                                                                                                                                        | Read by                                                   |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
@@ -103,27 +72,27 @@ following property table is exhaustive apart from `id` and `type`.
 
 ## FactionOperationLevel
 
-A FactionOperationLevel describes one Faction operation level. The following property table is exhaustive apart from
-`id` and `type`.
+A FactionOperationLevel describes one Faction operation level. This property table is exhaustive apart from `id` and
+`type`.
 
-| Property             | Meaning                                                                                                                                                                                             | Read by                                                                                                                                 |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `level`              | The Faction operation level as a whole number; it is the key that `operation_level_weights` uses, and the value that the MissionSiteArchetype property `operation_level`, owned by Missions, names. | [Operation level](#operation-level); [Missions](missions.md), which owns how a Response Mission site's MissionSiteArchetype is selected |
-| `name`               | The level's display name.                                                                                                                                                                           | [Player-visible information](#player-visible-information)                                                                               |
-| `on_win`             | What the Agency gains when a Response Mission at a site of this level is Won.                                                                                                                       | [Missions](missions.md), which owns its meaning                                                                                         |
-| `on_ignored_or_lost` | What changes when a Response Mission site of this level is Expired or its Mission Lost.                                                                                                             | [Missions](missions.md), which owns its meaning                                                                                         |
+| Property             | Meaning                                                                                                                                                                         | Read by                                                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `level`              | The Faction operation level as a whole number; it is the key that `operation_level_weights` uses, and the value that the MissionSiteArchetype property `operation_level` names. | [Operation level](#operation-level); [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) |
+| `name`               | The level's display name.                                                                                                                                                       | [Player-visible information](#player-visible-information)                                                         |
+| `on_win`             | What the Agency gains when a Response Mission at a site of this level is Won.                                                                                                   | [Missions](missions.md)                                                                                           |
+| `on_ignored_or_lost` | What changes when a Response Mission site of this level is Expired or its Mission Lost.                                                                                         | [Missions](missions.md)                                                                                           |
 
 ## Faction GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the GDRs
-this document reads. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it,
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Faction
+GDRs. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it,
 and the violation is reported as a data defect, never repaired into different gameplay, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **Known properties:** Each FactionArchetype, FactionActivityLevel, and FactionOperationLevel has every property its
    table above lists and no property other than those, apart from `id` and `type`. Each `name` is non-empty text. The
    content of a FactionOperationLevel's `on_win` and `on_ignored_or_lost` is validated by
-   [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions, which owns their meaning.
+   [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions.
 2. **Initial level resolves:** Every FactionArchetype's `initial_activity_level` references a FactionActivityLevel the
    Game build supplies.
 3. **Ranges are valid:** Every FactionActivityLevel's `operation_every_turns`, and its `lasts_turns` when that is not
@@ -140,7 +109,8 @@ and the violation is reported as a data defect, never repaired into different ga
 
 These rules guarantee that every uniform whole-number outcome below has a valid range and that every Faction operation
 occurrence has a Faction operation level. That a Response Mission site can be created for every Faction operation level
-a Faction can have is a validation rule of [Missions](missions.md). A FactionActivityLevel that no
+a Faction can have is checked by [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation). A
+FactionActivityLevel that no
 FactionArchetype's `initial_activity_level` and no `next` reaches is valid; it is never used.
 
 # Faction State
@@ -194,7 +164,7 @@ No Campaign configuration value adds, removes, or changes an initial Faction or 
 
 # Faction random outcomes
 
-Every random outcome of this document is one of the three named random outcomes below. Each Faction has its own
+Every random outcome of a Faction is one of the three named random outcomes below. Each Faction has its own
 outcomes: no outcome is shared between two Factions or between two occasions, and no outcome depends on another
 Faction. The distribution of each outcome depends only on the GDRs its rule names. One dependency links outcomes of the
 same Faction: which Faction activity level an Operation level or Operation interval outcome reads depends on whether
@@ -234,7 +204,8 @@ they sum to 1. The outcome depends only on that level's `operation_level_weights
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Faction whose Defeated
 is no applies [Escalation](#escalation) and then
 [Faction operation occurrence generation](#faction-operation-occurrence-generation), in that order. A Faction whose
-Defeated is yes applies neither; nothing about it changes in this step. The following pseudocode states the complete
+Defeated is yes applies neither; nothing about it changes in this step. Nothing slows a Faction's escalation or its
+operations except becoming Defeated. The following pseudocode states the complete
 rule for one Faction F whose Defeated is no; "level" means F's Faction activity level at the moment it is read:
 
 ```text
@@ -299,34 +270,29 @@ activity step of the same Advance turn:
    - its turn number: the turn number of the Turn whose Advance turn it happens in.
 
    [Missions](missions.md) creates exactly one Response Mission site from these facts, under
-   [Mission site creation](missions.md#mission-site-creation) in Missions, which owns which MissionSiteArchetype it is
-   created from.
+   [Mission site creation](missions.md#mission-site-creation) in Missions.
 
 3. F's Turns until the next operation takes the value of F's [Operation interval](#operation-interval) outcome for this
    occurrence, over the `operation_every_turns` of the Faction activity level F is at after Escalation in this step.
 
-[Faction and Faction operation occurrences](domain-model.md#faction-and-faction-operation-occurrences) in Domain Model
-owns that a Faction operation occurrence is not a separate Campaign instance and that the Response Mission site retains
-these facts, and [Mission site kind and provenance](domain-model.md#mission-site-kind-and-provenance) owns that each
-Faction operation occurrence creates exactly one Response Mission site. [Missions](missions.md) owns everything else
-about the Response Mission site: its MissionSiteArchetype, its Instance ID, its other initial values, its Enemies, its
-lifecycle, and its consequences. [Turn Advancement](turn-advancement.md) owns that a
-Response Mission site created in this step does not count down toward expiry in the same Advance turn, because Mission
-site expiration precedes Faction activity under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
+A Faction operation occurrence is not a separate Campaign instance, and its Response Mission site retains these facts,
+under [Faction and Faction operation occurrences](domain-model.md#faction-and-faction-operation-occurrences) in Domain
+Model. A Response Mission site created in this step does not count down toward expiry in the same Advance turn, because
+Mission site expiration precedes Faction activity under
+[Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
 A Faction operation occurrence does not depend on any existing Mission site. In particular, an Active Response Mission
 site of the same Faction, including one of the same Faction operation level, neither prevents nor delays a new
 occurrence, and consecutive occurrences may have the same Faction operation level.
 
 **Informative rationale:** game-ts also escalated Factions through activity levels and drew operations from per-level
-frequencies and severity weights. This document keeps that structure in a reduced form and states it as a Proposed
-rule; the game-ts values and its avoidance of repeated operations are not carried over.
+frequencies and severity weights. Factions keep that structure in a reduced form, as a Proposed rule; the game-ts
+values and its avoidance of repeated operations are not carried over.
 
 # Defeat
 
 **Proposed rule:** Defeated is a permanent fact of a Faction. It changes exactly once at most, from no to yes, and
-never back. This document defines the effect of making a Faction Defeated; [Missions](missions.md) owns the Mission
-consequence that applies it. No other rule makes a Faction Defeated.
+never back. Only a Mission consequence under [Consequences](missions.md#consequences) makes a Faction Defeated.
 
 Making a Faction F Defeated during an Advance turn has the following complete effects on F, applied at once:
 
@@ -339,25 +305,25 @@ turn keeps its first value.
 
 The following table states every change of Defeated. Every change not listed, e.g. from yes to no, is impossible.
 
-| From | To  | Trigger                                                                     | Condition |
-| ---- | --- | --------------------------------------------------------------------------- | --------- |
-| No   | Yes | A Mission consequence owned by [Missions](missions.md) defeats the Faction. | None.     |
+| From | To  | Trigger                                                                                   | Condition |
+| ---- | --- | ----------------------------------------------------------------------------------------- | --------- |
+| No   | Yes | A Mission consequence under [Consequences](missions.md#consequences) defeats the Faction. | None.     |
 
-A Faction whose Defeated is yes no longer does any of the following; the list is exhaustive for this document's rules:
+A Faction whose Defeated is yes no longer does any of the following; the list is exhaustive for the Faction rules:
 
 - It no longer escalates: [Escalation](#escalation) does not apply to it.
 - It no longer carries out operations: no Faction operation occurrence of it happens, so it creates no further Response
   Mission site.
 
-What becomes of Mission sites that target a Defeated Faction belongs to [Missions](missions.md), and whether a Lead of a
-Defeated Faction is available belongs to [Leads and Progression](leads-and-progression.md). Whether every Faction being
-Defeated ends the Campaign belongs to [Panic and Endings](panic-and-endings.md).
+What becomes of Mission sites that target a Defeated Faction, whether a Lead of a Defeated Faction is available, and
+whether every Faction being Defeated ends the Campaign are stated by [Missions](missions.md),
+[Leads and Progression](leads-and-progression.md), and [Panic and Endings](panic-and-endings.md).
 
 # Player-visible information
 
-**Proposed rule:** The following table states, for every value this document owns, whether it is Player-visible
-information under [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine
-Contract. It is exhaustive. Each Player-visible value is visible from campaign creation, without a reveal condition,
+**Proposed rule:** Each Faction value below is Player-visible information, or not, as the table states, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract. The table
+is exhaustive. Each Player-visible value is visible from campaign creation, without a reveal condition,
 for every Faction, whether or not it is Defeated.
 
 | Value                                                                                                                                                                            | Player-visible information                                                                             |
@@ -407,14 +373,14 @@ Developer API.
   per Faction, may happen in one Advance turn ([Faction activity](#faction-activity)).
 - **No FactionArchetype:** A Game build that supplies no FactionArchetype passes [Faction GDR validation](#faction-gdr-validation);
   the initial Campaign state then contains no Faction and the Faction activity step does nothing. What that means for
-  the Campaign ending belongs to [Panic and Endings](panic-and-endings.md).
+  the Campaign ending is stated by [Panic and Endings](panic-and-endings.md).
 - **Unknown property, cyclic `next` chain, or unresolved reference:** These cannot occur in a Campaign,
   because a Game build containing them fails [Faction GDR validation](#faction-gdr-validation) and no Campaign is created
   from it. A Committed state violating the range invariant under [Faction State](#faction-state), e.g. a Faction that is
   not Defeated with Turns until the next operation of 0, is an internal invariant violation, reported under
   [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
-- **Campaign ended:** Once the Campaign has a Campaign ending, Advance turn is rejected, so no further Faction activity
-  applies; [Panic and Endings](panic-and-endings.md) owns that rejection.
+- **Campaign ended:** Once the Campaign has a Campaign ending, Advance turn is rejected under
+  [Panic and Endings](panic-and-endings.md), so no further Faction activity applies.
 
 # Acceptance examples
 
@@ -431,13 +397,11 @@ states a test GDR. The values they read are:
 | `operation_level_1` | `level` 1; `name` Soft operations                                                                             |
 | `operation_level_2` | `level` 2; `name` Violent but small-scale                                                                     |
 
-The Response Mission site each Faction operation occurrence creates, and the MissionSiteArchetype it is created from,
-are owned by [Missions](missions.md); e.g., with the Bootstrap GDRs, under
-[MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) in Missions, an occurrence of Faction
-operation level 1 creates a Response Mission site from `foil_recruitment_push`, and one of level 2 from `foil_sabotage`.
-The examples name those Mission sites only to show when they are created. "The Advance turn ending turn t" is the
-Advance turn committed during Turn t; the Campaign starts in Turn 1. In every example, Red Dawn is not
-Defeated unless the example says otherwise.
+With the Bootstrap GDRs, under [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) in
+Missions, an occurrence of Faction operation level 1 creates a Response Mission site from `foil_recruitment_push`, and
+one of level 2 from `foil_sabotage`. The examples name those Mission sites only to show when they are created. "The
+Advance turn ending turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. In every
+example, Red Dawn is not Defeated unless the example says otherwise.
 
 ## Campaign creation through the first escalation
 
@@ -491,7 +455,8 @@ Turns until the next level to 1 and Turns until the next operation to 1. In the 
 | Turns until the next operation | 11                                    |
 
 Three Response Mission sites have been created in total, in the Advance turns ending turns 15, 40, and 60. None of
-them counted down toward expiry in the Advance turn that created it, which [Turn Advancement](turn-advancement.md) owns.
+them counted down toward expiry in the Advance turn that created it, under
+[Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
 ## A level change does not reset the operation countdown
 
@@ -523,8 +488,8 @@ injected Operation interval of 18, the upper bound, it would happen in the eight
 This example exercises [Defeat](#defeat) and [Faction activity](#faction-activity).
 
 Initial state: during Turn 120, Red Dawn is at `active` with Turns until the next level 1 and Turns until the next
-operation 1. In the Advance turn ending turn 120, a Mission site consequence owned by [Missions](missions.md) makes Red
-Dawn Defeated in Mission resolution. Result after that Advance turn: Defeated is yes; Defeated turn is 120; Faction
+operation 1. In the Advance turn ending turn 120, a Mission site consequence under
+[Consequences](missions.md#consequences) makes Red Dawn Defeated in Mission resolution. Result after that Advance turn: Defeated is yes; Defeated turn is 120; Faction
 activity level is still `active`; Turns until the next level is still 1 and Turns until the next operation is still 1,
 because Faction activity did not apply to Red Dawn; no Faction operation occurrence happened and no Response Mission
 site was created. Had the Campaign continued, no later Advance turn would change any of these values. Applying the
@@ -580,3 +545,12 @@ The unchanged Bootstrap GDRs satisfy every rule: every GDR has exactly the prope
 `faint`, `active`, `war` ends at `war`; levels 1 and 2 each have one FactionOperationLevel; and every range has `lo` of
 at least 1. Whether every Faction operation level has a MissionSiteArchetype to create a Response Mission site from is
 checked by [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions.
+
+# TODOs
+
+- TODO (later): Faction suppression, under [Faction activity](#faction-activity).
+- TODO (later): Faction discovery, under [Player-visible information](#player-visible-information).
+- TODO (later): Dormant Faction activity levels, from which a Faction carries out no operations, under
+  [Faction operation occurrence generation](#faction-operation-occurrence-generation).
+- TODO (later): Avoiding a repeat of a Faction's previous operation, under
+  [Faction operation occurrence generation](#faction-operation-occurrence-generation).

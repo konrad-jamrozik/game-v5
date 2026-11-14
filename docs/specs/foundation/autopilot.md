@@ -11,12 +11,14 @@
 
 # Overview
 
-This document defines Autopilot: how an Autopilot engagement is bounded, what an Autopilot AI receives, how an
-Autopilot engagement ends, and how Autopilot memory behaves.
+Autopilot is the mode in which an Autopilot AI plays the Current campaign through Player API instead of the Session
+controller, as the [Engine Contract glossary](engine-contract.md#glossary) defines it. The Session controller engages an
+Autopilot AI with an Autopilot limit, which bounds the Autopilot engagement in Player actions or turn advancements.
 
-It owns the behavior of Autopilot only. Which API surfaces an Autopilot AI can call is owned by
-[API hierarchy](engine-contract.md#api-hierarchy) in Engine Contract. How an Autopilot AI decides what to do is outside
-this document: each Autopilot AI a Game build offers is described in the Autopilot AIs family.
+During an Autopilot engagement the Autopilot AI receives only Player-visible information and its Autopilot memory. The
+Autopilot engagement ends when the Autopilot limit is reached, when the Session controller disengages it, when the
+Campaign ends, or when the Autopilot AI fails. Autopilot memory carries the Autopilot AI's plans between Autopilot
+engagements and follows undo, redo, and load.
 
 # Relationships
 
@@ -28,10 +30,9 @@ this document: each Autopilot AI a Game build offers is described in the Autopil
 
 # Glossary
 
-Autopilot, Autopilot AI, Autopilot engagement, Autopilot memory, Autopilot memory API, Session controller,
-Player-visible information, and Turn are defined by the [Engine Contract glossary](engine-contract.md#glossary).
-Independent identifier is defined by the [Determinism and Randomness glossary](determinism-and-randomness.md#glossary).
-Timeline entry and Undone action are defined by the [Timeline glossary](timeline.md#glossary).
+These terms are specific to Autopilot. General terms are in the [Engine Contract glossary](engine-contract.md#glossary);
+Independent identifier is in the [Determinism and Randomness glossary](determinism-and-randomness.md#glossary), and
+Timeline entry and Undone action are in the [Timeline glossary](timeline.md#glossary).
 
 | Term                    | Definition                                                                                                                                                                                 |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -112,7 +113,7 @@ failed. A disengagement result identifies the reason, whether the Autopilot limi
 Campaign completion before the Autopilot limit is reached disengages with campaign ended; reaching the Autopilot limit on the same
 action takes precedence as limit reached. Autopilot disengages as AI failed when the Autopilot AI reports an error,
 produces no valid action, or exhausts its configured finite execution budget. That budget prevents indefinitely
-repeated invalid actions or an Autopilot AI that makes no progress; its exact limits are an open decision.
+repeated invalid actions or an Autopilot AI that makes no progress; its exact limits are listed under [TODOs](#todos).
 
 Campaign mutations are serialized. During an Autopilot engagement, the Session controller may read Player API queries,
 Session status, Timeline status, and Autopilot status, read and change Global configuration, and disengage Autopilot. All other Session API operations,
@@ -122,17 +123,16 @@ commits completely or fails without effects. Disengagement never implicitly adva
 Player actions. Failure of the Autopilot AI follows the same boundary rule. A late response from a completed Autopilot engagement
 cannot change Campaign state or write Autopilot memory. Timeline navigation remains available after disengagement.
 
-Engaging Autopilot writes an Autosave, and no Turn-end Autosave is written during an Autopilot engagement.
-[Autosaves](saves.md#autosaves) in Saves owns these rules. An Autopilot engagement that advances the turn is
+Engaging Autopilot writes an Autosave, and no Turn-end Autosave is written during an Autopilot engagement, under
+[Autosaves](saves.md#autosaves). An Autopilot engagement that advances the turn is
 therefore reversed as a whole through [Autosave navigation](timeline.md#autosave-navigation), while the Timeline
 entries of its last Turn are reversed one by one. Completing disengagement writes no Autosave of its own: the Current
 Autosave already holds the Committed state in which the Autopilot engagement ended.
 
 # Autopilot memory
 
-A Campaign has at most one Autopilot memory, and that Autopilot memory records which Autopilot AI wrote it. Keeping
-Autopilot memory for several Autopilot AIs in one Campaign is out of scope. A newly created Campaign has no Autopilot
-memory.
+A Campaign has at most one Autopilot memory, and that Autopilot memory records which Autopilot AI wrote it. A newly
+created Campaign has no Autopilot memory.
 
 `autopilotMemory.read()` returns the Autopilot memory most recently written at or before the current Committed state,
 or an explicit absence when there is none. `autopilotMemory.write(memory)` atomically replaces
@@ -190,8 +190,10 @@ nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-recei
   fails without effects; earlier Player actions remain
   ([Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency)).
 
-# Open decisions
+# TODOs
 
 - TODO: Choose the exact limits of the finite execution budget of an Autopilot AI.
 - TODO: Define how an Autopilot AI becomes available beyond those the Game build offers, e.g. whether the player can
   register one.
+- TODO (later): Keep Autopilot memory for several Autopilot AIs in one Campaign, see
+  [Autopilot memory](#autopilot-memory).

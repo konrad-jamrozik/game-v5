@@ -11,14 +11,13 @@
 
 # Overview
 
-This document defines the Timeline of a Campaign and all undo and redo: what the Timeline records, how undo and redo
-navigate the Player actions of the current Turn, how undo and redo cross Turns by Autosave navigation, and what a
-restored Committed state guarantees.
+The Timeline of a Campaign records the Player actions of the current Turn, so that they can be undone and redone. It
+builds on the [Engine Contract](engine-contract.md) and on the Autosaves of [Saves](saves.md).
 
 Undo and redo come in two forms. [Action navigation](#action-navigation) steps through the Player actions of the
 current Turn and never leaves that Turn. [Autosave navigation](#autosave-navigation) goes back and forward across
-Turns by loading the Autosaves that [Saves](saves.md) defines. The past that game behavior consults is World history,
-owned by [Campaign State](campaign-state.md).
+Turns by loading Autosaves. After either form, the Campaign state equals the Committed state as it was when the
+Campaign first reached it.
 
 # Relationships
 
@@ -34,11 +33,8 @@ owned by [Campaign State](campaign-state.md).
 
 # Glossary
 
-Timeline, Player action, Committed state, Turn, Turn-start state, Turn-end state, Campaign save, Current campaign,
-Current save, and the API surface and Principal terms are defined by the
-[Engine Contract glossary](engine-contract.md#glossary). World history is defined by the
-[Campaign State glossary](campaign-state.md#glossary). Autosave, Current Autosave, Turn-end Autosave, Engagement
-Autosave, and Autosave limit are defined by the [Saves glossary](saves.md#glossary).
+General terms are in the [Engine Contract glossary](engine-contract.md#glossary), World history is in the
+[Campaign State glossary](campaign-state.md#glossary), and Autosave terms are in the [Saves glossary](saves.md#glossary).
 
 | Term            | Definition                                                                                                                                                                                    |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -71,7 +67,7 @@ The diagrams read as follows:
   Committed state right after that Player action.
 - **The diamond on the left:** this is the Turn-start state, in which no Timeline entry has been committed. The
   Timeline itself holds it, so undo reaches it whether or not any Campaign save exists.
-- **The diamond on the right:** this is the Turn-end Autosave, which [Autosaves](saves.md#autosaves) in Saves owns.
+- **The diamond on the right:** this is the Turn-end Autosave, under [Autosaves](saves.md#autosaves).
   It holds the Turn-end state: the Committed state just before the player advances the turn, and the Committed state
   restored when that Campaign save is loaded.
 - **Dashed circles:** these are Undone actions.
@@ -85,7 +81,7 @@ Three things keep a Campaign's past, for different purposes. The following compa
 | Kept past     | What it records                                                            | Consulted by game behavior | Effect of undo                                                            | Owner                                                                      |
 | ------------- | -------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | World history | Past Campaign state or events that game behavior and reports need          | Yes                        | Restored as part of Campaign state, to what it was at the Committed state | [Campaign state composition](campaign-state.md#campaign-state-composition) |
-| Timeline      | The Turn-start state and the Timeline entries of the current Turn          | Never                      | Turns the last Timeline entry that is not an Undone action into one       | This document                                                              |
+| Timeline      | The Turn-start state and the Timeline entries of the current Turn          | Never                      | Turns the last Timeline entry that is not an Undone action into one       | [Timeline structure](#timeline-structure)                                  |
 | Campaign save | A persisted copy of the Campaign at one Committed state, with its Timeline | Never                      | None, except that the Current Autosave is replaced to match               | [Saves](saves.md)                                                          |
 
 World history and the Timeline are independent. A game without undo would have no Timeline and would still need
@@ -138,8 +134,8 @@ Timeline entry. Going back to an earlier Turn, and forward again, is [Autosave n
 # Autosave navigation
 
 Autosave navigation is undo and redo across Turns. It moves the Current campaign between Autosaves and never applies
-or reverses a Player action itself. [Autosaves](saves.md#autosaves) in Saves owns when the Turn-end Autosave and
-the Engagement Autosave are written; this section adds the Return Autosave.
+or reverses a Player action itself. The Turn-end Autosave and the Engagement Autosave are written under
+[Autosaves](saves.md#autosaves); this section adds the Return Autosave.
 
 The targets of Autosave navigation are the Turn-end Autosaves, the Engagement Autosave, and the Return Autosave of
 the Current campaign, limited to those holding a Committed state that is earlier or later than the current Committed

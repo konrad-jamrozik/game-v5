@@ -11,52 +11,14 @@
 
 # Overview
 
-This document defines the Game Data Record (GDR) Type Lead: its properties, its one kind of prerequisite, its one kind of
-completion effect, and the validation rules a Game build's Leads must satisfy. It defines [Lead progression](domain-model.md#glossary),
-the part of Campaign state that records, for each Lead, the Won Missions at the Mission sites it created, and when a Won
-Mission is recorded. It defines when a Lead is available, i.e. may be investigated, as a Derived value; what happens
-when an Investigation of a Lead completes; and which of these values are Player-visible information.
+A [Lead](domain-model.md#glossary) is a Game Data Record (GDR) that describes one line of inquiry. Each Lead concerns
+one Faction, has a Lead difficulty, may require other Leads, and, each time an Investigation of it completes, creates
+one Initiative Mission site targeting its Faction.
 
-It refines Domain Model's progression contract, i.e. [Lead and Investigation](domain-model.md#lead-and-investigation),
-[Leads and Investigations](domain-model.md#leads-and-investigations), and
-[Progression facts](domain-model.md#progression-facts), with what a Lead GDR describes, what Lead progression holds, the
-meaning of a prerequisite, the conditions of availability, and the completion effect. It uses
-[Factions](factions.md) for the [Defeat](factions.md#defeat) fact that blocks the Leads of a Defeated Faction, and
-[Missions](missions.md) for the Mission site and Mission lifecycle states, for Mission site creation, and for the Mission
-resolution in which a Won Mission becomes known. Among Mechanics specifications it depends only on Domain Model,
-Factions, and Missions.
-
-This document does not own, e.g.:
-
-- When an Investigation completes, what an Investigation has, its lifecycle, its progress, how a Lead's `difficulty` is
-  used, and whether an Investigation of a Lead can be started now: [Investigations](investigations.md) owns them,
-  including the Player action that starts an Investigation and its rule
-  [One Active Investigation per Lead](investigations.md#one-active-investigation-per-lead).
-- The Mission site a completed Investigation creates, its lifecycle, and its consequences: [Missions](missions.md) owns
-  them, including the one consequence that makes a Faction Defeated.
-- The order of the Turn advancement steps: [Turn Advancement](turn-advancement.md) owns it.
-
-These are ownership pointers; this document relies on none of them. Two rules cross the boundary with Missions, and
-this document owns both: the validation rule that a Lead's `create_mission_site` names a MissionSiteArchetype of kind
-initiative, and recording a Won Mission against the Lead that created its Mission site, which [Missions](missions.md)
-points to.
-
-The following features are out of scope and are not specified here. The list is exhaustive: it names every deferred
-feature that would change a rule of this document.
-
-- **Discovery:** no Lead is hidden. Every Lead the Game build supplies is Player-visible information from campaign
-  creation, whether or not it is available. A Lead that the player has not yet found, and a Lead discovered through
-  another Lead, do not exist in this scope.
-- **Repeatable Leads:** a Lead with a Won Mission is never available again. No Lead property makes a Lead
-  repeatable.
-- **Further prerequisite and effect kinds:** `mission_won_from_lead` is the only prerequisite kind and
-  `create_mission_site` is the only effect kind. A Lead's completion gives no information, money, funding, Agent
-  improvement, or Campaign objective directly.
-- **Leads that defeat a Faction directly:** no Lead completion makes a Faction Defeated. A Faction becomes Defeated only
-  through a Won Mission, under [Defeat](factions.md#defeat), so no Lead discovers or defeats a Faction.
-
-With them out of scope, a Lead's availability depends only on its prerequisites, Lead progression, the Mission sites
-the Lead created and their Missions, and whether its Faction is Defeated.
+[Lead progression](domain-model.md#glossary) records, for each Lead, the Won Missions at the Mission sites it created;
+a Recorded win is permanent. A Lead is available exactly when every Lead it requires has a Recorded win, it has none
+itself, no Mission site it created is in progress, and its Faction is not Defeated. Every Lead, its Recorded wins, and
+its availability are Player-visible information from campaign creation.
 
 # Relationships
 
@@ -71,17 +33,7 @@ the Lead created and their Missions, and whether its Faction is Defeated.
 
 # Glossary
 
-Lead, Lead progression, Investigation, Current team, Mission site, Initiative Mission site, Response Mission site,
-Mission, and Faction are defined by the [Domain Model glossary](domain-model.md#glossary). Campaign instance, Instance ID,
-Archetype, Constants, and State are defined by the [Campaign State glossary](../foundation/campaign-state.md#glossary).
-GDR, Game build, Campaign state, Authoritative value, and Derived value are defined by the
-[Core Concepts glossary](../foundation/core-concepts.md#glossary). Player-visible information, Player action, Committed
-state, and Turn are defined by the [Engine Contract glossary](../foundation/engine-contract.md#glossary). Turn
-advancement step is defined by the [Turn Advancement glossary](turn-advancement.md#glossary). The Mission site states
-Active, Attempted, Expired, and Cancelled are defined by [Mission site lifecycle](missions.md#mission-site-lifecycle), the
-Mission states Deployed, Won, and Lost by [Mission lifecycle](missions.md#mission-lifecycle), the Investigation states Active, Completed, and Abandoned
-are owned by [Investigations](investigations.md), and Defeated is a fact of a Faction that
-[Defeat](factions.md#defeat) owns.
+These terms are specific to Leads. General terms are in the [Domain Model glossary](domain-model.md#glossary).
 
 | Term               | Definition                                                                                                               |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------ |
@@ -90,31 +42,24 @@ are owned by [Investigations](investigations.md), and Defeated is a fact of a Fa
 | Recorded win       | A Won Mission at a Mission site a Lead created, which Lead progression keeps for that Lead for the rest of the Campaign. |
 | Blocking condition | A condition of Lead availability that does not hold for a Lead and so makes the Lead not available.                      |
 
-This document defines no further terms. A Lead has no lifecycle states. Lead availability is a Derived value under
-[Lead availability](#lead-availability), not a state; "available" is the plain word for a Lead whose Lead availability
-holds. "Prerequisite" and "completion effect" are plain words for the `requires` and `on_completion` properties of a
-Lead.
-
 # Lead GDRs
 
-This document owns the GDR Type Lead and states which rule reads each property. A rule in this document names the
-property it reads and never copies a GDR value; only the [Acceptance examples](#acceptance-examples) show values. The
-GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the YAML
-files it names.
+The GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the
+YAML files it names.
 
 ## Lead
 
 A Lead describes one line of inquiry. A Lead is a GDR serving the Referenced GDR and Key for campaign facts purposes
 under [Game concepts](domain-model.md#game-concepts) in Domain Model; it is not a Campaign instance, and a Lead's GDR
-never changes during a Campaign. The following property table is exhaustive apart from the `id` and `type` that every GDR
-has.
+never changes during a Campaign. A Lead has no lifecycle states. The table below is exhaustive apart from the `id` and
+`type` that every GDR has.
 
 | Property        | Shape                                                                                                                                       | Meaning                                                                                                                                                                                                     | Read by                                                                          |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `name`          | Non-empty text.                                                                                                                             | The display name of the Lead.                                                                                                                                                                               | [Player-visible information](#player-visible-information)                        |
 | `description`   | Non-empty text.                                                                                                                             | The display description of the Lead.                                                                                                                                                                        | [Player-visible information](#player-visible-information)                        |
 | `faction`       | The identifier of a FactionArchetype.                                                                                                       | The Faction the Lead concerns: the Faction whose Archetype is this FactionArchetype. It decides the target Faction of the Mission site the Lead creates, and blocks the Lead once that Faction is Defeated. | [Lead availability](#lead-availability); [Completion effect](#completion-effect) |
-| `difficulty`    | A whole number of at least 1.                                                                                                               | The Lead difficulty of the Lead.                                                                                                                                                                            | [Investigations](investigations.md), which owns how an Investigation uses it     |
+| `difficulty`    | A whole number of at least 1.                                                                                                               | The Lead difficulty of the Lead.                                                                                                                                                                            | [Investigations](investigations.md)                                              |
 | `requires`      | A list, possibly empty, of prerequisites. Each prerequisite is a map with exactly one key, the prerequisite kind, and a value for that key. | The prerequisites that must all hold before the Lead is available, under [Prerequisites](#prerequisites).                                                                                                   | [Prerequisites](#prerequisites)                                                  |
 | `on_completion` | A map with exactly one key, the effect kind, and a value for that key.                                                                      | What happens when an Investigation of the Lead completes, under [Completion effect](#completion-effect).                                                                                                    | [Completion effect](#completion-effect)                                          |
 
@@ -218,8 +163,8 @@ The identifier X refers to the Lead GDR itself, never to text parsed from an ide
 # Lead availability
 
 **Proposed rule:** Whether a Lead is available is a Derived value, calculated from the Committed state in which it is
-read; it is never stored. A Lead L is available exactly when all of the following four conditions hold. The list is
-exhaustive.
+read; it is never stored, and it is not a state. A Lead L is available exactly when all of the following four
+conditions hold. The list is exhaustive.
 
 | Condition                      | It holds exactly when                                                                                           |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
@@ -230,11 +175,12 @@ exhaustive.
 
 The Lead is available exactly when conditions 1 to 4 all hold. When it is not available, its **Blocking conditions** are
 all of the conditions that do not hold; there may be several. No condition reads an Investigation: whether a Lead that
-already has an Active Investigation can be investigated again is not part of Lead availability, and is owned by
-[Investigations](investigations.md). The availability of a Lead is read, e.g., by the Player action that starts an
-Investigation of the Lead, which Investigations owns; this document owns the Derived value and no Player action.
-Availability has no timing of its own: it is true or false in every Committed state, and it can change only when a
-Committed state changes one of the values the four conditions read.
+already has an Active Investigation can be investigated again is not part of Lead availability; it is decided under
+[One Active Investigation per Lead](investigations.md#one-active-investigation-per-lead). The availability of a Lead is
+read, e.g., by the Player action that starts an Investigation of the Lead, under
+[Starting an Investigation](investigations.md#starting-an-investigation). Availability has no timing of its own: it is
+true or false in every Committed state, and it can change only when a Committed state changes one of the values the four
+conditions read.
 
 By [Initial Factions](factions.md#initial-factions), the initial Campaign state contains exactly one Faction for each
 FactionArchetype, and no Faction is created or removed afterwards. Condition 4 therefore names exactly one Faction for
@@ -260,7 +206,7 @@ A situation not listed changes none of the conditions. In particular, the outcom
 was created by a Lead other than L, of a Response Mission site or Response Mission, and any change to an Investigation of L that creates no Mission site change
 no condition of L.
 
-**Consequences.** Together the rules make the following hold, and no rule needs to state them again:
+**Consequences.** Together the rules make the following hold:
 
 - A Lost Mission or an Expired Mission site never blocks its Lead for ever: the Lead is available again and the Agency obtains
   a new Mission site from it by a new Investigation. A Mission site cannot be attempted twice, under
@@ -269,17 +215,17 @@ no condition of L.
   apart from the Turns in which a Mission site it created is Active or a Mission from it is Deployed.
 
 **Informative rationale:** A Lead holds at most one Recorded win. A second Recorded win would need a second Won Mission
-from the Lead, but no Mission site of the Lead is created while condition 3 does not hold if Investigations
-starts an Investigation only for an available Lead and allows only one Active Investigation per Lead, which
-[One Active Investigation per Lead](investigations.md#one-active-investigation-per-lead) in Investigations owns; and once
-a win is recorded, condition 2 never holds again.
+from the Lead, but no Mission site of the Lead is created while condition 3 does not hold if an Investigation is
+started only for an available Lead and only one Active Investigation per Lead is allowed, under
+[One Active Investigation per Lead](investigations.md#one-active-investigation-per-lead) in Investigations; and once a
+win is recorded, condition 2 never holds again.
 
 # Completion effect
 
 **Proposed rule:** When an Investigation of a Lead L completes, the effect named by the `on_completion` of L applies. The
-completion itself, i.e. in which Advance turn an Investigation becomes Completed, is owned by
-[Investigations](investigations.md); it happens in the Turn advancement step Investigation progress. The effect kind
-`create_mission_site` has the following complete effect, applied once for that completion, in the same step:
+completion itself, i.e. in which Advance turn an Investigation becomes Completed, is decided under
+[Completion](investigations.md#completion); it happens in the Turn advancement step Investigation progress. The effect
+kind `create_mission_site` has the following complete effect, applied once for that completion, in the same step:
 
 1. It is the creating rule of an Initiative Mission site under
    [Mission site creation](missions.md#mission-site-creation) in Missions, and supplies to it exactly these three inputs:
@@ -288,8 +234,8 @@ completion itself, i.e. in which Advance turn an Investigation becomes Completed
    - the origin Investigation: the Investigation of L that completed;
    - the target Faction: the Faction whose Archetype is the FactionArchetype named by the `faction` of L, which exists
      and is exactly one under [Initial Factions](factions.md#initial-factions) in Factions.
-2. Missions then creates exactly one Initiative Mission site from these inputs. The initial values of the Mission site,
-   its Enemies, and its expiry are owned by Missions.
+2. Missions then creates exactly one Initiative Mission site from these inputs, with the initial values, Enemies, and
+   expiry that [Missions](missions.md) gives it.
 
 The effect creates one Mission site per completion, never more and never none. It does not depend on the availability of
 L at the moment of completion, and it does not depend on whether the Faction of L is Defeated: if the Faction became
@@ -298,17 +244,16 @@ step Mission resolution of the same Advance turn, under [Cancellation](missions.
 nothing else: it records nothing in Lead progression, because only a Won Mission is recorded, and it spends
 nothing.
 
-The effect applies once for each completion of an Investigation of L; how often an Investigation completes is owned by
-[Investigations](investigations.md). Another completion of an Investigation of the same Lead, e.g. after an earlier
-Mission from the Lead was Lost or an earlier Mission site of the Lead Expired, applies the effect again and creates another Mission site.
+The effect applies once for each completion of an Investigation of L. Another completion of an Investigation of the
+same Lead, e.g. after an earlier Mission from the Lead was Lost or an earlier Mission site of the Lead Expired, applies
+the effect again and creates another Mission site.
 
 # Player-visible information
 
-**Proposed rule:** The following table states, for every value this document owns, whether it is Player-visible
-information under [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine
-Contract. It is exhaustive. Every value is Player-visible from campaign creation, without a reveal condition, for every
-Lead the Game build supplies, whether or not the Lead is available. Nothing in this document is hidden, because discovery
-is out of scope.
+**Proposed rule:** Every value below is Player-visible information under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, from
+campaign creation, without a reveal condition, for every Lead the Game build supplies, whether or not the Lead is
+available. The table is exhaustive. No Lead is hidden.
 
 | Value                                                                                                                                                                               | Player-visible information |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
@@ -321,7 +266,7 @@ is out of scope.
 The player can therefore see why a Lead is not available: every Blocking condition is reported, not only the first, and
 for condition 1 each prerequisite is reported with whether it holds. Whether an Investigation of a Lead can be started
 now, which also depends on whether the Lead already has an Active Investigation, is Player-visible under
-[Investigations](investigations.md). **Unknown versus absent:** No value this document owns is unknown to the player, so
+[Investigations](investigations.md). **Unknown versus absent:** No value in the table above is unknown to the player, so
 Player API never reports one as unknown. A Lead with an empty `requires` is reported with an empty list of
 prerequisites, and condition 1 is reported as holding. A Lead with no Recorded win is reported with an empty set, never
 as absent. The availability of a Lead of a Defeated Faction is reported as not available with condition 4 as a Blocking
@@ -344,8 +289,9 @@ condition.
   including the new one. The new Mission site is Cancelled, no record is made, and the Lead is not available afterwards
   because its Faction is Defeated ([Completion effect](#completion-effect), [Cancellation](missions.md#cancellation)).
 - **Investigation completes when the Faction is already Defeated:** What becomes of an Investigation whose Lead's
-  Faction becomes Defeated is owned by [Investigations](investigations.md). When it completes, the effect creates the Mission site, and [Missions](missions.md)
-  cancels it in the same Advance turn; no Committed state shows it Active ([Completion effect](#completion-effect)).
+  Faction becomes Defeated is decided under [Lead no longer available](investigations.md#lead-no-longer-available).
+  When it completes, the effect creates the Mission site, and [Missions](missions.md) cancels it in the same Advance
+  turn; no Committed state shows it Active ([Completion effect](#completion-effect)).
 - **Two Leads require the same Lead:** Each of them holds its prerequisite from the Committed state in which the required
   Lead's first win is recorded. Both can then become available together, can be investigated at the same time, and
   influence each other in no other way ([Prerequisites](#prerequisites)).
@@ -355,8 +301,9 @@ condition.
   its Faction is Defeated or because it has a Recorded win itself ([Lead availability](#lead-availability)).
 - **Active or Abandoned Investigation:** Neither changes any condition of its Lead; nothing is recorded and no Mission
   site is created. Whether a second Investigation of a Lead may start while one is Active, and whether an Abandoned
-  Investigation's progress is resumed, are owned by [Investigations](investigations.md)
-  ([What changes availability](#what-changes-availability)).
+  Investigation's progress is resumed, are decided under
+  [One Active Investigation per Lead](investigations.md#one-active-investigation-per-lead) and
+  [Abandonment](investigations.md#abandonment) ([What changes availability](#what-changes-availability)).
 - **Cancelled Mission site:** The Lead stays unavailable, because a Mission site is Cancelled only when its Faction is
   Defeated ([What changes availability](#what-changes-availability)).
 - **Lost then Won:** A Lead whose Mission was Lost and that is investigated again creates another Mission site. When
@@ -390,10 +337,10 @@ example states a test GDR. The values they read are:
 
 In the examples, the three Leads are called by their identifiers, "member", "safehouse", and "hq" for
 `locate_red_dawn_member`, `locate_red_dawn_safehouse`, and `locate_red_dawn_hq`. "The Advance turn ending turn t" is the
-Advance turn committed during Turn t; the Campaign starts in Turn 1. Investigations decides when an Investigation
-completes, and Combat decides a Battle outcome; the examples fix those results as inputs, named as their owners name them,
-and rely on none of their formulas. Instance IDs i1, i2, ... name Investigations, s1, s2, ... name Mission sites, and m1, m2, ... name Missions; m1 is the
-Mission at s1, m2 the Mission at s2, and so on.
+Advance turn committed during Turn t; the Campaign starts in Turn 1. When an Investigation completes, under
+[Completion](investigations.md#completion), and each Battle outcome are fixed inputs, named as Investigations and Combat
+name them. Instance IDs i1, i2, ... name Investigations, s1, s2, ... name Mission sites, and m1, m2, ... name
+Missions; m1 is the Mission at s1, m2 the Mission at s2, and so on.
 
 ## Campaign creation
 
@@ -478,8 +425,8 @@ Won, and Lead progression records m5 in hq's set; Missions applies the `on_win` 
 | safehouse | No                                              | 2, 4                |
 | hq        | No                                              | 2, 4                |
 
-Every prerequisite still holds, because the three wins are permanent. Whether the Campaign has ended is owned by
-[Panic and Endings](panic-and-endings.md).
+Every prerequisite still holds, because the three wins are permanent. Whether the Campaign has ended is decided under
+[Victory](panic-and-endings.md#victory).
 
 ## An Abandoned Investigation
 
@@ -564,3 +511,13 @@ together with every property of `raid_hq`; an empty set of Recorded wins; availa
 condition 1 not holding and conditions 2 to 4 holding. It returns for member a set of Recorded wins {m1}, availability No,
 and condition 2 as the only condition not holding. The result is the same
 for the Session controller and an Autopilot AI, and nothing is reported as unknown.
+
+# TODOs
+
+- TODO (later): Lead discovery, i.e. hidden Leads and Leads discovered through another Lead, under
+  [Player-visible information](#player-visible-information).
+- TODO (later): Repeatable Leads, under [What changes availability](#what-changes-availability).
+- TODO (later): Further prerequisite kinds, under [Prerequisites](#prerequisites).
+- TODO (later): Further completion effect kinds, e.g. a Lead completion that gives information, money, funding, Agent
+  improvement, or a Campaign objective directly, under [Completion effect](#completion-effect).
+- TODO (later): Leads whose completion makes a Faction Defeated directly, under [Completion effect](#completion-effect).

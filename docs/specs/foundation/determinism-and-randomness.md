@@ -11,15 +11,12 @@
 
 # Overview
 
-This document defines what makes a Campaign reproducible: the determinism guarantee, the Campaign seed from which every
-random outcome derives, the rules every random outcome obeys, and how unique identifiers behave under replay. These
-subjects share one test, whether replaying the same Player actions must reproduce the same result, so they are stated
-together.
-
-It does not own, e.g., the distribution of any one random outcome, which the Mechanics specification stating that
-outcome owns, or how a random rule is written, which
-[Formulas and uncertainty](../governance/spec-conventions.md#formulas-and-uncertainty) in Specification Conventions
-owns. [Numbers](numbers.md) owns rounding and precision.
+A Campaign is reproducible: given the same Game build, initial Campaign configuration, Campaign seed, and ordered Player
+actions, exactly the same things happen. The Campaign seed is the one value from which every random outcome of a
+Campaign derives, and every random outcome obeys a few common rules, e.g. each takes its possible values as often as its
+rule states. A unique identifier is either a Campaign-scoped identifier, which replaying the same Player actions must
+reproduce, or an Independent identifier, which it need not. The guarantee holds within one implementation and Game
+build, across machines.
 
 # Relationships
 
@@ -37,9 +34,8 @@ owns. [Numbers](numbers.md) owns rounding and precision.
 
 # Glossary
 
-Campaign, Campaign state, Game build, GDR, Session, and Derived value are defined by the
-[Core Concepts glossary](core-concepts.md#glossary). Player action, Committed state, Campaign save, Session controller, and Player-visible information are defined by the
-[Engine Contract glossary](engine-contract.md#glossary).
+These terms are specific to Determinism and Randomness. General terms are in the
+[Core Concepts glossary](core-concepts.md#glossary) and the [Engine Contract glossary](engine-contract.md#glossary).
 
 | Term                       | Definition                                                                                                                                                                                                                                                      |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -53,7 +49,7 @@ Given the same Game build, the same initial Campaign configuration, the same Cam
 Player actions, exactly the same things must happen: Campaign state and retained reports are equal after every
 Player action. This holds whenever, in whichever Session, and on whichever machine each Campaign is created and
 played; e.g., a Campaign save made on one machine and loaded on another continues exactly as it would have on the
-first, given the same Player actions. The Game build includes its GDRs, and the Player actions are those of the
+first, given the same Player actions. The Game build includes its Game Data Records (GDRs), and the Player actions are those of the
 Session controller and of the Autopilot AI alike. The Campaign seed is what makes a Campaign reproducible, and so makes
 undo, redo, load, and debugging possible.
 
@@ -81,7 +77,7 @@ Determinism is required within one implementation and Game build, not across dif
 specification or different Game builds. Within one implementation and Game build it is required across machines:
 no outcome may depend on the machine, operating system, or runtime that executes the Game build.
 
-Consequently, the following are the implementer's choice, provided the guarantee under [Determinism](#determinism)
+Consequently, the following are the Implementer's choice, provided the guarantee under [Determinism](#determinism)
 holds: how random outcomes are derived from the Campaign seed, the order of random draws, the order in which Campaign
 instances are created within one Player action, and the sequence and format of generated Campaign-scoped identifiers.
 Two implementations may therefore produce different outcomes from the same Campaign seed and Player actions; each must
@@ -93,14 +89,14 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
 
 - **Supplied:** The Session controller may supply the Campaign seed in `session.campaign.create(options)`. A
   supplied value that is not a permitted Campaign seed fails creation, under
-  [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle.
+  [Campaign selection](campaign-lifecycle.md#campaign-selection).
 - **Permitted values:** A permitted Campaign seed is text of 1 to 64 characters, each a printable ASCII character,
   i.e. one with a code from 32, the space, to 126, the tilde, inclusive. Two Campaign seeds are the same exactly
   when their texts are equal character for character; e.g., `abc` and `ABC` are different Campaign seeds, and so
   are `run 3` and `run  3`. A supplied value that is empty, longer than 64 characters, or contains any other
   character, e.g. `é` or a tab, is not a permitted Campaign seed.
 - **Chosen:** When none is supplied, the engine chooses a permitted Campaign seed of exactly 10 characters. Which one it chooses is
-  unspecified and need not be reproducible; it is the only engine decision exempt from the guarantee under
+  the Implementer's choice and need not be reproducible; it is the only engine decision exempt from the guarantee under
   [Determinism](#determinism).
 - **Fixed:** The Campaign seed never changes after creation. No action, Timeline navigation, save, or load changes it.
 - **Kept:** The Campaign seed is Campaign state; [Campaign state composition](campaign-state.md#campaign-state-composition)
@@ -133,7 +129,7 @@ Every random outcome of a Campaign obeys the following rules, and this list is c
   outcomes, under [Determinism](#determinism). After a different Player action, any later random outcome may differ,
   even one whose rule does not involve what that Player action changed. E.g., an attack misses; the Session controller
   loads the earlier Campaign save, hires an Agent, and commits the same attack, which may now hit. Whether it does is
-  the implementer's choice.
+  the Implementer's choice.
 
 # Unique identifiers
 
@@ -147,7 +143,7 @@ including through undo and redo, must reproduce the same identifier.
 | Independent identifier     | No                   | E.g., [Campaign IDs and Campaign save IDs](saves.md#glossary). |
 
 A Campaign-scoped identifier therefore depends on nothing outside Campaign state, e.g. wall-clock time, in the same way
-as a random outcome under [Random outcomes](#random-outcomes). The format of every identifier is the implementer's
+as a random outcome under [Random outcomes](#random-outcomes). The format of every identifier is the Implementer's
 choice.
 
 # Acceptance examples

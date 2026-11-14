@@ -87,8 +87,7 @@ A document's layer is one after the latest layer among the Mechanics documents i
 depends on no Mechanics document is in layer 1. The first diagram below shows each document's layer.
 
 A document in an earlier layer states what its things are and what can happen to them. A document in a later layer
-states when it happens and by how much. A document may point to those later details with an ownership pointer, but
-never depends on them.
+states when it happens and by how much. A document may link to those later details, but never depends on them.
 
 E.g., Agents states what health is and that it can go down and up. Combat states how a Battle lowers it, and Agent
 Recovery states how it goes back up.

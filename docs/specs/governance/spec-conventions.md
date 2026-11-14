@@ -107,7 +107,7 @@ Use one of these statuses in the metadata table:
 | Status     | Meaning                                                                                                   |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
 | Stub       | A scoped outline with TODOs; not an implementable contract.                                               |
-| Draft      | Proposed rules are being developed; unresolved decisions are explicit.                                    |
+| Draft      | Proposed rules are being developed; unresolved decisions are explicit TODOs.                              |
 | Accepted   | The user or designated project owner has explicitly accepted the document as the implementation contract. |
 | Superseded | A replacement is linked; the document is retained only for historical context.                            |
 
@@ -124,16 +124,16 @@ proposals on their merits and on Accepted contracts. Draft content may be cited 
 change.
 
 Record document status only in the metadata Status row. Do not repeat that a document is Draft, Stub, unaccepted,
-proposed, or awaiting review in body paragraphs, notices, Review metadata rows, or Open decisions. Work tracking may
+proposed, or awaiting review in body paragraphs, notices, Review metadata rows, or TODOs. Work tracking may
 record batch progress; lifecycle rules and worked review scenarios may discuss status changes.
 
-Open decisions contains only substantive unresolved design choices and their affected contracts. Do not list already
-stated rules merely to request acceptance. Omit the section when no substantive unresolved choices remain.
+The TODOs section contains only the items that [Kinds of unspecified content](#kinds-of-unspecified-content) defines.
+Do not list already stated rules merely to request acceptance. Omit the section when it would have no item.
 
 Each specification has a stable Spec ID, Family, title, status, Audience, Owns summary, and related-document links. The Audience
 metadata row lists the [Personas](#personas) who mainly read or act on the document, separated by commas, in the order
-of the Personas table; at least one Persona is required. Overview explains the
-specification’s purpose and scope, including what it owns and what it excludes; do not add a Scope row to metadata. The Owns metadata
+of the Personas table; at least one Persona is required. Overview describes the
+subject of the specification under [Subject before document](#subject-before-document); do not add a Scope row to metadata. The Owns metadata
 row is a one-sentence summary of what the specification owns; the generated catalog lists it for navigation.
 
 ## Specification families and paths
@@ -201,6 +201,13 @@ when adding, renaming, re-scoping, or moving a specification in that Family.
 
 A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
 
+When a rule uses something another specification decides, link that section where the rule uses it. The link is the
+whole pointer. Do not write a sentence or clause whose only content is that another specification owns something. The
+one exception is a place where a reader would conclude that a rule is missing from all specifications; there, one
+clause with a link is enough. E.g., write "the Order is cancelled when its payment fails" with "payment fails" linked to the section that decides it,
+not "Payments owns when a payment fails". A table column that names the owner of each row is data a reader looks up,
+not narration, and remains valid.
+
 ## Implicit relationships
 
 The following relationships exist without explicit table rows:
@@ -253,7 +260,7 @@ Relationship kinds, but duplicate entries of the same Relationship kind and dire
 Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
 contract prose; a document link does not imply reliance on every rule in that document.
 [Links that create no relationship](artifact-relationships.md#links-that-create-no-relationship) defines which
-links, e.g. citations and ownership pointers, are not relationships.
+links, e.g. citations and owner links, are not relationships.
 
 Relationships is the only inventory of explicit relationships. Overview must not repeat it as
 directional-phrase bullets; where a reliance matters, the owning contract prose states it.
@@ -279,8 +286,8 @@ One concept must have exactly one canonical term. Do not introduce synonyms, ali
 
 This also prohibits near-synonyms: ad hoc descriptive phrases that resemble a defined term, or name a concept that a
 defined term or an owning section already covers, without being that term. E.g., do not write "item catalogue" where
-the owning Glossary defines Product list. Use the defined term, or the title of the owning section, and link it to its
-owner. Coin a new phrase only when no defined term or owning section expresses the concept; if the phrase then names a
+the owning Glossary defines Product list. Use the defined term, or the title of the owning section linked to that
+section. Coin a new phrase only when no defined term or owning section expresses the concept; if the phrase then names a
 concept the specification relies on, define it under the rules above.
 
 Game Data Record has the approved abbreviation **GDR**. Introduce it as **Game Data Record (GDR)**
@@ -301,7 +308,7 @@ labels, examples, and generated views. Update the owning sources and regenerate 
 file paths, literal code identifiers, and exact quotations retain their actual spelling. Ordinary words remain valid
 when they describe something else; e.g., a glossary entry is not a GDR. Review each use in context; do not infer compliance from text search alone.
 
-If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must link to that specification's Glossary rather than be redefined. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
+If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must not be redefined. It needs no link: the generated glossary lists every term with its owner. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
 replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
 Glossary. If the concepts differ, make their distinct definitions explicit. Unresolved terminology blocks acceptance.
 
@@ -316,7 +323,10 @@ When a Glossary's terms form more than one subject, group them. Each group is an
 after the subject its terms cover, never after its role in the document. Each group contains a one-sentence
 description followed by exactly one Term and Definition table, and holds at least two terms. A Glossary whose terms
 form only one group is not grouped: it keeps a single Term and Definition table directly under its H1 and has no H2
-subsections. Prose identifying where shared terms are owned may precede the first group. A Glossary contains no
+subsections. A Glossary defines only the terms its specification owns. It may open with at most two sentences that name the
+Glossaries a reader should consult for other terms: the one this specification builds on, and any that add detail to
+it. It must not list terms that other Glossaries define. E.g., "These terms are specific to Orders. General terms are
+in the Store Model glossary; terms about refunds are in the Refunds glossary." A Glossary contains no
 other subsections and no headings deeper than H2.
 
 Groups only aid navigation. They do not change a term's owner or meaning, and links to a term continue to target the
@@ -360,6 +370,7 @@ Canonical terms remain owned by their linked glossaries; this list does not rede
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Delegated AI; Delegated agent; scoped AI; intellect                  | [Autopilot AI](../foundation/engine-contract.md#glossary)                                                                                                                                                                                                    | Referring to the AI that plays while Autopilot is engaged; Agent remains the game-domain concept.                                                                                                                                                                                                                                 |
 | Delegation; Delegation run                                           | [Autopilot](../foundation/engine-contract.md#glossary) or [Autopilot engagement](../foundation/engine-contract.md#glossary)                                                                                                                                  | Referring to lending Player API control to an Autopilot AI, or to one such period.                                                                                                                                                                                                                                                |
+| Deferred; deferral                                                   | Implementer's choice, TODO, or out of scope, as defined under [Kinds of unspecified content](#kinds-of-unspecified-content)                                                                                                                                  | Describing something a specification does not specify.                                                                                                                                                                                                                                                                            |
 | Delegation scope                                                     | [Autopilot limit](../foundation/autopilot.md#glossary)                                                                                                                                                                                                       | Referring to the bound on an Autopilot engagement.                                                                                                                                                                                                                                                                                |
 | Committed action; Developer action                                   | [Player action](../foundation/engine-contract.md#glossary)                                                                                                                                                                                                   | Referring to one successful state-changing action made through Player API or Developer API.                                                                                                                                                                                                                                       |
 | Holistic AI; overarching AI                                          | [Session controller](../foundation/engine-contract.md#glossary)                                                                                                                                                                                              | Referring to the Principal holding Session authority; its authority does not depend on what kind of caller holds it.                                                                                                                                                                                                              |
@@ -429,7 +440,7 @@ unresolved decisions rather than filling them with assumptions.
 A specification has three parts, in this order:
 
 1. Framing sections:
-   1. `# Overview`, explaining the document's purpose and scope
+   1. `# Overview`, describing the subject of the specification
    2. `# Relationships`, containing the flat directional inventory
    3. `# Glossary`
 2. Topic sections: one or more H1 sections, each named after a subject the specification owns; e.g.,
@@ -438,7 +449,8 @@ A specification has three parts, in this order:
 3. Closing sections:
    1. `# Edge cases and failure behavior`
    2. `# Acceptance examples`
-   3. `# Open decisions`, containing only substantive unresolved design choices
+   3. `# TODOs`, containing every TODO of the specification under
+      [Kinds of unspecified content](#kinds-of-unspecified-content)
 
 Overview is required. Every other section is present only when it applies to the document. Appendices follow the
 closing sections.
@@ -453,12 +465,29 @@ under Acceptance examples. Do not state a contract twice merely to populate a se
 whether embedded examples explain the contracts adequately, are semantic review concerns; the linter checks the order
 and content of framing and closing sections, not applicability.
 
+## Subject before document
+
+Write about the subject, not about the document. Do not announce what a section will say, summarize what it said,
+explain why a rule is placed where it is, or describe how the document treats GDR values, examples, or other
+documents.
+
+Overview describes the subject of the specification. It says what the subject is, links the specification it builds
+on, and names in a few sentences what the subject does or contains. It is short: one or two paragraphs, as a guide
+about 120 words, and never more than 200. It must not list the document's sections, say what the document defines,
+states, or owns, or say what the document does not cover. The Owns metadata row is the only statement of ownership.
+
+E.g., an Overview of an Orders specification says that an Order is a customer's request to buy products from the
+store, as Store Model introduces it, that an Order is placed, paid, shipped, and delivered or cancelled, and that its
+total is the sum of its lines plus shipping. It does not say "This document defines the Order lifecycle and the total
+formula. It does not own payment."
+
 ## Handling sections that do not apply
 
 Omit a section that does not apply. Do not keep its heading with a placeholder, e.g. "Not applicable", "N/A",
 "None.", or "No explicit relationships."; a present section is never empty.
 
-A missing decision is not "not applicable": keep the section and record the missing content as a TODO. E.g., a
+A missing decision is not "not applicable": record the missing content as a TODO in the TODOs section, naming the
+section to be written, under [Kinds of unspecified content](#kinds-of-unspecified-content). E.g., a
 mechanics specification can have no public function signatures while still defining inputs, outputs, and state changes.
 
 ## Specialized material
@@ -495,7 +524,7 @@ When a title changes or a section moves, update every reference and anchor toget
 or revise its references; Git history retains the historical record. Glossary-term links may use the canonical term
 as their visible text when linking to its owning Glossary.
 
-Stubs keep descriptive TODOs until concrete requirements can be written; do not reserve numbered labels for them.
+Stubs keep descriptive TODOs in the TODOs section until concrete requirements can be written; do not reserve numbered labels for them.
 
 A rule should make its trigger, inputs, preconditions, outcome, and state changes clear. Use a transition table or pseudocode where prose would conceal ordering. Define:
 
@@ -588,17 +617,17 @@ lists from looking like complete sets that must grow whenever a new value is add
 
 ## Scope exclusions
 
-A statement of what something is not, does not own, or does not do is a non-exhaustive enumeration under
-[Illustrative and exhaustive enumerations](#illustrative-and-exhaustive-enumerations), unless it is explicitly
-identified as exhaustive. Name only the few key exclusions a reader is likely to expect, and mark them with "e.g.".
-Name each exclusion with its canonical term, or with the title of the specification or section that owns it, and link
-it to that owner. Do not coin a descriptive phrase for an exclusion under
-[Canonical terminology](#canonical-terminology); an exclusion that no defined term or owning section names is rarely
-worth stating.
+Something is out of scope when it is not part of the game and there is no plan to specify it. State it only where a
+reader would otherwise expect the missing rule, in the topic section where they would look for it, as one sentence.
+Do not collect exclusions in Overview or in a list. Something that will be specified later is not out of scope; it is
+a TODO under [Kinds of unspecified content](#kinds-of-unspecified-content).
 
-E.g., an Overview of a checkout specification states that it does not own, e.g., payment or shipping, each linked to
-the specification that owns it. It does not list "payment processing, tax computation, carrier integration, address
-validation, or invoice layout", a long list of phrases that no Glossary defines and no link resolves.
+Name each exclusion with its canonical term, or with the title of the specification or section that owns it. Do not
+coin a descriptive phrase for an exclusion under [Canonical terminology](#canonical-terminology); an exclusion that no
+defined term or owning section names is rarely worth stating.
+
+E.g., the section on placing an Order says in one sentence that gift wrapping is out of scope. The Overview of that
+specification says nothing about what the specification does not cover.
 
 # Examples, conformance, and evidence
 
@@ -628,17 +657,32 @@ Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Pro
 
 ## Deterministic validation
 
-Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, required layout, local links and anchors, relationship inventories and mirrors, Family overview presence, structure, and coverage, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, and status-specific TODO and Open decisions rules. It performs no network access and offers no automatic fixes.
+Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, required layout, local links and anchors, relationship inventories and mirrors, Family overview presence, structure, and coverage, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document) and [Glossary groups](#glossary-groups), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
 
 A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
+
+## Kinds of unspecified content
+
+A specification leaves something unspecified in exactly one of three ways. This table is exhaustive.
+
+| Kind                 | Meaning                                                         | Where it is written                                                                                                                  | How it is marked                                                                                                                                                     |
+| -------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Implementer's choice | It will never be specified. Any implementation is correct.      | At the rule it concerns, in the topic section. It is part of the contract.                                                           | The fixed phrase "Implementer's choice", e.g. "the exact error representation is the Implementer's choice".                                                          |
+| TODO                 | It will be specified, but is not yet.                           | Only in the closing `# TODOs` section, one list item per TODO. Each item links the section it affects, when that section exists.     | `TODO:` when the specification cannot be implemented without it; `TODO (later):` when the specification is complete without it and the feature is to be added later. |
+| Out of scope         | It is not part of the game, and there is no plan to specify it. | Nowhere, unless a reader would expect the rule; then one sentence in the topic section, under [Scope exclusions](#scope-exclusions). | The words "out of scope".                                                                                                                                            |
+
+No TODO text appears outside the TODOs section. A Stub omits a section whose content is not written yet, and the TODO
+item names the section to be written. A `TODO:` item blocks acceptance. A `TODO (later):` item does not: the
+specification is a complete contract for the game as it is now. An Accepted specification therefore has no `TODO:`
+item and may have `TODO (later):` items.
 
 A TODO states what is missing and what a complete answer must include. E.g., prefer:
 
 > TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful turns, progress-removal behavior, rounding, and a numerical example.
 
-Avoid vague placeholders; e.g., "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation.
+Avoid vague placeholders; e.g., "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation. A `TODO (later):` item names the feature in one line, e.g. "TODO (later): Skill gained from a Battle."
 
-Use Open decisions to collect unresolved choices and identify affected sections or specifications. A TODO may appear at the exact location of missing content; summarize blocking choices in Open decisions without duplicating entire rules. Do not invent a default to close a TODO unless it is explicitly labeled as a proposal.
+Do not invent a default to close a TODO unless it is explicitly labeled as a proposal.
 
 Before acceptance, verify:
 
@@ -650,12 +694,12 @@ Before acceptance, verify:
 - Glossary terms are grouped as required by [Glossary groups](#glossary-groups).
 - Glossary definitions state what each term means, as required by [Glossary definitions](#glossary-definitions).
 - Every example is introduced with "e.g." or sits under an explicit "Examples" label; every illustrative enumeration contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
-- There are no unresolved implementation-affecting TODOs or decisions within scope.
+- No `TODO:` item remains; everything left for later is a `TODO (later):` item in the TODOs section.
+- Overview and the Glossary introduction satisfy their length limits, and no text describes the document.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
 - Worked examples and acceptance examples agree with the rules.
 - Related contracts and GDR tables are consistent.
-- Deferred features are explicitly out of scope, not holes in an allegedly complete contract.
 - The project owner has explicitly accepted the document.
 
 When accepted behavior changes, link to affected requirement sections by title and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.

@@ -11,9 +11,8 @@
 
 # Overview
 
-This document defines the shared language for the complete game contract, spanning campaign data and engine execution. It
-owns the meanings of its glossary terms independently of the contracts that use them. The behavior and structure those
-terms describe are owned by the specifications that use them, e.g. [Engine Contract](./engine-contract.md) and the
+The shared language for the complete game contract spans campaign data and engine execution. Its terms have a single
+meaning, independent of the contracts that use them, e.g. [Engine Contract](./engine-contract.md) and the
 [Mechanics family](../mechanics/about-mechanics.md).
 
 # Relationships

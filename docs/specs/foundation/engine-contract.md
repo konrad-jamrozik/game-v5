@@ -11,9 +11,7 @@
 
 # Overview
 
-This document defines the engine's API hierarchy, the data the engine owns, and the guarantees that hold across every engine subsystem when running the game and exposing information.
-
-It owns only cross-cutting guarantees and owns no engine subsystem. The behavior of each subsystem belongs to the one specification that [Engine subsystems](#engine-subsystems) names, e.g. [Campaign Lifecycle](./campaign-lifecycle.md) or [Turn Advancement](../mechanics/turn-advancement.md), and refinements of these guarantees belong to their refining specifications, e.g. [Campaign State](./campaign-state.md).
+The engine has an API hierarchy, data it owns, and guarantees that hold across every engine subsystem when running the game and exposing information. The behavior of each subsystem is specified by one specification, as listed under [Engine subsystems](#engine-subsystems), e.g. [Campaign Lifecycle](./campaign-lifecycle.md) or [Turn Advancement](../mechanics/turn-advancement.md). The guarantees are refined by e.g. [Campaign State](./campaign-state.md).
 
 # Relationships
 
@@ -277,8 +275,8 @@ Nothing a Session holds is persisted, and loading a Campaign save never restores
 # Engine subsystems
 
 Each Engine subsystem has exactly one owning specification, and each of those specifications owns exactly one Engine
-subsystem. This document owns none; it states only the guarantees that hold across all of them. The following table is
-the complete Engine subsystem inventory.
+subsystem. Engine Contract specifies none of them; it states only the guarantees that hold across all of them. The
+following table is the complete Engine subsystem inventory.
 
 | Engine subsystem           | Kind                 | Owner                                                       | What it provides                                                                                         |
 | -------------------------- | -------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |

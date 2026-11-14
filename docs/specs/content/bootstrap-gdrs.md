@@ -11,20 +11,15 @@
 
 # Overview
 
-This document defines the Bootstrap GDRs: the smallest set of Game Data Records (GDRs) that a Game build supplies so
-that a first playable Campaign can be created, played, won, and lost. It is a deliberately reduced selection of the
-game-ts content, chosen so that every concept the [Domain Model](../mechanics/domain-model.md) declares has at least
-one GDR, while each kind of GDR has as few members as a complete Campaign allows.
+The Bootstrap GDRs are the smallest set of Game Data Records (GDRs) that a Game build supplies so that a first
+playable Campaign can be created, played, won, and lost. They keep every kind of GDR that the
+[Domain Model](../mechanics/domain-model.md) requires and reduce how many of each exist: 33 GDRs in 17 YAML files
+under `content/`.
 
-This document owns which GDRs exist, the identifier of each, its Type, the GDR purposes it serves, the file that holds
-it, and how the GDRs reference one another, e.g. which Lead creates which Mission site. It does not own, e.g.:
-
-- The values inside each GDR: each GDR's own YAML file is the only place its values are recorded, under
-  [One owner per rule](../governance/spec-conventions.md#one-owner-per-rule).
-- What a value means and the rules that read it: each Type is owned by the Mechanics specification named in its
-  section under [Bootstrap GDR catalog](#bootstrap-gdr-catalog).
-- The authoring format of a GDR: [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) in
-  Game Data Records.
+The only Faction, Red Dawn, has three Leads. Each Lead creates one Initiative Mission site, and winning the last one
+defeats Red Dawn and wins the Campaign. Meanwhile, Red Dawn's activity creates Response Mission sites; one that is
+Expired, or whose Mission is Lost, raises Panic, and enough Panic loses the Campaign. Most values are copied from
+game-ts.
 
 # Relationships
 
@@ -65,9 +60,9 @@ Economy and Upgrades in the GDR `economy`, instead of supplying each value as a 
 
 # Bootstrap GDR catalog
 
-Each section below lists, exhaustively, the Bootstrap GDRs whose Type one Mechanics specification owns. GDR purposes are
-those defined under [Purposes of GDRs](../foundation/game-data-records.md#purposes-of-gdrs) in Game Data Records. Every
-GDR whose Type has a `name` property also serves the Display content purpose; the tables omit it.
+The Bootstrap GDRs are grouped by the specification that owns their Type, and each group is exhaustive. GDR purposes
+are those defined under [Purposes of GDRs](../foundation/game-data-records.md#purposes-of-gdrs). Every GDR whose Type
+has a `name` property also serves the Display content purpose, which the tables do not list.
 
 ## Configuration GDRs
 
@@ -124,8 +119,8 @@ Type owner: [Investigations](../mechanics/investigations.md).
 | ------------------------ | ---------------------- | ----------- | ------------------------------------- |
 | `standard_investigation` | InvestigationArchetype | Archetype   | The Archetype of every Investigation. |
 
-The Lead property `difficulty` is owned by Leads and Progression; how an Investigation uses it is owned by
-Investigations.
+An Investigation reads the `difficulty` of its Lead, under
+[Lead properties this document reads](../mechanics/investigations.md#lead-properties-this-document-reads).
 
 ## Missions GDRs
 
@@ -194,8 +189,8 @@ Type owner: [Panic and Endings](../mechanics/panic-and-endings.md).
 
 # Bootstrap GDR files
 
-The Bootstrap GDRs are authored in YAML files under the `content/` directory at the repository root. Their layout
-follows these rules:
+The Bootstrap GDRs are authored in YAML files under the `content/` directory at the repository root. The YAML file of a
+GDR is the only place its values are recorded. The layout of the files follows these rules:
 
 - **One file per Type:** each file holds every Bootstrap GDR of one Type and no GDR of another Type.
 - **Directory of the Type owner:** the file lies in the directory named after the file name of the Mechanics
@@ -244,7 +239,7 @@ An Initiative Mission site that is Expired, or whose Mission is Lost, records no
 can obtain a new Mission site from it. A Mission site cannot be attempted twice. Every Lead of the Victory path
 therefore remains available until a Mission at a Mission site it created is Won.
 
-The rules that make the Victory path work are owned by Mechanics specifications; this document states none of them:
+The Victory path works through these rules:
 
 - Lead availability, under [Lead availability](../mechanics/leads-and-progression.md#lead-availability); recording a
   win, under [Recording a Won Mission](../mechanics/leads-and-progression.md#recording-a-won-mission); and the
@@ -262,10 +257,9 @@ The rules that make the Victory path work are owned by Mechanics specifications;
 
 # Initial Campaign state sources
 
-[Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state) in Domain Model requires the Mechanics
-specification refining each Campaign instance Type to state which initial Campaign instances exist and the source of
-each initial value. The following table is exhaustive: it names, for each Campaign instance Type, the section that
-states those facts for the Bootstrap GDRs. This document states none of them.
+For each Campaign instance Type, the following table names the section that states which initial Campaign instances
+exist with the Bootstrap GDRs and the source of each initial value, as
+[Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state) requires. This table is exhaustive.
 
 | Campaign instance Type | Section that states the initial Campaign instances and the source of each value                                                                     |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -277,31 +271,38 @@ states those facts for the Bootstrap GDRs. This document states none of them.
 | Mission                | [Initial Mission sites](../mechanics/missions.md#initial-mission-sites) in Missions, which states that no Mission exists initially                  |
 | Enemy                  | [Enemy creation](../mechanics/combat.md#enemy-creation) in Combat, applied by [Enemy creation](../mechanics/missions.md#enemy-creation) in Missions |
 
-The turn, Panic, and Lead progression start from values that no GDR supplies. [Turn number](../mechanics/turn-advancement.md#turn-number)
-in Turn Advancement states the initial value of the turn;
-[Initial values](../mechanics/panic-and-endings.md#initial-values) in Panic and Endings and
-[Lead progression](../mechanics/leads-and-progression.md#lead-progression) in Leads and Progression state the others.
+The turn, Panic, and Lead progression start from values that no GDR supplies: the turn under
+[Turn number](../mechanics/turn-advancement.md#turn-number), Panic under
+[Initial values](../mechanics/panic-and-endings.md#initial-values), and Lead progression under
+[Lead progression](../mechanics/leads-and-progression.md#lead-progression).
 
-# GDRs deferred beyond the bootstrap
+# TODOs
 
-The Bootstrap GDRs exclude the following game-ts content. The list is exhaustive for game-ts content, in the order in
-which it is expected to return:
-
-- The Factions Exalt and Black Lotus, each with its own Leads reusing the existing MissionSiteArchetypes.
-- Faction suppression after a Won Mission.
-- Skill gained by surviving a Mission and by attacking and defending in a Battle.
-- The Upgrades raising training skill gain, exhaustion recovery, health recovery, and Agent health.
-- Initiative Mission sites of game-ts levels 3 to 7, and the interrogation Leads between them.
-- Faction operation levels 3 to 6, including the level whose loss ends the Campaign, and their Response Mission sites.
-- The Faction activity levels Dormant, Emerging, Expanding, Escalating, and Total war.
-- Partial success of a Lost Mission, which [Combat and consequences](../mechanics/domain-model.md#combat-and-consequences)
-  in Domain Model already allows for.
-- The Leads Criminal organizations, Deep state, and Peace on Earth, and Faction discovery through a profile Lead.
+- TODO (later): The Factions Exalt and Black Lotus, each with its own Leads reusing the existing MissionSiteArchetypes,
+  under [Factions GDRs](#factions-gdrs).
+- TODO (later): Faction suppression after a Won Mission, under [Factions GDRs](#factions-gdrs).
+- TODO (later): Skill gained by surviving a Mission and by attacking and defending in a Battle, under
+  [Agents GDRs](#agents-gdrs).
+- TODO (later): The Upgrades raising training skill gain, exhaustion recovery, health recovery, and Agent health, under
+  [Economy and Upgrades GDRs](#economy-and-upgrades-gdrs).
+- TODO (later): Initiative Mission sites of game-ts levels 3 to 7, and the interrogation Leads between them, under
+  [Missions GDRs](#missions-gdrs).
+- TODO (later): Faction operation levels 3 to 6, including the level whose loss ends the Campaign, and their Response
+  Mission sites, under [Factions GDRs](#factions-gdrs).
+- TODO (later): The Faction activity levels Dormant, Emerging, Expanding, Escalating, and Total war, under
+  [Factions GDRs](#factions-gdrs).
+- TODO (later): Partial success of a Lost Mission, which
+  [Combat and consequences](../mechanics/domain-model.md#combat-and-consequences) in Domain Model already allows for.
+- TODO (later): The Leads Criminal organizations, Deep state, and Peace on Earth, and Faction discovery through a
+  profile Lead, under [Leads and Progression GDRs](#leads-and-progression-gdrs).
 
 # Appendix: Derivation from game-ts
 
 This appendix is informative. **Inherited behavior** evidence comes from game-ts revision `f1835a29`, in
 `web/src/lib/data_tables/` and `web/src/lib/factories/gameStateFactory.ts`.
+
+The items under [TODOs](#todos) list exhaustively the game-ts content that the Bootstrap GDRs exclude, in the order in
+which it is expected to return.
 
 Most Bootstrap GDR values are copied from game-ts. The following table is exhaustive: it lists every Bootstrap GDR
 value that deliberately differs from its game-ts counterpart, and why.
@@ -319,4 +320,4 @@ value that deliberately differs from its game-ts counterpart, and why.
 | Panic reduction of Initiative Mission site wins             | 0.05% and 0.1%                                       | 1% and 2%                                 | Keeps wins and losses on the same scale.                                                                                                 |
 | Victory                                                     | Completing the Lead Peace on Earth                   | Every Faction defeated                    | One Lead fewer, and the condition does not depend on a specially named GDR.                                                              |
 | Faction discovery                                           | Through a profile Lead                               | Every Faction is known from the start     | Removes the profile and interrogation Leads.                                                                                             |
-| Upgrades                                                    | 8, with no distinction between cap and stat upgrades | 4: three cap upgrades and `weapon_damage` | game-ts left distinguishing the two kinds of upgrade as a TODO in `upgrades.ts`.                                                         |
+| Upgrades                                                    | 8, with no distinction between cap and stat upgrades | 4: three cap upgrades and `weapon_damage` | game-ts left distinguishing the two kinds of upgrade as an open item in `upgrades.ts`.                                                   |

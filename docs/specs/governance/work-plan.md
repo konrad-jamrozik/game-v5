@@ -11,16 +11,18 @@
 
 # Overview
 
-This document organizes development of the game specifications into manageable review batches rather than drafting the entire game at once. It
-owns the accepted authoring sequence and work tracking; individual specifications own game rules and interface contracts.
+The work plan organizes development of the game specifications into review batches instead of drafting the entire game
+at once. The specifications are the durable design artifacts; code and tests are derived from accepted contracts. The
+plan is a specification work plan, not an implementation schedule. The [Game Design Brief](../../game-design-brief.md)
+supplies strategic intent and architectural constraints, and the
+[derived specification catalog](../../derived/README.md) lists document IDs and Families.
 
-The specifications are the durable design artifacts. Code and tests will be derived from accepted contracts. This is a specification work plan, not an implementation schedule; it decides no specification content, e.g. [Mechanics family](../mechanics/about-mechanics.md) formulas or Game Data Record (GDR) values.
-The [Game Design Brief](../../game-design-brief.md) supplies strategic intent and architectural constraints, while the
-[derived specification catalog](../../derived/README.md) lists document IDs, Families, and ownership.
-
-**Current work:** Batch 1 is partially complete. [Core Concepts](../foundation/core-concepts.md), [Campaign State](../foundation/campaign-state.md), and
-[Engine Contract](../foundation/engine-contract.md) are Accepted. [Game Data Records](../foundation/game-data-records.md) and [Domain Model](../mechanics/domain-model.md) are **In review**. Review their
-contracts and unresolved design questions before advancing. Batch 2 is Drafting: [Numbers](../foundation/numbers.md) is a complete Draft, and the other four of its specifications have not been presented for review. Batches 3 to 7 are drafted together and are **In review** as one checkpoint; batch 8 has not started.
+**Current work:** Batch 1 is partially complete. [Core Concepts](../foundation/core-concepts.md),
+[Campaign State](../foundation/campaign-state.md), and [Engine Contract](../foundation/engine-contract.md) are
+Accepted; [Game Data Records](../foundation/game-data-records.md) and [Domain Model](../mechanics/domain-model.md) are
+**In review**. Batch 2 is Drafting: [Numbers](../foundation/numbers.md) is a complete Draft, and the other four of its
+specifications have not been presented for review. Batches 3 to 7 are drafted together and are **In review** as one
+checkpoint; batch 8 has not started.
 
 # Relationships
 
@@ -64,7 +66,7 @@ relationships, and canonical relationship terminology. This work does not advanc
 batches.
 
 Inventory migration is **Complete** for the current specification set. Explicit relationships use mirrored flat
-directional lists; implicit relationships are omitted from those lists. Substantive reliance is explained in owning
+directional lists; implicit relationships are omitted from those lists. Substantive reliance is explained in the
 contract prose. The relationships of the batch 1 specifications form no
 cycle. Core Concepts supplies shared vocabulary; Engine Contract uses Core Concepts, and Campaign State refines Engine Contract. Game Data Records uses Core Concepts, Engine Contract, and Campaign State. Domain Model uses Core Concepts, Engine Contract, Campaign State, and Game Data Records. Domain Model retains the
 game-specific identity scope; Engine Contract retains execution guarantees. Operational specifications use modeling
@@ -87,7 +89,7 @@ propose the change explicitly and update this table when agreed rather than sile
 | 3     | [Agents](../mechanics/agents-spec.md); [Economy and Upgrades](../mechanics/economy-and-upgrades.md)                                                                                                                                                            | Define personnel availability, effectiveness, growth, resources, and purchases used by other mechanics.                                                                                                                                                                                                                                                               | In review  |
 | 4     | [Leads and Progression](../mechanics/leads-and-progression.md); [Investigations](../mechanics/investigations.md)                                                                                                                                               | Define the first major strategic game system, including precise progress and completion probabilities.                                                                                                                                                                                                                                                                | In review  |
 | 5     | [Combat](../mechanics/combat.md)                                                                                                                                                                                                                               | Define automatic battle resolution and its outputs. Present this for review before drafting the mission-consequence contract.                                                                                                                                                                                                                                         | In review  |
-| 6     | [Missions](../mechanics/missions.md); [Agent Recovery](../mechanics/agent-recovery.md)                                                                                                                                                                         | Translate Battle results into Mission site outcomes, expiration, and rewards; partial success and Faction suppression are deferred. Hold a separate review. Then define health and exhaustion recovery, which relies on when Agents return from Missions.                                                                                                             | In review  |
+| 6     | [Missions](../mechanics/missions.md); [Agent Recovery](../mechanics/agent-recovery.md)                                                                                                                                                                         | Translate Battle results into Mission site outcomes, expiration, and rewards; partial success and Faction suppression are `TODO (later):` items of Missions. Hold a separate review. Then define health and exhaustion recovery, which relies on when Agents return from Missions.                                                                                    | In review  |
 | 7     | [Factions](../mechanics/factions.md); [Panic and Endings](../mechanics/panic-and-endings.md)                                                                                                                                                                   | Connect escalation, operations, panic, endings, and same-turn interactions into a coherent campaign loop.                                                                                                                                                                                                                                                             | In review  |
 | 8     | [Developer Access](../foundation/developer-access.md)                                                                                                                                                                                                          | Finalize Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides once the mechanics they expose are defined.                                                                                                                                                                                                                         | Queued     |
 
@@ -114,7 +116,7 @@ is scheduled work, not an unresolved decision about this work plan.
 Batch 1 states the player-information boundary and the API capabilities needed to support it in Engine Contract:
 [API hierarchy](../foundation/engine-contract.md#api-hierarchy) gives the required starter operation inventory, and
 [Information boundary](../foundation/engine-contract.md#information-boundary) gives the boundary. Both are part of the
-batch 1 deliverable and are reviewed with it. Extend the operation inventory with each mechanic; do not defer its
+batch 1 deliverable and are reviewed with it. Extend the operation inventory with each mechanic; do not postpone its
 design influence until batch 8. Each Mechanics specification states its own Player-visible information as it is drafted.
 
 ## Incremental timing refinement
@@ -148,8 +150,8 @@ status summaries consistent with document metadata.
 ## Separate implementation authorization
 
 Do not treat the completion of a draft or batch as authorization to implement game code. Implementation
-scope and milestones are selected separately. Graphics, animation, and possible browser-based 3D specifications remain
-deferred until those stages are requested.
+scope and milestones are selected separately. Graphics, animation, and possible browser-based 3D specifications are
+not written until those stages are requested.
 
 # First implementation milestone assessment
 
@@ -163,12 +165,12 @@ before any implementation can begin. If contracts are missing, schedule their re
 ## Earlier-specification gaps
 
 If a later mechanic exposes a missing assumption in an earlier specification, identify the affected rule and propose a
-revision in its owning document. Do not silently change Accepted rules or duplicate a workaround in another specification.
+revision in that earlier specification. Do not silently change Accepted rules or duplicate a workaround in another specification.
 
 ## Oversized batches
 
 If a batch becomes too large to review comfortably, propose a split at a coherent contract boundary and
-record it here. Partial acceptance does not accept the remaining documents or implicitly resolve their open decisions.
+record it here. Partial acceptance does not accept the remaining documents or implicitly resolve their TODOs.
 
 ## Unresolved dependencies
 

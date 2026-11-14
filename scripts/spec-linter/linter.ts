@@ -14,6 +14,8 @@ import {
   isTable,
   lineOf,
   parseDocument,
+  proseText,
+  renderedText,
   sectionNodes,
   tableRows,
   tableText,
@@ -61,7 +63,15 @@ const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Implementation',
 ])
 const FRAMING_HEADINGS = ['Overview', 'Relationships', 'Glossary']
-const CLOSING_HEADINGS = ['Edge cases and failure behavior', 'Acceptance examples', 'Open decisions']
+const TODOS_HEADING = 'TODOs'
+const RENAMED_TODOS_HEADING = 'Open decisions'
+const CLOSING_HEADINGS = ['Edge cases and failure behavior', 'Acceptance examples', TODOS_HEADING]
+const TODO_PREFIX = /^TODO(?: \(later\))?:/
+const BLOCKING_TODO_PREFIX = 'TODO:'
+const OVERVIEW_WORD_LIMIT = 200
+const GLOSSARY_INTRODUCTION_SENTENCE_LIMIT = 2
+const DOCUMENT_DESCRIBING_PHRASES =
+  /\bthis document (?:defines|states|owns|describes|specifies)\b|\bdoes not own\b|\bownership pointer\b/gi
 const GENERIC_TOPIC_HEADINGS = /^(?:Concepts and contract|Concepts|Contract|Requirements|Details|Specification)$/i
 const REMOVED_HEADINGS =
   /^(?:Terms|Terminology|Vocabulary|Background references?|Downstream ownership(?: \(informative\))?|Source basis)(?: \(informative\))?$/i
@@ -494,9 +504,11 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
     }
 
     const topLevel = h1s.slice(1)
+    // A renamed TODOs section is reported once by SPEC213 and otherwise ordered as the TODOs section it replaces.
+    const closingName = (text: string): string => (text === RENAMED_TODOS_HEADING ? TODOS_HEADING : text)
     const category = (text: string): number => {
       if (FRAMING_HEADINGS.includes(text)) return 0
-      if (CLOSING_HEADINGS.includes(text)) return 2
+      if (CLOSING_HEADINGS.includes(closingName(text))) return 2
       if (text.startsWith('Appendix')) return 3
       return 1
     }
@@ -505,8 +517,17 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
     let orderReported = false
     for (const heading of topLevel) {
       const text = headingText(heading)
+      if (text === RENAMED_TODOS_HEADING) {
+        addDiagnostic(
+          diagnostics,
+          specification.path,
+          heading,
+          'SPEC213',
+          `Section "${RENAMED_TODOS_HEADING}" has been renamed; rename it to "# ${TODOS_HEADING}".`,
+        )
+      }
       const current = category(text)
-      const closing = CLOSING_HEADINGS.indexOf(text)
+      const closing = CLOSING_HEADINGS.indexOf(closingName(text))
       const outOfOrder = current < previousCategory || (closing >= 0 && closing <= previousClosing)
       if (outOfOrder && !orderReported) {
         orderReported = true
@@ -533,7 +554,54 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
       }
       if (current === 1 || current === 2) validateSectionContent(specification, heading, diagnostics)
     }
+    if (overview) validateOverviewLength(specification, overview, diagnostics)
+    validateDocumentDescribingPhrases(specification, diagnostics)
   }
+}
+
+function wordCount(text: string): number {
+  return text.split(/\s+/).filter((word) => /[\p{L}\p{N}]/u.test(word)).length
+}
+
+function validateOverviewLength(specification: Specification, overview: Heading, diagnostics: Diagnostic[]): void {
+  const words = wordCount(sectionNodes(specification.document, overview).map(renderedText).join(' '))
+  if (words > OVERVIEW_WORD_LIMIT) {
+    addDiagnostic(
+      diagnostics,
+      specification.path,
+      overview,
+      'SPEC214',
+      `Overview has ${words} words; it must have at most ${OVERVIEW_WORD_LIMIT}.`,
+    )
+  }
+}
+
+/**
+ * Removes text inside straight or curly double quotation marks, so quoted phrases can be discussed without being used.
+ */
+function withoutQuotations(text: string): string {
+  return text.replace(/"[^"]*"/g, ' ').replace(/“[^”]*”/g, ' ')
+}
+
+function validateDocumentDescribingPhrases(specification: Specification, diagnostics: Diagnostic[]): void {
+  const walk = (node: Node): void => {
+    if (isBlockquote(node) || node.type === 'code' || node.type === 'html') return
+    if (node.type === 'paragraph' || node.type === 'heading' || node.type === 'tableCell') {
+      const text = withoutQuotations(proseText(node).replace(/\s+/g, ' '))
+      for (const match of text.matchAll(DOCUMENT_DESCRIBING_PHRASES)) {
+        addDiagnostic(
+          diagnostics,
+          specification.path,
+          node,
+          'SPEC215',
+          `Phrase "${match[0]}" describes the document; write about the subject instead.`,
+        )
+      }
+      return
+    }
+    if (isParent(node)) for (const child of node.children) walk(child)
+  }
+  walk(specification.document.tree)
 }
 
 function validateLinks(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
@@ -939,8 +1007,46 @@ function isTermTable(table: Table): boolean {
   return header?.[0] === 'Term' && header[1] === 'Definition'
 }
 
+/**
+ * Counts sentences deterministically: each run of ".", "?", or "!" (optionally followed by closing quotation marks or
+ * parentheses) that is followed by whitespace or the end of the text ends a sentence, and trailing text without such an
+ * ending is one more sentence. The abbreviations "e.g." and "i.e." do not end a sentence. Callers pass prose text, which
+ * already excludes link targets and code spans.
+ */
+function sentenceCount(text: string): number {
+  const normalized = text
+    .replace(/\b(?:e\.g|i\.e)\./gi, 'eg')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (!normalized) return 0
+  const endings = [...normalized.matchAll(/[.?!]+["'”’)]*(?=\s|$)/g)]
+  const last = endings.at(-1)
+  const trailing = last ? normalized.slice((last.index ?? 0) + last[0].length).trim() : normalized
+  return endings.length + (trailing ? 1 : 0)
+}
+
+function validateGlossaryIntroduction(
+  specification: Specification,
+  nodes: readonly RootContent[],
+  diagnostics: Diagnostic[],
+): void {
+  const end = nodes.findIndex((node) => isTable(node) || isHeading(node))
+  const introduction = nodes.slice(0, end < 0 ? nodes.length : end)
+  const sentences = sentenceCount(introduction.map(proseText).join(' '))
+  if (sentences > GLOSSARY_INTRODUCTION_SENTENCE_LIMIT) {
+    addDiagnostic(
+      diagnostics,
+      specification.path,
+      introduction[0],
+      'SPEC506',
+      `The Glossary introduction has ${sentences} sentences; it must have at most ${GLOSSARY_INTRODUCTION_SENTENCE_LIMIT}.`,
+    )
+  }
+}
+
 function validateGlossaryGroups(specification: Specification, glossary: Heading, diagnostics: Diagnostic[]): void {
   const nodes = sectionNodes(specification.document, glossary)
+  validateGlossaryIntroduction(specification, nodes, diagnostics)
   const report = (node: Node | undefined, message: string): void =>
     addDiagnostic(diagnostics, specification.path, node, 'SPEC505', message)
   const groupStarts: number[] = []
@@ -1090,25 +1196,68 @@ function validateTerminology(
   return terms
 }
 
-function startsWithTodo(node: Node): boolean {
-  if (isParagraph(node)) return textOf(node).trim().startsWith('TODO:')
-  if (isListItem(node)) {
-    const first = node.children[0]
-    return Boolean(first && textOf(first).trim().startsWith('TODO:'))
-  }
-  return false
+interface Todo {
+  readonly node: Node
+  readonly blocking: boolean
+  readonly inTodosSection: boolean
 }
 
-function todoNodes(specification: Specification): readonly Node[] {
-  const todos: Node[] = []
-  const walk = (node: Node, quoted: boolean): void => {
-    const nextQuoted = quoted || isBlockquote(node)
-    if (!nextQuoted && startsWithTodo(node)) todos.push(node)
+/**
+ * Returns the TODO prefix text of a paragraph or list item, read from its prose so that code spans such as `TODO:`
+ * that quote the marker are not TODOs.
+ */
+function todoText(node: Node): string | undefined {
+  const first = isListItem(node) ? node.children[0] : node
+  if (!first || !isParagraph(first)) return undefined
+  const text = proseText(first).trim()
+  return TODO_PREFIX.test(text) ? text : undefined
+}
+
+/**
+ * Finds every paragraph or list item beginning with a TODO marker outside quoted material (blockquotes and fenced
+ * code). A TODO list item is reported once, not again through its first paragraph.
+ */
+function todoNodes(specification: Specification): readonly Todo[] {
+  const todos: Todo[] = []
+  let inTodosSection = false
+  const walk = (node: Node, skip: Node | undefined): void => {
+    if (isBlockquote(node) || node.type === 'code') return
+    const text = node === skip ? undefined : todoText(node)
+    if (text !== undefined && (isParagraph(node) || isListItem(node))) {
+      todos.push({ node, blocking: text.startsWith(BLOCKING_TODO_PREFIX), inTodosSection })
+    }
     if (!isParent(node)) return
-    for (const child of node.children) walk(child, nextQuoted)
+    const nextSkip = text !== undefined && isListItem(node) ? node.children[0] : undefined
+    for (const child of node.children) walk(child, nextSkip)
   }
-  walk(specification.document.tree, false)
+  for (const child of specification.document.children) {
+    if (isHeading(child) && child.depth === 1) inTodosSection = headingText(child) === TODOS_HEADING
+    walk(child, undefined)
+  }
   return todos
+}
+
+function validateTodosSection(specification: Specification, todos: readonly Todo[], diagnostics: Diagnostic[]): void {
+  const heading = findHeading(specification.document, 1, TODOS_HEADING)
+  if (!heading) return
+  const nodes = sectionNodes(specification.document, heading)
+  if (nodes.every((node) => textOf(node).trim() === '')) return // SPEC204 reports an empty section.
+  const report = (node: Node, message: string): void =>
+    addDiagnostic(diagnostics, specification.path, node, 'SPEC608', message)
+  for (const node of nodes) {
+    if (node.type !== 'list') {
+      report(node, `The ${TODOS_HEADING} section must contain only list items beginning "TODO:" or "TODO (later):".`)
+      continue
+    }
+    for (const item of node.children) {
+      if (todoText(item) === undefined) {
+        report(item, `Every item in the ${TODOS_HEADING} section must begin "TODO:" or "TODO (later):".`)
+      }
+    }
+  }
+  if (!todos.some((todo) => todo.inTodosSection)) {
+    report(heading, `The ${TODOS_HEADING} section must contain at least one TODO item; omit it otherwise.`)
+  }
 }
 
 function validateSectionReferences(parsed: ParsedInput, diagnostics: Diagnostic[], includeDerived: boolean): void {
@@ -1169,33 +1318,35 @@ function validateSectionReferences(parsed: ParsedInput, diagnostics: Diagnostic[
 function validateLifecycleAndSections(parsed: ParsedInput, diagnostics: Diagnostic[], includeDerived = false): void {
   for (const specification of parsed.specifications) {
     const todos = todoNodes(specification)
-    if (specification.status === 'Stub' && todos.length === 0) {
+    for (const todo of todos) {
+      if (todo.inTodosSection) continue
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        todo.node,
+        'SPEC607',
+        `TODO items must appear only in the ${TODOS_HEADING} section.`,
+      )
+    }
+    validateTodosSection(specification, todos, diagnostics)
+    if (specification.status === 'Stub' && !todos.some((todo) => todo.blocking && todo.inTodosSection)) {
       addDiagnostic(
         diagnostics,
         specification.path,
         specification.metadata.table,
         'SPEC603',
-        'Stub specifications must contain unresolved work beginning "TODO:".',
+        `Stub specifications must contain at least one item beginning "TODO:" in the ${TODOS_HEADING} section.`,
       )
     }
     if (specification.status === 'Accepted') {
       for (const todo of todos) {
+        if (!todo.blocking) continue
         addDiagnostic(
           diagnostics,
           specification.path,
-          todo,
+          todo.node,
           'SPEC604',
-          'Accepted specifications must not contain unresolved work beginning "TODO:".',
-        )
-      }
-      const open = findHeading(specification.document, 1, 'Open decisions')
-      if (open) {
-        addDiagnostic(
-          diagnostics,
-          specification.path,
-          open,
-          'SPEC605',
-          'Accepted specifications must not contain Open decisions.',
+          'Accepted specifications must not contain items beginning "TODO:"; only "TODO (later):" items are allowed.',
         )
       }
     }

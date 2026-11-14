@@ -11,11 +11,11 @@
 
 # Overview
 
-This document steers implementers toward one physical layout for everything the game persists. It is a
-non-behavioural Implementation document: it owns no game behavior, observable contract, or GDR, and no acceptance test
-depends on it. What is persisted, and what saving and loading observably do, remain owned by
-[Data ownership](../foundation/engine-contract.md#data-ownership) in Engine Contract, [Saves](../foundation/saves.md),
-and [Timeline](../foundation/timeline.md).
+The Storage Schema is the physical layout of everything the game persists, as listed under
+[Data ownership](../foundation/engine-contract.md#data-ownership). Game storage never holds a copy of a GDR, because
+GDRs belong to the Game build. A [Timeline](../foundation/timeline.md) is suggested to be held in memory as Committed
+states that share their unchanged parts, and written to a Campaign save as the Turn-start state followed by the
+ordered Timeline entries.
 
 # Relationships
 
@@ -28,20 +28,8 @@ and [Timeline](../foundation/timeline.md).
 
 # Persisted layout
 
-TODO: Describe one physical layout covering every part of Game storage under
-[Data ownership](../foundation/engine-contract.md#data-ownership): Global configuration, and for each Campaign save
-its identifiers, Campaign state, Timeline, and Autopilot memory.
-
 GDRs, e.g. the [Bootstrap GDRs](../content/bootstrap-gdrs.md), belong to the Game build, so Game storage never holds a
 copy of them; Campaign state refers to a GDR by its identifier.
-
-TODO: Suggest how Autosaves are stored beside the other Campaign saves of their Campaign.
-
-TODO: Suggest how the Current Autosave is kept up to date after every change without rewriting a whole Campaign save
-each time.
-
-TODO: Suggest a Campaign save encoding and how a Game build recognises a Campaign save it rejects under
-[Game build compatibility](../foundation/saves.md#game-build-compatibility).
 
 # Timeline storage
 
@@ -102,11 +90,24 @@ Use a different representation in memory and in a Campaign save.
 Patches are not suggested: they give no smaller Campaign save than replay and add a reverse change to maintain for
 every Player action.
 
-TODO: Suggest whether Autosaves of one Campaign share stored data with each other, e.g. the recorded values of Turn
-series that several Autosaves have in common, and state the expected size of the default five Turn-end Autosaves.
-
 # Supported observable contract
 
 **Informative rationale:** Any layout that satisfies [Saves](../foundation/saves.md),
-[Timeline](../foundation/timeline.md), and [Determinism](../foundation/determinism-and-randomness.md#determinism) satisfies
-every specification, including one that ignores this document.
+[Timeline](../foundation/timeline.md), and [Determinism](../foundation/determinism-and-randomness.md#determinism)
+satisfies every specification.
+
+# TODOs
+
+- TODO: Describe one physical layout covering every part of Game storage under
+  [Data ownership](../foundation/engine-contract.md#data-ownership): Global configuration, and for each Campaign save
+  its identifiers, Campaign state, Timeline, and Autopilot memory, under [Persisted layout](#persisted-layout).
+- TODO: Suggest how Autosaves are stored beside the other Campaign saves of their Campaign, under
+  [Persisted layout](#persisted-layout).
+- TODO: Suggest how the Current Autosave is kept up to date after every change without rewriting a whole Campaign save
+  each time, under [Persisted layout](#persisted-layout).
+- TODO: Suggest a Campaign save encoding and how a Game build recognises a Campaign save it rejects under
+  [Game build compatibility](../foundation/saves.md#game-build-compatibility), under
+  [Persisted layout](#persisted-layout).
+- TODO: Suggest whether Autosaves of one Campaign share stored data with each other, e.g. the recorded values of Turn
+  series that several Autosaves have in common, and state the expected size of the default five Turn-end Autosaves,
+  under [Timeline storage](#timeline-storage).

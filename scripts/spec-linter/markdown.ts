@@ -52,6 +52,29 @@ export function textOf(node: Node): string {
   return node.children.map(textOf).join('')
 }
 
+const INLINE_CONTAINERS: ReadonlySet<string> = new Set(['paragraph', 'heading', 'tableCell'])
+
+/**
+ * Returns the authored prose of a node: like textOf, but without code spans, fenced code, or raw HTML. Block-level
+ * children are separated by a space so words in adjacent blocks or table cells do not merge.
+ */
+export function proseText(node: Node): string {
+  if (node.type === 'inlineCode' || node.type === 'code' || node.type === 'html') return ''
+  if ('value' in node && typeof node.value === 'string') return node.value
+  if (!isParent(node)) return ''
+  return node.children.map(proseText).join(INLINE_CONTAINERS.has(node.type) ? '' : ' ')
+}
+
+/**
+ * Returns the rendered text of a node for word counting: prose and code spans, without fenced code or raw HTML.
+ */
+export function renderedText(node: Node): string {
+  if (node.type === 'code' || node.type === 'html') return ''
+  if ('value' in node && typeof node.value === 'string') return node.value
+  if (!isParent(node)) return ''
+  return node.children.map(renderedText).join(INLINE_CONTAINERS.has(node.type) ? '' : ' ')
+}
+
 export function visit(node: Node, visitor: (node: Node) => void): void {
   visitor(node)
   if (!isParent(node)) return
