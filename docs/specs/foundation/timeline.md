@@ -78,14 +78,14 @@ The diagrams read as follows:
 
 Three things keep a Campaign's past, for different purposes. The following comparison is complete.
 
-| Kept past     | What it records                                                            | Consulted by game behavior | Effect of undo                                                            | Owner                                                                      |
-| ------------- | -------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| World history | Past Campaign state or events that game behavior and reports need          | Yes                        | Restored as part of Campaign state, to what it was at the Committed state | [Campaign state composition](campaign-state.md#campaign-state-composition) |
-| Timeline      | The Turn-start state and the Timeline entries of the current Turn          | Never                      | Turns the last Timeline entry that is not an Undone action into one       | [Timeline structure](#timeline-structure)                                  |
-| Campaign save | A persisted copy of the Campaign at one Committed state, with its Timeline | Never                      | None, except that the Current Autosave is replaced to match               | [Saves](saves.md)                                                          |
+| Kept past     | What it records                                                              | Consulted by game behavior | Effect of undo                                                            | Owner                                                                      |
+| ------------- | ---------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| World history | Past Campaign state or events that game behavior and Player API queries need | Yes                        | Restored as part of Campaign state, to what it was at the Committed state | [Campaign state composition](campaign-state.md#campaign-state-composition) |
+| Timeline      | The Turn-start state and the Timeline entries of the current Turn            | Never                      | Turns the last Timeline entry that is not an Undone action into one       | [Timeline structure](#timeline-structure)                                  |
+| Campaign save | A persisted copy of the Campaign at one Committed state, with its Timeline   | Never                      | None, except that the Current Autosave is replaced to match               | [Saves](saves.md)                                                          |
 
 World history and the Timeline are independent. A game without undo would have no Timeline and would still need
-World history; e.g., a report listing the Missions an Agent took part in reads World history. Starting a new Timeline,
+World history; e.g., a query listing the Missions an Agent took part in reads World history. Starting a new Timeline,
 as Advance turn does under [Timeline entries](#timeline-entries), never removes World history.
 
 # Timeline entries

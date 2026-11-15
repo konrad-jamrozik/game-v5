@@ -469,6 +469,6 @@ invalid.
 
 # TODOs
 
-- TODO: State what the Turn report and each History entry hold of each value the Mechanics specifications own, including the reduced form of a Battle result that a History entry keeps, e.g. which Agents survived, were wounded, or were Killed, under [Current state, Turn report, and history](../foundation/engine-contract.md#current-state-turn-report-and-history) in Engine Contract.
+- TODO: State what the Turn report and each History entry hold of each value the Mechanics specifications own, including the reduced form of a Battle result that a History entry keeps, e.g. which Agents survived, were wounded, or were Killed, under [Turn report and history](../foundation/campaign-state.md#turn-report-and-history) in Campaign State.
 - TODO (later): Damage-related benefits for a Battle the team did not prevail in, under
   [Combat and consequences](#combat-and-consequences).

@@ -570,8 +570,7 @@ recomputed, even when the values of its participants change later, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. Whatever
 presents a Battle later uses the retained values. Every fact above remains available while the Battle result belongs to
 the Turn report; after the next Advance turn, only the facts that its History entry holds need to remain available,
-under [Current state, Turn report, and history](../foundation/engine-contract.md#current-state-turn-report-and-history)
-in Engine Contract.
+under [Turn report and history](../foundation/campaign-state.md#turn-report-and-history) in Campaign State.
 
 # Player-visible information
 

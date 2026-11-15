@@ -113,15 +113,6 @@ What a Session has selected, the complete Campaign state the engine commits, and
 | Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                                                                                                     |
 | Current save     | The Campaign save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                                                                                                            |
 
-## Information over time
-
-What Player API returns about the most recent Advance turn and about earlier Turns.
-
-| Term          | Definition                                                                                                                                                                                                                              |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Turn report   | The account of what one committed Advance turn did, e.g. each Battle it fought and how that Battle went. A Campaign has at most one Turn report: the one of its most recent committed Advance turn.                                     |
-| History entry | The account of one ended Turn: a reduced form of its Turn-start state, of its Turn-end state, and of the Turn report of the Advance turn that ended it. Reduced means holding only part of that information, to bound what is retained. |
-
 # API hierarchy
 
 The engine API is the source of truth for execution and access behavior. Every user interface, e.g. a terminal or
@@ -345,25 +336,18 @@ for them.
 | Query                              | Returns                                                                                                                                                                         | Detail  |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
 | `player.queries.getCurrentState()` | The Player-visible information of [Current world state](campaign-state.md#glossary) and of [Campaign configuration](campaign-state.md#glossary) at the current Committed state. | Full    |
-| `player.queries.getTurnReport()`   | The Turn report, or none before the first committed Advance turn of the Campaign.                                                                                               | Full    |
-| `player.queries.getHistory()`      | One History entry for every ended Turn of the Campaign, in Turn order, from Turn 1.                                                                                             | Reduced |
+| `player.queries.getTurnReport()`   | The Player-visible information of the [Turn report](campaign-state.md#glossary), or none before the first committed Advance turn of the Campaign.                               | Full    |
+| `player.queries.getHistory()`      | The Player-visible information of every [History entry](campaign-state.md#glossary), in Turn order, from Turn 1.                                                                | Reduced |
 
 `getCurrentState()` returns nothing that is retained only in [World history](campaign-state.md#glossary). E.g., a
 Mission whose Battle has been fought no longer participates in current gameplay, so its Battle result is returned by
 `getTurnReport()` after the Advance turn that fought it, and in reduced form by `getHistory()`, but not by
 `getCurrentState()`.
 
-The Advance turn that ends Turn t replaces the Turn report with its own and adds the History entry for Turn t. No
-other Player action changes the Turn report or any History entry, so Player actions, undo, and redo within a Turn
-change only what `getCurrentState()` returns. The Turn report part of the latest History entry is exactly the reduced
-form of the Turn report, so the two never disagree. A History entry is never rewritten once added.
-
-The Turn report and every History entry are retained in World history. Undo, redo, and load therefore restore them
-with the Committed state they restore, and replay reproduces them, under
-[Derived value consistency](#derived-value-consistency) and
-[Determinism](determinism-and-randomness.md#determinism) in Determinism and Randomness. Information that the Turn
-report holds and its History entry does not need to remain available only while that Turn report is the latest one.
-What the Turn report and each History entry hold of a value is stated by the specification owning that value.
+Only Advance turn changes the Turn report and the History entries, under
+[Turn report and history](campaign-state.md#turn-report-and-history) in Campaign State, so Player actions, undo, and
+redo within a Turn change only what `getCurrentState()` returns. Undo, redo, and load restore what all three queries
+return, and replay reproduces it, under [Derived value consistency](#derived-value-consistency).
 
 Whether the engine stores each value these queries return, or computes it from other Campaign state when asked, is the
 Implementer's choice.
