@@ -420,7 +420,7 @@ Turn:
   leaves.
 
 Nothing else changes; e.g., no money is spent, the Mission site's Turns until expiry is unchanged, and the Agents' skill,
-health, and exhaustion are unchanged. The Agents count toward the Transport cap at once and until the Mission resolution
+current health, and exhaustion are unchanged. The Agents count toward the Transport cap at once and until the Mission resolution
 step of the next Advance turn, under [Agency caps](economy-and-upgrades.md#agency-caps). The Battle is fought in that
 step.
 
@@ -452,16 +452,16 @@ For each Deployed Mission M, at Mission site S:
 2. **Battle result:** The Battle result becomes M's Battle result.
 3. **Lifecycle:** M becomes Won when the Battle outcome is Prevailed, and Lost when it is Retreated or Wiped, under
    [Battle outcomes](combat.md#battle-outcomes).
-4. **Killed Agents:** Every Agent whose health reached 0 in the Battle is Killed under
+4. **Killed Agents:** Every Agent whose current health reached 0 in the Battle is Killed under
    [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat; [Agent lifecycle](agents-spec.md#agent-lifecycle)
    in Agents removes its Current assignment and Task phase and records M in its Participation history.
 5. **Survivors:** Every other Agent of M's Current team survives, including an Agent that ended the Battle
-   Incapacitated. Its Current assignment becomes Recovery when its health is below its maximum health, and Standby when
-   its health equals its maximum health; in both cases its Task phase becomes In transit, under
+   Incapacitated. Its Current assignment becomes Recovery when its current health is below its base health, and Standby when
+   its current health equals its base health; in both cases its Task phase becomes In transit, under
    [Current assignment changes](agents-spec.md#current-assignment-changes) in Agents. It leaves M's Current team, and M
    is recorded in its Participation history under [Participation history records](agents-spec.md#participation-history-records).
    Under [Transit rule](agents-spec.md#transit-rule), it is still In transit when this Advance turn ends. It then
-   regains health and exhaustion under [Agent Recovery](agent-recovery.md).
+   regains current health and exhaustion under [Agent Recovery](agent-recovery.md).
 6. **Current team:** M's Current team is now empty.
 7. **Consequences:** The consequences of M's new lifecycle state apply, under [Consequences](#consequences).
 
@@ -627,7 +627,7 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   keeps its Battle result and its Team sent, its Current team is empty, and the Killed Agents no longer count toward the
   Transport cap ([Resolving one Mission](#resolving-one-mission)).
 - **Incapacitated survivors:** An Agent that ends the Battle Incapacitated is alive and returns like any survivor:
-  Recovery if wounded, Standby if its health is full ([Resolving one Mission](#resolving-one-mission)).
+  Recovery if its current health is below its base health, Standby if its current health equals its base health ([Resolving one Mission](#resolving-one-mission)).
 - **Transport cap exactly reached:** Deploying Agents so that the number of Deployed Agents equals the Transport cap is
   accepted; one more is rejected ([Deploying Agents](#deploying-agents)).
 - **Response reward not doubled:** A Won Response Mission applies the operation level's `on_win` once
@@ -675,17 +675,17 @@ All examples use the Bootstrap GDR values from `content/missions/mission_site_ar
 | `operation_level_2`      | `level` 2; `on_win` `money` 30, `funding` 5; `on_ignored_or_lost` `panic_increase_pct` 8, `funding` −1                                   |
 | `locate_red_dawn_member` | `faction` `red_dawn`; `create_mission_site` `apprehend_member`                                                                           |
 | `locate_red_dawn_hq`     | `faction` `red_dawn`; `create_mission_site` `raid_hq`                                                                                    |
-| `initiate`, `soldier`    | `skill` 40 and 120; `health` 20 and 30; Weapon damage 10 and 14                                                                          |
-| `field_agent`            | `skill` 100; `health` 30; Weapon damage 10                                                                                               |
+| `initiate`, `soldier`    | `skill` 40 and 120; `base_health` 20 and 30; Weapon damage 10 and 14                                                                     |
+| `field_agent`            | `skill` 100; `base_health` 30; Weapon damage 10                                                                                          |
 | `economy`                | `base_transport_cap` 4                                                                                                                   |
 | `standard_mission`       | The MissionArchetype; no rule reads its properties                                                                                       |
 
 The Campaign has one Faction, Red Dawn, from `red_dawn`, which is not Defeated unless an example says otherwise. "The
 Advance turn ending turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
-`field_agent` with skill 100, health 30 of 30, exhaustion 0, weapon damage 10, and effective skill 100, and no Upgrade
+`field_agent` with skill 100, current health 30 of 30, exhaustion 0, weapon damage 10, and effective skill 100, and no Upgrade
 has been acquired, so the Transport cap is 4. In the Battle traces, Combat's rules decide every target and every value;
 the injected named random outcomes are each attack's hit outcome and, for a hit, its damage outcome, under
-[Hit outcome](combat.md#hit-outcome) and [Damage outcome](combat.md#damage-outcome) in Combat; "h" is health and "x" is
+[Hit outcome](combat.md#hit-outcome) and [Damage outcome](combat.md#damage-outcome) in Combat; "h" is current health and "x" is
 exhaustion. Money, funding, and Panic before each example are stated in it; Panic changes only in the Panic step, from
 the Pending panic change. [The full life of an apprehend_member Mission site](#the-full-life-of-an-apprehend_member-mission-site)
 states the whole Agency and follows money through every step of the Advance turn. Every other example states the money
@@ -714,7 +714,7 @@ origin Investigation i1, and the target Faction Red Dawn; e.g., the creating rul
 | Turn created       | 4                                                                                |
 | Lifecycle          | Active                                                                           |
 | Turns until expiry | 5: s1 did not exist in the Turn-end state, so Mission site expiration skipped it |
-| Enemies            | e1, e2, e3, each of `initiate`: skill 40, health 20 of 20, exhaustion 0          |
+| Enemies            | e1, e2, e3, each of `initiate`: skill 40, current health 20 of 20, exhaustion 0  |
 
 The Combat rating of s1's Enemies is 3 × 40 = 120, and its rewards are money 5, funding change 0, and Panic reduction 1.
 
@@ -747,13 +747,13 @@ Investigation is Active, so Investigation progress changes nothing. In Mission r
 
 a3 and a4 have no target in Round 2, and no Enemy attacks in its Enemies' phase. After Round 1 the Agents' Combat rating
 is 400, so the Battle continues; after Round 2 no Enemy is able to fight, and the Battle outcome is Prevailed after 2
-Rounds. Every Agent ends with health 30 of 30; a1 has exhaustion 4, a2 2, a3 1, and a4 1.
+Rounds. Every Agent ends with current health 30 of 30; a1 has exhaustion 4, a2 2, a3 1, and a4 1.
 
 | Value after the Advance turn ending turn 6 | Result                                                                                                                    |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
 | s1                                         | Attempted; Turns until expiry 4                                                                                           |
 | m1                                         | Won; it holds the Battle result above, an empty Current team, and its unchanged Team sent [a1, a2, a3, a4]                |
-| a1, a2, a3, a4                             | Serving; Standby, In transit, because each has health equal to its maximum health; m1 in each Participation history       |
+| a1, a2, a3, a4                             | Serving; Standby, In transit, because each has current health equal to its base health; m1 in each Participation history  |
 | Money                                      | 380 + 5 = 385 after Mission resolution; no later step of this Advance turn changes money, so the turn ends with money 385 |
 | Funding                                    | max(0, 20 + 0) = 20                                                                                                       |
 | Pending panic change                       | −1 from m1, the only contribution, so the Panic step gives Panic max(0, min(100, 10 − 1)) = 9                             |
@@ -803,7 +803,7 @@ the Advance turn ending turn 42:
 | 1     | e6 → a1                        | miss              | a1: h9, x7, effective skill `round down(100 × 9 × 98 / 3000) = 29` |
 
 After Round 1, an Enemy and an Agent are able to fight, and the Retreated check holds: 29 < 0.5 × 100 = 50, and the
-Enemies' Combat rating 400 ≥ 0.8 × 29. The Battle outcome is Retreated, so m2 is Lost. a1 survives with health 9 of 30,
+Enemies' Combat rating 400 ≥ 0.8 × 29. The Battle outcome is Retreated, so m2 is Lost. a1 survives with current health 9 of 30,
 so its Current assignment becomes Recovery, In transit. A Panic increase of 8 is added and funding becomes
 max(0, 20 − 1) = 19, the same consequences as the Ignored variant, two Advance turns earlier; money is unchanged. s2 does
 not count down in Mission site expiration, because it is Attempted, not Active.
@@ -826,7 +826,7 @@ resolution of the Advance turn ending turn 41:
 | 2     | e1, e2, e3, e4 → a2, each          | miss, each          | a2: x6. a1, at x6, has effective skill 99, so each initiate targets a2, whose exhaustion is at most 5, and so whose effective skill is 100, before each of these attacks |
 | 3     | a1 → e1, a2 → e2, a3 → e3, a4 → e4 | hit; damage 5, each | e1, e2, e3, e4: h0, dead                                                                                                                                                 |
 
-After Round 3 no Enemy is able to fight, so the Battle outcome is Prevailed and m2 is Won. Every Agent ends with health
+After Round 3 no Enemy is able to fight, so the Battle outcome is Prevailed and m2 is Won. Every Agent ends with current health
 30 of 30 and becomes Standby, In transit. Money becomes 300 + 30 = 330 and funding becomes max(0, 20 + 5) = 25; no Panic
 change is added. The Agency income step of the Advance turn ending turn 42 uses funding 25. The operation level's
 `on_win` is applied once: money rises by 30, not 60, and no rule of Factions adds a second reward.

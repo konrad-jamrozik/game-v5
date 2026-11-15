@@ -122,11 +122,11 @@ The classification has the following complete set of consequences:
   Campaign states are equal exactly when their Authoritative values are equal.
 
 Which values are Authoritative values and which are Derived values is the Engine designer's decision, because the
-first two consequences are observable game behavior. When several values determine one another, e.g. maximum health,
+first two consequences are observable game behavior. When several values determine one another, e.g. base health,
 current health, and damage taken, the specification owning them chooses which are Authoritative values and defines
 the others as Derived values. The choice decides what the player observes. E.g., current health always equals
-maximum health minus damage taken, and a level-up raises maximum health by 5. When maximum health and damage taken
-are the Authoritative values, current health rises by 5; when maximum health and current health are the
+base health minus damage taken, and a level-up raises base health by 5. When base health and damage taken
+are the Authoritative values, current health rises by 5; when base health and current health are the
 Authoritative values, current health keeps its value and damage taken rises by 5.
 
 The way a specification defines a value determines its classification, so a specification needs no separate
@@ -140,8 +140,8 @@ though it never changes during gameplay. It is also independent of player visibi
 the player.
 
 E.g., each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
-value. With two enemies at health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Hiding either the
-individual health or the total from the player does not change either classification.
+value. With two enemies at current health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Hiding either the
+individual current health or the total from the player does not change either classification.
 
 # Acceptance examples
 

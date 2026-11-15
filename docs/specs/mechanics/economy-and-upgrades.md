@@ -857,7 +857,7 @@ build defective, so no Campaign is created from it: setting `weapon_damage`'s `e
 - TODO (later): An Upgrade that raises training skill gain, under [Upgrade effects](#upgrade-effects).
 - TODO (later): An Upgrade that raises exhaustion recovery, under [Upgrade effects](#upgrade-effects).
 - TODO (later): An Upgrade that raises health recovery, under [Upgrade effects](#upgrade-effects).
-- TODO (later): An Upgrade that raises maximum health, under [Upgrade effects](#upgrade-effects).
+- TODO (later): An Upgrade that raises base health, under [Upgrade effects](#upgrade-effects).
 - TODO (later): Contracting income that depends on an Agent's skill, under [Agency income](#agency-income).
 - TODO (later): Upgrade prices that rise with each acquisition, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): A limit on the acquisitions of an Upgrade, under [Purchasing Upgrades](#purchasing-upgrades).

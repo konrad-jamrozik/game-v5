@@ -80,13 +80,13 @@ The work the Agency discovers and undertakes.
 
 A Battle, its participants, and its retained results.
 
-| Term                | Definition                                                                                                                            |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Battle              | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn.        |
-| Combatant           | An Agent or an Enemy as a participant in a Battle. Both can fight because both have skill, health, exhaustion, and weapon capability. |
-| Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Battle lasts.                               |
-| Enemy               | An opponent present at one Mission site, whom the Agency's Agents fight in a Battle.                                                  |
-| Battle result       | The record of how a Battle went, kept as part of its Mission and used to determine the consequences for the Campaign.                 |
+| Term                | Definition                                                                                                                                                 |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Battle              | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn.                             |
+| Combatant           | An Agent or an Enemy as a participant in a Battle. Both can fight because both have skill, current health, base health, exhaustion, and weapon capability. |
+| Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Battle lasts.                                                    |
+| Enemy               | An opponent present at one Mission site, whom the Agency's Agents fight in a Battle.                                                                       |
+| Battle result       | The record of how a Battle went, kept as part of its Mission and used to determine the consequences for the Campaign.                                      |
 
 ## Factions
 
@@ -262,7 +262,7 @@ Given turn 3 and:
 - Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Attempted.
 - Mission m1 with Archetype M1 at Mission site s1, deployed in turn 3, Deployed, with Current team {a2}.
 - Enemy e1 owned by s1, with Archetype E1.
-- Each Agent and Enemy has skill 100, health 10 of maximum health 10, exhaustion 0, and equipped values referring to W1.
+- Each Agent and Enemy has skill 100, current health 10 of base health 10, exhaustion 0, and equipped values referring to W1.
 - Other collections empty.
 
 Each Campaign instance has the following allocation of the properties named in the sections above; the properties
@@ -334,4 +334,4 @@ invalid.
 
 # TODOs
 
-- TODO: State what the Turn report and each History entry hold of each value the Mechanics specifications own, including the reduced form of a Battle result that a History entry keeps, e.g. which Agents survived, were wounded, or were Killed, under [Turn report and history](../foundation/campaign-state.md#turn-report-and-history) in Campaign State.
+- TODO: State what the Turn report and each History entry hold of each value the Mechanics specifications own, including the reduced form of a Battle result that a History entry keeps, e.g. which Agents survived, lost current health, or were Killed, under [Turn report and history](../foundation/campaign-state.md#turn-report-and-history) in Campaign State.

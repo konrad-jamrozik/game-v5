@@ -17,8 +17,8 @@ is created from its EnemyArchetype together with its Mission site, and it never 
 
 A Battle is fought in Rounds. In each Round every Agent and then every Enemy able to fight attacks the opponent with the
 highest effective skill. An attack hits with a Probability set by the effective skills of attacker and defender, and a
-hit removes a random amount of health around the attacker's weapon damage. Every attack, hit or miss, raises
-exhaustion. A Combatant whose health reaches zero is dead, and one whose effective skill falls to a small fraction of
+hit removes a random amount of current health around the attacker's weapon damage. Every attack, hit or miss, raises
+exhaustion. A Combatant whose current health reaches zero is dead, and one whose effective skill falls to a small fraction of
 its skill is Incapacitated and stops fighting. A Battle ends as Prevailed, Wiped, or Retreated, every Battle ends, and
 its Battle result records every attack.
 
@@ -38,7 +38,7 @@ its Battle result records every attack.
 # Glossary
 
 These terms are specific to Combat. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
-about skill, health, exhaustion, and weapon damage are in the [Agents glossary](agents-spec.md#glossary).
+about skill, current health, exhaustion, and weapon damage are in the [Agents glossary](agents-spec.md#glossary).
 
 ## Battles
 
@@ -70,12 +70,12 @@ YAML files it names.
 An EnemyArchetype is the Archetype of an Enemy. The table below is exhaustive apart from the `id` and `type` that every
 GDR has.
 
-| Property | Meaning                                                               | Read by                                                   |
-| -------- | --------------------------------------------------------------------- | --------------------------------------------------------- |
-| `name`   | The display name of the kind of Enemy.                                | [Player-visible information](#player-visible-information) |
-| `skill`  | The skill of a newly created Enemy.                                   | [Enemy creation](#enemy-creation)                         |
-| `health` | The maximum health of a newly created Enemy, and also its health.     | [Enemy creation](#enemy-creation)                         |
-| `weapon` | A reference to the Weapon GDR a newly created Enemy is equipped with. | [Enemy creation](#enemy-creation)                         |
+| Property      | Meaning                                                                | Read by                                                   |
+| ------------- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
+| `name`        | The display name of the kind of Enemy.                                 | [Player-visible information](#player-visible-information) |
+| `skill`       | The skill of a newly created Enemy.                                    | [Enemy creation](#enemy-creation)                         |
+| `base_health` | The base health of a newly created Enemy, and also its current health. | [Enemy creation](#enemy-creation)                         |
+| `weapon`      | A reference to the Weapon GDR a newly created Enemy is equipped with.  | [Enemy creation](#enemy-creation)                         |
 
 Which EnemyArchetypes a Mission site's Enemies have, and how many of each, is supplied by the Mission site's
 MissionSiteArchetype, under [Missions](missions.md).
@@ -128,7 +128,7 @@ different gameplay, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **One CombatParameters:** The Game build supplies exactly one CombatParameters GDR.
-2. **EnemyArchetype values are valid:** Each EnemyArchetype's `skill` is a whole number of at least 0, its `health` is a
+2. **EnemyArchetype values are valid:** Each EnemyArchetype's `skill` is a whole number of at least 0, its `base_health` is a
    whole number of at least 1, and its `weapon` references a Weapon GDR the Game build supplies.
 3. **Weapon values are valid:** Each Weapon's `damage` is a whole number of at least 1.
 4. **Damage range is valid:** `weapon_damage_range` is a decimal number from 0 to 1, both included. This guarantees
@@ -155,7 +155,7 @@ different gameplay, under
 
 Rules 7 and 8 together guarantee that every Battle ends, under [Termination](#termination). Rule 8 is also necessary for
 that guarantee: skill has no upper bound, and when the penalty factor at `X` exceeds `100 ×
-incapacitation_skill_fraction`, a Combatant with a large enough skill and full health is still able to fight at
+incapacitation_skill_fraction`, a Combatant with a large enough skill and current health equal to its base health is still able to fight at
 exhaustion `X`, so two such Combatants that keep missing would never stop.
 
 # Enemies
@@ -170,8 +170,8 @@ exhaustive.
 | -------------- | --------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | Mission site   | Constants | An Immutable reference to the Mission site at which the Enemy is present. | Authoritative value. Always exactly one Mission site, under [How concepts relate](domain-model.md#how-concepts-relate). |
 | Skill          | State     | The Enemy's skill.                                                        | Authoritative value. A whole number of at least 0. No rule changes it after creation.                                   |
-| Health         | State     | The Enemy's current health.                                               | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                          |
-| Maximum health | State     | The Enemy's maximum health.                                               | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                   |
+| Current health | State     | The Enemy's current health.                                               | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                          |
+| Base health    | State     | The Enemy's base health.                                                  | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                   |
 | Exhaustion     | State     | The Enemy's exhaustion.                                                   | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                          |
 | Weapon         | State     | A reference to the Weapon GDR the Enemy is equipped with.                 | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule changes it after creation.        |
 | Weapon damage  | State     | The Enemy's weapon damage.                                                | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                   |
@@ -180,7 +180,7 @@ These are exactly the properties the [Combatant Role Type](agents-spec.md#combat
 weapon damage together are the equipped weapon values. An Enemy also has two Derived values, which are never stored: its
 effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents, and its Combat rating, under
 [Combat rating](#combat-rating). An Enemy has no lifecycle, no Current assignment, and no Turn series. An Enemy whose
-health is 0 is dead; being dead is a Derived value of its health, not a lifecycle state.
+current health is 0 is dead; being dead is a Derived value of its current health, not a lifecycle state.
 
 **Retention:** An Enemy keeps every property above for the whole Campaign, so that every reference to it resolves, e.g.
 from a Battle result. Once its Mission site no longer participates in current gameplay, the Enemy is retained in World
@@ -197,28 +197,28 @@ and the following initial values, under
 [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in Campaign State. This table is
 exhaustive.
 
-| Value               | Initial value                                                 | Source                          |
-| ------------------- | ------------------------------------------------------------- | ------------------------------- |
-| Archetype reference | The EnemyArchetype the Enemy is created from.                 | The creating rule of Missions.  |
-| Mission site        | The Mission site being created.                               | The creating rule of Missions.  |
-| Skill               | The EnemyArchetype's `skill`.                                 | `skill` of the EnemyArchetype.  |
-| Maximum health      | The EnemyArchetype's `health`.                                | `health` of the EnemyArchetype. |
-| Health              | The EnemyArchetype's `health`.                                | `health` of the EnemyArchetype. |
-| Exhaustion          | 0.                                                            | This rule.                      |
-| Weapon              | The Weapon GDR that the EnemyArchetype's `weapon` references. | `weapon` of the EnemyArchetype. |
-| Weapon damage       | The `damage` of that Weapon GDR.                              | `damage` of the Weapon GDR.     |
+| Value               | Initial value                                                 | Source                               |
+| ------------------- | ------------------------------------------------------------- | ------------------------------------ |
+| Archetype reference | The EnemyArchetype the Enemy is created from.                 | The creating rule of Missions.       |
+| Mission site        | The Mission site being created.                               | The creating rule of Missions.       |
+| Skill               | The EnemyArchetype's `skill`.                                 | `skill` of the EnemyArchetype.       |
+| Base health         | The EnemyArchetype's `base_health`.                           | `base_health` of the EnemyArchetype. |
+| Current health      | The EnemyArchetype's `base_health`.                           | `base_health` of the EnemyArchetype. |
+| Exhaustion          | 0.                                                            | This rule.                           |
+| Weapon              | The Weapon GDR that the EnemyArchetype's `weapon` references. | `weapon` of the EnemyArchetype.      |
+| Weapon damage       | The `damage` of that Weapon GDR.                              | `damage` of the Weapon GDR.          |
 
 No Upgrade and no Campaign configuration value changes any initial value above. Two Enemies created from the same
-EnemyArchetype are distinct Campaign instances that share neither Instance ID nor health.
+EnemyArchetype are distinct Campaign instances that share neither Instance ID nor current health.
 
 ## Changes to Enemy values
 
 **Proposed rule:** The following list is the exhaustive set of rules that change an Enemy's values after its creation:
 
-- An attack on the Enemy in a Battle lowers its health, under [Effects of an attack](#effects-of-an-attack).
+- An attack on the Enemy in a Battle lowers its current health, under [Effects of an attack](#effects-of-an-attack).
 - An attack made by or on the Enemy in a Battle raises its exhaustion, under [Effects of an attack](#effects-of-an-attack).
 
-No rule raises an Enemy's health or lowers its exhaustion: Enemies never recover. Skill, maximum health, Weapon, and
+No rule raises an Enemy's current health or lowers its exhaustion: Enemies never recover. Skill, base health, Weapon, and
 weapon damage never change. An Enemy's values after its Battle are therefore its final values, and an Enemy whose Mission
 site is never fought over keeps its initial values.
 
@@ -231,7 +231,7 @@ makes no choice during the Battle. A Battle is a function of the following input
 
 1. **The Agents' side:** a list of one or more distinct Agents, each Serving. This is the Mission's Current team.
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
-3. **Current values:** the skill, health, maximum health, exhaustion, and weapon damage of every Combatant in the two
+3. **Current values:** the skill, current health, base health, exhaustion, and weapon damage of every Combatant in the two
    lists, as they are when the Battle begins.
 4. **GDR values:** the four values of CombatParameters, and `exhaustion_cap`, `exhaustion_free_points`,
    `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, and `exhaustion_per_defense` of AgentParameters.
@@ -243,8 +243,8 @@ Nothing else influences a Battle; e.g., the turn number, the Mission site's kind
 effect. Its outputs are exhaustive too:
 
 1. The Battle result, under [Battle result](#battle-result).
-2. The changed health and exhaustion of the Combatants of both lists, and the Killed lifecycle state of every Agent whose
-   health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
+2. The changed current health and exhaustion of the Combatants of both lists, and the Killed lifecycle state of every Agent whose
+   current health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
 
 An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side
 that contains an Enemy twice, are internal invariant violations under
@@ -263,14 +263,14 @@ cases. [Missions](missions.md) guarantees valid lists when it has a Battle fough
 Every Combatant in either list gains Incapacitated when the Battle begins and loses it when the Battle ends, whatever
 its value then. Its value at the end of the Battle is recorded in the Battle result, under
 [Battle result](#battle-result); it affects nothing after the Battle. E.g., an Agent that was Incapacitated at the end of
-a Battle is an ordinary Serving Agent afterward, with the health and exhaustion the Battle left it.
+a Battle is an ordinary Serving Agent afterward, with the current health and exhaustion the Battle left it.
 
-A Combatant is able to fight, during a Battle, exactly when its health is greater than 0 and it is not Incapacitated.
+A Combatant is able to fight, during a Battle, exactly when its current health is greater than 0 and it is not Incapacitated.
 Being able to fight is a Derived value.
 
 ## Incapacitation condition
 
-**Inherited behavior:** A Combatant meets the incapacitation condition exactly when its health is greater than 0 and
+**Inherited behavior:** A Combatant meets the incapacitation condition exactly when its current health is greater than 0 and
 
 ```text
 effective skill  ≤  incapacitation_skill_fraction × skill
@@ -285,7 +285,7 @@ and one of skill 125 at 12 or less, since 12 ≤ 12.5 < 13.
 A Combatant of skill 0 meets the condition whenever it is alive, because its effective skill is 0. A Combatant that does
 not meet it has an effective skill of at least 1, because its effective skill is greater than a value of at least 0.
 
-Outside a Battle, a Combatant is able to fight exactly when its health is greater than 0 and it does not meet the
+Outside a Battle, a Combatant is able to fight exactly when its current health is greater than 0 and it does not meet the
 incapacitation condition. This is the definition [Combat rating](#combat-rating) uses outside a Battle, e.g. for a Mission
 site's Enemies before any team is deployed. Within a Battle the two definitions always agree, under
 [Monotonicity within a Battle](#monotonicity-within-a-battle).
@@ -315,7 +315,7 @@ because every Combatant able to fight has an effective skill of at least 1.
 
 Combat rating is a Derived value and is never stored, except where the Battle result records it under
 [Battle result](#battle-result). It is computed from the values at the moment it is read. **Informative rationale:**
-game-ts also weighted health and weapon damage; v5 uses effective skill alone, which already falls with lost health and
+game-ts also weighted current health and weapon damage; v5 uses effective skill alone, which already falls with lost current health and
 exhaustion.
 
 # Battle flow
@@ -336,7 +336,7 @@ Implementer's choice and so defines no order.
 
 1. Every Combatant of both sides gains Incapacitated, set to yes exactly when the Combatant meets the
    [Incapacitation condition](#incapacitation-condition) with its current values, and to no otherwise. An Enemy whose
-   health is already 0 is dead and is not Incapacitated.
+   current health is already 0 is dead and is not Incapacitated.
 2. The Battle result records each Combatant's starting values and the Combat rating of each side, under
    [Battle result](#battle-result). The Combat rating of the Agents' side at this moment is its starting Combat rating,
    which the Retreated check reads.
@@ -429,9 +429,9 @@ attacks.
 
 1. **Read:** A and D are read, and the hit Probability is formed, under [Hit outcome](#hit-outcome).
 2. **Hit outcome:** The attack has its hit outcome. The damage outcome exists only when the hit outcome is a hit.
-3. **Damage:** On a hit, the defender's health falls by the damage outcome, under [Damage outcome](#damage-outcome), but
+3. **Damage:** On a hit, the defender's current health falls by the damage outcome, under [Damage outcome](#damage-outcome), but
    not below 0. The health removed is the smaller of the damage outcome and the
-   defender's health before this step. On a miss, health does not change and the health removed is 0.
+   defender's current health before this step. On a miss, current health does not change and the health removed is 0.
 4. **Exhaustion:** The attacker gains `exhaustion_per_attack` exhaustion and the defender gains `exhaustion_per_defense`
    exhaustion, hit or miss. Each is clamped at `exhaustion_cap` under [Attribute ranges](agents-spec.md#attribute-ranges)
    in Agents.
@@ -439,7 +439,7 @@ attacks.
    [Killed and Incapacitated](#killed-and-incapacitated), with their values after steps 3 and 4.
 
 The order of steps 3 and 4 affects no result, because nothing reads the values between them. No other value changes; in
-particular skill, maximum health, and weapon damage are unchanged, and no Combatant other than the attacker and the
+particular skill, base health, and weapon damage are unchanged, and no Combatant other than the attacker and the
 defender is affected.
 
 ## Killed and Incapacitated
@@ -447,15 +447,15 @@ defender is affected.
 **Proposed rule:** Each evaluation of a Combatant under [Effects of an attack](#effects-of-an-attack) applies the first
 of these that holds:
 
-1. **Dead:** Its health is 0. It is dead and is not Incapacitated. A dead Agent becomes Killed at this moment, under
-   [Agent lifecycle](agents-spec.md#agent-lifecycle) in Agents. A dead Enemy stays an Enemy with health 0.
+1. **Dead:** Its current health is 0. It is dead and is not Incapacitated. A dead Agent becomes Killed at this moment, under
+   [Agent lifecycle](agents-spec.md#agent-lifecycle) in Agents. A dead Enemy stays an Enemy with current health 0.
 2. **Incapacitated:** It meets the [Incapacitation condition](#incapacitation-condition). Its Incapacitated property
    becomes yes, if it was not already.
 3. Otherwise nothing changes.
 
-Only the defender can die in an attack, because only the defender loses health. Both can become Incapacitated. A dead or
+Only the defender can die in an attack, because only the defender loses current health. Both can become Incapacitated. A dead or
 Incapacitated Combatant is not able to fight: it makes no further attack and is never a target for the rest of the
-Battle, so its health and exhaustion do not change again in that Battle. An Incapacitated Combatant is alive: an
+Battle, so its current health and exhaustion do not change again in that Battle. An Incapacitated Combatant is alive: an
 Incapacitated Agent survives the Battle and is not Killed.
 
 **Inherited behavior:** The incapacitation threshold, i.e. an effective skill at or below a fraction of skill, is taken
@@ -463,7 +463,7 @@ from game-ts.
 
 ## Monotonicity within a Battle
 
-Within a Battle, skill and maximum health are constant, health never rises, and exhaustion never falls. Every factor of
+Within a Battle, skill and base health are constant, current health never rises, and exhaustion never falls. Every factor of
 the [Effective skill](agents-spec.md#effective-skill) formula that can change therefore never rises, so a Combatant's
 effective skill never rises during a Battle. It follows that a Combatant that meets the
 [Incapacitation condition](#incapacitation-condition) keeps meeting it, that no Combatant becomes able to fight again
@@ -518,8 +518,8 @@ whatever the random outcomes, including when every hit outcome is a miss, and in
 are never attacked. The argument is:
 
 1. **Exhaustion at the cap ends fighting.** For a Combatant alive with exhaustion `X`, its penalty factor is at most
-   `100 × incapacitation_skill_fraction` by rule 8 of [Combat GDR validation](#combat-gdr-validation). Since health
-   divided by maximum health is at most 1 and Round down never raises a value, its effective skill is at most
+   `100 × incapacitation_skill_fraction` by rule 8 of [Combat GDR validation](#combat-gdr-validation). Since current health
+   divided by base health is at most 1 and Round down never raises a value, its effective skill is at most
    `skill × penalty factor / 100 ≤ incapacitation_skill_fraction × skill`. It meets the
    [Incapacitation condition](#incapacitation-condition), so it is Incapacitated: at Battle start, or after the attack
    that raised its exhaustion to `X`. Every Combatant able to fight therefore has an exhaustion below `X`.
@@ -547,19 +547,19 @@ is exhaustive:
 1. **Battle outcome:** Prevailed, Retreated, or Wiped.
 2. **Number of Rounds:** a whole number of at least 0.
 3. **Participants:** the Agents' side and the Enemies' side, each as the list of Instance IDs in its fixed order.
-4. **Starting values:** for each participant, its skill, health, maximum health, exhaustion, weapon damage, effective
+4. **Starting values:** for each participant, its skill, current health, base health, exhaustion, weapon damage, effective
    skill, and Incapacitated value when the Battle began, after [Battle start](#battle-start) step 1.
-5. **Final values:** for each participant, its health, exhaustion, and effective skill when the Battle ended, and its
+5. **Final values:** for each participant, its current health, exhaustion, and effective skill when the Battle ended, and its
    final condition: able to fight, Incapacitated, or dead. A dead Agent is Killed.
 6. **Health removed:** for each participant, the damage it dealt, i.e. the sum of the health removed by its attacks, and
    the damage it took, i.e. the sum of the health removed by attacks on it.
 7. **Combat ratings:** the Combat rating of each side at Battle start and at the end of every Round.
 8. **Attacks:** every attack, in the order in which it was made, each with its Round number, its attacker and defender
    by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the
-   damage outcome when there is one, the health removed, the health and exhaustion of the attacker and the defender
+   damage outcome when there is one, the health removed, the current health and exhaustion of the attacker and the defender
    after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
 
-A participant's skill, maximum health, and weapon damage do not change in a Battle, so its final values need not repeat
+A participant's skill, base health, and weapon damage do not change in a Battle, so its final values need not repeat
 them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above.
 
 The Battle result is an Authoritative value. [Game concepts](domain-model.md#game-concepts) in Domain
@@ -579,7 +579,7 @@ moment it exists, without a reveal condition. The table is exhaustive.
 | Value                                                                                                                                            | Player-visible information |
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
 | An Enemy's Instance ID, its EnemyArchetype including the EnemyArchetype's `name`, and its Mission site                                           | Yes                        |
-| An Enemy's skill, health, maximum health, exhaustion, Weapon, and weapon damage                                                                  | Yes                        |
+| An Enemy's skill, current health, base health, exhaustion, Weapon, and weapon damage                                                             | Yes                        |
 | An Enemy's effective skill and Combat rating, and the Combat rating of any side, e.g. of a Mission site's Enemies                                | Yes                        |
 | Every fact of a Battle result, including every random outcome it records                                                                         | Yes                        |
 | Every property of each EnemyArchetype, Weapon, and CombatParameters GDR, and the meaning of `exhaustion_per_attack` and `exhaustion_per_defense` | Yes                        |
@@ -599,21 +599,21 @@ absent.
   survives unchanged ([Battle start](#battle-start)).
 - **Single Combatant on a side:** A side of one Combatant is valid. Every attacker of the other side targets it while it
   is able to fight ([Target selection](#target-selection)).
-- **Agent wounded or exhausted at Battle start:** The Battle starts from the Agent's current health and exhaustion. Its
+- **Agent with lost current health or with exhaustion at Battle start:** The Battle starts from the Agent's current health and exhaustion. Its
   effective skill and the starting Combat rating reflect them, and it is Incapacitated from the start if it meets the
   incapacitation condition ([Battle start](#battle-start), [Combat rating](#combat-rating)).
 - **Enemy with effective skill 0:** An alive Enemy whose effective skill is 0, e.g. one with skill 0, meets the
   incapacitation condition, so it is Incapacitated from Battle start, never attacks, and is never a target
   ([Incapacitation condition](#incapacitation-condition)).
-- **Enemy already dead at Battle start:** An Enemy with health 0 is dead, not able to fight, and not Incapacitated
+- **Enemy already dead at Battle start:** An Enemy with current health 0 is dead, not able to fight, and not Incapacitated
   ([Battle start](#battle-start)).
 - **Attacker with no target:** An attacker able to fight with no opponent able to fight does nothing on its turn and
   gains no exhaustion ([Rounds](#rounds)).
 - **Zero divisor:** The hit Probability's divisor is at least 2, because both effective skills are at least 1
   ([Hit outcome](#hit-outcome)).
-- **Damage above remaining health:** Health falls to 0, not below; the health removed is the defender's remaining
-  health ([Effects of an attack](#effects-of-an-attack)).
-- **Damage of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no health but still
+- **Damage above remaining current health:** Current health falls to 0, not below; the health removed is the defender's remaining
+  current health ([Effects of an attack](#effects-of-an-attack)).
+- **Damage of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no current health but still
   raises exhaustion ([Damage outcome](#damage-outcome)).
 - **Exhaustion at the cap:** Exhaustion that would exceed `exhaustion_cap` is `exhaustion_cap`, and under rule 8 of
   [Combat GDR validation](#combat-gdr-validation) such a Combatant is Incapacitated ([Termination](#termination)).
@@ -637,23 +637,23 @@ All examples use the Bootstrap GDR values from `content/combat/enemy_archetypes.
 
 | GDR                 | Values read                                                                                                                                       |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `initiate`          | `name` Initiate; `skill` 40; `health` 20; `weapon` `sidearm`                                                                                      |
-| `soldier`           | `name` Soldier; `skill` 120; `health` 30; `weapon` `rifle`                                                                                        |
-| `cult_leader`       | `name` Cult leader; `skill` 300; `health` 40; `weapon` `heavy_rifle`                                                                              |
+| `initiate`          | `name` Initiate; `skill` 40; `base_health` 20; `weapon` `sidearm`                                                                                 |
+| `soldier`           | `name` Soldier; `skill` 120; `base_health` 30; `weapon` `rifle`                                                                                   |
+| `cult_leader`       | `name` Cult leader; `skill` 300; `base_health` 40; `weapon` `heavy_rifle`                                                                         |
 | `sidearm`           | `damage` 10                                                                                                                                       |
 | `rifle`             | `damage` 14                                                                                                                                       |
 | `heavy_rifle`       | `damage` 22                                                                                                                                       |
 | `combat_parameters` | `weapon_damage_range` 0.5; `retreat_below_agent_rating_fraction` 0.5; `retreat_at_enemy_to_agent_rating` 0.8; `incapacitation_skill_fraction` 0.1 |
-| `field_agent`       | `skill` 100; `health` 30; `weapon` `sidearm`                                                                                                      |
+| `field_agent`       | `skill` 100; `base_health` 30; `weapon` `sidearm`                                                                                                 |
 | `agent_parameters`  | `exhaustion_cap` 100; `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_attack` 1; `exhaustion_per_defense` 1     |
 
-Unless stated otherwise, an Agent is a `field_agent` with skill 100, health 30 of 30, exhaustion 0, and weapon damage 10,
-so its effective skill is 100; and an Enemy is newly created, at full health with exhaustion 0. Agents are named a1, a2,
+Unless stated otherwise, an Agent is a `field_agent` with skill 100, current health 30 of 30, exhaustion 0, and weapon damage 10,
+so its effective skill is 100; and an Enemy is newly created, with current health equal to its base health and exhaustion 0. Agents are named a1, a2,
 and so on, and Enemies e1, e2, and so on; the order in which an example lists each side is its fixed order. The
 incapacitation thresholds are 0.1 × skill: 10 for an Agent of skill 100, 4 for `initiate`, 12 for `soldier`, and 30 for
 `cult_leader`. Effective skill is computed under [Effective skill](agents-spec.md#effective-skill) in Agents; e.g., an
-Agent with health 23 of 30 and exhaustion 3 has effective skill `round down(100 × 23 × 100 / (30 × 100)) = 76`. In the
-trace tables, "h" is health, "x" is exhaustion, and "eff" is effective skill.
+Agent with current health 23 of 30 and exhaustion 3 has effective skill `round down(100 × 23 × 100 / (30 × 100)) = 76`. In the
+trace tables, "h" is current health, "x" is exhaustion, and "eff" is effective skill.
 
 ## Enemy creation
 
@@ -661,11 +661,11 @@ This example exercises [Enemy creation](#enemy-creation), [Enemy properties](#en
 [Incapacitation condition](#incapacitation-condition). [Missions](missions.md) creates a Mission site s1 with one Enemy
 of each EnemyArchetype. Each has a distinct fresh Instance ID, Mission site s1, and these values:
 
-| EnemyArchetype | Skill | Health | Maximum health | Exhaustion | Weapon        | Weapon damage | Effective skill | Meets the incapacitation condition at an effective skill of |
-| -------------- | ----- | ------ | -------------- | ---------- | ------------- | ------------- | --------------- | ----------------------------------------------------------- |
-| `initiate`     | 40    | 20     | 20             | 0          | `sidearm`     | 10            | 40              | 4 or less                                                   |
-| `soldier`      | 120   | 30     | 30             | 0          | `rifle`       | 14            | 120             | 12 or less                                                  |
-| `cult_leader`  | 300   | 40     | 40             | 0          | `heavy_rifle` | 22            | 300             | 30 or less                                                  |
+| EnemyArchetype | Skill | Current health | Base health | Exhaustion | Weapon        | Weapon damage | Effective skill | Meets the incapacitation condition at an effective skill of |
+| -------------- | ----- | -------------- | ----------- | ---------- | ------------- | ------------- | --------------- | ----------------------------------------------------------- |
+| `initiate`     | 40    | 20             | 20          | 0          | `sidearm`     | 10            | 40              | 4 or less                                                   |
+| `soldier`      | 120   | 30             | 30          | 0          | `rifle`       | 14            | 120             | 12 or less                                                  |
+| `cult_leader`  | 300   | 40             | 40          | 0          | `heavy_rifle` | 22            | 300             | 30 or less                                                  |
 
 If s1 expires and its Battle is never fought, these values never change. All of them are Player-visible information
 ([Player-visible information](#player-visible-information)).
@@ -701,12 +701,12 @@ This example exercises [Hit outcome](#hit-outcome). Each hit Probability is repo
 ## Target selection with ties
 
 This example exercises [Target selection](#target-selection) and [Rounds](#rounds). Mid-Battle, the Agents' side is a1
-with health 29 of 30 (effective skill `round down(96.67…) = 96`), a2, a3, and a4, a test Agent of skill 130 with full
-health and exhaustion 100 (effective skill `round down(130 × 5 / 100) = 6`, Incapacitated since 6 ≤ 13). The Enemies'
+with current health 29 of 30 (effective skill `round down(96.67…) = 96`), a2, a3, and a4, a test Agent of skill 130 with current health
+equal to its base health and exhaustion 100 (effective skill `round down(130 × 5 / 100) = 6`, Incapacitated since 6 ≤ 13). The Enemies'
 side is e1 `initiate` (40), e2 `soldier` (120), and e3 `soldier` (120), all able to fight.
 
 - In the Agents' phase, a1 targets e2: e2 and e3 share the highest effective skill, 120, and e2 is earlier. a1 hits for
-  a damage outcome of 15, so e2 has health 15 of 30 and exhaustion 1, and effective skill
+  a damage outcome of 15, so e2 has current health 15 of 30 and exhaustion 1, and effective skill
   `round down(120 × 15 × 100 / 3000) = 60`.
 - a2 then targets e3, whose 120 is now the highest. a4 does nothing on its turn, because it is Incapacitated.
 - In the Enemies' phase, while a2 and a3 both still have effective skill 100, an attacking Enemy targets a2, because a2
@@ -742,12 +742,12 @@ End-of-round checks:
 | 3           | 176                         | 0                            | Prevailed                                                          |
 
 In Round 2, e1 is dead before the Enemies' phase, so it does not attack. In Round 2 the damage outcome 9 exceeds e1's
-remaining health 8, so e1's health is 0 and the health removed is 8. In Round 3, a2's turn comes after e2 is dead; with
+remaining current health 8, so e1's current health is 0 and the health removed is 8. In Round 3, a2's turn comes after e2 is dead; with
 no opponent able to fight, a2 does nothing and gains no exhaustion, and the Enemies' phase has no attack.
 
 The Battle result holds: Battle outcome Prevailed; 3 Rounds; participants [a1, a2] and [e1, e2]; the starting values
-above; final values a1 health 23, exhaustion 5, effective skill 76, able to fight; a2 health 30, exhaustion 3, effective
-skill 100, able to fight; e1 health 0, exhaustion 3, dead; e2 health 0, exhaustion 5, dead; damage dealt a1 25, a2 15,
+above; final values a1 current health 23, exhaustion 5, effective skill 76, able to fight; a2 current health 30, exhaustion 3, effective
+skill 100, able to fight; e1 current health 0, exhaustion 3, dead; e2 current health 0, exhaustion 5, dead; damage dealt a1 25, a2 15,
 e1 0, e2 7, and damage taken a1 7, a2 0, e1 20, e2 20; the Combat ratings in the table; and the 8 attacks above with
 their outcomes. a1 and a2 are both still Serving.
 
@@ -763,13 +763,13 @@ side is a1; the Enemies' side is e1, a `soldier`. The starting Combat rating of 
 
 a1's effective skill is `round down(100 × 9 × 100 / 3000) = 30`, above its threshold 10, so it is able to fight. After
 Round 1, an Enemy and an Agent are able to fight, so neither Prevailed nor Wiped holds. The Retreated check holds:
-30 < 0.5 × 100 = 50, and 120 ≥ 0.8 × 30 = 24. The Battle ends as Retreated after 1 Round. a1 survives with health 9 and
+30 < 0.5 × 100 = 50, and 120 ≥ 0.8 × 30 = 24. The Battle ends as Retreated after 1 Round. a1 survives with current health 9 and
 exhaustion 2; the damage outcome 21 is the highest value for `rifle`.
 
 ## Wiped, with the Retreated check also holding
 
 This example exercises [End-of-round checks](#end-of-round-checks), [Killed and Incapacitated](#killed-and-incapacitated),
-and an Agent already wounded at Battle start. The Agents' side is a1 with health 6 of 30, so effective skill
+and an Agent whose current health is already below its base health at Battle start. The Agents' side is a1 with current health 6 of 30, so effective skill
 `round down(100 × 6 × 100 / 3000) = 20`; the Enemies' side is e1, a `cult_leader`. The starting Combat rating of the
 Agents' side is 20.
 
@@ -778,7 +778,7 @@ Agents' side is 20.
 | 1     | a1 → e1           | 20  | 300 | 400 / 90400     | miss              | 0              | a1: h6, x1, eff 20   | e1: h40, x1, eff 300     |
 | 1     | e1 → a1           | 300 | 20  | 90000 / 90400   | hit; damage 11    | 6              | e1: h40, x2, eff 300 | a1: h0, x2, dead, Killed |
 
-a1 becomes Killed when its health reaches 0. After Round 1, e1 is able to fight and no Agent is, so the outcome is Wiped
+a1 becomes Killed when its current health reaches 0. After Round 1, e1 is able to fight and no Agent is, so the outcome is Wiped
 after 1 Round. The Retreated check would also hold, since 0 < 0.5 × 20 and 300 ≥ 0.8 × 0, but Wiped is checked first.
 
 ## Incapacitated during a Battle
@@ -800,7 +800,7 @@ At exhaustion 95, a1's penalty factor is 10 and its effective skill 10 ≤ 0.1 �
 Incapacitated. In the Enemies' phase of Round 1, e1 targets a2, not a1. After Round 1 the Combat rating of the Agents'
 side is 100, because a1 no longer counts; 100 is not below 0.5 × 111 = 55.5, so the Battle continues. In Round 2, a1
 does nothing. After Round 2 the outcome is Prevailed. The Battle result records a1's final condition as Incapacitated
-with health 30 and exhaustion 95. After the Battle, a1 has no Incapacitated property; it is a Serving Agent with health
+with current health 30 and exhaustion 95. After the Battle, a1 has no Incapacitated property; it is a Serving Agent with current health
 30 and exhaustion 95.
 
 ## Prevailed when neither side can fight on
@@ -828,13 +828,13 @@ or changes a value.
 | ------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | a1                                                            | Empty                                                                               | Prevailed, 0 Rounds                                                                                            |
 | a1                                                            | e1, from a test EnemyArchetype with `skill` 0: effective skill 0 ≤ 0, Incapacitated | Prevailed, 0 Rounds                                                                                            |
-| a1 with exhaustion 100: effective skill 5 ≤ 10, Incapacitated | e1, an `initiate`                                                                   | Wiped, 0 Rounds; a1 survives with health 30 and exhaustion 100                                                 |
+| a1 with exhaustion 100: effective skill 5 ≤ 10, Incapacitated | e1, an `initiate`                                                                   | Wiped, 0 Rounds; a1 survives with current health 30 and exhaustion 100                                         |
 | a1 with exhaustion 95, Incapacitated, and a2                  | e1, an `initiate`                                                                   | No end at start: a2 is able to fight, so Round 1 begins; the starting Combat rating of the Agents' side is 100 |
 
 ## Every attack misses
 
 This example exercises [Termination](#termination). It injects a miss for every hit outcome, so no damage outcome exists
-and no health changes; only exhaustion rises, by 2 per Round for each Combatant, from attacking and defending.
+and no current health changes; only exhaustion rises, by 2 per Round for each Combatant, from attacking and defending.
 
 **Against an initiate:** The Agents' side is a1; the Enemies' side is e1, an `initiate`. After Round r with r ≥ 3, both
 have exhaustion 2r, a1 has effective skill `105 − 2r`, and e1 has `round down(40 × (105 − 2r) / 100)`. The Retreated
@@ -861,13 +861,13 @@ from the MissionSiteArchetypes of [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 | 8 `initiate`, 1 `soldier`                  | 320 + 120 = 440                    |
 | 6 `initiate`, 3 `soldier`, 1 `cult_leader` | 240 + 360 + 300 = 900              |
 
-Four Agents with full health and exhaustion 0 have a Combat rating of 400. Four Agents of which one has exhaustion 100
+Four Agents with current health equal to base health and exhaustion 0 have a Combat rating of 400. Four Agents of which one has exhaustion 100
 have 300, because that Agent meets the incapacitation condition and does not count.
 
 ## GDR validation
 
 This example exercises [Combat GDR validation](#combat-gdr-validation). The Bootstrap GDRs pass every rule: there is one
-CombatParameters GDR; every EnemyArchetype has a whole `skill` of at least 0, a whole `health` of at least 1, and a
+CombatParameters GDR; every EnemyArchetype has a whole `skill` of at least 0, a whole `base_health` of at least 1, and a
 `weapon` the Game build supplies; every Weapon `damage` is at least 1; 0.5 lies from 0 to 1; 0.5 and 0.8 are at least 0;
 0.1 is at least 0 and below 1; `exhaustion_per_attack + exhaustion_per_defense = 2 ≥ 1`; and the penalty factor at the
 cap is `max(0, 100 − 1 × max(0, 100 − 5)) = 5`, which is at most `100 × 0.1 = 10`.
@@ -887,7 +887,7 @@ Each of the following test changes independently makes the Game build defective,
 | A second CombatParameters GDR                                 | One CombatParameters                                                                      |
 
 With `incapacitation_skill_fraction` 0.05 the Game build is valid, because 5 ≤ 5: a Combatant at exhaustion 100 with full
-health has an effective skill of at most 0.05 × skill.
+current health has an effective skill of at most 0.05 × skill.
 
 # TODOs
 

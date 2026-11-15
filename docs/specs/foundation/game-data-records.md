@@ -198,21 +198,21 @@ flowchart LR
 
 Consider an illustrative creation of two Enemy Campaign instances whose Archetype is the same Thug GDR:
 
-| Element             | Modeling role                                                              | Meaning in this example                                                                                                                                                             |
-| ------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Enemy               | Type                                                                       | Describes the Enemy Campaign instances.                                                                                                                                             |
-| EnemyArchetype      | Type                                                                       | Describes the shared enemy characteristics and initial values.                                                                                                                      |
-| Thug                | GDR serving the Archetype purpose                                          | Has Type EnemyArchetype and health 10.                                                                                                                                              |
-| Enemy creation      | [Campaign instance creation](campaign-state.md#campaign-instance-creation) | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty Constants, and current health in State equal to the Archetype's health. |
-| enemy_1 and enemy_2 | Campaign instances                                                         | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                            |
-| Current health      | Authoritative value                                                        | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                               |
+| Element             | Modeling role                                                              | Meaning in this example                                                                                                                                                                  |
+| ------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enemy               | Type                                                                       | Describes the Enemy Campaign instances.                                                                                                                                                  |
+| EnemyArchetype      | Type                                                                       | Describes the shared enemy characteristics and initial values.                                                                                                                           |
+| Thug                | GDR serving the Archetype purpose                                          | Has Type EnemyArchetype and base health 10.                                                                                                                                              |
+| Enemy creation      | [Campaign instance creation](campaign-state.md#campaign-instance-creation) | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty Constants, and current health in State equal to the Archetype's base health. |
+| enemy_1 and enemy_2 | Campaign instances                                                         | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                                 |
+| Current health      | Authoritative value                                                        | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                                    |
 
 E.g., the Thug GDR as YAML, with further illustrative properties that this example does not use:
 
 ```yaml
 id: thug
 type: EnemyArchetype
-health: 10
+base_health: 10
 skill: 40
 weapon_damage: 8
 is_officer: false
@@ -220,14 +220,14 @@ is_officer: false
 
 Each newly created Enemy Campaign instance whose Archetype is Thug has current health 10 in State and its own fresh
 Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to a Mission site.
-Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes its health without changing enemy_2 or Thug.
+Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes its current health without changing enemy_2 or Thug.
 
 ```mermaid
 flowchart LR
     Creation["Enemy creation"] -->|specifies| Enemy1
     Creation -->|specifies| Enemy2
-    Thug["GDR: Thug · health 10"] -->|Archetype and initial health| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>Instance ID: enemy_1<br/>Constants: empty<br/>State: health 10"]
-    Thug -->|Archetype and initial health| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: health 10"]
+    Thug["GDR: Thug · base health 10"] -->|Archetype and initial current health| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>Instance ID: enemy_1<br/>Constants: empty<br/>State: current health 10"]
+    Thug -->|Archetype and initial current health| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: current health 10"]
 ```
 
 # GDR purpose: referenced GDR
@@ -346,7 +346,7 @@ enemy and its encyclopedia article:
 | Element             | Modeling role                                          | Meaning in this example                                                                                        |
 | ------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
 | EnemyArchetype      | Type                                                   | Describes the shared enemy characteristics and initial values, including a display name and a description.     |
-| Thug                | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, health 10, display name "Thug", and a one-sentence description.                       |
+| Thug                | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, base health 10, display name "Thug", and a one-sentence description.                  |
 | EncyclopediaArticle | Type                                                   | Describes an encyclopedia article: a title, body text, an image reference, and a reference to its subject GDR. |
 | Thug article        | GDR serving the Display content purpose                | Has Type EncyclopediaArticle, title "Thug", body text, an image reference, and a reference to the Thug GDR.    |
 
@@ -361,7 +361,7 @@ image: images/enemies/thug.png
 subject: thug
 ```
 
-Combat reads Thug's health 10 as its Archetype initial value; no game behavior reads its display name, its description,
+Combat reads Thug's base health 10 as its Archetype initial value; no game behavior reads its display name, its description,
 or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible
 view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the encyclopedia once the player is
 entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.
@@ -383,10 +383,10 @@ Display content follows these requirements:
 
 ```mermaid
 flowchart LR
-    Thug["GDR: Thug<br/>health 10<br/>display name and description"]
+    Thug["GDR: Thug<br/>base health 10<br/>display name and description"]
     Article["GDR: Thug article<br/>title, body text, image reference"]
     Article -->|subject reference| Thug
-    Thug -->|health 10| Combat["Game behavior: Enemy creation and Combat"]
+    Thug -->|base health 10| Combat["Game behavior: Enemy creation and Combat"]
     Thug -->|display name and description| PlayerAPI["Player API:<br/>Player-visible information"]
     Article -->|article when Player-visible| PlayerAPI
     PlayerAPI --> UserInterface["A user interface renders it for the player"]

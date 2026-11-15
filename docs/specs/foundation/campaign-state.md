@@ -195,7 +195,7 @@ excludes it. Campaign state has no separate completion record and no Authoritati
 # Historical fact preservation
 
 A past value cannot always be recovered from its current replacement. E.g., a query that needs enemy_1's original
-health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
+current health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
 replacement for that historical fact. When a rule or query needs the historical basis, the original inputs or historical
 value must be preserved; required historical values must not be overwritten with current calculations. This does not
 require retaining every intermediate calculation or every possible chart. The values that a chart or a comparison

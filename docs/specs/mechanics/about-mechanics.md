@@ -34,7 +34,7 @@ the Combatant Role Type that Agents and Enemies share, the Agent lifecycle, Curr
 
 ## Agent Recovery
 
-[Agent Recovery](agent-recovery.md) answers _how does an Agent get back to full strength?_ It owns how health goes up
+[Agent Recovery](agent-recovery.md) answers _how does an Agent get back to full strength?_ It owns how current health goes up
 and exhaustion goes down, and the result when several rules change one of those values in the same turn.
 
 ## Economy and Upgrades
@@ -89,11 +89,11 @@ depends on no Mechanics document is in layer 1. The first diagram below shows ea
 A document in an earlier layer states what its things are and what can happen to them. A document in a later layer
 states when it happens and by how much. A document may link to those later details, but never depends on them.
 
-E.g., Agents states what health is and that it can go down and up. Combat states how a Battle lowers it, and Agent
-Recovery states how it goes back up.
+E.g., Agents states what current health and base health are and that current health can go down and up. Combat states
+how a Battle lowers current health, and Agent Recovery states how it goes back up.
 
-A document refines an earlier one when it adds detail to the same subject, e.g. Combat refines Agents with how health
-goes down. It uses an earlier one when it reads that subject to describe its own, e.g. Combat uses Agent skill to
+A document refines an earlier one when it adds detail to the same subject, e.g. Combat refines Agents with how current
+health goes down. It uses an earlier one when it reads that subject to describe its own, e.g. Combat uses Agent skill to
 resolve a Battle.
 
 E.g., Panic and Endings uses Economy and Upgrades, which is in layer 3, so Panic and Endings is in layer 4, and Missions,
