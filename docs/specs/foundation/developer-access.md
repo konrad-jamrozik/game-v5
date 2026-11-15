@@ -11,10 +11,16 @@
 
 # Overview
 
-Developer access lets the Session controller inspect and change a Campaign beyond what ordinary play allows. It builds
-on the [Engine Contract](engine-contract.md) and consists of Dev mode, full Campaign state inspection through
-`developer.queries`, cheat operations through `developer.actions`, and random outcome overrides. It leaves what Player
-API exposes and what an Autopilot AI receives unchanged.
+Building and testing a game needs ways around its own rules: seeing what the player cannot, and setting up a situation
+by hand instead of playing toward it. Developer access gives the Session controller these powers through Developer API,
+on top of the [Engine Contract](engine-contract.md).
+
+The guiding principle is that these powers stay apart from ordinary play. They are available only while Dev mode is
+enabled, a Session access setting that starts disabled and is disabled again whenever a Campaign is created, loaded, or
+closed. Full Campaign state inspection shows what Player API hides, and a cheat operation changes Campaign state in a
+way ordinary play does not allow, e.g. a random outcome override, which fixes a random outcome in advance. Player API
+still exposes only Player-visible information, an Autopilot AI never reaches Developer API, and every cheat operation
+is an ordinary Player action that undo and redo treat like any other.
 
 # Relationships
 

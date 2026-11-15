@@ -12,11 +12,15 @@
 
 # Overview
 
-While an [Implementation](../governance/artifact-relationships.md#glossary) is built, its implementer meets problems in
-the specifications and makes decisions the specifications leave open or fail to settle. Every Implementation keeps two
-records of them inside its [Implementation directory](implementation-placement.md#glossary): the Specification problems
-it met and the Implementation decisions it made. The Engine designer reads the records to improve the specifications
-and to compare Implementations.
+Building an Implementation also tests the specifications: it shows where they conflict, repeat themselves, or leave
+gaps, and how the implementer got past each such place is worth keeping. While an
+[Implementation](../governance/artifact-relationships.md#glossary) is built, its implementer meets problems in the
+specifications and makes decisions the specifications leave open or fail to settle.
+
+Every Implementation must therefore keep two records inside its
+[Implementation directory](implementation-placement.md#glossary): the Specification problems it met and the
+Implementation decisions it made, each decision linked to the problems it settles. The Engine designer reads the
+records to improve the specifications and to compare Implementations.
 
 # Relationships
 

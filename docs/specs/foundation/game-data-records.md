@@ -11,11 +11,16 @@
 
 # Overview
 
-A Game Data Record (GDR) is a record of game data that the Game build supplies, authored as YAML. It can serve seven
-purposes relative to game behavior and Campaign state: initializing a Campaign instance, presetting Campaign
-configuration, parameterizing a calculation, serving as an Archetype, being referenced by a Campaign instance, keying
-campaign facts, and supplying display content. It builds on [Campaign State](campaign-state.md): Campaign instances and
-their creation are stated there.
+A Game build carries a large body of fixed game data, e.g. how much health a Thug starts with, or what the
+encyclopedia says about it. Each piece of it is a Game Data Record (GDR), authored as YAML, conforming to a declared
+Type, and never changed during play. Whatever changes belongs to Campaign state instead, as
+[Campaign State](campaign-state.md) describes it, so one GDR serves every Campaign at once.
+
+Because a GDR never changes, what sets one use of it apart from another is how game behavior and Campaign state relate
+to it. A GDR can supply starting values when a Campaign or a Campaign instance is created, be read by game behavior
+whenever a calculation needs it, or be referenced from Campaign state, which may then key its own facts by that GDR's
+identity. A GDR that no game behavior reads exists only for the player to see. One GDR may serve several purposes at
+once, e.g. the Thug GDR is the Archetype of an Enemy and also supplies its display name.
 
 # Relationships
 
@@ -27,6 +32,9 @@ their creation are stated there.
 - Used by [Missions](../mechanics/missions.md)
 
 # Purposes of GDRs
+
+A GDR never changes during play, but it can matter to a Campaign in different ways, e.g. by supplying an initial value,
+by being read in a calculation, or by being referenced from Campaign state.
 
 GDRs can serve the following seven purposes. The purposes can overlap; they do not define separate Types or required
 implementation interfaces. Each GDR purpose section below is a worked example of one purpose.

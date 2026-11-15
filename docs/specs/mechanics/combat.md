@@ -11,16 +11,18 @@
 
 # Overview
 
-A [Combat](domain-model.md#glossary) is one armed clash between the [Agents](agents-spec.md) deployed to a Mission site and the
-[Enemies](domain-model.md#glossary) there, resolved in full within one Advance turn. It is fully automatic. Each Enemy
-is created from its EnemyArchetype together with its Mission site, and it never recovers.
+A [Combat](domain-model.md#glossary) is where preparation is tested. The player decides which [Agents](agents-spec.md)
+to deploy to a Mission site and then has no further say: the Agents and the [Enemies](domain-model.md#glossary) there
+fight automatically, and the whole Combat is resolved within one Advance turn.
 
-A Combat is fought in Combat rounds. In each Combat round every Agent and then every Enemy able to fight attacks the opponent with the
-highest effective skill. An attack hits with a Probability set by the effective skills of attacker and defender, and a
-hit removes a random amount of current health around the attacker's weapon damage. Every attack, hit or miss, raises
-exhaustion. A Combatant whose current health reaches zero is dead, and one whose effective skill falls to a small fraction of
-its skill is Incapacitated and stops fighting. A Combat ends as Prevailed, Wiped, or Retreated, every Combat ends, and
-its Combat report records every attack in its Combat log and becomes part of the Turn report.
+Everything about a Combat follows from one rule: fighting only wears Combatants down. Every attack, hit or miss, raises
+exhaustion, and a hit removes current health, so effective skill can only fall while a Combat lasts. A Combatant whose
+current health reaches zero is Killed, and one whose effective skill falls too far is Incapacitated and stops fighting.
+The Combat is fought in Combat rounds until no Enemy can fight on, no Agent can, or the Agents retreat, and because
+exhaustion keeps rising, every Combat ends. Its Combat report records every attack.
+
+Combat refines [Agents](agents-spec.md): Agents says what makes a Combatant strong, and Combat says how that strength is
+spent against an opponent.
 
 ![How a Combat fits between a Mission and the Turn report: deploying Agents to a Mission site creates a Deployed Mission; in the Mission resolution step its Combat is fought from Combat start through Combat rounds, each attack appended to the Combat log, until it ends with one Combat outcome; the Combat produces exactly one Combat report, which is part of the Turn report returned by getTurnReport() and reduced in a History entry, and the Combat outcome decides whether the Mission is Won or Lost](../../images/combat-terms.svg)
 
@@ -163,6 +165,9 @@ exhaustion `X`, so two such Combatants that keep missing would never stop.
 
 # Enemies
 
+Enemies are the opponents the Agency's Agents fight at a Mission site. Each is a Combatant like an Agent, but it belongs
+to its Mission site alone and never recovers.
+
 ## Enemy properties
 
 **Proposed rule:** An Enemy is a Campaign instance whose Archetype is an EnemyArchetype. Its Archetype reference is set
@@ -216,6 +221,8 @@ EnemyArchetype are distinct Campaign instances that share neither Instance ID no
 
 ## Changes to Enemy values
 
+An Enemy changes only while it is fought, so an Enemy that no Combat reaches keeps the values it was created with.
+
 **Proposed rule:** The following list is the exhaustive set of rules that change an Enemy's values after its creation:
 
 - An attack on the Enemy in a Combat lowers its current health, under [Effects of an attack](#effects-of-an-attack).
@@ -226,6 +233,9 @@ weapon damage never change. An Enemy's values after its Combat are therefore its
 site is never fought over keeps its initial values.
 
 # Combats
+
+A Combat turns a deployment into a result without any choice from the player. These rules fix what a Combat reads, what
+it produces, and when it happens.
 
 ## Combat inputs and outputs
 
@@ -322,6 +332,9 @@ game-ts also weighted current health and weapon damage; v5 uses effective skill 
 exhaustion.
 
 # Combat flow
+
+A Combat proceeds in a fixed order, so the only chance in it comes from its attacks. These rules decide who acts when,
+and whom each Combatant attacks.
 
 ## Fixed order of each side
 
@@ -475,6 +488,9 @@ evaluations under [Combat start](#combat-start) and [Killed and Incapacitated](#
 Incapacitated equal, at every moment of a Combat, to "alive and meets the incapacitation condition".
 
 # Combat end
+
+A Combat stops when one side can no longer fight, or when the Agents are losing badly enough to withdraw. These rules
+decide when that happens and how the Combat ended, and show that every Combat ends.
 
 ## End-of-Combat-round checks
 

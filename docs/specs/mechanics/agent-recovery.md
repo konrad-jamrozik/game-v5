@@ -11,14 +11,18 @@
 
 # Overview
 
-An [Agent](domain-model.md#glossary) regains current health only on Recovery, and loses exhaustion on Standby and on
-Recovery, refining the attributes of [Agents](agents-spec.md). In each Advance turn, an Agent At assignment on Recovery
-regains a percentage of its base health, rounded up, and an Agent At assignment on Standby or Recovery loses a fixed
-amount of exhaustion. An Agent In transit recovers nothing.
+A wounded or worn-down Agent works and fights worse, so getting it back to full strength matters, and it takes time. An
+[Agent](domain-model.md#glossary) regains lost current health only on Recovery, and sheds exhaustion only on Standby or
+Recovery.
 
-When its current health reaches base health, an Agent on Recovery becomes Standby at once, without transit. The player cannot
-end Recovery early. Both rates come from the one RecoveryParameters Game Data Record (GDR), and two Derived values tell
-the player how fast an Agent recovers.
+Recovery is gradual and cannot be rushed. In each Advance turn, an Agent At assignment on Recovery regains a share of
+its base health, an Agent At assignment on Standby or Recovery loses a fixed amount of exhaustion, and an Agent In
+transit recovers nothing. Recovery ends by itself the moment current health reaches base health: the Agent becomes
+Standby at once, without transit, and the player cannot end Recovery sooner. Both rates come from one RecoveryParameters
+Game Data Record (GDR).
+
+Agent Recovery refines [Agents](agents-spec.md): Agents says what current health and exhaustion are and how they lower
+effective skill, and Agent Recovery says how they return over time.
 
 # Relationships
 
@@ -183,6 +187,10 @@ nor while the Agent is In transit or Deployed, under [Which Agents recover](#whi
 on Standby and on Recovery.
 
 # Several changes in one turn
+
+One Advance turn can change an Agent's current health and exhaustion in more than one way, e.g. through Health recovery
+and Exhaustion recovery in the same step. These rules fix how such changes combine, so the result never depends on the
+order in which they are applied.
 
 **Proposed rule:** The following statements are complete.
 

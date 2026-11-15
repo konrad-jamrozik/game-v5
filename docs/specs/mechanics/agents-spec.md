@@ -11,15 +11,18 @@
 
 # Overview
 
-An [Agent](domain-model.md#glossary) is a Combatant that the Agency employs. A Serving Agent has one Current
-assignment at a time: Standby, Contracting to earn money, Training to gain skill, Recovery to regain health, an
-Investigation, or Deployed on a Mission at a Mission site. Every order takes one Advance turn of transit before the
-Agent starts working, except deployment, which is immediate.
+Agents are the player's main resource: an [Agent](domain-model.md#glossary) is an operative of the Agency who can do
+only one thing at a time, and changing what it does costs time. That one thing is its Current assignment, e.g.
+Contracting to earn money or Training to gain skill. A newly ordered Agent spends one Advance turn In transit before it
+starts working, and only deployment to a Mission site is immediate, so reshuffling Agents often leaves them idle.
 
-How well an Agent works and fights is its effective skill: its skill, lowered by lost current health and by exhaustion above a
-free amount. Training is the only way an Agent gains skill, and only a Combat raises exhaustion. Every Agent is created
-from the one AgentArchetype, and a Campaign starts with an initial roster of Agents. An Agent is Serving until it is
-Killed in a Combat or Dismissed, and it is never removed.
+How well an Agent works and fights is its effective skill: its skill, lowered by lost current health and by exhaustion
+above a free amount. Training raises skill, and Combats wear an Agent down, so choosing a Current assignment often
+trades present output against future strength. An Agent is Serving until it is Killed in a Combat or Dismissed, and it is never
+removed, so its record outlasts its service.
+
+Agents refines [Domain Model](domain-model.md): Domain Model says how an Agent connects to the Agency and its work, and
+Agents says what one Agent is and how it works.
 
 # Relationships
 
@@ -196,6 +199,9 @@ and the Investigation or Mission it belonged to, if any, is recorded under
 
 # Attributes and effectiveness
 
+An Agent's attributes say how capable it is and how worn down it is, and together they decide how well it works and
+fights. Agents share these attributes with Enemies, so one set of rules covers every Combatant.
+
 ## Combatant Role Type
 
 The Combatant Role Type is a Role Type under [Role Types](../foundation/campaign-state.md#role-types) in Campaign
@@ -279,6 +285,8 @@ moment's values a Turn advancement step reads is stated under
 
 ## Changes to attributes
 
+An Agent's attributes change only through a few named rules, so the cause of every change to them can be traced.
+
 **Proposed rule:** The following table is the exhaustive list of rules that change an Agent's attributes after its
 creation. A rule not listed here changes none of them.
 
@@ -300,6 +308,9 @@ Agent, not an Agency value. The [Weapon damage effect](economy-and-upgrades.md#w
 weapon damage of Serving Agents and of Agents created later, under [Agent creation](#agent-creation). No Upgrade changes skill, current health, base health, exhaustion, or Weapon.
 
 # Current assignments and transit
+
+An Agent's Current assignment says what it is doing, and transit is the price of changing it. These rules decide which
+Agents accept new orders and when an Agent starts working on a new Current assignment.
 
 ## Orders and Task phase
 
@@ -332,6 +343,10 @@ or deploy them to a Mission site. `dismissAgents`, which ends the Current assign
 own precondition, under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents).
 
 ## Current assignment changes
+
+An Agent changes what it is doing either because the player orders it or because an Advance turn moves it, e.g. when
+its Investigation completes. Each such change has one trigger and one owner, so no Agent changes what it is doing
+without a stated cause.
 
 **Proposed rule:** The following table lists every allowed change of a Serving Agent's Current assignment or Task
 phase, with its trigger and the owner of the trigger. A Current assignment of "Investigation" in the
@@ -501,6 +516,9 @@ Nothing else changes; e.g., no money is spent, and skill, current health, and ex
 the next Advance turn and start working in the Advance turn after it, under [Transit rule](#transit-rule).
 
 # Cheat operations
+
+A cheat operation changes Campaign state in a way ordinary play does not allow. The cheat operation for Agents adds them
+without the cost and the Agent cap that hiring has.
 
 ## Adding Agents
 

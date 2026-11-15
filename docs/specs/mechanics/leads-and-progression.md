@@ -11,14 +11,17 @@
 
 # Overview
 
-A [Lead](domain-model.md#glossary) is a Game Data Record (GDR) that describes one line of inquiry. Each Lead concerns
-one Faction, has a Lead difficulty, may require other Leads, and, each time an Investigation of it completes, creates
-one Initiative Mission site targeting its Faction.
+Leads are how the Agency closes in on a Faction. A [Lead](domain-model.md#glossary) is a Game Data Record (GDR) that
+describes one line of inquiry into one Faction: each completed Investigation of it creates one Initiative Mission site
+targeting that Faction. Its Lead difficulty says how hard it is to investigate, and it may require other Leads first, so
+Leads form chains that reach deeper into a Faction.
 
-[Lead progression](domain-model.md#glossary) records, for each Lead, the Won Missions at the Mission sites it created;
-a Recorded win is permanent. A Lead is available exactly when every Lead it requires has a Recorded win, it has none
-itself, no Mission site it created is in progress, and its Faction is not Defeated. Every Lead, its Recorded wins, and
-its availability are Player-visible information from campaign creation.
+What moves the Agency along a chain is winning, not investigating. [Lead progression](domain-model.md#glossary) keeps
+each Lead's Recorded wins: the Won Missions at the Mission sites it created, kept for the rest of the Campaign. A Lead
+is available only while every Lead it requires has a Recorded win and it has none itself. A Lost Mission or an Expired
+Mission site therefore sends the player back to investigate the same Lead again, while a win can open the Leads that
+require it. A Lead is also not available while a Mission site it created is in progress, or once its Faction is
+Defeated.
 
 # Relationships
 
@@ -192,6 +195,9 @@ FactionArchetype, and no Faction is created or removed afterwards. Condition 4 t
 every Lead that passes [Lead GDR validation](#lead-gdr-validation).
 
 ## What changes availability
+
+A Lead's availability changes over a Campaign as the Mission sites it created resolve, as the Leads it requires gain
+Recorded wins, and as its Faction is Defeated.
 
 The following table states, for each situation, what happens to the conditions and whether the Lead is available
 afterwards. It assumes that the conditions the row does not mention keep the values they had. The table is

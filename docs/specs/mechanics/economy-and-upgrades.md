@@ -11,14 +11,18 @@
 
 # Overview
 
-The [Agency](domain-model.md#glossary) has money, funding, and acquisitions of Upgrades. In every Advance turn it
-receives income, its funding plus contracting income for each Agent working on Contracting, and then pays upkeep for
-each Serving Agent. Money may become negative; funding is never below 0.
+Money is how the Agency turns what it earns today into strength tomorrow, and keeping the Agency running costs money
+every turn. In every Advance turn the [Agency](domain-model.md#glossary) receives income, its funding plus what its
+Agents earn on Contracting, and pays upkeep for every Serving Agent, whether or not that Agent is working. Money may run
+negative, but funding, the recurring part of income, never falls below zero.
 
-The player spends money to hire Agents and to purchase Upgrades, and may dismiss Agents on Standby, At assignment, for
-no refund. Three caps limit the Agency: the Agent cap on Serving Agents, the Transport cap on Deployed Agents, and the
-Training cap on Agents on Training. Each Upgrade either raises one cap or raises the weapon damage of Agents, and it may
-be purchased any number of times at the same price.
+The player spends money in two ways: hiring grows the roster of Agents, and Upgrades improve the Agency permanently.
+Three caps limit what the Agency can do at once: the Agent cap on the Agents it employs, the Transport cap on the Agents
+it has Deployed, and the Training cap on the Agents on Training. Each Upgrade either raises one cap or raises the weapon
+damage of Agents, and it can be bought again at the same price.
+
+Economy and Upgrades refines [Domain Model](domain-model.md): Domain Model says that the Agency holds money and employs
+Agents, and Economy and Upgrades says how that money is earned and spent.
 
 # Relationships
 
@@ -136,6 +140,9 @@ money or funding never changes them.
 
 # Agency State
 
+The Agency's State holds what the Agency has built up over the Campaign: its money, its funding, and the Upgrades it has
+bought. These rules say what each value is, how the Agency starts, and how funding may change.
+
 ## Agency properties
 
 **Proposed rule:** The Agency is a Campaign instance whose Archetype is the AgencyArchetype. Its Archetype reference is
@@ -251,6 +258,9 @@ assignment changes; only further additions are rejected until the count is below
 not an invariant violation.
 
 # Agency income and upkeep
+
+In every Advance turn the Agency earns money and pays for its Agents, and the difference decides whether it can afford
+to grow. These rules fix how much it earns, how much it pays, and how the player can see both in advance.
 
 ## Agency income
 
@@ -413,6 +423,9 @@ away from Training frees its place at once, within the same Turn.
 
 # Upgrades
 
+Upgrades let the Agency spend money on lasting improvements instead of on more Agents. These rules say how an Upgrade is
+bought and what each acquisition does.
+
 ## Purchasing Upgrades
 
 **Proposed rule:** The Player action `player.actions.purchaseUpgrade(upgrade)` buys one acquisition of one Upgrade.
@@ -519,6 +532,9 @@ already recorded. Both Turn series are Player-visible information. Funding, acqu
 series.
 
 # Cheat operations
+
+A cheat operation changes Campaign state in a way ordinary play does not allow. The cheat operation for money gives the
+Agency money that nothing in play earned.
 
 ## Adding money
 

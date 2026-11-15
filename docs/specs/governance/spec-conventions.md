@@ -87,6 +87,9 @@ it is worth recording, only in an Implementation Family document, as described i
 
 # Document lifecycle and ownership
 
+A specification is written and read by different participants, moves from a first outline to an accepted contract, and
+must keep one clear owner for everything it states throughout.
+
 ## Personas
 
 A Persona describes what a participant does with the game, independently of whether a human or an LLM-based agent fills
@@ -238,7 +241,8 @@ not narration, and remains valid.
 
 ## Implicit relationships
 
-The following relationships exist without explicit table rows:
+Some relationships hold for every specification, so recording them in every Relationships list would add entries that
+carry no information. The following relationships exist without explicit table rows:
 
 1. Every registered specification implicitly depends on Specification Conventions through `follows` for document structure, lifecycle, and writing rules.
 2. Specification Conventions consequently has every other registered specification as an implicit Dependent.
@@ -294,8 +298,11 @@ Relationships is the only inventory of explicit relationships. Overview must not
 directional-phrase bullets; where a reliance matters, the owning contract prose states it.
 
 Classify relationships using [Choosing uses or refines](artifact-relationships.md#choosing-uses-or-refines).
-Each refinement must identify the parent contract and the added detail about the same subject or behavior in its
-owning prose. A scoped Stub may declare that intended detail without settling its TODOs. Applying vocabulary,
+Each refinement is visible in the prose where the added detail is stated: the topic section that adds the detail links
+the parent section in a clause about the subject; e.g., "Every Order total is a Price, under Prices; for an Order it is
+computed as follows." Overview may also name the parent, under [Overview](#overview). No section or paragraph has the
+refinement itself as its subject; e.g., not "This document refines Store Model by specifying placement, payment, and
+shipping constraints." A scoped Stub may declare that intended detail without settling its TODOs. Applying vocabulary,
 obeying invariants, or supplying GDR values alone establishes uses. Do not hide substantive reliance behind
 an informative citation or duplicate a refinement as uses for the same reliance.
 
@@ -497,18 +504,62 @@ and content of framing and closing sections, not applicability.
 ## Subject before document
 
 Write about the subject, not about the document. Do not announce what a section will say, summarize what it said,
-explain why a rule is placed where it is, or describe how the document treats GDR values, examples, or other
-documents.
+explain why a rule is placed where it is, except in the statement of the subject's place under [Overview](#overview),
+or describe how the document treats GDR values, examples, or other documents.
 
-Overview describes the subject of the specification. It says what the subject is, links the specification it builds
-on, and names in a few sentences what the subject does or contains. It is short: one or two paragraphs, as a guide
-about 120 words, and never more than 200. It must not list the document's sections, say what the document defines,
-states, or owns, or say what the document does not cover. The Owns metadata row is the only statement of ownership.
+### Overview
 
-E.g., an Overview of an Orders specification says that an Order is a customer's request to buy products from the
-store, as Store Model introduces it, that an Order is placed, paid, shipped, and delivered or cancelled, and that its
-total is the sum of its lines plus shipping. It does not say "This document defines the Order lifecycle and the total
-formula. It does not own payment."
+Overview introduces the subject to a reader who has not met it. It moves from the idea to the parts:
+
+1. **The idea:** the opening sentences say in plain words what the subject is for, or which principle governs it, as
+   one would explain it to a newcomer; e.g., "Buying from the store is an exchange of promises: the customer promises
+   to pay, and the store promises to deliver what was paid for." Formal terms come after the idea that motivates them.
+2. **The organizing principle:** Overview then says what divides or shapes the subject, and introduces its main
+   concepts as consequences of that principle, each with what sets it apart; e.g., "Everything about an Order follows
+   from one rule: the store never ships what has not been paid for, and never keeps money for what it cannot ship."
+   It introduces at most four concepts; the rest belongs to the topic sections.
+3. **Its place:** when the subject refines or stands beside the subject of another specification, one or two
+   sentences say what this subject focuses on relative to that one and why it is separate; e.g., "Orders refines
+   Store Model: Store Model says what the store sells, and Orders says how one sale proceeds, which changes far more
+   often."
+
+Overview is one to three paragraphs, as a guide about 150 words, and never more than 200. It must not:
+
+- open with a list, or with a sentence whose subject is the document, its constraints, or its rules; e.g., not
+  "Orders follow constraints on placement, payment, shipping, and cancellation";
+- contain a sentence that enumerates more than three items;
+- list the document's sections, say what the document defines, states, or owns, or say what it does not cover. The
+  Owns metadata row is the only statement of ownership.
+
+A reader who stops after the first paragraph can explain to someone else what the subject is and why it is shaped as
+it is. A reader who stops after Overview knows the few concepts that every later section builds on, though not yet
+their rules.
+
+E.g., the following Overview of an Orders specification is an inventory: it lists facts, and the reader must
+reconstruct the idea that explains them.
+
+> Orders follow constraints on placement, payment, shipping, cancellation, and total calculation. An Order is placed,
+> paid, shipped, and delivered or cancelled, and its total is the sum of its lines plus shipping. These constraints
+> refine Store Model.
+
+The following Overview of the same subject orients the reader instead:
+
+> Buying from the store is an exchange of promises: the customer promises to pay, and the store promises to deliver
+> what was paid for. An Order records one such exchange, from the moment the customer places it until the goods arrive
+> or the Order is cancelled.
+>
+> Everything about an Order follows from one rule: the store never ships what has not been paid for, and never keeps
+> money for what it cannot ship. So payment comes before shipping, and an Order can be cancelled, with a full refund,
+> only until it ships. Orders refines Store Model: Store Model says what the store sells, and Orders says how one sale
+> proceeds, which changes far more often.
+
+### Orientation before detail
+
+Every topic section, and every subsection that states rules, opens with a lead: one to three sentences saying what the
+subject of the section is for or which problem its rules solve, before any list, table, subsection, or rule. E.g., a
+section on refunds opens "A refund returns money the store should not keep, e.g. for goods that never arrived," and
+then lists the rules; it does not open with "Refunds follow these complete rules:". A completeness statement, e.g.
+"The following rules are complete", follows the lead.
 
 ## Handling sections that do not apply
 
@@ -530,6 +581,10 @@ Give each specialized subject its own topic section, or a subsection of the clos
 | API contracts        | Functions; preconditions; results          |
 
 Long supporting tables may use descriptive appendices after the closing sections. State whether an appendix is normative or informative. If a topic repeatedly outgrows its specification, split it into an indexed specification with clear ownership.
+
+A specification has one subject, which its Overview can state in one sentence without joining unrelated nouns. When the
+Owns row or Overview needs a list of subjects that change for different reasons, e.g. "Order placement, product catalog
+structure, and customer accounts", split the specification so that each part has one subject.
 
 # Writing exact requirements
 
@@ -684,6 +739,9 @@ Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Pro
 
 # TODOs and acceptance checklist
 
+Before a specification is accepted, part of its quality can be checked by a machine and the rest only by a reviewer,
+and whatever it has not settled yet must be visible rather than hidden.
+
 ## Deterministic validation
 
 Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, the Binding row under [Implementation binding](#implementation-binding), required layout, local links and anchors, relationship inventories and mirrors, Family overview presence, structure, and coverage, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document) and [Glossary groups](#glossary-groups), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
@@ -724,7 +782,10 @@ Before acceptance, verify:
 - Glossary definitions state what each term means, as required by [Glossary definitions](#glossary-definitions).
 - Every example is introduced with "e.g." or sits under an explicit "Examples" label; every illustrative enumeration contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
 - No `TODO:` item remains; everything left for later is a `TODO (later):` item in the TODOs section.
-- Overview and the Glossary introduction satisfy their length limits, and no text describes the document.
+- Overview opens with the idea, introduces at most four concepts, has no sentence enumerating more than three items,
+  and keeps to its length limit, under [Overview](#overview); every topic section opens with a lead, under
+  [Orientation before detail](#orientation-before-detail); the Glossary introduction keeps to its length limit; and no
+  text describes the document.
 - Inputs, transitions, formulas, outputs, units, timing, and visibility are unambiguous.
 - Boundary cases and failures are defined.
 - Worked examples and acceptance examples agree with the rules.

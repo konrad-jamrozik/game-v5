@@ -11,11 +11,15 @@
 
 # Overview
 
-A [Session](core-concepts.md#glossary) is one run of the game. It starts when the game starts, at the Main menu with no
-Current campaign, and ends when the game exits. During a Session a Campaign becomes the Current campaign by creation or
-by load, and the Current campaign is closed on request. `session.getStatus()` reports whether a Current campaign
-exists, and a fixed set of Session API operations needs no Current campaign. Nothing a Session holds is persisted,
-under [Data ownership](engine-contract.md#data-ownership).
+Running the game and playing a Campaign are separate things. A [Session](core-concepts.md#glossary) is one run of the
+game, from start to exit, while a Campaign is a playthrough that can span many Sessions through its Campaign saves. The
+game starts at the Main menu, where the Session has no Current campaign, and only a few Session API operations work
+there, e.g. listing Campaign saves.
+
+A Session plays at most one Campaign at a time, its Current campaign. Creating a Campaign or loading a Campaign save
+selects it, and closing it returns the Session to the Main menu; this Campaign selection changes on request only.
+Nothing a Session holds is persisted, under [Data ownership](engine-contract.md#data-ownership), so replacing or
+closing the Current campaign never writes a Campaign save, and every new Session starts at the Main menu again.
 
 # Relationships
 
@@ -49,6 +53,8 @@ reports the Campaign seed, under [Campaign seed](determinism-and-randomness.md#c
 
 # Campaign selection
 
+The Campaign selection decides which Campaign, if any, the Session is playing.
+
 The following operations are the complete set that change the Campaign selection:
 
 - **Create:** `session.campaign.create(options)` creates a Campaign using the current Game build and the
@@ -68,6 +74,9 @@ Every successful create, load, or close has these effects:
 A failed create or load leaves the Session exactly as it was, including its Current campaign.
 
 # Operations without a Current campaign
+
+At the Main menu the Session still has to be managed before any Campaign is current, e.g. to load a Campaign save or
+create a Campaign.
 
 The following Session API operations need no Current campaign, and this list is complete: `session.getStatus()`,
 every `session.globalConfiguration` operation, `session.saves.list()`, `session.saves.load(save)`, `session.campaign.create(options)`, every

@@ -11,13 +11,15 @@
 
 # Overview
 
-Specifications, requirements, implementations, tests, and other artifacts are connected by relationships. Every
-relationship runs from a Dependency to a Dependent and has one of five Relationship kinds: `follows`, `refines`, `uses`,
-`implements`, or `verifies`. Explicit relationships are recorded in mirrored lists, and the relationships of each kind
-form a graph that is checked for cycles.
+A specification rarely stands alone: it builds on vocabulary from one document, adds detail to a contract in another,
+and is implemented and tested elsewhere. Relationships make these connections explicit, so that a change to one
+artifact shows which others it can affect. Every relationship runs from a Dependency to a Dependent and has one
+Relationship kind, e.g. `uses` or `refines`, which says what the Dependent takes from the Dependency. Explicit
+relationships are recorded in mirrored lists, and the relationships of each kind form a graph that is checked for
+cycles.
 
-A relationship does not change an artifact's status, accept a proposed rule, prove that an implementation is correct,
-or report a passing test run.
+A relationship records a connection, not a judgment: it does not change an artifact's status or accept a proposed rule,
+and it proves nothing about an implementation or a test run.
 
 # Relationships
 
@@ -92,6 +94,11 @@ For each proposed refinement, identify the parent contract and the additional de
 behavior. Record both in the contract prose, linking to the relevant sections by title. Obeying an invariant,
 using a vocabulary, consuming a result, or supplying Game Data Record (GDR) values is insufficient by itself: those are uses.
 Being more concrete or appearing later in an authoring sequence is also insufficient.
+
+A contract that applies to whatever other specifications state, e.g. "every invariant that a specification states
+holds", is used, not refined, by each specification that states such a thing. Refinement needs the same subject on
+both sides: the child adds detail about what the parent is about. Otherwise every specification that states an
+invariant would refine that contract, and the relationship would carry no information.
 
 E.g., Domain Model uses Core Concepts vocabulary and Campaign State composition constraints to describe game concepts.
 Campaign State refines Engine Contract Committed state integrity; vocabulary use alone is not refinement. Timeline uses the Campaign State identity and historical-preservation conventions and Engine Contract guarantees;

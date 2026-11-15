@@ -11,16 +11,18 @@
 
 # Overview
 
-A [Mission site](domain-model.md#glossary) is a place where Enemies of one target Faction are present. An Initiative
-Mission site is created from a completed Investigation, and a Response Mission site from a Faction operation
-occurrence. A Mission site is Active until the player deploys a team of Agents to it, which makes it Attempted, or
-until it is Expired after a number of Advance turns or Cancelled because its target Faction is Defeated.
+Missions are where the Agency confronts a Faction directly. Some it seeks out: an Initiative
+[Mission site](domain-model.md#glossary) comes from a completed Investigation. Others are forced on it: a Response
+Mission site comes from a Faction operation occurrence, and ignoring one has a price.
 
-Deploying Agents creates the Mission site's one [Mission](domain-model.md#glossary), at once and without transit. Its
-Combat is fought in the next Advance turn: the Mission is Won when the Combat outcome is Prevailed, and Lost when it is
-Retreated or Wiped. A Won Initiative Mission can give money, funding, a Panic reduction, and the defeat of its target
-Faction; a Won Response Mission gives money and funding. A Lost Response Mission and an Expired Response Mission site
-raise Panic and change funding.
+A Mission site is an opportunity that does not wait. It stays Active for a number of Advance turns, and the player may
+deploy one team of Agents to it, only once, which immediately creates its one [Mission](domain-model.md#glossary). The
+Mission's Combat is fought in the next Advance turn: the Mission is Won when the Combat outcome is Prevailed, and Lost
+otherwise. What follows depends on the kind of Mission site. A Won Initiative Mission rewards the Agency and can defeat
+its target Faction. A Lost Response Mission, like an Expired Response Mission site, raises Panic and changes funding.
+
+Missions refines [Factions](./factions.md): Factions says when a Faction operation occurs, and Missions says how the
+Agency can answer it.
 
 # Relationships
 
@@ -136,6 +138,9 @@ MissionArchetype Type. A Game build whose GDRs violate one of these rules is def
    `name` is non-empty text.
 
 # Mission site
+
+A Mission site is the Campaign instance that holds one opportunity to confront a Faction: whose Enemies are present,
+where it came from, and how long it stays Active.
 
 ## Mission site properties
 
@@ -281,6 +286,9 @@ new Mission site, under [Leads and Progression](leads-and-progression.md). An At
 its own; the consequences of the attempt are those of its Mission's final state, under [Consequences](#consequences).
 
 # Mission
+
+A Mission is the Campaign instance that holds one attempt at a Mission site: the team the player sent and what became of
+it.
 
 ## Mission properties
 
@@ -532,6 +540,9 @@ ending turn t + E if no team is deployed to it. A team deployed during Turn t + 
 fights, because Mission resolution precedes Mission site expiration, and the Mission site is then Attempted, not Active.
 
 # Consequences
+
+Consequences are what a Mission site and its Mission change in the Campaign once they reach a final state, e.g. the
+money a Won Mission brings or the Panic an ignored Response Mission site raises.
 
 **Proposed rule:** The following table states the complete consequences for the Campaign of each final state of a
 Mission and of a Mission site, by the kind of the Mission site. It is exhaustive: no other rule of any specification adds

@@ -11,14 +11,18 @@
 
 # Overview
 
-A [Faction](domain-model.md#glossary) is an organization that opposes the Agency and carries out operations in the
-world. The initial Campaign state has exactly one Faction for each FactionArchetype, and no Faction is created later.
+Factions are the pressure the Agency works against: left alone, a Faction only grows more dangerous, and nothing but
+defeat stops it. A [Faction](domain-model.md#glossary) is an organization that opposes the Agency, and every Faction a
+Campaign will ever have exists from its start.
 
-A Faction escalates through Faction activity levels: after a random number of Advance turns at one level, it moves to
-that level's next one, until it reaches a final level. At random intervals that its current level sets, it carries out
-a Faction operation occurrence of a randomly chosen Faction operation level, which creates one
-[Response Mission site](domain-model.md#glossary). A Faction that becomes Defeated stops escalating and carrying out
-operations for the rest of the Campaign, and no Faction is ever removed.
+A Faction's danger is its Faction activity level, which sets how often it acts and how severely. After a random number
+of Advance turns at one level, the Faction moves up to the next, until it reaches a final level, and it never moves
+back. At random intervals it carries out a Faction operation occurrence, whose Faction operation level decides how much
+is at stake, and each occurrence creates one [Response Mission site](domain-model.md#glossary), the Agency's chance to
+stop it. A Faction that becomes Defeated stops escalating and operating for the rest of the Campaign.
+
+Factions refines [Domain Model](domain-model.md): Domain Model says that Factions create Response Mission sites, and
+Factions says when they do and how severe each operation is.
 
 # Relationships
 

@@ -11,9 +11,13 @@
 
 # Overview
 
-The Web UI is the game's browser user interface. It calls the engine API of the
-[Engine Contract](../foundation/engine-contract.md) and opens at the Main menu, the Session state with no Current
-campaign under [Campaign Lifecycle](../foundation/campaign-lifecycle.md).
+The Web UI is where the Player plays the game in a browser. It shows the game and acts on the Player's choices by
+calling the engine API of the [Engine Contract](../foundation/engine-contract.md).
+
+Its screens follow the life of a Session under [Campaign Lifecycle](../foundation/campaign-lifecycle.md): it opens at
+the Main menu, where no Campaign is current yet, and once a Campaign is created or loaded it shows the screens for
+playing it. For every screen, the guiding question is what the Player needs to see by default and what can stay one
+step away.
 
 # Relationships
 

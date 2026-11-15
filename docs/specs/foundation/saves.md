@@ -11,11 +11,14 @@
 
 # Overview
 
-A Campaign save is a persisted copy of a Campaign at one Committed state, as the [Engine Contract](engine-contract.md)
-defines Campaigns and Sessions. The Session controller saves the Current campaign, saves it as a new Campaign save, loads
-a Campaign save, and lists the Campaign saves in Game storage. The engine also writes Autosaves itself, so that play can
-resume after the Session ends. A Campaign save is limited by the Save size limit, and a Game build may reject a
-Campaign save written by a different Game build.
+A Campaign outlives the Session it is played in only through its Campaign saves. A Campaign save is a persisted copy of
+one Campaign at one Committed state, together with its Timeline and Autopilot memory, as the
+[Engine Contract](engine-contract.md) defines it. Loading it lets play continue exactly as if it had never stopped.
+
+Campaign saves come from two sources. The Session controller saves on request, either over the Current save or as a
+new Campaign save that keeps an earlier line of play intact. The engine writes Autosaves by itself, so that play can
+resume even after the game stops unexpectedly, and so that undo can reach back across recent Turns. Every Campaign save
+is bounded by the Save size limit, and a Game build may reject a Campaign save written by a different Game build.
 
 # Relationships
 

@@ -11,15 +11,18 @@
 
 # Overview
 
-The game is a [Campaign](../foundation/core-concepts.md#glossary) in which the player controls one Agency. Its
-concepts are modeled with the vocabulary of [Campaign State](../foundation/campaign-state.md): each is a Campaign
-instance Type, a Role Type, or a Game Data Record (GDR).
+The game is a [Campaign](../foundation/core-concepts.md#glossary) in which the player runs one Agency against the
+Factions that oppose it. Everything the Agency does, its Agents do: each Agent is an operative who does one thing at a
+time, so sending it to one task always means taking it from another.
 
-The Agency employs Agents and gives each Agent a Current assignment. Agents investigate Leads in Investigations, and
-completing an Investigation can create an Initiative Mission site. Factions, the organizations that oppose the Agency,
-create Response Mission sites through their operations. Deploying a team of Agents to a Mission site creates a Mission,
-in which those Agents fight the Enemies present there in a Combat. Each Agent belongs to the Current team of the one
-Investigation or Mission its Current assignment references, if any.
+The concepts are arranged around where the Agency's work comes from and where it leads. The Agency finds work by
+investigating Leads, and the Factions create work through their operations. Either can lead to a Mission site, a place
+where Enemies are present for a limited time. Deploying a team of Agents to a Mission site creates a Mission, in which
+they fight those Enemies.
+
+Every concept is modeled with the vocabulary of [Campaign State](../foundation/campaign-state.md). Domain Model says how
+the concepts connect, which every concept must agree on; how each one behaves is refined separately, e.g. by
+[Agents](agents-spec.md), so that one concept's rules can change without touching the others.
 
 # Relationships
 

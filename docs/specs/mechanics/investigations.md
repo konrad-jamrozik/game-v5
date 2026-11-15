@@ -11,15 +11,16 @@
 
 # Overview
 
-An [Investigation](domain-model.md#glossary) is one effort by a team of Agents to investigate one Lead. The player
-starts it with `startInvestigation` and adds Agents to it with `assignAgentsToInvestigation`; a Lead has at most one
-Active Investigation at a time. An Investigation is Active until it is Completed or Abandoned.
+Investigating a Lead takes Agents and time, and when the work will pay off is never certain. An
+[Investigation](domain-model.md#glossary) is one team's effort on one Lead: the player starts it, adds Agents to it,
+and may order them elsewhere. A Lead has at most one Active Investigation at a time.
 
-In every Advance turn, an Investigation's Investigation progress grows by the effective skill of its working members.
-It then completes with a Probability that rises with its progress and reaches 1 at its Lead's `difficulty` × 100. A
-completed Investigation applies its Lead's completion effect, e.g. creating an Initiative Mission site, and sends its
-members to Standby. An Investigation keeps its progress when a member leaves, and becomes Abandoned when the player
-orders its last member elsewhere.
+The work accumulates. In every Advance turn, Investigation progress grows by the effective skill of the members working
+on it, and the Investigation then completes with a Probability that rises with that progress and reaches 1 at its
+Lead's `difficulty` × 100. A larger team therefore brings completion closer, but never to a known Turn. A completed
+Investigation applies its Lead's completion effect, e.g. creating an Initiative Mission site, and sends its members to
+Standby. Progress survives a member leaving but not the whole team leaving: an Investigation whose last member is
+ordered elsewhere becomes Abandoned, and a later Investigation of the same Lead starts again from 0.
 
 # Relationships
 
@@ -83,6 +84,9 @@ it, and the violation is reported as a data defect, never repaired into differen
    `name` is non-empty text.
 
 # Investigation
+
+An Investigation is the Campaign instance that holds one team's effort on one Lead: which Lead it investigates, who is
+on its team now, and how much progress the team has made.
 
 ## Investigation properties
 

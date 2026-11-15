@@ -11,17 +11,18 @@
 
 # Overview
 
-Advance turn is the Player action that ends a Turn, under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract. It applies
-twelve Turn advancement steps, each exactly once and in a fixed order: Transit, Agency income, Upkeep, Training,
-Investigation progress, Mission resolution, Mission site expiration, Faction activity, Agent recovery, Panic, Ending
-check, and Turn close. Each step applies the rules of one subject, e.g. in Upkeep the Agency pays for every Serving
-Agent.
+Time in the game moves only when the player ends a Turn. Advance turn is the Player action that does so, under
+[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, and
+everything that takes time happens in it at once, e.g. income, training, and Combat.
 
-A step uses every value as the earlier steps of the same Advance turn left it. Within one step, every rule uses
-Step-start values, apart from a few listed exceptions, so the order in which Campaign instances are processed never
-changes the result. Every transit takes one Advance turn, and a Mission site created during Advance turn does not count
-down in it. Only the Committed state after Advance turn is observable.
+Advance turn is a fixed sequence of twelve Turn advancement steps, from Transit to Turn close, each applied exactly once
+and each applying the rules of one subject, e.g. in Upkeep the Agency pays for every Serving Agent. The sequence
+matters, because a step sees what the earlier steps of the same Advance turn did. Within one step the opposite holds:
+every rule uses Step-start values, apart from a few listed exceptions, so the order in which Campaign instances are
+processed never changes the result. Only the Committed state after Advance turn is observable.
+
+Each Mechanics specification says what its rules do; Turn Advancement says when each applies, in one place, so that the
+whole order can be read and checked at once.
 
 # Relationships
 
@@ -139,6 +140,9 @@ arrives in the Advance turn ending turn 5 and earns its first income in the Adva
 
 ## Same-turn interactions
 
+Because the steps run in one fixed order, something that happens early in an Advance turn can change what a later step
+of the same Advance turn does, e.g. a Faction Defeated in Mission resolution no longer acts in Faction activity.
+
 **Proposed rule:** The following statements are complete for the interactions between steps of the same Advance turn
 that no other specification states:
 
@@ -169,6 +173,9 @@ that no other specification states:
 
 # Values a step uses
 
+The result of Advance turn must not depend on how an implementation happens to order its work, so which value a rule
+reads, as it was before or after another rule changed it, is fixed.
+
 The following rules are complete:
 
 - **Earlier steps are visible:** A Turn advancement step uses every value as it is after every earlier step of the
@@ -189,6 +196,9 @@ because the rules above make its result the same for every order. Only the Commi
 observable, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 ## Exceptions to Step-start values
+
+A few rules need something other than a Step-start value: a value from before the Advance turn began, or a result that
+an earlier part of the same step has just produced.
 
 **Proposed rule:** The following list of exceptions is exhaustive. Each one keeps the result independent of the order in
 which an implementation processes Campaign instances.
@@ -218,6 +228,9 @@ which an implementation processes Campaign instances.
    counts, under [Cancellation](missions.md#cancellation).
 
 ## Combined results
+
+When several changes reach the same value within an Advance turn, the result must still be one well-defined value,
+whichever change an implementation applies first.
 
 **Proposed rule:** The following combined results are complete:
 

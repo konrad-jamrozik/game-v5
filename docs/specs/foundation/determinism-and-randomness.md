@@ -11,12 +11,15 @@
 
 # Overview
 
-A Campaign is reproducible: given the same Game build, initial Campaign configuration, Campaign seed, and ordered Player
-actions, exactly the same things happen. The Campaign seed is the one value from which every random outcome of a
-Campaign derives, and every random outcome obeys a few common rules, e.g. each takes its possible values as often as its
-rule states. A unique identifier is either a Campaign-scoped identifier, which replaying the same Player actions must
-reproduce, or an Independent identifier, which it need not. The guarantee holds within one implementation and Game
-build, across machines.
+The guiding principle is that a Campaign can always be replayed: given the same starting point and the same Player
+actions, exactly the same things happen, down to every random outcome. This is what makes undo, redo, and loading a
+Campaign save trustworthy: going back and making the same choices always leads to the same place.
+
+The game still has chance, e.g. whether an attack hits. Chance stays reproducible because every random outcome derives
+from one value fixed when the Campaign is created, its Campaign seed, and from nothing outside Campaign state, e.g. not
+the clock. The same test sorts unique identifiers into those replay must reproduce, e.g. an Instance ID, and those it
+need not, e.g. a Campaign save ID. The promise holds across machines, but not across different implementations or Game
+builds.
 
 # Relationships
 
@@ -85,7 +88,9 @@ reproduce its own outcomes exactly.
 
 # Campaign seed
 
-Every Campaign has exactly one Campaign seed. The following rules are complete:
+The Campaign seed is what lets the Session controller recreate a Campaign: creating another Campaign with the same
+Campaign seed and new-Campaign setup, then making the same Player actions, gives the same Campaign. Every Campaign has exactly one Campaign seed. The following rules are
+complete:
 
 - **Supplied:** The Session controller may supply the Campaign seed in `session.campaign.create(options)`. A
   supplied value that is not a permitted Campaign seed fails creation, under
@@ -111,7 +116,8 @@ Every Campaign has exactly one Campaign seed. The following rules are complete:
 
 # Random outcomes
 
-Every random outcome of a Campaign obeys the following rules, and this list is complete:
+Chance in a Campaign must behave like real chance to the player while staying reproducible for the engine. Every random
+outcome of a Campaign obeys the following rules, and this list is complete:
 
 - **Sole source of randomness:** Every random outcome of a Campaign derives from its Campaign seed. No outcome
   depends on anything outside Campaign state; e.g., not on wall-clock time, on when, in which Session, or on which
@@ -133,7 +139,8 @@ Every random outcome of a Campaign obeys the following rules, and this list is c
 
 # Unique identifiers
 
-Every specification that introduces a unique identifier must classify it as a Campaign-scoped identifier or an
+Some identifiers name things inside the simulated world and must survive replay; others name things outside it, e.g.
+stored records, and need not. Every specification that introduces a unique identifier must classify it as a Campaign-scoped identifier or an
 Independent identifier. The test is whether replaying the same Player actions from the same Campaign state,
 including through undo and redo, must reproduce the same identifier.
 

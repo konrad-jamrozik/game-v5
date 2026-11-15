@@ -11,14 +11,14 @@
 
 # Overview
 
-The outstanding Work items are the known issues in the registered specifications that should be addressed eventually
-but are not yet scheduled. Each Work item records one issue completely enough that a reader with no other context can
-act on it.
+Reviewing the specifications keeps turning up problems that cannot all be fixed at once. A Work item records one such
+issue in the registered specifications, one that should be addressed eventually but is not yet scheduled, completely
+enough that a reader with no other context can act on it.
 
-Each Work item names the batch of each affected specification, as listed in
-[Batch sequence](work-plan.md#batch-sequence) in the [Specification Work Plan and Backlog](work-plan.md), so that it can
-be handled when that batch is drafted or reviewed. Recording a Work item neither schedules it nor changes any batch or
-document status. Each specification remains authoritative until it is revised. A link from a Work item to a
+Each Work item is tied to the review that will settle it: it names the Batch of each affected specification, as listed
+in [Batch sequence](work-plan.md#batch-sequence) in the [Specification Work Plan and Backlog](work-plan.md), so that it
+can be handled when that Batch is drafted or reviewed. Recording a Work item neither schedules it nor changes any Batch
+or document status, and each specification remains authoritative until it is revised. A link from a Work item to a
 specification is a citation, not a relationship.
 
 # Relationships
@@ -92,6 +92,9 @@ The Work items below were recorded from an audit on 2026-11-11. Quotations were 
 that time.
 
 ## Borderline
+
+Borderline Work items concern content that belongs in a specification but is worded as a mechanism rather than as an
+observable or designer-authored outcome.
 
 ### TODO-013: Snapshot and read wording for turn timing
 

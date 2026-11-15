@@ -11,18 +11,22 @@
 
 # Overview
 
-The work plan organizes development of the game specifications into review batches instead of drafting the entire game
-at once. The specifications are the durable design artifacts; code and tests are derived from accepted contracts. The
-plan is a specification work plan, not an implementation schedule. The [Game Design Brief](../../game-design-brief.md)
-supplies strategic intent and architectural constraints, and the
-[derived specification catalog](../../derived/README.md) lists document IDs and Families.
+The game is specified a few related documents at a time rather than all at once, so that each decision is reviewed
+before later ones build on it. The specifications are the durable design, and code and tests are derived from accepted
+contracts, so the work planned here is writing specifications, not implementing them. The
+[Game Design Brief](../../game-design-brief.md) supplies the strategic intent and architectural constraints.
+
+The work is divided into eight Batches, each a bounded set of related specifications with one review checkpoint at its
+end. The order follows reliance: shared vocabulary and contracts come before the mechanics built on them. Work states
+track progress separately from the Status of each document, which the
+[derived specification catalog](../../derived/README.md) lists.
 
 **Current work:** Batch 1 is partially complete. [Core Concepts](../foundation/core-concepts.md),
 [Campaign State](../foundation/campaign-state.md), and [Engine Contract](../foundation/engine-contract.md) are
-Accepted; [Game Data Records](../foundation/game-data-records.md) and [Domain Model](../mechanics/domain-model.md) are
-**In review**. Batch 2 is Drafting: [Numbers](../foundation/numbers.md) is a complete Draft, and the other four of its
-specifications have not been presented for review. Batches 3 to 7 are drafted together and are **In review** as one
-checkpoint; batch 8 has not started.
+Accepted, while [Game Data Records](../foundation/game-data-records.md) and [Domain Model](../mechanics/domain-model.md)
+are **In review**. Batch 2 is Drafting: [Numbers](../foundation/numbers.md) is a complete Draft, and none of its
+specifications has been presented for review. Batches 3 to 7 are **In review** as one checkpoint; Batch 8 has not
+started.
 
 # Relationships
 
@@ -51,6 +55,8 @@ instead of marking the whole batch Complete.
 
 # Current baseline
 
+The current baseline records where the work stands, so that the next checkpoint starts from an agreed state.
+
 - Batch 1 is In review, with three of its five specifications Accepted. Batch 2 is Drafting: all five of its
   specifications are Draft, Numbers is complete, and none has been presented for review. Batches 3 to 7 are In review:
   their specifications are complete Drafts, presented together as one checkpoint instead of one checkpoint per batch.
@@ -77,6 +83,9 @@ removal approaches do not select new gameplay rules or change the accepted revie
 
 # Review sequence and backlog
 
+The review sequence fixes the order in which specifications are drafted and reviewed, so that each Batch can rely on the
+Batches reviewed before it.
+
 ## Batch sequence
 
 Use the following 8-batch sequence, starting with Core Concepts, Engine Contract, Campaign State, Game Data Records, and Domain Model. If review reveals a better grouping,
@@ -97,6 +106,8 @@ The table is an authoring sequence, not a declaration that every referenced spec
 are mutual. Drafts must identify unresolved dependencies explicitly rather than borrowing unstated rules from stubs.
 
 # Work that grows alongside the batches
+
+Some work cannot wait for a Batch of its own, because each mechanic needs it as soon as it is drafted.
 
 ## Parallel GDR work
 
@@ -127,6 +138,9 @@ of the rules applied during Advance turn. Each Mechanics specification places it
 match it.
 
 # Review and completion workflow
+
+Each Batch moves from drafting to review to acceptance in the same way, so that nothing is treated as accepted, or as
+authorization to implement, before the user says so.
 
 ## Batch workflow
 

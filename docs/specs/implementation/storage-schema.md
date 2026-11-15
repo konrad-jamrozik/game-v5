@@ -12,11 +12,13 @@
 
 # Overview
 
-The Storage Schema is the physical layout of everything the game persists, as listed under
-[Data ownership](../foundation/engine-contract.md#data-ownership). Game storage never holds a copy of a GDR, because
-GDRs belong to the Game build. A [Timeline](../foundation/timeline.md) is suggested to be held in memory as Committed
-states that share their unchanged parts, and written to a Campaign save as the Turn-start state followed by the
-ordered Timeline entries.
+Everything the game persists has to be laid out somehow, and the cost to watch is size: a long Campaign accumulates
+World history, and undo needs every Committed state of the current Turn. The Storage Schema is the physical layout of
+everything the game persists, as listed under [Data ownership](../foundation/engine-contract.md#data-ownership).
+
+Two choices shape that layout. Game storage never holds a copy of a Game Data Record (GDR), because GDRs belong to the
+Game build. A [Timeline](../foundation/timeline.md) is suggested to be held in memory as Committed states that share
+their unchanged parts, and written to a Campaign save as the Turn-start state followed by the ordered Timeline entries.
 
 # Relationships
 
@@ -34,6 +36,9 @@ copy of them; Campaign state refers to a GDR by its identifier.
 
 # Timeline storage
 
+Undo and redo need every Committed state of the current Turn, and how those states are stored decides how much memory
+and save space a long Campaign takes.
+
 ## The problem with one copy for each Committed state
 
 Undo and redo must restore every Committed state of the current Turn, under
@@ -49,6 +54,9 @@ A Campaign save holds the Timeline of its Turn, and every Autosave is a Campaign
 each of them. It also brings Campaign saves closer to the [Save size limit](../foundation/saves.md#save-size-limit).
 
 ## Three ways to store a Timeline
+
+A Timeline can be stored as whole Committed states, as changes between them, or as the Player actions that produce them,
+and each trades storage against computation or effort.
 
 | Approach    | What is stored                                              | How undo restores a Committed state                                                           | Trade-off                                                                         |
 | ----------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |

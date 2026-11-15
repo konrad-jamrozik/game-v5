@@ -13,12 +13,14 @@
 
 The Basic Autopilot AI is the [Autopilot AI](../foundation/engine-contract.md#glossary) that a Game build offers so that
 a Campaign can be played without a human making every decision. It plays a sound, cautious Campaign rather than an
-optimal one. It keeps the Agency solvent, lets Agents rest after a Combat before it gives them new work, deploys Agents
-to Mission sites only when they have a good chance of succeeding, keeps Investigations going so that new Mission sites
-appear, and spends surplus money on growing and improving the Agency.
+optimal one: it never sends a team that is likely to lose, and it does not try to win quickly.
 
-During each turn it makes its Player actions in a fixed order and then advances the turn. It decides each Player action
-from the current Player-visible information alone and keeps no plan across turns.
+Its play follows from a few goals that can pull against each other, e.g. keeping the Agency solvent, deploying Agents
+only where they are likely to win, and keeping Investigations going so that new Mission sites appear. A fixed
+[Turn routine](#turn-routine) settles the conflicts: each turn, the Basic Autopilot AI makes its Player actions in a
+fixed order of priority and then advances the turn. It decides each Player action from the current Player-visible
+information alone and keeps no plan across turns, within what [Autopilot](../foundation/autopilot.md) lets any
+Autopilot AI receive.
 
 # Relationships
 

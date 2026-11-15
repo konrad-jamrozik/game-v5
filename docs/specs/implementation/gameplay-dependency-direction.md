@@ -12,10 +12,17 @@
 
 # Overview
 
-Gameplay code stays isolated from the [Campaign state](../foundation/campaign-state.md) that contains it. A Gameplay
-function receives only the inputs and dependencies it needs, and a Campaign instance holds no reference to the Campaign
-state that contains it. User interface code and Autopilot AI code reach the game only through the engine API of the
-[Engine Contract](../foundation/engine-contract.md).
+Game behavior is easiest to check when, for any piece of it, one can see exactly which values it consults. The
+suggested way to keep that visible is to hand gameplay code what it needs, rather than let it reach for whatever else is
+nearby.
+
+So a Gameplay function should receive only the inputs and dependencies it needs, and a Campaign instance should hold no
+reference to the [Campaign state](../foundation/campaign-state.md) that contains it. Code outside the engine should
+stay further away still: user interface code and Autopilot AI code should reach the game only through the engine API of
+the [Engine Contract](../foundation/engine-contract.md), so that every interface shows the same answer.
+
+This guidance supports [Determinism](../foundation/determinism-and-randomness.md#determinism), which guarantees that
+execution has no hidden inputs; an implementation may also meet that guarantee by other means.
 
 # Relationships
 

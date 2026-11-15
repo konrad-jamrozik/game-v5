@@ -12,11 +12,13 @@
 
 # Overview
 
-An [Implementation](../governance/artifact-relationships.md#glossary) of the game is the code, tests, and tooling that
-produce a playable Game build from the specifications. Each Implementation resides in its own Implementation directory,
-which is a sibling of the Specification repository directory and is meant to become a standalone repository of its own.
-The Implementation treats its Implementation directory as the root of its repository, as if nothing else existed.
-Several Implementations may exist side by side, each independent of the others and of the Specification repository.
+Each Implementation of the game must stand on its own, so that it can later become a repository of its own and none
+depends on another. An [Implementation](../governance/artifact-relationships.md#glossary) is the code, tests, and
+tooling that produce a playable Game build from the specifications.
+
+Each Implementation must reside in its own Implementation directory, a sibling of the Specification repository
+directory, and must treat that directory as the root of its repository, as if nothing else existed. Several
+Implementations may therefore exist side by side, each independent of the others and of the Specification repository.
 
 # Relationships
 

@@ -10,10 +10,19 @@
 
 # Overview
 
-The game specifications are grouped into Families. Each specification registers itself through its own metadata, and the
-generated catalog lists them all.
+The game is specified in many focused documents rather than one large one, so that each subject can be read, reviewed,
+and changed on its own. The [Game Design Brief](../game-design-brief.md) says what the game is meant to be; the
+specifications make it exact.
+
+The specifications are grouped into Families by what they build on: Foundation and Mechanics together form the game
+engine, and the other Families build on it. Each specification registers itself through its own metadata, and the
+generated [derived specification catalog](../derived/README.md) lists them all, so no hand-kept list can fall out of
+date.
 
 # Start here
+
+These documents give the context every specification assumes: what the game is meant to be, how specifications are
+written and related, and how the work on them proceeds.
 
 - [Game Design Brief](../game-design-brief.md): strategic intent and architectural constraints.
 - [Specification conventions](governance/spec-conventions.md): accepted layout, precision requirements, ownership, and lifecycle.

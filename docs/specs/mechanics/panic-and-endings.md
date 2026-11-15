@@ -11,15 +11,16 @@
 
 # Overview
 
-[Panic](#glossary) is how alarmed the public is: one Campaign-wide value from 0% to 100% that belongs directly to
-Campaign state, under [Campaign and Agency](domain-model.md#campaign-and-agency). During an Advance turn, other rules add
-Panic increases and Panic reductions to the Pending panic change, and the Panic step applies their sum once, clamped to
-the range 0 to 100.
+The Agency wins by defeating every Faction, and it loses when the public's alarm or its own debts get out of hand.
+[Panic](#glossary) measures that alarm: one Campaign-wide value from 0% to 100% that belongs directly to Campaign state,
+under [Campaign and Agency](domain-model.md#campaign-and-agency). It can rise, e.g. when a Response Mission site is
+ignored, and fall, e.g. after a Won Initiative Mission.
 
-A Campaign finishes in Victory or Defeat, decided in the Ending check step after the Panic step. Victory, tried first,
-holds when the Campaign has at least one Faction and every Faction is Defeated. Defeat holds when Panic reaches the
-Panic limit or the Agency's money is below zero. Once a Campaign has a Campaign ending, every Player action is rejected
-and every query keeps answering.
+Within an Advance turn, Panic does not move with each event. Every Panic increase and Panic reduction joins the Pending
+panic change, and the Panic step applies their sum once, clamped to the range 0 to 100, so the order of events never
+changes the result. Right after it, the Ending check step decides whether the Campaign has a Campaign ending: Victory
+when every Faction is Defeated, and otherwise Defeat when Panic reaches the Panic limit or the Agency's money is below
+zero. A Campaign ending is final: every Player action is then rejected, while every query keeps answering.
 
 # Relationships
 
@@ -236,6 +237,9 @@ holds: Panic at the limit when the first condition holds, Money below zero when 
 hold. Both conditions are always evaluated; holding one does not skip the other.
 
 ## Ending reasons
+
+An Ending reason records why a Campaign ended, which matters for Defeat, whose two conditions can hold separately or
+together.
 
 The following table is the exhaustive set of Ending reasons.
 

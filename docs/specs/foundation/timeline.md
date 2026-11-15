@@ -11,13 +11,14 @@
 
 # Overview
 
-The Timeline of a Campaign records the Player actions of the current Turn, so that they can be undone and redone. It
-builds on the [Engine Contract](engine-contract.md) and on the Autosaves of [Saves](saves.md).
+Undo lets the player take back a decision and try another. The Timeline of a Campaign makes this possible: it records
+each Player action of the current Turn as a Timeline entry, so that it can be undone and redone at no gameplay cost.
+Game behavior never consults the Timeline, as the [Engine Contract](engine-contract.md) defines it.
 
-Undo and redo come in two forms. [Action navigation](#action-navigation) steps through the Player actions of the
-current Turn and never leaves that Turn. [Autosave navigation](#autosave-navigation) goes back and forward across
-Turns by loading Autosaves. After either form, the Campaign state equals the Committed state as it was when the
-Campaign first reached it.
+The Turn divides undo and redo into two forms. [Action navigation](#action-navigation) steps through the Timeline
+entries of the current Turn and never leaves it. [Autosave navigation](#autosave-navigation) goes back and forward
+across Turns by loading the Autosaves of [Saves](saves.md). Either way, the Campaign state becomes exactly the
+Committed state as the Campaign first reached it, so play continued from there unfolds as if nothing had been undone.
 
 # Relationships
 

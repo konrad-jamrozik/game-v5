@@ -11,12 +11,16 @@
 
 # Overview
 
-The game has three kinds of setting: Session access settings, Global configuration, and Campaign configuration. Global
-configuration is stored in Game storage and follows the Game build default until the player sets a value. A Game build
-supplies Campaign configuration presets, each a Game Data Record (GDR); before creating a Campaign the player selects
-one and may edit its values, and creation copies the result into the new Campaign's Campaign configuration. A
-configuration cascade gives every setting its effective value. During play only the Campaign configuration values that
-are adjustable during play can change, all together as one action.
+The game is configurable, but not every setting applies all the time. Some settings belong to the player and apply to
+every Campaign, e.g. volume and language. Some belong to one Campaign and shape how it plays, e.g. its starting money or
+a difficulty multiplier. Some last only as long as the current Session and govern access rather than play, e.g. Dev
+mode. These are, in order, Global configuration, Campaign configuration, and Session access settings.
+
+Because a setting's value can come from more than one place, a configuration cascade decides which one
+applies: a value the player chose overrides the default the Game build supplies. A new Campaign starts from a Campaign
+configuration preset the player picks and may edit, and creation copies the result into the Campaign, so a later Game
+build never changes an existing Campaign. Once play begins, only the settings meant for it, e.g. difficulty, can still
+change.
 
 # Relationships
 
@@ -44,7 +48,8 @@ These terms are specific to Configuration. General terms are in the
 
 # Kinds of setting
 
-Three kinds of setting are distinct. This list is complete, and only the last two take part in the
+Settings differ in whom they serve and how long they last, so each kind lives in a different place and survives for a
+different time. Three kinds of setting are distinct. This list is complete, and only the last two take part in the
 [Configuration cascade](#configuration-cascade).
 
 | Kind                   | Examples                                     | Where it lives                            | Persisted         |

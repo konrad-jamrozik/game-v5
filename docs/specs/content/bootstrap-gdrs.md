@@ -11,14 +11,15 @@
 
 # Overview
 
-The Bootstrap GDRs are the smallest set of Game Data Records (GDRs) that a Game build supplies so that a first
-playable Campaign can be created, played, won, and lost. They keep every kind of GDR that the
-[Domain Model](../mechanics/domain-model.md) requires and reduce how many of each exist, in YAML files under `content/`.
+A Campaign cannot be played without content, e.g. Agents to hire and a Faction to fight. The Bootstrap GDRs are the
+smallest set of Game Data Records (GDRs) that a Game build supplies so that a first playable Campaign can be created
+and played to an ending. They keep every kind of GDR that the [Domain Model](../mechanics/domain-model.md) requires and
+supply as few of each as will do; most values are copied from game-ts.
 
-The only Faction, Red Dawn, has three Leads. Each Lead creates one Initiative Mission site, and winning the last one
-defeats Red Dawn and wins the Campaign. Meanwhile, Red Dawn's activity creates Response Mission sites; one that is
-Expired, or whose Mission is Lost, raises Panic, and enough Panic loses the Campaign. Most values are copied from
-game-ts.
+The content is shaped around one way to win and one way to lose. The only Faction, Red Dawn, has three Leads, each
+creating one Initiative Mission site; together they form the Victory path, and winning the last of them defeats Red
+Dawn and wins the Campaign. Meanwhile, Red Dawn's activity creates Response Mission sites. One that is Expired, or whose
+Mission is Lost, raises Panic, and enough Panic loses the Campaign.
 
 # Relationships
 

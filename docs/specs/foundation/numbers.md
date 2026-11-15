@@ -11,15 +11,16 @@
 
 # Overview
 
-Every stored quantity in the game is a whole number, e.g. an amount of money, a count, or a number of percent. A
-formula is evaluated exactly, as if with unlimited-precision rational arithmetic, and a formula that can produce a
-fraction names where it applies one of the two rounding operations, Round down or Round up. A percentage is a Percent
-value: a whole number of percent.
+Every number in the game must come out exactly the same everywhere, e.g. on every machine and in every acceptance
+example. Nothing may depend on how a computer happens to approximate a fraction.
 
-A Probability is an exact ratio of two whole numbers that is never stored and never rounded, so deciding whether a
-random outcome takes a stated value gives the same result on every machine. A uniform whole-number outcome gives each
-whole number in an inclusive range the same Probability. The random outcomes themselves are drawn as
-[Determinism and Randomness](determinism-and-randomness.md) states.
+The guiding principle is that fractions never last. Every stored quantity is a whole number, e.g. an amount of money or
+a count. A fraction may appear only inside one formula, which is evaluated exactly and names where it applies Round
+down or Round up, the only two rounding operations. A percentage is a Percent value, a whole number of percent.
+
+A Probability is kept exact instead: it is a ratio of two whole numbers, never stored and never rounded, so whether a
+random outcome takes a stated value is decided identically on every machine. How random outcomes are drawn is stated in
+[Determinism and Randomness](determinism-and-randomness.md).
 
 # Relationships
 

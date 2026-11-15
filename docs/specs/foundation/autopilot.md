@@ -11,14 +11,15 @@
 
 # Overview
 
-Autopilot is the mode in which an Autopilot AI plays the Current campaign through Player API instead of the Session
-controller, as the [Engine Contract glossary](engine-contract.md#glossary) defines it. The Session controller engages an
-Autopilot AI with an Autopilot limit, which bounds the Autopilot engagement in Player actions or turn advancements.
+Autopilot lets the player hand play over to an AI for a while and then take it back, e.g. to let an Autopilot AI play
+out the next few turns. During each Autopilot engagement, the Autopilot AI plays the Current campaign through Player API
+in place of the Session controller, as the [Engine Contract glossary](engine-contract.md#glossary) defines it.
 
-During an Autopilot engagement the Autopilot AI receives only Player-visible information and its Autopilot memory. The
-Autopilot engagement ends when the Autopilot limit is reached, when the Session controller disengages it, when the
-Campaign ends, or when the Autopilot AI fails. Autopilot memory carries the Autopilot AI's plans between Autopilot
-engagements and follows undo, redo, and load.
+The guiding principle is that an Autopilot AI plays as an ordinary player would, and no further. It receives only
+Player-visible information, and it never learns when its Autopilot engagement will end. The Session controller fixes
+that end in advance as an Autopilot limit, counted in Player actions or turn advancements, and can disengage Autopilot
+sooner. What the Autopilot AI plans beyond one Autopilot engagement it keeps in Autopilot memory, which moves with the
+Campaign through undo, redo, and load, so it never holds a plan written at an Undone action.
 
 # Relationships
 
