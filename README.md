@@ -20,7 +20,7 @@ The [Game Design Brief](docs/game-design-brief.md) records gameplay intent. The
 
 ## Getting started
 
-Use Node **24.21.0** (see `.node-version`) and its bundled npm **11.19.0**. A Node version manager can install that version.
+Use Node **26.13.1** (see `.node-version`) and its bundled npm **11.20.0**. A Node version manager can install that version.
 Then run:
 
 ```sh
@@ -31,7 +31,7 @@ npm run check
 ## Agent environment setup
 
 Agents working in this repository need the same Node and npm versions as human contributors. On Windows, install
-Node **24.21.0** with npm **11.19.0** and ensure both executables are on the `PATH` inherited by the agent host. If Node
+Node **26.13.1** with npm **11.20.0** and ensure both executables are on the `PATH` inherited by the agent host. If Node
 or npm was installed while the agent application was open, restart the application so newly started tasks receive the
 updated environment.
 
