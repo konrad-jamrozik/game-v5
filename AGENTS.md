@@ -4,6 +4,11 @@ Before running an npm script, verify that `node` and `npm` are available with `G
 on POSIX systems. Do not discover a missing package manager by attempting the script. Follow the Agent environment setup
 in `README.md` when the toolchain is unavailable.
 
+As of 2026-11-14, the environment for this repository is:
+
+- Node is managed with nvm.
+- Node version 26.13.1.
+
 Choose verification commands as described in the [Verification](README.md#verification) section of `README.md`. Before
 declaring repository changes complete, run `npm run check` and report any failures.
 
