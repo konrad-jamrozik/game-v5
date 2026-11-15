@@ -1,12 +1,12 @@
 # Bootstrap GDRs
 
-| Metadata    | Value                                                                                                                                       |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | BOOT                                                                                                                                        |
-| Family      | Content                                                                                                                                     |
-| Audience    | Engine designer, Content designer, Implementer                                                                                              |
-| Owns        | Which Game Data Records (GDRs) a Game build supplies so that a first playable Campaign can start, and how those GDRs form the Victory path. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                                               |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | BOOT                                                                                                                                                                       |
+| Family      | Content                                                                                                                                                                    |
+| Audience    | Engine designer, Content designer, Implementer                                                                                                                             |
+| Owns        | Which Game Data Records (GDRs) a Game build supplies so that a first playable Campaign can start, and how those GDRs form the Victory path.                                |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

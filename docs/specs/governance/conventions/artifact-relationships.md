@@ -30,34 +30,34 @@ and it proves nothing about an implementation or a test run.
 
 The things that relationships connect.
 
-| Term           | Definition                                                                                                                                                                           |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Artifact       | An identified [specification](spec-conventions.md#glossary), [requirement](spec-conventions.md#glossary), implementation, test, or other item that can participate in a relationship |
-| Implementation | An executable artifact intended to satisfy a specification or requirement                                                                                                            |
+| Term           | Definition                                                                                                                                                                           | Prohibited synonyms |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
+| Artifact       | An identified [specification](spec-conventions.md#glossary), [requirement](spec-conventions.md#glossary), implementation, test, or other item that can participate in a relationship |                     |
+| Implementation | An executable artifact intended to satisfy a specification or requirement                                                                                                            |                     |
 
 ## Relationships
 
 Directional connections between artifacts and how they are recorded.
 
-| Term                  | Definition                                                                                                         |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Relationship          | A directional connection from one Dependency to one Dependent with a Relationship kind                             |
-| Dependency            | The artifact on which the Dependent relies; it appears on the left of `Dependency → Dependent`                     |
-| Dependent             | The artifact that relies on the Dependency; it appears on the right of `Dependency → Dependent`                    |
-| Relationship kind     | Exactly one of `follows`, `refines`, `uses`, `implements`, or `verifies`                                           |
-| Explicit relationship | A relationship recorded in mirrored directional list entries                                                       |
-| Implicit relationship | A relationship created by an applicability rule in Specification Conventions rather than repeated artifact entries |
-| Relationships section | An artifact's flat list of explicit directional relationships                                                      |
+| Term                  | Definition                                                                                                         | Prohibited synonyms                                                |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| Relationship          | A directional connection from one Dependency to one Dependent with a Relationship kind                             |                                                                    |
+| Dependency            | The artifact on which the Dependent relies; it appears on the left of `Dependency → Dependent`                     |                                                                    |
+| Dependent             | The artifact that relies on the Dependency; it appears on the right of `Dependency → Dependent`                    |                                                                    |
+| Relationship kind     | Exactly one of `follows`, `refines`, `uses`, `implements`, or `verifies`                                           | Relationship type. Ordinary kinds of other things remain distinct. |
+| Explicit relationship | A relationship recorded in mirrored directional list entries                                                       |                                                                    |
+| Implicit relationship | A relationship created by an applicability rule under Implicit relationships rather than repeated artifact entries |                                                                    |
+| Relationships section | An artifact's flat list of explicit directional relationships                                                      |                                                                    |
 
 ## Graphs
 
 Structures formed by artifacts and their relationships.
 
-| Term  | Definition                                                            |
-| ----- | --------------------------------------------------------------------- |
-| Graph | A collection of artifacts and relationships                           |
-| Cycle | A directional relationship path that returns to its starting artifact |
-| DAG   | A directed acyclic graph                                              |
+| Term  | Definition                                                            | Prohibited synonyms |
+| ----- | --------------------------------------------------------------------- | ------------------- |
+| Graph | A collection of artifacts and relationships                           |                     |
+| Cycle | A directional relationship path that returns to its starting artifact |                     |
+| DAG   | A directed acyclic graph                                              |                     |
 
 # Direction
 
@@ -162,9 +162,9 @@ pair may have multiple Relationship kinds when each expresses distinct reliance.
 
 Each explicit relationship is recorded twice: once in the Dependent's Relationships section and once, as its mirror
 with the reverse-facing phrase, in the Dependency's. Both entries must resolve to the same Dependency, Dependent, and
-Relationship kind. Implicit relationships are defined centrally by Specification Conventions and are not listed.
-The layout of a specification's Relationships section, including its phrases, order, and links, is given under
-[Relationship inventories](spec-conventions.md#relationship-inventories).
+Relationship kind. Implicit relationships are defined centrally under [Implicit relationships](#implicit-relationships)
+and are not listed. The layout of a specification's Relationships section, including its phrases, order, and links, is
+given under [Relationship inventories](#relationship-inventories).
 
 Relationship entries have no Scope field. Substantive constraints and requirement references belong in the
 contract prose; a link to an artifact does not imply reliance on every rule in that artifact.
@@ -172,6 +172,82 @@ contract prose; a link to an artifact does not imply reliance on every rule in t
 Adding, changing, or removing an explicit relationship must update both entries. A missing or disagreeing entry is a
 documentation defect. Changes must preserve rule ownership and requirement traceability. Update the cycle register
 whenever a change introduces, alters, or removes a cycle.
+
+# Implicit relationships
+
+Some relationships hold for every specification, or for every specification of one Specification kind, so recording
+them in every Relationships list would add entries that carry no information. The following relationships exist
+without explicit table rows:
+
+1. Every registered specification implicitly depends through `follows`, for document structure, lifecycle, and
+   writing rules, on Specification Conventions and on every other specification its Conventions metadata row links,
+   under [Following the conventions](spec-conventions.md#following-the-conventions).
+2. Each of those convention specifications consequently has those specifications as implicit Dependents.
+3. An acceptance example that explicitly identifies requirements it checks implicitly depends on those requirements through `verifies`.
+4. The checked requirements consequently have that acceptance example as an implicit Dependent.
+5. No other relationship is implicit unless Artifact Relationships adds and defines it.
+
+Implicit relationships are exempt from mirrored table rows.
+
+# Relationship inventories
+
+Every specification records its explicit relationships in the same place and the same shape, so that a mirror is easy
+to check. When present, the Relationships and Glossary H1 sections follow Overview in that order, and Glossary immediately
+follows Relationships when both are present. Relationships contains one flat unordered list, without tables or subsections. Each bullet
+describes the current document and consists of a directional phrase followed by one hyperlink whose text is the
+linked document's title. Link to the registered document itself, without an anchor or a scope annotation.
+
+Use this complete phrase order; omit groups with no entries and sort document titles alphabetically within each group:
+
+1. Uses
+2. Refines
+3. Follows
+4. Implements
+5. Verifies
+6. Used by
+7. Refined by
+8. Followed by
+9. Implemented by
+10. Verified by
+
+Groups are contiguous entries, not headings. E.g., Engine Contract contains:
+
+- Uses [Core Concepts](../../design/foundation/core-concepts.md)
+
+Core Concepts contains the mirror:
+
+- Used by [Engine Contract](../../design/foundation/engine-contract.md)
+
+Both entries describe the same relationship. The first five phrases describe the current document as Dependent;
+the last five describe it as Dependency. Reverse-facing phrases are grammatical presentations of the canonical
+Relationship kinds, not additional Relationship kinds or glossary synonyms.
+
+List explicit relationships only. When there are none, omit the Relationships section. Do not repeat implicit
+relationships. Every explicit relationship
+must have its mirror with the same Dependency, Dependent, and Relationship kind. A document pair may have multiple
+Relationship kinds, but duplicate entries of the same Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
+
+Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
+contract prose; a document link does not imply reliance on every rule in that document.
+[Links that create no relationship](#links-that-create-no-relationship) defines which
+links, e.g. citations and owner links, are not relationships.
+
+Relationships is the only inventory of explicit relationships. Overview must not repeat it as
+directional-phrase bullets; where a reliance matters, the owning contract prose states it.
+
+Classify relationships using [Choosing uses or refines](#choosing-uses-or-refines).
+Each refinement is visible in the prose where the added detail is stated: the topic section that adds the detail links
+the parent section in a clause about the subject; e.g., "Every Order total is a Price, under Prices; for an Order it is
+computed as follows." Overview may also name the parent, under
+[Specification Overview](overview-conventions.md#specification-overview). No section or paragraph has the
+refinement itself as its subject; e.g., not "This document refines Store Model by specifying placement, payment, and
+shipping constraints." A specification may declare intended detail that its TODOs have not settled yet. Applying vocabulary,
+obeying invariants, or supplying GDR values alone establishes uses. Do not hide substantive reliance behind
+an informative citation or duplicate a refinement as uses for the same reliance.
+
+Maintain [Specification relationship cycles](../../../spec-relationship-cycles.md) when changing relationships.
+The register must cover retained combined uses/refines cycles and mixed governance cycles, with supporting meanings
+and future removal criteria. It is an informative report outside the registered specification corpus.
 
 # Evidence
 

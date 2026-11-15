@@ -57,6 +57,28 @@ const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
 const CONVENTIONS_PATH = 'docs/specs/governance/conventions/spec-conventions.md'
 const INDEX_FAMILY: SpecificationFamily = 'Conventions'
+/** The Spec IDs of the conventions that the Conventions metadata row of a specification of each Specification kind links. */
+const CONVENTIONS_BY_KIND: Readonly<Record<SpecificationKind, readonly string[]>> = {
+  Governance: ['CONV'],
+  Design: ['CONV', 'DCONV'],
+  Implementation: ['CONV', 'ICONV'],
+}
+
+/**
+ * The registered conventions a specification follows, under Following the conventions in Specification Conventions.
+ * Conventions absent from the corpus are skipped, and no convention follows itself.
+ */
+function conventionsFollowedBy<T extends { readonly id?: string | undefined; readonly family?: string | undefined }>(
+  specification: T,
+  specifications: readonly T[],
+): readonly T[] {
+  if (!isSpecificationFamily(specification.family)) return []
+  return CONVENTIONS_BY_KIND[FAMILY_KIND[specification.family]].flatMap((id) => {
+    if (id === specification.id) return []
+    const convention = specifications.find((candidate) => candidate.id === id)
+    return convention ? [convention] : []
+  })
+}
 const PERSONAS = [
   'Game designer',
   'Engine designer',
@@ -116,6 +138,7 @@ interface RelationshipRow {
 interface GlossaryTerm {
   readonly term: string
   readonly definitionMarkdown: string
+  readonly prohibitedSynonymsMarkdown: string
   readonly specification: Specification
   readonly node: Node
 }
@@ -285,9 +308,44 @@ function registryEntries(
   return entries
 }
 
+function conventionsRowLinks(specification: Specification): ReadonlySet<string> | undefined {
+  const table = specification.metadata.table
+  if (!table) return undefined
+  const row = tableRows(table).find((cells) => cells[0] && textOf(cells[0]).trim() === 'Conventions')
+  const value = row?.[1]
+  if (!value) return undefined
+  const links = new Set<string>()
+  visit(value, (node) => {
+    if (!isLink(node) || isExternalUrl(node.url)) return
+    const decoded = decodeUrlPart(splitUrl(node.url).path)
+    if (decoded) links.add(resolvePath(specification.path, decoded))
+  })
+  return links
+}
+
+function validateConventionsRow(parsed: ParsedInput, specification: Specification, diagnostics: Diagnostic[]): void {
+  if (specification.path === parsed.indexPath || specification.id === 'CONV') return
+  if (!isSpecificationFamily(specification.family)) return
+  const required = conventionsFollowedBy(specification, parsed.specifications)
+  if (required.length === 0) return
+  const links = conventionsRowLinks(specification)
+  const expected = new Set(required.map((convention) => convention.path))
+  if (links && links.size === expected.size && [...expected].every((path) => links.has(path))) return
+  addDiagnostic(
+    diagnostics,
+    specification.path,
+    specification.metadata.table,
+    'SPEC115',
+    `The Conventions metadata row of a ${FAMILY_KIND[specification.family]} specification must link exactly ${required
+      .map((convention) => convention.title)
+      .join(' and ')}.`,
+  )
+}
+
 function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
   const metadataIds = new Map<string, Specification[]>()
   for (const specification of parsed.specifications) {
+    validateConventionsRow(parsed, specification, diagnostics)
     if (!specification.id) {
       addDiagnostic(
         diagnostics,
@@ -1089,9 +1147,20 @@ function validateRelationships(
   return rows
 }
 
+const PROHIBITED_SYNONYMS_HEADING = 'Prohibited synonyms'
+
+function termTableHeader(table: Table): readonly string[] | undefined {
+  return tableRows(table)[0]?.map((cell) => textOf(cell).trim())
+}
+
 function isTermTable(table: Table): boolean {
-  const header = tableRows(table)[0]?.map((cell) => textOf(cell).trim())
+  const header = termTableHeader(table)
   return header?.[0] === 'Term' && header[1] === 'Definition'
+}
+
+/** A Term and Definition table may add one Prohibited synonyms column, under Glossary Conventions. */
+function hasProhibitedSynonymsColumn(table: Table): boolean {
+  return termTableHeader(table)?.[2] === PROHIBITED_SYNONYMS_HEADING
 }
 
 /**
@@ -1182,15 +1251,39 @@ function glossaryTerms(specification: Specification, diagnostics: Diagnostic[]):
   if (!glossary) return []
   validateGlossaryGroups(specification, glossary, diagnostics)
   const terms: GlossaryTerm[] = []
-  for (const table of tablesIn(sectionNodes(specification.document, glossary))) {
+  const termTables = tablesIn(sectionNodes(specification.document, glossary)).filter(isTermTable)
+  const withSynonyms = termTables.filter(hasProhibitedSynonymsColumn)
+  for (const table of termTables) {
+    const header = termTableHeader(table) ?? []
+    if (
+      header.length > 3 ||
+      (header.length === 3 && !hasProhibitedSynonymsColumn(table)) ||
+      (withSynonyms.length > 0 && !hasProhibitedSynonymsColumn(table))
+    ) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        table,
+        'SPEC507',
+        `A Term and Definition table may add only a "${PROHIBITED_SYNONYMS_HEADING}" column, and then every table of the Glossary must have it.`,
+      )
+    }
+  }
+  for (const table of termTables) {
     const rows = tableRows(table)
-    const header = rows[0]?.map((cell) => textOf(cell).trim())
-    if (header?.[0] !== 'Term' || header[1] !== 'Definition') continue
+    const columns = rows[0]?.length ?? 2
     for (const row of rows.slice(1)) {
       const cell = row[0]
       const definitionCell = row[1]
+      const synonymsCell = row[2]
       const definition = definitionCell ? inlineMarkdown(definitionCell) : ''
-      if (row.length !== 2 || !cell || !definitionCell || !textOf(cell).trim() || !textOf(definitionCell).trim()) {
+      if (
+        row.length !== columns ||
+        !cell ||
+        !definitionCell ||
+        !textOf(cell).trim() ||
+        !textOf(definitionCell).trim()
+      ) {
         addDiagnostic(
           diagnostics,
           specification.path,
@@ -1210,7 +1303,13 @@ function glossaryTerms(specification: Specification, diagnostics: Diagnostic[]):
           `Glossary term "${term}" must not declare aliases or slash-separated alternatives.`,
         )
       }
-      terms.push({ term, definitionMarkdown: definition, specification, node: cell })
+      terms.push({
+        term,
+        definitionMarkdown: definition,
+        prohibitedSynonymsMarkdown: synonymsCell ? inlineMarkdown(synonymsCell) : '',
+        specification,
+        node: cell,
+      })
     }
   }
   return terms
@@ -1226,8 +1325,17 @@ function validateTerminology(
     for (const sectionName of ['Relationships', 'Glossary']) {
       const heading = findHeading(specification.document, 1, sectionName)
       if (!heading) continue
+      // A Prohibited synonyms cell names the very words it prohibits, so it is not scanned.
+      const synonymNodes = new Set<Node>()
+      for (const table of tablesIn(sectionNodes(specification.document, heading)).filter(hasProhibitedSynonymsColumn)) {
+        for (const row of tableRows(table).slice(1)) {
+          const cell = row[2]
+          if (cell) visit(cell, (node) => synonymNodes.add(node))
+        }
+      }
       for (const node of sectionNodes(specification.document, heading)) {
         visit(node, (descendant) => {
+          if (synonymNodes.has(descendant)) return
           // Check whole inline phrases so emphasis cannot hide a competing relationship term.
           if (descendant.type === 'paragraph' || descendant.type === 'tableCell') {
             const match = /\brelationship\s+types?\b/i.exec(textOf(descendant))
@@ -1465,6 +1573,7 @@ function buildCorpus(
     glossary.push({
       term: entry.term,
       definitionMarkdown: entry.definitionMarkdown,
+      prohibitedSynonymsMarkdown: entry.prohibitedSynonymsMarkdown,
       ownerId: owner.id,
       ownerPath: owner.path,
     })
@@ -1494,18 +1603,16 @@ function buildCorpus(
       sourcePaths: [dependency.path, dependent.path],
     })
   }
-  const conventions = specifications.find((specification) => specification.id === 'CONV')
-  if (conventions) {
-    for (const dependent of specifications) {
-      if (dependent.id === conventions.id) continue
+  for (const dependent of specifications) {
+    for (const convention of conventionsFollowedBy(dependent, specifications)) {
       relationships.push({
-        dependencyId: conventions.id,
-        dependencyPath: conventions.path,
+        dependencyId: convention.id,
+        dependencyPath: convention.path,
         dependentId: dependent.id,
         dependentPath: dependent.path,
         kind: 'follows',
         origin: 'implicit',
-        sourcePaths: [CONVENTIONS_PATH],
+        sourcePaths: [convention.id === 'CONV' ? CONVENTIONS_PATH : convention.path],
       })
     }
   }

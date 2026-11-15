@@ -37,7 +37,7 @@ Batch is defined in the [Specification Work Plan and Backlog glossary](work-plan
 Add a Work item when an issue is found that is not fixed in the same change. Give it the next unused label, the form
 `TODO-NNN` with three digits, and a heading of the form `TODO-NNN: short title` under the matching category. Never
 reuse a label. The label is a short handle for discussion; references from other documents link to the Work item's
-heading, as required by [Writing exact requirements](../conventions/spec-conventions.md#writing-exact-requirements).
+heading, as required by [Requirement wording](../conventions/spec-conventions.md#requirement-wording).
 
 Remove a Work item in the same change that resolves it, or when the issue no longer exists. Do not mark Work items as
 done or keep resolved ones; Git history is the record. When a resolution changes only part of a Work item, update the
@@ -58,18 +58,18 @@ Every Work item states the following, in this order:
 
 The complete set of categories, in descending priority, is:
 
-| Category                               | Meaning                                                                                                                                                              |
-| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Clear violation                        | The wording specifies a matter that [What belongs in a specification](../conventions/spec-conventions.md#what-belongs-in-a-specification) leaves to the implementer. |
-| Contradiction with a recorded decision | The wording plans or requires something that a recorded decision in another section has already excluded.                                                            |
-| Borderline                             | The underlying content belongs in a specification, but its wording describes a mechanism rather than an observable or designer-authored outcome.                     |
-| Other                                  | Any other defect, e.g. a terminology or consistency error.                                                                                                           |
+| Category                               | Meaning                                                                                                                                                                                   |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Clear violation                        | The wording specifies a matter that [What belongs in a Design specification](../conventions/design-spec-conventions.md#what-belongs-in-a-design-specification) leaves to the implementer. |
+| Contradiction with a recorded decision | The wording plans or requires something that a recorded decision in another section has already excluded.                                                                                 |
+| Borderline                             | The underlying content belongs in a specification, but its wording describes a mechanism rather than an observable or designer-authored outcome.                                          |
+| Other                                  | Any other defect, e.g. a terminology or consistency error.                                                                                                                                |
 
 # Measuring rules
 
 The Work items below were measured against these recorded rules and decisions:
 
-- **Scope rule:** [What belongs in a specification](../conventions/spec-conventions.md#what-belongs-in-a-specification). A statement
+- **Scope rule:** [What belongs in a Design specification](../conventions/design-spec-conventions.md#what-belongs-in-a-design-specification). A statement
   belongs only if it is Observable (a black-box test through the engine API, a save, or a replay could fail),
   Designer-authored (a GDR or a description of game behavior), or Vocabulary. Everything else is the implementer's choice.
 - **Determinism decision:** [Determinism](../../design/foundation/determinism-and-randomness.md#determinism) and
@@ -99,10 +99,10 @@ observable or designer-authored outcome.
 
 **Category and priority:** Borderline, low priority.
 
-**Affected:** Specification Conventions (CONV),
-[Writing exact requirements](../conventions/spec-conventions.md#writing-exact-requirements).
+**Affected:** Design Specification Conventions (DCONV),
+[Writing exact rules](../conventions/design-spec-conventions.md#writing-exact-rules).
 
-**Batches:** CONV has no batch.
+**Batches:** DCONV has no batch.
 
 **Current wording:**
 

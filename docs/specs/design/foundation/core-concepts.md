@@ -1,12 +1,12 @@
 # Core Concepts
 
-| Metadata    | Value                                                                                        |
-| ----------- | -------------------------------------------------------------------------------------------- |
-| Spec ID     | CORE                                                                                         |
-| Family      | Foundation                                                                                   |
-| Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer                     |
-| Owns        | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | CORE                                                                                                                                                                       |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer                                                                                                   |
+| Owns        | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                                               |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
@@ -52,39 +52,39 @@ every value is either an Authoritative value, kept as a fact, or a Derived value
 
 Language-independent vocabulary for describing model data.
 
-| Term     | Definition                                                                                                                                                                                                 |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Type     | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration. |
-| Property | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                        |
+| Term     | Definition                                                                                                                                                                                                 | Prohibited synonyms                                                                                                                                                                                    |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Type     | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a TypeScript type declaration. | Schema; TypeScript type; Definition, as a modeling category. API and serialization schemas, actual TypeScript declarations, explanatory language analogies, and the definition of a term remain valid. |
+| Property | A named component of a structured Type, with an associated Type. Similar to a property in a TypeScript object type.                                                                                        | Field; member; key. Unrelated uses, e.g. a lookup key, remain valid.                                                                                                                                   |
 
 ## Game build and content
 
 What a version of the game supplies: shared by every Campaign and unchanged during play.
 
-| Term                   | Definition                                                                                                                             |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Game build             | A particular version of the game's data and of the executable implementation of its game behavior, supplied together.                  |
-| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated. |
+| Term                   | Definition                                                                                                                             | Prohibited synonyms                                                                                                                                                                         |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Game build             | A particular version of the game's data and of the executable implementation of its game behavior, supplied together.                  | Build. Ordinary build-tool operations keep their meaning.                                                                                                                                   |
+| Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated. | Content entry; Content; entry; entries; Content definition; GDR role, for which say GDR purpose. The Content Family, document titles, and the Display content GDR purpose keep their names. |
 
 ## Campaign and Session
 
 A playthrough, its data, and the runtime context that selects it. Campaign State owns how Campaign state
 divides into components.
 
-| Term           | Definition                                                                                                                          |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign       | A particular playthrough with its own evolving Campaign state.                                                                      |
-| Campaign state | Data describing one Campaign, including retained data describing its past Campaign state or events.                                 |
-| Session        | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |
+| Term           | Definition                                                                                                                          | Prohibited synonyms                                                                          |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Campaign       | A particular playthrough with its own evolving Campaign state.                                                                      |                                                                                              |
+| Campaign state | Data describing one Campaign, including retained data describing its past Campaign state or events.                                 | Evolving campaign facts; Continuation state; continuation data; Controller continuation data |
+| Session        | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |                                                                                              |
 
 ## Value classification
 
 Classifications of a value, whether a GDR or Campaign state supplies it.
 
-| Term                | Definition                                                                                                                                                                                            |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Authoritative value | A value that a GDR supplies, or a value of Campaign state that specifications define by its initial value and the changes game behavior makes to it, rather than by a formula over other values.      |
-| Derived value       | A value that specifications define by a formula over the Authoritative values of one Campaign state and of GDRs. It always equals that formula applied to the Campaign state as it is at that moment. |
+| Term                | Definition                                                                                                                                                                                            | Prohibited synonyms              |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| Authoritative value | A value that a GDR supplies, or a value of Campaign state that specifications define by its initial value and the changes game behavior makes to it, rather than by a formula over other values.      | Authoritative fact               |
+| Derived value       | A value that specifications define by a formula over the Authoritative values of one Campaign state and of GDRs. It always equals that formula applied to the Campaign state as it is at that moment. | Computed value; calculated value |
 
 # Vocabulary and contract ownership
 

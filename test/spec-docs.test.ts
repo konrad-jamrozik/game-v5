@@ -11,6 +11,7 @@ import {
   renderFamilyOverviews,
 } from '../scripts/spec-docs/generator.ts'
 import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
+import { FAMILY_KIND } from '../scripts/spec-linter/overviews.ts'
 import type { SourceFile, SpecificationCorpus } from '../scripts/spec-linter/types.ts'
 import { derivedLinkFindings, derivedOutputFindings } from '../scripts/derived-docs.ts'
 
@@ -52,6 +53,7 @@ function sampleCorpus(): SpecificationCorpus {
       {
         term: 'Zulu term',
         definitionMarkdown: 'Last definition.',
+        prohibitedSynonymsMarkdown: '',
         ownerId: 'ZZZ',
         ownerPath: 'docs/specs/design/mechanics/zulu.md',
       },
@@ -59,6 +61,7 @@ function sampleCorpus(): SpecificationCorpus {
         term: 'alpha term',
         definitionMarkdown:
           'Uses **strong rules** from [Conventions](../../governance/conventions/spec-conventions.md#glossary) and [Rule](#rule).',
+        prohibitedSynonymsMarkdown: 'Beta term; see [Rule](#rule)',
         ownerId: 'AAA',
         ownerPath: 'docs/specs/design/foundation/alpha.md',
       },
@@ -135,6 +138,14 @@ describe('derived specification renderer', () => {
     expect(glossary).toContain('[Conventions](../specs/governance/conventions/spec-conventions.md#glossary)')
     expect(glossary).toContain('[Rule](../specs/design/foundation/alpha.md#rule)')
     expect(glossary).toContain('[AAA — Alpha "Quoted" & More](../specs/design/foundation/alpha.md#glossary)')
+  })
+
+  test('collects the Prohibited synonyms of every term in one table', async () => {
+    const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
+    const glossary = outputs.get('docs/derived/glossary.md') ?? ''
+    const section = glossary.slice(glossary.indexOf('## Prohibited synonyms'))
+    expect(section).toContain('| Beta term; see [Rule](../specs/design/foundation/alpha.md#rule) | alpha term |')
+    expect(section).not.toContain('Zulu term')
   })
 
   test('renders each explicit relationship-kind diagram in its own file and omits implicit follows', async () => {
@@ -266,7 +277,7 @@ describe('derived specification renderer', () => {
     const outputs = await renderDerivedDocumentation(governanceCorpus, PRETTIER_OPTIONS)
     const diagrams = renderDerivedDiagramFiles(governanceCorpus)
     const uses = outputs.get('docs/derived/relationships/uses.md') ?? ''
-    const governanceStart = uses.indexOf('## Relationship governance')
+    const governanceStart = uses.indexOf('## Governance specifications')
     expect(uses.indexOf('(../../images/uses-game.svg)')).toBeLessThan(governanceStart)
     expect(uses.indexOf('(../../images/uses-governance.svg)')).toBeGreaterThan(governanceStart)
     const game = diagrams.get('docs/images/uses-game.svg') ?? ''
@@ -400,9 +411,23 @@ describe('shared specification analysis', () => {
       ),
     ).toHaveLength(1)
     const implicit = analysis.corpus.relationships.filter((relationship) => relationship.origin === 'implicit')
-    expect(implicit).toHaveLength(analysis.corpus.specifications.length - 1)
-    expect(implicit.every((relationship) => relationship.dependencyId === 'CONV')).toBe(true)
+    const fromConventions = implicit.filter((relationship) => relationship.dependencyId === 'CONV')
+    expect(fromConventions).toHaveLength(analysis.corpus.specifications.length - 1)
+    expect(implicit.every((relationship) => ['CONV', 'DCONV', 'ICONV'].includes(relationship.dependencyId))).toBe(true)
     expect(implicit.some((relationship) => relationship.dependentId === 'CONV')).toBe(false)
+    const kindOf = new Map(
+      analysis.corpus.specifications.map((specification) => [specification.id, FAMILY_KIND[specification.family]]),
+    )
+    for (const [convention, kind] of [
+      ['DCONV', 'Design'],
+      ['ICONV', 'Implementation'],
+    ] as const) {
+      const dependents = implicit
+        .filter((relationship) => relationship.dependencyId === convention)
+        .map((relationship) => relationship.dependentId)
+      expect(dependents.length).toBeGreaterThan(0)
+      expect(dependents.every((id) => kindOf.get(id) === kind)).toBe(true)
+    }
   })
 })
 

@@ -1,12 +1,12 @@
 # Basic Autopilot AI
 
-| Metadata    | Value                                                                                                                   |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | BASICAI                                                                                                                 |
-| Family      | Autopilot AIs                                                                                                           |
-| Audience    | AI designer, Implementer                                                                                                |
-| Owns        | The goals the Basic Autopilot AI pursues, how it prioritizes them within a turn, and what it deliberately leaves alone. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                           |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | BASICAI                                                                                                                                                                    |
+| Family      | Autopilot AIs                                                                                                                                                              |
+| Audience    | AI designer, Implementer                                                                                                                                                   |
+| Owns        | The goals the Basic Autopilot AI pursues, how it prioritizes them within a turn, and what it deliberately leaves alone.                                                    |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

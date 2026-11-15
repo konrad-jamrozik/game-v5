@@ -1,12 +1,12 @@
 # Specification Updates
 
-| Metadata    | Value                                                                                                                      |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | UPDATES                                                                                                                    |
-| Family      | Recipes                                                                                                                    |
-| Audience    | Engine designer, Implementer                                                                                               |
-| Owns        | Non-behavioural guidance for bringing an Implementation from its Specification baseline to a later Specification revision. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                              |
+| Metadata    | Value                                                                                                                                                                                      |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | UPDATES                                                                                                                                                                                    |
+| Family      | Recipes                                                                                                                                                                                    |
+| Audience    | Engine designer, Implementer                                                                                                                                                               |
+| Owns        | Non-behavioural guidance for bringing an Implementation from its Specification baseline to a later Specification revision.                                                                 |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

@@ -1,12 +1,12 @@
 # Domain Model
 
-| Metadata    | Value                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------------- |
-| Spec ID     | DOM                                                                                       |
-| Family      | Mechanics                                                                                 |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                               |
-| Owns        | Game concepts, how they relate, and the structural invariants that span several concepts. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)             |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | DOM                                                                                                                                                                        |
+| Family      | Mechanics                                                                                                                                                                  |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                |
+| Owns        | Game concepts, how they relate, and the structural invariants that span several concepts.                                                                                  |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
@@ -55,51 +55,51 @@ and [Campaign Instances](../foundation/campaign-instances.md#glossary) glossarie
 
 The player-controlled organization, its Agents, what each Agent is doing, and what each has taken part in.
 
-| Term                  | Definition                                                                                                             |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Agency                | The organization the player controls in a Campaign. It holds the money, funding, and upgrades, and employs the Agents. |
-| Agent                 | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                           |
-| Current assignment    | What an Agent is currently ordered to do, e.g. take part in a particular Investigation or Mission.                     |
-| Task phase            | Whether an Agent is carrying out its Current assignment (At assignment) or still travelling to it (In transit).        |
-| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                              |
+| Term                  | Definition                                                                                                             | Prohibited synonyms                                              |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Agency                | The organization the player controls in a Campaign. It holds the money, funding, and upgrades, and employs the Agents. |                                                                  |
+| Agent                 | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                           |                                                                  |
+| Current assignment    | What an Agent is currently ordered to do, e.g. take part in a particular Investigation or Mission.                     | Assignment. The lifecycle label At assignment remains unchanged. |
+| Task phase            | Whether an Agent is carrying out its Current assignment (At assignment) or still travelling to it (In transit).        |                                                                  |
+| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                              | Participation; agent history; past participation                 |
 
 ## Leads, Investigations, Mission sites, and Missions
 
 The work the Agency discovers and undertakes.
 
-| Term                    | Definition                                                                                                                  |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Lead                    | A line of inquiry the Agency can investigate. Investigating it can open further Leads and Mission sites.                    |
-| Lead progression        | What the Agency has earned on each Lead so far in a Campaign: the Won Missions at the Mission sites that Lead created.      |
-| Investigation           | One effort by a team of Agents to investigate one Lead, from its start until it concludes.                                  |
-| Mission site            | A place where Enemies of one Faction are present for a limited time, and to which the Agency can deploy one team of Agents. |
-| Initiative Mission site | A Mission site the Agency found by completing an Investigation of a Lead.                                                   |
-| Response Mission site   | A Mission site created by a Faction operation occurrence, where the Agency can stop that operation.                         |
-| Mission                 | One deployment of a team of Agents to one Mission site, together with its outcome.                                          |
-| Initiative Mission      | A Mission at an Initiative Mission site.                                                                                    |
-| Response Mission        | A Mission at a Response Mission site.                                                                                       |
-| Current team            | The Agents currently assigned to a given Investigation or Mission.                                                          |
+| Term                    | Definition                                                                                                                  | Prohibited synonyms                                                                                                                                        |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lead                    | A line of inquiry the Agency can investigate. Investigating it can open further Leads and Mission sites.                    | Opportunity. Ordinary uses, e.g. opportunity cost, remain valid.                                                                                           |
+| Lead progression        | What the Agency has earned on each Lead so far in a Campaign: the Won Missions at the Mission sites that Lead created.      |                                                                                                                                                            |
+| Investigation           | One effort by a team of Agents to investigate one Lead, from its start until it concludes.                                  | Attempt. Attempts to execute commands or undertake Missions remain distinct.                                                                               |
+| Mission site            | A place where Enemies of one Faction are present for a limited time, and to which the Agency can deploy one team of Agents. | Open Mission; available Mission; pending Mission, for which say Active Mission site; Mission template, for which say MissionSiteArchetype                  |
+| Initiative Mission site | A Mission site the Agency found by completing an Investigation of a Lead.                                                   | Offensive mission                                                                                                                                          |
+| Response Mission site   | A Mission site created by a Faction operation occurrence, where the Agency can stop that operation.                         | Defensive mission                                                                                                                                          |
+| Mission                 | One deployment of a team of Agents to one Mission site, together with its outcome.                                          | Mission deployment; deployment, as a thing; Mission definition, for which say MissionArchetype. Deployment as the ordinary act of deploying remains valid. |
+| Initiative Mission      | A Mission at an Initiative Mission site.                                                                                    |                                                                                                                                                            |
+| Response Mission        | A Mission at a Response Mission site.                                                                                       |                                                                                                                                                            |
+| Current team            | The Agents currently assigned to a given Investigation or Mission.                                                          |                                                                                                                                                            |
 
 ## Combat
 
 A Combat, its participants, and its retained results.
 
-| Term                | Definition                                                                                                                                                   |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Combat              | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn.                               |
-| Combatant           | An Agent or an Enemy as a participant in a Combat. Both can fight because both have skill, current health, base health, exhaustion, and weapon capability.   |
-| Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Combat lasts.                                                      |
-| Enemy               | An opponent present at one Mission site, whom the Agency's Agents fight in a Combat.                                                                         |
-| Combat report       | The record of how a Combat went, kept as part of the Turn report of the Advance turn that fought it and used to determine the consequences for the Campaign. |
+| Term                | Definition                                                                                                                                                   | Prohibited synonyms                                                                            |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| Combat              | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn.                               | Battle; skirmish; fight, as a noun. Ordinary verbs, e.g. "Agents fight Enemies", remain valid. |
+| Combatant           | An Agent or an Enemy as a participant in a Combat. Both can fight because both have skill, current health, base health, exhaustion, and weapon capability.   |                                                                                                |
+| Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Combat lasts.                                                      |                                                                                                |
+| Enemy               | An opponent present at one Mission site, whom the Agency's Agents fight in a Combat.                                                                         |                                                                                                |
+| Combat report       | The record of how a Combat went, kept as part of the Turn report of the Advance turn that fought it and used to determine the consequences for the Campaign. | Battle result                                                                                  |
 
 ## Factions
 
 The opposing organizations and their operations.
 
-| Term                         | Definition                                                                       |
-| ---------------------------- | -------------------------------------------------------------------------------- |
-| Faction                      | An organization that opposes the Agency and carries out operations in the world. |
-| Faction operation occurrence | One operation carried out by a Faction, which creates one Response Mission site. |
+| Term                         | Definition                                                                       | Prohibited synonyms |
+| ---------------------------- | -------------------------------------------------------------------------------- | ------------------- |
+| Faction                      | An organization that opposes the Agency and carries out operations in the world. |                     |
+| Faction operation occurrence | One operation carried out by a Faction, which creates one Response Mission site. |                     |
 
 # Game concepts
 

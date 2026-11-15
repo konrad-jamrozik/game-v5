@@ -1,12 +1,12 @@
 # Numbers
 
-| Metadata    | Value                                                                                                                                        |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | NUMBERS                                                                                                                                      |
-| Family      | Foundation                                                                                                                                   |
-| Audience    | Engine designer, Implementer                                                                                                                 |
-| Owns        | That every stored quantity is a whole number, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                                                |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | NUMBERS                                                                                                                                                                    |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, Implementer                                                                                                                                               |
+| Owns        | That every stored quantity is a whole number, the rounding operations, how percentages and probabilities are computed, and exact evaluation.                               |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

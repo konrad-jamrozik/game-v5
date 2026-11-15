@@ -1,12 +1,12 @@
 # Campaign Lifecycle
 
-| Metadata    | Value                                                                                                      |
-| ----------- | ---------------------------------------------------------------------------------------------------------- |
-| Spec ID     | LIFE                                                                                                       |
-| Family      | Foundation                                                                                                 |
-| Audience    | Engine designer, UI designer, AI designer, Implementer                                                     |
-| Owns        | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                              |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | LIFE                                                                                                                                                                       |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, UI designer, AI designer, Implementer                                                                                                                     |
+| Owns        | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status.                                                                 |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

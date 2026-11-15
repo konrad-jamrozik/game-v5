@@ -1,12 +1,12 @@
 # Campaign Instances
 
-| Metadata    | Value                                                                         |
-| ----------- | ----------------------------------------------------------------------------- |
-| Spec ID     | CINST                                                                         |
-| Family      | Foundation                                                                    |
-| Audience    | Engine designer, Content designer, Implementer                                |
-| Owns        | How every thing in a Campaign's world is modeled as a Campaign instance.      |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md) |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | CINST                                                                                                                                                                      |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, Content designer, Implementer                                                                                                                             |
+| Owns        | How every thing in a Campaign's world is modeled as a Campaign instance.                                                                                                   |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
@@ -37,14 +37,14 @@ instance in World state.
 These terms are specific to Campaign Instances. General terms are in the [Core Concepts glossary](core-concepts.md#glossary)
 and the [Campaign State glossary](campaign-state.md#glossary).
 
-| Term              | Definition                                                                                                                                                                                                                                                 |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              |
-| Instance ID       | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary).                                            |
-| Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
-| State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
-| Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
-| Role Type         | A Type that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration.                                                              |
+| Term              | Definition                                                                                                                                                                                                                                                 | Prohibited synonyms                                                                                                                                    |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Campaign instance | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              | Instance; occurrence; Campaign instance kind, for which say Campaign instance Type. Explaining what an occurrence means in a definition remains valid. |
+| Instance ID       | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary).                                            | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names.                                                                  |
+| Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. | Template; EnemyType; EnemyKind, for which say EnemyArchetype                                                                                           |
+| State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       | MutableState; Instance state that does not separate State from Constants; Changeable reference, for which say Mutable reference                        |
+| Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     | ImmutableState; Fixed reference, for which say Immutable reference                                                                                     |
+| Role Type         | A Type that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration.                                                              |                                                                                                                                                        |
 
 # Campaign instance structure
 
@@ -56,7 +56,7 @@ its Archetype reference is required like that of any other Campaign instance.
 The four-property shape is the ubiquitous language for Campaign instances. It is chosen for uniformity and ease of
 reasoning: every Campaign instance is described, compared, and inspected in the same terms. The shape therefore
 belongs in this specification under the vocabulary criterion of
-[What belongs in a specification](../../governance/conventions/spec-conventions.md#what-belongs-in-a-specification) and must not be
+[What belongs in a Design specification](../../governance/conventions/design-spec-conventions.md#what-belongs-in-a-design-specification) and must not be
 removed or weakened as an implementation detail.
 
 How full Campaign state inspection presents each Campaign instance is owned by

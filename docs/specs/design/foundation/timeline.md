@@ -1,12 +1,12 @@
 # Timeline
 
-| Metadata    | Value                                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Spec ID     | TIMELINE                                                                                                                             |
-| Family      | Foundation                                                                                                                           |
-| Audience    | Engine designer, UI designer, Implementer                                                                                            |
-| Owns        | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                                        |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | TIMELINE                                                                                                                                                                   |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, UI designer, Implementer                                                                                                                                  |
+| Owns        | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees.                                       |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

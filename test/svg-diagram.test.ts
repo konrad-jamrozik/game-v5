@@ -12,6 +12,7 @@ import {
   renderFamilyDiagramFiles,
 } from '../scripts/spec-docs/generator.ts'
 import { computeFamilyArchitecture, renderFamilyArchitecture } from '../scripts/spec-docs/family-architecture.ts'
+import { renderReviewChecklist } from '../scripts/spec-docs/review-checklist.ts'
 import { computeStackLayout, renderStackDiagram } from '../scripts/spec-docs/stack-diagram.ts'
 import { computeLayers, renderSvgDiagram, type DiagramInput } from '../scripts/spec-docs/svg-diagram.ts'
 import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
@@ -255,6 +256,9 @@ describe('family SVG diagrams', () => {
       ...renderDerivedDiagramFiles(analysis.corpus),
     ])
     const fileSources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
+    for (const [path, content] of await renderReviewChecklist(analysis.corpus, fileSources, PRETTIER_OPTIONS)) {
+      derived.set(path, content)
+    }
     const diagrams = renderFamilyDiagramFiles(analysis.corpus, fileSources)
     const within = 'docs/images/mechanics-family-within-uses.svg'
     const across = 'docs/images/mechanics-family-across.svg'

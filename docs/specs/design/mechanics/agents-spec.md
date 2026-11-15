@@ -6,7 +6,7 @@
 | Family      | Mechanics                                                                                                                                                                                                                |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                              |
 | Owns        | What an Agent has, the Combatant Role Type, the Agent lifecycle, Current assignments and the transit rule, effective skill, Training, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                                                                                                                            |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                               |
 
 # Overview
 
@@ -50,26 +50,26 @@ about regaining health, Combats, and the Agency's caps are in the [Agent Recover
 
 What makes an Agent or an Enemy able to work and to fight, and how worn down it is.
 
-| Term            | Definition                                                                                                                                                                                                   |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Skill           | How capable a Combatant is at its work and in a Combat, as a whole number.                                                                                                                                   |
-| Effective skill | A Combatant's skill as reduced by its lost current health and its exhaustion; the value every rule uses when a Combatant works or fights.                                                                    |
-| Base health     | The highest current health a Combatant can have.                                                                                                                                                             |
-| Current health  | How much more harm a Combatant can take now, from zero up to its base health under [Attribute ranges](#attribute-ranges); an Agent whose current health reaches zero is dead.                                |
-| Exhaustion      | How worn down a Combatant is, as a whole number from zero up to the exhaustion cap; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. |
-| Weapon damage   | The typical current health a Combatant's hit removes, before the random spread.                                                                                                                              |
+| Term            | Definition                                                                                                                                                                                                   | Prohibited synonyms                                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Skill           | How capable a Combatant is at its work and in a Combat, as a whole number.                                                                                                                                   |                                                                                                                                       |
+| Effective skill | A Combatant's skill as reduced by its lost current health and its exhaustion; the value every rule uses when a Combatant works or fights.                                                                    |                                                                                                                                       |
+| Base health     | The highest current health a Combatant can have.                                                                                                                                                             | Maximum health; max health; full health                                                                                               |
+| Current health  | How much more harm a Combatant can take now, from zero up to its base health under [Attribute ranges](#attribute-ranges); an Agent whose current health reaches zero is dead.                                | Hit points; hit-point; health, naming a Combatant value. Unqualified health remains valid in its general sense, e.g. Health recovery. |
+| Exhaustion      | How worn down a Combatant is, as a whole number from zero up to the exhaustion cap; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. | Fatigue                                                                                                                               |
+| Weapon damage   | The typical current health a Combatant's hit removes, before the random spread.                                                                                                                              |                                                                                                                                       |
 
 ## Agent Current assignments
 
 The Current assignments that are neither an Investigation nor a Mission, and the one that places an Agent in a Mission.
 
-| Term        | Definition                                                                                                                                                                                     |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Standby     | The Current assignment of an Agent waiting for orders.                                                                                                                                         |
-| Contracting | The Current assignment of an Agent earning money for the Agency.                                                                                                                               |
-| Training    | The Current assignment of an Agent gaining skill.                                                                                                                                              |
-| Recovery    | The Current assignment of an Agent regaining current health.                                                                                                                                   |
-| Deployed    | Sent on a Mission at a Mission site as a member of its Current team, and fighting there in the next Advance turn. An Agent becomes Deployed the moment the player deploys it, without transit. |
+| Term        | Definition                                                                                                                                                                                     | Prohibited synonyms |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Standby     | The Current assignment of an Agent waiting for orders.                                                                                                                                         |                     |
+| Contracting | The Current assignment of an Agent earning money for the Agency.                                                                                                                               |                     |
+| Training    | The Current assignment of an Agent gaining skill.                                                                                                                                              |                     |
+| Recovery    | The Current assignment of an Agent regaining current health.                                                                                                                                   |                     |
+| Deployed    | Sent on a Mission at a Mission site as a member of its Current team, and fighting there in the next Advance turn. An Agent becomes Deployed the moment the player deploys it, without transit. |                     |
 
 # Agent GDRs
 

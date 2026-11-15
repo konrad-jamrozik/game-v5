@@ -1,12 +1,12 @@
 # Panic and Endings
 
-| Metadata    | Value                                                                                                                                                            |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | ENDING                                                                                                                                                           |
-| Family      | Mechanics                                                                                                                                                        |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                      |
-| Owns        | Panic and how this turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                                                                    |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | ENDING                                                                                                                                                                     |
+| Family      | Mechanics                                                                                                                                                                  |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                |
+| Owns        | Panic and how this turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending.           |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

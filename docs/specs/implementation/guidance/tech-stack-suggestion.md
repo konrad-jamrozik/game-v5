@@ -1,12 +1,12 @@
 # Tech Stack Suggestion
 
-| Metadata    | Value                                                                         |
-| ----------- | ----------------------------------------------------------------------------- |
-| Spec ID     | STACK                                                                         |
-| Family      | Guidance                                                                      |
-| Audience    | Implementer                                                                   |
-| Owns        | A suggested technology stack for a browser Implementation.                    |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md) |
+| Metadata    | Value                                                                                                                                                                                      |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | STACK                                                                                                                                                                                      |
+| Family      | Guidance                                                                                                                                                                                   |
+| Audience    | Implementer                                                                                                                                                                                |
+| Owns        | A suggested technology stack for a browser Implementation.                                                                                                                                 |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

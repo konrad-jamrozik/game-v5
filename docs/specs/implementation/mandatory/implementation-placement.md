@@ -1,12 +1,12 @@
 # Implementation Placement
 
-| Metadata    | Value                                                                                  |
-| ----------- | -------------------------------------------------------------------------------------- |
-| Spec ID     | PLACE                                                                                  |
-| Family      | Mandatory                                                                              |
-| Audience    | Implementer                                                                            |
-| Owns        | Where each implementation and everything it needs reside, relative to this repository. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)          |
+| Metadata    | Value                                                                                                                                                                                      |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | PLACE                                                                                                                                                                                      |
+| Family      | Mandatory                                                                                                                                                                                  |
+| Audience    | Implementer                                                                                                                                                                                |
+| Owns        | Where each implementation and everything it needs reside, relative to this repository.                                                                                                     |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

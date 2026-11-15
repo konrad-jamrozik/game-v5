@@ -11,7 +11,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | Specification kind | Family        | Specifications |
 | ------------------ | ------------- | -------------- |
-| Governance         | Conventions   | 3              |
+| Governance         | Conventions   | 8              |
 | Governance         | Process       | 3              |
 | Design             | Foundation    | 14             |
 | Design             | Mechanics     | 11             |
@@ -24,11 +24,16 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Conventions
 
-| ID    | Document                                                                            | Owns                                                                             |
-| ----- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| CONV  | [Specification Conventions](../specs/governance/conventions/spec-conventions.md)    | How specifications are written, reviewed, and maintained.                        |
-| INDEX | [Game Specification Index](../specs/README.md)                                      | Specification registration, navigation, and ownership summaries.                 |
-| REL   | [Artifact Relationships](../specs/governance/conventions/artifact-relationships.md) | Artifact relationship terminology, direction, inventories, and graph validation. |
+| ID    | Document                                                                                                       | Owns                                                                                                                                |
+| ----- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| CONV  | [Specification Conventions](../specs/governance/conventions/spec-conventions.md)                               | How every specification is written, whatever its Specification kind: layout, metadata, ownership, wording, and unspecified content. |
+| DCONV | [Design Specification Conventions](../specs/governance/conventions/design-spec-conventions.md)                 | What a Design specification may state, and how exactly it states rules, formulas, GDRs, and examples.                               |
+| GLOSS | [Glossary Conventions](../specs/governance/conventions/glossary-conventions.md)                                | How a specification's Glossary is arranged and how its definitions are written.                                                     |
+| ICONV | [Implementation Specification Conventions](../specs/governance/conventions/implementation-spec-conventions.md) | What an Implementation specification may state, and how its Binding decides its wording.                                            |
+| INDEX | [Game Specification Index](../specs/README.md)                                                                 | Specification registration, navigation, and ownership summaries.                                                                    |
+| OVW   | [Overview Conventions](../specs/governance/conventions/overview-conventions.md)                                | How the Overview of a specification and the overviews of Specification kinds and Families orient a reader.                          |
+| REL   | [Artifact Relationships](../specs/governance/conventions/artifact-relationships.md)                            | Artifact relationship terminology, direction, inventories, and graph validation.                                                    |
+| TERM  | [Terminology Conventions](../specs/governance/conventions/terminology-conventions.md)                          | Canonical terms, Non-terms, and how Prohibited synonyms are recorded.                                                               |
 
 ## Process
 

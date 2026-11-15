@@ -44,6 +44,8 @@ export interface SpecificationRecord {
 export interface GlossaryRecord {
   readonly term: string
   readonly definitionMarkdown: string
+  /** The Prohibited synonyms cell of the term's row, or an empty string when the row records none. */
+  readonly prohibitedSynonymsMarkdown: string
   readonly ownerId: string
   readonly ownerPath: string
 }

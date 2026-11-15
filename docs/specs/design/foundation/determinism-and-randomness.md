@@ -1,12 +1,12 @@
 # Determinism and Randomness
 
-| Metadata    | Value                                                                                                              |
-| ----------- | ------------------------------------------------------------------------------------------------------------------ |
-| Spec ID     | DETERM                                                                                                             |
-| Family      | Foundation                                                                                                         |
-| Audience    | Engine designer, AI designer, Implementer                                                                          |
-| Owns        | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                      |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | DETERM                                                                                                                                                                     |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, AI designer, Implementer                                                                                                                                  |
+| Owns        | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay.                                                         |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

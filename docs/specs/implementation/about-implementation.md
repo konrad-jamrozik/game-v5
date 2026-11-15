@@ -12,7 +12,7 @@ engine API depends on them.
 # Families
 
 The Implementation specifications divide by how binding they are and what they cover, as described in
-[Implementation binding](../governance/conventions/spec-conventions.md#implementation-binding).
+[Implementation binding](../governance/conventions/implementation-spec-conventions.md#implementation-binding).
 
 - [About the Mandatory family](mandatory/about-mandatory.md): repository constraints that every Implementation must
   meet, whatever its platform.

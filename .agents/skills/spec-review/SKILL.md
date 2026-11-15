@@ -9,8 +9,12 @@ The point of a review is the semantic check: finding statements that conflict, r
 than they need to. Deterministic checks come first only as a preflight, so the semantic review never spends effort on
 problems a command can find.
 
-The [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md) are the authority for every rule
-this skill applies. Read them before reviewing. The repository commands are the single executable authority for
+The conventions are the authority for every rule this skill applies: [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md)
+and the specifications that refine it, all in `docs/specs/governance/conventions/`. Read the ones each Target follows,
+under [Following the conventions](../../../docs/specs/governance/conventions/spec-conventions.md#following-the-conventions),
+before reviewing; every rule in them is a review check. The generated
+[Specification Review Checklist](../../../docs/derived/review-checklist.md) lists every rule section of the conventions
+and marks those the linter already checks. The repository commands are the single executable authority for
 deterministic checks; do not copy the linter into this skill.
 
 ## Scope
@@ -44,9 +48,9 @@ current state of the documents around it.
 2. **Context documents:** for each Target, collect:
    - every document in its Relationships section, in both directions;
    - every specification it links in prose, including the owning Glossaries of the terms it uses;
-   - Specification Conventions, in particular [Terminology replacements](../../../docs/specs/governance/conventions/spec-conventions.md#terminology-replacements),
-     [Non-terms](../../../docs/specs/governance/conventions/spec-conventions.md#non-terms), and
-     [Subject before document](../../../docs/specs/governance/conventions/spec-conventions.md#subject-before-document);
+   - the conventions the Target follows, in particular [Terminology Conventions](../../../docs/specs/governance/conventions/terminology-conventions.md),
+     the [Prohibited synonyms](../../../docs/derived/glossary.md#prohibited-synonyms) collected in the derived glossary,
+     and [Subject before document](../../../docs/specs/governance/conventions/spec-conventions.md#subject-before-document);
    - the [game design brief](../../../docs/game-design-brief.md), for checking intent only.
 3. Read each Dependency in full. For each Dependent, read at least every passage that cites or relies on the Target.
 4. Run `git log` on the Target and on each Dependency, and look closely at Dependencies that
@@ -75,10 +79,10 @@ each other as well as with their context documents. Check every use in context, 
    makes text verbose, and different documents describe it inconsistently, e.g. one says "the turn's closing
    bookkeeping" and another "end-of-turn updates" for the same step. Propose a term and the Glossary that should own
    it. Also flag a formal term used before or without its definition.
-4. **Forbidden terms:** a word from the INSTEAD OF column of Terminology replacements used for the concept it replaces,
-   e.g. "entry" for a GDR; a near-synonym or shortened form of a defined term, e.g. "instance" for Campaign instance;
-   or a Non-term treated as a defined term. Each causes inconsistency because readers cannot tell whether two words
-   mean one concept or two. A likely synonym missing from Terminology replacements is also a finding.
+4. **Forbidden terms:** a Prohibited synonym used for the concept of its canonical term, e.g. "entry" for a GDR; a
+   near-synonym or shortened form of a defined term, e.g. "instance" for Campaign instance; or a Non-term treated as a
+   defined term. Each causes inconsistency because readers cannot tell whether two words mean one concept or two. A
+   likely synonym that the owning Glossary does not record as a Prohibited synonym is also a finding.
 5. **Meta documentation:** text about the document instead of its subject, as prohibited by Subject before document,
    e.g. "This section defines…", "X owns Y", or "This document refines Z by specifying A, B, and C". This includes
    Overviews that inventory facts instead of orienting the reader, and topic sections without a lead sentence.
@@ -86,8 +90,9 @@ each other as well as with their context documents. Check every use in context, 
    needs, e.g. a paragraph that restates its own heading, or rationale padding inside a normative rule. Do not flag
    multi-angle worked examples of foundational or complex concepts; the project owner wants them kept. Do flag
    verbosity in ordinary rules and in examples of simple concepts.
-7. **Out-of-scope content:** statements that fail [What belongs in a specification](../../../docs/specs/governance/conventions/spec-conventions.md#what-belongs-in-a-specification),
-   e.g. internal ordering or code structure.
+7. **Out-of-scope content:** statements that the conventions of the Target's Specification kind do not admit, under
+   [What belongs in a specification](../../../docs/specs/governance/conventions/spec-conventions.md#what-belongs-in-a-specification),
+   e.g. internal ordering or code structure in a Design specification.
 8. **Gaps:** a rule that depends on an unstated choice, an Open decisions entry that the text already settles, or a
    `TODO:` item whose missing answer a rule in the Target already relies on.
 

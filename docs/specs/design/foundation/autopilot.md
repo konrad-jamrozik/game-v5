@@ -1,12 +1,12 @@
 # Autopilot
 
-| Metadata    | Value                                                                                                  |
-| ----------- | ------------------------------------------------------------------------------------------------------ |
-| Spec ID     | AUTO                                                                                                   |
-| Family      | Foundation                                                                                             |
-| Audience    | Engine designer, UI designer, AI designer, Implementer                                                 |
-| Owns        | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                          |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | AUTO                                                                                                                                                                       |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, UI designer, AI designer, Implementer                                                                                                                     |
+| Owns        | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                                                     |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
@@ -34,11 +34,11 @@ These terms are specific to Autopilot. General terms are in the [Engine Contract
 Independent identifier is in the [Determinism and Randomness glossary](determinism-and-randomness.md#glossary), and
 Timeline entry and Undone action are in the [Timeline glossary](timeline.md#glossary).
 
-| Term                    | Definition                                                                                                                                                                                 |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Autopilot limit         | The bound on an Autopilot engagement, fixed when Autopilot is engaged and measured in Player actions or turn advancements.                                                                 |
-| Autopilot engagement ID | The Independent identifier identifying one Autopilot engagement, assigned when Autopilot is engaged.                                                                                       |
-| Autopilot progress      | The Player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |
+| Term                    | Definition                                                                                                                                                                                 | Prohibited synonyms |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
+| Autopilot limit         | The bound on an Autopilot engagement, fixed when Autopilot is engaged and measured in Player actions or turn advancements.                                                                 | Delegation scope    |
+| Autopilot engagement ID | The Independent identifier identifying one Autopilot engagement, assigned when Autopilot is engaged.                                                                                       |                     |
+| Autopilot progress      | The Player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |                     |
 
 # Available Autopilot AIs
 

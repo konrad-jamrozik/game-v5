@@ -1,12 +1,12 @@
 # Web UI
 
-| Metadata    | Value                                                                                            |
-| ----------- | ------------------------------------------------------------------------------------------------ |
-| Spec ID     | WEB                                                                                              |
-| Family      | UI                                                                                               |
-| Audience    | UI designer, Implementer                                                                         |
-| Owns        | Guidance on the screens of the browser user interface and what each shows the Player by default. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                    |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | WEB                                                                                                                                                                        |
+| Family      | UI                                                                                                                                                                         |
+| Audience    | UI designer, Implementer                                                                                                                                                   |
+| Owns        | Guidance on the screens of the browser user interface and what each shows the Player by default.                                                                           |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

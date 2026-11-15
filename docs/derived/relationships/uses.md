@@ -12,6 +12,6 @@ A → B means A is used by B. The game specifications are layered by their uses 
 
 ![Uses relationships: Game specifications](../../images/uses-game.svg)
 
-## Relationship governance
+## Governance specifications
 
-![Uses relationships: Relationship governance](../../images/uses-governance.svg)
+![Uses relationships: Governance specifications](../../images/uses-governance.svg)

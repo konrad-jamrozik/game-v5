@@ -1,12 +1,12 @@
 # Saves
 
-| Metadata    | Value                                                                                                  |
-| ----------- | ------------------------------------------------------------------------------------------------------ |
-| Spec ID     | SAVES                                                                                                  |
-| Family      | Foundation                                                                                             |
-| Audience    | Engine designer, UI designer, Implementer                                                              |
-| Owns        | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                          |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | SAVES                                                                                                                                                                      |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, UI designer, Implementer                                                                                                                                  |
+| Owns        | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                                                     |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

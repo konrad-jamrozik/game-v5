@@ -164,6 +164,7 @@ function validCorpus(): SourceFile[] {
         '| Family | Foundation |',
         '| Audience | Engine designer, Implementer |',
         '| Owns | Alpha rules. |',
+        '| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md) |',
 
         '',
         '# Overview',
@@ -309,6 +310,95 @@ describe('specification linter', () => {
       expect(diagnosticCodes(files)).toEqual(['SPEC114'])
     },
   )
+
+  test.each([
+    [
+      'missing',
+      '| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md) |\n',
+      '',
+    ],
+    [
+      'extra',
+      '| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md) |',
+      '| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Alpha](alpha.md) |',
+    ],
+  ])('rejects a %s link in the Conventions row', (_reason, find, replacement) => {
+    const files = mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', find, replacement)
+    expect(diagnosticCodes(files)).toContain('SPEC115')
+  })
+
+  test('requires Design Specification Conventions in the Conventions row of a Design specification', () => {
+    const designConventions: SourceFile = {
+      path: 'docs/specs/governance/conventions/design-spec-conventions.md',
+      content: lines([
+        '# Design Specification Conventions',
+        '',
+        '| Metadata | Value |',
+        '| --- | --- |',
+        '| Spec ID | DCONV |',
+        '| Family | Conventions |',
+        '| Audience | Engine designer, Implementer |',
+        '| Owns | Design rules. |',
+        '| Conventions | [Specification Conventions](spec-conventions.md) |',
+        '',
+        '# Overview',
+        '',
+        'Design rules.',
+      ]),
+    }
+    const files = [...validCorpus(), designConventions]
+    expect(diagnosticCodes(files)).toEqual(['SPEC115'])
+    const fixed = mutate(
+      files,
+      'docs/specs/design/foundation/alpha.md',
+      '| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md) |',
+      '| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |',
+    )
+    expect(diagnosticCodes(fixed)).toEqual([])
+    const relationships = analyzeSpecifications({ files: fixed }).corpus.relationships
+    expect(
+      relationships.some(
+        (relationship) =>
+          relationship.dependencyId === 'DCONV' &&
+          relationship.dependentId === 'AAA' &&
+          relationship.kind === 'follows',
+      ),
+    ).toBe(true)
+  })
+
+  test('accepts a Prohibited synonyms column and keeps its words out of the prohibited-term scan', () => {
+    const files = withGlossary(
+      validCorpus(),
+      'docs/specs/design/foundation/alpha.md',
+      '# Glossary\n\n| Term | Definition | Prohibited synonyms |\n| --- | --- | --- |\n| Rulebook | A set of rules. | Relationship type; source |\n| Page | A part of a Rulebook. | |',
+    )
+    expect(diagnosticCodes(files)).toEqual([])
+    const glossary = analyzeSpecifications({ files }).corpus.glossary
+    expect(glossary.find((entry) => entry.term === 'Rulebook')?.prohibitedSynonymsMarkdown).toBe(
+      'Relationship type; source',
+    )
+  })
+
+  test('rejects a Glossary whose tables disagree about the Prohibited synonyms column', () => {
+    const files = withGlossary(
+      validCorpus(),
+      'docs/specs/design/foundation/alpha.md',
+      lines([
+        '# Glossary',
+        '',
+        ...glossaryGroup('Rulebooks', 'Rulebook', 'Page'),
+        '## Readers',
+        '',
+        'Terms about readers.',
+        '',
+        '| Term | Definition | Prohibited synonyms |',
+        '| --- | --- | --- |',
+        '| Reader | A reader definition. | Viewer |',
+        '| Owner | An owner definition. | |',
+      ]),
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC507'])
+  })
 
   test('rejects an empty topic section', () => {
     const files = mutate(

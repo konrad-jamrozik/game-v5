@@ -1,12 +1,12 @@
 # Turn Advancement
 
-| Metadata    | Value                                                                          |
-| ----------- | ------------------------------------------------------------------------------ |
-| Spec ID     | TURN                                                                           |
-| Family      | Mechanics                                                                      |
-| Audience    | Engine designer, AI designer, Implementer                                      |
-| Owns        | The canonical order of Turn advancement steps and which values each step uses. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)  |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | TURN                                                                                                                                                                       |
+| Family      | Mechanics                                                                                                                                                                  |
+| Audience    | Engine designer, AI designer, Implementer                                                                                                                                  |
+| Owns        | The canonical order of Turn advancement steps and which values each step uses.                                                                                             |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

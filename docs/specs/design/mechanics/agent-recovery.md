@@ -1,12 +1,12 @@
 # Agent Recovery
 
-| Metadata    | Value                                                                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | RECOVER                                                                                                                                                       |
-| Family      | Mechanics                                                                                                                                                     |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                   |
-| Owns        | Health recovery and exhaustion recovery of Agents, the RecoveryParameters GDR, and the result when several rules change one of those values in the same turn. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                                                                 |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | RECOVER                                                                                                                                                                    |
+| Family      | Mechanics                                                                                                                                                                  |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                |
+| Owns        | Health recovery and exhaustion recovery of Agents, the RecoveryParameters GDR, and the result when several rules change one of those values in the same turn.              |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

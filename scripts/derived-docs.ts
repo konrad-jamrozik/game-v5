@@ -12,6 +12,7 @@ import {
   renderFamilyDiagramFiles,
   renderFamilyOverviews,
 } from './spec-docs/generator.ts'
+import { renderReviewChecklist } from './spec-docs/review-checklist.ts'
 import { analyzeSpecifications, formatDiagnostic, lintSectionReferences } from './spec-linter/linter.ts'
 import { columnOf, headingSlugs, isLink, lineOf, parseDocument, visit } from './spec-linter/markdown.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from './spec-linter/paths.ts'
@@ -125,9 +126,11 @@ export async function runDerivedDocumentation(
     }
     const sources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
     const overviews = await renderFamilyOverviews(analysis.corpus, sources, prettierOptions)
+    const checklist = await renderReviewChecklist(analysis.corpus, sources, prettierOptions)
     const expectedMarkdown = new Map([
       ...(await renderDerivedDocumentation(analysis.corpus, prettierOptions)),
       ...overviews,
+      ...checklist,
     ])
     const expected = new Map([
       ...expectedMarkdown,

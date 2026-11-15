@@ -1,12 +1,12 @@
 # Gameplay Dependency Direction
 
-| Metadata    | Value                                                                                                    |
-| ----------- | -------------------------------------------------------------------------------------------------------- |
-| Spec ID     | DEPDIR                                                                                                   |
-| Family      | Guidance                                                                                                 |
-| Audience    | Implementer                                                                                              |
-| Owns        | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                            |
+| Metadata    | Value                                                                                                                                                                                      |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | DEPDIR                                                                                                                                                                                     |
+| Family      | Guidance                                                                                                                                                                                   |
+| Audience    | Implementer                                                                                                                                                                                |
+| Owns        | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs.                                                                                   |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

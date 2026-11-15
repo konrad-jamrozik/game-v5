@@ -1,12 +1,12 @@
 # Storage Schema
 
-| Metadata    | Value                                                                            |
-| ----------- | -------------------------------------------------------------------------------- |
-| Spec ID     | SCHEMA                                                                           |
-| Family      | Guidance                                                                         |
-| Audience    | Implementer                                                                      |
-| Owns        | Non-behavioural guidance on the physical layout of everything the game persists. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)    |
+| Metadata    | Value                                                                                                                                                                                      |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | SCHEMA                                                                                                                                                                                     |
+| Family      | Guidance                                                                                                                                                                                   |
+| Audience    | Implementer                                                                                                                                                                                |
+| Owns        | Non-behavioural guidance on the physical layout of everything the game persists.                                                                                                           |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

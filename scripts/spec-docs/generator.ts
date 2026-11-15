@@ -164,6 +164,28 @@ function renderGlossary(corpus: SpecificationCorpus): string {
       ],
     ]
   })
+  const synonymRows = entries.flatMap((entry) => {
+    const owner = specifications.get(entry.ownerId)
+    if (!owner || !entry.prohibitedSynonymsMarkdown) return []
+    return [
+      [
+        rewriteInlineLinks(entry.prohibitedSynonymsMarkdown, entry.ownerPath, outputPath),
+        entry.term,
+        specificationLink(owner, outputPath, 'glossary'),
+      ],
+    ]
+  })
+  const synonymSection =
+    synonymRows.length === 0
+      ? []
+      : [
+          '',
+          '## Prohibited synonyms',
+          '',
+          'Each row lists the Prohibited synonyms that the owning Glossary records for a term, and the term to use instead.',
+          '',
+          markdownTable(['Instead of', 'Use', 'Owner'], synonymRows),
+        ]
   return `${[
     '# Specification Glossary',
     '',
@@ -174,6 +196,7 @@ function renderGlossary(corpus: SpecificationCorpus): string {
     '[Back to the derived specification catalog](README.md)',
     '',
     markdownTable(['Term', 'Definition', 'Owner'], rows),
+    ...synonymSection,
   ].join('\n')}\n`
 }
 
@@ -247,9 +270,14 @@ interface RelationshipSection {
 /** Splits the relationships of one kind into the diagrams its page shows. */
 function relationshipSections(corpus: SpecificationCorpus, kind: RelationshipKind): readonly RelationshipSection[] {
   const kindRelationships = explicitRelationships(corpus, kind)
-  if (kind === 'uses') {
+  if (kind === 'uses' || kind === 'refines') {
+    const kindById = new Map(
+      corpus.specifications.map((specification) => [specification.id, FAMILY_KIND[specification.family]]),
+    )
     const governanceRelationships = kindRelationships.filter(
-      (relationship) => relationship.dependencyId === 'REL' && relationship.dependentId === 'CONV',
+      (relationship) =>
+        kindById.get(relationship.dependencyId) === 'Governance' &&
+        kindById.get(relationship.dependentId) === 'Governance',
     )
     if (governanceRelationships.length > 0) {
       const governanceRelationshipSet = new Set(governanceRelationships)
@@ -258,7 +286,7 @@ function relationshipSections(corpus: SpecificationCorpus, kind: RelationshipKin
         ...(gameRelationships.length > 0
           ? [{ heading: 'Game specifications', slug: 'game', relationships: gameRelationships }]
           : []),
-        { heading: 'Relationship governance', slug: 'governance', relationships: governanceRelationships },
+        { heading: 'Governance specifications', slug: 'governance', relationships: governanceRelationships },
       ]
     }
   }

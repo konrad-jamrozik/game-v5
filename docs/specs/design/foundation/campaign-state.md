@@ -1,12 +1,12 @@
 # Campaign State
 
-| Metadata    | Value                                                                         |
-| ----------- | ----------------------------------------------------------------------------- |
-| Spec ID     | CSTATE                                                                        |
-| Family      | Foundation                                                                    |
-| Audience    | Engine designer, Content designer, Implementer                                |
-| Owns        | What Campaign state is made of, and how Campaign initialization produces it.  |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md) |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | CSTATE                                                                                                                                                                     |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, Content designer, Implementer                                                                                                                             |
+| Owns        | What Campaign state is made of, and how Campaign initialization produces it.                                                                                               |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
@@ -41,12 +41,12 @@ These terms are specific to Campaign State. General terms are in the [Core Conce
 terms about Campaign instances are in the [Campaign Instances glossary](campaign-instances.md#glossary), and terms about
 the retained past in the [World History glossary](world-history.md#glossary).
 
-| Term                   | Definition                                                                                                                                                                                                                                                 |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and World history, distinct from Campaign configuration.                                                                               |
-| Current world state    | The subcomponent of World state other than World history: the simulated world as it stands at the position selected by undo and redo. After undo, it is the state at that earlier position, not the furthest position reached.                             |
-| World history          | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and Player API queries may consult World history.                                |
-| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation. |
+| Term                   | Definition                                                                                                                                                                                                                                                 | Prohibited synonyms                                                                                                                                                                                                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and World history, distinct from Campaign configuration.                                                                               |                                                                                                                                                                                                                                                                                      |
+| Current world state    | The subcomponent of World state other than World history: the simulated world as it stands at the position selected by undo and redo. After undo, it is the state at that earlier position, not the furthest position reached.                             |                                                                                                                                                                                                                                                                                      |
+| World history          | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and Player API queries may consult World history.                                | Archived; archival; became historical; deconstructed; destroyed; History, as a component of Campaign state. Legitimate destruction mechanics, Participation history, and Git history remain valid, and retention does not replace named lifecycle states, e.g. Killed and Completed. |
+| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation. | Scenario, naming campaign setup; scenario GDR; scenario setup. Unrelated uses of "configuration" remain valid.                                                                                                                                                                       |
 
 # Campaign state composition
 

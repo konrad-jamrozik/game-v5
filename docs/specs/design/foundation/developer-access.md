@@ -1,12 +1,12 @@
 # Developer Access
 
-| Metadata    | Value                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------------- |
-| Spec ID     | DEV                                                                                       |
-| Family      | Foundation                                                                                |
-| Audience    | Engine designer, Implementer                                                              |
-| Owns        | Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)             |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | DEV                                                                                                                                                                        |
+| Family      | Foundation                                                                                                                                                                 |
+| Audience    | Engine designer, Implementer                                                                                                                                               |
+| Owns        | Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides.                                                                                  |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

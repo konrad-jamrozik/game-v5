@@ -6,7 +6,7 @@
 | Family      | Mechanics                                                                                                                                                                      |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                    |
 | Owns        | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating, Combat outcomes, and the Combat report. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                                                                                  |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)     |
 
 # Overview
 
@@ -47,21 +47,21 @@ about skill, current health, exhaustion, and weapon damage are in the [Agents gl
 
 How a Combat is divided, and how it ends.
 
-| Term           | Definition                                                                                                                                                |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                 |
-| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                     |
-| Combat outcome | How a Combat ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. |
+| Term           | Definition                                                                                                                                                | Prohibited synonyms              |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                 | Round, naming a pass of a Combat |
+| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                     |                                  |
+| Combat outcome | How a Combat ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome                   |
 
 ## Combatant condition in a Combat
 
 Whether a Combatant still takes part in a Combat, and how strong it and its side are.
 
-| Term          | Definition                                                                                                                                                     |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Incapacitated | Alive but too weakened to take further part in the current Combat.                                                                                             |
-| Able to fight | Alive and not Incapacitated, so still attacking and still liable to be attacked.                                                                               |
-| Combat rating | How strong a Combatant or a side is in a Combat: the effective skill of one Combatant, or the sum of the effective skill of a side's Combatants able to fight. |
+| Term          | Definition                                                                                                                                                     | Prohibited synonyms           |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| Incapacitated | Alive but too weakened to take further part in the current Combat.                                                                                             |                               |
+| Able to fight | Alive and not Incapacitated, so still attacking and still liable to be attacked.                                                                               |                               |
+| Combat rating | How strong a Combatant or a side is in a Combat: the effective skill of one Combatant, or the sum of the effective skill of a side's Combatants able to fight. | Combat strength; combat power |
 
 # Combat GDRs
 

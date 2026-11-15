@@ -1,12 +1,12 @@
 # Leads and Progression
 
-| Metadata    | Value                                                                                                                  |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | LEAD                                                                                                                   |
-| Family      | Mechanics                                                                                                              |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                                                            |
-| Owns        | What a Lead GDR describes, Lead progression and its recording, Lead availability, and the effect of completing a Lead. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                          |
+| Metadata    | Value                                                                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | LEAD                                                                                                                                                                       |
+| Family      | Mechanics                                                                                                                                                                  |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                |
+| Owns        | What a Lead GDR describes, Lead progression and its recording, Lead availability, and the effect of completing a Lead.                                                     |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

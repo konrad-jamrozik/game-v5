@@ -8,4 +8,10 @@ A → B means A is refined by B. The game specifications are layered by their us
 
 [Back to the derived specification catalog](../README.md)
 
-![Refines relationships](../../images/refines-all.svg)
+## Game specifications
+
+![Refines relationships: Game specifications](../../images/refines-game.svg)
+
+## Governance specifications
+
+![Refines relationships: Governance specifications](../../images/refines-governance.svg)

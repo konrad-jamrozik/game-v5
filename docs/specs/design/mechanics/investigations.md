@@ -6,7 +6,7 @@
 | Family      | Mechanics                                                                                                                                                                                                                   |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                                 |
 | Owns        | What an Investigation has, the InvestigationArchetype GDR, the Investigation lifecycle, the startInvestigation and assignAgentsToInvestigation actions, leaving and abandonment, and Investigation progress and completion. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md)                                                                                                                                               |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                                  |
 
 # Overview
 

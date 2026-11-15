@@ -25,7 +25,6 @@ becomes Designer feedback. Both flow back into the specifications, and the loop 
 | Term                 | Definition                                                                                                                                                  |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Development loop     | The repeating cycle in which specifications are changed, an Implementation is built or updated from them, and what that shows is fed back into them.        |
-| Design specification | A specification that describes the game itself, i.e. any specification of the Design Specification kind.                                                    |
 | Implementer feedback | What an Implementer learns about the specifications while building or updating an Implementation: the defects it met and the choices it made in their gaps. |
 | Designer feedback    | What the Game designer finds wrong, or wants changed, after playing or reviewing an Implementation.                                                         |
 | LLM skill            | A packaged set of instructions that an LLM agent loads to carry out one recurring task of the Development loop.                                             |
@@ -46,12 +45,12 @@ exhaustive.
 The Implementation specifications come in three Families, distinguished by how binding they are and what they
 cover:
 
-- **Mandatory environment constraints:** what every Implementation must do whatever its platform, e.g. reside in its
+- **Mandatory:** what every Implementation must do whatever its platform, e.g. reside in its
   own directory beside the specifications under [Implementation Placement](../../implementation/mandatory/implementation-placement.md),
   keep its Implementer feedback, and record which specifications it follows so it can be updated from their changes.
-- **Technical suggestions:** Guidance on matters the Design specifications deliberately leave open, e.g. the
+- **Guidance:** suggestions on matters the Design specifications deliberately leave open, e.g. the
   toolchain suggested by [Tech Stack Suggestion](../../implementation/guidance/tech-stack-suggestion.md).
-- **Recipes:** Guidance on carrying out one task, e.g. publishing a browser Implementation to GitHub Pages under
+- **Recipes:** suggested steps for carrying out one task, e.g. publishing a browser Implementation to GitHub Pages under
   [GitHub Pages Deployment](../../implementation/recipes/github-pages-deployment.md).
 
 The specifications live in one repository and each Implementation in its own directory outside it. Every change to an
