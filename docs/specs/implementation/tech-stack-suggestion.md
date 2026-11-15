@@ -25,7 +25,7 @@ choose any other.
 - Redux Toolkit (RTK), with React Redux and `redux-undo` for undo and redo.
 - MUI, with Emotion, MUI Icons, and MUI X Charts, Data Grid, and Tree View.
 - Dexie, with `dexie-react-hooks`, for IndexedDB persistence.
-- Oxlint and ESLint for linting, Prettier for formatting, and dependency-cruiser for enforcing module dependency rules.
+- Oxlint for linting, Prettier for formatting, and dependency-cruiser for enforcing module dependency rules.
 
 # Newer tooling
 
@@ -33,5 +33,4 @@ The Implementer may also consider tooling beyond what game-ts uses:
 
 - [Vite+](https://viteplus.dev/), a unified toolchain that bundles Vite, Vitest, and the Oxc tools behind one command
   line.
-- More of the [Oxc](https://oxc.rs/) toolchain, e.g. its formatter Oxfmt in place of Prettier, and its linter Oxlint in place
-  of ESLint.
+- More of the [Oxc](https://oxc.rs/) toolchain, e.g. its formatter Oxfmt in place of Prettier.
