@@ -9,7 +9,7 @@ Use this skill when the Game designer reports something about an Implementation 
 report shows the wrong damage" or "Missions feel too easy".
 
 The Implementation is disposable, so the fix must start from the specifications. How Designer feedback enters them is
-owned by [Designer feedback](../../../docs/specs/governance/development-loop.md#designer-feedback) in Development Loop;
+owned by [Designer feedback](../../../docs/specs/governance/process/development-loop.md#designer-feedback) in Development Loop;
 follow it, and let it win when this skill disagrees.
 
 ## Workflow
@@ -30,7 +30,7 @@ follow it, and let it win when this skill disagrees.
 5. Carry out the decision:
    - **Specification change**, for a design change, a newly specified open matter, or a clarification of ambiguous
      wording: edit the specifications under `AGENTS.md` and
-     [Specification Conventions](../../../docs/specs/governance/spec-conventions.md), run `npm run check`, and commit
+     [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), run `npm run check`, and commit
      and push as `AGENTS.md` directs. Then run the `update-implementation` skill when the user asked for the change to
      reach the Implementation.
    - **Conformance fix:** change the Implementation, in its directory, to match the specifications at its

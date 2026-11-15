@@ -1,89 +1,30 @@
-# About the Governance family
+# About Governance specifications
 
 > Informative overview. It owns no rules; each linked specification owns its content.
 
-# What this family is for
+# What Governance specifications are for
 
-Governance specifications own how the specifications themselves are written, related, registered, and scheduled. They
-define no gameplay. Every other registered specification implicitly follows
-[Specification Conventions](spec-conventions.md).
+Governance specifications govern the specifications themselves, not the game: how a specification is written and
+related to others, and how the work of developing the game proceeds. They define no gameplay. Every other registered
+specification implicitly follows
+[Specification Conventions](conventions/spec-conventions.md).
 
-# Documents
+# Families
 
-## Game Specification Index
+The Governance specifications divide by what they govern: a single document, or the work around all of them.
 
-[Game Specification Index](../README.md) answers _which specifications exist, and what does each own?_ It is the
-navigation entry point and points to the generated catalog of every specification's ID, Family, title, and Owns
-summary. It lives at the root
-of the specifications directory rather than in this one.
-
-## Specification Conventions
-
-[Specification Conventions](spec-conventions.md) answers _how is a specification written?_ It owns layout, metadata,
-Families and paths, ownership rules, terminology, and lifecycle.
-
-## Development Loop
-
-[Development Loop](development-loop.md) answers _how is the game developed?_ It explains how the Game designer keeps
-design control while LLMs write the specifications and Implementations, and how feedback from each Implementation flows
-back into the specifications.
-
-## Artifact Relationships
-
-[Artifact Relationships](artifact-relationships.md) answers _how do artifacts declare their dependencies?_ It owns the
-five Relationship kinds, their direction, inventories, and graph validation.
-
-## Specification Work Plan and Backlog
-
-[Specification Work Plan and Backlog](work-plan.md) answers _in what order are specifications written and reviewed?_
-It owns review batches, checkpoints, and work states.
-
-## Outstanding Work Items
-
-[Outstanding Work Items](work-todos.md) answers _what known issues are waiting to be scheduled?_ It owns the register of
-unscheduled issues and the batches they affect.
-
-# How they relate
-
-Specification Conventions uses Artifact Relationships for the relationship model it requires every specification to
-declare. Outstanding Work Items uses the Specification Work Plan and Backlog for the batches it assigns each Work item
-to. The index is tied to the rest of the corpus by links rather than declared relationships.
-
-<!-- generated:family-diagram:start -->
-
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
-
-## Within the family
-
-### Uses
-
-![Governance family: uses relationships within the family](../../images/governance-family-within-uses.svg)
-
-### Refines
-
-No refines relationships are declared within this family.
-
-## Across families
-
-No relationships are declared with specifications in other families.
-
-<!-- generated:family-diagram:end -->
+- [About the Conventions family](conventions/about-conventions.md): how one specification is written, registered, and
+  related to others.
+- [About the Process family](process/about-process.md): how the game is developed in a loop between specifications
+  and Implementations, and how work on the specifications is planned and tracked.
 
 # Why these boundaries
 
-- **Conventions versus Artifact Relationships:** the relationship model also covers implementations and tests, not
-  only specifications, so it is owned separately from specification layout.
-- **Work plan versus work items:** the plan owns the schedule; the work-item register only records issues, so adding an
-  issue never changes the schedule.
-- **Development Loop versus Specification Conventions:** the conventions say how one specification is written; the
-  Development Loop says how specifications and Implementations change together, so the process can change without
-  touching the writing rules.
-- **Index versus everything else:** the index only navigates; ownership stays with each registered
-  document.
+The conventions change when the way of writing changes; the process changes when the way of working changes. Keeping
+them in separate Families lets either change without touching the other: e.g., adding an LLM skill to the Development
+Loop changes no writing rule.
 
 # Reading order
 
-Start with the [Game Specification Index](../README.md) and [Specification Conventions](spec-conventions.md), then
-[Artifact Relationships](artifact-relationships.md). Read the [Development Loop](development-loop.md) before building or
-updating an Implementation. Consult the [work plan](work-plan.md) and
-[outstanding work items](work-todos.md) when planning work.
+Start with the [Game Specification Index](../README.md) and the [Conventions family](conventions/about-conventions.md).
+Read the [Process family](process/about-process.md) before building or updating an Implementation or planning work.

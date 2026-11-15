@@ -9,7 +9,7 @@ The point of a review is the semantic check: finding statements that conflict, r
 than they need to. Deterministic checks come first only as a preflight, so the semantic review never spends effort on
 problems a command can find.
 
-The [Specification Conventions](../../../docs/specs/governance/spec-conventions.md) are the authority for every rule
+The [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md) are the authority for every rule
 this skill applies. Read them before reviewing. The repository commands are the single executable authority for
 deterministic checks; do not copy the linter into this skill.
 
@@ -44,9 +44,9 @@ current state of the documents around it.
 2. **Context documents:** for each Target, collect:
    - every document in its Relationships section, in both directions;
    - every specification it links in prose, including the owning Glossaries of the terms it uses;
-   - Specification Conventions, in particular [Terminology replacements](../../../docs/specs/governance/spec-conventions.md#terminology-replacements),
-     [Non-terms](../../../docs/specs/governance/spec-conventions.md#non-terms), and
-     [Subject before document](../../../docs/specs/governance/spec-conventions.md#subject-before-document);
+   - Specification Conventions, in particular [Terminology replacements](../../../docs/specs/governance/conventions/spec-conventions.md#terminology-replacements),
+     [Non-terms](../../../docs/specs/governance/conventions/spec-conventions.md#non-terms), and
+     [Subject before document](../../../docs/specs/governance/conventions/spec-conventions.md#subject-before-document);
    - the [game design brief](../../../docs/game-design-brief.md), for checking intent only.
 3. Read each Dependency in full. For each Dependent, read at least every passage that cites or relies on the Target.
 4. Run `git log` on the Target and on each Dependency, and look closely at Dependencies that
@@ -69,7 +69,7 @@ each other as well as with their context documents. Check every use in context, 
    e.g. a statement that still describes a design that has since changed, or that cites a removed or renamed section,
    term, or API name.
 2. **Duplicate information:** a rule, definition, formula, parameter value, or API field stated in more than one place,
-   even consistently. It has one owner, per [One owner per rule](../../../docs/specs/governance/spec-conventions.md#one-owner-per-rule);
+   even consistently. It has one owner, per [One owner per rule](../../../docs/specs/governance/conventions/spec-conventions.md#one-owner-per-rule);
    every other place links to the owner. Propose which document owns it.
 3. **Missing terminology:** a concept with no defined term, so documents describe it with repeated ad hoc phrases. This
    makes text verbose, and different documents describe it inconsistently, e.g. one says "the turn's closing
@@ -86,7 +86,7 @@ each other as well as with their context documents. Check every use in context, 
    needs, e.g. a paragraph that restates its own heading, or rationale padding inside a normative rule. Do not flag
    multi-angle worked examples of foundational or complex concepts; the project owner wants them kept. Do flag
    verbosity in ordinary rules and in examples of simple concepts.
-7. **Out-of-scope content:** statements that fail [What belongs in a specification](../../../docs/specs/governance/spec-conventions.md#what-belongs-in-a-specification),
+7. **Out-of-scope content:** statements that fail [What belongs in a specification](../../../docs/specs/governance/conventions/spec-conventions.md#what-belongs-in-a-specification),
    e.g. internal ordering or code structure.
 8. **Gaps:** a rule that depends on an unstated choice, an Open decisions entry that the text already settles, or a
    `TODO:` item whose missing answer a rule in the Target already relies on.

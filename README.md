@@ -7,16 +7,16 @@ renderer, state management, and persistence are left to each implementation.
 
 Each implementation lives outside this repository, in its own directory beside this repository's local clone, which it
 treats as its repository root, as required by
-[Implementation Placement](docs/specs/implementation/implementation-placement.md); e.g., beside `repos/game-v5/` an
+[Implementation Placement](docs/specs/implementation/mandatory/implementation-placement.md); e.g., beside `repos/game-v5/` an
 implementer creates `repos/game-v5-impl-web/`. That directory starts as a plain local directory and may later become a
 standalone repository. This repository has no game code. A browser implementation may consider the
-technology stack suggested by [Tech Stack Suggestion](docs/specs/implementation/tech-stack-suggestion.md).
+technology stack suggested by [Tech Stack Suggestion](docs/specs/implementation/guidance/tech-stack-suggestion.md).
 
 ## Design and continuation
 
 The [Game Design Brief](docs/game-design-brief.md) records gameplay intent. The
 [specification index](docs/specs/README.md) links the detailed contracts, and the
-[work plan](docs/specs/governance/work-plan.md) tracks review progress.
+[work plan](docs/specs/governance/process/work-plan.md) tracks review progress.
 
 ## Getting started
 

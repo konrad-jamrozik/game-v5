@@ -52,7 +52,7 @@ function mechanicsCorpus(): SpecificationCorpus {
       specification('MID', 'Mechanics'),
       specification('TOP', 'Mechanics'),
       specification('FOUND', 'Foundation'),
-      specification('FACE', 'Implementation'),
+      specification('FACE', 'Guidance'),
     ],
     glossary: [],
     relationships: [
@@ -233,7 +233,7 @@ describe('family SVG diagrams', () => {
     expect(refines).toContain('LAYER 2')
     const across = files.get('docs/images/mechanics-family-across.svg') ?? ''
     expect(across).toContain('>Foundation family<')
-    expect(across).toContain('>Implementation family<')
+    expect(across).toContain('>Guidance family<')
     expect(across).toContain('>another family<')
     expect(across).not.toContain('LAYER')
     // BASE and MID relate to other families identically, so they share one box.
@@ -295,7 +295,7 @@ describe('specification stack diagram', () => {
         specification('ONE', 'Mechanics'),
         specification('TWO', 'Mechanics'),
         specification('TURN', 'Mechanics'),
-        specification('IMPL', 'Implementation'),
+        specification('IMPL', 'Guidance'),
       ],
       glossary: [],
       relationships: [
@@ -319,7 +319,7 @@ describe('specification stack diagram', () => {
       ['Foundation', [['ENG', 'NUM'], ['CORE']]],
     ])
     expect(layout.foundationIndependent).toBe(true)
-    expect(layout.besideFamilies).toEqual(['Implementation'])
+    expect(layout.besideFamilies).toEqual(['Guidance'])
   })
 
   test('renders every layer and the layer captions', () => {
@@ -330,12 +330,12 @@ describe('specification stack diagram', () => {
     )
     expect(svg).toContain('Foundation, from its top layer to its bottom layer: Title ENG, Title NUM; Title CORE')
     expect(svg).toContain('No Foundation specification depends on a Mechanics specification.')
-    expect(svg).toContain('Implementation specifications sit beside the stack and are not drawn.')
+    expect(svg).toContain('Guidance specifications sit beside the stack and are not drawn.')
   })
 })
 
 describe('family architecture diagram', () => {
-  const families = ['Governance', 'Foundation', 'Mechanics', 'Content', 'UI', 'Implementation']
+  const families = ['Conventions', 'Foundation', 'Mechanics', 'Content', 'UI', 'Guidance']
 
   function architectureCorpus(): SpecificationCorpus {
     return {
@@ -343,7 +343,7 @@ describe('family architecture diagram', () => {
         specification('ENG', 'Foundation'),
         specification('MECH', 'Mechanics'),
         specification('SCREEN', 'UI'),
-        specification('IMPL', 'Implementation'),
+        specification('IMPL', 'Guidance'),
       ],
       glossary: [],
       relationships: [
@@ -357,12 +357,12 @@ describe('family architecture diagram', () => {
 
   test('derives what each Family builds on from the relationships of its specifications', () => {
     expect(computeFamilyArchitecture(architectureCorpus(), families)).toEqual([
-      { family: 'Governance', buildsOn: [] },
+      { family: 'Conventions', buildsOn: [] },
       { family: 'Foundation', buildsOn: [] },
       { family: 'Mechanics', buildsOn: ['Foundation'] },
       { family: 'Content', buildsOn: [] },
       { family: 'UI', buildsOn: ['Mechanics'] },
-      { family: 'Implementation', buildsOn: ['Foundation', 'UI'] },
+      { family: 'Guidance', buildsOn: ['Foundation', 'UI'] },
     ])
   })
 
@@ -370,10 +370,10 @@ describe('family architecture diagram', () => {
     const corpus = architectureCorpus()
     const svg = renderFamilyArchitecture(corpus, computeFamilyArchitecture(corpus, families))
     expect(svg).toContain('>Game engine<')
-    expect(svg).toContain('>Implementation<')
-    expect(svg).toContain('Implementation builds on Foundation and UI')
+    expect(svg).toContain('>Guidance<')
+    expect(svg).toContain('Guidance builds on Foundation and UI')
     expect(svg).toContain('Content has no specifications yet, so no relationships either.')
-    expect(svg).toContain('Every specification also follows the Governance family, which is not drawn.')
+    expect(svg).toContain('Every specification also follows the Governance specifications, which are not drawn.')
     expect(svg.match(/class="arrow"/g)).toHaveLength(3)
   })
 })

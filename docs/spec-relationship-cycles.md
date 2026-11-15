@@ -16,7 +16,7 @@ The complete result is one governance component with two documents and two inter
 kinds. No game specification occurs in a cyclic component: the combined explicit uses/refines graph is acyclic.
 Neither the refines graph nor the follows graph alone contains a cycle. These results were recomputed after the nine Mechanics specifications and Numbers were completed,
 and again after Missions began to use Game Data Records.
-The Mechanics family then has eight layers under [The layer rule](specs/mechanics/about-mechanics.md#the-layer-rule),
+The Mechanics family then has eight layers under [The layer rule](specs/design/mechanics/about-mechanics.md#the-layer-rule),
 and no document uses or refines a document in its own or a later layer. E.g., Panic and Endings uses Factions and
 Economy and Upgrades, Missions uses Panic and Endings, Investigations uses Missions, and Leads and Progression no
 longer refines Factions. Several Mechanics specifications use Numbers, Economy and Upgrades uses Configuration, and
@@ -25,7 +25,7 @@ Missions uses Game Data Records; Numbers, Configuration, and Game Data Records u
 When a relationship changes, recompute these components from the registered inventories, check the supporting prose,
 and update the diagrams, tables, counts, and removal criteria together. Include all internal edges, including edges
 that close longer paths rather than a two-document loop. Remove a component from this register when it is acyclic.
-The [Relationship graphs](specs/governance/artifact-relationships.md#relationship-graphs) require this maintenance;
+The [Relationship graphs](specs/governance/conventions/artifact-relationships.md#relationship-graphs) require this maintenance;
 deterministic specification lint alone does not establish the semantic justification or completeness of this report.
 
 ## Governance component: relationship language and document conventions
@@ -38,10 +38,10 @@ flowchart LR
 
 This is the complete internal-edge inventory:
 
-| Dependency → Dependent                             | Kind             | Independently supplied meaning and evidence                                                                                                                                                                                                                      |
-| -------------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Specification Conventions → Artifact Relationships | Implicit follows | Conventions — [Implicit relationships](specs/governance/spec-conventions.md#implicit-relationships) supplies document structure, lifecycle, and writing rules for every other registered specification.                                                          |
-| Artifact Relationships → Specification Conventions | Uses             | Artifact Relationships — [Relationship kinds](specs/governance/artifact-relationships.md#relationship-kinds) supplies relationship meanings used by the conventions — [Relationship inventories](specs/governance/spec-conventions.md#relationship-inventories). |
+| Dependency → Dependent                             | Kind             | Independently supplied meaning and evidence                                                                                                                                                                                                                                              |
+| -------------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Specification Conventions → Artifact Relationships | Implicit follows | Conventions — [Implicit relationships](specs/governance/conventions/spec-conventions.md#implicit-relationships) supplies document structure, lifecycle, and writing rules for every other registered specification.                                                                      |
+| Artifact Relationships → Specification Conventions | Uses             | Artifact Relationships — [Relationship kinds](specs/governance/conventions/artifact-relationships.md#relationship-kinds) supplies relationship meanings used by the conventions — [Relationship inventories](specs/governance/conventions/spec-conventions.md#relationship-inventories). |
 
 The meanings are independently stated: writing rules govern a document that defines the relationship vocabulary.
 The relationship definition does not need a missing definition supplied only by the writing rule.

@@ -17,8 +17,19 @@ export interface LintInput {
   readonly indexPath?: string
 }
 
+export type SpecificationKind = 'Governance' | 'Design' | 'Implementation'
+
 export type SpecificationFamily =
-  'Governance' | 'Foundation' | 'Mechanics' | 'Content' | 'UI' | 'Autopilot AIs' | 'Implementation'
+  | 'Conventions'
+  | 'Process'
+  | 'Foundation'
+  | 'Mechanics'
+  | 'Content'
+  | 'UI'
+  | 'Autopilot AIs'
+  | 'Mandatory'
+  | 'Guidance'
+  | 'Recipes'
 
 export type RelationshipKind = 'follows' | 'refines' | 'uses' | 'implements' | 'verifies'
 

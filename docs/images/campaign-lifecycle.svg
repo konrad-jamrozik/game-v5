@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="410" viewBox="0 0 1000 410" role="img" aria-label="Campaign lifecycle: a Session starts with no Current campaign; campaign.create(options) or saves.load(save) selects a Current campaign; campaign.close() removes it; the Session ends when the game exits">
-  <!-- Hand-kept diagram for docs/specs/foundation/engine-contract.md; not generated. -->
+  <!-- Hand-kept diagram for docs/specs/design/foundation/engine-contract.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --turn: #2f7f95; }
     @media (prefers-color-scheme: dark) {

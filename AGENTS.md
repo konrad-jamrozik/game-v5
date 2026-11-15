@@ -14,15 +14,14 @@ declaring repository changes complete, run `npm run check` and report any failur
 
 ## Implementing the game
 
-When implementing the game, follow every specification in `docs/specs/implementation/` whose Binding metadata is
-Mandatory, e.g. [Implementation Placement](docs/specs/implementation/implementation-placement.md) and
-[Implementation Feedback](docs/specs/implementation/implementation-feedback.md). They apply whatever the task says about
+When implementing the game, follow every specification in `docs/specs/implementation/mandatory/`, e.g. [Implementation Placement](docs/specs/implementation/mandatory/implementation-placement.md) and
+[Implementation Feedback](docs/specs/implementation/mandatory/implementation-feedback.md). They apply whatever the task says about
 platform, language, or engine, e.g. equally to a browser implementation and to a dedicated game-engine mplementation, and no other instruction waives them.
 
 ## Marking examples
 
 In every document and in chat, introduce every example with "e.g.", as defined in
-[Marking examples](docs/specs/governance/spec-conventions.md#marking-examples). Never state an example as a bare
+[Marking examples](docs/specs/governance/conventions/spec-conventions.md#marking-examples). Never state an example as a bare
 sentence after a general statement; the reader must not have to infer whether a sentence is general or illustrative.
 
 ## Linking to documents in chat

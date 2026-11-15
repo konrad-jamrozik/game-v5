@@ -24,11 +24,11 @@ function sampleCorpus(): SpecificationCorpus {
         family: 'Mechanics',
         title: 'Zulu',
         owns: 'Zulu rules.',
-        path: 'docs/specs/mechanics/zulu.md',
+        path: 'docs/specs/design/mechanics/zulu.md',
       },
       {
         id: 'INDEX',
-        family: 'Governance',
+        family: 'Conventions',
         title: 'Specification Index',
         owns: 'Registration.',
         path: 'docs/specs/README.md',
@@ -38,14 +38,14 @@ function sampleCorpus(): SpecificationCorpus {
         family: 'Foundation',
         title: 'Alpha "Quoted" & More',
         owns: 'Alpha rules.',
-        path: 'docs/specs/foundation/alpha.md',
+        path: 'docs/specs/design/foundation/alpha.md',
       },
       {
         id: 'CONV',
-        family: 'Governance',
+        family: 'Conventions',
         title: 'Conventions',
         owns: 'Writing conventions.',
-        path: 'docs/specs/governance/spec-conventions.md',
+        path: 'docs/specs/governance/conventions/spec-conventions.md',
       },
     ],
     glossary: [
@@ -53,52 +53,52 @@ function sampleCorpus(): SpecificationCorpus {
         term: 'Zulu term',
         definitionMarkdown: 'Last definition.',
         ownerId: 'ZZZ',
-        ownerPath: 'docs/specs/mechanics/zulu.md',
+        ownerPath: 'docs/specs/design/mechanics/zulu.md',
       },
       {
         term: 'alpha term',
         definitionMarkdown:
-          'Uses **strong rules** from [Conventions](../governance/spec-conventions.md#glossary) and [Rule](#rule).',
+          'Uses **strong rules** from [Conventions](../../governance/conventions/spec-conventions.md#glossary) and [Rule](#rule).',
         ownerId: 'AAA',
-        ownerPath: 'docs/specs/foundation/alpha.md',
+        ownerPath: 'docs/specs/design/foundation/alpha.md',
       },
     ],
     relationships: [
       {
         dependencyId: 'CONV',
-        dependencyPath: 'docs/specs/governance/spec-conventions.md',
+        dependencyPath: 'docs/specs/governance/conventions/spec-conventions.md',
         dependentId: 'AAA',
-        dependentPath: 'docs/specs/foundation/alpha.md',
+        dependentPath: 'docs/specs/design/foundation/alpha.md',
         kind: 'follows',
         origin: 'implicit',
-        sourcePaths: ['docs/specs/governance/spec-conventions.md'],
+        sourcePaths: ['docs/specs/governance/conventions/spec-conventions.md'],
       },
       {
         dependencyId: 'AAA',
-        dependencyPath: 'docs/specs/foundation/alpha.md',
+        dependencyPath: 'docs/specs/design/foundation/alpha.md',
         dependentId: 'ZZZ',
-        dependentPath: 'docs/specs/mechanics/zulu.md',
+        dependentPath: 'docs/specs/design/mechanics/zulu.md',
         kind: 'uses',
         origin: 'explicit',
-        sourcePaths: ['docs/specs/foundation/alpha.md', 'docs/specs/mechanics/zulu.md'],
+        sourcePaths: ['docs/specs/design/foundation/alpha.md', 'docs/specs/design/mechanics/zulu.md'],
       },
       {
         dependencyId: 'AAA',
-        dependencyPath: 'docs/specs/foundation/alpha.md',
+        dependencyPath: 'docs/specs/design/foundation/alpha.md',
         dependentId: 'ZZZ',
-        dependentPath: 'docs/specs/mechanics/zulu.md',
+        dependentPath: 'docs/specs/design/mechanics/zulu.md',
         kind: 'refines',
         origin: 'explicit',
-        sourcePaths: ['docs/specs/foundation/alpha.md', 'docs/specs/mechanics/zulu.md'],
+        sourcePaths: ['docs/specs/design/foundation/alpha.md', 'docs/specs/design/mechanics/zulu.md'],
       },
       {
         dependencyId: 'ZZZ',
-        dependencyPath: 'docs/specs/mechanics/zulu.md',
+        dependencyPath: 'docs/specs/design/mechanics/zulu.md',
         dependentId: 'AAA',
-        dependentPath: 'docs/specs/foundation/alpha.md',
+        dependentPath: 'docs/specs/design/foundation/alpha.md',
         kind: 'uses',
         origin: 'explicit',
-        sourcePaths: ['docs/specs/mechanics/zulu.md', 'docs/specs/foundation/alpha.md'],
+        sourcePaths: ['docs/specs/design/mechanics/zulu.md', 'docs/specs/design/foundation/alpha.md'],
       },
     ],
   }
@@ -121,20 +121,20 @@ describe('derived specification renderer', () => {
   test('renders catalog fields, grouping, sorting, and counts', async () => {
     const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
     const catalog = outputs.get('docs/derived/README.md') ?? ''
-    expect(catalog).toContain('| Governance     | 2              |')
-    expect(catalog).toContain('| AAA | [Alpha "Quoted" & More](../specs/foundation/alpha.md) | Alpha rules. |')
+    expect(catalog).toContain('| Governance         | Conventions   | 2              |')
+    expect(catalog).toContain('| AAA | [Alpha "Quoted" & More](../specs/design/foundation/alpha.md) | Alpha rules. |')
     expect(catalog.indexOf('| CONV')).toBeLessThan(catalog.indexOf('| INDEX'))
     expect(catalog).not.toContain('Scope')
-    expect(catalog.indexOf('## Governance')).toBeLessThan(catalog.indexOf('## Foundation'))
+    expect(catalog.indexOf('## Conventions')).toBeLessThan(catalog.indexOf('## Foundation'))
   })
 
   test('sorts glossary terms and preserves formatted definitions with rewritten links', async () => {
     const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
     const glossary = outputs.get('docs/derived/glossary.md') ?? ''
     expect(glossary.indexOf('| alpha term')).toBeLessThan(glossary.indexOf('| Zulu term'))
-    expect(glossary).toContain('[Conventions](../specs/governance/spec-conventions.md#glossary)')
-    expect(glossary).toContain('[Rule](../specs/foundation/alpha.md#rule)')
-    expect(glossary).toContain('[AAA — Alpha "Quoted" & More](../specs/foundation/alpha.md#glossary)')
+    expect(glossary).toContain('[Conventions](../specs/governance/conventions/spec-conventions.md#glossary)')
+    expect(glossary).toContain('[Rule](../specs/design/foundation/alpha.md#rule)')
+    expect(glossary).toContain('[AAA — Alpha "Quoted" & More](../specs/design/foundation/alpha.md#glossary)')
   })
 
   test('renders each explicit relationship-kind diagram in its own file and omits implicit follows', async () => {
@@ -185,19 +185,22 @@ describe('derived specification renderer', () => {
           family: 'Foundation',
           title: 'Engine Contract',
           owns: 'Engine behavior.',
-          path: 'docs/specs/foundation/engine-contract.md',
+          path: 'docs/specs/design/foundation/engine-contract.md',
         },
       ],
       relationships: [
         ...corpus.relationships,
         {
           dependencyId: 'ENG',
-          dependencyPath: 'docs/specs/foundation/engine-contract.md',
+          dependencyPath: 'docs/specs/design/foundation/engine-contract.md',
           dependentId: 'CONV',
-          dependentPath: 'docs/specs/governance/spec-conventions.md',
+          dependentPath: 'docs/specs/governance/conventions/spec-conventions.md',
           kind: 'refines',
           origin: 'explicit',
-          sourcePaths: ['docs/specs/foundation/engine-contract.md', 'docs/specs/governance/spec-conventions.md'],
+          sourcePaths: [
+            'docs/specs/design/foundation/engine-contract.md',
+            'docs/specs/governance/conventions/spec-conventions.md',
+          ],
         },
       ],
     }
@@ -225,35 +228,38 @@ describe('derived specification renderer', () => {
           family: 'Foundation',
           title: 'Domain Model',
           owns: 'Shared domain.',
-          path: 'docs/specs/foundation/domain-model.md',
+          path: 'docs/specs/design/foundation/domain-model.md',
         },
         {
           id: 'REL',
-          family: 'Governance',
+          family: 'Conventions',
           title: 'Artifact Relationships',
           owns: 'Relationship rules.',
-          path: 'docs/specs/governance/artifact-relationships.md',
+          path: 'docs/specs/governance/conventions/artifact-relationships.md',
         },
       ],
       relationships: [
         ...corpus.relationships,
         {
           dependencyId: 'DOM',
-          dependencyPath: 'docs/specs/foundation/domain-model.md',
+          dependencyPath: 'docs/specs/design/foundation/domain-model.md',
           dependentId: 'AAA',
-          dependentPath: 'docs/specs/foundation/alpha.md',
+          dependentPath: 'docs/specs/design/foundation/alpha.md',
           kind: 'uses',
           origin: 'explicit',
-          sourcePaths: ['docs/specs/foundation/domain-model.md', 'docs/specs/foundation/alpha.md'],
+          sourcePaths: ['docs/specs/design/foundation/domain-model.md', 'docs/specs/design/foundation/alpha.md'],
         },
         {
           dependencyId: 'REL',
-          dependencyPath: 'docs/specs/governance/artifact-relationships.md',
+          dependencyPath: 'docs/specs/governance/conventions/artifact-relationships.md',
           dependentId: 'CONV',
-          dependentPath: 'docs/specs/governance/spec-conventions.md',
+          dependentPath: 'docs/specs/governance/conventions/spec-conventions.md',
           kind: 'uses',
           origin: 'explicit',
-          sourcePaths: ['docs/specs/governance/artifact-relationships.md', 'docs/specs/governance/spec-conventions.md'],
+          sourcePaths: [
+            'docs/specs/governance/conventions/artifact-relationships.md',
+            'docs/specs/governance/conventions/spec-conventions.md',
+          ],
         },
       ],
     }
@@ -297,14 +303,14 @@ describe('family overview diagrams', () => {
     '',
   ].join('\n')
 
-  const foundationOverview = 'docs/specs/foundation/about-foundation.md'
+  const foundationOverview = 'docs/specs/design/foundation/about-foundation.md'
   const acrossPath = 'docs/images/foundation-family-across.svg'
 
   test('collapses other Families, combines kinds, and omits implicit follows', () => {
     const diagram = renderFamilyDiagram(sampleCorpus(), 'Foundation')
     expect(diagram).toContain('This family has a single specification')
     expect(diagram).toContain(
-      '![Foundation family: relationships with other families](../../images/foundation-family-across.svg)',
+      '![Foundation family: relationships with other families](../../../images/foundation-family-across.svg)',
     )
     expect(diagram).not.toContain('```mermaid')
     const files = renderFamilyDiagramFiles(sampleCorpus(), new Map([[foundationOverview, overview]]))
@@ -316,7 +322,7 @@ describe('family overview diagrams', () => {
     expect(across).toContain('class="edge edge-uses"')
     expect(across).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More')
     expect(across).not.toContain('CONV')
-    expect(across).not.toContain('Governance family')
+    expect(across).not.toContain('Conventions family')
   })
 
   test('renders relationships within a Family separately from those across Families', () => {
@@ -331,19 +337,19 @@ describe('family overview diagrams', () => {
             family: 'Foundation',
             title: 'Beta',
             owns: 'Beta rules.',
-            path: 'docs/specs/foundation/beta.md',
+            path: 'docs/specs/design/foundation/beta.md',
           },
         ],
         relationships: [
           ...corpus.relationships,
           {
             dependencyId: 'AAA',
-            dependencyPath: 'docs/specs/foundation/alpha.md',
+            dependencyPath: 'docs/specs/design/foundation/alpha.md',
             dependentId: 'BBB',
-            dependentPath: 'docs/specs/foundation/beta.md',
+            dependentPath: 'docs/specs/design/foundation/beta.md',
             kind: 'uses',
             origin: 'explicit',
-            sourcePaths: ['docs/specs/foundation/alpha.md', 'docs/specs/foundation/beta.md'],
+            sourcePaths: ['docs/specs/design/foundation/alpha.md', 'docs/specs/design/foundation/beta.md'],
           },
         ],
       },
@@ -360,21 +366,21 @@ describe('family overview diagrams', () => {
   })
 
   test('replaces only the marked block and is idempotent', async () => {
-    const sources = new Map([['docs/specs/foundation/about-foundation.md', overview]])
+    const sources = new Map([['docs/specs/design/foundation/about-foundation.md', overview]])
     const first = await renderFamilyOverviews(sampleCorpus(), sources, PRETTIER_OPTIONS)
-    const output = first.get('docs/specs/foundation/about-foundation.md') ?? ''
+    const output = first.get('docs/specs/design/foundation/about-foundation.md') ?? ''
     expect(output).not.toContain('stale content')
     expect(output).toContain('Prose.')
     expect(output).toContain('Reasons.')
-    expect(output).toContain('(../../images/foundation-family-across.svg)')
+    expect(output).toContain('(../../../images/foundation-family-across.svg)')
     expect(output).not.toContain('```mermaid')
-    expect(first.has('docs/specs/mechanics/about-mechanics.md')).toBe(false)
+    expect(first.has('docs/specs/design/mechanics/about-mechanics.md')).toBe(false)
     const second = await renderFamilyOverviews(
       sampleCorpus(),
-      new Map([['docs/specs/foundation/about-foundation.md', output]]),
+      new Map([['docs/specs/design/foundation/about-foundation.md', output]]),
       PRETTIER_OPTIONS,
     )
-    expect(second.get('docs/specs/foundation/about-foundation.md')).toBe(output)
+    expect(second.get('docs/specs/design/foundation/about-foundation.md')).toBe(output)
   })
 })
 

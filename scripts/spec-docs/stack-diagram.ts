@@ -1,3 +1,4 @@
+import { FAMILY_KIND } from '../spec-linter/overviews.ts'
 import type { SpecificationCorpus, SpecificationFamily, SpecificationRecord } from '../spec-linter/types.ts'
 
 /** The generated layer diagram of the Foundation and Mechanics specifications, linked from the specification index. */
@@ -99,7 +100,7 @@ export function computeStackLayout(corpus: SpecificationCorpus): StackLayout {
     ...new Set(
       corpus.specifications
         .map((specification) => specification.family)
-        .filter((family) => !STACK_FAMILIES.includes(family) && family !== 'Governance'),
+        .filter((family) => !STACK_FAMILIES.includes(family) && FAMILY_KIND[family] !== 'Governance'),
     ),
   ]
   return { bands, foundationIndependent, besideFamilies }

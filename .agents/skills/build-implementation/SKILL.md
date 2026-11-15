@@ -20,14 +20,14 @@ the specification wins.
    Specification revision holds them and ask whether to commit them first or build from the last commit without
    them. Do not start until the user answers.
 2. Record `git rev-parse HEAD` now, before any subagent reads the specifications. That commit is the Specification
-   baseline, under [Specification baseline](../../../docs/specs/implementation/specification-tracking.md#specification-baseline),
+   baseline, under [Specification baseline](../../../docs/specs/implementation/mandatory/specification-tracking.md#specification-baseline),
    even when the specifications receive new commits during the build.
-3. Read every specification in `docs/specs/implementation/` whose Binding is Mandatory, and follow
-   [Implementation Placement](../../../docs/specs/implementation/implementation-placement.md) to choose the
+3. Read every specification in `docs/specs/implementation/mandatory/`, and follow
+   [Implementation Placement](../../../docs/specs/implementation/mandatory/implementation-placement.md) to choose the
    Implementation name and create the Implementation directory.
 4. In the new directory, write `tracking/specification-baseline.md` with the recorded commit, and the empty record
-   files that [Implementation Feedback](../../../docs/specs/implementation/implementation-feedback.md) and
-   [Specification Tracking](../../../docs/specs/implementation/specification-tracking.md) require, before any code.
+   files that [Implementation Feedback](../../../docs/specs/implementation/mandatory/implementation-feedback.md) and
+   [Specification Tracking](../../../docs/specs/implementation/mandatory/specification-tracking.md) require, before any code.
 
 ## During the build
 
@@ -55,7 +55,7 @@ Check each of the following against the files, not from memory, and fix whatever
 3. Every path listed in the Specification map exists in the Implementation directory, and every file of the
    Implementation that implements a specification, including its tests, is listed.
 4. Every Specification problem states a Resolution and links its Implementation decisions, and every Guidance
-   Implementation family specification has a Treatment of guidance Implementation decision, under Implementation
+   or Recipes specification has a Treatment of guidance Implementation decision, under Implementation
    Records.
 5. The Implementation's own checks pass, run from its Implementation directory.
 

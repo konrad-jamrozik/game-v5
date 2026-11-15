@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="490" viewBox="0 0 1000 490" role="img" aria-label="What advanceTurn() changes when it ends Turn 8: Turn 8 gets a reduced History entry, the report of the Advance turn that ended Turn 7 is kept only in reduced form, getTurnReport() returns the full report of the new Advance turn, and getCurrentState() returns the Turn-start state of Turn 9">
-  <!-- Hand-kept diagram for docs/specs/foundation/engine-contract.md; not generated. -->
+  <!-- Hand-kept diagram for docs/specs/design/foundation/engine-contract.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --turn: #2f7f95; --hist: #6b5ca5; --histtint: #efecf8; --full: #2f7d4f; --fulltint: #e4f3ea; }
     @media (prefers-color-scheme: dark) {

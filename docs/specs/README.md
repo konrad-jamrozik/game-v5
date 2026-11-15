@@ -3,7 +3,7 @@
 | Metadata | Value                                                                    |
 | -------- | ------------------------------------------------------------------------ |
 | Spec ID  | INDEX                                                                    |
-| Family   | Governance                                                               |
+| Family   | Conventions                                                              |
 | Audience | Engine designer, Content designer, UI designer, AI designer, Implementer |
 | Owns     | Specification registration, navigation, and ownership summaries.         |
 
@@ -13,8 +13,9 @@ The game is specified in many focused documents rather than one large one, so th
 and changed on its own. The [Game Design Brief](../game-design-brief.md) says what the game is meant to be; the
 specifications make it exact.
 
-The specifications are grouped into Families by what they build on: Foundation and Mechanics together form the game
-engine, and the other Families build on it. Each specification registers itself through its own metadata, and the
+The specifications divide first by what they govern into three Specification kinds: Governance specifications govern
+the specifications themselves, Design specifications describe the game, and Implementation specifications steer how
+an Implementation is built. Each Specification kind is divided into Families. Each specification registers itself through its own metadata, and the
 generated [derived specification catalog](../derived/README.md) lists them all, so no hand-kept list can fall out of
 date.
 
@@ -24,33 +25,40 @@ These documents give the context every specification assumes: what the game is m
 written and related, and how the work on them proceeds.
 
 - [Game Design Brief](../game-design-brief.md): strategic intent and architectural constraints.
-- [Specification conventions](governance/spec-conventions.md): layout, precision requirements, ownership, and how specifications change.
-- [Artifact Relationships](governance/artifact-relationships.md): definitions of `follows`, `refines`, `uses`,
+- [Specification conventions](governance/conventions/spec-conventions.md): layout, precision requirements, ownership, and how specifications change.
+- [Artifact Relationships](governance/conventions/artifact-relationships.md): definitions of `follows`, `refines`, `uses`,
   `implements`, and `verifies`, with direction, inventory rules, and examples for all artifacts.
 - [Specification relationship cycles](../spec-relationship-cycles.md): informative register of retained cycles,
   their contract meanings, and future removal criteria.
-- [Specification work plan and backlog](governance/work-plan.md): review batches, parallel tracks, checkpoints, and current work state.
-- [Outstanding work items](governance/work-todos.md): known issues in the specifications awaiting scheduling, each with its affected batches.
+- [Specification work plan and backlog](governance/process/work-plan.md): review batches, parallel tracks, checkpoints, and current work state.
+- [Outstanding work items](governance/process/work-todos.md): known issues in the specifications awaiting scheduling, each with its affected batches.
 
-# Family overviews
+# Specification kind and Family overviews
 
-Each Family has an informative overview that explains what each of its specifications is for, how they relate, and why
-the boundaries between them sit where they do. Each overview includes generated relationship diagrams.
+Each Specification kind has an informative overview that explains what it governs and why its Families are divided as
+they are. Each Family has an informative overview that explains what each of its specifications is for, how they
+relate, and why the boundaries between them sit where they do; it includes generated relationship diagrams.
 
-- [About the Governance family](governance/about-governance.md)
-- [About the Foundation family](foundation/about-foundation.md)
-- [About the Mechanics family](mechanics/about-mechanics.md)
-- [About the Content family](content/about-content.md)
-- [About the UI family](ui/about-ui.md)
-- [About the Autopilot AIs family](autopilot-ais/about-autopilot-ais.md)
-- [About the Implementation family](implementation/about-implementation.md)
+- [About Governance specifications](governance/about-governance.md)
+  - [About the Conventions family](governance/conventions/about-conventions.md)
+  - [About the Process family](governance/process/about-process.md)
+- [About Design specifications](design/about-design.md)
+  - [About the Foundation family](design/foundation/about-foundation.md)
+  - [About the Mechanics family](design/mechanics/about-mechanics.md)
+  - [About the Content family](design/content/about-content.md)
+  - [About the UI family](design/ui/about-ui.md)
+  - [About the Autopilot AIs family](design/autopilot-ais/about-autopilot-ais.md)
+- [About Implementation specifications](implementation/about-implementation.md)
+  - [About the Mandatory family](implementation/mandatory/about-mandatory.md)
+  - [About the Guidance family](implementation/guidance/about-guidance.md)
+  - [About the Recipes family](implementation/recipes/about-recipes.md)
 
 # Family architecture
 
 Foundation and Mechanics together form the game engine. Content, UI, and Autopilot AIs build on the game engine, and
-Implementation builds on the game engine, Content, UI, and Autopilot AIs, as the Builds on column of the Families table in
-[Specification families and paths](governance/spec-conventions.md#specification-families-and-paths) states. Every
-specification also follows the Governance family. `npm run docs:generate` draws the following diagram from the
+the Implementation Families build on all the Design Families, as the Builds on column of the Families table in
+[Specification kinds and Families](governance/conventions/spec-conventions.md#specification-kinds-and-families) states. Every
+specification also follows the Governance specifications, which the diagram does not draw. `npm run docs:generate` draws the following diagram from the
 relationships the specifications declare: an arrow from one Family to another means a specification of the first uses
 or refines a specification of the second. Do not edit it by hand.
 
@@ -75,6 +83,6 @@ graphs.
 
 # Work plan
 
-The [work plan and backlog](governance/work-plan.md) sets the authoring sequence and review checkpoints. Start with
+The [work plan and backlog](governance/process/work-plan.md) sets the authoring sequence and review checkpoints. Start with
 the batch 1 specifications; grow GDRs alongside the reviewed mechanics. See that document for
 the full sequence, current work states, and treatment of cross-specification dependencies.

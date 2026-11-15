@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="446" viewBox="0 0 1000 446" role="img" aria-label="What each Player API query returns during Turn 8 after two Player actions: getHistory() returns a reduced History entry for each ended Turn, getTurnReport() returns the full report of the Advance turn that ended Turn 7, and getCurrentState() returns the current Committed state">
-  <!-- Hand-kept diagram for docs/specs/foundation/engine-contract.md; not generated. -->
+  <!-- Hand-kept diagram for docs/specs/design/foundation/engine-contract.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --turn: #2f7f95; --hist: #6b5ca5; --histtint: #efecf8; --full: #2f7d4f; --fulltint: #e4f3ea; }
     @media (prefers-color-scheme: dark) {

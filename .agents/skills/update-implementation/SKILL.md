@@ -10,9 +10,9 @@ implementation to the latest spec" or "apply the spec changes to game-v5-impl-we
 
 The procedure is owned by two specifications. Read them, and nothing else of the specifications, before starting:
 
-- [Specification Tracking](../../../docs/specs/implementation/specification-tracking.md) (Mandatory): the
+- [Specification Tracking](../../../docs/specs/implementation/mandatory/specification-tracking.md) (Mandatory): the
   Specification baseline and Specification map every Implementation keeps.
-- [Specification Updates](../../../docs/specs/implementation/specification-updates.md) (Guidance): how to apply the
+- [Specification Updates](../../../docs/specs/implementation/recipes/specification-updates.md) (Guidance): how to apply the
   difference since the Specification baseline.
 
 Do not copy or restate their rules here; when this skill and those specifications disagree, the specifications win.
@@ -38,7 +38,7 @@ Do not copy or restate their rules here; when this skill and those specification
 5. Run the Implementation's own checks from its Implementation directory, never this repository's scripts.
 6. Commit the change in the Implementation directory. Never add a Git remote there. Push only when the Implementation
    already has a remote and its own publishing setup expects pushes, e.g. after
-   [GitHub Pages Deployment](../../../docs/specs/implementation/github-pages-deployment.md).
+   [GitHub Pages Deployment](../../../docs/specs/implementation/recipes/github-pages-deployment.md).
 
 ## Report
 

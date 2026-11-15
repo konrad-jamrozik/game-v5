@@ -1,14 +1,37 @@
-import type { SpecificationFamily } from './types.ts'
+import type { SpecificationFamily, SpecificationKind } from './types.ts'
 
+export const KIND_ORDER: readonly SpecificationKind[] = ['Governance', 'Design', 'Implementation']
+
+/** Every Family in catalog order, each listed after the Families of its Specification kind that it builds on. */
 export const FAMILY_ORDER: readonly SpecificationFamily[] = [
-  'Governance',
+  'Conventions',
+  'Process',
   'Foundation',
   'Mechanics',
   'Content',
   'UI',
   'Autopilot AIs',
-  'Implementation',
+  'Mandatory',
+  'Guidance',
+  'Recipes',
 ]
+
+export const FAMILY_KIND: Readonly<Record<SpecificationFamily, SpecificationKind>> = {
+  Conventions: 'Governance',
+  Process: 'Governance',
+  Foundation: 'Design',
+  Mechanics: 'Design',
+  Content: 'Design',
+  UI: 'Design',
+  'Autopilot AIs': 'Design',
+  Mandatory: 'Implementation',
+  Guidance: 'Implementation',
+  Recipes: 'Implementation',
+}
+
+export function isSpecificationFamily(value: string | undefined): value is SpecificationFamily {
+  return value !== undefined && Object.hasOwn(FAMILY_KIND, value)
+}
 
 export const FAMILY_DIAGRAM_START = '<!-- generated:family-diagram:start -->'
 export const FAMILY_DIAGRAM_END = '<!-- generated:family-diagram:end -->'
@@ -20,9 +43,18 @@ export const FAMILY_OVERVIEW_HEADINGS = [
   'Why these boundaries',
 ] as const
 
-/** Lowercases the Family name and joins its words with hyphens, e.g. `autopilot-ais` for Autopilot AIs. */
-export function familyDirectoryName(family: string): string {
-  return family.toLowerCase().replaceAll(' ', '-')
+/** Lowercases a Family or Specification kind name and joins its words with hyphens, e.g. `autopilot-ais`. */
+export function familyDirectoryName(name: string): string {
+  return name.toLowerCase().replaceAll(' ', '-')
+}
+
+export function kindDirectoryName(kind: SpecificationKind): string {
+  return familyDirectoryName(kind)
+}
+
+/** The directory of a Family relative to the specification root, e.g. `design/autopilot-ais` for Autopilot AIs. */
+export function familyDirectoryPath(family: SpecificationFamily): string {
+  return `${kindDirectoryName(FAMILY_KIND[family])}/${familyDirectoryName(family)}`
 }
 
 export function familyOverviewFileName(family: SpecificationFamily): string {
@@ -30,16 +62,27 @@ export function familyOverviewFileName(family: SpecificationFamily): string {
 }
 
 export function familyOverviewPath(specificationRoot: string, family: SpecificationFamily): string {
-  return `${specificationRoot}/${familyDirectoryName(family)}/${familyOverviewFileName(family)}`
+  return `${specificationRoot}/${familyDirectoryPath(family)}/${familyOverviewFileName(family)}`
 }
 
 export function familyOverviewTitle(family: SpecificationFamily): string {
   return `About the ${family} family`
 }
 
-/** Returns true for any `about-*.md` file directly inside a directory of the specification root. */
+export function kindOverviewPath(specificationRoot: string, kind: SpecificationKind): string {
+  return `${specificationRoot}/${kindDirectoryName(kind)}/about-${kindDirectoryName(kind)}.md`
+}
+
+export function kindOverviewTitle(kind: SpecificationKind): string {
+  return `About ${kind} specifications`
+}
+
+/**
+ * Returns true for any `about-*.md` file directly inside a Specification kind directory or a Family directory of the
+ * specification root.
+ */
 export function isFamilyOverviewCandidate(specificationRoot: string, filePath: string): boolean {
   if (!filePath.startsWith(`${specificationRoot}/`)) return false
   const segments = filePath.slice(specificationRoot.length + 1).split('/')
-  return segments.length === 2 && /^about-[^/]*\.md$/.test(segments[1] ?? '')
+  return (segments.length === 2 || segments.length === 3) && /^about-[^/]*\.md$/.test(segments.at(-1) ?? '')
 }

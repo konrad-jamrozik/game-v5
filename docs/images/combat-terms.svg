@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="790" viewBox="0 0 1000 790" role="img" aria-label="How a Combat fits between a Mission and the Turn report: the player deploys Agents to a Mission site, creating a Deployed Mission; in the Mission resolution step of the Advance turn its Combat is fought from Combat start through Combat rounds, each attack appended to the Combat log, until the Combat ends with one Combat outcome; the Combat produces exactly one Combat report, which is part of the Turn report returned by getTurnReport() and kept in reduced form by a History entry, and the Combat outcome decides whether the Mission is Won or Lost">
-  <!-- Hand-kept diagram for docs/specs/mechanics/combat.md; not generated. -->
+  <!-- Hand-kept diagram for docs/specs/design/mechanics/combat.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --accent: #2f7f95; --accenttint: #e6f2f5; }
     @media (prefers-color-scheme: dark) {

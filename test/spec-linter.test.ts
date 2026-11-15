@@ -11,8 +11,17 @@ import {
   lintSectionReferences,
   lintSpecifications as lintSpecificationsRaw,
 } from '../scripts/spec-linter/linter.ts'
-import { FAMILY_DIAGRAM_END, FAMILY_DIAGRAM_START, familyDirectoryName } from '../scripts/spec-linter/overviews.ts'
-import type { LintInput, SourceFile } from '../scripts/spec-linter/types.ts'
+import {
+  FAMILY_DIAGRAM_END,
+  FAMILY_DIAGRAM_START,
+  FAMILY_KIND,
+  familyDirectoryPath,
+  familyOverviewPath,
+  isSpecificationFamily,
+  kindOverviewPath,
+  kindOverviewTitle,
+} from '../scripts/spec-linter/overviews.ts'
+import type { LintInput, SourceFile, SpecificationFamily, SpecificationKind } from '../scripts/spec-linter/types.ts'
 
 function lines(values: readonly string[]): string {
   return values.join('\n')
@@ -54,10 +63,26 @@ function withOverviews(files: readonly SourceFile[]): readonly SourceFile[] {
     members.set(family, [...(members.get(family) ?? []), file.path])
   }
   const added: SourceFile[] = []
+  const kinds = new Map<SpecificationKind, string[]>()
   for (const [family, paths] of members) {
-    const path = `docs/specs/${familyDirectoryName(family)}/about-${familyDirectoryName(family)}.md`
+    if (!isSpecificationFamily(family)) continue
+    const path = familyOverviewPath('docs/specs', family)
+    const kind = FAMILY_KIND[family]
+    kinds.set(kind, [...(kinds.get(kind) ?? []), path])
     if (files.some((file) => file.path === path)) continue
     added.push({ path, content: overviewFixture(family, paths, path) })
+  }
+  for (const [kind, familyOverviews] of kinds) {
+    const path = kindOverviewPath('docs/specs', kind)
+    if (files.some((file) => file.path === path)) continue
+    added.push({
+      path,
+      content: lines([
+        `# ${kindOverviewTitle(kind)}`,
+        '',
+        ...familyOverviews.map((overview) => `- [${overview}](${posix.relative(posix.dirname(path), overview)})`),
+      ]),
+    })
   }
   return [...files, ...added]
 }
@@ -86,7 +111,7 @@ function validCorpus(): SourceFile[] {
         '| Metadata | Value |',
         '| --- | --- |',
         '| Spec ID | INDEX |',
-        '| Family | Governance |',
+        '| Family | Conventions |',
         '| Audience | Engine designer, Implementer |',
         '| Owns | Registry. |',
 
@@ -101,14 +126,14 @@ function validCorpus(): SourceFile[] {
       ]),
     },
     {
-      path: 'docs/specs/governance/spec-conventions.md',
+      path: 'docs/specs/governance/conventions/spec-conventions.md',
       content: lines([
         '# Specification Conventions',
         '',
         '| Metadata | Value |',
         '| --- | --- |',
         '| Spec ID | CONV |',
-        '| Family | Governance |',
+        '| Family | Conventions |',
         '| Audience | Engine designer, Implementer |',
         '| Owns | Conventions. |',
 
@@ -129,7 +154,7 @@ function validCorpus(): SourceFile[] {
       ]),
     },
     {
-      path: 'docs/specs/foundation/alpha.md',
+      path: 'docs/specs/design/foundation/alpha.md',
       content: lines([
         '# Alpha',
         '',
@@ -143,7 +168,7 @@ function validCorpus(): SourceFile[] {
         '',
         '# Overview',
         '',
-        'Alpha purpose. See [Implicit relationships](../governance/spec-conventions.md#implicit-relationships).',
+        'Alpha purpose. See [Implicit relationships](../../governance/conventions/spec-conventions.md#implicit-relationships).',
         '',
         '# Alpha behavior',
         '',
@@ -165,21 +190,15 @@ function validCorpus(): SourceFile[] {
   ]
 }
 
-/** Moves the alpha fixture into the given Family, adding the Binding row that the Implementation family requires. */
-function alphaInFamily(family: string): SourceFile[] {
-  const directory = familyDirectoryName(family)
-  return validCorpus().map((file) => {
-    const content = file.content
+/** Moves the alpha fixture into the given Family. */
+function alphaInFamily(family: SpecificationFamily): SourceFile[] {
+  const directory = familyDirectoryPath(family)
+  return validCorpus().map((file) => ({
+    path: file.path.replace('design/foundation/alpha.md', `${directory}/alpha.md`),
+    content: file.content
       .replaceAll('Foundation', family)
-      .replaceAll('foundation/alpha.md', `${directory}/alpha.md`)
-    return {
-      path: file.path.replace('foundation/alpha.md', `${directory}/alpha.md`),
-      content:
-        family === 'Implementation' && file.path.endsWith('/alpha.md')
-          ? content.replace('| Owns | Alpha rules. |', '| Owns | Alpha rules. |\n| Binding | Guidance |')
-          : content,
-    }
-  })
+      .replaceAll('design/foundation/alpha.md', `${directory}/alpha.md`),
+  }))
 }
 
 function diagnosticCodes(files: readonly SourceFile[]): readonly string[] {
@@ -200,7 +219,7 @@ function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
   const withBeta = files
   return [
     ...withRelationships(withBeta, alpha.path, '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)'),
-    { path: 'docs/specs/foundation/beta.md', content: betaContent },
+    { path: 'docs/specs/design/foundation/beta.md', content: betaContent },
   ]
 }
 
@@ -249,7 +268,7 @@ function glossaryGroup(name: string, ...terms: readonly string[]): string[] {
 
 function glossaryCodes(glossary: readonly string[]): readonly string[] {
   return diagnosticCodes(
-    withGlossary(validCorpus(), 'docs/specs/foundation/alpha.md', lines(['# Glossary', '', ...glossary])),
+    withGlossary(validCorpus(), 'docs/specs/design/foundation/alpha.md', lines(['# Glossary', '', ...glossary])),
   )
 }
 
@@ -257,56 +276,44 @@ describe('specification linter', () => {
   test('accepts modeling Types as glossary terms and descriptions', () => {
     const files = withGlossary(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Type | A named description of data. |\n| Value | Data conforming to a Type. |',
     )
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'UI', 'Autopilot AIs', 'Implementation'])(
-    'accepts topic sections for %s',
+  test.each<SpecificationFamily>([
+    'Conventions',
+    'Process',
+    'Foundation',
+    'Mechanics',
+    'Content',
+    'UI',
+    'Autopilot AIs',
+    'Mandatory',
+    'Guidance',
+    'Recipes',
+  ])('accepts topic sections for %s', (family) => {
+    expect(diagnosticCodes(alphaInFamily(family))).toEqual([])
+  })
+
+  test.each<SpecificationFamily>(['Foundation', 'Mandatory', 'Guidance'])(
+    'rejects a Binding metadata row in %s',
     (family) => {
-      expect(diagnosticCodes(alphaInFamily(family))).toEqual([])
+      const files = alphaInFamily(family).map((file) => ({
+        ...file,
+        content: file.path.endsWith('/alpha.md')
+          ? file.content.replace('| Owns | Alpha rules. |', '| Owns | Alpha rules. |\n| Binding | Mandatory |')
+          : file.content,
+      }))
+      expect(diagnosticCodes(files)).toEqual(['SPEC114'])
     },
   )
-
-  test.each(['Guidance', 'Mandatory'])('accepts Implementation Binding %s', (binding) => {
-    const files = mutate(
-      alphaInFamily('Implementation'),
-      'docs/specs/implementation/alpha.md',
-      '| Binding | Guidance |',
-      `| Binding | ${binding} |`,
-    )
-    expect(diagnosticCodes(files)).toEqual([])
-  })
-
-  test.each([
-    ['missing', ''],
-    ['unknown', '| Binding | Optional |\n'],
-  ])('rejects a %s Implementation Binding', (_reason, row) => {
-    const files = mutate(
-      alphaInFamily('Implementation'),
-      'docs/specs/implementation/alpha.md',
-      '| Binding | Guidance |\n',
-      row,
-    )
-    expect(diagnosticCodes(files)).toEqual(['SPEC114'])
-  })
-
-  test('rejects Binding metadata outside the Implementation family', () => {
-    const files = mutate(
-      validCorpus(),
-      'docs/specs/foundation/alpha.md',
-      '| Owns | Alpha rules. |',
-      '| Owns | Alpha rules. |\n| Binding | Guidance |',
-    )
-    expect(diagnosticCodes(files)).toEqual(['SPEC114'])
-  })
 
   test('rejects an empty topic section', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Edge cases and failure behavior',
       '# Empty topic\n\n# Edge cases and failure behavior',
     )
@@ -316,7 +323,7 @@ describe('specification linter', () => {
   test('rejects a topic section after the closing sections', () => {
     const misplaced = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '[Rule](#rule): the same input has the same result.',
       '[Rule](#rule): the same input has the same result.\n\n# Late topic\n\nSeparate contract.',
     )
@@ -326,7 +333,7 @@ describe('specification linter', () => {
   test.each(['Concepts and contract', 'Requirements', 'Details', 'Specification'])(
     'rejects the generic topic heading %s',
     (heading) => {
-      const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Alpha behavior', '# ' + heading)
+      const files = mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', '# Alpha behavior', '# ' + heading)
       expect(diagnosticCodes(files)).toEqual(['SPEC212'])
     },
   )
@@ -335,7 +342,12 @@ describe('specification linter', () => {
     ['Alpha behavior', 'Contract.'],
     ['Edge cases and failure behavior', 'Failures are defined.'],
   ])('allows omitting %s when it does not apply', (section, body) => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# ' + section + '\n\n' + body + '\n\n', '')
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/design/foundation/alpha.md',
+      '# ' + section + '\n\n' + body + '\n\n',
+      '',
+    )
     expect(diagnosticCodes(files)).toEqual([])
   })
 
@@ -347,7 +359,7 @@ describe('specification linter', () => {
   ])('rejects Audience metadata %j (%s)', (value, _reason) => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '| Audience | Engine designer, Implementer |\n',
       value ? '| Audience | ' + value + ' |\n' : '',
     )
@@ -355,7 +367,7 @@ describe('specification linter', () => {
   })
 
   test('requires Overview', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Overview', '# Introduction')
+    const files = mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', '# Overview', '# Introduction')
     expect(diagnosticCodes(files)).toContain('SPEC206')
   })
 
@@ -366,7 +378,7 @@ describe('specification linter', () => {
   ])('rejects a placeholder section instead of omission (%s)', (section, _name) => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Edge cases and failure behavior\n\nFailures are defined.',
       section.startsWith('# Edge') ? section : 'Failures are defined.\n\n' + section,
     )
@@ -376,7 +388,7 @@ describe('specification linter', () => {
   test('rejects a misplaced optional TODOs section', () => {
     const misplaced = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Alpha behavior',
       '# TODOs\n\n- TODO: Choose the numeric representation.\n\n# Alpha behavior',
     )
@@ -387,35 +399,40 @@ describe('specification linter', () => {
     const files = mutate(
       mutate(
         validCorpus(),
-        'docs/specs/foundation/alpha.md',
+        'docs/specs/design/foundation/alpha.md',
         'Contract.',
         'Contract. For example, [Rule](#rule): the same input has the same result.',
       ),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
       '',
     )
     expect(lintSpecifications({ files })).toEqual([])
   })
 
-  test.each(['Governance', 'Mechanics', 'Content', 'UI', 'Autopilot AIs', 'Implementation'])(
-    'allows omitting the separate acceptance section for %s specifications',
-    (family) => {
-      const files = alphaInFamily(family).map((file) => ({
-        ...file,
-        content: file.content.replace(
-          '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
-          '',
-        ),
-      }))
-      expect(diagnosticCodes(files)).toEqual([])
-    },
-  )
+  test.each<SpecificationFamily>([
+    'Conventions',
+    'Process',
+    'Mechanics',
+    'Content',
+    'UI',
+    'Autopilot AIs',
+    'Mandatory',
+  ])('allows omitting the separate acceptance section for %s specifications', (family) => {
+    const files = alphaInFamily(family).map((file) => ({
+      ...file,
+      content: file.content.replace(
+        '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
+        '',
+      ),
+    }))
+    expect(diagnosticCodes(files)).toEqual([])
+  })
 
   test('rejects a misplaced optional Foundation acceptance section', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Edge cases and failure behavior\n\nFailures are defined.\n\n# Acceptance examples\n\n[Rule](#rule): the same input has the same result.',
       '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n# Edge cases and failure behavior\n\nFailures are defined.',
     )
@@ -425,7 +442,7 @@ describe('specification linter', () => {
   test('rejects an empty optional Foundation acceptance section', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '[Rule](#rule): the same input has the same result.',
       '',
     )
@@ -436,11 +453,11 @@ describe('specification linter', () => {
     const files = mutate(
       mutate(
         validCorpus(),
-        'docs/specs/foundation/alpha.md',
+        'docs/specs/design/foundation/alpha.md',
         '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
         '',
       ),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Edge cases and failure behavior\n\nFailures are defined.\n\n',
       '',
     )
@@ -453,7 +470,7 @@ describe('specification linter', () => {
         ...file,
         content: file.content.replaceAll('AAA', 'CMC').replaceAll('aaa-', 'cmc-'),
       })),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Edge cases and failure behavior\n\nFailures are defined.\n\n',
       '',
     )
@@ -465,7 +482,7 @@ describe('specification linter', () => {
     (term) => {
       const files = withGlossary(
         validCorpus(),
-        'docs/specs/foundation/alpha.md',
+        'docs/specs/design/foundation/alpha.md',
         `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Example | A ${term} describing data. |`,
       )
       expect(lintSpecifications({ files })).toEqual([])
@@ -477,7 +494,7 @@ describe('specification linter', () => {
     (extra) => {
       const files = withGlossary(
         validCorpus(),
-        'docs/specs/foundation/alpha.md',
+        'docs/specs/design/foundation/alpha.md',
         `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Constants | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.${extra} |`,
       )
       expect(diagnosticCodes(files)).toEqual(extra === '' ? [] : ['SPEC501'])
@@ -497,7 +514,7 @@ describe('specification linter', () => {
   ])('still rejects competing formal relationship terminology: %s', (term) => {
     const files = withGlossary(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       `# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Example | A ${term}. |`,
     )
     expect(diagnosticCodes(files)).toContain('SPEC501')
@@ -513,11 +530,11 @@ describe('specification linter', () => {
     const files = withRelationships(
       withRelationships(
         validCorpus(),
-        'docs/specs/foundation/alpha.md',
-        `- ${active} [Game Specification Index](../README.md)`,
+        'docs/specs/design/foundation/alpha.md',
+        `- ${active} [Game Specification Index](../../README.md)`,
       ),
       'docs/specs/README.md',
-      `- ${passive} [Alpha](foundation/alpha.md)`,
+      `- ${passive} [Alpha](design/foundation/alpha.md)`,
     )
     const result = analyzeSpecifications({ files })
     expect(result.diagnostics).toEqual([])
@@ -532,53 +549,53 @@ describe('specification linter', () => {
     ['old subsection', '## Dependencies\n\nNo explicit relationships.', 'SPEC208'],
     [
       'old empty sentence',
-      'Only [implicit dependencies](../governance/spec-conventions.md#implicit-relationships).',
+      'Only [implicit dependencies](../../governance/conventions/spec-conventions.md#implicit-relationships).',
       'SPEC401',
     ],
-    ['annotated entry', '- Uses [Game Specification Index](../README.md): rules', 'SPEC407'],
-    ['nested entry', '- Uses [Game Specification Index](../README.md)\n  - details', 'SPEC407'],
-    ['ordered list', '1. Uses [Game Specification Index](../README.md)', 'SPEC401'],
-    ['wrong phrase case', '- uses [Game Specification Index](../README.md)', 'SPEC409'],
+    ['annotated entry', '- Uses [Game Specification Index](../../README.md): rules', 'SPEC407'],
+    ['nested entry', '- Uses [Game Specification Index](../../README.md)\n  - details', 'SPEC407'],
+    ['ordered list', '1. Uses [Game Specification Index](../../README.md)', 'SPEC401'],
+    ['wrong phrase case', '- uses [Game Specification Index](../../README.md)', 'SPEC409'],
     ['external destination', '- Uses [Example](https://example.com)', 'SPEC408'],
     ['nonregistered destination', '- Uses [Missing](missing.md)', 'SPEC408'],
-    ['fragment destination', '- Uses [Game Specification Index](../README.md#glossary)', 'SPEC408'],
-    ['incorrect title', '- Uses [Index](../README.md)', 'SPEC410'],
+    ['fragment destination', '- Uses [Game Specification Index](../../README.md#glossary)', 'SPEC408'],
+    ['incorrect title', '- Uses [Index](../../README.md)', 'SPEC410'],
     [
       'duplicate',
-      '- Uses [Game Specification Index](../README.md)\n- Uses [Game Specification Index](../README.md)',
+      '- Uses [Game Specification Index](../../README.md)\n- Uses [Game Specification Index](../../README.md)',
       'SPEC412',
     ],
     ['self reference', '- Uses [Alpha](alpha.md)', 'SPEC411'],
     [
       'wrong group order',
-      '- Refines [Game Specification Index](../README.md)\n- Uses [Game Specification Index](../README.md)',
+      '- Refines [Game Specification Index](../../README.md)\n- Uses [Game Specification Index](../../README.md)',
       'SPEC415',
     ],
     [
       'wrong title order',
-      '- Uses [Specification Conventions](../governance/spec-conventions.md)\n- Uses [Game Specification Index](../README.md)',
+      '- Uses [Specification Conventions](../../governance/conventions/spec-conventions.md)\n- Uses [Game Specification Index](../../README.md)',
       'SPEC415',
     ],
     [
       'empty mixed with entries',
-      'No explicit relationships.\n\n- Uses [Game Specification Index](../README.md)',
+      'No explicit relationships.\n\n- Uses [Game Specification Index](../../README.md)',
       'SPEC401',
     ],
   ])('rejects %s', (_name, inventory, code) => {
-    expect(diagnosticCodes(withRelationships(validCorpus(), 'docs/specs/foundation/alpha.md', inventory))).toContain(
-      code,
-    )
+    expect(
+      diagnosticCodes(withRelationships(validCorpus(), 'docs/specs/design/foundation/alpha.md', inventory)),
+    ).toContain(code)
   })
 
   test('does not accept a mirror with the wrong direction', () => {
     const files = withRelationships(
       withRelationships(
         validCorpus(),
-        'docs/specs/foundation/alpha.md',
-        '- Uses [Game Specification Index](../README.md)',
+        'docs/specs/design/foundation/alpha.md',
+        '- Uses [Game Specification Index](../../README.md)',
       ),
       'docs/specs/README.md',
-      '- Uses [Alpha](foundation/alpha.md)',
+      '- Uses [Alpha](design/foundation/alpha.md)',
     )
     expect(diagnosticCodes(files).filter((code) => code === 'SPEC413')).toHaveLength(2)
   })
@@ -588,12 +605,12 @@ describe('specification linter', () => {
   })
 
   test.each([
-    ['- Uses [Game Specification Index](../README.md) for the shared contract.', 'description bullet'],
-    ['- Used by [Game Specification Index](../README.md)', 'bare inventory bullet'],
+    ['- Uses [Game Specification Index](../../README.md) for the shared contract.', 'description bullet'],
+    ['- Used by [Game Specification Index](../../README.md)', 'bare inventory bullet'],
   ])('rejects a repeated inventory entry in Overview (%s)', (bullet) => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       'Alpha purpose.',
       'Alpha purpose.\n\n' + bullet + '\n',
     )
@@ -603,9 +620,9 @@ describe('specification linter', () => {
   test('accepts ordinary bullets in Overview', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       'Alpha purpose.',
-      'Alpha purpose.\n\n- Uses of [Game Specification Index](../README.md) are informative.\n',
+      'Alpha purpose.\n\n- Uses of [Game Specification Index](../../README.md) are informative.\n',
     )
     expect(diagnosticCodes(files)).toEqual([])
   })
@@ -613,7 +630,7 @@ describe('specification linter', () => {
   test('accepts requirements nested below H2 and H3 topic headings', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Rule',
       lines(['# Topic', '', 'Lead.', '', '## Detail', '', 'Lead.', '', '### Rule']),
     )
@@ -623,7 +640,7 @@ describe('specification linter', () => {
   test('accepts a requirement after a sibling topic heading', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Rule',
       lines(['# Topic', '', 'Topic text.', '', '# Rule']),
     )
@@ -633,7 +650,7 @@ describe('specification linter', () => {
   test('accepts requirements after returning from nested explanatory sections', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '# Rule',
       lines([
         '# Topic',
@@ -657,34 +674,49 @@ describe('specification linter', () => {
   })
 
   test('rejects skipped heading levels', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Rule', '### Rule')
+    const files = mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', '# Rule', '### Rule')
     expect(diagnosticCodes(files)).toContain('SPEC211')
   })
 
   test.each(['AAA-001', 'AAA-NNN', 'AAA-nnn'])('rejects numbered labels in headings: %s', (label) => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Rule', '# ' + label + ' — Rule')
+    const files = mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', '# Rule', '# ' + label + ' — Rule')
     expect(diagnosticCodes(files)).toContain('SPEC612')
   })
 
   test('requires the exact section title as hyperlink text', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '[Rule](#rule)', '[Other title](#rule)')
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/design/foundation/alpha.md',
+      '[Rule](#rule)',
+      '[Other title](#rule)',
+    )
     expect(diagnosticCodes(files)).toEqual(['SPEC611'])
   })
 
   test('preserves game-data identifiers that are not specification labels', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', 'Contract.', 'Contract uses GDR WEAPON-001.')
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/design/foundation/alpha.md',
+      'Contract.',
+      'Contract uses GDR WEAPON-001.',
+    )
     expect(diagnosticCodes(files)).toEqual([])
   })
 
   test('rejects stale section anchors', () => {
-    const files = mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '[Rule](#rule)', '[Rule](#removed-rule)')
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/design/foundation/alpha.md',
+      '[Rule](#rule)',
+      '[Rule](#removed-rule)',
+    )
     expect(diagnosticCodes(files)).toContain('SPEC606')
   })
 
   test('validates requirement links in prose, lists, tables, and authored non-spec docs', () => {
     let files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '[Rule](#rule): the same input has the same result.',
       lines([
         '[Rule](#rule): the same input has the same result.',
@@ -700,7 +732,7 @@ describe('specification linter', () => {
       ...files,
       {
         path: 'docs/notes.md',
-        content: '[Rule](specs/foundation/alpha.md#rule)\n',
+        content: '[Rule](specs/design/foundation/alpha.md#rule)\n',
       },
     ]
     expect(lintSpecifications({ files })).toEqual([])
@@ -718,7 +750,7 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(
           files,
-          'docs/specs/foundation/alpha.md',
+          'docs/specs/design/foundation/alpha.md',
           '| Owns | Alpha rules. |',
           '| Owns | Alpha rules. |\n| Status | Draft |',
         ),
@@ -726,7 +758,7 @@ describe('specification linter', () => {
     ],
     [
       'missing Owns metadata',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '| Owns | Alpha rules. |\n', ''),
+      (files: SourceFile[]) => mutate(files, 'docs/specs/design/foundation/alpha.md', '| Owns | Alpha rules. |\n', ''),
       'SPEC113',
     ],
     [
@@ -734,7 +766,7 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(
           files,
-          'docs/specs/foundation/alpha.md',
+          'docs/specs/design/foundation/alpha.md',
           '| Owns | Alpha rules. |',
           '| Owns | Alpha rules. |\n| Scope | Alpha rules |',
         ),
@@ -743,19 +775,19 @@ describe('specification linter', () => {
     [
       'invalid metadata family',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Unknown |'),
+        mutate(files, 'docs/specs/design/foundation/alpha.md', '| Family | Foundation |', '| Family | Unknown |'),
       'SPEC109',
     ],
     [
       'family and directory disagreement',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '| Family | Foundation |', '| Family | Mechanics |'),
+        mutate(files, 'docs/specs/design/foundation/alpha.md', '| Family | Foundation |', '| Family | Mechanics |'),
       'SPEC110',
     ],
     [
       'standard heading order',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '# Alpha behavior', '# Acceptance examples'),
+        mutate(files, 'docs/specs/design/foundation/alpha.md', '# Alpha behavior', '# Acceptance examples'),
       'SPEC209',
     ],
     [
@@ -763,7 +795,7 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(
           files,
-          'docs/specs/foundation/alpha.md',
+          'docs/specs/design/foundation/alpha.md',
           '# Alpha behavior',
           '# Terminology\n\nTerms.\n\n# Alpha behavior',
         ),
@@ -774,8 +806,8 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         mutate(
           files,
-          'docs/specs/foundation/alpha.md',
-          '../governance/spec-conventions.md#implicit-relationships',
+          'docs/specs/design/foundation/alpha.md',
+          '../../governance/conventions/spec-conventions.md#implicit-relationships',
           'missing.md#implicit-relationships',
         ),
       'SPEC303',
@@ -783,12 +815,12 @@ describe('specification linter', () => {
     [
       'broken anchors',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '#implicit-relationships', '#missing-anchor'),
+        mutate(files, 'docs/specs/design/foundation/alpha.md', '#implicit-relationships', '#missing-anchor'),
       'SPEC304',
     ],
     [
       'None dependencies',
-      (files: SourceFile[]) => withRelationships(files, 'docs/specs/foundation/alpha.md', 'None.'),
+      (files: SourceFile[]) => withRelationships(files, 'docs/specs/design/foundation/alpha.md', 'None.'),
       'SPEC401',
     ],
     [
@@ -796,8 +828,8 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         withRelationships(
           files,
-          'docs/specs/foundation/alpha.md',
-          '- Copies [Specification Conventions](../governance/spec-conventions.md)',
+          'docs/specs/design/foundation/alpha.md',
+          '- Copies [Specification Conventions](../../governance/conventions/spec-conventions.md)',
         ),
       'SPEC409',
     ],
@@ -806,25 +838,30 @@ describe('specification linter', () => {
       (files: SourceFile[]) =>
         withRelationships(
           files,
-          'docs/specs/foundation/alpha.md',
-          '- Uses [Specification Conventions](../governance/spec-conventions.md)',
+          'docs/specs/design/foundation/alpha.md',
+          '- Uses [Specification Conventions](../../governance/conventions/spec-conventions.md)',
         ),
       'SPEC413',
     ],
     [
       'prohibited formal terminology',
-      (files: SourceFile[]) => withGlossary(files, 'docs/specs/foundation/alpha.md', '# Glossary\n\nSource.'),
+      (files: SourceFile[]) => withGlossary(files, 'docs/specs/design/foundation/alpha.md', '# Glossary\n\nSource.'),
       'SPEC501',
     ],
     [
       'numbered requirement label',
-      (files: SourceFile[]) => mutate(files, 'docs/specs/foundation/alpha.md', '# Rule', '# AAA-001 — Rule'),
+      (files: SourceFile[]) => mutate(files, 'docs/specs/design/foundation/alpha.md', '# Rule', '# AAA-001 — Rule'),
       'SPEC612',
     ],
     [
       'unresolved requirement reference',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '[Rule](#rule): the same', '[Rule](#removed-rule): the same'),
+        mutate(
+          files,
+          'docs/specs/design/foundation/alpha.md',
+          '[Rule](#rule): the same',
+          '[Rule](#removed-rule): the same',
+        ),
       'SPEC606',
     ],
   ])('rejects %s', (_name, change, expectedCode) => {
@@ -833,8 +870,8 @@ describe('specification linter', () => {
 
   test('produces stable sorted diagnostics', () => {
     const files = mutate(
-      mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Alpha', '# ALPHA'),
-      'docs/specs/foundation/alpha.md',
+      mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', '# Alpha', '# ALPHA'),
+      'docs/specs/design/foundation/alpha.md',
       '| Owns | Alpha rules. |',
       '| Owns | Alpha rules. |\n| Status | Draft |',
     )
@@ -862,7 +899,7 @@ describe('specification linter', () => {
   test('rejects duplicate glossary ownership and aliases', () => {
     const files = withGlossary(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       lines([
         '# Glossary',
         '',
@@ -880,14 +917,14 @@ describe('specification linter', () => {
   test('rejects incomplete glossary rows', () => {
     const files = withGlossary(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       lines(['# Glossary', '', '| Term | Definition |', '| --- | --- |', '| Incomplete | |']),
     )
     expect(diagnosticCodes(files)).toContain('SPEC504')
   })
 
   describe('TODOs', () => {
-    const alpha = 'docs/specs/foundation/alpha.md'
+    const alpha = 'docs/specs/design/foundation/alpha.md'
     const acceptanceEnd = '[Rule](#rule): the same input has the same result.'
 
     function withTodos(items: readonly string[]): SourceFile[] {
@@ -945,10 +982,10 @@ describe('specification linter', () => {
   })
 
   describe('subject before document', () => {
-    const alpha = 'docs/specs/foundation/alpha.md'
+    const alpha = 'docs/specs/design/foundation/alpha.md'
 
     const overviewParagraph =
-      'Alpha purpose. See [Implicit relationships](../governance/spec-conventions.md#implicit-relationships).'
+      'Alpha purpose. See [Implicit relationships](../../governance/conventions/spec-conventions.md#implicit-relationships).'
 
     /** Builds an Overview of the given word count, including one code span, plus fenced code that is not counted. */
     function overviewOf(words: number): SourceFile[] {
@@ -1054,7 +1091,7 @@ describe('specification linter', () => {
         'two sentences with e.g. and i.e.',
         [
           'These terms, e.g. Apple, are specific to Alpha, i.e. its rules.',
-          'General terms are in the [Specification Conventions glossary](../governance/spec-conventions.md#glossary).',
+          'General terms are in the [Specification Conventions glossary](../../governance/conventions/spec-conventions.md#glossary).',
         ],
       ],
     ])('accepts a Glossary introduction with %s', (_name, introduction) => {
@@ -1135,7 +1172,7 @@ describe('specification linter', () => {
   test('rejects compact ranges and removed requirement references', () => {
     const files = mutate(
       validCorpus(),
-      'docs/specs/foundation/alpha.md',
+      'docs/specs/design/foundation/alpha.md',
       '[Rule](#rule): the same input',
       'AAA-001–002: the same input',
     )
@@ -1150,7 +1187,7 @@ describe('specification linter', () => {
       runSpecificationLint(
         mutate(
           validCorpus(),
-          'docs/specs/foundation/alpha.md',
+          'docs/specs/design/foundation/alpha.md',
           '| Owns | Alpha rules. |',
           '| Owns | Alpha rules. |\n| Status | Draft |',
         ),
@@ -1175,7 +1212,7 @@ function replaceOverview(
 }
 
 describe('family overviews', () => {
-  const foundationOverview = 'docs/specs/foundation/about-foundation.md'
+  const foundationOverview = 'docs/specs/design/foundation/about-foundation.md'
 
   test('accepts overviews without treating them as specifications', () => {
     const files = withOverviews(validCorpus())
@@ -1188,14 +1225,31 @@ describe('family overviews', () => {
     const files = withOverviews(validCorpus()).filter((file) => file.path !== foundationOverview)
     const diagnostics = lintSpecificationsRaw({ files })
     expect(diagnostics.map((diagnostic) => [diagnostic.code, diagnostic.path])).toEqual([
+      ['SPEC303', 'docs/specs/design/about-design.md'],
       ['SPEC702', foundationOverview],
     ])
+  })
+
+  test('requires an overview for every Specification kind with registered specifications', () => {
+    const designOverview = 'docs/specs/design/about-design.md'
+    const files = withOverviews(validCorpus()).filter((file) => file.path !== designOverview)
+    expect(lintSpecificationsRaw({ files }).map((diagnostic) => [diagnostic.code, diagnostic.path])).toEqual([
+      ['SPEC702', designOverview],
+    ])
+  })
+
+  test('requires the Specification kind overview title and links to every Family overview', () => {
+    const designOverview = 'docs/specs/design/about-design.md'
+    const files = withOverviews(validCorpus()).map((file) =>
+      file.path === designOverview ? { ...file, content: '# About design\n' } : file,
+    )
+    expect(rawCodes(files)).toEqual(['SPEC703', 'SPEC706'])
   })
 
   test('rejects a misnamed or misplaced overview', () => {
     const files = [
       ...withOverviews(validCorpus()),
-      { path: 'docs/specs/foundation/about-mechanics.md', content: '# About\n' },
+      { path: 'docs/specs/design/foundation/about-mechanics.md', content: '# About\n' },
     ]
     expect(rawCodes(files)).toEqual(['SPEC701'])
   })
@@ -1231,7 +1285,7 @@ describe('family overviews', () => {
 
   test('requires a link to every specification in the Family', () => {
     const files = replaceOverview(withOverviews(validCorpus()), foundationOverview, (content) =>
-      content.replace('[docs/specs/foundation/alpha.md](alpha.md)', 'Alpha'),
+      content.replace('[docs/specs/design/foundation/alpha.md](alpha.md)', 'Alpha'),
     )
     expect(rawCodes(files)).toEqual(['SPEC706'])
   })

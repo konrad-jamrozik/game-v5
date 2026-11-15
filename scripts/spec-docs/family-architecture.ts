@@ -1,3 +1,4 @@
+import { FAMILY_KIND, isSpecificationFamily } from '../spec-linter/overviews.ts'
 import type { SpecificationCorpus } from '../spec-linter/types.ts'
 
 /** The generated diagram of how the Families build on one another, linked from the specification index. */
@@ -6,8 +7,10 @@ export const FAMILY_ARCHITECTURE_PATH = 'docs/images/family-architecture.svg'
 /** The Families drawn together as the game engine. */
 const ENGINE_FAMILIES: readonly string[] = ['Foundation', 'Mechanics']
 
-/** The Family every specification follows implicitly; drawn as a caption rather than a box. */
-const GOVERNANCE_FAMILY = 'Governance'
+/** Governance specifications are followed implicitly; they are drawn as a caption rather than as boxes. */
+function isGovernanceFamily(family: string): boolean {
+  return isSpecificationFamily(family) && FAMILY_KIND[family] === 'Governance'
+}
 
 export interface FamilyArchitectureRow {
   readonly family: string
@@ -105,7 +108,7 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
     counts.set(specification.family, (counts.get(specification.family) ?? 0) + 1)
   }
   const engineMembers = ENGINE_FAMILIES.filter((family) => rows.some((row) => row.family === family))
-  const others = rows.filter((row) => row.family !== GOVERNANCE_FAMILY && !ENGINE_FAMILIES.includes(row.family))
+  const others = rows.filter((row) => !isGovernanceFamily(row.family) && !ENGINE_FAMILIES.includes(row.family))
   const buildsOn = new Map(rows.map((row) => [row.family, row.buildsOn]))
 
   const depthCache = new Map<string, number>()
@@ -120,7 +123,7 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
       Math.max(
         0,
         ...(buildsOn.get(family) ?? [])
-          .filter((dependency) => dependency !== GOVERNANCE_FAMILY)
+          .filter((dependency) => !isGovernanceFamily(dependency))
           .map((dependency) => depthOf(dependency, next)),
       )
     depthCache.set(family, depth)
@@ -181,7 +184,7 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
     for (const dependency of row.buildsOn) {
       const targetKey = ENGINE_FAMILIES.includes(dependency) ? 'engine' : dependency
       const key = `${row.family}->${targetKey}`
-      if (targets.has(key) || dependency === GOVERNANCE_FAMILY) continue
+      if (targets.has(key) || isGovernanceFamily(dependency)) continue
       targets.add(key)
       const target = targetKey === 'engine' ? engine : boxes.get(dependency)
       if (!target) continue
@@ -204,8 +207,8 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
       `${empty.join(' and ')} ${empty.length === 1 ? 'has' : 'have'} no specifications yet, so no relationships either.`,
     )
   }
-  if (rows.some((row) => row.family === GOVERNANCE_FAMILY)) {
-    captions.push('Every specification also follows the Governance family, which is not drawn.')
+  if (rows.some((row) => isGovernanceFamily(row.family))) {
+    captions.push('Every specification also follows the Governance specifications, which are not drawn.')
   }
   y += 22
   for (const caption of captions) {

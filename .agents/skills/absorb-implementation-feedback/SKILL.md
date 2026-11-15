@@ -9,7 +9,7 @@ Use this skill when the user asks to back-propagate what an Implementation learn
 "go through the implementation's feedback" or "fix the spec problems the implementer found".
 
 Building or updating an Implementation records, as feedback, the defects it met in the specifications, under
-[Implementation Feedback](../../../docs/specs/implementation/implementation-feedback.md). Only the specifications are
+[Implementation Feedback](../../../docs/specs/implementation/mandatory/implementation-feedback.md). Only the specifications are
 durable: a fix that stays in an Implementation is lost when the Implementation is rebuilt. This skill moves each fix
 into the specifications. The user is the Engine designer and decides every outcome; propose, never settle a design
 question silently.
@@ -31,14 +31,14 @@ question silently.
    - **Adopt the Implementation decision:** write the option the Implementation chose into the specifications, so a
      rebuilt Implementation chooses it too.
    - **Make it an Implementer's choice:** state at the rule that the matter is the Implementer's choice, under
-     [Kinds of unspecified content](../../../docs/specs/governance/spec-conventions.md#kinds-of-unspecified-content),
+     [Kinds of unspecified content](../../../docs/specs/governance/conventions/spec-conventions.md#kinds-of-unspecified-content),
      so it stops being a problem.
    - **Decline:** leave the specifications as they are. Warn that nothing durable records a decline, so a rebuilt
      Implementation may record the same problem again.
 5. Present the proposals to the user in small groups and wait for each decision. Group related problems, e.g. two
    entries about one formula, so one decision covers them.
 6. Make the accepted specification changes under the repository's `AGENTS.md` and
-   [Specification Conventions](../../../docs/specs/governance/spec-conventions.md), run `npm run check`, and commit and
+   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), run `npm run check`, and commit and
    push as `AGENTS.md` directs, including its exceptions.
 7. For each declined problem, set its Resolution in the Implementation's feedback file to Declined, naming this repository's
    reviewed commit by its full hash and the user's reason, and commit that in the Implementation directory without

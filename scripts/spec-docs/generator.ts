@@ -9,8 +9,10 @@ import { isLink, visit } from '../spec-linter/markdown.ts'
 import {
   FAMILY_DIAGRAM_END,
   FAMILY_DIAGRAM_START,
+  FAMILY_KIND,
   FAMILY_ORDER,
   familyDirectoryName,
+  familyDirectoryPath,
   familyOverviewFileName,
 } from '../spec-linter/overviews.ts'
 import { decodeUrlPart, directoryOf, isExternalUrl, resolvePath, splitUrl } from '../spec-linter/paths.ts'
@@ -113,8 +115,12 @@ function renderCatalog(corpus: SpecificationCorpus): string {
     '## Counts by family',
     '',
     markdownTable(
-      ['Family', 'Specifications'],
-      FAMILY_ORDER.map((family) => [family, String(specifications.filter((item) => item.family === family).length)]),
+      ['Specification kind', 'Family', 'Specifications'],
+      FAMILY_ORDER.map((family) => [
+        FAMILY_KIND[family],
+        family,
+        String(specifications.filter((item) => item.family === family).length),
+      ]),
     ),
   ]
   for (const family of FAMILY_ORDER) {
@@ -566,7 +572,7 @@ export function renderFamilyDiagramFiles(
     const families = FAMILY_ORDER.filter(
       (family) =>
         corpus.specifications.some((specification) => specification.family === family) ||
-        sources.has(`docs/specs/${familyDirectoryName(family)}/${familyOverviewFileName(family)}`),
+        sources.has(`docs/specs/${familyDirectoryPath(family)}/${familyOverviewFileName(family)}`),
     )
     outputs.set(FAMILY_ARCHITECTURE_PATH, renderFamilyArchitecture(corpus, computeFamilyArchitecture(corpus, families)))
   }
@@ -592,7 +598,7 @@ export function renderFamilyDiagram(corpus: SpecificationCorpus, family: Specifi
   const { members, internalEdges, crossEdges } = familyDiagramData(corpus, family)
   const overviewPath =
     familyOverviewOutputPath(corpus, family) ??
-    `docs/specs/${familyDirectoryName(family)}/${familyOverviewFileName(family)}`
+    `docs/specs/${familyDirectoryPath(family)}/${familyOverviewFileName(family)}`
   const sections = ['## Within the family', '']
   if (members.length > 1) {
     for (const [position, kind] of WITHIN_KINDS.entries()) {

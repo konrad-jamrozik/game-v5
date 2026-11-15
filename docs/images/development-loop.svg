@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="The Development loop: the Game designer changes the specifications in the durable specification repository; the Implementer builds the Implementation with build-implementation, or updates it with update-implementation, in its disposable directory; Implementer feedback flows back into the specifications with absorb-implementation-feedback, repeating until no feedback is open; the Game designer plays and reviews the Implementation and turns Designer feedback into specification changes with apply-designer-feedback">
-  <!-- Hand-kept diagram for docs/specs/governance/development-loop.md; not generated. -->
+  <!-- Hand-kept diagram for docs/specs/governance/process/development-loop.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --accent: #2f7f95; --accenttint: #e6f2f5; }
     @media (prefers-color-scheme: dark) {
@@ -53,7 +53,7 @@
 
   <rect class="inner" x="48" y="205" width="334" height="65" rx="6"/>
   <text class="b" x="62" y="229">Governance specifications</text>
-  <text class="m" x="62" y="248">Specification Conventions, Development Loop</text>
+  <text class="m" x="62" y="248">Conventions, Process</text>
   <text class="m" x="62" y="263">how specifications are written; how the loop runs</text>
 
   <rect class="inner" x="48" y="285" width="334" height="65" rx="6"/>
@@ -62,9 +62,9 @@
   <text class="m" x="62" y="343">the game itself</text>
 
   <rect class="inner" x="48" y="365" width="334" height="80" rx="6"/>
-  <text class="b" x="62" y="389">Implementation family specifications</text>
+  <text class="b" x="62" y="389">Implementation specifications</text>
   <text class="m" x="62" y="408">Mandatory: placement, feedback, tracking</text>
-  <text class="m" x="62" y="424">Guidance: technical suggestions and recipes</text>
+  <text class="m" x="62" y="424">Guidance and Recipes: suggestions and tasks</text>
   <text class="m" x="62" y="439">Skills sit beside them in .agents/skills/</text>
 
   <!-- Implementation directory -->

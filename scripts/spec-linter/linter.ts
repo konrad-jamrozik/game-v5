@@ -27,12 +27,17 @@ import {
 import {
   FAMILY_DIAGRAM_END,
   FAMILY_DIAGRAM_START,
+  FAMILY_KIND,
   FAMILY_ORDER,
   FAMILY_OVERVIEW_HEADINGS,
-  familyDirectoryName,
+  familyDirectoryPath,
   familyOverviewPath,
   familyOverviewTitle,
   isFamilyOverviewCandidate,
+  isSpecificationFamily,
+  KIND_ORDER,
+  kindOverviewPath,
+  kindOverviewTitle,
 } from './overviews.ts'
 import { decodeUrlPart, directoryOf, isExternalUrl, normalizePath, resolvePath, splitUrl } from './paths.ts'
 import type {
@@ -44,13 +49,14 @@ import type {
   SpecificationAnalysis,
   SpecificationCorpus,
   SpecificationFamily,
+  SpecificationKind,
   SpecificationRecord,
 } from './types.ts'
 
 const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
-const CONVENTIONS_PATH = 'docs/specs/governance/spec-conventions.md'
-const ALLOWED_BINDINGS: ReadonlySet<string> = new Set(['Guidance', 'Mandatory'])
+const CONVENTIONS_PATH = 'docs/specs/governance/conventions/spec-conventions.md'
+const INDEX_FAMILY: SpecificationFamily = 'Conventions'
 const PERSONAS = [
   'Game designer',
   'Engine designer',
@@ -60,15 +66,6 @@ const PERSONAS = [
   'Implementer',
   'Player',
 ]
-const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
-  'Governance',
-  'Foundation',
-  'Mechanics',
-  'Content',
-  'UI',
-  'Autopilot AIs',
-  'Implementation',
-])
 const FRAMING_HEADINGS = ['Overview', 'Relationships', 'Glossary']
 const TODOS_HEADING = 'TODOs'
 const RENAMED_TODOS_HEADING = 'Open decisions'
@@ -114,10 +111,6 @@ interface RelationshipRow {
   readonly destination: Specification
   readonly kind: RelationshipKind
   readonly node: Node
-}
-
-function isSpecificationFamily(value: string | undefined): value is SpecificationFamily {
-  return value !== undefined && ALLOWED_FAMILIES.has(value)
 }
 
 interface GlossaryTerm {
@@ -317,21 +310,21 @@ function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void 
         'Specifications have no status; remove the Status metadata row.',
       )
     }
-    if (!specification.family || !ALLOWED_FAMILIES.has(specification.family)) {
+    if (!isSpecificationFamily(specification.family)) {
       addDiagnostic(
         diagnostics,
         specification.path,
         specification.metadata.table,
         'SPEC109',
-        'Metadata Family must be Governance, Foundation, Mechanics, Content, UI, Autopilot AIs, or Implementation.',
+        `Metadata Family must be one of ${FAMILY_ORDER.join(', ')}.`,
       )
     } else {
       const relativePath = specification.path.slice(parsed.specificationRoot.length + 1)
       const actualDirectory = directoryOf(relativePath)
-      const expectedDirectory = specification.path === parsed.indexPath ? '' : familyDirectoryName(specification.family)
+      const expectedDirectory = specification.path === parsed.indexPath ? '' : familyDirectoryPath(specification.family)
       if (
         actualDirectory !== expectedDirectory ||
-        (specification.path === parsed.indexPath && specification.family !== 'Governance')
+        (specification.path === parsed.indexPath && specification.family !== INDEX_FAMILY)
       ) {
         addDiagnostic(
           diagnostics,
@@ -339,7 +332,7 @@ function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void 
           specification.metadata.table,
           'SPEC110',
           specification.path === parsed.indexPath
-            ? `The specification index must use Family Governance and remain at ${parsed.indexPath}.`
+            ? `The specification index must use Family ${INDEX_FAMILY} and remain at ${parsed.indexPath}.`
             : `Family ${specification.family} specifications must be direct children of ${parsed.specificationRoot}/${expectedDirectory}.`,
         )
       }
@@ -370,22 +363,13 @@ function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void 
         'Scope belongs in Overview, not in metadata.',
       )
     }
-    const binding = specification.metadata.values.get('Binding')
-    if (specification.family === 'Implementation' && (binding === undefined || !ALLOWED_BINDINGS.has(binding))) {
+    if (specification.metadata.values.has('Binding')) {
       addDiagnostic(
         diagnostics,
         specification.path,
         specification.metadata.table,
         'SPEC114',
-        'Metadata Binding of an Implementation family specification must be Guidance or Mandatory.',
-      )
-    } else if (specification.family !== 'Implementation' && binding !== undefined) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        specification.metadata.table,
-        'SPEC114',
-        'Only Implementation family specifications have a Binding metadata row.',
+        'Binding follows from the Family of an Implementation specification; remove the Binding metadata row.',
       )
     }
   }
@@ -719,6 +703,32 @@ function validateFamilyOverviews(parsed: ParsedInput, diagnostics: Diagnostic[])
     }
     validateFamilyOverview(overview, family, members, diagnostics)
   }
+  for (const kind of KIND_ORDER) {
+    const families = FAMILY_ORDER.filter(
+      (family) =>
+        FAMILY_KIND[family] === kind && parsed.specifications.some((specification) => specification.family === family),
+    )
+    const path = kindOverviewPath(parsed.specificationRoot, kind)
+    expectedPaths.add(path)
+    if (families.length === 0) continue
+    const overview = overviewsByPath.get(path)
+    if (!overview) {
+      addDiagnostic(
+        diagnostics,
+        path,
+        undefined,
+        'SPEC702',
+        `${kind} specifications exist but there is no Specification kind overview at ${path}.`,
+      )
+      continue
+    }
+    validateKindOverview(
+      overview,
+      kind,
+      families.map((family) => familyOverviewPath(parsed.specificationRoot, family)),
+      diagnostics,
+    )
+  }
   for (const overview of parsed.overviews) {
     if (expectedPaths.has(overview.path)) continue
     addDiagnostic(
@@ -726,7 +736,48 @@ function validateFamilyOverviews(parsed: ParsedInput, diagnostics: Diagnostic[])
       overview.path,
       undefined,
       'SPEC701',
-      'Family overviews must be named about-<directory>.md and placed directly in a Family directory.',
+      'Overviews must be named about-<directory>.md and placed directly in a Specification kind or Family directory.',
+    )
+  }
+}
+
+function linkedLocalPaths(document: FamilyOverview['document'], path: string): ReadonlySet<string> {
+  const linkedPaths = new Set<string>()
+  visit(document.tree, (node) => {
+    if (!isLink(node) || isExternalUrl(node.url)) return
+    const decoded = decodeUrlPart(splitUrl(node.url).path)
+    if (decoded) linkedPaths.add(resolvePath(path, decoded))
+  })
+  return linkedPaths
+}
+
+function validateKindOverview(
+  overview: FamilyOverview,
+  kind: SpecificationKind,
+  familyOverviewPaths: readonly string[],
+  diagnostics: Diagnostic[],
+): void {
+  const { document, path } = overview
+  const title = document.children[0]
+  const expectedTitle = kindOverviewTitle(kind)
+  if (!title || !isHeading(title) || title.depth !== 1 || headingText(title) !== expectedTitle) {
+    addDiagnostic(
+      diagnostics,
+      path,
+      title,
+      'SPEC703',
+      `The first element of a Specification kind overview must be the H1 "${expectedTitle}".`,
+    )
+  }
+  const linkedPaths = linkedLocalPaths(document, path)
+  for (const familyOverview of familyOverviewPaths) {
+    if (linkedPaths.has(familyOverview)) continue
+    addDiagnostic(
+      diagnostics,
+      path,
+      undefined,
+      'SPEC706',
+      `The Specification kind overview must link the overview of every ${kind} Family; "${familyOverview}" is not linked.`,
     )
   }
 }
@@ -795,12 +846,7 @@ function validateFamilyOverview(
     )
   }
 
-  const linkedPaths = new Set<string>()
-  visit(document.tree, (node) => {
-    if (!isLink(node) || isExternalUrl(node.url)) return
-    const decoded = decodeUrlPart(splitUrl(node.url).path)
-    if (decoded) linkedPaths.add(resolvePath(path, decoded))
-  })
+  const linkedPaths = linkedLocalPaths(document, path)
   for (const member of members) {
     if (linkedPaths.has(member.path)) continue
     addDiagnostic(

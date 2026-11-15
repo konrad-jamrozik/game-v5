@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="380" viewBox="0 0 1000 380" role="img" aria-label="Undo within one Turn: four undoAction() calls step back through four Timeline entries to the Turn-start state, and one undoAllActions() call does the same at once">
-  <!-- Hand-kept diagram for docs/specs/foundation/timeline.md; not generated. -->
+  <!-- Hand-kept diagram for docs/specs/design/foundation/timeline.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --turn: #2f7f95; }
     @media (prefers-color-scheme: dark) {
