@@ -14,7 +14,9 @@
 
 If an Implementation uses a browser as its GUI, the Implementer may consider the technology stack of the `web`
 directory of [game-ts](https://github.com/konrad-jamrozik/game-ts/). The stack is a suggestion; an Implementation may
-choose any other.
+choose any other. The technologies listed here may be obsolete by the time an Implementation starts, so the Implementer
+is expected to use their judgement and prefer newer technologies, or newer versions, where they serve the
+Implementation better.
 
 # Suggested stack
 
