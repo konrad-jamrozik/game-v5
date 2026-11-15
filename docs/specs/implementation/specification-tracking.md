@@ -62,8 +62,13 @@ The Implementation must conform to every specification at its Specification base
 specifications at that revision leave unsettled. A Specification baseline therefore names a commit, never
 specifications with changes that are not committed.
 
-The Specification baseline must be set when the Implementation is first built, to the latest Specification revision
-whose specifications the Implementation conforms to. It must change only in the same change to the Implementation that
+The Specification baseline must be set when the Implementation is first built, to the Specification revision the
+implementer began building from: the latest commit of the repository that holds these specifications when the
+implementer first read them. A commit made to the specifications while the Implementation is being built, e.g. while
+subagents are still reading them, is not covered by the Specification baseline, even when part of the Implementation
+already follows it. When the specifications the implementer begins from have changes that are not committed, the
+implementer must tell the Engine designer before building, because no Specification revision holds those changes. The
+Specification baseline must change only in the same change to the Implementation that
 brings the Implementation into conformance with the specifications at the new Specification revision.
 
 # Specification map
