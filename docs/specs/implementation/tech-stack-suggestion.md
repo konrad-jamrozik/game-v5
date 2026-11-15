@@ -18,7 +18,7 @@ choose any other.
 
 # Suggested stack
 
-- TypeScript, type-checked with the TypeScript native preview compiler `tsgo`.
+- TypeScript 7 or later, whose native compiler `tsc` replaces the `tsgo` preview that game-ts uses.
 - Vite, with `@vitejs/plugin-react` and the React Compiler.
 - Vitest, with Testing Library, jsdom, and `@vitest/coverage-v8`.
 - React.
