@@ -146,7 +146,7 @@ This table is exhaustive.
 | Property           | Part      | Value                                                                                                                                                                                                                                                                                               | Classification and range                                                                                                                                                                                                      |
 | ------------------ | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Kind               | Constants | Initiative or Response.                                                                                                                                                                                                                                                                             | Authoritative value. Equals the MissionSiteArchetype's `kind`.                                                                                                                                                                |
-| Origin             | Constants | For an Initiative Mission site, an Immutable reference to the Investigation whose completion created it. For a Response Mission site, its Faction operation occurrence: an Immutable reference to the initiating Faction and an Immutable reference to the FactionOperationLevel of the occurrence. | Authoritative value, under [Mission site kind and provenance](domain-model.md#mission-site-kind-and-provenance).                                                                                                              |
+| Origin             | Constants | For an Initiative Mission site, an Immutable reference to the Investigation whose completion created it. For a Response Mission site, its Faction operation occurrence: an Immutable reference to the initiating Faction and an Immutable reference to the FactionOperationLevel of the occurrence. | Authoritative value, under [Mission site kind and provenance](#mission-site-kind-and-provenance).                                                                                                                             |
 | Target Faction     | Constants | An Immutable reference to the Faction whose Enemies are present at the Mission site.                                                                                                                                                                                                                | Authoritative value. Always exactly one Faction of the Campaign.                                                                                                                                                              |
 | Turn created       | Constants | The turn number of the Turn whose Advance turn created the Mission site.                                                                                                                                                                                                                            | Authoritative value. A whole number of at least 1.                                                                                                                                                                            |
 | Lifecycle          | State     | Active, Attempted, Expired, or Cancelled, under [Mission site lifecycle](#mission-site-lifecycle).                                                                                                                                                                                                  | Authoritative value.                                                                                                                                                                                                          |
@@ -154,7 +154,7 @@ This table is exhaustive.
 | Enemies            | State     | The ordered list of the Enemies present at the Mission site, in their creation order.                                                                                                                                                                                                               | Authoritative value. No rule changes the list after creation; each Enemy has its own values under [Combat](combat.md).                                                                                                        |
 
 A Mission site also has Derived values, which are never stored: its Mission, i.e. the Mission whose Mission site
-reference identifies it, when one exists, under [Mission at a Mission site](domain-model.md#mission-at-a-mission-site);
+reference identifies it, when one exists, under [Mission at a Mission site](#mission-at-a-mission-site);
 and its rewards and penalties, i.e. the amounts the [Consequences](#consequences) table would apply when its Mission is
 Won and when its Mission is Lost or it is Expired, read from its
 MissionSiteArchetype and, for a Response Mission site, from the FactionOperationLevel of its origin; and the Combat
@@ -174,6 +174,21 @@ violates one is an internal invariant violation, reported under
 every reference to it resolves, e.g. from an Enemy or a Mission. A Mission site in a final state no longer participates
 in current gameplay and is retained in World history with its final values, under [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign
 State. No Mission site is ever removed.
+
+## Mission site kind and provenance
+
+A Mission site is either an Initiative Mission site or a Response Mission site; its kind is fixed when it is created.
+An Initiative Mission site retains its origin: the Investigation whose completion created it, and through that
+Investigation the Lead it investigated. A Response Mission site retains its Faction operation occurrence origin, which
+identifies the initiating Faction. Both hold under [How concepts relate](domain-model.md#how-concepts-relate) in Domain
+Model.
+
+Two Response Mission sites originating from the same Faction are distinct Campaign instances. Target Faction and
+initiating Faction are explicit references, never inferred from a Mission site's name.
+
+A Mission has the kind of its Mission site: a Mission at an Initiative Mission site is an Initiative Mission, and a
+Mission at a Response Mission site is a Response Mission. The kind of a Mission is a Derived value read through its
+Mission site reference; a Mission stores no kind of its own.
 
 ## Initial Mission sites
 
@@ -272,7 +287,7 @@ its own; the consequences of the attempt are those of its Mission's final state,
 **Proposed rule:** A Mission is a Campaign instance whose Archetype is the MissionArchetype. Its Archetype reference is
 set when it is created and never changes. It is created only by the `deployAgents` Player action, under
 [Deploying Agents](#deploying-agents), and always at a Mission site, under
-[Mission at a Mission site](domain-model.md#mission-at-a-mission-site) in Domain Model. Its Constants and State have
+[Mission at a Mission site](#mission-at-a-mission-site). Its Constants and State have
 exactly the following properties. This table is exhaustive.
 
 | Property      | Part      | Value                                                                                                                         | Classification and range                                                                                                                       |
@@ -285,8 +300,8 @@ exactly the following properties. This table is exhaustive.
 | Battle result | State     | The Battle result of the Mission's Battle, or absent before it is fought.                                                     | Authoritative value, under [Battle result](combat.md#battle-result) in Combat. Never rewritten once present.                                   |
 
 A Mission also has Derived values, which are never stored: its kind, which is the kind of its Mission site, so that it is
-an Initiative Mission or a Response Mission under [Mission site kind and provenance](domain-model.md#mission-site-kind-and-provenance)
-in Domain Model; and its rewards and penalties, which are those of its Mission site.
+an Initiative Mission or a Response Mission under [Mission site kind and provenance](#mission-site-kind-and-provenance);
+and its rewards and penalties, which are those of its Mission site.
 
 **Invariants:** In every Committed state, every Mission satisfies all of the following. A Committed state that violates
 one is an internal invariant violation, reported under
@@ -307,6 +322,24 @@ Mission is ever removed.
 The Agents who took part in a Mission remain recorded after its Current team is empty: in its Team sent, in the
 participants of its Battle result, in their fixed order, and in each Agent's Participation history, under
 [Participation history records](agents-spec.md#participation-history-records) in Agents.
+
+## Mission at a Mission site
+
+A Mission takes place at exactly one Mission site, and a Mission site has at most one Mission, under
+[How concepts relate](domain-model.md#how-concepts-relate) in Domain Model, because the Agency can deploy only one team
+of Agents to a Mission site, once. No Mission exists without a Mission site, and a Mission site that no team is ever
+deployed to never has a Mission. Both are retained for the whole Campaign, so the Mission's reference to its Mission
+site always resolves.
+
+A Mission is its own Campaign instance, not a part of its Mission site's State, because it carries facts the Mission
+site does not have, e.g. the Turn it was deployed in, the team sent, its own lifecycle from deployment to its outcome,
+and its Battle result; and because Current assignments, Participation history, and Lead progression reference it
+directly. A Battle result, by contrast, is not a Campaign instance: it is a part of the Mission that holds it.
+
+The Mission site and its Mission have separate lifecycles, under [Mission site lifecycle](#mission-site-lifecycle) and
+[Mission lifecycle](#mission-lifecycle). The Mission site's lifecycle describes the opportunity, e.g. whether a team
+can still be deployed to it or whether it expired unattended; the Mission's lifecycle describes the attempt, e.g.
+whether its Battle is still to be fought and whether it was Won or Lost.
 
 # Mission lifecycle
 

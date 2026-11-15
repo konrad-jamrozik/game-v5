@@ -30,7 +30,7 @@ ending.
 ## Agents
 
 [Agents](agents-spec.md) answers _what does an Agent have, and what can it be ordered to do?_ It owns what an Agent has,
-the Agent lifecycle, Current assignments and the transit rule, effective skill, Training, and Agent creation.
+the Combatant Role Type that Agents and Enemies share, the Agent lifecycle, Current assignments and the transit rule, effective skill, Training, and Agent creation.
 
 ## Agent Recovery
 
@@ -126,7 +126,16 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 - **Domain Model versus the other Mechanics documents:** Domain Model holds each concept's definition and the rules
   relating one concept to another; what a single concept has and does on its own belongs to the Mechanics document
   that refines it. E.g., that an Agent's Current assignment places the Agent in a Current team is in Domain Model, and
-  the Agent lifecycle states are in Agents.
+  the Agent lifecycle states are in Agents. A statement belongs where the first of these questions that answers yes
+  places it:
+  1. Does it say what a word means? It is a Glossary definition in Domain Model, unless the word is about a single
+     concept only.
+  2. Does it say how a concept is modeled, or how many exist? It is a row of the Game concepts table in Domain Model.
+  3. Does it say which concept references which, how many, and whether the reference can change? It is a row of the
+     How concepts relate table in Domain Model.
+  4. Is it about the Campaign as a whole, with no single concept to own it? It is a short section of Domain Model,
+     e.g. Campaign instance identity scope.
+  5. Anything else describes one concept on its own and belongs to the Mechanics document that refines that concept.
 - **Turn Advancement versus the rest:** Advance turn applies rules from many Mechanics documents, and the order in
   which they apply changes outcomes. Turn Advancement states that order canonically and depends on every document
   whose rules it orders; those documents only point to it, keep the formulas and effects of their own rules, and are

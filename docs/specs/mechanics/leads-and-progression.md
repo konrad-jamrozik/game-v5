@@ -113,7 +113,7 @@ prerequisites can never hold in practice is also valid, because the rules do not
 
 **Proposed rule:** Lead progression is the Campaign-wide part of Campaign state that records, for each Lead the Game build
 supplies, the Won Missions at the Mission sites that Lead created. It belongs to the Campaign, not to any Campaign
-instance, under [Progression facts](domain-model.md#progression-facts) in Domain Model. It is an Authoritative value, and
+instance, under [Game concepts](domain-model.md#game-concepts) in Domain Model. It is an Authoritative value, and
 it has exactly the following content.
 
 | Part                  | Value                                                                                                                                         | Classification and range                                                                                                                       |
@@ -122,9 +122,14 @@ it has exactly the following content.
 
 A Mission site is created by a Lead L exactly when it is an Initiative Mission site whose origin Investigation, under
 [Mission site properties](missions.md#mission-site-properties) in Missions, is an Investigation of L, i.e. retains a
-reference to L under [Leads and Investigations](domain-model.md#leads-and-investigations) in Domain Model. A Response
+reference to L under [How concepts relate](domain-model.md#how-concepts-relate) in Domain Model. A Response
 Mission site is created by no Lead. A Mission is from Lead L exactly when its Mission site was created by L. A Lead L has
 a Recorded win exactly when L's set in Lead progression is not empty.
+
+Lead progression holds no completion record. A Lead's completion count, i.e. the number of Completed Investigations of
+the Lead, is a Derived value calculated from Investigation Campaign instances, as
+[Value classification](../foundation/campaign-state.md#value-classification) in Campaign State describes, and no rule
+of a Mechanics specification reads it.
 
 **Initial Lead progression:** The initial Campaign state has, for every Lead the Game build supplies, an empty set of
 Recorded wins. No GDR and no Campaign configuration value supplies or changes it, under
@@ -141,8 +146,8 @@ This is the only way an entry is added. A Mission that becomes Lost is recorded 
 becomes Expired or Cancelled, and a Response Mission is recorded nowhere. Recording does nothing else; e.g., it changes no
 Faction, no Investigation, no Mission site, and no Mission.
 
-The record is permanent: once recorded, a win remains recorded even if the Faction of the Lead later becomes Defeated, as
-[Progression facts](domain-model.md#progression-facts) in Domain Model requires. Adding the references of several Missions
+The record is permanent: once recorded, a win remains recorded even if the Faction of the Lead later becomes Defeated, under
+[Authoritative and Derived values](../foundation/core-concepts.md#authoritative-and-derived-values) in Core Concepts. Adding the references of several Missions
 in one step, to the same set or to different sets, gives the same Lead progression whichever order an
 implementation uses.
 

@@ -92,7 +92,7 @@ This table is exhaustive.
 
 | Property               | Part      | Value                                                                                                  | Classification and range                                                                                                                                                                                       |
 | ---------------------- | --------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lead                   | Constants | An Immutable reference to the Lead GDR the Investigation investigates.                                 | Authoritative value, under [Leads and Investigations](domain-model.md#leads-and-investigations). Always resolves to a Lead GDR the Game build supplies.                                                        |
+| Lead                   | Constants | An Immutable reference to the Lead GDR the Investigation investigates.                                 | Authoritative value, under [How concepts relate](domain-model.md#how-concepts-relate). Always resolves to a Lead GDR the Game build supplies.                                                                  |
 | Turn started           | Constants | The turn number of the Turn in which the `startInvestigation` Player action created the Investigation. | Authoritative value. A whole number of at least 1.                                                                                                                                                             |
 | Lifecycle              | State     | Active, Completed, or Abandoned, under [Investigation lifecycle](#investigation-lifecycle).            | Authoritative value.                                                                                                                                                                                           |
 | Investigation progress | State     | The Investigation progress, in skill points.                                                           | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). Changes only under [Progress gain](#progress-gain). |
@@ -109,13 +109,11 @@ Turn series.
 violates one is an internal invariant violation, reported under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
-1. Its Current team is non-empty exactly when its lifecycle state is Active, as
-   [Leads and Investigations](domain-model.md#leads-and-investigations) in Domain Model requires.
+1. Its Current team is non-empty exactly when its lifecycle state is Active.
 2. When it is Active, its Investigation progress is less than its Lead's `difficulty` multiplied by 100. This holds
    because a completion probability of 1 always completes the Investigation, under
    [Completion probability](#completion-probability).
-3. No other Active Investigation has the same Lead, as [Leads and Investigations](domain-model.md#leads-and-investigations)
-   in Domain Model requires. `startInvestigation` guarantees it, under
+3. No other Active Investigation has the same Lead. `startInvestigation` guarantees it, under
    [One Active Investigation per Lead](#one-active-investigation-per-lead).
 4. Its Investigation progress never decreases.
 
@@ -151,9 +149,8 @@ earlier Investigations of that Lead.
 # Investigation lifecycle
 
 **Proposed rule:** An Investigation is in exactly one of the lifecycle states Active, Completed, and Abandoned. The set
-is exhaustive. Every Investigation is Active when it is created. Completed and Abandoned are the two states of an
-Investigation that is not Active under [Leads and Investigations](domain-model.md#leads-and-investigations). The
-transition table is:
+is exhaustive. Every Investigation is Active when it is created. It stays Active until it becomes Completed or
+Abandoned. The transition table is:
 
 | Source state | Target state | Trigger                                                                                                                                                                                                   | Condition                                                                           | Effects                            |
 | ------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
@@ -224,8 +221,7 @@ Committed state in which the action is requested, before any of its changes; the
 
 Condition 1 is precondition 2 and condition 2 is precondition 3 of [Starting an Investigation](#starting-an-investigation).
 Condition 2 is not part of Lead availability, because it reads the Investigation lifecycle. Together
-they make at most one Investigation of a Lead Active in every Committed state, as
-[Leads and Investigations](domain-model.md#leads-and-investigations) in Domain Model requires. Condition 2 holds again
+they make at most one Investigation of a Lead Active in every Committed state. Condition 2 holds again
 as soon as the Active Investigation of L becomes Completed or Abandoned. **Whether a Lead can be investigated now** is a
 Derived value of each Lead, never stored: yes exactly when both conditions hold, and otherwise no, with every condition
 that does not hold. It is Player-visible under [Player-visible information](#player-visible-information).

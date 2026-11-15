@@ -276,7 +276,7 @@ activity step of the same Advance turn:
    occurrence, over the `operation_every_turns` of the Faction activity level F is at after Escalation in this step.
 
 A Faction operation occurrence is not a separate Campaign instance, and its Response Mission site retains these facts,
-under [Faction and Faction operation occurrences](domain-model.md#faction-and-faction-operation-occurrences) in Domain
+under [Game concepts](domain-model.md#game-concepts) in Domain
 Model. A Response Mission site created in this step does not count down toward expiry in the same Advance turn, because
 Mission site expiration precedes Faction activity under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps).

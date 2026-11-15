@@ -291,8 +291,8 @@ The turn, Panic, and Lead progression start from values that no GDR supplies: th
   Mission sites, under [Factions GDRs](#factions-gdrs).
 - TODO (later): The Faction activity levels Dormant, Emerging, Expanding, Escalating, and Total war, under
   [Factions GDRs](#factions-gdrs).
-- TODO (later): Partial success of a Lost Mission, which
-  [Combat and consequences](../mechanics/domain-model.md#combat-and-consequences) in Domain Model already allows for.
+- TODO (later): Partial success of a Lost Mission, under [Consequences](../mechanics/missions.md#consequences) in
+  Missions.
 - TODO (later): The Leads Criminal organizations, Deep state, and Peace on Earth, and Faction discovery through a
   profile Lead, under [Leads and Progression GDRs](#leads-and-progression-gdrs).
 

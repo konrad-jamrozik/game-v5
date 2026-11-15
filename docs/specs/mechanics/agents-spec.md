@@ -1,17 +1,17 @@
 # Agents
 
-| Metadata    | Value                                                                                                                                                                                           |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | AGENT                                                                                                                                                                                           |
-| Family      | Mechanics                                                                                                                                                                                       |
-| Status      | Draft                                                                                                                                                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                     |
-| Owns        | What an Agent has, the Agent lifecycle, Current assignments and the transit rule, effective skill, Training, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                                                                  |
+| Metadata    | Value                                                                                                                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | AGENT                                                                                                                                                                                                                    |
+| Family      | Mechanics                                                                                                                                                                                                                |
+| Status      | Draft                                                                                                                                                                                                                    |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                              |
+| Owns        | What an Agent has, the Combatant Role Type, the Agent lifecycle, Current assignments and the transit rule, effective skill, Training, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                                                                                           |
 
 # Overview
 
-An [Agent](domain-model.md#agent) is a Combatant that the Agency employs. A Serving Agent has one Current
+An [Agent](domain-model.md#glossary) is a Combatant that the Agency employs. A Serving Agent has one Current
 assignment at a time: Standby, Contracting to earn money, Training to gain skill, Recovery to regain health, an
 Investigation, or Deployed on a Mission at a Mission site. Every order takes one Advance turn of transit before the
 Agent starts working, except deployment, which is immediate.
@@ -52,7 +52,7 @@ What makes an Agent or an Enemy able to work and to fight, and how worn down it 
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Skill           | How capable a Combatant is at its work and in a Battle, as a whole number.                                                                                                                                   |
 | Effective skill | A Combatant's skill as reduced by its lost health and its exhaustion; the value every rule uses when a Combatant works or fights.                                                                            |
-| Health          | How much more harm a Combatant can take, from zero up to its maximum health under [Attribute bounds](domain-model.md#attribute-bounds); an Agent whose health reaches zero is dead.                          |
+| Health          | How much more harm a Combatant can take, from zero up to its maximum health under [Attribute ranges](#attribute-ranges); an Agent whose health reaches zero is dead.                                         |
 | Maximum health  | The health of an unwounded Combatant.                                                                                                                                                                        |
 | Exhaustion      | How worn down a Combatant is, as a whole number from zero up to the exhaustion cap; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. |
 | Weapon damage   | The typical health a Combatant's hit removes, before the random spread.                                                                                                                                      |
@@ -103,8 +103,7 @@ The table below is exhaustive apart from `id` and `type`.
 
 ## Weapon properties this document reads
 
-A [Weapon](combat.md#weapon) GDR describes damage configuration, under
-[Weapons and upgrades](domain-model.md#weapons-and-upgrades) in Domain Model. The Agent rules read only its `damage`
+A [Weapon](combat.md#weapon) GDR describes damage configuration. The Agent rules read only its `damage`
 property: the weapon damage of a newly created Agent equipped with that Weapon, under [Agent creation](#agent-creation).
 
 ## Agent GDR validation
@@ -127,7 +126,7 @@ and the violation is reported as a data defect, never repaired into different ga
 
 [Combat GDR validation](combat.md#combat-gdr-validation) adds further rules, e.g. that the Weapon `damage` is a whole
 number of at least 1. These rules guarantee that every newly created Agent satisfies
-[Attribute bounds](domain-model.md#attribute-bounds) and that the effective skill formula never divides by zero.
+[Attribute ranges](#attribute-ranges) and that the effective skill formula never divides by zero.
 
 # Agent properties
 
@@ -151,7 +150,7 @@ exhaustive.
 | Participation history | State     | The Investigations and Missions the Agent took part in and has left.                                                                                                                              | Authoritative value, under [Participation history records](#participation-history-records).                                                                |
 
 Skill, health, maximum health, exhaustion, Weapon, and weapon damage are the properties the
-[Combatant Role Type](domain-model.md#combatant-role-type) requires; Weapon and weapon damage together are the equipped
+[Combatant Role Type](#combatant-role-type) requires; Weapon and weapon damage together are the equipped
 weapon values. An Agent also has two Derived values, which are never stored: its effective skill, under
 [Effective skill](#effective-skill), and whether it can be ordered, under
 [Agents that can be ordered](#agents-that-can-be-ordered). An Agent has no Turn series.
@@ -188,7 +187,7 @@ The following invariants hold in every Committed state:
 
 - A Serving Agent has exactly one Current assignment and exactly one Task phase. A Killed or Dismissed Agent has
   neither, and belongs to no Current team. Killed and Dismissed are lifecycle states, not Current assignments.
-- Within [Attribute bounds](domain-model.md#attribute-bounds), a Serving Agent has positive health, a Killed Agent has
+- Within [Attribute ranges](#attribute-ranges), a Serving Agent has positive health, a Killed Agent has
   zero health, and a Dismissed Agent has positive health.
 
 When an Agent becomes Killed or Dismissed, its Current assignment and Task phase are removed in the same Player action,
@@ -197,11 +196,36 @@ and the Investigation or Mission it belonged to, if any, is recorded under
 
 # Attributes and effectiveness
 
+## Combatant Role Type
+
+The Combatant Role Type is a Role Type under [Role Types](../foundation/campaign-state.md#role-types) in Campaign
+State. It states what a Campaign instance Type must have for its Campaign instances to be Combatants, and what a
+Combatant gains while a Battle lasts.
+
+- **Adoption condition:** a Campaign instance Type can adopt the Combatant Role Type if the State of its Campaign
+  instances has all of the following properties: skill, health, maximum health, exhaustion, and equipped weapon
+  values. This set is exhaustive.
+- **Adopters:** Agent and Enemy adopt the Combatant Role Type. This set is exhaustive.
+- **Gained properties:** every Combatant taking part in a Battle gains properties that mean something only while
+  that Battle lasts, e.g. whether it is [Incapacitated](combat.md#glossary). It gains them when the Battle begins and
+  loses them when the Battle ends. The exhaustive set of gained properties is under
+  [Battle-only properties](combat.md#battle-only-properties) in Combat.
+
+The properties named by the adoption condition persist outside a Battle; e.g., an Agent has health and exhaustion
+between Battles. What outlasts a Battle is its Battle result and every change the Battle made to those properties,
+e.g. lost health.
+
+The Combatant Role Type is not a Campaign instance Type, so a Combatant is never a Campaign instance separate from
+its Agent or Enemy. If it were, every Agent would be two Campaign instances with two Instance IDs, and health would
+belong to the second one instead of to the Agent. A Battle instead changes the participating Agent and Enemy Campaign
+instances themselves: the Agent changed by a Battle is the same Agent that returns to the Agency.
+
 ## Attribute ranges
 
-**Proposed rule:** In every Committed state, every Combatant, i.e. every Agent and every Enemy, satisfies these ranges
-in addition to [Attribute bounds](domain-model.md#attribute-bounds) in Domain Model:
+**Proposed rule:** In every Committed state, every Combatant, i.e. every Agent and every Enemy, satisfies these ranges:
 
+- Skill is a whole number of at least 0.
+- Maximum health is a whole number of at least 1.
 - Exhaustion is a whole number from 0 to the `exhaustion_cap` of AgentParameters, both included.
 - Health is a whole number from 0 to maximum health, both included.
 
@@ -214,7 +238,7 @@ maximum health instead. The rule that changes the value applies these clamps as 
 ## Effective skill
 
 **Inherited behavior:** A Combatant's effective skill is a Derived value computed by this formula. It is shared by
-Agents and Enemies through the [Combatant Role Type](domain-model.md#combatant-role-type), and every rule that uses a
+Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and every rule that uses a
 Combatant's capability, e.g. Investigation progress or a Battle's hit probability, reads effective skill rather than
 skill.
 

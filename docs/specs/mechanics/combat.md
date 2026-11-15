@@ -11,7 +11,7 @@
 
 # Overview
 
-A [Battle](#glossary) is one armed clash between the [Agents](agents-spec.md) deployed to a Mission site and the
+A [Battle](domain-model.md#glossary) is one armed clash between the [Agents](agents-spec.md) deployed to a Mission site and the
 [Enemies](domain-model.md#glossary) there, resolved in full within one Advance turn. It is fully automatic. Each Enemy
 is created from its EnemyArchetype together with its Mission site, and it never recovers.
 
@@ -42,11 +42,10 @@ about skill, health, exhaustion, and weapon damage are in the [Agents glossary](
 
 ## Battles
 
-The fight itself, how it is divided, and how it ends.
+How a Battle is divided, and how it ends.
 
 | Term           | Definition                                                                                                                                                |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Battle         | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn.                            |
 | Round          | One pass of a Battle in which every Combatant able to fight attacks once.                                                                                 |
 | Battle outcome | How a Battle ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. |
 
@@ -83,8 +82,7 @@ MissionSiteArchetype, under [Missions](missions.md).
 
 ## Weapon
 
-A Weapon GDR describes damage configuration, under [Weapons and upgrades](domain-model.md#weapons-and-upgrades) in
-Domain Model. The table below is exhaustive apart from `id` and `type`.
+A Weapon GDR describes damage configuration. The table below is exhaustive apart from `id` and `type`.
 
 | Property | Meaning                                                                                     | Read by                                                                                                  |
 | -------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -93,7 +91,7 @@ Domain Model. The table below is exhaustive apart from `id` and `type`.
 
 A Combatant's weapon damage is a value of the Combatant, set from `damage` at creation; the Battle reads the
 Combatant's weapon damage, never the Weapon's `damage`. An Agent's weapon damage can differ from its Weapon's `damage`
-under [Modifiable values](agents-spec.md#modifiable-values) in Agents.
+under [Modifiable values](agents-spec.md#modifiable-values) in Agents. Individual inventory items are out of scope.
 
 ## CombatParameters
 
@@ -168,17 +166,17 @@ exhaustion `X`, so two such Combatants that keep missing would never stop.
 when it is created and never changes. Its Constants and State have exactly the following properties. This table is
 exhaustive.
 
-| Property       | Part      | Value                                                                     | Classification and range                                                                                                        |
-| -------------- | --------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Mission site   | Constants | An Immutable reference to the Mission site at which the Enemy is present. | Authoritative value. Always exactly one Mission site, under [Combat and consequences](domain-model.md#combat-and-consequences). |
-| Skill          | State     | The Enemy's skill.                                                        | Authoritative value. A whole number of at least 0. No rule changes it after creation.                                           |
-| Health         | State     | The Enemy's current health.                                               | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                                  |
-| Maximum health | State     | The Enemy's maximum health.                                               | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                           |
-| Exhaustion     | State     | The Enemy's exhaustion.                                                   | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                                  |
-| Weapon         | State     | A reference to the Weapon GDR the Enemy is equipped with.                 | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule changes it after creation.                |
-| Weapon damage  | State     | The Enemy's weapon damage.                                                | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                           |
+| Property       | Part      | Value                                                                     | Classification and range                                                                                                |
+| -------------- | --------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Mission site   | Constants | An Immutable reference to the Mission site at which the Enemy is present. | Authoritative value. Always exactly one Mission site, under [How concepts relate](domain-model.md#how-concepts-relate). |
+| Skill          | State     | The Enemy's skill.                                                        | Authoritative value. A whole number of at least 0. No rule changes it after creation.                                   |
+| Health         | State     | The Enemy's current health.                                               | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                          |
+| Maximum health | State     | The Enemy's maximum health.                                               | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                   |
+| Exhaustion     | State     | The Enemy's exhaustion.                                                   | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                          |
+| Weapon         | State     | A reference to the Weapon GDR the Enemy is equipped with.                 | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule changes it after creation.        |
+| Weapon damage  | State     | The Enemy's weapon damage.                                                | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                   |
 
-These are exactly the properties the [Combatant Role Type](domain-model.md#combatant-role-type) requires; Weapon and
+These are exactly the properties the [Combatant Role Type](agents-spec.md#combatant-role-type) requires; Weapon and
 weapon damage together are the equipped weapon values. An Enemy also has two Derived values, which are never stored: its
 effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents, and its Combat rating, under
 [Combat rating](#combat-rating). An Enemy has no lifecycle, no Current assignment, and no Turn series. An Enemy whose
@@ -256,7 +254,7 @@ cases. [Missions](missions.md) guarantees valid lists when it has a Battle fough
 ## Battle-only properties
 
 **Proposed rule:** The exhaustive set of gained properties of the
-[Combatant Role Type](domain-model.md#combatant-role-type) is one property:
+[Combatant Role Type](agents-spec.md#combatant-role-type) is one property:
 
 | Gained property | Type      | Initial value                                           | Meaning                                                                                              |
 | --------------- | --------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -564,7 +562,7 @@ is exhaustive:
 A participant's skill, maximum health, and weapon damage do not change in a Battle, so its final values need not repeat
 them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above.
 
-The Battle result is an Authoritative value. [Combat and consequences](domain-model.md#combat-and-consequences) in Domain
+The Battle result is an Authoritative value. [Game concepts](domain-model.md#game-concepts) in Domain
 Model places it in the Mission whose Battle it is. Once produced, it is never rewritten or
 recomputed, even when the values of its participants change later, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. Whatever
