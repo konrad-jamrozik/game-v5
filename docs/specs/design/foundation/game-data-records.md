@@ -393,7 +393,7 @@ Display content follows these requirements:
 
 - **No gameplay dependence:** No game behavior reads a value that serves the Display content purpose. Changing Display content
   in a Game build changes only what the player sees; equal initial Campaign state and the same ordered committed
-  commands still produce equal Campaign state.
+  Player actions still produce equal Campaign state.
 - **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing
   something hidden from the player stays hidden until it becomes Player-visible.
   The value described states when it becomes Player-visible, under

@@ -110,8 +110,8 @@ or a value of Campaign state defined by its initial value and the changes game b
 is defined by a formula over the Authoritative values of one Campaign state and of GDRs.
 
 The formula of a Derived value uses only one Campaign state, as it is at one moment. It never uses an earlier
-Campaign state or the commands that led to the current one. The game is deterministic, so replaying a Campaign's
-commands from its start would reproduce every value; that does not make a value a Derived value. E.g., an Agent's
+Campaign state or the Player actions that led to the current one. The game is deterministic, so replaying a Campaign's
+Player actions from its start would reproduce every value; that does not make a value a Derived value. E.g., an Agent's
 skill is an Authoritative value although replaying the Campaign would reproduce it, because no formula over the
 current Campaign state defines it.
 

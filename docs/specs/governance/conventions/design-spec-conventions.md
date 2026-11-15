@@ -92,7 +92,7 @@ A rule should make its trigger, inputs, preconditions, outcome, and state change
 - Exact thresholds, inclusivity, caps, floors, and tie-breaking.
 - Which state snapshot supplies each input and when each effect becomes visible.
 - Atomicity and whether rejection changes state, history, or randomness.
-- Expected player-command rejection separately from an internal invariant violation.
+- Expected rejection of a player's action separately from an internal invariant violation.
 
 ## Formula and state machine notations
 

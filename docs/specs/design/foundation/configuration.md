@@ -271,7 +271,7 @@ and investigation difficulty multiplier 1; and Hard, with starting money 60 and 
   them. Only two Campaign configuration values exist so far: starting money and starting funding, under
   [Campaign configuration values](../mechanics/economy-and-upgrades.md#campaign-configuration-values), which are both
   fixed after Campaign creation, so neither is adjustable during play.
-- TODO: Define the public command and report signatures for
+- TODO: Define the public Player action and report signatures for
   [Changing Campaign configuration during play](#changing-campaign-configuration-during-play).
 - TODO (later): Allow Campaign-specific overrides of Global configuration preferences, see
   [Global configuration](#global-configuration).

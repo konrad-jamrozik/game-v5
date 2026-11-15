@@ -76,7 +76,7 @@ a Campaign save is encoded and stored is the Implementer's choice.
 
 One Campaign may have several Campaign saves, which share its Campaign ID and have distinct Campaign save IDs. E.g., a
 player may keep a Campaign save from before a risky decision and another from after it. Two Campaigns created with
-equal creation inputs, including the same Campaign seed, and given equal commands have equal Campaign state but
+equal creation inputs, including the same Campaign seed, and given equal Player actions have equal Campaign state but
 distinct Campaign IDs. Because the Campaign seed is Campaign state, under
 [Campaign seed](determinism-and-randomness.md#campaign-seed), every Campaign save holds it.
 
