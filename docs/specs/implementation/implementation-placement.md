@@ -50,10 +50,15 @@ e.g. `game-v5-impl-web`. Which name an Implementation uses within these constrai
 
 ## Creating the Implementation directory
 
-The Implementer creates the Implementation directory as a new local directory. The Implementer must not initialize it
-as a Git repository, add a Git remote to it, or publish it; whether it becomes a standalone repository, and where that
-repository is hosted, is decided after the Implementation is reviewed. The Implementation must nevertheless be ready to
-become one, e.g. by holding its own Git ignore rules.
+The Implementer creates the Implementation directory as a new local directory. When creating it, the Implementer may
+immediately initialize it as a local Git repository and commit to it, so that the Implementation has a Git history from
+the start; e.g., the Implementer may commit each completed step to review or revert it later.
+
+The Implementer must not add a Git remote to the Implementation directory, push from it, or publish it in any other
+way; whether the Implementation gets a remote repository, e.g. on GitHub, and where that repository is hosted, is
+decided by the Engine designer after the Implementation is reviewed. Whether or not the Implementer initializes it as a local Git
+repository, the Implementation must be ready to become a standalone repository, e.g. by holding its own Git ignore
+rules.
 
 # Repository root of an Implementation
 
