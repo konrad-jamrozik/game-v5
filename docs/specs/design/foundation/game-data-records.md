@@ -41,7 +41,7 @@ implementation interfaces. Each GDR purpose section below is a worked example of
 
 | Purpose                          | How the engine uses the GDR                                                                                                                                                                                  | Example                                                                                                                    |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance initialization | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance. The player cannot override the value.      | A newly hired Agent has skill 100, the value of the recruit-skill GDR.                                                     |
+| Campaign instance initialization | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance. The player cannot override the value.      | A newly hired Agent has skill 100, the value of the new-base-Agent-skill GDR.                                              |
 | Campaign configuration preset    | Campaign creation takes the GDR’s values as the complete initial Campaign configuration. Before creation, the engine lets the player override individual values of the selected preset.                      | A Campaign created from the Hard preset with one override has starting money 80 and investigation difficulty multiplier 2. |
 | Calculation parameter            | The engine reads a GDR when computing a Derived value.                                                                                                                                                       | The engine reads the rate from the Standard contracting GDR to calculate contracting income.                               |
 | Archetype                        | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-instances.md#campaign-instance-creation). | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID.                               |
@@ -84,40 +84,40 @@ A GDR added later goes into the file of its Type, and a file is added only for a
 
 Consider an illustrative creation of an Agent hired during play:
 
-| Element             | Modeling role                                                                  | Meaning in this example                                                                                                      |
-| ------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Skill               | Type                                                                           | Describes a nonnegative integer skill.                                                                                       |
-| Recruit skill       | GDR                                                                            | Has Type Skill and value 100.                                                                                                |
-| Agent hiring        | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) | Hiring creates one Agent Campaign instance with a fresh Instance ID and skill in State equal to the recruit-skill GDR value. |
-| Agent               | Campaign instance                                                              | The newly created Agent Campaign instance, with skill 100 in State.                                                          |
-| Agent skill         | Authoritative value                                                            | Initially 100 in the Agent Campaign instance’s State.                                                                        |
-| New Committed state | Committed state                                                                | Contains the Agent Campaign instance when the hiring action completes.                                                       |
+| Element              | Modeling role                                                                  | Meaning in this example                                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Skill                | Type                                                                           | Describes a nonnegative integer skill.                                                                                              |
+| New base Agent skill | GDR                                                                            | Has Type Skill and value 100.                                                                                                       |
+| Agent hiring         | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) | Hiring creates one Agent Campaign instance with a fresh Instance ID and skill in State equal to the new-base-Agent-skill GDR value. |
+| Agent                | Campaign instance                                                              | The newly created Agent Campaign instance, with skill 100 in State.                                                                 |
+| Agent skill          | Authoritative value                                                            | Initially 100 in the Agent Campaign instance’s State.                                                                               |
+| New Committed state  | Committed state                                                                | Contains the Agent Campaign instance when the hiring action completes.                                                              |
 
-E.g., the recruit-skill GDR as YAML:
+E.g., the new-base-Agent-skill GDR as YAML:
 
 ```yaml
-id: recruit_skill
+id: new_base_agent_skill
 type: Skill
 value: 100
 ```
 
-Recruit skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies
+New base Agent skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies
 to newly hired Agents of every Archetype without being repeated in each Archetype.
 
 The example shows only the skill initial value; Agent hiring also sets the Agent's other initial values. When the hiring action completes, the new Committed state contains an Agent Campaign instance
-with a fresh Instance ID and skill 100 in State, the value of the recruit-skill GDR.
+with a fresh Instance ID and skill 100 in State, the value of the new-base-Agent-skill GDR.
 
 ```mermaid
 flowchart LR
-    Type["Type: Skill"] -.->|describes| GDR["GDR: Recruit skill · value 100"]
-    Creation["Agent hiring<br/>skill starts at the recruit-skill value"] -->|specifies| Agent["Agent Campaign instance<br/>fresh Instance ID"]
+    Type["Type: Skill"] -.->|describes| GDR["GDR: New base Agent skill · value 100"]
+    Creation["Agent hiring<br/>skill starts at the new-base-Agent-skill value"] -->|specifies| Agent["Agent Campaign instance<br/>fresh Instance ID"]
     GDR -->|initial skill 100| Agent
     Agent -->|State contains| Skill["Authoritative value:<br/>skill 100"]
     Agent -->|included in| State["New Committed state"]
 ```
 
 If training later raises the Agent's skill to 110, the engine reads 110 from the Agent Campaign instance’s State.
-The recruit-skill GDR still contains the initial value of 100.
+The new-base-Agent-skill GDR still contains the initial value of 100.
 
 The engine exposes no way for the player to change a value this purpose supplies. That distinguishes it from the
 Campaign configuration preset purpose, described next.
@@ -130,7 +130,7 @@ several such GDRs, and the player selects one of them. Unlike every other purpos
 engine capability: before the Campaign is created, the player may override individual values of the selected preset.
 
 A value belongs to Campaign configuration if and only if the preset GDRs supply it. Whatever no preset can change is
-not Campaign configuration. It is either a GDR serving another purpose, e.g. the recruit-skill GDR, or game behavior,
+not Campaign configuration. It is either a GDR serving another purpose, e.g. the new-base-Agent-skill GDR, or game behavior,
 e.g. a starting turn that is the same for every Campaign.
 
 Consider an illustrative Game build with two presets and two Campaign configuration values:
