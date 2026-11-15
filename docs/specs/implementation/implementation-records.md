@@ -25,6 +25,8 @@ records to improve the specifications and to compare Implementations.
 # Relationships
 
 - Uses [Implementation Placement](implementation-placement.md)
+- Used by [Specification Tracking](specification-tracking.md)
+- Used by [Specification Updates](specification-updates.md)
 
 # Glossary
 
@@ -65,6 +67,7 @@ direction`, with the relevant wording quoted. Specifications are named rather th
 - **Description:** what the problem or decision is.
 - **Links:** for a Specification problem, the identifiers of the Implementation decisions that settle it; for an
   Implementation decision, the identifiers of the Specification problems it settles.
+- **Resolution:** for a Specification problem only, one Resolution from the table below.
 
 An Implementation decision must also state the options considered, the option chosen, and why it was chosen.
 
@@ -83,6 +86,21 @@ Something a specification marks as the Implementer's choice, as left to the impl
 scope, as defined under [Kinds of unspecified content](../governance/spec-conventions.md#kinds-of-unspecified-content),
 is not an Implicit gap. The implementer records how it was settled as an Implementation decision of the Asked by the
 specifications category instead.
+
+## Resolution
+
+A Specification problem stays in its record after it is dealt with, so each entry states whether the specifications
+still have it, which lets the Engine designer find the problems left to settle without reading every entry. The
+following table is exhaustive.
+
+| Resolution | Meaning                                                                                                                                                                                                                                   |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Open       | The specifications the Implementation conforms to still have the problem, and the Engine designer has not declined it.                                                                                                                    |
+| Resolved   | A later commit of the specifications removed the problem, e.g. by settling a Conflict or by stating an Implicit gap as an Implementer's choice. The entry names that commit by its full commit hash and says how the problem was removed. |
+| Declined   | The Engine designer reviewed the problem and decided to leave the specifications as they are. The entry names the commit of the specifications that was reviewed, by its full commit hash, and gives the reason.                          |
+
+A Specification problem is Open when it is recorded. Its Implementation decisions stay in force whatever its
+Resolution, until a change to the specifications overrides them.
 
 # Implementation decisions
 
@@ -116,3 +134,6 @@ group of suggestions treated alike.
 
 An Implementation that has met no Specification problem and made no Implementation decision yet still keeps both record
 files, each holding only its H1 title.
+
+A Specification problem recorded before entries stated a Resolution is given one the next time its record file
+changes, judged against the specifications the Implementation then conforms to.

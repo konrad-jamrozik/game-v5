@@ -25,6 +25,8 @@ Implementations may therefore exist side by side, each independent of the others
 - Uses [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 - Used by [GitHub Pages Deployment](github-pages-deployment.md)
 - Used by [Implementation Records](implementation-records.md)
+- Used by [Specification Tracking](specification-tracking.md)
+- Used by [Specification Updates](specification-updates.md)
 
 # Glossary
 
