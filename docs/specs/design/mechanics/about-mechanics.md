@@ -68,7 +68,7 @@ which creates its Mission, and turning Combat reports into Campaign consequences
 ## Factions
 
 [Factions](factions.md) answers _how do the opponents push back?_ It owns escalating Faction pressure, Faction
-operation occurrence generation, and permanent defeat.
+operation occurrence generation, and permanent elimination.
 
 ## Turn Advancement
 

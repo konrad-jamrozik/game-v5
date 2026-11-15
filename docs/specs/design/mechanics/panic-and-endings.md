@@ -10,7 +10,7 @@
 
 # Overview
 
-The Agency wins by defeating every Faction, and it loses when the public's alarm or its own debts get out of hand.
+The Agency wins by eliminating every Faction, and it loses when the public's alarm or its own debts get out of hand.
 [Panic](#glossary) measures that alarm: one Campaign-wide value from 0% to 100% that belongs directly to Campaign state,
 under [Campaign and Agency](domain-model.md#campaign-and-agency). It can rise, e.g. when a Response Mission site is
 ignored, and fall, e.g. after a Won Initiative Mission.
@@ -18,7 +18,7 @@ ignored, and fall, e.g. after a Won Initiative Mission.
 Within an Advance turn, Panic does not move with each event. Every Panic increase and Panic reduction joins the Pending
 panic change, and the Panic step applies their sum once, clamped to the range 0 to 100, so the order of events never
 changes the result. Right after it, the Ending check step decides whether the Campaign has a Campaign ending: Victory
-when every Faction is Defeated, and otherwise Defeat when Panic reaches the Panic limit or the Agency's money is below
+when every Faction is Eliminated, and otherwise Defeat when Panic reaches the Panic limit or the Agency's money is below
 zero. A Campaign ending is final: every Player action is then rejected, while every query keeps answering.
 
 # Relationships
@@ -52,10 +52,10 @@ How alarmed the public is, and how a turn's changes to it are collected.
 
 How a Campaign finishes, and why.
 
-| Term            | Definition                                                                                                                                                                                         |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign ending | How a Campaign finished: Victory or Defeat. A Campaign without one is still being played.                                                                                                          |
-| Ending reason   | A condition that held when a Campaign ending was recorded and caused it: Every Faction Defeated, Panic at the limit, or Money below zero. Each is defined under [Ending reasons](#ending-reasons). |
+| Term            | Definition                                                                                                                                                                                           |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign ending | How a Campaign finished: Victory or Defeat. A Campaign without one is still being played.                                                                                                            |
+| Ending reason   | A condition that held when a Campaign ending was recorded and caused it: Every Faction Eliminated, Panic at the limit, or Money below zero. Each is defined under [Ending reasons](#ending-reasons). |
 
 # Panic and Campaign ending state
 
@@ -98,7 +98,7 @@ Engine Contract. The list is exhaustive.
 
 1. Panic is a whole number from 0 to 100.
 2. The Campaign ending, the Ending reasons, and the Ending turn are all absent or empty, or all present.
-3. A Campaign ending of Victory has exactly one Ending reason, Every Faction Defeated.
+3. A Campaign ending of Victory has exactly one Ending reason, Every Faction Eliminated.
 4. A Campaign ending of Defeat has one or two Ending reasons, each of them Panic at the limit or Money below zero.
 
 ## Campaign ending lifecycle
@@ -207,11 +207,11 @@ decides the Campaign ending:
 
 ## Victory
 
-**Proposed rule:** Victory holds exactly when the Campaign has at least one Faction and the Defeated fact of every Faction
-is yes. Defeated is read as it is when the step begins, under [Faction State](factions.md#faction-state) in Factions, so a
-Faction made Defeated earlier in the same Advance turn counts.
+**Proposed rule:** Victory holds exactly when the Campaign has at least one Faction and the Eliminated fact of every Faction
+is yes. Eliminated is read as it is when the step begins, under [Faction State](factions.md#faction-state) in Factions, so a
+Faction made Eliminated earlier in the same Advance turn counts.
 
-A Campaign that has no Faction never has Victory: the condition "every Faction is Defeated" is not satisfied by an
+A Campaign that has no Faction never has Victory: the condition "every Faction is Eliminated" is not satisfied by an
 absence of Factions. **Proposed rule:** this is the consequence for a Game build that supplies no FactionArchetype,
 which is valid under [Edge cases and failure behavior](factions.md#edge-cases-and-failure-behavior) in Factions. Such a
 Campaign can end only in Defeat. Victory requires at least one Faction, rather than a GDR validation rule requiring a
@@ -219,7 +219,7 @@ FactionArchetype, because Factions already declares such a Game build valid, and
 otherwise win the Campaign in its first Advance turn.
 
 When Victory holds, the Campaign ending becomes Victory, the Ending reasons become the one Ending reason Every Faction
-Defeated, and no Defeat condition is evaluated or recorded, whatever Panic and money are.
+Eliminated, and no Defeat condition is evaluated or recorded, whatever Panic and money are.
 
 ## Defeat
 
@@ -242,24 +242,24 @@ together.
 
 The following table is the exhaustive set of Ending reasons.
 
-| Ending reason          | Recorded with | Holds when                                                                                      |
-| ---------------------- | ------------- | ----------------------------------------------------------------------------------------------- |
-| Every Faction Defeated | Victory       | The Campaign has at least one Faction and every Faction is Defeated, under [Victory](#victory). |
-| Panic at the limit     | Defeat        | Panic is greater than or equal to the Panic limit, under [Defeat](#defeat).                     |
-| Money below zero       | Defeat        | The Agency's money is less than 0, under [Defeat](#defeat).                                     |
+| Ending reason            | Recorded with | Holds when                                                                                        |
+| ------------------------ | ------------- | ------------------------------------------------------------------------------------------------- |
+| Every Faction Eliminated | Victory       | The Campaign has at least one Faction and every Faction is Eliminated, under [Victory](#victory). |
+| Panic at the limit       | Defeat        | Panic is greater than or equal to the Panic limit, under [Defeat](#defeat).                       |
+| Money below zero         | Defeat        | The Agency's money is less than 0, under [Defeat](#defeat).                                       |
 
 ## Recording the ending
 
 When the Ending check step decides a Campaign ending, it records the Campaign ending, the Ending reasons, and the Ending
 turn in the Committed state that Advance turn produces. The Ending turn is the turn number of the Turn that this Advance
-turn ends, i.e. the turn number before the Turn close step raises it, the same convention as the Defeated turn of a
+turn ends, i.e. the turn number before the Turn close step raises it, the same convention as the Eliminated turn of a
 Faction under [Faction State](factions.md#faction-state). The following pseudocode states the complete step, where `F` is
 the set of Factions and `L` is the Panic limit:
 
 ```text
-if |F| >= 1 and every Faction in F has Defeated = yes:
+if |F| >= 1 and every Faction in F has Eliminated = yes:
     Campaign ending = Victory
-    Ending reasons  = { Every Faction Defeated }
+    Ending reasons  = { Every Faction Eliminated }
 else:
     reasons = { }
     if Panic >= L:        add Panic at the limit to reasons
@@ -341,10 +341,10 @@ makes Player-visible.
   a reduction would each have been clamped on their own ([Pending panic change](#pending-panic-change)).
 - **Money exactly zero:** No Defeat from money. Money of -1 is Defeat ([Defeat](#defeat)).
 - **Victory and Defeat conditions both hold:** The Campaign ending is Victory with the one Ending reason Every Faction
-  Defeated; the Defeat conditions are not recorded ([Victory](#victory)).
+  Eliminated; the Defeat conditions are not recorded ([Victory](#victory)).
 - **Both Defeat conditions hold:** The Campaign ending is Defeat with both Ending reasons ([Defeat](#defeat)).
 - **No Faction:** The Campaign never has Victory and ends only in Defeat ([Victory](#victory)).
-- **Faction made Defeated in the same Advance turn:** The last Faction made Defeated in Mission resolution counts for
+- **Faction made Eliminated in the same Advance turn:** The last Faction made Eliminated in Mission resolution counts for
   Victory in the Ending check step of the same Advance turn ([Victory](#victory)).
 - **Empty roster, no Mission sites, no Investigations:** Not an ending and not an Ending reason. Only Panic at the limit
   and Money below zero cause Defeat ([Defeat](#defeat)).
@@ -374,7 +374,7 @@ states a test GDR. The values they read are:
 
 Where an example says a Panic increase or reduction is added, the rule of [Missions](missions.md) that adds it is
 assumed. In every example the Campaign has one Faction, Red Dawn, which is not
-Defeated unless the example says otherwise, and the Agency's money is 500 unless the example says otherwise. "The
+Eliminated unless the example says otherwise, and the Agency's money is 500 unless the example says otherwise. "The
 Advance turn ending turn t" is the Advance turn committed during Turn t.
 
 ## Panic is summed, clamped, and reaches Defeat
@@ -396,7 +396,7 @@ Advance turn ending turn 12:
 The Pending panic change is `8 − 2 = 6`. The Panic step computes
 `max(0, min(100, 97 + 6)) = max(0, min(100, 103)) = 100`.
 
-In the Ending check step, Victory does not hold, because Red Dawn is not Defeated. Panic 100 is at least the Panic limit
+In the Ending check step, Victory does not hold, because Red Dawn is not Eliminated. Panic 100 is at least the Panic limit
 100, so Defeat holds; money 100 is not below zero.
 
 | Value           | After the Advance turn ending turn 12 |
@@ -448,7 +448,7 @@ does not end the Campaign and a Panic of 100 does.
 
 This example exercises [Defeat](#defeat).
 
-Initial state: Panic 40, no Panic contributions, Red Dawn not Defeated.
+Initial state: Panic 40, no Panic contributions, Red Dawn not Eliminated.
 
 | Money after the earlier steps | Campaign ending | Ending reasons       |
 | ----------------------------- | --------------- | -------------------- |
@@ -471,7 +471,7 @@ Initial state: Panic 95, money -5 after the Upkeep step. A Panic increase of 8 i
 
 This example exercises [Victory](#victory), [Defeat](#defeat), and [Ending check step](#ending-check-step).
 
-Initial state: Turn 150, Panic 95, money 30, funding 0, and Red Dawn, the only Faction, not Defeated. The Agency has
+Initial state: Turn 150, Panic 95, money 30, funding 0, and Red Dawn, the only Faction, not Eliminated. The Agency has
 exactly 4 Agents, which equals the Transport cap: Agents a1 and a2 are Deployed on a Mission at a `raid_hq` Mission site, and
 Agents a3 and a4 are Deployed on a Mission at a Response Mission site of `operation_level_2` of Red Dawn. No Agent is on Contracting.
 
@@ -480,18 +480,18 @@ In the Advance turn ending turn 150:
 - Agency income adds 0, because funding is 0 and no Agent is on Contracting.
 - Upkeep takes `10 × 4 = 40`, so money is -10.
 - In Mission resolution, the Combat of the Mission at the `raid_hq` Mission site is stipulated to be Prevailed, so that
-  Mission is Won and makes Red Dawn Defeated, with the Defeated turn 150, under [Defeat](factions.md#defeat) in Factions. In the same step,
+  Mission is Won and makes Red Dawn Eliminated, with the Eliminated turn 150, under [Elimination](factions.md#elimination) in Factions. In the same step,
   the Combat of the Response Mission is stipulated to be Wiped, so that Mission is Lost and adds a Panic increase of 8
   to the Pending panic change. Funding stays 0, because a funding change of -1 is floored at 0.
 - The Panic step gives `max(0, min(100, 95 + 8)) = 100`.
 
-In the Ending check step, the Campaign has one Faction and it is Defeated, so Victory holds. The order of the predicates
+In the Ending check step, the Campaign has one Faction and it is Eliminated, so Victory holds. The order of the predicates
 means Defeat is not tried.
 
 | Value           | After the Advance turn ending turn 150 |
 | --------------- | -------------------------------------- |
 | Campaign ending | Victory                                |
-| Ending reasons  | { Every Faction Defeated }             |
+| Ending reasons  | { Every Faction Eliminated }           |
 | Ending turn     | 150                                    |
 | Panic           | 100                                    |
 | Money           | -10                                    |
@@ -504,7 +504,7 @@ This example exercises [Victory](#victory). It uses a test Game build that suppl
 are the Bootstrap GDRs.
 
 The Game build passes [Faction GDR validation](factions.md#faction-gdr-validation), so a Campaign is created with no
-Faction. In the Advance turn ending turn 1, Panic is 0 and money is 500; "every Faction is Defeated" is vacuously true,
+Faction. In the Advance turn ending turn 1, Panic is 0 and money is 500; "every Faction is Eliminated" is vacuously true,
 but the Campaign has no Faction, so Victory does not hold. Defeat does not hold either, so the Campaign has no Campaign
 ending. The same Campaign ends in Defeat if Panic reaches 100 or money falls below zero, and never in Victory.
 

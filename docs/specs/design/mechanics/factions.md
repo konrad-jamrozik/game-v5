@@ -5,20 +5,20 @@
 | Spec ID     | FACTION                                                                                                                                                                    |
 | Family      | Mechanics                                                                                                                                                                  |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                |
-| Owns        | What a Faction has, its creation, its escalation through Faction activity levels, Faction operation occurrence generation, and defeat.                                     |
+| Owns        | What a Faction has, its creation, its escalation through Faction activity levels, Faction operation occurrence generation, and elimination.                                |
 | Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
 Factions are the pressure the Agency works against: left alone, a Faction only grows more dangerous, and nothing but
-defeat stops it. A [Faction](domain-model.md#glossary) is an organization that opposes the Agency, and every Faction a
+elimination stops it. A [Faction](domain-model.md#glossary) is an organization that opposes the Agency, and every Faction a
 Campaign will ever have exists from its start.
 
 A Faction's danger is its Faction activity level, which sets how often it acts and how severely. After a random number
 of Advance turns at one level, the Faction moves up to the next, until it reaches a final level, and it never moves
 back. At random intervals it carries out a Faction operation occurrence, whose Faction operation level decides how much
 is at stake, and each occurrence creates one [Response Mission site](domain-model.md#glossary), the Agency's chance to
-stop it. A Faction that becomes Defeated stops escalating and operating for the rest of the Campaign.
+stop it. A Faction that becomes Eliminated stops escalating and operating for the rest of the Campaign.
 
 Factions refines [Domain Model](domain-model.md): Domain Model says that Factions create Response Mission sites, and
 Factions says when they do and how severe each operation is.
@@ -39,10 +39,11 @@ Factions says when they do and how severe each operation is.
 
 These terms are specific to Factions. General terms are in the [Domain Model glossary](domain-model.md#glossary).
 
-| Term                    | Definition                                                                                                                                |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Faction activity level  | How aggressively a Faction currently acts: how often it carries out operations and how severe they are.                                   |
-| Faction operation level | How severe one Faction operation occurrence is; it decides the rewards and penalties of the Response Mission site the occurrence creates. |
+| Term                    | Definition                                                                                                                                                                 | Prohibited synonyms                                                                                                                |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Faction activity level  | How aggressively a Faction currently acts: how often it carries out operations and how severe they are.                                                                    |                                                                                                                                    |
+| Faction operation level | How severe one Faction operation occurrence is; it decides the rewards and penalties of the Response Mission site the occurrence creates.                                  |                                                                                                                                    |
+| Eliminated              | Permanently put out of action by a Won Mission: an Eliminated Faction no longer escalates or carries out operations, and it stays Eliminated for the rest of the Campaign. | Defeated; defeat, naming the end of a Faction. Defeat remains the Campaign ending under [Panic and Endings](panic-and-endings.md). |
 
 # Faction GDRs
 
@@ -127,19 +128,19 @@ FactionArchetype. Its State has exactly the following properties. This table is 
 | Faction activity level         | A Mutable reference to the FactionActivityLevel the Faction is currently at.                                 | Authoritative value. Always resolves to a FactionActivityLevel the Game build supplies.                                                                                                    |
 | Turns until the next level     | The number of Advance turns left before the Faction moves to its Faction activity level's `next`, or absent. | Authoritative value. A whole number, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). Absent exactly when the Faction activity level's `next` is `null`. |
 | Turns until the next operation | The number of Advance turns left before the Faction's next Faction operation occurrence.                     | Authoritative value. A whole number. Always present.                                                                                                                                       |
-| Defeated                       | Whether the Faction is Defeated: no or yes.                                                                  | Authoritative value. Starts as no and changes only under [Defeat](#defeat).                                                                                                                |
-| Defeated turn                  | The turn number of the Turn whose Advance turn made the Faction Defeated, or absent.                         | Authoritative value. A whole number of at least 1. Absent exactly when Defeated is no.                                                                                                     |
+| Eliminated                     | Whether the Faction is Eliminated: no or yes.                                                                | Authoritative value. Starts as no and changes only under [Elimination](#elimination).                                                                                                      |
+| Eliminated turn                | The turn number of the Turn whose Advance turn made the Faction Eliminated, or absent.                       | Authoritative value. A whole number of at least 1. Absent exactly when Eliminated is no.                                                                                                   |
 
-**Range invariant:** In every Committed state, for every Faction whose Defeated is no, Turns until the next operation is
+**Range invariant:** In every Committed state, for every Faction whose Eliminated is no, Turns until the next operation is
 at least 1, and Turns until the next level is at least 1 whenever it is present. The rules under
 [Escalation](#escalation) and [Faction operation occurrence generation](#faction-operation-occurrence-generation)
 maintain this: a countdown that reaches zero takes, within the same Turn advancement step, the value of a
-[Level duration](#level-duration) or [Operation interval](#operation-interval) outcome, which is at least 1. For a Faction whose Defeated is yes, both countdowns keep the values they had when it became Defeated
+[Level duration](#level-duration) or [Operation interval](#operation-interval) outcome, which is at least 1. For a Faction whose Eliminated is yes, both countdowns keep the values they had when it became Eliminated
 and are never read again.
 
 A Faction's name is not a State property: it is the `name` of its FactionArchetype. A Faction has no Turn series.
 
-**Retention:** A Faction participates in current gameplay for the whole Campaign, including after it is Defeated, and
+**Retention:** A Faction participates in current gameplay for the whole Campaign, including after it is Eliminated, and
 keeps every property above, so that every reference to it, e.g. a Mission site's target Faction, resolves, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Faction is ever removed.
@@ -160,8 +161,8 @@ Campaign Instances. This table is exhaustive.
 | Faction activity level         | The FactionActivityLevel that the FactionArchetype's `initial_activity_level` references.                                                | `initial_activity_level` of the FactionArchetype.            |
 | Turns until the next level     | The Faction's initial [Level duration](#level-duration) outcome when that level's `lasts_turns` is not `null`; absent when it is `null`. | `lasts_turns` of the initial FactionActivityLevel.           |
 | Turns until the next operation | The Faction's initial [Operation interval](#operation-interval) outcome.                                                                 | `operation_every_turns` of the initial FactionActivityLevel. |
-| Defeated                       | No.                                                                                                                                      | This rule.                                                   |
-| Defeated turn                  | Absent.                                                                                                                                  | This rule.                                                   |
+| Eliminated                     | No.                                                                                                                                      | This rule.                                                   |
+| Eliminated turn                | Absent.                                                                                                                                  | This rule.                                                   |
 
 No Campaign configuration value adds, removes, or changes an initial Faction or any of its initial values.
 
@@ -204,12 +205,12 @@ they sum to 1. The outcome depends only on that level's `operation_level_weights
 # Faction activity
 
 **Proposed rule:** During each Advance turn, in the Turn advancement step Faction activity under
-[Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Faction whose Defeated
+[Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Faction whose Eliminated
 is no applies [Escalation](#escalation) and then
 [Faction operation occurrence generation](#faction-operation-occurrence-generation), in that order. A Faction whose
-Defeated is yes applies neither; nothing about it changes in this step. Nothing slows a Faction's escalation or its
-operations except becoming Defeated. The following pseudocode states the complete
-rule for one Faction F whose Defeated is no; "level" means F's Faction activity level at the moment it is read:
+Eliminated is yes applies neither; nothing about it changes in this step. Nothing slows a Faction's escalation or its
+operations except becoming Eliminated. The following pseudocode states the complete
+rule for one Faction F whose Eliminated is no; "level" means F's Faction activity level at the moment it is read:
 
 ```text
 if Turns until the next level is present:
@@ -243,8 +244,8 @@ implementation processes the Factions in, and no order is specified, under
 operation reaches zero has its own Faction operation occurrence and creates its own Response Mission site; several
 Factions can therefore create several Response Mission sites in one Advance turn.
 
-Whether this step applies to a Faction is decided by its Defeated as it is when the step begins, i.e. after the
-step Mission resolution under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), so a Faction made Defeated earlier in the same Advance
+Whether this step applies to a Faction is decided by its Eliminated as it is when the step begins, i.e. after the
+step Mission resolution under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), so a Faction made Eliminated earlier in the same Advance
 turn neither escalates nor operates in it.
 
 ## Escalation
@@ -292,34 +293,34 @@ occurrence, and consecutive occurrences may have the same Faction operation leve
 frequencies and severity weights. Factions keep that structure in a reduced form, as a Proposed rule; the game-ts
 values and its avoidance of repeated operations are not carried over.
 
-# Defeat
+# Elimination
 
-**Proposed rule:** Defeated is a permanent fact of a Faction. It changes exactly once at most, from no to yes, and
-never back. Only a Mission consequence under [Consequences](missions.md#consequences) makes a Faction Defeated.
+**Proposed rule:** Eliminated is a permanent fact of a Faction. It changes exactly once at most, from no to yes, and
+never back. Only a Mission consequence under [Consequences](missions.md#consequences) makes a Faction Eliminated.
 
-Making a Faction F Defeated during an Advance turn has the following complete effects on F, applied at once:
+Making a Faction F Eliminated during an Advance turn has the following complete effects on F, applied at once:
 
-- Defeated becomes yes.
-- Defeated turn becomes the turn number of the Turn that this Advance turn ends.
+- Eliminated becomes yes.
+- Eliminated turn becomes the turn number of the Turn that this Advance turn ends.
 - Faction activity level, Turns until the next level, and Turns until the next operation keep their current values.
 
-When the effect is applied to a Faction whose Defeated is already yes, nothing changes; in particular, its Defeated
+When the effect is applied to a Faction whose Eliminated is already yes, nothing changes; in particular, its Eliminated
 turn keeps its first value.
 
-The following table states every change of Defeated. Every change not listed, e.g. from yes to no, is impossible.
+The following table states every change of Eliminated. Every change not listed, e.g. from yes to no, is impossible.
 
-| From | To  | Trigger                                                                                   | Condition |
-| ---- | --- | ----------------------------------------------------------------------------------------- | --------- |
-| No   | Yes | A Mission consequence under [Consequences](missions.md#consequences) defeats the Faction. | None.     |
+| From | To  | Trigger                                                                                      | Condition |
+| ---- | --- | -------------------------------------------------------------------------------------------- | --------- |
+| No   | Yes | A Mission consequence under [Consequences](missions.md#consequences) eliminates the Faction. | None.     |
 
-A Faction whose Defeated is yes no longer does any of the following; the list is exhaustive for the Faction rules:
+A Faction whose Eliminated is yes no longer does any of the following; the list is exhaustive for the Faction rules:
 
 - It no longer escalates: [Escalation](#escalation) does not apply to it.
 - It no longer carries out operations: no Faction operation occurrence of it happens, so it creates no further Response
   Mission site.
 
-What becomes of Mission sites that target a Defeated Faction, whether a Lead of a Defeated Faction is available, and
-whether every Faction being Defeated ends the Campaign are stated by [Missions](missions.md),
+What becomes of Mission sites that target a Eliminated Faction, whether a Lead of a Eliminated Faction is available, and
+whether every Faction being Eliminated ends the Campaign are stated by [Missions](missions.md),
 [Leads and Progression](leads-and-progression.md), and [Panic and Endings](panic-and-endings.md).
 
 # Player-visible information
@@ -327,14 +328,14 @@ whether every Faction being Defeated ends the Campaign are stated by [Missions](
 **Proposed rule:** Each Faction value below is Player-visible information, or not, as the table states, under
 [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract. The table
 is exhaustive. Each Player-visible value is visible from campaign creation, without a reveal condition,
-for every Faction, whether or not it is Defeated.
+for every Faction, whether or not it is Eliminated.
 
 | Value                                                                                                                                                                            | Player-visible information                                                                             |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | A Faction's Instance ID and its FactionArchetype, including the FactionArchetype's `name`                                                                                        | Yes                                                                                                    |
 | A Faction's Faction activity level, including every property of that FactionActivityLevel: `name`, `lasts_turns`, `operation_every_turns`, `operation_level_weights`, and `next` | Yes                                                                                                    |
 | Every FactionOperationLevel's `level` and `name`                                                                                                                                 | Yes                                                                                                    |
-| A Faction's Defeated and Defeated turn                                                                                                                                           | Yes                                                                                                    |
+| A Faction's Eliminated and Eliminated turn                                                                                                                                       | Yes                                                                                                    |
 | A Faction's Turns until the next level                                                                                                                                           | No                                                                                                     |
 | A Faction's Turns until the next operation                                                                                                                                       | No                                                                                                     |
 | The value of every Level duration outcome and every Operation interval outcome                                                                                                   | No                                                                                                     |
@@ -343,8 +344,8 @@ for every Faction, whether or not it is Defeated.
 **Hidden versus absent:** Player API returns no property for either countdown of any Faction. It never reports a
 hidden countdown as zero, as empty, or as absent, and it reports nothing that distinguishes a present Turns until the
 next level from an absent one. The player tells a final Faction activity level, at which Turns until the next level is
-absent, from the visible `next` of that level being `null`, never from the countdown. Defeated turn is never hidden:
-when Player API reports it as absent, the Faction is not Defeated.
+absent, from the visible `next` of that level being `null`, never from the countdown. Eliminated turn is never hidden:
+when Player API reports it as absent, the Faction is not Eliminated.
 
 Under [Information boundary](../foundation/engine-contract.md#information-boundary) in Engine Contract, no channel of
 Player API reveals either countdown, e.g. neither a validation error nor the Turn report nor a History entry states how many Advance turns remain
@@ -362,13 +363,13 @@ Developer API.
 - **Move to a final level:** Turns until the next level becomes absent and no Level duration outcome exists for that
   move. Turns until the next operation is unchanged by the move ([Escalation](#escalation)).
 - **At a final level:** The Faction never escalates again; Faction operation occurrences continue for as long as it is
-  not Defeated ([Escalation](#escalation)).
+  not Eliminated ([Escalation](#escalation)).
 - **Level duration or Operation interval at its lower bound:** An outcome value of `lo` is valid. Because `lo` is at
   least 1, the countdown is never set to zero, and an occurrence or move happens in the `lo`-th Advance turn after the
   one that set the countdown ([Faction GDR validation](#faction-gdr-validation), [Faction State](#faction-state)).
-- **Defeated earlier in the same Advance turn:** A Faction made Defeated in Mission resolution does not apply Faction
+- **Eliminated earlier in the same Advance turn:** A Faction made Eliminated in Mission resolution does not apply Faction
   activity in the same Advance turn, even if a countdown of it would have reached zero ([Faction activity](#faction-activity)).
-- **Defeated twice:** Applying the effect of [Defeat](#defeat) to a Faction that is already Defeated changes nothing.
+- **Eliminated twice:** Applying the effect of [Elimination](#elimination) to a Faction that is already Eliminated changes nothing.
 - **Existing Response Mission sites:** An Active Response Mission site of the same Faction, or a Deployed Mission at one, does not affect a
   new occurrence, and the same Faction operation level may occur again
   ([Faction operation occurrence generation](#faction-operation-occurrence-generation)).
@@ -380,7 +381,7 @@ Developer API.
 - **Unknown property, cyclic `next` chain, or unresolved reference:** These cannot occur in a Campaign,
   because a Game build containing them fails [Faction GDR validation](#faction-gdr-validation) and no Campaign is created
   from it. A Committed state violating the range invariant under [Faction State](#faction-state), e.g. a Faction that is
-  not Defeated with Turns until the next operation of 0, is an internal invariant violation, reported under
+  not Eliminated with Turns until the next operation of 0, is an internal invariant violation, reported under
   [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 - **Campaign ended:** Once the Campaign has a Campaign ending, Advance turn is rejected under
   [Panic and Endings](panic-and-endings.md), so no further Faction activity applies.
@@ -404,7 +405,7 @@ With the Bootstrap GDRs, under [MissionSiteArchetype selection](missions.md#miss
 Missions, an occurrence of Faction operation level 1 creates a Response Mission site from `foil_recruitment_push`, and
 one of level 2 from `foil_sabotage`. The examples name those Mission sites only to show when they are created. "The
 Advance turn ending turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. In every
-example, Red Dawn is not Defeated unless the example says otherwise.
+example, Red Dawn is not Eliminated unless the example says otherwise.
 
 ## Campaign creation through the first escalation
 
@@ -422,8 +423,8 @@ outcome is 15, a uniform whole-number outcome over 15 to 25 in which each of 11 
 | Faction activity level         | `faint`                 |
 | Turns until the next level     | 60                      |
 | Turns until the next operation | 15                      |
-| Defeated                       | No                      |
-| Defeated turn                  | Absent                  |
+| Eliminated                     | No                      |
+| Eliminated turn                | Absent                  |
 
 **Advance turns ending turns 1 to 14.** Each Advance turn subtracts one from each countdown and neither reaches zero.
 After the Advance turn ending turn 14, Turns until the next level is 46 and Turns until the next operation is 1.
@@ -486,17 +487,17 @@ Faction operation level `operation_level_1`, from which Missions creates one Res
 Turns until the next operation is 8, so the next occurrence happens in the eighth Advance turn after this one. With an
 injected Operation interval of 18, the upper bound, it would happen in the eighteenth.
 
-## Defeat stops escalation and operations
+## Elimination stops escalation and operations
 
-This example exercises [Defeat](#defeat) and [Faction activity](#faction-activity).
+This example exercises [Elimination](#elimination) and [Faction activity](#faction-activity).
 
 Initial state: during Turn 120, Red Dawn is at `active` with Turns until the next level 1 and Turns until the next
 operation 1. In the Advance turn ending turn 120, a Mission site consequence under
-[Consequences](missions.md#consequences) makes Red Dawn Defeated in Mission resolution. Result after that Advance turn: Defeated is yes; Defeated turn is 120; Faction
+[Consequences](missions.md#consequences) makes Red Dawn Eliminated in Mission resolution. Result after that Advance turn: Eliminated is yes; Eliminated turn is 120; Faction
 activity level is still `active`; Turns until the next level is still 1 and Turns until the next operation is still 1,
 because Faction activity did not apply to Red Dawn; no Faction operation occurrence happened and no Response Mission
 site was created. Had the Campaign continued, no later Advance turn would change any of these values. Applying the
-defeat effect to Red Dawn again would leave Defeated turn at 120.
+elimination effect to Red Dawn again would leave Eliminated turn at 120.
 
 ## Several Factions
 
@@ -523,7 +524,7 @@ In the Committed state after the Advance turn ending turn 15 in
 [Campaign creation through the first escalation](#campaign-creation-through-the-first-escalation), a Player API query
 of Factions returns, for Red Dawn: its Instance ID; FactionArchetype `red_dawn` with name Red Dawn; Faction activity
 level `faint` with name Faint, `lasts_turns` [60, 90], `operation_every_turns` [15, 25], weights 1: 80 and 2: 20, and
-`next` `active`; Defeated no; and Defeated turn absent. It returns no property for Turns until the next level, 45, or
+`next` `active`; Eliminated no; and Eliminated turn absent. It returns no property for Turns until the next level, 45, or
 Turns until the next operation, 25, and the result is the same for the Session controller and an Autopilot AI. After
 Red Dawn reaches `war`, the query shows `next` null, from which the player knows that Red Dawn will not escalate
 further, while the absent Turns until the next level is still not returned.

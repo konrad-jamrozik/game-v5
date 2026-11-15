@@ -20,7 +20,7 @@ each Lead's Recorded wins: the Won Missions at the Mission sites it created, kep
 is available only while every Lead it requires has a Recorded win and it has none itself. A Lost Mission or an Expired
 Mission site therefore sends the player back to investigate the same Lead again, while a win can open the Leads that
 require it. A Lead is also not available while a Mission site it created is in progress, or once its Faction is
-Defeated.
+Eliminated.
 
 # Relationships
 
@@ -56,14 +56,14 @@ under [Game concepts](domain-model.md#game-concepts) in Domain Model; it is not 
 never changes during a Campaign. A Lead has no lifecycle states. The table below is exhaustive apart from the `id` and
 `type` that every GDR has.
 
-| Property        | Shape                                                                                                                                       | Meaning                                                                                                                                                                                                     | Read by                                                                          |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `name`          | Non-empty text.                                                                                                                             | The display name of the Lead.                                                                                                                                                                               | [Player-visible information](#player-visible-information)                        |
-| `description`   | Non-empty text.                                                                                                                             | The display description of the Lead.                                                                                                                                                                        | [Player-visible information](#player-visible-information)                        |
-| `faction`       | The identifier of a FactionArchetype.                                                                                                       | The Faction the Lead concerns: the Faction whose Archetype is this FactionArchetype. It decides the target Faction of the Mission site the Lead creates, and blocks the Lead once that Faction is Defeated. | [Lead availability](#lead-availability); [Completion effect](#completion-effect) |
-| `difficulty`    | A whole number of at least 1.                                                                                                               | The Lead difficulty of the Lead.                                                                                                                                                                            | [Investigations](investigations.md)                                              |
-| `requires`      | A list, possibly empty, of prerequisites. Each prerequisite is a map with exactly one key, the prerequisite kind, and a value for that key. | The prerequisites that must all hold before the Lead is available, under [Prerequisites](#prerequisites).                                                                                                   | [Prerequisites](#prerequisites)                                                  |
-| `on_completion` | A map with exactly one key, the effect kind, and a value for that key.                                                                      | What happens when an Investigation of the Lead completes, under [Completion effect](#completion-effect).                                                                                                    | [Completion effect](#completion-effect)                                          |
+| Property        | Shape                                                                                                                                       | Meaning                                                                                                                                                                                                       | Read by                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `name`          | Non-empty text.                                                                                                                             | The display name of the Lead.                                                                                                                                                                                 | [Player-visible information](#player-visible-information)                        |
+| `description`   | Non-empty text.                                                                                                                             | The display description of the Lead.                                                                                                                                                                          | [Player-visible information](#player-visible-information)                        |
+| `faction`       | The identifier of a FactionArchetype.                                                                                                       | The Faction the Lead concerns: the Faction whose Archetype is this FactionArchetype. It decides the target Faction of the Mission site the Lead creates, and blocks the Lead once that Faction is Eliminated. | [Lead availability](#lead-availability); [Completion effect](#completion-effect) |
+| `difficulty`    | A whole number of at least 1.                                                                                                               | The Lead difficulty of the Lead.                                                                                                                                                                              | [Investigations](investigations.md)                                              |
+| `requires`      | A list, possibly empty, of prerequisites. Each prerequisite is a map with exactly one key, the prerequisite kind, and a value for that key. | The prerequisites that must all hold before the Lead is available, under [Prerequisites](#prerequisites).                                                                                                     | [Prerequisites](#prerequisites)                                                  |
+| `on_completion` | A map with exactly one key, the effect kind, and a value for that key.                                                                      | What happens when an Investigation of the Lead completes, under [Completion effect](#completion-effect).                                                                                                      | [Completion effect](#completion-effect)                                          |
 
 Exactly one prerequisite kind and exactly one effect kind exist, and these two tables are exhaustive:
 
@@ -148,7 +148,7 @@ This is the only way an entry is added. A Mission that becomes Lost is recorded 
 becomes Expired or Cancelled, and a Response Mission is recorded nowhere. Recording does nothing else; e.g., it changes no
 Faction, no Investigation, no Mission site, and no Mission.
 
-The record is permanent: once recorded, a win remains recorded even if the Faction of the Lead later becomes Defeated, under
+The record is permanent: once recorded, a win remains recorded even if the Faction of the Lead later becomes Eliminated, under
 [Authoritative and Derived values](../foundation/core-concepts.md#authoritative-and-derived-values) in Core Concepts. Adding the references of several Missions
 in one step, to the same set or to different sets, gives the same Lead progression whichever order an
 implementation uses.
@@ -163,7 +163,7 @@ The identifier X refers to the Lead GDR itself, never to text parsed from an ide
   prerequisite relation has a Recorded win, and it does not read the Investigations, the Mission sites, the Missions, or the
   Faction of X.
 - **Permanent:** Because a Recorded win is permanent, a prerequisite that holds holds for the rest of the Campaign. It
-  does not stop holding when its Faction becomes Defeated.
+  does not stop holding when its Faction becomes Eliminated.
 - **All must hold:** The prerequisites of a Lead are all of the entries of its `requires`. They hold together exactly
   when each of them holds. An empty `requires` holds together, because no prerequisite fails.
 
@@ -173,12 +173,12 @@ The identifier X refers to the Lead GDR itself, never to text parsed from an ide
 read; it is never stored, and it is not a state. A Lead L is available exactly when all of the following four
 conditions hold. The list is exhaustive.
 
-| Condition                      | It holds exactly when                                                                                           |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| 1. Prerequisites hold          | Every prerequisite in the `requires` of L holds, under [Prerequisites](#prerequisites).                         |
-| 2. No win recorded             | Lead progression records no Won Mission for L, i.e. L has no Recorded win.                                      |
-| 3. No Mission site in progress | No Mission site created by L is Active, and no Mission from L is Deployed.                                      |
-| 4. Faction not Defeated        | The Faction whose Archetype is the FactionArchetype named by the `faction` of L exists, and its Defeated is no. |
+| Condition                      | It holds exactly when                                                                                             |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| 1. Prerequisites hold          | Every prerequisite in the `requires` of L holds, under [Prerequisites](#prerequisites).                           |
+| 2. No win recorded             | Lead progression records no Won Mission for L, i.e. L has no Recorded win.                                        |
+| 3. No Mission site in progress | No Mission site created by L is Active, and no Mission from L is Deployed.                                        |
+| 4. Faction not Eliminated      | The Faction whose Archetype is the FactionArchetype named by the `faction` of L exists, and its Eliminated is no. |
 
 The Lead is available exactly when conditions 1 to 4 all hold. When it is not available, its **Blocking conditions** are
 all of the conditions that do not hold; there may be several. No condition reads an Investigation: whether a Lead that
@@ -196,21 +196,21 @@ every Lead that passes [Lead GDR validation](#lead-gdr-validation).
 ## What changes availability
 
 A Lead's availability changes over a Campaign as the Mission sites it created resolve, as the Leads it requires gain
-Recorded wins, and as its Faction is Defeated.
+Recorded wins, and as its Faction is Eliminated.
 
 The following table states, for each situation, what happens to the conditions and whether the Lead is available
 afterwards. It assumes that the conditions the row does not mention keep the values they had. The table is
 exhaustive for what changes a condition.
 
-| Situation                                                                 | Conditions that change                                       | Result for L                                                                                                                  |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| The [Completion effect](#completion-effect) of L creates a Mission site   | 3 stops holding.                                             | Not available while that Mission site is Active or its Mission is Deployed.                                                   |
-| The Mission at that Mission site becomes Lost                             | 3 holds again.                                               | Available again, if the other conditions hold; Lead progression is unchanged. A new Investigation creates a new Mission site. |
-| That Mission site becomes Expired                                         | 3 holds again.                                               | Available again, as for Lost.                                                                                                 |
-| The Mission at that Mission site becomes Won                              | 3 holds again; 2 stops holding, because the win is recorded. | Never available again, for the rest of the Campaign, under [Recording a Won Mission](#recording-a-won-mission).               |
-| That Mission site becomes Cancelled, because the Faction of L is Defeated | 3 holds again; 4 has stopped holding.                        | Not available, because 4 does not hold. Cancellation does not make L available.                                               |
-| A Lead X that L requires has its first win recorded                       | 1 can start holding, once every prerequisite of L holds.     | L can become available, if conditions 2 to 4 hold; it does so in the same Committed state in which the win is recorded.       |
-| The Faction of L becomes Defeated                                         | 4 stops holding, for good.                                   | Not available for the rest of the Campaign, whatever the other conditions are.                                                |
+| Situation                                                                   | Conditions that change                                       | Result for L                                                                                                                  |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| The [Completion effect](#completion-effect) of L creates a Mission site     | 3 stops holding.                                             | Not available while that Mission site is Active or its Mission is Deployed.                                                   |
+| The Mission at that Mission site becomes Lost                               | 3 holds again.                                               | Available again, if the other conditions hold; Lead progression is unchanged. A new Investigation creates a new Mission site. |
+| That Mission site becomes Expired                                           | 3 holds again.                                               | Available again, as for Lost.                                                                                                 |
+| The Mission at that Mission site becomes Won                                | 3 holds again; 2 stops holding, because the win is recorded. | Never available again, for the rest of the Campaign, under [Recording a Won Mission](#recording-a-won-mission).               |
+| That Mission site becomes Cancelled, because the Faction of L is Eliminated | 3 holds again; 4 has stopped holding.                        | Not available, because 4 does not hold. Cancellation does not make L available.                                               |
+| A Lead X that L requires has its first win recorded                         | 1 can start holding, once every prerequisite of L holds.     | L can become available, if conditions 2 to 4 hold; it does so in the same Committed state in which the win is recorded.       |
+| The Faction of L becomes Eliminated                                         | 4 stops holding, for good.                                   | Not available for the rest of the Campaign, whatever the other conditions are.                                                |
 
 A situation not listed changes none of the conditions. In particular, the outcome of a Mission site, or of its Mission, that
 was created by a Lead other than L, of a Response Mission site or Response Mission, and any change to an Investigation of L that creates no Mission site change
@@ -221,7 +221,7 @@ no condition of L.
 - A Lost Mission or an Expired Mission site never blocks its Lead for ever: the Lead is available again and the Agency obtains
   a new Mission site from it by a new Investigation. A Mission site cannot be attempted twice, under
   [Mission site lifecycle](missions.md#mission-site-lifecycle).
-- A Lead whose prerequisites hold and whose Faction is not Defeated stays available until a Mission from it is Won,
+- A Lead whose prerequisites hold and whose Faction is not Eliminated stays available until a Mission from it is Won,
   apart from the Turns in which a Mission site it created is Active or a Mission from it is Deployed.
 
 **Informative rationale:** A Lead holds at most one Recorded win. A second Recorded win would need a second Won Mission
@@ -248,8 +248,8 @@ kind `create_mission_site` has the following complete effect, applied once for t
    expiry that [Missions](missions.md) gives it.
 
 The effect creates one Mission site per completion, never more and never none. It does not depend on the availability of
-L at the moment of completion, and it does not depend on whether the Faction of L is Defeated: if the Faction became
-Defeated before the completion, [Missions](missions.md) cancels the new Mission site at the end of the Turn advancement
+L at the moment of completion, and it does not depend on whether the Faction of L is Eliminated: if the Faction became
+Eliminated before the completion, [Missions](missions.md) cancels the new Mission site at the end of the Turn advancement
 step Mission resolution of the same Advance turn, under [Cancellation](missions.md#cancellation). The effect changes
 nothing else: it records nothing in Lead progression, because only a Won Mission is recorded, and it spends
 nothing.
@@ -279,7 +279,7 @@ now, which also depends on whether the Lead already has an Active Investigation,
 [Investigations](investigations.md). **Unknown versus absent:** No value in the table above is unknown to the player, so
 Player API never reports one as unknown. A Lead with an empty `requires` is reported with an empty list of
 prerequisites, and condition 1 is reported as holding. A Lead with no Recorded win is reported with an empty set, never
-as absent. The availability of a Lead of a Defeated Faction is reported as not available with condition 4 as a Blocking
+as absent. The availability of a Lead of a Eliminated Faction is reported as not available with condition 4 as a Blocking
 condition.
 
 # Edge cases and failure behavior
@@ -292,14 +292,14 @@ condition.
   occurred would be an internal invariant violation, reported under
   [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract; condition 4
   would not hold, so the Lead would not be available.
-- **Investigation completes in the same Advance turn in which the Faction is Defeated:** The Turn advancement step
-  Investigation progress precedes Mission resolution, under [Turn Advancement](turn-advancement.md). The Faction is not yet Defeated in the earlier step, so the effect
-  creates its Initiative Mission site, which is Active. In Mission resolution, a Won Mission then defeats the
+- **Investigation completes in the same Advance turn in which the Faction is Eliminated:** The Turn advancement step
+  Investigation progress precedes Mission resolution, under [Turn Advancement](turn-advancement.md). The Faction is not yet Eliminated in the earlier step, so the effect
+  creates its Initiative Mission site, which is Active. In Mission resolution, a Won Mission then eliminates the
   Faction, and at the end of the step [Missions](missions.md) cancels every Active Mission site targeting that Faction,
   including the new one. The new Mission site is Cancelled, no record is made, and the Lead is not available afterwards
-  because its Faction is Defeated ([Completion effect](#completion-effect), [Cancellation](missions.md#cancellation)).
-- **Investigation completes when the Faction is already Defeated:** What becomes of an Investigation whose Lead's
-  Faction becomes Defeated is decided under [Lead no longer available](investigations.md#lead-no-longer-available).
+  because its Faction is Eliminated ([Completion effect](#completion-effect), [Cancellation](missions.md#cancellation)).
+- **Investigation completes when the Faction is already Eliminated:** What becomes of an Investigation whose Lead's
+  Faction becomes Eliminated is decided under [Lead no longer available](investigations.md#lead-no-longer-available).
   When it completes, the effect creates the Mission site, and [Missions](missions.md) cancels it in the same Advance
   turn; no Committed state shows it Active ([Completion effect](#completion-effect)).
 - **Two Leads require the same Lead:** Each of them holds its prerequisite from the Committed state in which the required
@@ -308,14 +308,14 @@ condition.
 - **One win unlocks several Leads at once:** All Leads whose prerequisites all hold after the record become available in
   that same Committed state, if their other conditions hold ([What changes availability](#what-changes-availability)).
 - **Prerequisite holds, Lead unavailable:** A Lead can have every prerequisite holding and still be unavailable, because
-  its Faction is Defeated or because it has a Recorded win itself ([Lead availability](#lead-availability)).
+  its Faction is Eliminated or because it has a Recorded win itself ([Lead availability](#lead-availability)).
 - **Active or Abandoned Investigation:** Neither changes any condition of its Lead; nothing is recorded and no Mission
   site is created. Whether a second Investigation of a Lead may start while one is Active, and whether an Abandoned
   Investigation's progress is resumed, are decided under
   [One Active Investigation per Lead](investigations.md#one-active-investigation-per-lead) and
   [Abandonment](investigations.md#abandonment) ([What changes availability](#what-changes-availability)).
 - **Cancelled Mission site:** The Lead stays unavailable, because a Mission site is Cancelled only when its Faction is
-  Defeated ([What changes availability](#what-changes-availability)).
+  Eliminated ([What changes availability](#what-changes-availability)).
 - **Lost then Won:** A Lead whose Mission was Lost and that is investigated again creates another Mission site. When
   the Mission there is Won, the record is made for the Lead as for any other Won Mission; the earlier Lost Mission stays
   Lost and is not recorded ([Recording a Won Mission](#recording-a-won-mission)).
@@ -342,7 +342,7 @@ example states a test GDR. The values they read are:
 | `locate_red_dawn_hq`        | `faction` `red_dawn`; `difficulty` 10; `requires` `mission_won_from_lead` `locate_red_dawn_safehouse`; `create_mission_site` `raid_hq`    |
 | `apprehend_member`          | `kind` initiative; `expires_in_turns` 5                                                                                                   |
 | `raid_safehouse`            | `kind` initiative; `expires_in_turns` 8                                                                                                   |
-| `raid_hq`                   | `kind` initiative; `expires_in_turns` 20; `on_win` `defeat_target_faction` true                                                           |
+| `raid_hq`                   | `kind` initiative; `expires_in_turns` 20; `on_win` `eliminate_target_faction` true                                                        |
 | `foil_sabotage`             | `kind` response                                                                                                                           |
 
 In the examples, the three Leads are called by their identifiers, "member", "safehouse", and "hq" for
@@ -358,13 +358,13 @@ This example exercises [Lead progression](#lead-progression), [Prerequisites](#p
 [Lead availability](#lead-availability).
 
 In the initial Campaign state, Lead progression has an empty set of Recorded wins for member, safehouse, and hq, and there
-are no Investigations and no Mission sites. Red Dawn is not Defeated.
+are no Investigations and no Mission sites. Red Dawn is not Eliminated.
 
-| Lead      | 1. Prerequisites hold                        | 2. No win recorded | 3. No Mission site in progress | 4. Faction not Defeated | Available | Blocking conditions |
-| --------- | -------------------------------------------- | ------------------ | ------------------------------ | ----------------------- | --------- | ------------------- |
-| member    | Holds: `requires` is empty                   | Holds              | Holds                          | Holds                   | Yes       | None                |
-| safehouse | Does not hold: member has no Recorded win    | Holds              | Holds                          | Holds                   | No        | 1                   |
-| hq        | Does not hold: safehouse has no Recorded win | Holds              | Holds                          | Holds                   | No        | 1                   |
+| Lead      | 1. Prerequisites hold                        | 2. No win recorded | 3. No Mission site in progress | 4. Faction not Eliminated | Available | Blocking conditions |
+| --------- | -------------------------------------------- | ------------------ | ------------------------------ | ------------------------- | --------- | ------------------- |
+| member    | Holds: `requires` is empty                   | Holds              | Holds                          | Holds                     | Yes       | None                |
+| safehouse | Does not hold: member has no Recorded win    | Holds              | Holds                          | Holds                     | No        | 1                   |
+| hq        | Does not hold: safehouse has no Recorded win | Holds              | Holds                          | Holds                     | No        | 1                   |
 
 A Player-visible query of the Leads returns all three, each with its properties, its availability, and the four
 conditions, so the player sees that hq is blocked by condition 1 only and that its one prerequisite concerns safehouse,
@@ -419,7 +419,7 @@ Investigations i2, i3, and i4 of safehouse are started in turns 6, 11, and 25 re
   progression records m4 in safehouse's set, which becomes {m4}. m2 is not recorded, and s3 never had a Mission. Safehouse is never available again; hq's
   condition 1 now holds, so hq is available.
 
-## The last Lead and the defeat of Red Dawn
+## The last Lead and the elimination of Red Dawn
 
 This example exercises [Recording a Won Mission](#recording-a-won-mission),
 [Lead availability](#lead-availability), and [Prerequisites](#prerequisites).
@@ -427,7 +427,7 @@ This example exercises [Recording a Won Mission](#recording-a-won-mission),
 Initial state: safehouse's set is {m4}, member's set is {m1}, hq is available, in Turn 30. Investigation i5 of hq is
 started in Turn 30 and completes in the Advance turn ending turn 40; Mission site s5 from `raid_hq` is created, Active. In
 Turn 41 a team is deployed, creating m5, and in the Advance turn ending turn 41 the Combat outcome is Prevailed. m5 becomes
-Won, and Lead progression records m5 in hq's set; Missions applies the `on_win` of `raid_hq`, which defeats Red Dawn.
+Won, and Lead progression records m5 in hq's set; Missions applies the `on_win` of `raid_hq`, which eliminates Red Dawn.
 
 | Lead      | Available after the Advance turn ending turn 41 | Blocking conditions |
 | --------- | ----------------------------------------------- | ------------------- |
@@ -454,7 +454,7 @@ Active, a second Investigation of member is rejected under
 Abandoned, starting another Investigation i2 of member succeeds and creates a new Campaign instance, whose progress, under
 Investigations, does not resume the progress of i1.
 
-## A Mission site Cancelled by the defeat of its Faction
+## A Mission site Cancelled by the elimination of its Faction
 
 This example exercises [Completion effect](#completion-effect), [What changes availability](#what-changes-availability),
 and [Edge cases and failure behavior](#edge-cases-and-failure-behavior). It uses a test Lead `test_lead` with `faction`
@@ -465,9 +465,9 @@ Initial state: Turn 60. A Mission site s6 from `raid_hq`, created by an Investig
 Attempted, and its Mission m6 is Deployed; `test_lead` has an Active Investigation i7. The following happens in the Advance turn ending turn 60.
 
 1. **Investigation progress:** i7 completes (input from Investigations). The effect creates Mission site s7 from
-   `apprehend_member`, Active, with target Faction Red Dawn, which is not yet Defeated.
+   `apprehend_member`, Active, with target Faction Red Dawn, which is not yet Eliminated.
 2. **Mission resolution:** The Combat of m6 has the outcome Prevailed, so m6 becomes Won. Lead progression records m6 in
-   hq's set, and Red Dawn becomes Defeated. After every Combat of the step, s7 is Active and its target Faction is Defeated,
+   hq's set, and Red Dawn becomes Eliminated. After every Combat of the step, s7 is Active and its target Faction is Eliminated,
    so s7 becomes Cancelled, under [Cancellation](missions.md#cancellation).
 
 Result: `test_lead` has no Recorded win, no Active Mission site, and no Deployed Mission. It is not available, because
@@ -530,4 +530,4 @@ for the Session controller and an Autopilot AI, and nothing is reported as unkno
 - TODO (later): Further prerequisite kinds, under [Prerequisites](#prerequisites).
 - TODO (later): Further completion effect kinds, e.g. a Lead completion that gives information, money, funding, Agent
   improvement, or a Campaign objective directly, under [Completion effect](#completion-effect).
-- TODO (later): Leads whose completion makes a Faction Defeated directly, under [Completion effect](#completion-effect).
+- TODO (later): Leads whose completion makes a Faction Eliminated directly, under [Completion effect](#completion-effect).

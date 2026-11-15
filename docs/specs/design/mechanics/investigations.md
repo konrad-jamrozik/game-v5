@@ -427,12 +427,12 @@ Turn Advancement, and the result is the same whichever order an implementation p
 
 **Proposed rule:** Lead availability is checked only by precondition 2 of
 [Starting an Investigation](#starting-an-investigation). Once an Investigation is Active, a later change to whether its
-Lead would be available, e.g. its Faction becoming Defeated under [Defeat](factions.md#defeat) in Factions, does not
+Lead would be available, e.g. its Faction becoming Eliminated under [Elimination](factions.md#elimination) in Factions, does not
 change the Investigation: it stays Active, keeps its Current team and Investigation progress, still accepts Agents under
 [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation), still gains progress, and can still
 complete and apply its Lead's completion effect.
 
-A Mission site created that way targets a Faction that is already Defeated. It is created Active in Investigation
+A Mission site created that way targets a Faction that is already Eliminated. It is created Active in Investigation
 progress and becomes Cancelled in the Cancellation part of Mission resolution of the same Advance turn, under
 [Cancellation](missions.md#cancellation) in Missions, so no Committed state shows it Active. The player can instead end
 such an Investigation by ordering its members elsewhere, which makes it Abandoned under [Abandonment](#abandonment).
@@ -546,7 +546,7 @@ completion probability, reported as absent; the visible lifecycle state explains
 - **Completion and exhaustion:** Investigating raises no exhaustion, so completion never coincides with an exhaustion
   change; members returning to Standby, In transit, recover no exhaustion in the same Advance turn under
   [Agent Recovery](agent-recovery.md) ([Progress gain](#progress-gain), [Completion](#completion)).
-- **Lead no longer available:** An Active Investigation continues; its Mission site, when its Faction is Defeated, is
+- **Lead no longer available:** An Active Investigation continues; its Mission site, when its Faction is Eliminated, is
   Cancelled in the same Advance turn ([Lead no longer available](#lead-no-longer-available)).
 - **Mission site created in the same Advance turn:** The Mission site a completion creates does not count down in Mission
   site expiration of the same Advance turn, under [Mission site creation](missions.md#mission-site-creation) in Missions.
@@ -715,7 +715,7 @@ completes; i9 reaches 200 with completion probability 200 / 400 = 1/2, and its i
 i8 is Completed, a1 is on Standby, In transit, and L1's completion effect applies; i9 stays Active with a2 and
 Investigation progress 200. Processing i9 before i8 gives the same Committed state.
 
-## An Investigation whose Faction is Defeated
+## An Investigation whose Faction is Eliminated
 
 This example exercises [Lead no longer available](#lead-no-longer-available). It uses test GDRs: two Factions, F1 and
 F2, and a test Lead L3 of F1 with `difficulty` 4 whose `create_mission_site` names a test MissionSiteArchetype m3 of
@@ -723,10 +723,10 @@ kind initiative. Investigation i10 of L3 has working member a1 (effective skill 
 turn ending turn 50 begins.
 
 - Advance turn ending turn 50: in Investigation progress, i10 reaches 200, completion probability 200 / 400 = 1/2,
-  injected outcome "does not complete". In Mission resolution, a Won Mission makes F1 Defeated, under
-  [Missions](missions.md). The Campaign does not end, because F2 is not Defeated.
+  injected outcome "does not complete". In Mission resolution, a Won Mission makes F1 Eliminated, under
+  [Missions](missions.md). The Campaign does not end, because F2 is not Eliminated.
 - Turn 51: i10 is still Active, with Current team {a1} and projected completion probability (200 + 100) / 400 = 3/4. A
-  `startInvestigation(L3, [a2])` is rejected, because L3 is not available, its Faction being Defeated, and also because
+  `startInvestigation(L3, [a2])` is rejected, because L3 is not available, its Faction being Eliminated, and also because
   i10 is an Active Investigation of L3; the error identifies at least one of the two failed preconditions.
 - Advance turn ending turn 51: i10 reaches 300, completion probability 300 / 400 = 3/4, injected outcome "completes".
   i10 is Completed, a1 is on Standby, In transit, and Mission site s3 from m3 is created Active with target Faction F1.

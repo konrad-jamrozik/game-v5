@@ -33,7 +33,7 @@ enemies:
   soldier: 3
   cult_leader: 1
 on_win:
-  defeat_target_faction: true
+  eliminate_target_faction: true
 ---
 id: foil_recruitment_push
 type: MissionSiteArchetype

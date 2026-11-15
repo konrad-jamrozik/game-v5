@@ -17,7 +17,7 @@ The main domain concepts are:
 - **Initiative missions:** agency efforts to advance objectives, typically uncovered through investigations.
 - **Faction operations and Response missions:** enemy activity and the agency’s opportunities to intervene.
 - **Combat:** automatic combat with targeting, skill contests, damage, exhaustion, incapacitation, retreat, casualties, and experience.
-- **Factions:** opponents that escalate, launch operations, can be suppressed, and can eventually be defeated.
+- **Factions:** opponents that escalate, launch operations, can be suppressed, and can eventually be eliminated.
 - **Economy and panic:** money, recurring funding, upkeep, upgrades, and global pressure.
 - **Turn reports and history:** what the latest Advance turn did in full, and every earlier Turn in reduced form.
 
@@ -76,7 +76,7 @@ The player must choose:
 - Repeatable Leads versus deeper progression.
 - Which Initiative missions justify committing scarce combat-ready agents.
 
-Completing one faction’s defeat can remove a continuing source of pressure, but concentrating on it gives other factions time to strengthen.
+Completing one faction’s elimination can remove a continuing source of pressure, but concentrating on it gives other factions time to strengthen.
 
 ### D. Investigations: focus, uncertainty, and commitment
 
@@ -98,7 +98,7 @@ Too little successful mission activity stalls rewards and progression while fact
 
 Several difficult Response missions can arrive together. The player must triage using urgency, consequences, achievable outcomes, and available teams. Not every mission should be affordable or winnable.
 
-Suppression provides another choice: **buy time now or pursue permanent defeat**. In `game-ts`, suppression delays operations without stopping faction escalation. Temporary relief therefore creates a preparation window rather than solving the underlying threat.
+Suppression provides another choice: **buy time now or pursue permanent elimination**. In `game-ts`, suppression delays operations without stopping faction escalation. Temporary relief therefore creates a preparation window rather than solving the underlying threat.
 
 ### F. Mission commitment: force concentration, casualties, and partial success
 

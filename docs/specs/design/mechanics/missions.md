@@ -17,7 +17,7 @@ Mission site comes from a Faction operation occurrence, and ignoring one has a p
 A Mission site is an opportunity that does not wait. It stays Active for a number of Advance turns, and the player may
 deploy one team of Agents to it, only once, which immediately creates its one [Mission](domain-model.md#glossary). The
 Mission's Combat is fought in the next Advance turn: the Mission is Won when the Combat outcome is Prevailed, and Lost
-otherwise. What follows depends on the kind of Mission site. A Won Initiative Mission rewards the Agency and can defeat
+otherwise. What follows depends on the kind of Mission site. A Won Initiative Mission rewards the Agency and can eliminate
 its target Faction. A Lost Response Mission, like an Expired Response Mission site, raises Panic and changes funding.
 
 Missions refines [Factions](./factions.md): Factions says when a Faction operation occurs, and Missions says how the
@@ -56,14 +56,14 @@ for an Initiative Mission, its rewards. No MissionSiteArchetype references a Fac
 site comes from its origin, under [Mission site creation](#mission-site-creation). The following property table is
 exhaustive apart from the `id` and `type` that every GDR has.
 
-| Property           | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Read by                                                                                                                                |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`             | The display name of the kind of Mission site.                                                                                                                                                                                                                                                                                                                                                                                                                                          | [Player-visible information](#player-visible-information)                                                                              |
-| `kind`             | `initiative` for an Initiative Mission site, or `response` for a Response Mission site.                                                                                                                                                                                                                                                                                                                                                                                                | [Mission site creation](#mission-site-creation); [MissionSiteArchetype selection](#missionsitearchetype-selection)                     |
-| `expires_in_turns` | The number of Advance turns a newly created Mission site stays Active before it is Expired, if no team is deployed to it.                                                                                                                                                                                                                                                                                                                                                              | [Mission site creation](#mission-site-creation)                                                                                        |
-| `enemies`          | An ordered map from the identifier of an EnemyArchetype to a count: which Enemies are present at the Mission site, and how many of each. The order of its keys, as authored, is part of the GDR; [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) in Game Data Records guarantees that this order is preserved.                                                                                                                                         | [Mission site creation](#mission-site-creation)                                                                                        |
-| `on_win`           | Only for the `initiative` kind, and optional: what a Won Mission gives. It may hold `money`, the money the Agency gains; `funding`, the funding change; `panic_reduction_pct`, the Panic reduction, a whole number of Panic percentage points subtracted from Panic, never a percent of the current Panic; and `defeat_target_faction`, whether a win makes the target Faction Defeated. A missing `on_win` or a missing property of it means 0, or false for `defeat_target_faction`. | [Consequences](#consequences)                                                                                                          |
-| `operation_level`  | Only for the `response` kind, and required: the `level` of the Faction operation level the MissionSiteArchetype serves.                                                                                                                                                                                                                                                                                                                                                                | [MissionSiteArchetype selection](#missionsitearchetype-selection); [MissionSiteArchetype validation](#missionsitearchetype-validation) |
+| Property           | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Read by                                                                                                                                |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`             | The display name of the kind of Mission site.                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [Player-visible information](#player-visible-information)                                                                              |
+| `kind`             | `initiative` for an Initiative Mission site, or `response` for a Response Mission site.                                                                                                                                                                                                                                                                                                                                                                                                        | [Mission site creation](#mission-site-creation); [MissionSiteArchetype selection](#missionsitearchetype-selection)                     |
+| `expires_in_turns` | The number of Advance turns a newly created Mission site stays Active before it is Expired, if no team is deployed to it.                                                                                                                                                                                                                                                                                                                                                                      | [Mission site creation](#mission-site-creation)                                                                                        |
+| `enemies`          | An ordered map from the identifier of an EnemyArchetype to a count: which Enemies are present at the Mission site, and how many of each. The order of its keys, as authored, is part of the GDR; [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) in Game Data Records guarantees that this order is preserved.                                                                                                                                                 | [Mission site creation](#mission-site-creation)                                                                                        |
+| `on_win`           | Only for the `initiative` kind, and optional: what a Won Mission gives. It may hold `money`, the money the Agency gains; `funding`, the funding change; `panic_reduction_pct`, the Panic reduction, a whole number of Panic percentage points subtracted from Panic, never a percent of the current Panic; and `eliminate_target_faction`, whether a win makes the target Faction Eliminated. A missing `on_win` or a missing property of it means 0, or false for `eliminate_target_faction`. | [Consequences](#consequences)                                                                                                          |
+| `operation_level`  | Only for the `response` kind, and required: the `level` of the Faction operation level the MissionSiteArchetype serves.                                                                                                                                                                                                                                                                                                                                                                        | [MissionSiteArchetype selection](#missionsitearchetype-selection); [MissionSiteArchetype validation](#missionsitearchetype-validation) |
 
 Of an [EnemyArchetype](combat.md#enemyarchetype), only its identifier is read, through `enemies`.
 
@@ -107,8 +107,8 @@ Engine Contract.
    supplies, and each count is a whole number of at least 1.
 5. **Rewards only for Initiative:** A MissionSiteArchetype whose `kind` is `response` has no `on_win`. When a
    MissionSiteArchetype whose `kind` is `initiative` has `on_win`, it holds no property other than `money`, `funding`,
-   `panic_reduction_pct`, and `defeat_target_faction`; each of `money`, `funding`, and `panic_reduction_pct` that is
-   present is a whole number of at least 0, and `defeat_target_faction`, when present, is true or false.
+   `panic_reduction_pct`, and `eliminate_target_faction`; each of `money`, `funding`, and `panic_reduction_pct` that is
+   present is a whole number of at least 0, and `eliminate_target_faction`, when present, is true or false.
 6. **Operation level only for Response:** A MissionSiteArchetype whose `kind` is `response` has `operation_level`, and
    it equals the `level` of a FactionOperationLevel the Game build supplies. A MissionSiteArchetype whose `kind` is
    `initiative` has no `operation_level`.
@@ -276,7 +276,7 @@ The set is exhaustive. Every Mission site is Active when it is created. The tran
 | ------------ | ------------ | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Active       | Attempted    | The `deployAgents` Player action names the Mission site.                                                   | Every precondition under [Deploying Agents](#deploying-agents) holds.        | A new Mission at the Mission site comes into existence, Deployed, with its Current team, and those Agents are Deployed at once, under [Deploying Agents](#deploying-agents). |
 | Active       | Expired      | Advance turn, in the Turn advancement step Mission site expiration: its Turns until expiry reaches 0.      | The Mission site already existed in the Turn-end state of this Advance turn. | The Expired consequences apply, under [Mission site expiration](#mission-site-expiration) and [Consequences](#consequences). It never has a Mission.                         |
-| Active       | Cancelled    | Advance turn, at the end of the Turn advancement step Mission resolution, after every Combat of that step. | Its target Faction is Defeated.                                              | None, under [Consequences](#consequences). It never has a Mission.                                                                                                           |
+| Active       | Cancelled    | Advance turn, at the end of the Turn advancement step Mission resolution, after every Combat of that step. | Its target Faction is Eliminated.                                            | None, under [Consequences](#consequences). It never has a Mission.                                                                                                           |
 
 Every transition not listed is impossible; e.g., an Attempted Mission site is never Cancelled or Expired, and nothing
 leaves Attempted, Expired, or Cancelled. Attempted, Expired, and Cancelled are final. A Mission site cannot be attempted
@@ -479,12 +479,12 @@ under [Combat](combat.md), and changes an Agent's skill in no way, under
 ## Cancellation
 
 After every Deployed Mission of the step has been resolved and its consequences applied, every Mission site that is
-Active and whose target Faction is Defeated becomes Cancelled. Defeated is read at that moment, so a Faction made Defeated
+Active and whose target Faction is Eliminated becomes Cancelled. Eliminated is read at that moment, so a Faction made Eliminated
 by any Won Mission of this step counts, whichever Mission an implementation resolved first. This is the one
-rule of this step that does not read Step-start values: it reads Defeated after the step's own consequences. A Cancelled
+rule of this step that does not read Step-start values: it reads Eliminated after the step's own consequences. A Cancelled
 Mission site has no consequences, and its Enemies keep their values.
 
-Only Active Mission sites are cancelled. An Attempted Mission site whose target Faction becomes Defeated in the same
+Only Active Mission sites are cancelled. An Attempted Mission site whose target Faction becomes Eliminated in the same
 step is not cancelled: its Mission is resolved like every other Deployed Mission, and its consequences apply in full.
 
 ## Order independence
@@ -500,10 +500,10 @@ The result of the step is the same whichever order an implementation resolves th
   are summed and floored once for the step, under [Funding changes](economy-and-upgrades.md#funding-changes). Panic
   increases and Panic reductions are added to the Pending panic change, whose sum does not depend on order, under
   [Pending panic change](panic-and-endings.md#pending-panic-change).
-- **Defeat is idempotent:** Applying [Defeat](factions.md#defeat) to a Faction that is already Defeated changes nothing,
-  and every application in one step sets the same Defeated turn, so two Won Missions that defeat the same Faction
+- **Elimination is idempotent:** Applying [Elimination](factions.md#elimination) to a Faction that is already Eliminated changes nothing,
+  and every application in one step sets the same Eliminated turn, so two Won Missions that eliminate the same Faction
   give the same result in either order.
-- **Cancellation comes last:** Cancellation reads Defeated only after every resolution, under
+- **Cancellation comes last:** Cancellation reads Eliminated only after every resolution, under
   [Cancellation](#cancellation), so it does not depend on which Won Mission was resolved first.
 
 # Mission site expiration
@@ -550,12 +550,12 @@ a consequence of these final states, apart from the Lead progression record and 
 [Resolving one Mission](#resolving-one-mission). The final state Attempted of a Mission site has no consequence of its
 own. "The operation level" is the FactionOperationLevel in the Response Mission site's origin.
 
-| Final state            | Initiative                                                                                                                                                                                                                                                             | Response                                                                                                                 |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Mission Won            | Its MissionSiteArchetype's `on_win`: money rises by `money`; a funding change of `funding`; a Panic reduction of `panic_reduction_pct`; and, when `defeat_target_faction` is true, its target Faction is made Defeated under [Defeat](factions.md#defeat) in Factions. | The operation level's `on_win`: money rises by `money`, and a funding change of `funding`. Applied exactly once.         |
-| Mission Lost           | None.                                                                                                                                                                                                                                                                  | The operation level's `on_ignored_or_lost`: a Panic increase of `panic_increase_pct`, and a funding change of `funding`. |
-| Mission site Expired   | None.                                                                                                                                                                                                                                                                  | As Lost: the operation level's `on_ignored_or_lost`.                                                                     |
-| Mission site Cancelled | None.                                                                                                                                                                                                                                                                  | None.                                                                                                                    |
+| Final state            | Initiative                                                                                                                                                                                                                                                                            | Response                                                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Mission Won            | Its MissionSiteArchetype's `on_win`: money rises by `money`; a funding change of `funding`; a Panic reduction of `panic_reduction_pct`; and, when `eliminate_target_faction` is true, its target Faction is made Eliminated under [Elimination](factions.md#elimination) in Factions. | The operation level's `on_win`: money rises by `money`, and a funding change of `funding`. Applied exactly once.         |
+| Mission Lost           | None.                                                                                                                                                                                                                                                                                 | The operation level's `on_ignored_or_lost`: a Panic increase of `panic_increase_pct`, and a funding change of `funding`. |
+| Mission site Expired   | None.                                                                                                                                                                                                                                                                                 | As Lost: the operation level's `on_ignored_or_lost`.                                                                     |
+| Mission site Cancelled | None.                                                                                                                                                                                                                                                                                 | None.                                                                                                                    |
 
 How each kind of change applies:
 
@@ -571,11 +571,11 @@ How each kind of change applies:
   points that is added to or subtracted from Panic, never a percent of the current Panic, under
   [Percent values](../foundation/numbers.md#percent-values) in Numbers; e.g., a Panic increase of 8 raises a Panic of 10
   to 18, not to 10.8. No rounding occurs, and an amount of 0 changes nothing.
-- **Defeat:** Making a Faction Defeated has the effects under [Defeat](factions.md#defeat) in Factions. This is the
-  only rule that makes a Faction Defeated.
+- **Elimination:** Making a Faction Eliminated has the effects under [Elimination](factions.md#elimination) in Factions. This is the
+  only rule that makes a Faction Eliminated.
 
 Every amount a consequence applies is read from GDRs when the transition happens; a missing `on_win` property of a
-MissionSiteArchetype of kind initiative contributes 0, or no defeat. The consequences of a Mission site and its Mission
+MissionSiteArchetype of kind initiative contributes 0, or no elimination. The consequences of a Mission site and its Mission
 depend only on the Mission site's kind, the final state of the Mission site or its Mission, and the GDRs they read. A
 Lost Mission yields no benefit from the damage its team inflicted, and no consequence of a Mission or a Mission site
 slows a Faction's escalation or its operations.
@@ -621,16 +621,16 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   does not count down in the same Advance turn ([Mission site expiration](#mission-site-expiration)).
 - **Several Missions resolved in one step:** Each has its own Combat; money, funding, and Panic changes add up, and
   funding is floored once for the step ([Order independence](#order-independence)).
-- **Win that defeats a Faction while other Mission sites target it:** Every Active Mission site targeting that Faction
+- **Win that eliminates a Faction while other Mission sites target it:** Every Active Mission site targeting that Faction
   is Cancelled at the end of the step. A Deployed Mission at a Mission site targeting it in the same step still has its
   Combat, and is Won or Lost with its full consequences, e.g. a Won Response Mission still pays the operation level's `on_win`
   ([Cancellation](#cancellation)).
-- **Two wins that defeat the same Faction in one step:** The Faction is Defeated once, with one Defeated turn
+- **Two wins that eliminate the same Faction in one step:** The Faction is Eliminated once, with one Eliminated turn
   ([Order independence](#order-independence)).
-- **Mission site created for a Faction that is already Defeated:** A Mission site created in Investigation progress whose
-  target Faction is already Defeated is Active only until the Cancellation part of Mission resolution in the same
-  Advance turn, which cancels it; no Committed state shows it Active. A Defeated Faction creates no Response Mission site,
-  under [Defeat](factions.md#defeat) ([Cancellation](#cancellation)).
+- **Mission site created for a Faction that is already Eliminated:** A Mission site created in Investigation progress whose
+  target Faction is already Eliminated is Active only until the Cancellation part of Mission resolution in the same
+  Advance turn, which cancels it; no Committed state shows it Active. A Eliminated Faction creates no Response Mission site,
+  under [Elimination](factions.md#elimination) ([Cancellation](#cancellation)).
 - **All Agents Killed:** The Combat outcome is Wiped, so the Mission is Lost with its Lost consequences. The Mission
   keeps its Team sent, its Current team is empty, and the Killed Agents no longer count toward the
   Transport cap ([Resolving one Mission](#resolving-one-mission)).
@@ -649,8 +649,8 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   ([Deploying Agents](#deploying-agents)).
 - **Agents taken from an Investigation:** They leave its Current team at once, with the effects on the Investigation
   under [Investigations](investigations.md) ([Deploying Agents](#deploying-agents)).
-- **Defeat on a Faction already Defeated:** A Won Initiative Mission whose MissionSiteArchetype has
-  `defeat_target_faction` true and whose target Faction is already Defeated changes nothing about that Faction; its other `on_win` amounts still apply
+- **Elimination of a Faction already Eliminated:** A Won Initiative Mission whose MissionSiteArchetype has
+  `eliminate_target_faction` true and whose target Faction is already Eliminated changes nothing about that Faction; its other `on_win` amounts still apply
   ([Consequences](#consequences)).
 - **Negative or zero funding change at the floor:** Funding never falls below 0, under
   [Funding changes](economy-and-upgrades.md#funding-changes) ([Consequences](#consequences)).
@@ -676,7 +676,7 @@ All examples use the Bootstrap GDR values from `content/missions/mission_site_ar
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `apprehend_member`       | `kind` initiative; `expires_in_turns` 5; `enemies` `initiate` 3; `on_win` `money` 5, `funding` 0, `panic_reduction_pct` 1                |
 | `raid_safehouse`         | `kind` initiative; `expires_in_turns` 8; `enemies` `initiate` 8, `soldier` 1; `on_win` `money` 100, `funding` 5, `panic_reduction_pct` 2 |
-| `raid_hq`                | `kind` initiative; `expires_in_turns` 20; `enemies` `initiate` 6, `soldier` 3, `cult_leader` 1; `on_win` `defeat_target_faction` true    |
+| `raid_hq`                | `kind` initiative; `expires_in_turns` 20; `enemies` `initiate` 6, `soldier` 3, `cult_leader` 1; `on_win` `eliminate_target_faction` true |
 | `foil_recruitment_push`  | `kind` response; `operation_level` 1; `expires_in_turns` 3; `enemies` `initiate` 5                                                       |
 | `foil_sabotage`          | `kind` response; `operation_level` 2; `expires_in_turns` 4; `enemies` `initiate` 4, `soldier` 2                                          |
 | `operation_level_1`      | `level` 1; `on_win` `money` 10, `funding` 0; `on_ignored_or_lost` `panic_increase_pct` 3, `funding` 0                                    |
@@ -688,7 +688,7 @@ All examples use the Bootstrap GDR values from `content/missions/mission_site_ar
 | `economy`                | `base_transport_cap` 4                                                                                                                   |
 | `standard_mission`       | The MissionArchetype; no rule reads its properties                                                                                       |
 
-The Campaign has one Faction, Red Dawn, from `red_dawn`, which is not Defeated unless an example says otherwise. "The
+The Campaign has one Faction, Red Dawn, from `red_dawn`, which is not Eliminated unless an example says otherwise. "The
 Advance turn ending turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
 `field_agent` with skill 100, current health 30 of 30, exhaustion 0, weapon damage 10, and effective skill 100, and no Upgrade
 has been acquired, so the Transport cap is 4. In the Combat traces, Combat's rules decide every target and every value;
@@ -845,7 +845,7 @@ change is added. The Agency income step of the Advance turn ending turn 42 uses 
 | Lost    | s2 Attempted; m2 Lost, Advance turn ending turn 42  | 0            | 19                     | +8                 |
 | Won     | s2 Attempted; m2 Won, Advance turn ending turn 41   | +30          | 25                     | 0                  |
 
-## A Won raid_hq Mission defeats Red Dawn and cancels an Active Mission site
+## A Won raid_hq Mission eliminates Red Dawn and cancels an Active Mission site
 
 This example exercises [Consequences](#consequences), [Cancellation](#cancellation),
 [Order independence](#order-independence), and [Mission site lifecycle](#mission-site-lifecycle). During Turn 150:
@@ -862,17 +862,17 @@ fought. Their injected hit and damage outcomes are chosen so that the Combat of 
 the Combat of m4 the Combat outcome Prevailed; this example does not repeat the two traces, which Combat's rules decide,
 and checks only what follows from the two Combat outcomes.
 
-| Effect  | Result                                                                                                                                                                                                                               |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| m3      | Won. `on_win` of `raid_hq` has `defeat_target_faction` true and no `money`, `funding`, or `panic_reduction_pct`, which therefore contribute 0. Red Dawn is made Defeated under [Defeat](factions.md#defeat), with Defeated turn 150. |
-| m4      | Won, although Red Dawn is Defeated in the same step: it was Deployed, so it is resolved in full. Money rises by 30 and a funding change of 5 applies.                                                                                |
-| Funding | max(0, 25 + 0 + 5) = 30, one floor for the step                                                                                                                                                                                      |
-| Money   | 1000 + 0 + 30 = 1030                                                                                                                                                                                                                 |
-| s5      | Cancelled at the end of the step, because it is Active and Red Dawn is Defeated. No consequence: no Panic increase, no funding change.                                                                                               |
+| Effect  | Result                                                                                                                                                                                                                                                |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| m3      | Won. `on_win` of `raid_hq` has `eliminate_target_faction` true and no `money`, `funding`, or `panic_reduction_pct`, which therefore contribute 0. Red Dawn is made Eliminated under [Elimination](factions.md#elimination), with Eliminated turn 150. |
+| m4      | Won, although Red Dawn is Eliminated in the same step: it was Deployed, so it is resolved in full. Money rises by 30 and a funding change of 5 applies.                                                                                               |
+| Funding | max(0, 25 + 0 + 5) = 30, one floor for the step                                                                                                                                                                                                       |
+| Money   | 1000 + 0 + 30 = 1030                                                                                                                                                                                                                                  |
+| s5      | Cancelled at the end of the step, because it is Active and Red Dawn is Eliminated. No consequence: no Panic increase, no funding change.                                                                                                              |
 
 Resolving m4 before m3 gives the same Committed state: s5 is cancelled only after both resolutions. s5 does not count down
 in Mission site expiration, and it never has a Mission. Whether the Campaign now ends in Victory is decided under
-[Panic and Endings](panic-and-endings.md). Had s5 been left Active without a defeat, it would have been Expired in the
+[Panic and Endings](panic-and-endings.md). Had s5 been left Active without an elimination, it would have been Expired in the
 Advance turn ending turn 151 with a Panic increase of 3 and a funding change of 0.
 
 ## Transport cap and other rejections of deployAgents
@@ -965,7 +965,7 @@ rule: the one MissionArchetype, `standard_mission`, has a non-empty `name` and n
 MissionSiteArchetypes has a non-empty `name`, a `kind` of `initiative` or `response`, an
 `expires_in_turns` of at least 1, and a non-empty `enemies` whose keys are EnemyArchetypes the Game build supplies with
 counts of at least 1; only the three of the `initiative` kind have `on_win`, whose properties are whole numbers of at
-least 0 or `defeat_target_faction` true; only the two of the `response` kind have `operation_level`, 1 and 2, each the
+least 0 or `eliminate_target_faction` true; only the two of the `response` kind have `operation_level`, 1 and 2, each the
 `level` of a FactionOperationLevel, so each key of every FactionActivityLevel's `operation_level_weights`, 1 or 2, can
 be served; and both FactionOperationLevels have `on_win` with whole `money` and `funding` of at
 least 0 and `on_ignored_or_lost` with a whole `panic_increase_pct` of at least 0 and a whole `funding`. Each of the

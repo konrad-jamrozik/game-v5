@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="732" viewBox="0 0 760 732" role="img" aria-label="Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning Raid HQ defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose loss raises panic until the Campaign is lost">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="732" viewBox="0 0 760 732" role="img" aria-label="Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning Raid HQ eliminates Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose loss raises panic until the Campaign is lost">
   <!-- Hand-kept diagram for docs/specs/design/content/bootstrap-gdrs.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --node: #f4f6f9; --fg: #18202b; --muted: #5a6573; --line: #d9dfe7; --accent: #2a5aa6; --accent-soft: #e4ecf8; --red: #a8322a; --red-soft: #f7e6e4; }
@@ -79,20 +79,20 @@
   <text class="lbl mid" x="384" y="304">Investigation</text>
   <text class="lbl mid" x="384" y="318">completes, creates</text>
   <path class="arc" d="M600 356 V378 H164 V396" marker-end="url(#head)"/>
-  <text class="lbl mid" x="382" y="372">win defeats the target Faction</text>
+  <text class="lbl mid" x="382" y="372">win eliminates the target Faction</text>
   <rect class="node" x="24" y="400" width="280" height="64" rx="6"/>
   <rect class="bar-faction" x="24" y="400" width="4" height="64" rx="2"/>
   <text class="tag" x="40" y="419">FACTION</text>
-  <text class="name" x="40" y="439">Red Dawn defeated</text>
+  <text class="name" x="40" y="439">Red Dawn eliminated</text>
   <text class="id" x="40" y="456">red_dawn</text>
   <rect class="winbg" x="464" y="400" width="272" height="64" rx="6"/>
   <rect class="bar-win" x="464" y="400" width="4" height="64" rx="2"/>
   <text class="tag" x="480" y="419">ENDING</text>
   <text class="name" x="480" y="439">Campaign won</text>
-  <text class="sub" x="480" y="456">every Faction is defeated</text>
+  <text class="sub" x="480" y="456">every Faction is eliminated</text>
   <path class="arc" d="M304 432 H460" marker-end="url(#head)"/>
   <text class="lbl mid" x="384" y="412">every Faction</text>
-  <text class="lbl mid" x="384" y="426">defeated</text>
+  <text class="lbl mid" x="384" y="426">eliminated</text>
   <line class="rule" x1="24" y1="492" x2="736" y2="492"/>
   <text class="section red" x="24" y="520">THROUGHOUT THE CAMPAIGN</text>
   <rect class="node" x="24" y="536" width="280" height="64" rx="6"/>

@@ -16,7 +16,7 @@ and played to an ending. They keep every kind of GDR that the [Domain Model](../
 supply as few of each as will do; most values are copied from game-ts.
 
 The content is shaped around one way to win and one way to lose. The only Faction, Red Dawn, has three Leads, each
-creating one Initiative Mission site; together they form the Victory path, and winning the last of them defeats Red
+creating one Initiative Mission site; together they form the Victory path, and winning the last of them eliminates Red
 Dawn and wins the Campaign. Meanwhile, Red Dawn's activity creates Response Mission sites. One that is Expired, or whose
 Mission is Lost, raises Panic, and enough Panic loses the Campaign.
 
@@ -30,10 +30,10 @@ Mission is Lost, raises Panic, and enough Panic loses the Campaign.
 
 # Glossary
 
-| Term           | Definition                                                                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Bootstrap GDRs | The GDRs a Game build must supply so that a first playable Campaign can be created and played to an ending.                                      |
-| Victory path   | The sequence of Leads and Initiative Mission sites by which the Agency can defeat every Faction and so win the Campaign with the Bootstrap GDRs. |
+| Term           | Definition                                                                                                                                          |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bootstrap GDRs | The GDRs a Game build must supply so that a first playable Campaign can be created and played to an ending.                                         |
+| Victory path   | The sequence of Leads and Initiative Mission sites by which the Agency can eliminate every Faction and so win the Campaign with the Bootstrap GDRs. |
 
 # Bootstrap scope
 
@@ -128,14 +128,14 @@ An Investigation reads the `difficulty` of its Lead, under
 
 Type owner: [Missions](../mechanics/missions.md).
 
-| GDR                     | Type                 | GDR purpose | What it supplies                                                                                                      |
-| ----------------------- | -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------- |
-| `apprehend_member`      | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry, its Enemies by EnemyArchetype and count, and its rewards for a win.           |
-| `raid_safehouse`        | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry, its Enemies by EnemyArchetype and count, and its rewards for a win.           |
-| `raid_hq`               | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry and its Enemies by EnemyArchetype and count; a win defeats its target Faction. |
-| `foil_recruitment_push` | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 1: its expiry and its Enemies by EnemyArchetype and count.         |
-| `foil_sabotage`         | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 2: its expiry and its Enemies by EnemyArchetype and count.         |
-| `standard_mission`      | MissionArchetype     | Archetype   | The Archetype of every Mission.                                                                                       |
+| GDR                     | Type                 | GDR purpose | What it supplies                                                                                                         |
+| ----------------------- | -------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `apprehend_member`      | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry, its Enemies by EnemyArchetype and count, and its rewards for a win.              |
+| `raid_safehouse`        | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry, its Enemies by EnemyArchetype and count, and its rewards for a win.              |
+| `raid_hq`               | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry and its Enemies by EnemyArchetype and count; a win eliminates its target Faction. |
+| `foil_recruitment_push` | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 1: its expiry and its Enemies by EnemyArchetype and count.            |
+| `foil_sabotage`         | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 2: its expiry and its Enemies by EnemyArchetype and count.            |
+| `standard_mission`      | MissionArchetype     | Archetype   | The Archetype of every Mission.                                                                                          |
 
 No MissionSiteArchetype references a Faction. A Mission site's target Faction is a value in its Constants: for an
 Initiative Mission site it is the Faction whose Archetype is the creating Lead's `faction`, and for a Response Mission
@@ -222,11 +222,11 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 # Victory path
 
 The Victory path consists of three Leads, each creating one Initiative Mission site. A Won Mission there makes the next
-Lead available, and winning `raid_hq` defeats Red Dawn. With Red Dawn defeated, every Faction is defeated, which wins
+Lead available, and winning `raid_hq` eliminates Red Dawn. With Red Dawn eliminated, every Faction is eliminated, which wins
 the Campaign. Throughout the Campaign, Red Dawn's activity creates Faction operation occurrences, each with one Response
 Mission site; a Response Mission site that is Expired, or whose Mission is Lost, raises Panic, and enough Panic loses the Campaign.
 
-![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq defeats Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiry or loss raises Panic until the Campaign is lost](../../../images/bootstrap-victory-path.svg)
+![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq eliminates Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiry or loss raises Panic until the Campaign is lost](../../../images/bootstrap-victory-path.svg)
 
 An Initiative Mission site that is Expired, or whose Mission is Lost, records no win, so its Lead becomes available again and the Agency
 can obtain a new Mission site from it. A Mission site cannot be attempted twice. Every Lead of the Victory path
@@ -242,8 +242,8 @@ The Victory path works through these rules:
   [Mission site creation](../mechanics/missions.md#mission-site-creation),
   [Mission site expiration](../mechanics/missions.md#mission-site-expiration), and
   [Consequences](../mechanics/missions.md#consequences) in [Missions](../mechanics/missions.md).
-- Faction activity and defeat, under [Faction activity](../mechanics/factions.md#faction-activity) and
-  [Defeat](../mechanics/factions.md#defeat) in [Factions](../mechanics/factions.md).
+- Faction activity and elimination, under [Faction activity](../mechanics/factions.md#faction-activity) and
+  [Elimination](../mechanics/factions.md#elimination) in [Factions](../mechanics/factions.md).
 - The conditions that end the Campaign, and which Campaign ending applies when Victory and Defeat hold together, under
   [Ending check step](../mechanics/panic-and-endings.md#ending-check-step) in
   [Panic and Endings](../mechanics/panic-and-endings.md).
@@ -311,6 +311,6 @@ value that deliberately differs from its game-ts counterpart, and why.
 | Starting training cap                                       | 0                                                    | Above zero, raised by `training_cap`      | Training is available from the first turn.                                                                                               |
 | Panic change of `operation_level_1` and `operation_level_2` | 0.02% and 0.1% when ignored or lost                  | 3% and 8% when ignored or lost            | At the game-ts scale, Panic cannot end a Campaign as short as the Victory path.                                                          |
 | Panic reduction of Initiative Mission site wins             | 0.05% and 0.1%                                       | 1% and 2%                                 | Keeps wins and losses on the same scale.                                                                                                 |
-| Victory                                                     | Completing the Lead Peace on Earth                   | Every Faction defeated                    | One Lead fewer, and the condition does not depend on a specially named GDR.                                                              |
+| Victory                                                     | Completing the Lead Peace on Earth                   | Every Faction eliminated                  | One Lead fewer, and the condition does not depend on a specially named GDR.                                                              |
 | Faction discovery                                           | Through a profile Lead                               | Every Faction is known from the start     | Removes the profile and interrogation Leads.                                                                                             |
 | Upgrades                                                    | 8, with no distinction between cap and stat upgrades | 4: three cap upgrades and `weapon_damage` | game-ts left distinguishing the two kinds of upgrade as an open item in `upgrades.ts`.                                                   |
