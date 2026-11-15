@@ -47,7 +47,7 @@ complete copy of Campaign state for each of them. Its size grows in two ways at 
 
 - **With the Timeline entries of the Turn:** a Turn with 50 Timeline entries keeps 51 copies of Campaign state.
 - **With the length of the Campaign:** each copy holds World history, including every
-  [Turn series](../foundation/campaign-state.md#turn-series) in full. E.g., in turn 300, 51 copies each hold 300
+  [Turn series](../foundation/world-history.md#turn-series) in full. E.g., in turn 300, 51 copies each hold 300
   turns of every Turn series, although the copies differ only in the recorded values of the current Turn.
 
 A Campaign save holds the Timeline of its Turn, and every Autosave is a Campaign save, so the same growth repeats in

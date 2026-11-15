@@ -77,7 +77,7 @@ Exactly one prerequisite kind and exactly one effect kind exist, and these two t
 | `create_mission_site` | The identifier of a MissionSiteArchetype. | Creates one Initiative Mission site under [Completion effect](#completion-effect). |
 
 A Lead names its prerequisite Leads, its Faction, and the MissionSiteArchetype it creates by GDR identifier, never by
-inference from identifier text, under [References](../foundation/campaign-state.md#references) in Campaign State.
+inference from identifier text, under [References](../foundation/campaign-instances.md#references) in Campaign Instances.
 
 ## Lead GDR validation
 
@@ -131,7 +131,7 @@ a Recorded win exactly when L's set in Lead progression is not empty.
 
 Lead progression holds no completion record. A Lead's completion count, i.e. the number of Completed Investigations of
 the Lead, is a Derived value calculated from Investigation Campaign instances, as
-[Value classification](../foundation/campaign-state.md#value-classification) in Campaign State describes, and no rule
+[Authoritative and Derived values](../foundation/core-concepts.md#authoritative-and-derived-values) in Core Concepts describes, and no rule
 of a Mechanics specification reads it.
 
 **Initial Lead progression:** The initial Campaign state has, for every Lead the Game build supplies, an empty set of

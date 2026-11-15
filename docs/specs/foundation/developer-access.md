@@ -24,8 +24,8 @@ is an ordinary Player action that undo and redo treat like any other.
 
 # Relationships
 
+- Uses [Campaign Instances](./campaign-instances.md)
 - Uses [Campaign Lifecycle](./campaign-lifecycle.md)
-- Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
@@ -55,7 +55,7 @@ To inspect or cheat, the Session controller disengages Autopilot and waits for d
 
 Full Campaign state inspection presents each Campaign instance as its four properties, Instance ID, Archetype
 reference, Constants, and State, as required by
-[Campaign instance structure](campaign-state.md#campaign-instance-structure). How an
+[Campaign instance structure](campaign-instances.md#campaign-instance-structure). How an
 implementation stores Campaign instances internally is the Implementer's choice.
 
 # Cheat operations

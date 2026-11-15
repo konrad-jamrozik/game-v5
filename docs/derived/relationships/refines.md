@@ -2,16 +2,10 @@
 
 > **Generated — do not edit.** Run `npm run docs:generate` after changing registered specifications.
 
-A → B means A is refined by B. Layer 1 holds the specifications that depend on no other specification in the diagram.
+A → B means A is refined by B. The game specifications are layered by their uses and refines relationships together, so a specification is in the same layer in the Uses and Refines diagrams. Layer 1 is drawn at the top and holds the specifications that depend on no other specification through either kind; every other specification is drawn in the layer below the lowest-drawn specification it depends on.
 
 [Back to the relationship graph index](../relationships.md)
 
 [Back to the derived specification catalog](../README.md)
 
-## Model and gameplay specifications
-
-![Refines relationships: Model and gameplay specifications](../../images/refines-model-and-gameplay.svg)
-
-## Engine contract
-
-![Refines relationships: Engine contract](../../images/refines-engine-contract.svg)
+![Refines relationships](../../images/refines-all.svg)

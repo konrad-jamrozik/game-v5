@@ -142,7 +142,7 @@ A Faction's name is not a State property: it is the `name` of its FactionArchety
 
 **Retention:** A Faction participates in current gameplay for the whole Campaign, including after it is Defeated, and
 keeps every property above, so that every reference to it, e.g. a Mission site's target Faction, resolves, under
-[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
+[Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Faction is ever removed.
 
 # Initial Factions
@@ -151,8 +151,8 @@ Faction is ever removed.
 supplies, and no other Faction, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model
 requires. No Faction is created after campaign creation. Each initial Faction has a fresh Instance ID under
 [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following
-initial values, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in
-Campaign State. This table is exhaustive.
+initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in
+Campaign Instances. This table is exhaustive.
 
 | Value                          | Initial value                                                                                                                            | Source                                                       |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |

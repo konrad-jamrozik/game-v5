@@ -101,7 +101,7 @@ both sides: the child adds detail about what the parent is about. Otherwise ever
 invariant would refine that contract, and the relationship would carry no information.
 
 E.g., Domain Model uses Core Concepts vocabulary and Campaign State composition constraints to describe game concepts.
-Campaign State refines Engine Contract Committed state integrity; vocabulary use alone is not refinement. Timeline uses the Campaign State identity and historical-preservation conventions and Engine Contract guarantees;
+Campaign State refines Engine Contract Data ownership: it adds detail about the Campaign state that Data ownership places among the data the engine keeps; vocabulary use alone is not refinement. Timeline uses the Campaign Instances identity convention and Engine Contract guarantees;
 obeying them while restoring Campaign state is not refinement. These classifications concern the particular contract
 meaning, not a prohibition on refinement between any document families.
 
@@ -210,17 +210,17 @@ check links, and validate the graphs. Do not invent implementation or test relat
 These cases exercise [Recording relationships](#recording-relationships), [Direction](#direction), and
 [Status and evidence](#status-and-evidence); they add no relationships to the named documents. The table is exhaustive.
 
-| Case                                                                                                                          | Expected classification and reason                                                                  |
-| ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                 | Uses Campaign State; it applies campaign composition constraints without elaborating their meanings |
-| Agents supplies the lifecycle of the Agent described by [Agent](../mechanics/domain-model.md#glossary)                        | Refines Domain Model; it adds detail to the same concept                                            |
-| Combat rounds a damage value with a rounding operation that Numbers defines                                                   | Uses Numbers; applying a rounding operation does not elaborate its meaning                          |
-| Timeline preserves references under [References](../foundation/campaign-state.md#references) while restoring Campaign state   | Uses Campaign State; satisfying the reference invariant alone is not refinement                     |
-| Saves persists the Timeline whose navigation Timeline defines                                                                 | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
-| Saves lists Campaign saves through an operation that [API hierarchy](../foundation/engine-contract.md#api-hierarchy) names    | Uses Engine Contract; applying an existing operation does not elaborate it                          |
-| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields | Intended refinement is permitted; the fields remain unspecified and status stays Stub               |
-| A document merely says it must obey [Campaign instances](../foundation/campaign-state.md#campaign-instances)                  | Uses, not Refines; no added detail about the identity convention is identified                      |
-| A refinement duplicates the same reliance as a Uses entry                                                                     | Keep only Refines; two Relationship kinds require distinct reliance                                 |
+| Case                                                                                                                            | Expected classification and reason                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and GDR                                                                   | Uses Campaign Instances; it applies the Campaign instance structure without elaborating its meaning |
+| Agents supplies the lifecycle of the Agent described by [Agent](../mechanics/domain-model.md#glossary)                          | Refines Domain Model; it adds detail to the same concept                                            |
+| Combat rounds a damage value with a rounding operation that Numbers defines                                                     | Uses Numbers; applying a rounding operation does not elaborate its meaning                          |
+| Timeline preserves references under [References](../foundation/campaign-instances.md#references) while restoring Campaign state | Uses Campaign Instances; satisfying the reference invariant alone is not refinement                 |
+| Saves persists the Timeline whose navigation Timeline defines                                                                   | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
+| Saves lists Campaign saves through an operation that [API hierarchy](../foundation/engine-contract.md#api-hierarchy) names      | Uses Engine Contract; applying an existing operation does not elaborate it                          |
+| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields   | Intended refinement is permitted; the fields remain unspecified and status stays Stub               |
+| A document merely says it must obey [Campaign Instances](../foundation/campaign-instances.md)                                   | Uses, not Refines; no added detail about the identity convention is identified                      |
+| A refinement duplicates the same reliance as a Uses entry                                                                       | Keep only Refines; two Relationship kinds require distinct reliance                                 |
 
 ## Complete coverage of Relationship kinds
 

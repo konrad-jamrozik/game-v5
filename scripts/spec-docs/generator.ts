@@ -42,8 +42,12 @@ const PASSIVE_DESCRIPTIONS: Readonly<Record<RelationshipKind, string>> = {
   implements: 'A → B means A is implemented by B.',
   verifies: 'A → B means A is verified by B.',
 }
+const GAME_LAYER_DESCRIPTION =
+  'The game specifications are layered by their uses and refines relationships together, so a specification is in the same layer in the Uses and Refines diagrams. Layer 1 is drawn at the top and holds the specifications that depend on no other specification through either kind; every other specification is drawn in the layer below the lowest-drawn specification it depends on.'
+const SINGLE_LAYER_DESCRIPTION =
+  'Layer 1 holds the specifications that depend on no other specification in the diagram.'
 const FAMILY_DIAGRAM_NOTICE =
-  '_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._'
+  '_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._'
 const GENERATED_NOTICE =
   '> **Generated — do not edit.** Run `npm run docs:generate` after changing registered specifications.'
 
@@ -219,27 +223,6 @@ function renderedRelationshipKinds(corpus: SpecificationCorpus): readonly Relati
   return RELATIONSHIP_ORDER.filter((kind) => explicitRelationships(corpus, kind).length > 0)
 }
 
-function descendantRelationships(
-  relationships: readonly RelationshipRecord[],
-  rootId: string,
-): readonly RelationshipRecord[] {
-  const descendantIds = new Set([rootId])
-  const descendants: RelationshipRecord[] = []
-  let added = true
-  while (added) {
-    added = false
-    for (const relationship of relationships) {
-      if (!descendantIds.has(relationship.dependencyId) || descendants.includes(relationship)) continue
-      descendants.push(relationship)
-      if (!descendantIds.has(relationship.dependentId)) {
-        descendantIds.add(relationship.dependentId)
-        added = true
-      }
-    }
-  }
-  return descendants
-}
-
 function renderRelationshipsIndex(corpus: SpecificationCorpus): string {
   const kinds = renderedRelationshipKinds(corpus)
   return `${[
@@ -269,25 +252,6 @@ interface RelationshipSection {
 /** Splits the relationships of one kind into the diagrams its page shows. */
 function relationshipSections(corpus: SpecificationCorpus, kind: RelationshipKind): readonly RelationshipSection[] {
   const kindRelationships = explicitRelationships(corpus, kind)
-  if (kind === 'refines') {
-    const engineRelationships = descendantRelationships(kindRelationships, 'ENG')
-    if (engineRelationships.length > 0) {
-      const engineRelationshipSet = new Set(engineRelationships)
-      const otherRelationships = kindRelationships.filter((relationship) => !engineRelationshipSet.has(relationship))
-      return [
-        ...(otherRelationships.length > 0
-          ? [
-              {
-                heading: 'Model and gameplay specifications',
-                slug: 'model-and-gameplay',
-                relationships: otherRelationships,
-              },
-            ]
-          : []),
-        { heading: 'Engine contract', slug: 'engine-contract', relationships: engineRelationships },
-      ]
-    }
-  }
   if (kind === 'uses') {
     const governanceRelationships = kindRelationships.filter(
       (relationship) => relationship.dependencyId === 'REL' && relationship.dependentId === 'CONV',
@@ -322,6 +286,24 @@ function relationshipSvgLabel(kind: RelationshipKind, section: RelationshipSecti
   return section.heading === undefined ? title : `${title}: ${section.heading}`
 }
 
+/**
+ * The relationships that decide the layers of a diagram. The game diagrams of the uses and refines kinds are layered
+ * together, so that a specification is in the same layer in both, even when the specifications it depends on are
+ * linked to it only in the other kind.
+ */
+function layeringRelationships(
+  corpus: SpecificationCorpus,
+  kind: RelationshipKind,
+  section: RelationshipSection,
+): readonly RelationshipRecord[] {
+  if ((kind !== 'uses' && kind !== 'refines') || section.slug === 'governance') return section.relationships
+  return (['uses', 'refines'] as const).flatMap((layeredKind) =>
+    relationshipSections(corpus, layeredKind)
+      .filter((layeredSection) => layeredSection.slug !== 'governance')
+      .flatMap((layeredSection) => layeredSection.relationships),
+  )
+}
+
 function renderRelationshipSvg(
   corpus: SpecificationCorpus,
   kind: RelationshipKind,
@@ -338,9 +320,15 @@ function renderRelationshipSvg(
     to: relationship.dependentId,
     kinds: new Set<RelationshipKind>([relationship.kind]),
   }))
+  const layeringEdges = layeringRelationships(corpus, kind, section)
   const layers = computeLayers(
-    participants.map((specification) => specification.id),
-    edges,
+    [
+      ...new Set([
+        ...participants.map((specification) => specification.id),
+        ...layeringEdges.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
+      ]),
+    ],
+    layeringEdges.map((relationship) => ({ from: relationship.dependencyId, to: relationship.dependentId })),
   )
   return renderSvgDiagram({
     label: relationshipSvgLabel(kind, section),
@@ -360,7 +348,7 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
     '',
     GENERATED_NOTICE,
     '',
-    `${passiveDescription(kind)} Layer 1 holds the specifications that depend on no other specification in the diagram.`,
+    `${passiveDescription(kind)} ${kind === 'uses' || kind === 'refines' ? GAME_LAYER_DESCRIPTION : SINGLE_LAYER_DESCRIPTION}`,
     '',
     '[Back to the relationship graph index](../relationships.md)',
     '',
@@ -429,7 +417,11 @@ function familyDiagramData(corpus: SpecificationCorpus, family: SpecificationFam
   return { members, internalEdges, crossEdges }
 }
 
-type DiagramScope = 'within' | 'across'
+/** The within-family diagrams each show one relationship kind; the across-families diagram shows them all. */
+type WithinKind = 'uses' | 'refines'
+type DiagramScope = `within-${WithinKind}` | 'across'
+
+const WITHIN_KINDS: readonly WithinKind[] = ['uses', 'refines']
 
 /** The widest row of member boxes, in pixels, before the across-families diagram starts another row. */
 const ACROSS_FAMILIES_ROW_WIDTH = 900
@@ -439,28 +431,46 @@ function familySvgFileName(family: SpecificationFamily, scope: DiagramScope): st
 }
 
 function familySvgLabel(family: SpecificationFamily, scope: DiagramScope): string {
-  return scope === 'within'
-    ? `${family} family: relationships within the family`
-    : `${family} family: relationships with other families`
+  return scope === 'across'
+    ? `${family} family: relationships with other families`
+    : `${family} family: ${scope.slice('within-'.length)} relationships within the family`
 }
 
 function specificationLabel(specification: SpecificationRecord): string {
   return `${specification.id} — ${specification.title} (${specification.status})`
 }
 
-function renderWithinFamilySvg(family: SpecificationFamily, data: FamilyDiagramData): string {
+/** The internal edges that carry `kind`, each drawn as that kind alone. */
+function withinEdgesOfKind(data: FamilyDiagramData, kind: WithinKind): readonly FamilyEdge[] {
+  return data.internalEdges
+    .filter((edge) => edge.kinds.has(kind))
+    .map((edge) => ({ from: edge.from, to: edge.to, kinds: new Set<RelationshipKind>([kind]) }))
+}
+
+/**
+ * Draws the members that `kind` relates, in the layers that all the relationships within the Family decide together, so
+ * that a member is in the same layer in the diagram of every kind. The diagram of uses also holds the members that no
+ * relationship within the Family relates.
+ */
+function renderWithinFamilySvg(family: SpecificationFamily, data: FamilyDiagramData, kind: WithinKind): string {
   const layers = computeLayers(
     data.members.map((specification) => specification.id),
     data.internalEdges,
   )
+  const edges = withinEdgesOfKind(data, kind)
+  const related = new Set(data.internalEdges.flatMap((edge) => [edge.from, edge.to]))
+  const shown = new Set(edges.flatMap((edge) => [edge.from, edge.to]))
+  const members = data.members.filter(
+    (specification) => shown.has(specification.id) || (kind === 'uses' && !related.has(specification.id)),
+  )
   return renderSvgDiagram({
-    label: familySvgLabel(family, 'within'),
-    nodes: data.members.map((specification) => ({
+    label: familySvgLabel(family, `within-${kind}`),
+    nodes: members.map((specification) => ({
       id: specification.id,
       lines: [specificationLabel(specification)],
       layer: layers.get(specification.id) ?? 1,
     })),
-    edges: data.internalEdges,
+    edges,
     showLayerLabels: true,
   })
 }
@@ -552,7 +562,10 @@ export function renderFamilyDiagramFiles(
     if (overviewPath === undefined || !sources.has(overviewPath)) continue
     const data = familyDiagramData(corpus, family)
     if (data.members.length > 1) {
-      outputs.set(imagePath(familySvgFileName(family, 'within')), renderWithinFamilySvg(family, data))
+      for (const kind of WITHIN_KINDS) {
+        if (withinEdgesOfKind(data, kind).length === 0) continue
+        outputs.set(imagePath(familySvgFileName(family, `within-${kind}`)), renderWithinFamilySvg(family, data, kind))
+      }
     }
     if (data.crossEdges.length > 0) {
       outputs.set(imagePath(familySvgFileName(family, 'across')), renderAcrossFamiliesSvg(family, data))
@@ -581,7 +594,7 @@ export function isGeneratedDiagramFilePath(path: string): boolean {
   return (
     `${IMAGES_DIRECTORY}/${fileName}` === STACK_DIAGRAM_PATH ||
     `${IMAGES_DIRECTORY}/${fileName}` === FAMILY_ARCHITECTURE_PATH ||
-    /^[a-z0-9-]+-family-(within|across)\.svg$/.test(fileName) ||
+    /^[a-z0-9-]+-family-(within-uses|within-refines|across)\.svg$/.test(fileName) ||
     RELATIONSHIP_ORDER.some((kind) => fileName.startsWith(`${kind}-`) && /^[a-z0-9-]+\.svg$/.test(fileName))
   )
 }
@@ -593,8 +606,15 @@ export function renderFamilyDiagram(corpus: SpecificationCorpus, family: Specifi
     `docs/specs/${familyDirectoryName(family)}/${familyOverviewFileName(family)}`
   const sections = ['## Within the family', '']
   if (members.length > 1) {
-    sections.push(imageLink(family, 'within', overviewPath))
-    if (internalEdges.length === 0) sections.push('', 'No relationships are declared within this family.')
+    for (const [position, kind] of WITHIN_KINDS.entries()) {
+      sections.push(`### ${titleForRelationshipKind(kind)}`, '')
+      if (internalEdges.some((edge) => edge.kinds.has(kind))) {
+        sections.push(imageLink(family, `within-${kind}`, overviewPath))
+      } else {
+        sections.push(`No ${kind} relationships are declared within this family.`)
+      }
+      if (position + 1 < WITHIN_KINDS.length) sections.push('')
+    }
   } else {
     sections.push('This family has a single specification, so there are no relationships within it.')
   }

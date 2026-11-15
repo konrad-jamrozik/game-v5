@@ -202,7 +202,10 @@ describe('family SVG diagrams', () => {
   test('links the SVG files from the overview of a family that uses them', () => {
     const diagram = renderFamilyDiagram(mechanicsCorpus(), 'Mechanics')
     expect(diagram).toContain(
-      '![Mechanics family: relationships within the family](../../images/mechanics-family-within.svg)',
+      '![Mechanics family: uses relationships within the family](../../images/mechanics-family-within-uses.svg)',
+    )
+    expect(diagram).toContain(
+      '![Mechanics family: refines relationships within the family](../../images/mechanics-family-within-refines.svg)',
     )
     expect(diagram).toContain(
       '![Mechanics family: relationships with other families](../../images/mechanics-family-across.svg)',
@@ -210,17 +213,24 @@ describe('family SVG diagrams', () => {
     expect(diagram).not.toContain('```mermaid')
   })
 
-  test('renders both files with layers, grouped members, and other families', () => {
+  test('renders the uses, refines, and across files with shared layers, grouped members, and other families', () => {
     const files = renderFamilyDiagramFiles(mechanicsCorpus(), sources)
     expect([...files.keys()]).toEqual([
-      'docs/images/mechanics-family-within.svg',
+      'docs/images/mechanics-family-within-uses.svg',
+      'docs/images/mechanics-family-within-refines.svg',
       'docs/images/mechanics-family-across.svg',
     ])
     for (const path of files.keys()) expect(isGeneratedDiagramFilePath(path)).toBe(true)
-    const within = files.get('docs/images/mechanics-family-within.svg') ?? ''
-    expect(within).toContain('LAYER 3')
-    expect(within).toContain('TOP — Title TOP (Stub)')
-    expect(within).not.toContain(' family<')
+    const uses = files.get('docs/images/mechanics-family-within-uses.svg') ?? ''
+    expect(uses).toContain('LAYER 3')
+    expect(uses).toContain('TOP — Title TOP (Stub)')
+    expect(uses).not.toContain(' family<')
+    expect(uses).not.toContain('class="edge edge-refines"')
+    const refines = files.get('docs/images/mechanics-family-within-refines.svg') ?? ''
+    expect(refines).toContain('class="edge edge-refines"')
+    expect(refines).not.toContain('class="edge edge-uses"')
+    // MID is in layer 2 because of its uses relationship, so the refines diagram keeps it there.
+    expect(refines).toContain('LAYER 2')
     const across = files.get('docs/images/mechanics-family-across.svg') ?? ''
     expect(across).toContain('>Foundation family<')
     expect(across).toContain('>Implementation family<')
@@ -246,7 +256,7 @@ describe('family SVG diagrams', () => {
     ])
     const fileSources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
     const diagrams = renderFamilyDiagramFiles(analysis.corpus, fileSources)
-    const within = 'docs/images/mechanics-family-within.svg'
+    const within = 'docs/images/mechanics-family-within-uses.svg'
     const across = 'docs/images/mechanics-family-across.svg'
     expect(diagrams.has(within) && diagrams.has(across)).toBe(true)
     const run = async (actualOutputs: ReadonlyMap<string, string>): Promise<readonly string[]> => {

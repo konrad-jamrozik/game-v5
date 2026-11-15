@@ -12,7 +12,7 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 3              |
-| Draft      | 30             |
+| Draft      | 32             |
 | Accepted   | 3              |
 | Superseded | 0              |
 
@@ -21,7 +21,7 @@ These informative views are derived from the registered Markdown specifications.
 | Family         | Specifications |
 | -------------- | -------------- |
 | Governance     | 5              |
-| Foundation     | 12             |
+| Foundation     | 14             |
 | Mechanics      | 11             |
 | Content        | 1              |
 | UI             | 1              |
@@ -43,9 +43,10 @@ These informative views are derived from the registered Markdown specifications.
 | ID       | Document                                                                        | Status   | Owns                                                                                                                                         |
 | -------- | ------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | AUTO     | [Autopilot](../specs/foundation/autopilot.md)                                   | Draft    | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                       |
+| CINST    | [Campaign Instances](../specs/foundation/campaign-instances.md)                 | Draft    | How every thing in a Campaign's world is modeled as a Campaign instance.                                                                     |
 | CONFIG   | [Configuration](../specs/foundation/configuration.md)                           | Draft    | Kinds of setting, Global configuration, and the configuration cascade.                                                                       |
 | CORE     | [Core Concepts](../specs/foundation/core-concepts.md)                           | Accepted | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build.                                                 |
-| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)                         | Accepted | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation.     |
+| CSTATE   | [Campaign State](../specs/foundation/campaign-state.md)                         | Accepted | What Campaign state is made of, and how Campaign initialization produces it.                                                                 |
 | DETERM   | [Determinism and Randomness](../specs/foundation/determinism-and-randomness.md) | Draft    | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay.                           |
 | DEV      | [Developer Access](../specs/foundation/developer-access.md)                     | Stub     | Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides.                                                    |
 | ENG      | [Engine Contract](../specs/foundation/engine-contract.md)                       | Accepted | API hierarchy, Principal authority, data ownership, the Engine subsystem inventory, and the guarantees shared by every engine subsystem.     |
@@ -54,6 +55,7 @@ These informative views are derived from the registered Markdown specifications.
 | NUMBERS  | [Numbers](../specs/foundation/numbers.md)                                       | Draft    | That every stored quantity is a whole number, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
 | SAVES    | [Saves](../specs/foundation/saves.md)                                           | Draft    | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                       |
 | TIMELINE | [Timeline](../specs/foundation/timeline.md)                                     | Draft    | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees.         |
+| WHIST    | [World History](../specs/foundation/world-history.md)                           | Draft    | What a Campaign remembers about its past, and for how long.                                                                                  |
 
 ## Mechanics
 

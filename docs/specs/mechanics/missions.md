@@ -177,8 +177,8 @@ violates one is an internal invariant violation, reported under
 
 **Retention:** A Mission site keeps every property above for the whole Campaign, whatever its lifecycle state, so that
 every reference to it resolves, e.g. from an Enemy or a Mission. A Mission site in a final state no longer participates
-in current gameplay and is retained in World history with its final values, under [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign
-State. No Mission site is ever removed.
+in current gameplay and is retained in World history with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World
+History. No Mission site is ever removed.
 
 ## Mission site kind and provenance
 
@@ -221,8 +221,8 @@ adds a Mission site to it. Every Mission site comes into existence during an Adv
 
 Each new Mission site has a fresh Instance ID under
 [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following
-initial values, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in
-Campaign State. This table is exhaustive.
+initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in
+Campaign Instances. This table is exhaustive.
 
 | Value               | Initial value                                                                                                                                                                                     | Source                                                                                                                                                                             |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -321,7 +321,7 @@ one is an internal invariant violation, reported under
 **Retention:** A Mission keeps every property above for the whole Campaign, whatever its lifecycle state, so that every
 reference to it resolves, e.g. from a Participation history or Lead progression. A Won or Lost Mission no longer
 participates in current gameplay and is retained in World history with its final values, under
-[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
+[Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Mission is ever removed.
 
 The Agents who took part in a Mission remain recorded after its Current team is empty: in its Team sent and in each
@@ -412,8 +412,8 @@ Turn:
 - The Mission site's lifecycle state becomes Attempted.
 - A new Mission comes into existence, with a fresh Instance ID under
   [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and with these
-  initial values, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in
-  Campaign State: the MissionArchetype as its Archetype reference; the Mission site as its Mission site; the current
+  initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in
+  Campaign Instances: the MissionArchetype as its Archetype reference; the Mission site as its Mission site; the current
   turn number as its Turn deployed; the Agents of `agents`, in that order, as its Team sent and as its Current team;
   and lifecycle state Deployed.
 - For every Agent in `agents`: its Current assignment becomes Deployed with a Mutable reference to the new Mission, and

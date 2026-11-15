@@ -112,7 +112,7 @@ Type owner: [Leads and Progression](../mechanics/leads-and-progression.md).
 
 Each Lead references its Faction, `red_dawn`, explicitly through its `faction` property, and names its prerequisite
 Leads and the MissionSiteArchetype it creates by GDR identifier, so no relationship is inferred from identifier text under
-[References](../foundation/campaign-state.md#references) in Campaign State.
+[References](../foundation/campaign-instances.md#references) in Campaign Instances.
 
 ## Investigations GDRs
 

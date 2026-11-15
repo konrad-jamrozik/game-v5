@@ -76,12 +76,12 @@ absent value, under [Whole-number quantities](../foundation/numbers.md#whole-num
 | Ending turn     | The turn number of the Turn whose Advance turn recorded the Campaign ending.                                        | A whole number of at least 1. Absent exactly when the Campaign ending is absent.                               |
 
 A Campaign has exactly one Panic, one Campaign ending value, one set of Ending reasons, and one Ending turn. Panic has no
-Turn series, under [Turn series](../foundation/campaign-state.md#turn-series) in Campaign State.
+Turn series, under [Turn series](../foundation/world-history.md#turn-series) in World History.
 
 ## Initial values
 
 **Proposed rule:** Campaign creation sets the Campaign-wide values as follows, under
-[Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in Campaign State. No Game
+[Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. No Game
 Data Record (GDR) and no Campaign configuration value supplies or changes any of them. This table is exhaustive.
 
 | Value           | Initial value | Source     |

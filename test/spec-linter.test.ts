@@ -618,7 +618,7 @@ describe('specification linter', () => {
       validCorpus(),
       'docs/specs/foundation/alpha.md',
       '# Rule',
-      lines(['# Topic', '', '## Detail', '', '### Rule']),
+      lines(['# Topic', '', 'Lead.', '', '## Detail', '', 'Lead.', '', '### Rule']),
     )
     expect(lintSpecifications({ files })).toEqual([])
   })
@@ -638,7 +638,23 @@ describe('specification linter', () => {
       validCorpus(),
       'docs/specs/foundation/alpha.md',
       '# Rule',
-      lines(['# Topic', '', '## Detail', '', '### Explanation', '', '## Nested rule', '', 'Rule.', '', '# Rule']),
+      lines([
+        '# Topic',
+        '',
+        'Lead.',
+        '',
+        '## Detail',
+        '',
+        'Lead.',
+        '',
+        '### Explanation',
+        '',
+        '## Nested rule',
+        '',
+        'Rule.',
+        '',
+        '# Rule',
+      ]),
     )
     expect(diagnosticCodes(files)).toEqual([])
   })
@@ -919,7 +935,7 @@ describe('specification linter', () => {
       ['later paragraph', 'TODO (later): Complete the contract.'],
       ['list item', '- TODO: Complete the contract.'],
     ])('rejects a TODO %s outside the TODOs section', (_name, todo) => {
-      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', todo))).toEqual(['SPEC607'])
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', `Contract.\n\n${todo}`))).toEqual(['SPEC607'])
     })
 
     test.each([
@@ -928,7 +944,7 @@ describe('specification linter', () => {
       ['a fenced code block', '```text\nTODO: Define the probability.\n```'],
       ['inline quoted text', 'Avoid vague placeholders; e.g., "TODO: implement investigations."'],
     ])('does not treat TODO text in %s as a TODO', (_name, text) => {
-      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', text))).toEqual([])
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', `Contract.\n\n${text}`))).toEqual([])
     })
 
     test.each([
@@ -999,6 +1015,9 @@ describe('specification linter', () => {
       'This document specifies',
       'Alpha does not own',
       'The ownership pointer',
+      'This document refines',
+      'Alpha follows constraints on',
+      'Alphas follow constraints on',
     ])('rejects the document-describing phrase "%s"', (phrase) => {
       const files = mutate(validCorpus(), alpha, 'Contract.', `${phrase} the contract.`)
       expect(diagnosticCodes(files)).toEqual(['SPEC215'])
@@ -1010,7 +1029,40 @@ describe('specification linter', () => {
       ['a code span', 'Do not write `this document owns`.'],
       ['a blockquote', '> This document describes the contract.'],
     ])('does not flag a document-describing phrase inside %s', (_name, text) => {
-      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', text))).toEqual([])
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', `Contract.\n\n${text}`))).toEqual([])
+    })
+
+    test.each([
+      ['a list', '- First rule.'],
+      ['a table', '| Column |\n| --- |\n| Value |'],
+      ['a code block', '```text\ncode\n```'],
+      ['a subsection', '## Alpha detail\n\nDetail.'],
+    ])('rejects a topic section that opens with %s instead of a lead', (_name, text) => {
+      const diagnostics = lintSpecifications({ files: mutate(validCorpus(), alpha, 'Contract.', text) })
+      expect(diagnostics.map((diagnostic) => diagnostic.code)).toEqual(['SPEC216'])
+      expect(diagnostics[0]?.message).toBe(
+        'Section "Alpha behavior" must open with a lead paragraph before any list, table, or subsection.',
+      )
+    })
+
+    test('rejects a topic subsection that opens without a lead', () => {
+      const files = mutate(validCorpus(), alpha, 'Contract.', 'Lead.\n\n## Alpha detail\n\n- First rule.')
+      expect(diagnosticCodes(files)).toEqual(['SPEC216'])
+    })
+
+    test('accepts topic sections and subsections that open with a lead', () => {
+      const files = mutate(
+        validCorpus(),
+        alpha,
+        'Contract.',
+        'Lead.\n\n- First rule.\n\n## Alpha detail\n\nLead.\n\n- Rule.',
+      )
+      expect(diagnosticCodes(files)).toEqual([])
+    })
+
+    test('does not require a lead in framing or closing sections', () => {
+      const files = mutate(validCorpus(), alpha, 'Alpha purpose.', '- Alpha purpose.\n\nAlpha.')
+      expect(diagnosticCodes(files)).toEqual([])
     })
 
     test('flags a document-describing phrase in Overview and tables', () => {
@@ -1018,7 +1070,7 @@ describe('specification linter', () => {
         mutate(validCorpus(), alpha, 'Alpha purpose.', 'This document owns Alpha.'),
         alpha,
         'Contract.',
-        '| Column |\n| --- |\n| Alpha does not own Beta. |',
+        'Contract.\n\n| Column |\n| --- |\n| Alpha does not own Beta. |',
       )
       expect(diagnosticCodes(files)).toEqual(['SPEC215', 'SPEC215'])
     })

@@ -45,11 +45,17 @@ to. The index is tied to the rest of the corpus by links rather than declared re
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
 
 ## Within the family
 
-![Governance family: relationships within the family](../../images/governance-family-within.svg)
+### Uses
+
+![Governance family: uses relationships within the family](../../images/governance-family-within-uses.svg)
+
+### Refines
+
+No refines relationships are declared within this family.
 
 ## Across families
 

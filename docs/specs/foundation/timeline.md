@@ -22,6 +22,7 @@ Committed state as the Campaign first reached it, so play continued from there u
 
 # Relationships
 
+- Uses [Campaign Instances](./campaign-instances.md)
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
@@ -219,7 +220,7 @@ Play continued from a restored Committed state produces the outcomes of uninterr
   API access.
 
 Navigation leaves Dev mode unchanged. Restoration preserves
-[Campaign instance identity](campaign-state.md#campaign-instance-identity): undo may remove a Campaign instance or
+[Campaign instance identity](campaign-instances.md#campaign-instance-identity): undo may remove a Campaign instance or
 restore its earlier State, and redo restores the same Instance ID, Archetype, and Constants. Restoration is not creation
 of a new Campaign instance.
 

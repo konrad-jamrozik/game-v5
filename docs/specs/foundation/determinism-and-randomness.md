@@ -24,16 +24,17 @@ builds.
 # Relationships
 
 - Uses [Campaign Lifecycle](./campaign-lifecycle.md)
+- Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
 - Used by [Autopilot](./autopilot.md)
+- Used by [Campaign Instances](./campaign-instances.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Developer Access](./developer-access.md)
 - Used by [Numbers](./numbers.md)
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Timeline](./timeline.md)
-- Refined by [Campaign State](./campaign-state.md)
 
 # Glossary
 
@@ -146,7 +147,7 @@ including through undo and redo, must reproduce the same identifier.
 
 | Kind                       | Replay reproduces it | Examples                                                       |
 | -------------------------- | -------------------- | -------------------------------------------------------------- |
-| Campaign-scoped identifier | Yes                  | E.g., [Instance IDs](campaign-state.md#glossary).              |
+| Campaign-scoped identifier | Yes                  | E.g., [Instance IDs](campaign-instances.md#glossary).          |
 | Independent identifier     | No                   | E.g., [Campaign IDs and Campaign save IDs](saves.md#glossary). |
 
 A Campaign-scoped identifier therefore depends on nothing outside Campaign state, e.g. wall-clock time, in the same way

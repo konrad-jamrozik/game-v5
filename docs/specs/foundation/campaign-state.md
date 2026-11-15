@@ -1,79 +1,59 @@
 # Campaign State
 
-| Metadata    | Value                                                                                                                                    |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | CSTATE                                                                                                                                   |
-| Family      | Foundation                                                                                                                               |
-| Status      | Accepted                                                                                                                                 |
-| Audience    | Engine designer, Content designer, Implementer                                                                                           |
-| Owns        | Campaign state composition, Campaign instance creation, identity/reference integrity, value classification, and historical preservation. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                           |
+| Metadata    | Value                                                                        |
+| ----------- | ---------------------------------------------------------------------------- |
+| Spec ID     | CSTATE                                                                       |
+| Family      | Foundation                                                                   |
+| Status      | Accepted                                                                     |
+| Audience    | Engine designer, Content designer, Implementer                               |
+| Owns        | What Campaign state is made of, and how Campaign initialization produces it. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)               |
 
 # Overview
 
-Campaign state follows constraints on campaign-data composition, Campaign instance creation, identity, reference
-integrity, value classification, and historical preservation. These constraints refine
-[Engine Contract](engine-contract.md).
+Each Campaign has its own world, its own past, and its own settings, e.g. its Agents, the Missions it has fought, and
+its starting money. Together these are its Campaign state, and game behavior consults nothing else. Campaign State
+refines [Engine Contract](engine-contract.md): Engine Contract decides which data the engine keeps and promises that
+every Committed state is valid, and Campaign State looks inside one part of that data, the Campaign's own, and says
+what shape it must have. That shape changes for different reasons than sessions, access, and the Engine API do.
+
+Campaign state is organized by what changes it. Play changes the World state, which holds both the world as it is now
+and the World history the game must remember. The Campaign configuration holds the settings the Campaign was created
+with, of which play may adjust only a few. Every thing in the world, e.g. an Agent or a Mission site, is a
+[Campaign instance](campaign-instances.md) of one common shape.
 
 # Relationships
 
 - Uses [Core Concepts](./core-concepts.md)
-- Refines [Determinism and Randomness](./determinism-and-randomness.md)
 - Refines [Engine Contract](./engine-contract.md)
+- Used by [Campaign Instances](./campaign-instances.md)
 - Used by [Configuration](./configuration.md)
-- Used by [Developer Access](./developer-access.md)
+- Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Domain Model](../mechanics/domain-model.md)
 - Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../implementation/gameplay-dependency-direction.md)
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](../mechanics/turn-advancement.md)
+- Refined by [World History](./world-history.md)
 
 # Glossary
 
-Shared modeling and execution vocabulary is owned by [Core Concepts](core-concepts.md#glossary), including Campaign
-state. The terms below add campaign-specific composition; Instance ID identity constraints are specified under
-[Campaign instance identity](#campaign-instance-identity).
+These terms are specific to Campaign State. General terms are in the [Core Concepts glossary](core-concepts.md#glossary);
+terms about Campaign instances are in the [Campaign Instances glossary](campaign-instances.md#glossary), and terms about
+the retained past in the [World History glossary](world-history.md#glossary).
 
-## Campaign state components
-
-The components into which Campaign state divides, and whether model data stays available.
-
-| Term                   | Definition                                                                                                                                                                                                                                                                                |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and World history, distinct from Campaign configuration.                                                                                                              |
-| Current world state    | The subcomponent of World state other than World history: the simulated world as it stands at the position selected by undo and redo. After undo, it is the state at that earlier position, not the furthest position reached.                                                            |
-| World history          | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and Player API queries may consult World history.                                                               |
-| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation.                                |
-| Retained               | Describes model data kept available for rules, Player API queries, reference resolution, or restoration. Retained describes availability; World history describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state.                 |
-| Turn series            | Retained data in World history recording one value at stated moments of every turn of the Campaign, from campaign creation onward, under [Turn series](#turn-series). The specification owning the value declares it.                                                                     |
-| Turn report            | Retained data in World history describing what one committed Advance turn did, e.g. each Combat it fought and how that Combat went. A Campaign has at most one Turn report: the one of its most recent committed Advance turn, under [Turn report and history](#turn-report-and-history). |
-| History entry          | Retained data in World history describing one ended Turn: a reduced form of its Turn-start state, of its Turn-end state, and of the Turn report of the Advance turn that ended it. Reduced means holding only part of that information, to bound what is retained.                        |
-
-## Campaign instances
-
-The composition of each Campaign instance, and Types that Campaign instance Types adopt.
-
-| Term              | Definition                                                                                                                                                                                                                                                 |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              |
-| Instance ID       | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary).                                            |
-| Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. |
-| State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       |
-| Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     |
-| Role Type         | A Type that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration.                                                              |
-
-# Campaign data integrity refinement
-
-This document refines [Determinism](determinism-and-randomness.md#determinism) and
-[Unique identifiers](determinism-and-randomness.md#unique-identifiers) in Determinism and Randomness, and
-[Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract, by specifying the
-composition, initialization, identity, reference, and historical-preservation constraints that campaign creation,
-committed mutations, and restoration must preserve. It supplies campaign modeling detail without defining API authority
-or execution sequencing. Core Concepts supplies the shared vocabulary used to express these constraints.
+| Term                   | Definition                                                                                                                                                                                                                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and World history, distinct from Campaign configuration.                                                                               |
+| Current world state    | The subcomponent of World state other than World history: the simulated world as it stands at the position selected by undo and redo. After undo, it is the state at that earlier position, not the furthest position reached.                             |
+| World history          | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and Player API queries may consult World history.                                |
+| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation. |
 
 # Campaign state composition
 
-Campaign state has the following complete conceptual hierarchy. World history is a subcomponent of World state.
+Campaign state is one part of the data the engine keeps, under [Data ownership](engine-contract.md#data-ownership) in
+Engine Contract; inside, it divides by what changes each part. Campaign state has the following complete conceptual
+hierarchy. World history is a subcomponent of World state.
 
 ```text
 Campaign state
@@ -102,165 +82,19 @@ permitted changes to adjustable values, and when their effects apply.
 Every Campaign instance is part of World state, never of Campaign configuration. A Campaign instance that participates
 in current gameplay is part of Current world state. When a Campaign instance no longer participates in current
 gameplay, its data that must remain available is part of World history, under
-[Historical fact preservation](#historical-fact-preservation). Placing a Campaign instance in this hierarchy does not
-change its four properties under [Campaign instance structure](#campaign-instance-structure).
+[Historical fact preservation](world-history.md#historical-fact-preservation) in World History. Placing a Campaign
+instance in this hierarchy does not change its four properties under
+[Campaign instance structure](campaign-instances.md#campaign-instance-structure) in Campaign Instances.
 
 # Campaign initialization
 
-Campaign initialization receives setup inputs and immutable Game Data Records (GDRs) supplied by the Game build, and
-produces the initial Campaign state from them as the specifications owning campaign creation describe. GDRs supply
-data; specifications describe calculations and permitted behavior, including which Campaign instances the initial
-Campaign state contains, under [Campaign instance creation](#campaign-instance-creation). A GDR is data, not game
-behavior. The engine performs every operation: it reads GDRs and carries out the specified game behavior, and a GDR
-performs no operation. Exact starting data and balance
-values are outside this document's ownership. Session lifecycle and publication of Committed state belong to Engine Contract.
-
-# Campaign instances
-
-## Campaign instance structure
-
-A Campaign instance Type always has exactly four properties: Instance ID, an Archetype reference, Constants, and State.
-Every Campaign instance has exactly these four properties. The singleton Agency is not exempt: its Archetype reference
-is required like that of any other Campaign instance.
-
-The four-property shape is the ubiquitous language for Campaign instances. It is chosen for uniformity and ease of
-reasoning: every Campaign instance is described, compared, and inspected in the same terms. The shape therefore
-belongs in this specification under the vocabulary criterion of
-[What belongs in a specification](../governance/spec-conventions.md#what-belongs-in-a-specification) and must not be
-removed or weakened as an implementation detail.
-
-How full Campaign state inspection presents each Campaign instance is owned by
-[Inspection contract](developer-access.md#inspection-contract) in Developer Access.
-
-## Campaign instance creation
-
-Creation of a Campaign instance, during campaign initialization or gameplay, is specified by the specification that
-owns the creating behavior. That specification states when the Campaign instance is created, its Type, and the initial
-values of its Archetype reference, Constants, and State, together with the source of each value; e.g., a named GDR or a
-value in Campaign state. The initial values need not all come from the Campaign instance's Archetype: the creating
-specification may take some of them from another GDR, e.g. one serving the Campaign instance initialization purpose under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs) or a
-Referenced GDR (e.g., the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign
-state. Every newly created Campaign instance has a fresh Instance ID under
-[Campaign instance identity](#campaign-instance-identity). Which code creates Campaign instances, and what that code
-receives, is left to the implementer: the creating specification does not state that code, its signature, or its
-dependencies. It states the resulting facts instead, e.g. which Campaign instance owns the new one.
-
-## Campaign instance identity
-
-Instance IDs are unique within their explicitly declared scope and stable for the Campaign instance’s lifetime.
-Restoration, including undo/redo, preserves identity and immutable facts; uniqueness applies within the Campaign’s current timeline, excluding discarded futures.
-
-## Role Types
-
-A Role Type describes a capability that several Campaign instance Types share; e.g., a Role Type for taking part in
-combat, adopted by every Campaign instance Type whose Campaign instances can fight. The specification declaring a
-Role Type states all of the following:
-
-- **Adoption condition:** the exhaustive set of properties a Campaign instance Type must have to adopt the Role Type.
-- **Adopters:** the exhaustive set of Campaign instance Types that adopt it.
-- **Gained properties:** the properties that every Campaign instance of an adopting Campaign instance Type gains for
-  a stated duration, when the Role Type has any, and when that duration begins and ends.
-
-Adopting a Role Type creates no Campaign instance and no Instance ID, and adds no fifth property under
-[Campaign instance structure](#campaign-instance-structure). The properties named by the adoption condition are
-ordinary properties of the adopting Campaign instance Type and persist like any other. Gained properties belong to
-the Campaign instance that gains them and exist only for the stated duration. A Role Type has no Campaign instances
-of its own, so nothing references a Role Type's occurrence; references target the adopting Campaign instance.
-
-# References
-
-References identify a particular target and its expected Type. In Committed state, Campaign instance references must resolve
-within the same Campaign; GDR references identify the GDR ID and must resolve against the current Game build.
-Required historical references remain resolvable. Relationships must not be inferred from display names or identifier text.
-
-References that can change belong in State; fixed references belong in Constants. Instance ID and the Archetype reference
-are separate immutable properties. Reference mutability is independent of the target’s mutability.
-
-# Value classification
-
-Authoritative value and Derived value, including their independence from mutability and player visibility,
-are defined in [Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. The way a specification
-defines a value determines its classification, as Core Concepts states; a specification makes no separate
-declaration of it. The classification states game behavior, not storage: a Derived value follows the Authoritative
-values its formula uses, while an Authoritative value changes only when game behavior changes it. What an
-implementation stores is the implementer's choice. A past calculation retained as a historical fact is an Authoritative value and
-follows [Historical fact preservation](#historical-fact-preservation).
-
-E.g., each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle property
-within its State property. The values of these two properties are Authoritative values. The completion count for a
-Lead is a Derived value: count the Investigation Campaign instances whose Lead reference property identifies
-that Lead GDR and whose lifecycle property has the value Completed. The count for lead_1 is 1 after investigation_2 completes; investigation_1’s Abandoned lifecycle
-excludes it. Campaign state has no separate completion record and no Authoritative completion count.
-
-# Historical fact preservation
-
-A past value cannot always be recovered from its current replacement. E.g., a query that needs enemy_1's original
-current health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
-replacement for that historical fact. When a rule or query needs the historical basis, the original inputs or historical
-value must be preserved; required historical values must not be overwritten with current calculations. This does not
-require retaining every intermediate calculation or every possible chart. The values that a chart or a comparison
-across turns needs are retained exactly where a specification declares a Turn series, under
-[Turn series](#turn-series).
-
-When a Campaign instance no longer participates in current gameplay, data required by rules, queries, or retained
-references must remain in World history rather than being deleted. E.g., if enemy_1 no longer participates in a Mission,
-a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
-name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
-changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
-retained references must be preserved under [Campaign instances](#campaign-instances) and [References](#references).
-An evolving collection can contain immutable historical records: e.g., adding a Combat report does not permit rewriting
-an earlier retained Combat report.
-
-# Turn series
-
-A Turn series keeps the past values of one value available for the whole Campaign, so that game behavior and queries
-can use them long after the value has changed; e.g., a chart of money over the last 200 turns. Such past values cannot
-be recovered from the current value, so they are retained in World history under
-[Historical fact preservation](#historical-fact-preservation).
-
-A Turn series follows these complete rules:
-
-- **Declared by the owner of the value:** A value has a Turn series only when the specification owning that value
-  declares one. The declaration states the value and the moments of each turn at which it is recorded; e.g., at the
-  start of each turn and at the end of each turn. No other specification declares a Turn series for that value.
-- **One recorded value for each moment:** For every turn of the Campaign and every declared moment of it that the
-  Campaign has reached, the Turn series holds exactly one recorded value: the value as it was at that moment.
-- **Kept from campaign creation:** A Turn series starts at campaign creation and is never shortened. It has no limit on
-  the number of turns it covers, and its recorded values are never removed, merged, or replaced by a summary.
-- **Recorded values are historical facts:** A recorded value is an Authoritative value, including when the value it
-  records is a Derived value. It is never recomputed from current Campaign state.
-- **Moments within the current turn:** A declaration may name a moment that is not yet final while the turn is in
-  progress; e.g., the number of upgrades purchased during the turn so far. The recorded value for the current turn is
-  then the value in the current Committed state, and it becomes final when the turn ends.
-- **Part of Campaign state:** A Turn series is World history, so every Campaign save holds it in full, and restoration
-  restores it together with the rest of Campaign state. After undo, redo, or load, each Turn series holds exactly the
-  recorded values of the restored Committed state.
-
-A Turn series is Player-visible information exactly when the specification declaring it says so. Player API returns a
-Player-visible Turn series in full: every recorded value from campaign creation up to the current Committed state,
-each with the turn and the recorded moment it belongs to. The result is the same for the Session controller and an
-Autopilot AI, and after undo, redo, or load it holds the recorded values of the restored Committed state. A
-specification describing a chart names the Turn series the chart shows and declares none itself.
-
-# Turn report and history
-
-The Turn report and the History entries keep what happened in a Campaign: the Turn report in full for the most recent
-committed Advance turn, and one reduced History entry for every ended Turn. They follow these complete rules:
-
-- **Written only by Advance turn:** The Advance turn that ends Turn t replaces the Turn report with its own and adds
-  the History entry for Turn t. No other Player action changes the Turn report or any History entry. Before the first
-  committed Advance turn of a Campaign, there is no Turn report and no History entry.
-- **Never rewritten:** A History entry is never rewritten once added, and a Turn report is never rewritten while it is
-  the most recent one.
-- **Agreement:** The Turn report part of the latest History entry is exactly the reduced form of the Turn report, so
-  the two never disagree.
-- **Reduction:** Information that the Turn report holds and its History entry does not is required, under
-  [Historical fact preservation](#historical-fact-preservation), only while that Turn report is the most recent one.
-- **Part of Campaign state:** The Turn report and every History entry are World history, so every Campaign save holds
-  them, and restoration restores them together with the rest of Campaign state. After undo, redo, or load, they are
-  exactly those of the restored Committed state.
-- **Declared by the owner of each value:** What the Turn report and each History entry hold of a value is stated by
-  the specification owning that value.
+Every Campaign starts from data the Game build supplies and choices made before creation, and nothing else. Campaign
+initialization receives setup inputs and immutable Game Data Records (GDRs) supplied by the Game build, and produces
+the initial Campaign state from them as the specifications owning campaign creation describe. GDRs supply data;
+specifications describe calculations and permitted behavior, including which Campaign instances the initial Campaign
+state contains, under [Campaign instance creation](campaign-instances.md#campaign-instance-creation) in Campaign
+Instances. A GDR is data, not game behavior. The engine performs every operation: it reads GDRs and carries out the
+specified game behavior, and a GDR performs no operation.
 
 # Acceptance examples
 
@@ -269,11 +103,3 @@ committed Advance turn, and one reduced History entry for every ended Turn. They
 - **World history within world:** A retained record of a past difficulty change belongs to World history within World state;
   the current difficulty value belongs to Campaign configuration. Both are Campaign state
   ([Campaign state composition](#campaign-state-composition)).
-- **A Turn series covers the whole Campaign:** A specification declares a Turn series of money at the end of each
-  turn. In turn 205 the Turn series holds 204 recorded values, one for each of turn 1 to turn 204, and each equals the
-  money the Campaign had when that turn ended. Saving and loading the Campaign keeps all 204
-  ([Turn series](#turn-series)).
-- **Undo restores a Turn series:** A specification declares a Turn series of the upgrades purchased during each turn.
-  In one turn the player purchases 7 upgrades, and the recorded value for that turn is 7. The player undoes 2 of the
-  purchases: the recorded value is 5, and the recorded values of earlier turns are unchanged. Redoing both purchases
-  makes it 7 again ([Turn series](#turn-series)).

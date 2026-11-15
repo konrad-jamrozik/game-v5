@@ -72,7 +72,7 @@ const BLOCKING_TODO_PREFIX = 'TODO:'
 const OVERVIEW_WORD_LIMIT = 200
 const GLOSSARY_INTRODUCTION_SENTENCE_LIMIT = 2
 const DOCUMENT_DESCRIBING_PHRASES =
-  /\bthis document (?:defines|states|owns|describes|specifies)\b|\bdoes not own\b|\bownership pointer\b/gi
+  /\bthis document (?:defines|states|owns|describes|specifies|refines)\b|\bdoes not own\b|\bownership pointer\b|\bfollows? constraints on\b/gi
 const GENERIC_TOPIC_HEADINGS = /^(?:Concepts and contract|Concepts|Contract|Requirements|Details|Specification)$/i
 const REMOVED_HEADINGS =
   /^(?:Terms|Terminology|Vocabulary|Background references?|Downstream ownership(?: \(informative\))?|Source basis)(?: \(informative\))?$/i
@@ -429,6 +429,22 @@ function validateSectionContent(specification: Specification, heading: Heading, 
   }
 }
 
+/**
+ * Reports a topic section or topic subsection whose first content is not a paragraph, i.e. one that opens with a list,
+ * table, code block, quotation, or subsection instead of a lead.
+ */
+function validateLead(specification: Specification, heading: Heading, diagnostics: Diagnostic[]): void {
+  const first = sectionNodes(specification.document, heading).find((node) => node.type !== 'html')
+  if (!first || first.type === 'paragraph') return
+  addDiagnostic(
+    diagnostics,
+    specification.path,
+    heading,
+    'SPEC216',
+    `Section "${headingText(heading)}" must open with a lead paragraph before any list, table, or subsection.`,
+  )
+}
+
 function validateLayout(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
   for (const specification of specifications) {
     const headings = specification.document.headings
@@ -572,6 +588,12 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
         )
       }
       if (current === 1 || current === 2) validateSectionContent(specification, heading, diagnostics)
+      if (current === 1) {
+        validateLead(specification, heading, diagnostics)
+        for (const node of sectionNodes(specification.document, heading)) {
+          if (isHeading(node) && node.depth === 2) validateLead(specification, node, diagnostics)
+        }
+      }
     }
     if (overview) validateOverviewLength(specification, overview, diagnostics)
     validateDocumentDescribingPhrases(specification, diagnostics)

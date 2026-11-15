@@ -30,11 +30,23 @@ that subsystem's behavior.
 
 ## Campaign State
 
-[Campaign State](campaign-state.md) answers _how must campaign data be structured?_ It owns
-Campaign state composition, with its World state, Current world state, World history, and Campaign configuration terms,
-Campaign instance structure, creation and identity, references, value classification, and historical fact preservation.
-It refines Engine Contract's Committed state integrity requirement into concrete data rules. It stays generic: the rules
-would hold for any game built on this engine.
+[Campaign State](campaign-state.md) answers _what is a Campaign's data made of?_ It divides Campaign state into World
+state, with its Current world state and World history, and Campaign configuration, and says how Campaign initialization
+produces the first Campaign state. It refines Engine Contract's Data ownership, which places Campaign state among the
+data the engine keeps. It stays generic: the rules would hold for any game built on this engine.
+
+## Campaign Instances
+
+[Campaign Instances](campaign-instances.md) answers _how is one thing in a Campaign's world modeled?_ Every such thing
+is a Campaign instance with the same four properties, created with a fresh Instance ID, referenced only through valid
+references, and able to adopt Role Types. It builds on Campaign State, which places every Campaign instance in World
+state.
+
+## World History
+
+[World History](world-history.md) answers _what must a Campaign remember?_ It keeps the historical facts that rules and
+queries need, the Turn series that charts use, and the Turn report and History entries. It refines Campaign State's
+World history component.
 
 ## Game Data Records
 
@@ -91,20 +103,26 @@ Mechanics specification owns the distributions of its own random outcomes.
 # How they relate
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
-State refines those guarantees and Determinism and Randomness. Numbers stands alone and is used by Mechanics. Campaign
+State refines its Data ownership; Campaign Instances builds on Campaign State, and World History refines it. Numbers stands alone and is used by Mechanics. Campaign
 Lifecycle, Saves, Timeline, Configuration, Autopilot, Developer Access, Determinism and Randomness, and Numbers each
 own one engine subsystem outright, and all but Numbers use Engine Contract; Timeline also uses Saves. Game Data
-Records builds on Campaign State. No Foundation specification depends on a Mechanics specification; the
+Records builds on Campaign State and Campaign Instances. No Foundation specification depends on a Mechanics specification; the
 [Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base and Turn
 Advancement, the owner of the Turn advancement engine subsystem, as its tip.
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
 
 ## Within the family
 
-![Foundation family: relationships within the family](../../images/foundation-family-within.svg)
+### Uses
+
+![Foundation family: uses relationships within the family](../../images/foundation-family-within-uses.svg)
+
+### Refines
+
+![Foundation family: refines relationships within the family](../../images/foundation-family-within-refines.svg)
 
 ## Across families
 
@@ -120,8 +138,11 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
   this game. E.g., Factions can be redesigned without touching Campaign State, and reference integrity can be
   tightened without touching Domain Model.
 - **Engine Contract versus Campaign State:** engine behavior (e.g. sessions and access) and
-  data shape (e.g. identity and references) change for different reasons. Keeping data rules in their own refinement lets
-  Engine Contract stay about guarantees.
+  data shape (e.g. the components of Campaign state) change for different reasons. Keeping data rules in their own
+  refinement lets Engine Contract stay about guarantees.
+- **Campaign State, Campaign Instances, and World History:** what a Campaign's data is made of, how one thing in it is
+  modeled, and what it remembers of its past change for different reasons, so each has its own document. E.g., a new
+  Turn series changes only World History, and a change to how a Role Type is declared changes only Campaign Instances.
 - **Campaign State versus Game Data Records:** the first holds the rules for data that changes during a Campaign; the
   second holds the uses of data that never changes during one.
 - **Engine Contract versus the engine subsystem specifications:** Engine Contract holds only what is true across all
@@ -142,7 +163,8 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 1. [Core Concepts](core-concepts.md) for the vocabulary.
 2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns.
-3. [Campaign State](campaign-state.md) and [Game Data Records](game-data-records.md) for how campaign data is shaped.
+3. [Campaign State](campaign-state.md), [Campaign Instances](campaign-instances.md), [World History](world-history.md),
+   and [Game Data Records](game-data-records.md) for how campaign data is shaped.
 4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md), [Developer Access](developer-access.md), and
    [Determinism and Randomness](determinism-and-randomness.md) for the engine subsystems.
 5. [Numbers](numbers.md) as needed.

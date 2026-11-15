@@ -161,7 +161,7 @@ weapon values. An Agent also has two Derived values, which are never stored: its
 **Retention:** An Agent keeps every property above for the whole Campaign, whatever its lifecycle state, so that every
 reference to it resolves, e.g. from a Combat report or a Participation history. A Killed or Dismissed Agent no longer
 participates in current gameplay and is retained in World history with its final values, under
-[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
+[Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Agent is ever removed.
 
 ## Participation history records
@@ -204,8 +204,8 @@ fights. Agents share these attributes with Enemies, so one set of rules covers e
 
 ## Combatant Role Type
 
-The Combatant Role Type is a Role Type under [Role Types](../foundation/campaign-state.md#role-types) in Campaign
-State. It states what a Campaign instance Type must have for its Campaign instances to be Combatants, and what a
+The Combatant Role Type is a Role Type under [Role Types](../foundation/campaign-instances.md#role-types) in Campaign
+Instances. It states what a Campaign instance Type must have for its Campaign instances to be Combatants, and what a
 Combatant gains while a Combat lasts.
 
 - **Adoption condition:** a Campaign instance Type can adopt the Combatant Role Type if the State of its Campaign
@@ -435,8 +435,8 @@ Training, not how much skill each gains.
 [Initial roster](#initial-roster), the `hireAgent` Player action of [Economy and Upgrades](economy-and-upgrades.md), or
 the cheat operation under [Adding Agents](#adding-agents). Each new Agent has a fresh Instance ID under
 [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following
-initial values, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in
-Campaign State. This table is exhaustive.
+initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in
+Campaign Instances. This table is exhaustive.
 
 | Value                 | Initial value                                                                                     | Source                                                                           |
 | --------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |

@@ -193,7 +193,7 @@ current health is 0 is dead; being dead is a Derived value of its current health
 **Retention:** An Enemy keeps every property above for the whole Campaign, so that every reference to it resolves, e.g.
 from a Combat report. Once its Mission site no longer participates in current gameplay, the Enemy is retained in World
 history with its final values, under
-[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
+[Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Enemy is ever removed.
 
 ## Enemy creation
@@ -202,7 +202,7 @@ Enemy is ever removed.
 [Missions](missions.md). Each new Enemy has a fresh
 Instance ID under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model,
 and the following initial values, under
-[Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in Campaign State. This table is
+[Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is
 exhaustive.
 
 | Value               | Initial value                                                 | Source                               |
@@ -583,15 +583,15 @@ is exhaustive:
 A participant's skill, base health, and weapon damage do not change in a Combat, so its final values need not repeat
 them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above.
 
-The Combat report is an Authoritative value. It is part of the [Turn report](../foundation/campaign-state.md#glossary) of
+The Combat report is an Authoritative value. It is part of the [Turn report](../foundation/world-history.md#glossary) of
 the Advance turn in which its Combat was fought, and no Mission or other Campaign instance holds it.
 `player.queries.getTurnReport()` returns every fact above until the next Advance turn replaces that Turn report, under
 [Current state, Turn report, and history](../foundation/engine-contract.md#current-state-turn-report-and-history) in
 Engine Contract. How the Turn report organizes its Combat reports is left to the implementation. Once produced, a
 Combat report is never rewritten or recomputed, even when the values of its participants change later, under
-[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. Whatever
+[Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. Whatever
 presents a Combat later uses the retained values. After the next Advance turn, only the facts that its History entry holds need to remain available,
-under [Turn report and history](../foundation/campaign-state.md#turn-report-and-history) in Campaign State.
+under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
 
 # Player-visible information
 

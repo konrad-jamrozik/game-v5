@@ -11,7 +11,17 @@
 
 # Overview
 
-The engine has an API hierarchy, data it owns, and guarantees that hold across every engine subsystem when running the game and exposing information. The behavior of each subsystem is specified by one specification, as listed under [Engine subsystems](#engine-subsystems), e.g. [Campaign Lifecycle](./campaign-lifecycle.md) or [Turn Advancement](../mechanics/turn-advancement.md). The guarantees are refined by e.g. [Campaign State](./campaign-state.md).
+The engine is the whole game except its user interfaces. Every way of playing, e.g. a browser interface, a terminal, or
+an LLM-based agent calling the API directly, uses the same Engine API and gets exactly the same results. The engine is
+divided into engine subsystems, e.g. [Campaign Lifecycle](./campaign-lifecycle.md) and
+[Turn Advancement](../mechanics/turn-advancement.md), each specified on its own; Engine Contract holds the promises that
+hold whichever engine subsystem is involved.
+
+Those promises answer three questions. Who may do what: callers are told apart by the authority they hold, so the
+Session controller and an Autopilot AI playing on its behalf see the same Player-visible information but may do
+different things. What the engine keeps: which data survives the end of a Session, and which lives only within one. And
+what every caller can rely on: a Player action happens completely or not at all, and no caller ever sees half-finished
+or invalid Campaign state.
 
 # Relationships
 
@@ -20,6 +30,7 @@ The engine has an API hierarchy, data it owns, and guarantees that hold across e
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
+- Used by [Campaign Instances](./campaign-instances.md)
 - Used by [Campaign Lifecycle](./campaign-lifecycle.md)
 - Used by [Combat](../mechanics/combat.md)
 - Used by [Configuration](./configuration.md)
@@ -39,6 +50,7 @@ The engine has an API hierarchy, data it owns, and guarantees that hold across e
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](../mechanics/turn-advancement.md)
 - Used by [Web UI](../ui/web-ui.md)
+- Used by [World History](./world-history.md)
 - Refined by [Campaign State](./campaign-state.md)
 
 # Glossary
@@ -336,8 +348,8 @@ for them.
 | Query                              | Returns                                                                                                                                                                         | Detail  |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
 | `player.queries.getCurrentState()` | The Player-visible information of [Current world state](campaign-state.md#glossary) and of [Campaign configuration](campaign-state.md#glossary) at the current Committed state. | Full    |
-| `player.queries.getTurnReport()`   | The Player-visible information of the [Turn report](campaign-state.md#glossary), or none before the first committed Advance turn of the Campaign.                               | Full    |
-| `player.queries.getHistory()`      | The Player-visible information of every [History entry](campaign-state.md#glossary), in Turn order, from Turn 1.                                                                | Reduced |
+| `player.queries.getTurnReport()`   | The Player-visible information of the [Turn report](world-history.md#glossary), or none before the first committed Advance turn of the Campaign.                                | Full    |
+| `player.queries.getHistory()`      | The Player-visible information of every [History entry](world-history.md#glossary), in Turn order, from Turn 1.                                                                 | Reduced |
 
 `getCurrentState()` returns nothing that is retained only in [World history](campaign-state.md#glossary). E.g., a
 Mission whose Combat has been fought no longer participates in current gameplay, so the Combat report of its Combat is returned by
@@ -345,7 +357,7 @@ Mission whose Combat has been fought no longer participates in current gameplay,
 `getCurrentState()`.
 
 Only Advance turn changes the Turn report and the History entries, under
-[Turn report and history](campaign-state.md#turn-report-and-history) in Campaign State, so Player actions, undo, and
+[Turn report and history](world-history.md#turn-report-and-history) in World History, so Player actions, undo, and
 redo within a Turn change only what `getCurrentState()` returns. Undo, redo, and load restore what all three queries
 return, and replay reproduces it, under [Derived value consistency](#derived-value-consistency).
 
@@ -385,8 +397,8 @@ Autopilot AI; it cannot erase information a human discloses outside the engine A
 # Committed state integrity
 
 Every Committed state satisfies every invariant that a specification states. A specification stating an invariant
-states its condition and its scope; [Campaign State](campaign-state.md) states the campaign-data invariants, e.g.
-composition, identity, reference, and historical-fact constraints. Campaign creation, committed Player API and
+states its condition and its scope; e.g., [References](campaign-instances.md#references) in Campaign Instances states
+that every reference in Committed state resolves. Campaign creation, committed Player API and
 Developer API actions, and restoration therefore each produce a Committed state that satisfies them.
 
 Rejected requests leave Campaign state, the Timeline, and Autopilot memory unchanged. This covers every

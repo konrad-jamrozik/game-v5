@@ -101,11 +101,17 @@ which uses Panic and Endings, is in layer 5.
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
+_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
 
 ## Within the family
 
-![Mechanics family: relationships within the family](../../images/mechanics-family-within.svg)
+### Uses
+
+![Mechanics family: uses relationships within the family](../../images/mechanics-family-within-uses.svg)
+
+### Refines
+
+![Mechanics family: refines relationships within the family](../../images/mechanics-family-within-refines.svg)
 
 ## Across families
 

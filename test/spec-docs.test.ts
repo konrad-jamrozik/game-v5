@@ -185,7 +185,7 @@ describe('derived specification renderer', () => {
     expect(outputs.has('docs/derived/relationships/verifies.md')).toBe(false)
   })
 
-  test('renders the Engine Contract refinement subtree as a separate diagram', async () => {
+  test('renders all refines relationships of the game in one diagram', async () => {
     const corpus = sampleCorpus()
     const engineCorpus: SpecificationCorpus = {
       ...corpus,
@@ -217,22 +217,14 @@ describe('derived specification renderer', () => {
     const outputs = await renderDerivedDocumentation(engineCorpus, PRETTIER_OPTIONS)
     const diagrams = renderDerivedDiagramFiles(engineCorpus)
     const refines = outputs.get('docs/derived/relationships/refines.md') ?? ''
-    expect(refines).toContain('## Model and gameplay specifications')
-    expect(refines).toContain('## Engine contract')
-    expect(refines.match(/!\[Refines relationships: /g)).toHaveLength(2)
-    expect(refines.indexOf('(../../images/refines-model-and-gameplay.svg)')).toBeLessThan(
-      refines.indexOf('## Engine contract'),
-    )
-    expect(refines.indexOf('(../../images/refines-engine-contract.svg)')).toBeGreaterThan(
-      refines.indexOf('## Engine contract'),
-    )
-    const gameplay = diagrams.get('docs/images/refines-model-and-gameplay.svg') ?? ''
-    const engine = diagrams.get('docs/images/refines-engine-contract.svg') ?? ''
-    expect(gameplay).toContain('ZZZ — Zulu (Stub)')
-    expect(gameplay).not.toContain('ENG — ')
-    expect(engine).toContain('ENG — Engine Contract (Draft)')
-    expect(engine).toContain('CONV — Conventions (Accepted)')
-    expect(engine).not.toContain('ZZZ — ')
+    expect(refines).not.toContain('## ')
+    expect(refines.match(/!\[Refines relationships/g)).toHaveLength(1)
+    expect(refines).toContain('(../../images/refines-all.svg)')
+    const all = diagrams.get('docs/images/refines-all.svg') ?? ''
+    expect(all).toContain('ZZZ — Zulu (Stub)')
+    expect(all).toContain('ENG — Engine Contract (Draft)')
+    expect(all).toContain('CONV — Conventions (Accepted)')
+    expect(diagrams.has('docs/images/refines-engine-contract.svg')).toBe(false)
   })
 
   test('isolates relationship governance from the main uses graph', async () => {
@@ -323,7 +315,6 @@ describe('family overview diagrams', () => {
   ].join('\n')
 
   const foundationOverview = 'docs/specs/foundation/about-foundation.md'
-  const withinPath = 'docs/images/foundation-family-within.svg'
   const acrossPath = 'docs/images/foundation-family-across.svg'
 
   test('collapses other Families, combines kinds, and omits implicit follows', () => {
@@ -376,7 +367,7 @@ describe('family overview diagrams', () => {
       },
       new Map([[foundationOverview, overview]]),
     )
-    const within = files.get(withinPath) ?? ''
+    const within = files.get('docs/images/foundation-family-within-uses.svg') ?? ''
     expect(within).toContain('AAA — ')
     expect(within).toContain('BBB — Beta (Draft)')
     expect(within).toContain('LAYER 2')

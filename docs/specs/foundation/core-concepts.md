@@ -11,14 +11,20 @@
 
 # Overview
 
-The shared language for the complete game contract spans campaign data and engine execution. Its terms have a single
-meaning, independent of the contracts that use them, e.g. [Engine Contract](./engine-contract.md) and the
-[Mechanics family](../mechanics/about-mechanics.md).
+Every specification of the game must mean the same thing by the same word, whichever subject it covers. Core Concepts
+holds the words that every family relies on, and gives each one a meaning independent of the contracts that use it,
+e.g. [Engine Contract](./engine-contract.md) and the [Mechanics family](../mechanics/about-mechanics.md).
+
+The words fall into groups by what they describe: how data is modeled independently of a programming language, e.g.
+Type and Property; what the Game build supplies, i.e. Game Data Records (GDRs) and game behavior; and what one playthrough is, i.e. a
+Campaign and its Campaign state, as opposed to the Session that runs it. One classification runs across all of them:
+every value is either an Authoritative value, kept as a fact, or a Derived value, calculated from other values.
 
 # Relationships
 
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
+- Used by [Campaign Instances](./campaign-instances.md)
 - Used by [Campaign Lifecycle](./campaign-lifecycle.md)
 - Used by [Campaign State](./campaign-state.md)
 - Used by [Combat](../mechanics/combat.md)
@@ -39,6 +45,7 @@ meaning, independent of the contracts that use them, e.g. [Engine Contract](./en
 - Used by [Storage Schema](../implementation/storage-schema.md)
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](../mechanics/turn-advancement.md)
+- Used by [World History](./world-history.md)
 
 # Glossary
 
@@ -142,6 +149,13 @@ the player.
 E.g., each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
 value. With two enemies at current health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Hiding either the
 individual current health or the total from the player does not change either classification.
+
+E.g., each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle
+property within its State property. The values of these two properties are Authoritative values. The completion count
+for a Lead is a Derived value: count the Investigation Campaign instances whose Lead reference property identifies that
+Lead GDR and whose lifecycle property has the value Completed. The count for lead_1 is 1 after investigation_2
+completes; investigation_1's Abandoned lifecycle excludes it. Campaign state has no separate completion record and no
+Authoritative completion count.
 
 # Acceptance examples
 

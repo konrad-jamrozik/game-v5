@@ -83,7 +83,7 @@ Each Upgrade is one GDR of Type Upgrade. The Upgrade GDRs the Game build supplie
 | `increment` | How much one acquisition of the Upgrade raises the value its `effect` improves.                                            | [Upgrade effects](#upgrade-effects)                       |
 
 An Upgrade's effect is decided only by its `effect` property, never by its `id` or `name`, under
-[References](../foundation/campaign-state.md#references) in Campaign State. E.g., the Upgrade whose `id` is `agent_cap`
+[References](../foundation/campaign-instances.md#references) in Campaign Instances. E.g., the Upgrade whose `id` is `agent_cap`
 raises the Agent cap because its `effect` is `agent_cap`, and would raise the Transport cap if its `effect` were
 `transport_cap`.
 
@@ -180,7 +180,7 @@ never clamped. The Agency is retained for the whole Campaign and never removed.
 [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model require, and no rule creates another
 Agency during play. It has a fresh Instance ID under
 [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) and the following initial values,
-under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in Campaign State. This
+under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This
 table is exhaustive.
 
 | Value               | Initial value                                      | Source                                                                                         |
@@ -507,7 +507,7 @@ Agents. The effect changes no other Agent value, no Weapon GDR, and no Enemy.
 # Turn series of money
 
 **Proposed rule:** The Agency's money has exactly the following two Turn series, under
-[Turn series](../foundation/campaign-state.md#turn-series) in Campaign State. Each records the Agency's money, a whole
+[Turn series](../foundation/world-history.md#turn-series) in World History. Each records the Agency's money, a whole
 number of money that may be negative.
 
 | Turn series                | Recorded moment of each turn                                                                             |

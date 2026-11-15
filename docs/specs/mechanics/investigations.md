@@ -125,7 +125,7 @@ violates one is an internal invariant violation, reported under
 every reference to it resolves, e.g. from an Agent's Participation history or from the origin of an Initiative Mission
 site. A Completed or Abandoned Investigation no longer participates in current gameplay and is retained in World history
 with its final values, including its final Investigation progress, under
-[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
+[Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Investigation is ever removed.
 
 ## Investigation creation
@@ -134,8 +134,8 @@ Investigation is ever removed.
 under [Starting an Investigation](#starting-an-investigation). The initial Campaign state contains no Investigation, and
 no Turn advancement step creates one. Each new Investigation has a fresh Instance ID under
 [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following
-initial values, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in
-Campaign State. This table is exhaustive.
+initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in
+Campaign Instances. This table is exhaustive.
 
 | Value                  | Initial value                        | Source                                                                                                             |
 | ---------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |

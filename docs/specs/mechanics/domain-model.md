@@ -26,10 +26,12 @@ the concepts connect, which every concept must agree on; how each one behaves is
 
 # Relationships
 
+- Uses [Campaign Instances](../foundation/campaign-instances.md)
 - Uses [Campaign State](../foundation/campaign-state.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Game Data Records](../foundation/game-data-records.md)
+- Uses [World History](../foundation/world-history.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 - Used by [Turn Advancement](./turn-advancement.md)
@@ -46,8 +48,8 @@ the concepts connect, which every concept must agree on; how each one behaves is
 # Glossary
 
 These terms name the concepts of the game. Modeling terms are in the
-[Core Concepts](../foundation/core-concepts.md#glossary) and [Campaign State](../foundation/campaign-state.md#glossary)
-glossaries; terms about a single concept are in the Glossary of the Mechanics specification that refines it, e.g. the
+[Core Concepts](../foundation/core-concepts.md#glossary), [Campaign State](../foundation/campaign-state.md#glossary),
+and [Campaign Instances](../foundation/campaign-instances.md#glossary) glossaries; terms about a single concept are in the Glossary of the Mechanics specification that refines it, e.g. the
 [Agents](agents-spec.md#glossary) and [Combat](combat.md#glossary) glossaries.
 
 ## Agency and Agents
@@ -124,7 +126,7 @@ Each game concept has the following modeling role and multiplicity. This table i
 
 GDR purposes are defined under [Purposes of GDRs](../foundation/game-data-records.md#purposes-of-gdrs). Every Campaign instance of
 the seven Campaign instance Types has the four properties stated under
-[Campaign instance structure](../foundation/campaign-state.md#campaign-instance-structure). A concept can include facts
+[Campaign instance structure](../foundation/campaign-instances.md#campaign-instance-structure). A concept can include facts
 hidden from the player. Being a property of a concept does not determine whether a value
 is an Authoritative value or a Derived value; e.g., an Agent's career statistics may be Derived values calculated from
 retained facts.
@@ -205,7 +207,7 @@ The initial Campaign state contains exactly one Agency, under [Agency per Campai
 Faction for each FactionArchetype the Game build supplies, and no Mission sites, and therefore no Missions and no
 Enemies. For each Campaign instance Type, the rule determining the initial Campaign instances of that Type and the
 source of each of their initial values, under
-[Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation), is in the Mechanics
+[Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation), is in the Mechanics
 specification that refines it; e.g., [Initial Factions](factions.md#initial-factions) gives which values each initial
 Faction takes from its FactionArchetype. The rule is game behavior; the content it reads is supplied by GDRs that serve
 no Campaign configuration preset purpose, e.g. the FactionArchetypes and their values.
@@ -213,7 +215,7 @@ no Campaign configuration preset purpose, e.g. the FactionArchetypes and their v
 ## Campaign instance identity scope
 
 Agency, Agent, Investigation, Mission site, Mission, Enemy, and Faction share one Instance ID scope, as
-[Campaign instance identity](../foundation/campaign-state.md#campaign-instance-identity) requires: Instance IDs must
+[Campaign instance identity](../foundation/campaign-instances.md#campaign-instance-identity) requires: Instance IDs must
 be unique across all seven Types within one Campaign. A repeated Investigation of one Lead, or a second Mission site
 with the same Archetype, is therefore a distinct Campaign instance with its own Instance ID. A Mission and its Mission
 site have different Instance IDs.
@@ -242,7 +244,7 @@ Agent; e.g., a Won Mission retains an Agent's Participation history after that A
 | A team is to be deployed to a Mission site that already has a Mission                     | Never valid: a Mission site has at most one Mission, under [How concepts relate](#how-concepts-relate); Missions owns the rejection                                                                                                                                                                                             |
 | A Mission retains an Agent in its Participation history after it is Won or Lost           | The Agent's Current assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams)                                                                                                                                                                                                       |
 | The roster is empty, or no Mission sites or Investigations exist                          | Valid; [Panic and Endings](panic-and-endings.md) owns defeat conditions                                                                                                                                                                                                                                                         |
-| A Faction is Defeated while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-state.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes                                                                                                                                          |
+| A Faction is Defeated while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-instances.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes                                                                                                                                      |
 
 # Acceptance examples
 
@@ -338,4 +340,4 @@ invalid.
 
 # TODOs
 
-- TODO: State what the Turn report and each History entry hold of each value the Mechanics specifications own, including the reduced form of a Combat report that a History entry keeps, e.g. which Agents survived, lost current health, or were Killed, under [Turn report and history](../foundation/campaign-state.md#turn-report-and-history) in Campaign State.
+- TODO: State what the Turn report and each History entry hold of each value the Mechanics specifications own, including the reduced form of a Combat report that a History entry keeps, e.g. which Agents survived, lost current health, or were Killed, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.

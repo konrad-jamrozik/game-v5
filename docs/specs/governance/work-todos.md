@@ -83,7 +83,7 @@ The Work items below were measured against these recorded rules and decisions:
   are the implementer's choice. Acceptance examples assert replay equality, including from the same Campaign seed, or
   use fixed injected random outcomes, never which outcome a particular Campaign seed produces.
 - **Creation decision:** creation of Campaign instances is specified by the specification of the creating
-  behavior, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation).
+  behavior, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation).
   The former Campaign instance constructor concept was removed.
 
 # Work items
