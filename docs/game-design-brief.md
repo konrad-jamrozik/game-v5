@@ -19,7 +19,7 @@ The main domain concepts are:
 - **Combat:** automatic battles with targeting, skill contests, damage, exhaustion, incapacitation, retreat, casualties, and experience.
 - **Factions:** opponents that escalate, launch operations, can be suppressed, and can eventually be defeated.
 - **Economy and panic:** money, recurring funding, upkeep, upgrades, and global pressure.
-- **Reports and World history:** structured explanations of decisions and consequences.
+- **Turn reports and history:** what the latest Advance turn did in full, and every earlier Turn in reduced form.
 
 Initiative and Response describe agency purpose, independently of combat tactics. Avoid offensive/defensive as mission categories.
 
@@ -124,7 +124,7 @@ The foundation is a **well-defined TypeScript API consisting of exposed function
 
 Humans and AI players must be able to play completely through it. It provides Player-visible information, decision-relevant information expressed as Derived values, action discovery, constraints, commands, structured outcomes, and undo/redo.
 
-Player API always exposes **all information needed to play and only information the player is entitled to know**. Visibility restrictions apply equally to queries, action descriptions, errors, and reports. Session API allows the Session controller to enable Dev mode, granting separate Developer API inspection and cheat operations. Autopilot AI always receives only Player-visible information, regardless of Dev mode. Engine Contract owns the API hierarchy and access rules.
+Player API always exposes **all information needed to play and only information the player is entitled to know**. Visibility restrictions apply equally to queries, action descriptions, and errors. Session API allows the Session controller to enable Dev mode, granting separate Developer API inspection and cheat operations. Autopilot AI always receives only Player-visible information, regardless of Dev mode. Engine Contract owns the API hierarchy and access rules.
 
 Supported interfaces develop progressively:
 
@@ -142,7 +142,7 @@ Only these interfaces are in scope. Dedicated native game engines, e.g. Unity, a
 
 ## 4. Turns, determinism, and the Timeline
 
-Management commands take immediate effect. **Advance turn** atomically resolves time-dependent activity and generates a report. Combat rounds remain internal to that resolution.
+Management commands take immediate effect. **Advance turn** atomically resolves time-dependent activity and produces a Turn report. Combat rounds remain internal to that resolution.
 
 - Under the same game revision, identical initial state and commands reproduce identical outcomes.
 - Random-generator state and deterministic Instance ID counters belong to Authoritative values in Campaign state.
@@ -151,11 +151,11 @@ Management commands take immediate effect. **Advance turn** atomically resolves 
 - Undo and redo within a turn step through that turn's Timeline entries, back to the start of the turn at most.
 - Undo and redo across turns are a separate, explicit operation that loads an Autosave. The engine writes an Autosave at the end of every turn, keeping the latest 5 turns by default, and just before every Autopilot engagement.
 - The engine also keeps one Autosave of the current state at all times, which cannot be turned off, so the player can resume after quitting or a crash.
-- Undo restores state, randomness, and reports. Redo restores the recorded result without rerolling.
+- Undo restores state, including randomness and the Turn report. Redo restores the recorded result without rerolling.
 - A new command after undo discards the undone commands and the Autosaves of the play it abandons.
 - Rejected commands change neither state nor the Timeline.
 - UI preferences belong to Global configuration and remain outside the Timeline. Autopilot memory follows undo, redo, and load, so an Autopilot AI that is engaged again reads the memory it wrote at or before the restored state.
-- World history, the past that game behavior and reports consult, is part of Campaign state and is separate from the Timeline.
+- World history, the past that game behavior and Player API queries consult, is part of Campaign state and is separate from the Timeline.
 
 Begin with snapshots; optimize Timeline and Autosave storage later.
 
@@ -168,7 +168,7 @@ Future validation should establish that:
 - A campaign is playable through the API and CLI without dev access.
 - Equivalent API, CLI, and web commands produce identical results.
 - Player information is complete within its visibility boundary.
-- Seeded replay and undo/redo reproduce outcomes, reports, and generated IDs.
+- Seeded replay and undo/redo reproduce outcomes, Turn reports, and generated IDs.
 - Invalid commands cannot partially spend resources or assign agents.
 - Transit, fatigue, recovery, investigation commitments, and capacity create consistent trade-offs.
 - Failed missions can provide damage-related benefits distinct from expiration.

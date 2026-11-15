@@ -49,14 +49,15 @@ glossaries; terms about a single concept are in the Glossary of the Mechanics sp
 
 ## Agency and Agents
 
-The player-controlled organization, its Agents, and what each Agent is doing.
+The player-controlled organization, its Agents, what each Agent is doing, and what each has taken part in.
 
-| Term               | Definition                                                                                                             |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| Agency             | The organization the player controls in a Campaign. It holds the money, funding, and upgrades, and employs the Agents. |
-| Agent              | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                           |
-| Current assignment | What an Agent is currently ordered to do, e.g. take part in a particular Investigation or Mission.                     |
-| Task phase         | Whether an Agent is carrying out its Current assignment (At assignment) or still travelling to it (In transit).        |
+| Term                  | Definition                                                                                                             |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Agency                | The organization the player controls in a Campaign. It holds the money, funding, and upgrades, and employs the Agents. |
+| Agent                 | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                           |
+| Current assignment    | What an Agent is currently ordered to do, e.g. take part in a particular Investigation or Mission.                     |
+| Task phase            | Whether an Agent is carrying out its Current assignment (At assignment) or still travelling to it (In transit).        |
+| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                              |
 
 ## Leads, Investigations, Mission sites, and Missions
 
@@ -94,15 +95,6 @@ The opposing organizations and their operations.
 | ---------------------------- | -------------------------------------------------------------------------------- |
 | Faction                      | An organization that opposes the Agency and carries out operations in the world. |
 | Faction operation occurrence | One operation carried out by a Faction, which creates one Response Mission site. |
-
-## Retained records
-
-Records kept to explain past gameplay.
-
-| Term                  | Definition                                                                                                |
-| --------------------- | --------------------------------------------------------------------------------------------------------- |
-| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                 |
-| Report                | An account of something that happened in the Campaign, e.g. a Battle, explaining its facts to the player. |
 
 # Game concepts
 
@@ -361,26 +353,6 @@ modifications during a Campaign belong to the State of an Agent or Enemy, among 
 requires; individual inventory items are out of scope. Upgrade GDRs supply shared upgrade data; acquisitions and their
 amount or level belong to the Agency, under [Upgrades](economy-and-upgrades.md#upgrades).
 
-# Reports
-
-**Proposed rule:** No rule of a Mechanics specification creates a Report, so the set of Reports of a Campaign is
-empty and `getReports()` returns none. Everything a Report would explain is already retained as Player-visible
-information: a Mission's Battle result and lifecycle state, each Mission site's lifecycle state and Turn created, each Investigation's
-lifecycle state and Investigation progress, each Faction's Faction activity level, the Campaign ending and its Ending
-reasons, and the Turn series of money. Once a rule creates Reports, a Report must behave as follows.
-
-A Report links historical facts and explanations in World history to commands or turns and to Campaign instances. A
-Report explaining a retained Battle result uses the retained values, never current calculations, under
-[Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation).
-
-A Report is Player-visible information, and it contains only facts that are Player-visible information under the
-specification that owns each fact, as [Information boundary](../foundation/engine-contract.md#information-boundary) in
-Engine Contract requires; e.g., a Report of a Battle states the damage an Enemy took only if [Combat](combat.md) makes that
-damage Player-visible. Reports are retained in World history, so restoring a Committed state restores exactly the
-Reports of that Committed state, under
-[Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. A retained
-Report is never rewritten, under [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation).
-
 # Edge cases and failure behavior
 
 | Case                                                                                      | Result and owner                                                                                                                                                                                                                                                                                                                |
@@ -497,6 +469,6 @@ invalid.
 
 # TODOs
 
-- TODO (later): A rule that creates Reports, and what each Report states, under [Reports](#reports).
+- TODO: State what the Turn report and each History entry hold of each value the Mechanics specifications own, including the reduced form of a Battle result that a History entry keeps, e.g. which Agents survived, were wounded, or were Killed, under [Current state, Turn report, and history](../foundation/engine-contract.md#current-state-turn-report-and-history) in Engine Contract.
 - TODO (later): Damage-related benefits for a Battle the team did not prevail in, under
   [Combat and consequences](#combat-and-consequences).

@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="446" viewBox="0 0 1000 446" role="img" aria-label="What each Player API query returns during Turn 8 after two Player actions: getHistory() returns a reduced History entry for each ended Turn, getTurnReport() returns the full report of the Advance turn that ended Turn 7, and getCurrentState() returns the current Committed state">
+  <!-- Hand-kept diagram for docs/specs/foundation/engine-contract.md; not generated. -->
+  <style>
+    :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --turn: #2f7f95; --hist: #6b5ca5; --histtint: #efecf8; --full: #2f7d4f; --fulltint: #e4f3ea; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161d; --surface: #1a2029; --block: #1a2029; --fg: #e6eaf0; --muted: #9aa5b5; --line: #323b49; --turn: #6fb3c7; --hist: #a99be0; --histtint: #241f38; --full: #6cc893; --fulltint: #173326; }
+    }
+    text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 12.5px; fill: var(--fg); }
+    .bg { fill: var(--bg); }
+    .title { font-size: 14px; font-weight: 600; }
+    .b { font-weight: 600; }
+    .m { fill: var(--muted); }
+    .mid { text-anchor: middle; }
+    .code { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 12.5px; font-weight: 600; }
+    .axis { stroke: var(--fg); stroke-width: 1.5; fill: none; }
+    .future { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 4; fill: none; }
+    .block { fill: var(--block); stroke: var(--line); stroke-width: 1.5; }
+    .blockfuture { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 4; }
+    .entry { fill: var(--surface); stroke: var(--fg); stroke-width: 2; }
+    .now { fill: var(--turn); stroke: var(--turn); stroke-width: 2; }
+    .ring { fill: none; stroke: var(--turn); stroke-width: 1.5; }
+    .start { fill: var(--surface); stroke: var(--turn); stroke-width: 2; }
+    .end { fill: var(--turn); stroke: var(--turn); stroke-width: 2; }
+    .reduced { fill: var(--histtint); stroke: var(--hist); stroke-width: 1.5; stroke-dasharray: 5 4; }
+    .full { fill: var(--fulltint); stroke: var(--full); stroke-width: 1.8; }
+    .th { fill: var(--hist); font-weight: 600; }
+    .tf { fill: var(--full); font-weight: 600; }
+    .guide { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 3; }
+    .lane { stroke: var(--line); stroke-width: 1; }
+    .rule { stroke: var(--line); stroke-width: 1; }
+  </style>
+  <rect class="bg" x="0" y="0" width="1000" height="446"/>
+  <text class="title" x="24" y="32">What each query returns during Turn 8, after its second Player action</text>
+
+  <!-- Turn labels -->
+  <text class="b mid" x="272" y="82">Turn 6</text>
+  <text class="b mid" x="527" y="82">Turn 7</text>
+  <text class="b mid" x="790" y="82">Turn 8</text>
+
+  <!-- Axis -->
+  <path class="axis" d="M 190 125 H 368 M 432 125 H 623 M 687 125 H 810"/>
+  <path class="future" d="M 810 125 H 893"/>
+  <rect class="block" x="368" y="101" width="64" height="48" rx="6"/>
+  <text class="b mid" x="400" y="122">Advance</text><text class="b mid" x="400" y="138">turn</text>
+  <rect class="block" x="623" y="101" width="64" height="48" rx="6"/>
+  <text class="b mid" x="655" y="122">Advance</text><text class="b mid" x="655" y="138">turn</text>
+  <rect class="blockfuture" x="893" y="101" width="64" height="48" rx="6"/>
+  <text class="m mid" x="925" y="122">Advance</text><text class="m mid" x="925" y="138">turn</text>
+
+  <!-- Turn 6 -->
+  <polygon class="start" points="190,114 201,125 190,136 179,125"/>
+  <circle class="entry" cx="250" cy="125" r="7"/>
+  <circle class="entry" cx="300" cy="125" r="7"/>
+  <polygon class="end" points="355,115 365,125 355,135 345,125"/>
+  <!-- Turn 7 -->
+  <polygon class="start" points="445,114 456,125 445,136 434,125"/>
+  <circle class="entry" cx="505" cy="125" r="7"/>
+  <circle class="entry" cx="555" cy="125" r="7"/>
+  <polygon class="end" points="610,115 620,125 610,135 600,125"/>
+  <!-- Turn 8 -->
+  <polygon class="start" points="700,114 711,125 700,136 689,125"/>
+  <circle class="entry" cx="755" cy="125" r="7"/>
+  <circle class="ring" cx="810" cy="125" r="12"/>
+  <circle class="now" cx="810" cy="125" r="7"/>
+  <text class="b mid" x="810" y="168">current Committed state</text>
+
+  <!-- Lanes -->
+  <path class="lane" d="M 24 182 H 976 M 24 238 H 976 M 24 294 H 976 M 24 350 H 976"/>
+  <text class="code" x="24" y="214">getHistory()</text>
+  <text class="code" x="24" y="270">getTurnReport()</text>
+  <text class="code" x="24" y="326">getCurrentState()</text>
+
+  <!-- guides from the axis to the lanes -->
+  <path class="guide" d="M 179 150 V 345 M 432 150 V 345 M 687 150 V 345 M 623 150 V 345 M 810 180 V 345"/>
+
+  <!-- getHistory(): one reduced History entry per ended Turn -->
+  <rect class="reduced" x="179" y="193" width="253" height="34" rx="6"/>
+  <text class="th mid" x="305" y="214">History entry, Turn 6 · reduced</text>
+  <rect class="reduced" x="436" y="193" width="251" height="34" rx="6"/>
+  <text class="th mid" x="561" y="214">History entry, Turn 7 · reduced</text>
+  <text class="m" x="700" y="208">Turn 8 has not ended,</text>
+  <text class="m" x="700" y="223">so it has no History entry yet</text>
+
+  <!-- getTurnReport(): full report of the latest Advance turn -->
+  <rect class="full" x="623" y="249" width="64" height="34" rx="6"/>
+  <text class="tf mid" x="655" y="270">full</text>
+  <text class="m" x="700" y="264">the Advance turn that ended Turn 7,</text>
+  <text class="m" x="700" y="279">e.g. every Battle result with its attacks</text>
+
+  <!-- getCurrentState(): current Committed state -->
+  <rect class="full" x="778" y="305" width="64" height="34" rx="6"/>
+  <text class="tf mid" x="810" y="326">full</text>
+  <text class="m" x="852" y="320">Turn 8 as it</text>
+  <text class="m" x="852" y="335">stands now</text>
+
+  <!-- Legend -->
+  <polygon class="start" points="34,370 42,378 34,386 26,378"/>
+  <text class="m" x="52" y="382">Turn-start state</text>
+  <polygon class="end" points="186,370 194,378 186,386 178,378"/>
+  <text class="m" x="204" y="382">Turn-end state</text>
+  <circle class="entry" cx="322" cy="378" r="6"/>
+  <text class="m" x="338" y="382">Committed state after a Player action</text>
+  <rect class="reduced" x="578" y="370" width="26" height="16" rx="3"/>
+  <text class="m" x="612" y="382">reduced</text>
+  <rect class="full" x="680" y="370" width="26" height="16" rx="3"/>
+  <text class="m" x="714" y="382">full detail</text>
+  <text class="m" x="24" y="412">A History entry holds its Turn's Turn-start state, its Turn-end state, and the Turn report of the Advance turn that ended it.</text>
+  <text class="m" x="24" y="428">A Player action, undo, or redo moves only the current Committed state: getCurrentState() changes; getTurnReport() and getHistory() do not.</text>
+</svg>

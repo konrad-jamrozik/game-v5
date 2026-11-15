@@ -251,7 +251,7 @@ play are not targets. They stay in Game storage until a new action removes them.
 # Acceptance examples
 
 - **Action undo and redo:** At a Turn-start state, add money through Developer API and commit two ordinary gameplay
-  actions. Undo each action and redo it with Dev mode disabled. Complete Campaign state and retained reports equal the
+  actions. Undo each action and redo it with Dev mode disabled. Complete Campaign state equals the
   original results after each step, and queries between actions do not change those results
   ([Action navigation](#action-navigation), [Restored Committed states](#restored-committed-states)).
 - **Undo stops at the Turn-start state:** Commit two actions, Advance turn, and commit one action. One `undoAction()`

@@ -46,7 +46,7 @@ These terms are specific to Determinism and Randomness. General terms are in the
 # Determinism
 
 Given the same Game build, the same initial Campaign configuration, the same Campaign seed, and the same ordered
-Player actions, exactly the same things must happen: Campaign state and retained reports are equal after every
+Player actions, exactly the same things must happen: Campaign state is equal after every
 Player action. This holds whenever, in whichever Session, and on whichever machine each Campaign is created and
 played; e.g., a Campaign save made on one machine and loaded on another continues exactly as it would have on the
 first, given the same Player actions. The Game build includes its Game Data Records (GDRs), and the Player actions are those of the
@@ -58,7 +58,7 @@ The guarantee has two parts:
 - **Creation:** The same Game build, initial Campaign configuration, and Campaign seed must produce equal initial
   Campaign state.
 - **Play:** For equal Campaign state, the same Game build, and the same ordered Player actions, execution must
-  produce equal resulting Campaign state and retained reports.
+  produce equal resulting Campaign state.
 
 When two Campaign states are equal is stated under
 [Derived value consistency](engine-contract.md#derived-value-consistency) in Engine Contract.
@@ -150,13 +150,13 @@ choice.
 
 - **Equal outcomes:** Starting at Campaign state S, add money through Developer API, commit ordinary gameplay actions,
   and Advance turn. Repeat the same Player actions from S with queries and a rejected action interleaved. Complete
-  Campaign state and retained reports equal the original results ([Determinism](#determinism)).
+  Campaign state equals the original results ([Determinism](#determinism)).
 - **Same seed, same Campaign:** Create Campaign A supplying Campaign seed K, commit gameplay actions including
-  Advance turn, and record Campaign state and retained reports after each Player action. End the Session. In a new
+  Advance turn, and record Campaign state after each Player action. End the Session. In a new
   Session, create Campaign B with the same new-Campaign setup and K, and commit the same Player actions. B equals A at
   every Player action ([Determinism](#determinism), [Campaign seed](#campaign-seed)).
 - **Same save, another machine:** Save Campaign A on one machine, then commit gameplay actions including Advance
-  turn and record Campaign state and retained reports after each Player action. On another machine running the same
+  turn and record Campaign state after each Player action. On another machine running the same
   Game build, load that Campaign save and commit the same Player actions. The results equal those recorded on the first
   machine after every Player action ([Scope of the guarantee](#scope-of-the-guarantee)).
 - **Seed chosen by the engine:** Create Campaign C supplying no Campaign seed. `session.getStatus()` reports its

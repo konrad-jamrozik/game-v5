@@ -285,7 +285,7 @@ the same Timeline, and the list is complete:
   error identifies that the Campaign has a Campaign ending, whether or not another precondition also failed.
 - **Queries keep answering:** Every query of Player API and of Developer API returns exactly as at any other Committed
   state, subject to [Player-visible information](#player-visible-information) and the visibility rules of each value.
-  The Campaign ending itself and every other query, including `getReports()`, keep answering.
+  The Campaign ending itself and every other query, including `getTurnReport()` and `getHistory()`, keep answering.
 - **Nothing in Campaign state changes:** Because no Player action can commit, Panic, money, and every other value stay as
   the Advance turn that recorded the Campaign ending left them. The Campaign ending is not cleared by any rule.
 - **Other operations are not restricted:** The operations of Session API, e.g. saving, Timeline navigation, and
@@ -529,9 +529,9 @@ money 100, the Campaign ending Defeat, and the 4 surviving Agents In transit.
 - `advanceTurn()` is rejected. The turn number is still 13, Panic is still 100, and no Timeline entry or other Committed
   state is produced.
 - A Developer API cheat action, e.g. `addMoney(100)` with Dev mode enabled, is rejected, and money is still 100.
-- `getCampaignState()` of Player API returns Panic 100, the Panic limit 100, the Campaign ending Defeat, the Ending
+- `getCurrentState()` of Player API returns Panic 100, the Panic limit 100, the Campaign ending Defeat, the Ending
   reasons { Panic at the limit }, and the Ending turn 12. The result is the same for the Session controller and an
-  Autopilot AI, and `getReports()` keeps answering.
+  Autopilot AI, and `getTurnReport()` and `getHistory()` keep answering.
 - The Campaign ending is never cleared: Panic does not fall, because no Panic reduction can be added without an Advance turn.
 
 ## Returning to a Committed state before the ending
@@ -548,7 +548,7 @@ and the Ending check step decides the Campaign ending anew from the values of th
 
 This example exercises [Player-visible information](#player-visible-information).
 
-At campaign creation, `getCampaignState()` of Player API returns Panic 0, the Panic limit 100, no Campaign ending, an
+At campaign creation, `getCurrentState()` of Player API returns Panic 0, the Panic limit 100, no Campaign ending, an
 empty set of Ending reasons, and no Ending turn. Panic is reported as 0, and the Campaign ending as absent, so the player
 distinguishes a Campaign at Panic 0 from one that has finished. No query returns the Pending panic change, including
 during the Advance turn that adds to it.

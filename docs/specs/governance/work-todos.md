@@ -77,7 +77,7 @@ The Work items below were measured against these recorded rules and decisions:
   [Campaign seed](../foundation/determinism-and-randomness.md#campaign-seed). Every Campaign has a Campaign seed, supplied by
   the Session controller at campaign creation or chosen by the engine, and every random outcome derives from it and
   from nothing else. The same Game build, initial Campaign configuration, Campaign seed, and ordered committed
-  commands reproduce the same Campaign state and retained reports. Determinism is required only within one
+  commands reproduce the same Campaign state. Determinism is required only within one
   implementation and Game build. How random outcomes are derived from the Campaign seed, the order of random draws,
   the order of Campaign instance creation within one command, and the sequence and format of generated Instance IDs
   are the implementer's choice. Acceptance examples assert replay equality, including from the same Campaign seed, or

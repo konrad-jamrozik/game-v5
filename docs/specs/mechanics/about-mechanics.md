@@ -16,7 +16,7 @@ and which values it uses.
 ## Domain Model
 
 [Domain Model](domain-model.md) answers _what exists in this game?_ It owns the game concepts and how they relate: the
-Agency, Agents, Leads, Investigations, Mission sites, Missions, Combat, Factions, weapons, upgrades, and Reports. It applies Core
+Agency, Agents, Leads, Investigations, Mission sites, Missions, Combat, Factions, weapons, and upgrades. It applies Core
 Concepts' vocabulary and Campaign State's rules to these concepts. It defines each concept briefly and states the
 rules that span several concepts; each other Mechanics specification refines one concept with what that concept has,
 its lifecycle, formulas, and transitions.

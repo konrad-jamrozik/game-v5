@@ -298,7 +298,8 @@ one is an internal invariant violation, reported under
 3. Its Battle result is present exactly when the lifecycle state is Won or Lost.
 
 **Retention:** A Mission keeps every property above for the whole Campaign, whatever its lifecycle state, so that every
-reference to it resolves, e.g. from a Participation history or Lead progression. A Won or Lost Mission no longer
+reference to it resolves, e.g. from a Participation history or Lead progression. The one exception is its Battle result,
+which may be reduced after the next Advance turn, under [Battle result](combat.md#battle-result) in Combat. A Won or Lost Mission no longer
 participates in current gameplay and is retained in World history with its final values, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
 Mission is ever removed.

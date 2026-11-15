@@ -97,8 +97,7 @@ applies.
 **Proposed rule:** The turn number is the number of the current [Turn](../foundation/engine-contract.md#glossary), as
 a whole number of at least 1. The initial Campaign state has turn number 1, and step 12 (Turn close) raises it by 1 in
 every Advance turn, so the Committed state after the Advance turn that ends Turn t has turn number t + 1. No other rule
-changes the turn number. In this scope no rule creates a Report, so step 12 retains none; the facts a Report would
-explain are retained as stated under [Reports](domain-model.md#reports) in Domain Model.
+changes the turn number.
 
 ## Transit across the steps
 

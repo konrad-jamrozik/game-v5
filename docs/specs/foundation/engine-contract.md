@@ -113,6 +113,15 @@ What a Session has selected, the complete Campaign state the engine commits, and
 | Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                                                                                                                                                                                                     |
 | Current save     | The Campaign save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced.                                                                                                                                                                            |
 
+## Information over time
+
+What Player API returns about the most recent Advance turn and about earlier Turns.
+
+| Term          | Definition                                                                                                                                                                                                                              |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Turn report   | The account of what one committed Advance turn did, e.g. each Battle it fought and how that Battle went. A Campaign has at most one Turn report: the one of its most recent committed Advance turn.                                     |
+| History entry | The account of one ended Turn: a reduced form of its Turn-start state, of its Turn-end state, and of the Turn report of the Advance turn that ended it. Reduced means holding only part of that information, to bound what is retained. |
+
 # API hierarchy
 
 The engine API is the source of truth for execution and access behavior. Every user interface, e.g. a terminal or
@@ -123,7 +132,7 @@ caller holding it. An Autopilot AI never inherits that authority, whatever model
 Every user interface is equivalent to the engine API it adapts: an action taken through any user interface has exactly
 the result that the same operation called directly through the engine API has, and every user interface respects the
 same [Information boundary](#information-boundary). E.g., assigning the same Agents to the same mission through the
-terminal interface, the browser interface, and the engine API produces equal Campaign state and equal reports.
+terminal interface, the browser interface, and the engine API produces equal Campaign state and equal query results.
 
 The complete namespace inventory is `session`, `player`, `developer`, and `autopilotMemory`. The following tree is the
 required starter operation inventory. Additional gameplay and developer operations may be added under the same
@@ -172,8 +181,9 @@ Engine API
 │       └── disengage(engagementId)
 ├── player
 │   ├── queries
-│   │   ├── getCampaignState()
-│   │   ├── getReports()
+│   │   ├── getCurrentState()
+│   │   ├── getTurnReport()
+│   │   ├── getHistory()
 │   │   └── getAvailableActions()
 │   └── actions
 │       ├── assignAgents(...)
@@ -204,9 +214,9 @@ Engine subsystem, under [Engine subsystems](#engine-subsystems).
 | `session.timeline`            | Timeline status, undo and redo of Player actions within the current turn, and undo and redo across turns.                                                                                          | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline                                                                     |
 | `session.developer`           | Enabling and disabling Dev mode.                                                                                                                                                                   | [Dev mode](developer-access.md#dev-mode) in Developer Access                                                                                                                                  |
 | `session.autopilot`           | Listing the Autopilot AIs available for engagement, engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it.                                                            | [Available Autopilot AIs](autopilot.md#available-autopilot-ais) and [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot                      |
-| `player.queries`              | Read-only Player-visible information and ordinary action discovery. Its `getCampaignState()` returns only the Player-visible information of Campaign state.                                        | [Player queries and actions](#player-queries-and-actions), and the specification owning each value                                                                                            |
+| `player.queries`              | Read-only Player-visible information and ordinary action discovery: the current state, the Turn report, the History entries, and the available actions.                                            | [Player queries and actions](#player-queries-and-actions) and [Current state, Turn report, and history](#current-state-turn-report-and-history), and the specification owning each value      |
 | `player.actions`              | Normal gameplay mutations, including Advance turn.                                                                                                                                                 | The mechanics specification owning each action, under [Player queries and actions](#player-queries-and-actions); [Turn Advancement](../mechanics/turn-advancement.md) for Advance turn        |
-| `developer.queries`           | Read-only inspection of full Campaign state. Its `getCampaignState()` returns Campaign state in full, unlike the Player API query of the same name.                                                | [Inspection contract](developer-access.md#inspection-contract) in Developer Access                                                                                                            |
+| `developer.queries`           | Read-only inspection of full Campaign state. Its `getCampaignState()` returns Campaign state in full, including World history.                                                                     | [Inspection contract](developer-access.md#inspection-contract) in Developer Access                                                                                                            |
 | `developer.actions`           | Validated, recorded cheat mutations; e.g., adding money or adding Agents.                                                                                                                          | [Cheat operations](developer-access.md#cheat-operations) in Developer Access, and the Mechanics specification owning each cheat operation                                                     |
 | `autopilotMemory`             | Autopilot memory for the active Autopilot AI, independent of gameplay resolution.                                                                                                                  | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot                                                                                                                                |
 
@@ -327,9 +337,44 @@ they apply, which values change, and by how much. A rejected action changes noth
 [Committed state integrity](#committed-state-integrity). The gameplay action inventory is extensible; future gameplay
 actions follow the same atomicity, visibility, and replay contract.
 
+# Current state, Turn report, and history
+
+Player API returns what is true now and what happened earlier through three queries. The following table is complete
+for them.
+
+| Query                              | Returns                                                                                                                                                                         | Detail  |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `player.queries.getCurrentState()` | The Player-visible information of [Current world state](campaign-state.md#glossary) and of [Campaign configuration](campaign-state.md#glossary) at the current Committed state. | Full    |
+| `player.queries.getTurnReport()`   | The Turn report, or none before the first committed Advance turn of the Campaign.                                                                                               | Full    |
+| `player.queries.getHistory()`      | One History entry for every ended Turn of the Campaign, in Turn order, from Turn 1.                                                                                             | Reduced |
+
+`getCurrentState()` returns nothing that is retained only in [World history](campaign-state.md#glossary). E.g., a
+Mission whose Battle has been fought no longer participates in current gameplay, so its Battle result is returned by
+`getTurnReport()` after the Advance turn that fought it, and in reduced form by `getHistory()`, but not by
+`getCurrentState()`.
+
+The Advance turn that ends Turn t replaces the Turn report with its own and adds the History entry for Turn t. No
+other Player action changes the Turn report or any History entry, so Player actions, undo, and redo within a Turn
+change only what `getCurrentState()` returns. The Turn report part of the latest History entry is exactly the reduced
+form of the Turn report, so the two never disagree. A History entry is never rewritten once added.
+
+The Turn report and every History entry are retained in World history. Undo, redo, and load therefore restore them
+with the Committed state they restore, and replay reproduces them, under
+[Derived value consistency](#derived-value-consistency) and
+[Determinism](determinism-and-randomness.md#determinism) in Determinism and Randomness. Information that the Turn
+report holds and its History entry does not need to remain available only while that Turn report is the latest one.
+What the Turn report and each History entry hold of a value is stated by the specification owning that value.
+
+Whether the engine stores each value these queries return, or computes it from other Campaign state when asked, is the
+Implementer's choice.
+
+![What each query returns during Turn 8, after its second Player action: a reduced History entry for Turns 6 and 7, the full Turn report of the Advance turn that ended Turn 7, and the current Committed state](../../images/query-layers-during-turn.svg)
+
+![What advanceTurn() changes when it ends Turn 8: Turn 8 gets a History entry, the Turn report of Turn 7 remains only in reduced form, the new Turn report is returned in full, and the current state is the Turn-start state of Turn 9](../../images/query-layers-after-advance.svg)
+
 # Derived value consistency
 
-After any action or restoration, every query result, report, and Player-visible information equals what would be
+After any action or restoration, every query result and all other Player-visible information equal what would be
 computed from the current Campaign state. After restoration, that is the restored Committed state rather than one
 that was undone; e.g., no result may come from a value computed before an undo.
 
@@ -340,7 +385,7 @@ states under the same Game build therefore have equal Derived values.
 # Information boundary
 
 The boundary of Player-visible information applies to every channel through which Player API returns information,
-not only query results: action discovery, validation errors, reports, Timeline status, and identifiers. E.g., the
+not only query results: action discovery, validation errors, Timeline status, and identifiers. E.g., the
 error for a rejected action must not reveal a hidden value that the matching query hides. Developer API is the only
 path to information that is not Player-visible information, under [API hierarchy](#api-hierarchy).
 
@@ -360,7 +405,7 @@ states its condition and its scope; [Campaign State](campaign-state.md) states t
 composition, identity, reference, and historical-fact constraints. Campaign creation, committed Player API and
 Developer API actions, and restoration therefore each produce a Committed state that satisfies them.
 
-Rejected requests leave Campaign state, reports, the Timeline, and Autopilot memory unchanged. This covers every
+Rejected requests leave Campaign state, the Timeline, and Autopilot memory unchanged. This covers every
 rejection, e.g. no Current campaign, an unavailable Timeline navigation target, or an unauthorized call.
 Intermediate processing must not be exposed as Committed state; e.g., values computed partway through Advance turn
 are never returned. Failed
@@ -375,3 +420,9 @@ Exact error representations and asynchronous operation results are the implement
   [Information boundary](#information-boundary)).
 - **Campaign integrity:** A Player action and its undo and redo preserve declared campaign-data composition and identity,
   and required historical references remain resolvable ([Committed state integrity](#committed-state-integrity)).
+- **Turn report and history:** During Turn 8, after two Player actions, `getTurnReport()` returns the Turn report of
+  the Advance turn that ended Turn 7, and `getHistory()` returns the History entries of Turns 1 to 7. Undoing one of
+  the actions changes neither answer. Advance turn then makes `getTurnReport()` return the Turn report of the Advance
+  turn that ended Turn 8, and `getHistory()` return the History entries of Turns 1 to 8, whose last entry holds the
+  reduced form of that new Turn report. Saving and loading the Campaign changes neither answer
+  ([Current state, Turn report, and history](#current-state-turn-report-and-history)).

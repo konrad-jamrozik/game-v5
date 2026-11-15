@@ -344,7 +344,7 @@ absent, from the visible `next` of that level being `null`, never from the count
 when Player API reports it as absent, the Faction is not Defeated.
 
 Under [Information boundary](../foundation/engine-contract.md#information-boundary) in Engine Contract, no channel of
-Player API reveals either countdown, e.g. neither a validation error nor a Report states how many Advance turns remain
+Player API reveals either countdown, e.g. neither a validation error nor the Turn report nor a History entry states how many Advance turns remain
 before a Faction moves to its next level or carries out its next operation. That a Faction operation occurrence has
 happened is visible through its Response Mission site, and that a Faction has moved to a new level is visible through
 its Faction activity level; neither reveals the new value of either countdown. The countdowns are available only through

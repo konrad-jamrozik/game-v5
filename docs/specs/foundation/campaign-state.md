@@ -38,14 +38,14 @@ state. The terms below add campaign-specific composition; Instance ID identity c
 
 The components into which Campaign state divides, and whether model data stays available.
 
-| Term                   | Definition                                                                                                                                                                                                                                                     |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and World history, distinct from Campaign configuration.                                                                                   |
-| Current world state    | The subcomponent of World state other than World history: the simulated world as it stands at the position selected by undo and redo. After undo, it is the state at that earlier position, not the furthest position reached.                                 |
-| World history          | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and reports may consult World history.                                               |
-| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation.     |
-| Retained               | Describes model data kept available for rules, reports, reference resolution, or restoration. Retained describes availability; World history describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
-| Turn series            | Retained data in World history recording one value at stated moments of every turn of the Campaign, from campaign creation onward, under [Turn series](#turn-series). The specification owning the value declares it.                                          |
+| Term                   | Definition                                                                                                                                                                                                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| World state            | The component of Campaign state describing the simulated world and its progression, composed of Current world state and World history, distinct from Campaign configuration.                                                                                              |
+| Current world state    | The subcomponent of World state other than World history: the simulated world as it stands at the position selected by undo and redo. After undo, it is the state at that earlier position, not the furthest position reached.                                            |
+| World history          | The subcomponent of World state containing retained data describing past Campaign state or events, including past Campaign configuration values or changes. Game behavior and Player API queries may consult World history.                                               |
+| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation.                |
+| Retained               | Describes model data kept available for rules, Player API queries, reference resolution, or restoration. Retained describes availability; World history describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state. |
+| Turn series            | Retained data in World history recording one value at stated moments of every turn of the Campaign, from campaign creation onward, under [Turn series](#turn-series). The specification owning the value declares it.                                                     |
 
 ## Campaign instances
 
@@ -192,15 +192,15 @@ excludes it. Campaign state has no separate completion record and no Authoritati
 
 # Historical fact preservation
 
-A past value cannot always be recovered from its current replacement. E.g., a report that needs enemy_1's original
+A past value cannot always be recovered from its current replacement. E.g., a query that needs enemy_1's original
 health must retain that value of 10 or the original inputs needed to reconstruct it. Current health of 7 is not a
-replacement for that historical fact. When a rule or report needs the historical basis, the original inputs or historical
+replacement for that historical fact. When a rule or query needs the historical basis, the original inputs or historical
 value must be preserved; required historical values must not be overwritten with current calculations. This does not
 require retaining every intermediate calculation or every possible chart. The values that a chart or a comparison
 across turns needs are retained exactly where a specification declares a Turn series, under
 [Turn series](#turn-series).
 
-When a Campaign instance no longer participates in current gameplay, data required by rules, reports, or retained
+When a Campaign instance no longer participates in current gameplay, data required by rules, queries, or retained
 references must remain in World history rather than being deleted. E.g., if enemy_1 no longer participates in a Mission,
 a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
 name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
@@ -211,7 +211,7 @@ an earlier retained Battle result.
 
 # Turn series
 
-A Turn series keeps the past values of one value available for the whole Campaign, so that game behavior and reports
+A Turn series keeps the past values of one value available for the whole Campaign, so that game behavior and queries
 can use them long after the value has changed; e.g., a chart of money over the last 200 turns. Such past values cannot
 be recovered from the current value, so they are retained in World history under
 [Historical fact preservation](#historical-fact-preservation).
