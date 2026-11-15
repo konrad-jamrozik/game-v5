@@ -245,7 +245,7 @@ kind `create_mission_site` has the following complete effect, applied once for t
    - the target Faction: the Faction whose Archetype is the FactionArchetype named by the `faction` of L, which exists
      and is exactly one under [Initial Factions](factions.md#initial-factions) in Factions.
 2. Missions then creates exactly one Initiative Mission site from these inputs, with the initial values, Enemies, and
-   expiry that [Missions](missions.md) gives it.
+   expiration that [Missions](missions.md) gives it.
 
 The effect creates one Mission site per completion, never more and never none. It does not depend on the availability of
 L at the moment of completion, and it does not depend on whether the Faction of L is Eliminated: if the Faction became
@@ -408,7 +408,7 @@ Initial state: member's set is {m1}, in Turn 6, and safehouse is available (the 
 Investigations i2, i3, and i4 of safehouse are started in turns 6, 11, and 25 respectively.
 
 - **Advance turn ending turn 9:** i2 completes; a Mission site s2 from `raid_safehouse` is created, Active, with 8 Advance
-  turns until expiry. Safehouse is blocked by 3. In Turn 10 a team is deployed, creating m2, and in the Advance turn ending
+  Turns until expiration. Safehouse is blocked by 3. In Turn 10 a team is deployed, creating m2, and in the Advance turn ending
   turn 10 the Combat outcome is Retreated, so m2 is Lost. Nothing is recorded: safehouse's set is empty. Safehouse is available
   again, because conditions 1 to 4 all hold; hq stays blocked by 1.
 - **Advance turn ending turn 16:** i3 completes (started in Turn 11); a new Mission site s3 from `raid_safehouse` is

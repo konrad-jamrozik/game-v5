@@ -128,14 +128,14 @@ An Investigation reads the `difficulty` of its Lead, under
 
 Type owner: [Missions](../mechanics/missions.md).
 
-| GDR                     | Type                 | GDR purpose | What it supplies                                                                                                         |
-| ----------------------- | -------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `apprehend_member`      | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry, its Enemies by EnemyArchetype and count, and its rewards for a win.              |
-| `raid_safehouse`        | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry, its Enemies by EnemyArchetype and count, and its rewards for a win.              |
-| `raid_hq`               | MissionSiteArchetype | Archetype   | An Initiative Mission site: its expiry and its Enemies by EnemyArchetype and count; a win eliminates its target Faction. |
-| `foil_recruitment_push` | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 1: its expiry and its Enemies by EnemyArchetype and count.            |
-| `foil_sabotage`         | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 2: its expiry and its Enemies by EnemyArchetype and count.            |
-| `standard_mission`      | MissionArchetype     | Archetype   | The Archetype of every Mission.                                                                                          |
+| GDR                     | Type                 | GDR purpose | What it supplies                                                                                                                     |
+| ----------------------- | -------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `apprehend_member`      | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns`, its Enemies by EnemyArchetype and count, and its rewards for a win.              |
+| `raid_safehouse`        | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns`, its Enemies by EnemyArchetype and count, and its rewards for a win.              |
+| `raid_hq`               | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns` and its Enemies by EnemyArchetype and count; a win eliminates its target Faction. |
+| `foil_recruitment_push` | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 1: its `expires_in_turns` and its Enemies by EnemyArchetype and count.            |
+| `foil_sabotage`         | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 2: its `expires_in_turns` and its Enemies by EnemyArchetype and count.            |
+| `standard_mission`      | MissionArchetype     | Archetype   | The Archetype of every Mission.                                                                                                      |
 
 No MissionSiteArchetype references a Faction. A Mission site's target Faction is a value in its Constants: for an
 Initiative Mission site it is the Faction whose Archetype is the creating Lead's `faction`, and for a Response Mission
@@ -226,7 +226,7 @@ Lead available, and winning `raid_hq` eliminates Red Dawn. With Red Dawn elimina
 the Campaign. Throughout the Campaign, Red Dawn's activity creates Faction operation occurrences, each with one Response
 Mission site; a Response Mission site that is Expired, or whose Mission is Lost, raises Panic, and enough Panic loses the Campaign.
 
-![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq eliminates Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiry or loss raises Panic until the Campaign is lost](../../../images/bootstrap-victory-path.svg)
+![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq eliminates Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiration or loss raises Panic until the Campaign is lost](../../../images/bootstrap-victory-path.svg)
 
 An Initiative Mission site that is Expired, or whose Mission is Lost, records no win, so its Lead becomes available again and the Agency
 can obtain a new Mission site from it. A Mission site cannot be attempted twice. Every Lead of the Victory path
@@ -238,7 +238,7 @@ The Victory path works through these rules:
   win, under [Recording a Won Mission](../mechanics/leads-and-progression.md#recording-a-won-mission); and the
   effect of completing a Lead, under [Completion effect](../mechanics/leads-and-progression.md#completion-effect), all in
   [Leads and Progression](../mechanics/leads-and-progression.md).
-- Mission site creation, expiry, and the consequences of a Mission's win or loss, under
+- Mission site creation, expiration, and the consequences of a Mission's win or loss, under
   [Mission site creation](../mechanics/missions.md#mission-site-creation),
   [Mission site expiration](../mechanics/missions.md#mission-site-expiration), and
   [Consequences](../mechanics/missions.md#consequences) in [Missions](../mechanics/missions.md).
@@ -306,7 +306,7 @@ value that deliberately differs from its game-ts counterpart, and why.
 | `cult_leader` skill and base health                         | Cult leader: skill 800, base health 80               | game-ts commander values                  | An 800-skill Enemy cannot be beaten after a three-step Victory path.                                                                     |
 | `initiate` Weapon                                           | Damage 8                                             | `sidearm`                                 | Sharing the Agents' Weapon saves one Weapon GDR.                                                                                         |
 | `locate_red_dawn_hq` difficulty                             | 25                                                   | Lower                                     | The HQ is the third step of three, not the eighth of eight.                                                                              |
-| `raid_hq` expiry and Enemies                                | Expires in 40 turns; 111 Enemies                     | Shorter; ten Enemies                      | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |
+| `raid_hq` expiration and Enemies                            | Expires in 40 turns; 111 Enemies                     | Shorter; ten Enemies                      | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |
 | Starting transport cap                                      | 6                                                    | Lower, raised by `transport_cap`          | Transport capacity becomes something the Agency invests in.                                                                              |
 | Starting training cap                                       | 0                                                    | Above zero, raised by `training_cap`      | Training is available from the first turn.                                                                                               |
 | Panic change of `operation_level_1` and `operation_level_2` | 0.02% and 0.1% when ignored or lost                  | 3% and 8% when ignored or lost            | At the game-ts scale, Panic cannot end a Campaign as short as the Victory path.                                                          |

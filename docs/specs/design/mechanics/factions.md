@@ -281,7 +281,7 @@ activity step of the same Advance turn:
 
 A Faction operation occurrence is not a separate Campaign instance, and its Response Mission site retains these facts,
 under [Game concepts](domain-model.md#game-concepts) in Domain
-Model. A Response Mission site created in this step does not count down toward expiry in the same Advance turn, because
+Model. A Response Mission site created in this step does not count down toward expiration in the same Advance turn, because
 Mission site expiration precedes Faction activity under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
@@ -459,7 +459,7 @@ Turns until the next level to 1 and Turns until the next operation to 1. In the 
 | Turns until the next operation | 11                                    |
 
 Three Response Mission sites have been created in total, in the Advance turns ending turns 15, 40, and 60. None of
-them counted down toward expiry in the Advance turn that created it, under
+them counted down toward expiration in the Advance turn that created it, under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
 ## A level change does not reset the operation countdown

@@ -1,12 +1,12 @@
 # Missions
 
-| Metadata    | Value                                                                                                                                                                                               |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | MISSION                                                                                                                                                                                             |
-| Family      | Mechanics                                                                                                                                                                                           |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                         |
-| Owns        | What a Mission site and a Mission have, Mission site creation, the Mission site and Mission lifecycles, the deployAgents action, Mission resolution, expiry, and the consequences for the Campaign. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                          |
+| Metadata    | Value                                                                                                                                                                                                   |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | MISSION                                                                                                                                                                                                 |
+| Family      | Mechanics                                                                                                                                                                                               |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                             |
+| Owns        | What a Mission site and a Mission have, Mission site creation, the Mission site and Mission lifecycles, the deployAgents action, Mission resolution, expiration, and the consequences for the Campaign. |
+| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                              |
 
 # Overview
 
@@ -51,7 +51,7 @@ of a Response Mission site and its Mission. The GDRs a Game build supplies, and 
 
 ## MissionSiteArchetype
 
-A MissionSiteArchetype is the Archetype of a Mission site. It describes the site: its kind, its expiry, its Enemies, and,
+A MissionSiteArchetype is the Archetype of a Mission site. It describes the site: its kind, its expiration, its Enemies, and,
 for an Initiative Mission, its rewards. No MissionSiteArchetype references a Faction; the target Faction of a Mission
 site comes from its origin, under [Mission site creation](#mission-site-creation). The following property table is
 exhaustive apart from the `id` and `type` that every GDR has.
@@ -102,7 +102,7 @@ Engine Contract.
 1. **Known properties:** Each MissionSiteArchetype has `name`, `kind`, `expires_in_turns`, and `enemies`, and no
    property other than those listed in its table above, apart from `id` and `type`. Its `name` is non-empty text.
 2. **Kind is valid:** `kind` is exactly `initiative` or `response`.
-3. **Expiry is valid:** `expires_in_turns` is a whole number of at least 1.
+3. **Expiration is valid:** `expires_in_turns` is a whole number of at least 1.
 4. **Enemies are valid:** `enemies` has at least one key. Each key is the identifier of an EnemyArchetype the Game build
    supplies, and each count is a whole number of at least 1.
 5. **Rewards only for Initiative:** A MissionSiteArchetype whose `kind` is `response` has no `on_win`. When a
@@ -119,7 +119,7 @@ Engine Contract.
    `operation_level_weights`, under [FactionActivityLevel](factions.md#factionactivitylevel) in Factions, the Game build
    supplies at least one MissionSiteArchetype whose `kind` is `response` and whose `operation_level` equals that key.
 
-These rules guarantee that every Mission site has at least one Enemy and an expiry of at least one Advance turn, that
+These rules guarantee that every Mission site has at least one Enemy and an expiration of at least one Advance turn, that
 every Enemy it names can be created, that every consequence under [Consequences](#consequences) is a whole number, and
 that [MissionSiteArchetype selection](#missionsitearchetype-selection) has at least one possible value for every
 Faction operation occurrence. That every MissionSiteArchetype the creating rule of an Initiative Mission site supplies
@@ -147,15 +147,15 @@ where it came from, and how long it stays Active.
 reference is set when it is created and never changes. Its Constants and State have exactly the following properties.
 This table is exhaustive.
 
-| Property           | Part      | Value                                                                                                                                                                                                                                                                                               | Classification and range                                                                                                                                                                                                      |
-| ------------------ | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Kind               | Constants | Initiative or Response.                                                                                                                                                                                                                                                                             | Authoritative value. Equals the MissionSiteArchetype's `kind`.                                                                                                                                                                |
-| Origin             | Constants | For an Initiative Mission site, an Immutable reference to the Investigation whose completion created it. For a Response Mission site, its Faction operation occurrence: an Immutable reference to the initiating Faction and an Immutable reference to the FactionOperationLevel of the occurrence. | Authoritative value, under [Mission site kind and provenance](#mission-site-kind-and-provenance).                                                                                                                             |
-| Target Faction     | Constants | An Immutable reference to the Faction whose Enemies are present at the Mission site.                                                                                                                                                                                                                | Authoritative value. Always exactly one Faction of the Campaign.                                                                                                                                                              |
-| Turn created       | Constants | The turn number of the Turn whose Advance turn created the Mission site.                                                                                                                                                                                                                            | Authoritative value. A whole number of at least 1.                                                                                                                                                                            |
-| Lifecycle          | State     | Active, Attempted, Expired, or Cancelled, under [Mission site lifecycle](#mission-site-lifecycle).                                                                                                                                                                                                  | Authoritative value.                                                                                                                                                                                                          |
-| Turns until expiry | State     | The number of Advance turns after which an Active Mission site is Expired.                                                                                                                                                                                                                          | Authoritative value. A whole number, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities), from 0 to `expires_in_turns`. Changes only under [Mission site expiration](#mission-site-expiration). |
-| Enemies            | State     | The ordered list of the Enemies present at the Mission site, in their creation order.                                                                                                                                                                                                               | Authoritative value. No rule changes the list after creation; each Enemy has its own values under [Combat](combat.md).                                                                                                        |
+| Property               | Part      | Value                                                                                                                                                                                                                                                                                               | Classification and range                                                                                                                                                                                                      |
+| ---------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kind                   | Constants | Initiative or Response.                                                                                                                                                                                                                                                                             | Authoritative value. Equals the MissionSiteArchetype's `kind`.                                                                                                                                                                |
+| Origin                 | Constants | For an Initiative Mission site, an Immutable reference to the Investigation whose completion created it. For a Response Mission site, its Faction operation occurrence: an Immutable reference to the initiating Faction and an Immutable reference to the FactionOperationLevel of the occurrence. | Authoritative value, under [Mission site kind and provenance](#mission-site-kind-and-provenance).                                                                                                                             |
+| Target Faction         | Constants | An Immutable reference to the Faction whose Enemies are present at the Mission site.                                                                                                                                                                                                                | Authoritative value. Always exactly one Faction of the Campaign.                                                                                                                                                              |
+| Turn created           | Constants | The turn number of the Turn whose Advance turn created the Mission site.                                                                                                                                                                                                                            | Authoritative value. A whole number of at least 1.                                                                                                                                                                            |
+| Lifecycle              | State     | Active, Attempted, Expired, or Cancelled, under [Mission site lifecycle](#mission-site-lifecycle).                                                                                                                                                                                                  | Authoritative value.                                                                                                                                                                                                          |
+| Turns until expiration | State     | The number of Advance turns after which an Active Mission site is Expired.                                                                                                                                                                                                                          | Authoritative value. A whole number, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities), from 0 to `expires_in_turns`. Changes only under [Mission site expiration](#mission-site-expiration). |
+| Enemies                | State     | The ordered list of the Enemies present at the Mission site, in their creation order.                                                                                                                                                                                                               | Authoritative value. No rule changes the list after creation; each Enemy has its own values under [Combat](combat.md).                                                                                                        |
 
 A Mission site also has Derived values, which are never stored: its Mission, i.e. the Mission whose Mission site
 reference identifies it, when one exists, under [Mission at a Mission site](#mission-at-a-mission-site);
@@ -168,7 +168,7 @@ rating of its Enemies, under [Combat rating](combat.md#combat-rating) in Combat.
 violates one is an internal invariant violation, reported under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
-1. Turns until expiry is 0 exactly when the lifecycle state is Expired, and from 1 to `expires_in_turns` otherwise.
+1. Turns until expiration is 0 exactly when the lifecycle state is Expired, and from 1 to `expires_in_turns` otherwise.
 2. A Mission whose Mission site reference identifies this Mission site exists exactly when the lifecycle state is
    Attempted, and at most one such Mission exists.
 3. The Enemies list has one Enemy for each unit of each count of the MissionSiteArchetype's `enemies`, and each of those
@@ -223,16 +223,16 @@ Each new Mission site has a fresh Instance ID under
 initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in
 Campaign Instances. This table is exhaustive.
 
-| Value               | Initial value                                                                                                                                                                                     | Source                                                                                                                                                                             |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Archetype reference | The MissionSiteArchetype of the occasion.                                                                                                                                                         | From a completed Investigation: the MissionSiteArchetype the creating rule supplies. From a Faction operation occurrence: the value of its MissionSiteArchetype selection outcome. |
-| Kind                | Initiative from a completed Investigation; Response from a Faction operation occurrence. It always equals the MissionSiteArchetype's `kind`.                                                      | The occasion; the equality holds because the creating rule supplies a MissionSiteArchetype of kind `initiative` and the selection outcome has only values of kind `response`.      |
-| Origin              | From a completed Investigation: the origin Investigation the creating rule supplies. From a Faction operation occurrence: the initiating Faction and the FactionOperationLevel of the occurrence. | The occasion.                                                                                                                                                                      |
-| Target Faction      | From a completed Investigation: the target Faction the creating rule supplies. From a Faction operation occurrence: the initiating Faction.                                                       | The creating rule; or the occurrence.                                                                                                                                              |
-| Turn created        | The turn number of the Turn whose Advance turn creates the Mission site.                                                                                                                          | Campaign state; for a Faction operation occurrence, also the turn number Factions supplies, which is the same.                                                                     |
-| Lifecycle           | Active.                                                                                                                                                                                           | This rule.                                                                                                                                                                         |
-| Turns until expiry  | The MissionSiteArchetype's `expires_in_turns`.                                                                                                                                                    | `expires_in_turns` of the MissionSiteArchetype.                                                                                                                                    |
-| Enemies             | Newly created Enemies, under [Enemy creation](#enemy-creation).                                                                                                                                   | `enemies` of the MissionSiteArchetype.                                                                                                                                             |
+| Value                  | Initial value                                                                                                                                                                                     | Source                                                                                                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Archetype reference    | The MissionSiteArchetype of the occasion.                                                                                                                                                         | From a completed Investigation: the MissionSiteArchetype the creating rule supplies. From a Faction operation occurrence: the value of its MissionSiteArchetype selection outcome. |
+| Kind                   | Initiative from a completed Investigation; Response from a Faction operation occurrence. It always equals the MissionSiteArchetype's `kind`.                                                      | The occasion; the equality holds because the creating rule supplies a MissionSiteArchetype of kind `initiative` and the selection outcome has only values of kind `response`.      |
+| Origin                 | From a completed Investigation: the origin Investigation the creating rule supplies. From a Faction operation occurrence: the initiating Faction and the FactionOperationLevel of the occurrence. | The occasion.                                                                                                                                                                      |
+| Target Faction         | From a completed Investigation: the target Faction the creating rule supplies. From a Faction operation occurrence: the initiating Faction.                                                       | The creating rule; or the occurrence.                                                                                                                                              |
+| Turn created           | The turn number of the Turn whose Advance turn creates the Mission site.                                                                                                                          | Campaign state; for a Faction operation occurrence, also the turn number Factions supplies, which is the same.                                                                     |
+| Lifecycle              | Active.                                                                                                                                                                                           | This rule.                                                                                                                                                                         |
+| Turns until expiration | The MissionSiteArchetype's `expires_in_turns`.                                                                                                                                                    | `expires_in_turns` of the MissionSiteArchetype.                                                                                                                                    |
+| Enemies                | Newly created Enemies, under [Enemy creation](#enemy-creation).                                                                                                                                   | `enemies` of the MissionSiteArchetype.                                                                                                                                             |
 
 Creating a Mission site changes nothing else; e.g., it creates no Mission, spends no money, changes no Panic, and
 changes no Agent. A Mission
@@ -275,7 +275,7 @@ The set is exhaustive. Every Mission site is Active when it is created. The tran
 | Source state | Target state | Trigger                                                                                                    | Condition                                                                    | Effects                                                                                                                                                                      |
 | ------------ | ------------ | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Active       | Attempted    | The `deployAgents` Player action names the Mission site.                                                   | Every precondition under [Deploying Agents](#deploying-agents) holds.        | A new Mission at the Mission site comes into existence, Deployed, with its Current team, and those Agents are Deployed at once, under [Deploying Agents](#deploying-agents). |
-| Active       | Expired      | Advance turn, in the Turn advancement step Mission site expiration: its Turns until expiry reaches 0.      | The Mission site already existed in the Turn-end state of this Advance turn. | The Expired consequences apply, under [Mission site expiration](#mission-site-expiration) and [Consequences](#consequences). It never has a Mission.                         |
+| Active       | Expired      | Advance turn, in the Turn advancement step Mission site expiration: its Turns until expiration reaches 0.  | The Mission site already existed in the Turn-end state of this Advance turn. | The Expired consequences apply, under [Mission site expiration](#mission-site-expiration) and [Consequences](#consequences). It never has a Mission.                         |
 | Active       | Cancelled    | Advance turn, at the end of the Turn advancement step Mission resolution, after every Combat of that step. | Its target Faction is Eliminated.                                            | None, under [Consequences](#consequences). It never has a Mission.                                                                                                           |
 
 Every transition not listed is impossible; e.g., an Attempted Mission site is never Cancelled or Expired, and nothing
@@ -424,7 +424,7 @@ Turn:
   Investigation under [Investigations](investigations.md), e.g. the Investigation is Abandoned when its last member
   leaves.
 
-Nothing else changes; e.g., no money is spent, the Mission site's Turns until expiry is unchanged, and the Agents' skill,
+Nothing else changes; e.g., no money is spent, the Mission site's Turns until expiration is unchanged, and the Agents' skill,
 current health, and exhaustion are unchanged. The Agents count toward the Transport cap at once and until the Mission resolution
 step of the next Advance turn, under [Agency caps](economy-and-upgrades.md#agency-caps). The Combat is fought in that
 step.
@@ -513,10 +513,10 @@ The result of the step is the same whichever order an implementation resolves th
 Active when the step begins and that already existed in the Turn-end state of this Advance turn counts down:
 
 ```text
-Turns until expiry after = Turns until expiry before − 1
+Turns until expiration after = Turns until expiration before − 1
 ```
 
-Turns until expiry before is a whole number of at least 1, by the invariants under
+Turns until expiration before is a whole number of at least 1, by the invariants under
 [Mission site properties](#mission-site-properties), so the result is a whole number of at least 0 and no rounding
 occurs. When the result is 0, the Mission site becomes Expired and the Expired consequences apply, under
 [Consequences](#consequences). When no Mission site qualifies, the step does nothing.
@@ -527,15 +527,15 @@ The following Mission sites do not count down in this step, and the list is exha
   in the Turn-end state. A Response Mission site created later in the same Advance turn, in the Faction activity step,
   does not exist yet when this step applies.
 - A Mission site that is not Active: Attempted, Expired, and Cancelled Mission sites never count down. An Attempted
-  Mission site keeps the Turns until expiry it had when its Mission was created.
+  Mission site keeps the Turns until expiration it had when its Mission was created.
 
 Each Mission site counts down independently of every other, and the funding changes of all Mission sites Expired in this
 step are summed and floored once, under [Funding changes](economy-and-upgrades.md#funding-changes), so the result does
 not depend on processing order.
 
 **Timing consequence:** A Mission site created during the Advance turn ending turn t with `expires_in_turns` E has Turns
-until expiry E during Turn t + 1, can be deployed to in each of Turns t + 1 to t + E, and is Expired in the Advance turn
-ending turn t + E if no team is deployed to it. A team deployed during Turn t + E, when Turns until expiry is 1, still
+until expiration E during Turn t + 1, can be deployed to in each of Turns t + 1 to t + E, and is Expired in the Advance turn
+ending turn t + E if no team is deployed to it. A team deployed during Turn t + E, when Turns until expiration is 1, still
 fights, because Mission resolution precedes Mission site expiration, and the Mission site is then Attempted, not Active.
 
 # Consequences
@@ -597,7 +597,7 @@ The table is exhaustive.
 | A Mission site's Instance ID and its MissionSiteArchetype, including every property of that GDR                                                                                           | Yes                        |
 | A Mission site's kind, origin, target Faction, and Turn created, including the FactionOperationLevel of a Response Mission site's origin and that GDR's `on_win` and `on_ignored_or_lost` | Yes                        |
 | A Mission site's lifecycle state                                                                                                                                                          | Yes                        |
-| A Mission site's Turns until expiry                                                                                                                                                       | Yes                        |
+| A Mission site's Turns until expiration                                                                                                                                                   | Yes                        |
 | A Mission site's Enemies list, in its order; the values of each Enemy are Player-visible under [Player-visible information](combat.md#player-visible-information) in Combat               | Yes                        |
 | A Mission site's rewards and penalties, i.e. the amounts under [Consequences](#consequences) for each final state                                                                         | Yes                        |
 | A Mission's Instance ID, its MissionArchetype, its Mission site, its Turn deployed, and its Team sent, in its order                                                                       | Yes                        |
@@ -608,12 +608,12 @@ A Response Mission site's MissionSiteArchetype is the value of its
 [MissionSiteArchetype selection](#missionsitearchetype-selection) outcome, so that value is Player-visible through the
 Mission site from the Committed state in which the Mission site exists. **Unknown versus absent:** No value in the table is hidden, so
 Player API never reports one as unknown. A Mission site that no team has been deployed to has no Mission; Player API
-reports its Mission as absent, and the visible lifecycle state of the Mission site explains why. Turns until expiry is always present; a value of 0 appears only on an Expired
+reports its Mission as absent, and the visible lifecycle state of the Mission site explains why. Turns until expiration is always present; a value of 0 appears only on an Expired
 Mission site. An empty Current team of a Won or Lost Mission is reported as empty, not as absent.
 
 # Edge cases and failure behavior
 
-- **Deploying on the last Turn before expiry:** A team deployed when Turns until expiry is 1 fights in the next Advance
+- **Deploying on the last Turn before expiration:** A team deployed when Turns until expiration is 1 fights in the next Advance
   turn, because Mission resolution precedes Mission site expiration; its Mission is Won or Lost, and the Mission site is
   Attempted, never Expired
   ([Mission site expiration](#mission-site-expiration)).
@@ -713,16 +713,16 @@ This example exercises [Mission site creation](#mission-site-creation), [Enemy c
 origin Investigation i1, and the target Faction Red Dawn; e.g., the creating rule is the completion effect of
 `locate_red_dawn_member` under [Leads and Progression](leads-and-progression.md). Mission site s1 is created:
 
-| Value              | s1 after the Advance turn ending turn 4                                          |
-| ------------------ | -------------------------------------------------------------------------------- |
-| Archetype          | `apprehend_member`, as supplied                                                  |
-| Kind               | Initiative                                                                       |
-| Origin             | Investigation i1, as supplied                                                    |
-| Target Faction     | Red Dawn, as supplied                                                            |
-| Turn created       | 4                                                                                |
-| Lifecycle          | Active                                                                           |
-| Turns until expiry | 5: s1 did not exist in the Turn-end state, so Mission site expiration skipped it |
-| Enemies            | e1, e2, e3, each of `initiate`: skill 40, current health 20 of 20, exhaustion 0  |
+| Value                  | s1 after the Advance turn ending turn 4                                          |
+| ---------------------- | -------------------------------------------------------------------------------- |
+| Archetype              | `apprehend_member`, as supplied                                                  |
+| Kind                   | Initiative                                                                       |
+| Origin                 | Investigation i1, as supplied                                                    |
+| Target Faction         | Red Dawn, as supplied                                                            |
+| Turn created           | 4                                                                                |
+| Lifecycle              | Active                                                                           |
+| Turns until expiration | 5: s1 did not exist in the Turn-end state, so Mission site expiration skipped it |
+| Enemies                | e1, e2, e3, each of `initiate`: skill 40, current health 20 of 20, exhaustion 0  |
 
 The Combat rating of s1's Enemies is 3 × 40 = 120, and its rewards are money 5, funding change 0, and Panic reduction 1.
 
@@ -733,7 +733,7 @@ At assignment, so no Agent is on Contracting and no Agent is Deployed. s1 is the
 calls `deployAgents(s1, [a1, a2, a3, a4])`. 0 + 4 = 4 is not more than the Transport cap 4, so the action succeeds: s1 is
 Attempted, and Mission m1 is created with Archetype `standard_mission`, Mission site s1, Turn deployed 6, Team sent and
 Current team [a1, a2, a3, a4], and lifecycle Deployed. Each Agent is Deployed on m1, At assignment.
-s1's Turns until expiry stays 4. A further `deployAgents` of any Agent to any Mission site in Turn 6 is
+s1's Turns until expiration stays 4. A further `deployAgents` of any Agent to any Mission site in Turn 6 is
 rejected, because 4 + 1 is more than 4.
 
 **Resolution, Advance turn ending turn 6.** Money is 400, funding 20, and Panic 10 when the Advance turn begins, and the
@@ -759,7 +759,7 @@ Combat rounds. Every Agent ends with current health 30 of 30; a1 has exhaustion 
 
 | Value after the Advance turn ending turn 6 | Result                                                                                                                    |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| s1                                         | Attempted; Turns until expiry 4                                                                                           |
+| s1                                         | Attempted; Turns until expiration 4                                                                                       |
 | m1                                         | Won; an empty Current team and its unchanged Team sent [a1, a2, a3, a4]; the Turn report holds the Combat report above    |
 | a1, a2, a3, a4                             | Serving; Standby, In transit, because each has current health equal to its base health; m1 in each Participation history  |
 | Money                                      | 380 + 5 = 385 after Mission resolution; no later step of this Advance turn changes money, so the turn ends with money 385 |
@@ -777,18 +777,18 @@ This example exercises [Consequences](#consequences), [Mission site expiration](
 [Mission lifecycle](#mission-lifecycle), and compares the three outcomes of the same Mission site. In the Advance turn ending turn 40, a Faction operation occurrence
 of Red Dawn with Faction operation level `operation_level_2` creates Mission site s2 from `foil_sabotage`, under
 [Faction operation occurrence generation](factions.md#faction-operation-occurrence-generation): Response, origin Red Dawn
-and `operation_level_2`, target Faction Red Dawn, Turn created 40, Active, Turns until expiry 4, and the Enemies list
+and `operation_level_2`, target Faction Red Dawn, Turn created 40, Active, Turns until expiration 4, and the Enemies list
 e1, e2, e3, e4 of `initiate` followed by e5, e6 of `soldier`, with a Combat rating of 160 + 240 = 400. Its rewards are
 money 30 and funding change 5, and its penalties are Panic increase 8 and funding change −1. In each variant, when the
 step that settles s2 or its Mission begins, money is 300, funding is 20, Panic is 10, and nothing else contributes to the Pending panic
 change.
 
-| Turn | s2's Turns until expiry during that Turn, while Active |
-| ---- | ------------------------------------------------------ |
-| 41   | 4                                                      |
-| 42   | 3                                                      |
-| 43   | 2                                                      |
-| 44   | 1                                                      |
+| Turn | s2's Turns until expiration during that Turn, while Active |
+| ---- | ---------------------------------------------------------- |
+| 41   | 4                                                          |
+| 42   | 3                                                          |
+| 43   | 2                                                          |
+| 44   | 1                                                          |
 
 **Ignored.** No team is deployed. s2 counts down to 3, 2, and 1 in the Advance turns ending turns 41, 42, and 43. In
 Mission site expiration of the Advance turn ending turn 44 it reaches 0 and is Expired: a Panic increase of 8 is added to
@@ -796,7 +796,7 @@ the Pending panic change, so Panic becomes 18 when nothing else contributes, and
 Money is not changed by s2. The Agency income step of the Advance turn ending turn 44 had already used funding 20; that
 of the Advance turn ending turn 45 uses 19. s2 never has a Mission, and its Enemies keep their initial values.
 
-**Lost.** During Turn 42, with Turns until expiry 3, the player calls `deployAgents(s2, [a1])`, so s2 is Attempted and
+**Lost.** During Turn 42, with Turns until expiration 3, the player calls `deployAgents(s2, [a1])`, so s2 is Attempted and
 Mission m2 is created with the Current team [a1]. In Mission resolution of
 the Advance turn ending turn 42:
 
@@ -816,7 +816,7 @@ so its Current assignment becomes Recovery, In transit. A Panic increase of 8 is
 max(0, 20 − 1) = 19, the same consequences as the Ignored variant, two Advance turns earlier; money is unchanged. s2 does
 not count down in Mission site expiration, because it is Attempted, not Active.
 
-**Won.** During Turn 41, with Turns until expiry 4, the player calls `deployAgents(s2, [a1, a2, a3, a4])`, so s2 is
+**Won.** During Turn 41, with Turns until expiration 4, the player calls `deployAgents(s2, [a1, a2, a3, a4])`, so s2 is
 Attempted and Mission m2 is created with the Current team [a1, a2, a3, a4]. In Mission
 resolution of the Advance turn ending turn 41:
 
@@ -855,7 +855,7 @@ This example exercises [Consequences](#consequences), [Cancellation](#cancellati
 - Mission site s4, from `foil_sabotage`, target Faction Red Dawn, is Attempted; its Mission m4 is Deployed with a team of
   four other Agents. The
   Agency has acquired the Upgrade `transport_cap` four times, so the Transport cap is 4 + 2 × 4 = 12 and both teams fit.
-- Mission site s5, from `foil_recruitment_push`, target Faction Red Dawn, is Active with Turns until expiry 2.
+- Mission site s5, from `foil_recruitment_push`, target Faction Red Dawn, is Active with Turns until expiration 2.
 
 Money is 1000, funding 25, and Panic 40. In Mission resolution of the Advance turn ending turn 150, both Combats are
 fought. Their injected hit and damage outcomes are chosen so that the Combat of m3 has the Combat outcome Prevailed and
@@ -905,12 +905,12 @@ counting toward the Transport cap.
 This example exercises [Mission site expiration](#mission-site-expiration) and
 [Mission resolution](#mission-resolution). Mission site s1 from `apprehend_member` is created in the Advance turn ending
 turn 4, as in [The full life of an apprehend_member Mission site](#the-full-life-of-an-apprehend_member-mission-site). It
-counts down to 4, 3, 2, and 1 in the Advance turns ending turns 5 to 8, so during Turn 9 its Turns until expiry is 1.
+counts down to 4, 3, 2, and 1 in the Advance turns ending turns 5 to 8, so during Turn 9 its Turns until expiration is 1.
 
 - **Deployed in Turn 9:** The player calls `deployAgents(s1, [a1, a2, a3, a4])`, so s1 is Attempted and its Mission is
   Deployed. In the Advance turn ending turn 9, the Combat is fought in Mission resolution and the Mission becomes Won or
   Lost; with the injected outcomes of the full-life example it is Won, with money +5 and a Panic reduction of 1. s1 is
-  not Active in Mission site expiration, so it is not Expired, and its Turns until expiry stays 1.
+  not Active in Mission site expiration, so it is not Expired, and its Turns until expiration stays 1.
 - **Not deployed:** In Mission site expiration of the Advance turn ending turn 9, s1 counts down to 0 and is Expired. As
   an Initiative Mission site it has no consequence: money, funding, and Panic are unchanged by it. Whether
   `locate_red_dawn_member` is available again is decided under [Leads and Progression](leads-and-progression.md).
@@ -926,8 +926,8 @@ MissionSiteArchetype selection outcome is `foil_recruitment_push`, with Probabil
 `test_foil_level_1` of kind response and `operation_level` 1 supplied as well, `n` would be 2, and each of the two
 values would have Probability 1 / 2. Mission site s9 is
 created: Response; origin Red Dawn and `operation_level_1`; target Faction Red Dawn; Turn created 15; Active; Turns until
-expiry 3; Enemies e1 to e5, each of `initiate`, in that order; no Mission. Mission site expiration came before Faction
-activity in that Advance turn, so s9 has Turns until expiry 3 during Turn 16. It counts down to 2 and 1 in the Advance
+expiration 3; Enemies e1 to e5, each of `initiate`, in that order; no Mission. Mission site expiration came before Faction
+activity in that Advance turn, so s9 has Turns until expiration 3 during Turn 16. It counts down to 2 and 1 in the Advance
 turns ending turns 16 and 17 and, if no team is deployed, is Expired in the Advance turn ending turn 18, adding a Panic
 increase of 3 and a funding change of 0. If a team were deployed to it and its Mission Won instead, it would add money
 10 and a funding change of 0.
@@ -956,7 +956,7 @@ Each row independently changes that fixture and describes an invalid state.
 | A second Mission m2 also references s1       | At most one Mission references a Mission site                      |
 | m1 is Won and its Current team is still {a2} | The Current team is empty when Won or Lost                         |
 | m1 is Deployed with an empty Current team    | The Current team equals the Team sent exactly when Deployed        |
-| s1 is Expired with Turns until expiry 1      | Turns until expiry is 0 exactly when Expired                       |
+| s1 is Expired with Turns until expiration 1  | Turns until expiration is 0 exactly when Expired                   |
 
 ## GDR validation
 
@@ -973,7 +973,7 @@ following test changes independently makes the Game build defective, so no Campa
 
 | Test change                                                                            | Rule violated                               |
 | -------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `apprehend_member`'s `expires_in_turns` is 0                                           | Expiry is valid                             |
+| `apprehend_member`'s `expires_in_turns` is 0                                           | Expiration is valid                         |
 | `foil_sabotage`'s `enemies` is empty                                                   | Enemies are valid                           |
 | `raid_safehouse`'s `enemies` gains `commander: 1`, an identifier no EnemyArchetype has | Enemies are valid                           |
 | `foil_recruitment_push`'s `enemies` count of `initiate` is 0                           | Enemies are valid                           |
