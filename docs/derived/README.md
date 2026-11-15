@@ -91,10 +91,10 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Implementation
 
-| ID       | Document                                                                                  | Status | Owns                                                                                                     |
-| -------- | ----------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
-| DEPDIR   | [Gameplay Dependency Direction](../specs/implementation/gameplay-dependency-direction.md) | Draft  | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
-| PLACE    | [Implementation Placement](../specs/implementation/implementation-placement.md)           | Draft  | Where in this repository each implementation and everything it needs reside.                             |
-| RECORDS  | [Implementation Records](../specs/implementation/implementation-records.md)               | Draft  | The records of Specification problems and Implementation decisions that each Implementation keeps.       |
-| SCAFFOLD | [Implementation Scaffold](../specs/implementation/implementation-scaffold.md)             | Draft  | A suggested technology stack for a browser Implementation.                                               |
-| SCHEMA   | [Storage Schema](../specs/implementation/storage-schema.md)                               | Stub   | Non-behavioural guidance on the physical layout of everything the game persists.                         |
+| ID      | Document                                                                                  | Status | Owns                                                                                                     |
+| ------- | ----------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| DEPDIR  | [Gameplay Dependency Direction](../specs/implementation/gameplay-dependency-direction.md) | Draft  | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
+| PLACE   | [Implementation Placement](../specs/implementation/implementation-placement.md)           | Draft  | Where in this repository each implementation and everything it needs reside.                             |
+| RECORDS | [Implementation Records](../specs/implementation/implementation-records.md)               | Draft  | The records of Specification problems and Implementation decisions that each Implementation keeps.       |
+| SCHEMA  | [Storage Schema](../specs/implementation/storage-schema.md)                               | Stub   | Non-behavioural guidance on the physical layout of everything the game persists.                         |
+| STACK   | [Tech Stack Suggestion](../specs/implementation/tech-stack-suggestion.md)                 | Draft  | A suggested technology stack for a browser Implementation.                                               |

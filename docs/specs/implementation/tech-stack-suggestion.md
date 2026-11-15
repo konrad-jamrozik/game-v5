@@ -1,8 +1,8 @@
-# Implementation Scaffold
+# Tech Stack Suggestion
 
 | Metadata    | Value                                                          |
 | ----------- | -------------------------------------------------------------- |
-| Spec ID     | SCAFFOLD                                                       |
+| Spec ID     | STACK                                                          |
 | Family      | Implementation                                                 |
 | Status      | Draft                                                          |
 | Binding     | Guidance                                                       |

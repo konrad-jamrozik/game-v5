@@ -23,10 +23,10 @@ repository root.
 [Implementation Records](implementation-records.md), Mandatory, answers _what must an implementer write down?_ It
 requires each implementation to keep a record of the problems met in the specifications and of the decisions made.
 
-## Implementation Scaffold
+## Tech Stack Suggestion
 
-[Implementation Scaffold](implementation-scaffold.md), Guidance, answers _what can a new implementation start from?_ It
-suggests the technology stack of game-ts for an implementation that uses a browser as its GUI.
+[Tech Stack Suggestion](tech-stack-suggestion.md), Guidance, answers _what technologies can a browser
+implementation use?_ It suggests the technology stack of game-ts for an implementation that uses a browser as its GUI.
 
 ## Gameplay Dependency Direction
 
