@@ -23,6 +23,12 @@ which the implementation treats as its repository root.
 [Implementation Records](implementation-records.md), Mandatory, answers _what must an implementer write down?_ It
 requires each implementation to keep a record of the problems met in the specifications and of the decisions made.
 
+## GitHub Pages Deployment
+
+[GitHub Pages Deployment](github-pages-deployment.md), Guidance, answers _how does an implementation get published
+once the Engine designer asks for it?_ It takes an implementation whose Game build a browser runs from static files to a
+public GitHub repository, whose CI workflow checks every push and deploys the passing ones to GitHub Pages.
+
 ## Tech Stack Suggestion
 
 [Tech Stack Suggestion](tech-stack-suggestion.md), Guidance, answers _what technologies can a browser
@@ -40,7 +46,9 @@ implementers toward one physical layout for Game storage.
 
 # How they relate
 
-Implementation Records uses Implementation Placement: the records are kept in its Implementation directory.
+Implementation Records and GitHub Pages Deployment use Implementation Placement: the records are kept in its
+Implementation directory, and the published repository is that directory, published only once the Engine designer
+decides where.
 Implementation Placement uses Bootstrap GDRs from the Content family, whose files each implementation copies. Gameplay Dependency
 Direction and Storage Schema use the Foundation family: Gameplay Dependency Direction uses its vocabulary and
 determinism guarantees, and Storage Schema uses its data ownership, Campaign save, and Timeline contracts. Gameplay

@@ -23,6 +23,7 @@ Implementations may therefore exist side by side, each independent of the others
 # Relationships
 
 - Uses [Bootstrap GDRs](../content/bootstrap-gdrs.md)
+- Used by [GitHub Pages Deployment](github-pages-deployment.md)
 - Used by [Implementation Records](implementation-records.md)
 
 # Glossary

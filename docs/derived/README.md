@@ -12,7 +12,7 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 3              |
-| Draft      | 32             |
+| Draft      | 33             |
 | Accepted   | 3              |
 | Superseded | 0              |
 
@@ -26,7 +26,7 @@ These informative views are derived from the registered Markdown specifications.
 | Content        | 1              |
 | UI             | 1              |
 | Autopilot AIs  | 1              |
-| Implementation | 5              |
+| Implementation | 6              |
 
 ## Governance
 
@@ -93,10 +93,11 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Implementation
 
-| ID      | Document                                                                                  | Status | Owns                                                                                                     |
-| ------- | ----------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
-| DEPDIR  | [Gameplay Dependency Direction](../specs/implementation/gameplay-dependency-direction.md) | Draft  | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
-| PLACE   | [Implementation Placement](../specs/implementation/implementation-placement.md)           | Draft  | Where each implementation and everything it needs reside, relative to this repository.                   |
-| RECORDS | [Implementation Records](../specs/implementation/implementation-records.md)               | Draft  | The records of Specification problems and Implementation decisions that each Implementation keeps.       |
-| SCHEMA  | [Storage Schema](../specs/implementation/storage-schema.md)                               | Stub   | Non-behavioural guidance on the physical layout of everything the game persists.                         |
-| STACK   | [Tech Stack Suggestion](../specs/implementation/tech-stack-suggestion.md)                 | Draft  | A suggested technology stack for a browser Implementation.                                               |
+| ID      | Document                                                                                  | Status | Owns                                                                                                               |
+| ------- | ----------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------ |
+| DEPDIR  | [Gameplay Dependency Direction](../specs/implementation/gameplay-dependency-direction.md) | Draft  | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs.           |
+| GHPAGES | [GitHub Pages Deployment](../specs/implementation/github-pages-deployment.md)             | Draft  | Guidance on publishing an Implementation to a public GitHub repository that checks and deploys it to GitHub Pages. |
+| PLACE   | [Implementation Placement](../specs/implementation/implementation-placement.md)           | Draft  | Where each implementation and everything it needs reside, relative to this repository.                             |
+| RECORDS | [Implementation Records](../specs/implementation/implementation-records.md)               | Draft  | The records of Specification problems and Implementation decisions that each Implementation keeps.                 |
+| SCHEMA  | [Storage Schema](../specs/implementation/storage-schema.md)                               | Stub   | Non-behavioural guidance on the physical layout of everything the game persists.                                   |
+| STACK   | [Tech Stack Suggestion](../specs/implementation/tech-stack-suggestion.md)                 | Draft  | A suggested technology stack for a browser Implementation.                                                         |
