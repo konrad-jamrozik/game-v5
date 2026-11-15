@@ -26,7 +26,7 @@ requires each implementation to keep a record of the problems met in the specifi
 ## Tech Stack Suggestion
 
 [Tech Stack Suggestion](tech-stack-suggestion.md), Guidance, answers _what technologies can a browser
-implementation use?_ It suggests the technology stack of game-ts for an implementation that uses a browser as its GUI.
+implementation use?_ It suggests a technology stack for an implementation that uses a browser as its GUI.
 
 ## Gameplay Dependency Direction
 
