@@ -13,8 +13,7 @@
 
 The Bootstrap GDRs are the smallest set of Game Data Records (GDRs) that a Game build supplies so that a first
 playable Campaign can be created, played, won, and lost. They keep every kind of GDR that the
-[Domain Model](../mechanics/domain-model.md) requires and reduce how many of each exist: 33 GDRs in 17 YAML files
-under `content/`.
+[Domain Model](../mechanics/domain-model.md) requires and reduce how many of each exist, in YAML files under `content/`.
 
 The only Faction, Red Dawn, has three Leads. Each Lead creates one Initiative Mission site, and winning the last one
 defeats Red Dawn and wins the Campaign. Meanwhile, Red Dawn's activity creates Response Mission sites; one that is
@@ -44,17 +43,18 @@ Domain Model concept it serves.
 
 | Domain Model concept   | Bootstrap GDRs                                                                        | Count |
 | ---------------------- | ------------------------------------------------------------------------------------- | ----- |
-| Campaign configuration | One Campaign configuration preset, which is the Game build default preset             | 1     |
+| Campaign configuration | One Campaign configuration preset and one parameter GDR naming it as the default      | 2     |
 | Agency                 | One AgencyArchetype                                                                   | 1     |
 | Agent                  | One AgentArchetype and one parameter GDR                                              | 2     |
 | Lead and Investigation | Three Leads of one Faction and one InvestigationArchetype                             | 4     |
 | Mission site           | Three MissionSiteArchetypes of kind initiative and two of kind response               | 5     |
+| Mission                | One MissionArchetype                                                                  | 1     |
 | Enemy and Combat       | Three EnemyArchetypes, three Weapons, and one parameter GDR                           | 7     |
 | Agent recovery         | One parameter GDR                                                                     | 1     |
 | Economy and upgrades   | One parameter GDR and four Upgrades                                                   | 5     |
 | Faction                | One FactionArchetype, three Faction activity levels, and two Faction operation levels | 6     |
 | Panic and endings      | One parameter GDR                                                                     | 1     |
-| **Total**              |                                                                                       | 33    |
+| **Total**              |                                                                                       | 35    |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of
 Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
@@ -69,9 +69,10 @@ has a `name` property also serves the Display content purpose, which the tables 
 
 Type owner: [Configuration](../foundation/configuration.md).
 
-| GDR        | Type                  | GDR purpose                   | What it supplies                                                                                                                                                                                 |
-| ---------- | --------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `standard` | CampaignConfiguration | Campaign configuration preset | The Game build default preset under [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets): the Agency's starting money and starting recurring funding. |
+| GDR                        | Type                    | GDR purpose                   | What it supplies                                                                                                                                                                                 |
+| -------------------------- | ----------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `standard`                 | CampaignConfiguration   | Campaign configuration preset | The Game build default preset under [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets): the Agency's starting money and starting recurring funding. |
+| `configuration_parameters` | ConfigurationParameters | None of the listed purposes   | Which preset is the Game build default preset, under [Game build default preset](../foundation/configuration.md#game-build-default-preset).                                                      |
 
 ## Agents GDRs
 
@@ -191,41 +192,32 @@ Type owner: [Panic and Endings](../mechanics/panic-and-endings.md).
 # Bootstrap GDR files
 
 The Bootstrap GDRs are authored in YAML files under the `content/` directory at the repository root. The YAML file of a
-GDR is the only place its values are recorded. The layout of the files follows these rules:
+GDR is the only place its values are recorded. The layout of the files follows
+[GDR file layout](../foundation/game-data-records.md#gdr-file-layout) in Game Data Records.
 
-- **One file per Type:** each file holds every Bootstrap GDR of one Type and no GDR of another Type.
-- **Directory of the Type owner:** the file lies in the directory named after the file name of the Mechanics
-  specification that owns its Type, without the `.md` extension or a `-spec` suffix, e.g. `content/combat/` for Combat.
-- **File named after the Type:** the file name is the Type's name in lowercase words joined by underscores, in the
-  plural, e.g. `faction_activity_levels.yaml` for FactionActivityLevel.
-- **One YAML document per GDR:** documents are separated by `---`, and each states its GDR as
-  [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) shows, including its identifier and
-  its Type.
+The following table is exhaustive: it lists every Bootstrap GDR file.
 
-The following table is exhaustive: it lists all 17 Bootstrap GDR files.
-
-| File                                                   | Type                   | GDRs                                                                                      |
-| ------------------------------------------------------ | ---------------------- | ----------------------------------------------------------------------------------------- |
-| `content/configuration/campaign_configurations.yaml`   | CampaignConfiguration  | `standard`                                                                                |
-| `content/agents/agent_archetypes.yaml`                 | AgentArchetype         | `field_agent`                                                                             |
-| `content/agents/agent_parameters.yaml`                 | AgentParameters        | `agent_parameters`                                                                        |
-| `content/economy-and-upgrades/agency_archetypes.yaml`  | AgencyArchetype        | `agency`                                                                                  |
-| `content/economy-and-upgrades/economy_parameters.yaml` | EconomyParameters      | `economy`                                                                                 |
-| `content/economy-and-upgrades/upgrades.yaml`           | Upgrade                | `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`                             |
-| `content/leads-and-progression/leads.yaml`             | Lead                   | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`               |
-| `content/investigations/investigation_archetypes.yaml` | InvestigationArchetype | `standard_investigation`                                                                  |
-| `content/missions/mission_site_archetypes.yaml`        | MissionSiteArchetype   | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage` |
-| `content/missions/mission_archetypes.yaml`             | MissionArchetype       | `standard_mission`                                                                        |
-| `content/combat/enemy_archetypes.yaml`                 | EnemyArchetype         | `initiate`, `soldier`, `cult_leader`                                                      |
-| `content/combat/weapons.yaml`                          | Weapon                 | `sidearm`, `rifle`, `heavy_rifle`                                                         |
-| `content/combat/combat_parameters.yaml`                | CombatParameters       | `combat_parameters`                                                                       |
-| `content/agent-recovery/recovery_parameters.yaml`      | RecoveryParameters     | `recovery`                                                                                |
-| `content/factions/faction_archetypes.yaml`             | FactionArchetype       | `red_dawn`                                                                                |
-| `content/factions/faction_activity_levels.yaml`        | FactionActivityLevel   | `faint`, `active`, `war`                                                                  |
-| `content/factions/faction_operation_levels.yaml`       | FactionOperationLevel  | `operation_level_1`, `operation_level_2`                                                  |
-| `content/panic-and-endings/ending_parameters.yaml`     | EndingParameters       | `endings`                                                                                 |
-
-A GDR added later goes into the file of its Type, and a file is added only for a new Type.
+| File                                                   | Type                    | GDRs                                                                                      |
+| ------------------------------------------------------ | ----------------------- | ----------------------------------------------------------------------------------------- |
+| `content/configuration/campaign_configurations.yaml`   | CampaignConfiguration   | `standard`                                                                                |
+| `content/configuration/configuration_parameters.yaml`  | ConfigurationParameters | `configuration_parameters`                                                                |
+| `content/agents/agent_archetypes.yaml`                 | AgentArchetype          | `field_agent`                                                                             |
+| `content/agents/agent_parameters.yaml`                 | AgentParameters         | `agent_parameters`                                                                        |
+| `content/economy-and-upgrades/agency_archetypes.yaml`  | AgencyArchetype         | `agency`                                                                                  |
+| `content/economy-and-upgrades/economy_parameters.yaml` | EconomyParameters       | `economy`                                                                                 |
+| `content/economy-and-upgrades/upgrades.yaml`           | Upgrade                 | `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`                             |
+| `content/leads-and-progression/leads.yaml`             | Lead                    | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`               |
+| `content/investigations/investigation_archetypes.yaml` | InvestigationArchetype  | `standard_investigation`                                                                  |
+| `content/missions/mission_site_archetypes.yaml`        | MissionSiteArchetype    | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage` |
+| `content/missions/mission_archetypes.yaml`             | MissionArchetype        | `standard_mission`                                                                        |
+| `content/combat/enemy_archetypes.yaml`                 | EnemyArchetype          | `initiate`, `soldier`, `cult_leader`                                                      |
+| `content/combat/weapons.yaml`                          | Weapon                  | `sidearm`, `rifle`, `heavy_rifle`                                                         |
+| `content/combat/combat_parameters.yaml`                | CombatParameters        | `combat_parameters`                                                                       |
+| `content/agent-recovery/recovery_parameters.yaml`      | RecoveryParameters      | `recovery`                                                                                |
+| `content/factions/faction_archetypes.yaml`             | FactionArchetype        | `red_dawn`                                                                                |
+| `content/factions/faction_activity_levels.yaml`        | FactionActivityLevel    | `faint`, `active`, `war`                                                                  |
+| `content/factions/faction_operation_levels.yaml`       | FactionOperationLevel   | `operation_level_1`, `operation_level_2`                                                  |
+| `content/panic-and-endings/ending_parameters.yaml`     | EndingParameters        | `endings`                                                                                 |
 
 # Victory path
 

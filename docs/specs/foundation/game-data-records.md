@@ -57,6 +57,21 @@ the `enemies` mapping of a MissionSiteArchetype for the fixed order of the Enemi
 file is read as the exact decimal number it is written as, never as a binary floating-point approximation, under
 [Whole-number quantities](numbers.md#whole-number-quantities) in Numbers.
 
+## GDR file layout
+
+GDR files are authored under the `content/` directory at the repository root. The layout of the files follows these
+rules:
+
+- **One file per Type:** each file holds every GDR of one Type and no GDR of another Type.
+- **Directory of the Type owner:** the file lies in the directory named after the file name of the specification that
+  owns its Type, without the `.md` extension or a `-spec` suffix, e.g. `content/combat/` for Combat.
+- **File named after the Type:** the file name is the Type's name in lowercase words joined by underscores, in the
+  plural, e.g. `faction_activity_levels.yaml` for FactionActivityLevel.
+- **One YAML document per GDR:** documents are separated by `---`, and each states its GDR as the snippets of the GDR
+  purpose sections show, including its identifier and its Type.
+
+A GDR added later goes into the file of its Type, and a file is added only for a new Type.
+
 # GDR purpose: campaign instance initialization
 
 Consider an illustrative creation of an Agent hired during play:
@@ -396,8 +411,6 @@ flowchart LR
 
 - TODO: State when encyclopedia articles become Player-visible information, under
   [GDR purpose: display content](#gdr-purpose-display-content).
-- TODO: Decide the GDR file layout: which directory holds the GDR files, and whether one file holds one GDR or several.
-  Affects [GDR authoring format](#gdr-authoring-format).
 - TODO: Decide the GDR identifier format: the permitted characters and casing of a GDR identifier, and the scope within
   which it is unique. Affects [GDR authoring format](#gdr-authoring-format) and every reference to a GDR.
 - TODO: Decide the YAML property naming: how a GDR states its identifier and its Type, and the casing of property

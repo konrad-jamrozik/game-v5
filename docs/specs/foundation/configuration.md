@@ -99,6 +99,21 @@ part of the new-Campaign setup; campaign creation receives it separately, under
 [Campaign seed](determinism-and-randomness.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after
 creation, under [Campaign state composition](campaign-state.md#campaign-state-composition).
 
+## Game build default preset
+
+The Game build supplies exactly one GDR of Type ConfigurationParameters. Its `default_preset` property holds the
+identifier of one Campaign configuration preset, and that preset is the Game build default preset. No preset states
+whether it is the default, so the presets supply Campaign configuration values only.
+
+The ConfigurationParameters GDR serves none of the purposes under
+[Purposes of GDRs](game-data-records.md#purposes-of-gdrs): it affects only the preset selection, which the Session
+holds, and neither game behavior nor Campaign state reads it.
+
+A Game build is defective, and no Campaign is created from it, if it supplies no ConfigurationParameters GDR or more
+than one, if that GDR has a property other than `id`, `type`, and `default_preset`, or if its `default_preset` is not
+the identifier of a Campaign configuration preset the Game build supplies. The violation is reported as a data defect,
+under [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract.
+
 Presets are immutable: a Preset edit, or a later change to Campaign configuration, never changes a preset. Campaign
 state retains the values copied at creation, as the [Configuration cascade](#configuration-cascade) states, and no
 reference to the selected preset. Creation of a Campaign instance that needs a Campaign configuration value reads it

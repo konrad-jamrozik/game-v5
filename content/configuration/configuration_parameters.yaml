@@ -1,0 +1,3 @@
+id: configuration_parameters
+type: ConfigurationParameters
+default_preset: standard # the Game build default preset
