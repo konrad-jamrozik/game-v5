@@ -4,7 +4,6 @@
 | ----------- | ---------------------------------------------------------------------------------------- |
 | Spec ID     | TODOS                                                                                    |
 | Family      | Governance                                                                               |
-| Status      | Draft                                                                                    |
 | Audience    | Engine designer                                                                          |
 | Owns        | Known outstanding specification issues awaiting scheduling, with their affected batches. |
 | Conventions | [Specification conventions](spec-conventions.md)                                         |
@@ -18,7 +17,7 @@ enough that a reader with no other context can act on it.
 Each Work item is tied to the review that will settle it: it names the Batch of each affected specification, as listed
 in [Batch sequence](work-plan.md#batch-sequence) in the [Specification Work Plan and Backlog](work-plan.md), so that it
 can be handled when that Batch is drafted or reviewed. Recording a Work item neither schedules it nor changes any Batch
-or document status, and each specification remains authoritative until it is revised. A link from a Work item to a
+status, and each specification remains authoritative until it is revised. A link from a Work item to a
 specification is a citation, not a relationship.
 
 # Relationships
@@ -51,7 +50,7 @@ Every Work item states the following, in this order:
 | Part                  | Content                                                                                                                                                                                   |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Category and priority | One of the categories below.                                                                                                                                                              |
-| Affected              | Each affected specification's title and Spec ID, linked to the exact section, with that specification's Status when it is Accepted.                                                       |
+| Affected              | Each affected specification's title and Spec ID, linked to the exact section.                                                                                                             |
 | Batches               | The batch of each affected specification under [Batch sequence](work-plan.md#batch-sequence), or a statement that the specification has no batch and how its review is scheduled instead. |
 | Current wording       | The exact current wording, quoted from the specification. Update the quotation when the wording changes without resolving the Work item.                                                  |
 | Why it is an issue    | The rule or recorded decision it conflicts with, linked to its section.                                                                                                                   |
@@ -100,7 +99,7 @@ observable or designer-authored outcome.
 
 **Category and priority:** Borderline, low priority.
 
-**Affected:** Specification Conventions (CONV, Accepted),
+**Affected:** Specification Conventions (CONV),
 [Writing exact requirements](spec-conventions.md#writing-exact-requirements).
 
 **Batches:** CONV has no batch.
@@ -123,9 +122,8 @@ If the quoted wording of a Work item changes without resolving it, update the qu
 renamed or moved, update the link. If a Work item is found to be wrong, remove it and record the reasoning in the
 commit message.
 
-When a Work item affects an Accepted specification, its resolution is a revision presented to the project owner, under
-[Status](spec-conventions.md#status); recording it here does not authorize the change. When a Work item conflicts with
-a later decision, the decision prevails and the Work item is revised or removed.
+Recording a Work item does not authorize the change it suggests. When a Work item conflicts with a later decision, the
+decision prevails and the Work item is revised or removed.
 
 If the specifications affected by one Work item belong to several batches, the Work item may be resolved in the earliest
 batch, or split so that each part is resolved with its own batch.
@@ -139,6 +137,3 @@ These are workflow checks, not gameplay tests:
 - **New issue ([Adding and removing Work items](#adding-and-removing-work-items), [Work item format](#work-item-format)):**
   A reviewer finds an out-of-scope storage statement in Missions. They add TODO-021 under Clear violations, naming
   Missions and batch 6 from [Batch sequence](work-plan.md#batch-sequence), with the exact quoted wording.
-- **Accepted owner ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)):** TODO-013 affects Specification
-  Conventions, which is Accepted. Its Writing exact requirements wording remains in force until the project owner
-  accepts a revision.

@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | FACTION                                                                                                                                |
 | Family      | Mechanics                                                                                                                              |
-| Status      | Draft                                                                                                                                  |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                            |
 | Owns        | What a Faction has, its creation, its escalation through Faction activity levels, Faction operation occurrence generation, and defeat. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                         |

@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------------------------------- |
 | Spec ID     | PLACE                                                                                  |
 | Family      | Implementation                                                                         |
-| Status      | Draft                                                                                  |
 | Binding     | Mandatory                                                                              |
 | Audience    | Implementer                                                                            |
 | Owns        | Where each implementation and everything it needs reside, relative to this repository. |

@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------------ |
 | Spec ID     | TURN                                                                           |
 | Family      | Mechanics                                                                      |
-| Status      | Draft                                                                          |
 | Audience    | Engine designer, AI designer, Implementer                                      |
 | Owns        | The canonical order of Turn advancement steps and which values each step uses. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                 |

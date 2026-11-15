@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | BOOT                                                                                                                                        |
 | Family      | Content                                                                                                                                     |
-| Status      | Draft                                                                                                                                       |
 | Audience    | Engine designer, Content designer, Implementer                                                                                              |
 | Owns        | Which Game Data Records (GDRs) a Game build supplies so that a first playable Campaign can start, and how those GDRs form the Victory path. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                              |

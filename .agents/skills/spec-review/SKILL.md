@@ -1,6 +1,6 @@
 ---
 name: spec-review
-description: Review repository specifications, either all of them or a named subset such as specific files or one Family. Runs the deterministic spec checks as a preflight and has failures fixed first, then performs a deep semantic review for conflicting, stale, duplicate, verbose, meta-documentation, and terminology problems, cross-referenced against related documents. Use for any request to check, lint, validate, review, or assess acceptance readiness or drift of specifications.
+description: Review repository specifications, either all of them or a named subset such as specific files or one Family. Runs the deterministic spec checks as a preflight and has failures fixed first, then performs a deep semantic review for conflicting, stale, duplicate, verbose, meta-documentation, and terminology problems, cross-referenced against related documents. Use for any request to check, lint, validate, or review specifications, or to find drift between them.
 ---
 
 # Specification review
@@ -18,15 +18,14 @@ deterministic checks; do not copy the linter into this skill.
 A review runs in one of two modes:
 
 - **Sweep:** every registered specification, as listed in the [derived specification catalog](../../../docs/derived/README.md).
-- **Narrowed:** a set the user names, e.g. specific files, one or more Families, or "all Draft specifications in
-  Mechanics". Resolve the description to an explicit list of files, the Targets, using the catalog and each file's
-  metadata. If the description is ambiguous, ask instead of guessing.
+- **Narrowed:** a set the user names, e.g. specific files, one or more Families, or "all Mechanics specifications".
+  Resolve the description to an explicit list of files, the Targets, using the catalog and each file's metadata. If the description is ambiguous, ask instead of guessing.
 
 In Sweep mode every specification is a Target. In both modes, documents outside the Targets are still read as context,
 as described in [Building the review set](#building-the-review-set).
 
-Each Target is reviewed for acceptance readiness if it is not Accepted, and for drift if it is: whether it still holds
-against the current state of the documents around it.
+Every Target is reviewed the same way: for its own quality, and for drift, i.e. whether it still holds against the
+current state of the documents around it.
 
 ## Preflight
 
@@ -35,10 +34,9 @@ against the current state of the documents around it.
    do not describe the specifications as linted, and stop.
 3. If either command reports findings, fix them before starting the semantic review, then run both commands again
    until they pass. Missing, stale, or unexpected derived views are fixed with `npm run docs:generate`.
-4. Stop and ask the user instead of fixing when a fix needs a design decision, would change a specification that is
-   Accepted, or lies in a file outside the Targets of a Narrowed review that the user may be editing elsewhere.
+4. Stop and ask the user instead of fixing when a fix needs a design decision, or lies in a file outside the Targets of a Narrowed review that the user may be editing elsewhere.
 5. Report "preflight passed" separately from the semantic results. Passing the preflight never shows that a
-   specification is correct or ready for acceptance.
+   specification is correct.
 
 ## Building the review set
 
@@ -51,9 +49,7 @@ against the current state of the documents around it.
      [Subject before document](../../../docs/specs/governance/spec-conventions.md#subject-before-document);
    - the [game design brief](../../../docs/game-design-brief.md), for checking intent only.
 3. Read each Dependency in full. For each Dependent, read at least every passage that cites or relies on the Target.
-4. Record each document's Status from its metadata table. Status decides severity, as described in
-   [Severity](#severity).
-5. For a drift review, run `git log` on the Target and on each Dependency, and look closely at Dependencies that
+4. Run `git log` on the Target and on each Dependency, and look closely at Dependencies that
    changed after the Target last did.
 
 A Sweep, or any review with more than about ten documents, can be split across subagents, e.g. one per Family. Each
@@ -93,7 +89,7 @@ each other as well as with their context documents. Check every use in context, 
 7. **Out-of-scope content:** statements that fail [What belongs in a specification](../../../docs/specs/governance/spec-conventions.md#what-belongs-in-a-specification),
    e.g. internal ordering or code structure.
 8. **Gaps:** a rule that depends on an unstated choice, an Open decisions entry that the text already settles, or a
-   TODO left in a Target proposed for acceptance.
+   `TODO:` item whose missing answer a rule in the Target already relies on.
 
 ### Structural checks
 
@@ -113,14 +109,13 @@ These are semantic checks the linter deliberately cannot prove:
 
 Assign each finding one severity:
 
-| Severity | When                                                                                                                                                                                                                                                     |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Blocking | A conflict, duplicate, forbidden term, or missing term within the Targets; a conflict between a Target and an Accepted document; anything a Target must resolve before acceptance.                                                                       |
-| Minor    | Meta documentation, verbosity, out-of-scope content, and imprecise wording that does not change a rule's meaning.                                                                                                                                        |
-| Note     | A conflict or terminology mismatch between a Target and a Draft or Stub document outside the Targets. Draft and Stub content may change freely, so these do not block; say which side should change on the merits, never because of its current wording. |
+| Severity | When                                                                                                                                                                               |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Blocking | A conflict, duplicate, forbidden term, or missing term within the Targets or between a Target and any other document; anything a Target must resolve before it can be implemented. |
+| Minor    | Meta documentation, verbosity, out-of-scope content, and imprecise wording that does not change a rule's meaning.                                                                  |
 
-Ignore Superseded documents, except to flag a Target that relies on one. In a drift review, a finding that requires
-changing an Accepted Target is Blocking, and its fix is a revision for the project owner to approve.
+Every document may change, so for a conflict between two documents, say which side should change on the merits, never
+because of its current wording.
 
 ## Verifying findings
 
@@ -134,10 +129,9 @@ Write the report in chat, in this order:
 
 1. **Scope:** the mode, and for a Narrowed review the resolved list of Targets.
 2. **Preflight:** passed, or what was fixed to make it pass.
-3. **Verdict per Target:** Ready, Ready after Minor fixes, or Not ready. For an Accepted Target: No drift, or Drift
-   found. In a Sweep, list only Targets with findings, then a count of the rest.
+3. **Verdict per Target:** Consistent, Minor issues only, or Has blocking issues. In a Sweep, list only Targets with findings, then a count of the rest.
 4. **Findings,** grouped by severity, Blocking first. Each states the anti-pattern or check; the location, linked as the
-   repository's `AGENTS.md` requires, and for a conflict or duplicate both locations with the other document's Status;
+   repository's `AGENTS.md` requires, and for a conflict or duplicate both locations;
    a short quotation; why it is a problem; and a concrete fix, e.g. replacement wording or the document that should own
    the rule.
 5. **Not reviewed:** anything you could not read or check.
@@ -148,4 +142,4 @@ Introduce every example in the report with "e.g.".
 
 A review changes no specification beyond the preflight fixes. Fix semantic findings only when the user asks. After
 fixing, run `npm run check:commit`, and before declaring the work complete run `npm run check`, as `AGENTS.md`
-requires. Follow `AGENTS.md` for committing, including its rule for changes to Accepted specifications.
+requires. Follow `AGENTS.md` for committing.

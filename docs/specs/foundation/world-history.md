@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------- |
 | Spec ID     | WHIST                                                          |
 | Family      | Foundation                                                     |
-| Status      | Draft                                                          |
 | Audience    | Engine designer, UI designer, AI designer, Implementer         |
 | Owns        | What a Campaign remembers about its past, and for how long.    |
 | Conventions | [Specification conventions](../governance/spec-conventions.md) |

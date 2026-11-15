@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------------------------------------- |
 | Spec ID     | CORE                                                                                         |
 | Family      | Foundation                                                                                   |
-| Status      | Accepted                                                                                     |
 | Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer                     |
 | Owns        | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                               |

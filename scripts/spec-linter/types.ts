@@ -20,15 +20,12 @@ export interface LintInput {
 export type SpecificationFamily =
   'Governance' | 'Foundation' | 'Mechanics' | 'Content' | 'UI' | 'Autopilot AIs' | 'Implementation'
 
-export type SpecificationStatus = 'Stub' | 'Draft' | 'Accepted' | 'Superseded'
-
 export type RelationshipKind = 'follows' | 'refines' | 'uses' | 'implements' | 'verifies'
 
 export interface SpecificationRecord {
   readonly id: string
   readonly family: SpecificationFamily
   readonly title: string
-  readonly status: SpecificationStatus
   readonly owns: string
   readonly path: string
 }
@@ -38,7 +35,6 @@ export interface GlossaryRecord {
   readonly definitionMarkdown: string
   readonly ownerId: string
   readonly ownerPath: string
-  readonly ownerStatus: SpecificationStatus
 }
 
 export interface RelationshipRecord {

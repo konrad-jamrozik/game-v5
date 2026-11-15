@@ -4,7 +4,6 @@
 | ----------------- | --------------------------------------------------------------------------- |
 | Spec ID           | CONV                                                                        |
 | Family            | Governance                                                                  |
-| Status            | Draft                                                                       |
 | Audience          | Engine designer, Content designer, UI designer, AI designer, Implementer    |
 | Owns              | How specifications are written, reviewed, and maintained.                   |
 | Related documents | [Spec index](../README.md), [game design brief](../../game-design-brief.md) |
@@ -12,8 +11,6 @@
 # Overview
 
 Specifications are the durable authority for intended behavior. Code and tests implement that behavior and may be replaced without changing the contract. The [game design brief](../../game-design-brief.md) explains intent and strategic tensions; the specifications resolve those ideas into precise rules.
-
-These conventions are the accepted working agreement. A stub uses the standard layout, but neither its presence nor its formatting makes unresolved rules accepted.
 
 Specifications state only what satisfies [What belongs in a specification](#what-belongs-in-a-specification). E.g., exact public TypeScript signatures belong in specifications because API callers observe them, while internal classes do not.
 
@@ -88,7 +85,7 @@ it is worth recording, only in an Implementation Family document, as described i
 
 # Document lifecycle and ownership
 
-A specification is written and read by different participants, moves from a first outline to an accepted contract, and
+A specification is written and read by different participants, keeps changing as the game is developed, and
 must keep one clear owner for everything it states throughout.
 
 ## Personas
@@ -110,37 +107,22 @@ The following table is the exhaustive set of Personas. The last column names the
 | Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                                       | Foundation, Mechanics, UI, Autopilot AIs, Implementation                                                                                  |
 | Player           | Human or LLM | Plays the game.                                                                                                                                                                    | None directly; plays through a user interface                                                                                             |
 
-## Status
+## Changing specifications
 
-Use one of these statuses in the metadata table:
+Every specification may change at any time, because the game is under active development. Its current wording, terms,
+API names, or the effort of changing it is never a reason to keep a design choice; justify proposals on their merits.
+Creating a document, generating tests, or successfully implementing it does not make it any less open to change.
 
-| Status     | Meaning                                                                                                   |
-| ---------- | --------------------------------------------------------------------------------------------------------- |
-| Stub       | A scoped outline with TODOs; not an implementable contract.                                               |
-| Draft      | Proposed rules are being developed; unresolved decisions are explicit TODOs.                              |
-| Accepted   | The user or designated project owner has explicitly accepted the document as the implementation contract. |
-| Superseded | A replacement is linked; the document is retained only for historical context.                            |
-
-Creating a document, generating tests, or successfully implementing it does not promote it to Accepted. Set Status to Accepted only when the project owner explicitly accepts the document. Do not infer approval from silence. Work may explore a draft when requested, but must not silently settle its open design decisions.
-
-The Status row is the only approval record a specification keeps, and it must stay accurate. Do not record who
-requested or approved a change, or when: add no acceptance or revision metadata rows, approval notices, or prose
-describing a change's request or approval history. Git history records changes; specifications state the current
-contract only.
-
-Only Accepted content constrains design decisions. Stub and Draft content may be revised or rewritten entirely, so
-its current wording, terms, API names, or the effort of changing it is never a reason to keep a design choice. Justify
-proposals on their merits and on Accepted contracts. Draft content may be cited to identify what a proposal would
-change.
-
-Record document status only in the metadata Status row. Do not repeat that a document is Draft, Stub, unaccepted,
-proposed, or awaiting review in body paragraphs, notices, Review metadata rows, or TODOs. Work tracking may
-record batch progress; lifecycle rules and worked review scenarios may discuss status changes.
+A specification states the current contract only. Do not record who requested or approved a change, or when: add no
+approval or revision metadata rows, approval notices, or prose describing a change's request or approval history. Git
+history records changes. Do not describe a document's maturity, e.g. that it is a draft or awaiting review, in
+metadata, body paragraphs, notices, or TODOs; what it has not settled yet is recorded as described under
+[Kinds of unspecified content](#kinds-of-unspecified-content).
 
 The TODOs section contains only the items that [Kinds of unspecified content](#kinds-of-unspecified-content) defines.
-Do not list already stated rules merely to request acceptance. Omit the section when it would have no item.
+Do not list already stated rules merely to request review. Omit the section when it would have no item.
 
-Each specification has a stable Spec ID, Family, title, status, Audience, Owns summary, and related-document links. The Audience
+Each specification has a stable Spec ID, Family, title, Audience, Owns summary, and related-document links. The Audience
 metadata row lists the [Personas](#personas) who mainly read or act on the document, separated by commas, in the order
 of the Personas table; at least one Persona is required. Overview describes the
 subject of the specification under [Subject before document](#subject-before-document); do not add a Scope row to metadata. The Owns metadata
@@ -304,7 +286,7 @@ Each refinement is visible in the prose where the added detail is stated: the to
 the parent section in a clause about the subject; e.g., "Every Order total is a Price, under Prices; for an Order it is
 computed as follows." Overview may also name the parent, under [Overview](#overview). No section or paragraph has the
 refinement itself as its subject; e.g., not "This document refines Store Model by specifying placement, payment, and
-shipping constraints." A scoped Stub may declare that intended detail without settling its TODOs. Applying vocabulary,
+shipping constraints." A specification may declare intended detail that its TODOs have not settled yet. Applying vocabulary,
 obeying invariants, or supplying GDR values alone establishes uses. Do not hide substantive reliance behind
 an informative citation or duplicate a refinement as uses for the same reliance.
 
@@ -347,7 +329,7 @@ when they describe something else; e.g., a glossary entry is not a GDR. Review e
 
 If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must not be redefined. It needs no link: the generated glossary lists every term with its owner. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
 replace it with the canonical term and add it to Terminology replacements with its context and a link to the owning
-Glossary. If the concepts differ, make their distinct definitions explicit. Unresolved terminology blocks acceptance.
+Glossary. If the concepts differ, make their distinct definitions explicit. Do not leave terminology unresolved.
 
 Relationship content uses `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
 The modeling term [Type](../foundation/core-concepts.md#glossary) describes data independently of a programming
@@ -610,7 +592,7 @@ When a title changes or a section moves, update every reference and anchor toget
 or revise its references; Git history retains the historical record. Glossary-term links may use the canonical term
 as their visible text when linking to its owning Glossary.
 
-Stubs keep descriptive TODOs in the TODOs section until concrete requirements can be written; do not reserve numbered labels for them.
+Content not yet written stays as descriptive TODOs in the TODOs section until concrete requirements can be written; do not reserve numbered labels for them.
 
 A rule should make its trigger, inputs, preconditions, outcome, and state changes clear. Use a transition table or pseudocode where prose would conceal ordering. Define:
 
@@ -674,7 +656,7 @@ Include worked numerical examples for normal cases and boundaries. Equations, pr
 
 ## Contracts and GDRs
 
-Public API specifications define exact names, types, argument shapes, outputs, and errors when they are ready for acceptance. Conceptual domain specifications need not mirror implementation storage layouts.
+Public API specifications define exact names, types, argument shapes, outputs, and errors when they are complete. Conceptual domain specifications need not mirror implementation storage layouts.
 
 GDR tables define stable GDR identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit GDR. Use parameter references instead of copying balance values throughout mechanics specifications.
 
@@ -739,16 +721,16 @@ Use relative Markdown links between specifications. For inherited-game evidence,
 
 Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Proposed rule**, or **Informative rationale** when the distinction could be unclear. Legacy bugs and undocumented implementation quirks are not requirements. A legacy formula can become a proposed rule only by being stated explicitly.
 
-# TODOs and acceptance checklist
+# TODOs and review checklist
 
-Before a specification is accepted, part of its quality can be checked by a machine and the rest only by a reviewer,
+Part of a specification's quality can be checked by a machine and the rest only by a reviewer,
 and whatever it has not settled yet must be visible rather than hidden.
 
 ## Deterministic validation
 
 Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, the Binding row under [Implementation binding](#implementation-binding), required layout, local links and anchors, relationship inventories and mirrors, Family overview presence, structure, and coverage, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document) and [Glossary groups](#glossary-groups), topic sections and their subsections that open with a list, table, or subsection instead of a lead under [Orientation before detail](#orientation-before-detail), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
 
-A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
+A successful deterministic lint means only that every machine-checkable convention passed. It does not establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
 
 ## Kinds of unspecified content
 
@@ -760,10 +742,10 @@ A specification leaves something unspecified in exactly one of three ways. This 
 | TODO                 | It will be specified, but is not yet.                           | Only in the closing `# TODOs` section, one list item per TODO. Each item links the section it affects, when that section exists.     | `TODO:` when the specification cannot be implemented without it; `TODO (later):` when the specification is complete without it and the feature is to be added later. |
 | Out of scope         | It is not part of the game, and there is no plan to specify it. | Nowhere, unless a reader would expect the rule; then one sentence in the topic section, under [Scope exclusions](#scope-exclusions). | The words "out of scope".                                                                                                                                            |
 
-No TODO text appears outside the TODOs section. A Stub omits a section whose content is not written yet, and the TODO
-item names the section to be written. A `TODO:` item blocks acceptance. A `TODO (later):` item does not: the
-specification is a complete contract for the game as it is now. An Accepted specification therefore has no `TODO:`
-item and may have `TODO (later):` items.
+No TODO text appears outside the TODOs section. A specification may omit a section whose content is not written yet,
+and the TODO item names the section to be written. A `TODO:` item marks content without which the section it affects
+cannot be implemented. A `TODO (later):` item does not: without it, the specification is a complete contract for the
+game as it is now.
 
 A TODO states what is missing and what a complete answer must include. E.g., prefer:
 
@@ -773,7 +755,7 @@ Avoid vague placeholders; e.g., "TODO: implement investigations." Documentation 
 
 Do not invent a default to close a TODO unless it is explicitly labeled as a proposal.
 
-Before acceptance, verify:
+A review verifies:
 
 - Scope and ownership are clear and all references resolve.
 - Every statement is observable, designer-authored, or vocabulary needed for those statements, as defined in
@@ -783,7 +765,7 @@ Before acceptance, verify:
 - Glossary terms are grouped as required by [Glossary groups](#glossary-groups).
 - Glossary definitions state what each term means, as required by [Glossary definitions](#glossary-definitions).
 - Every example is introduced with "e.g." or sits under an explicit "Examples" label; every illustrative enumeration contains at most three examples; exhaustive enumerations are clearly distinguished and owned.
-- No `TODO:` item remains; everything left for later is a `TODO (later):` item in the TODOs section.
+- Everything not yet specified is a `TODO:` or `TODO (later):` item in the TODOs section.
 - Overview opens with the idea, introduces at most four concepts, has no sentence enumerating more than three items,
   and keeps to its length limit, under [Overview](#overview); every topic section opens with a lead, under
   [Orientation before detail](#orientation-before-detail); the Glossary introduction keeps to its length limit; and no
@@ -792,10 +774,5 @@ Before acceptance, verify:
 - Boundary cases and failures are defined.
 - Worked examples and acceptance examples agree with the rules.
 - Related contracts and GDR tables are consistent.
-- The project owner has explicitly accepted the document.
 
-When accepted behavior changes, link to affected requirement sections by title and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.
-
-# Acceptance
-
-This acceptance applies to the conventions only; subject specifications retain their own statuses. Future changes must be presented as revisions rather than silently changing the accepted agreement.
+When specified behavior changes, link to affected requirement sections by title and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.

@@ -4,7 +4,6 @@
 | ----------- | ---------------------------------------------------------------------- |
 | Spec ID     | CONFIG                                                                 |
 | Family      | Foundation                                                             |
-| Status      | Draft                                                                  |
 | Audience    | Engine designer, UI designer, Implementer                              |
 | Owns        | Kinds of setting, Global configuration, and the configuration cascade. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)         |

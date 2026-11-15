@@ -21,7 +21,6 @@ import type {
   SpecificationCorpus,
   SpecificationFamily,
   SpecificationRecord,
-  SpecificationStatus,
 } from '../spec-linter/types.ts'
 import { computeFamilyArchitecture, FAMILY_ARCHITECTURE_PATH, renderFamilyArchitecture } from './family-architecture.ts'
 import { renderStackDiagram, STACK_DIAGRAM_PATH } from './stack-diagram.ts'
@@ -33,7 +32,6 @@ export const DERIVED_BASE_OUTPUT_PATHS = [
   'docs/derived/relationships.md',
 ] as const
 
-const STATUS_ORDER: readonly SpecificationStatus[] = ['Stub', 'Draft', 'Accepted', 'Superseded']
 const RELATIONSHIP_ORDER: readonly RelationshipKind[] = ['follows', 'refines', 'uses', 'implements', 'verifies']
 const PASSIVE_DESCRIPTIONS: Readonly<Record<RelationshipKind, string>> = {
   follows: 'A → B means A is followed by B.',
@@ -112,13 +110,6 @@ function renderCatalog(corpus: SpecificationCorpus): string {
     '- [Alphabetical glossary](glossary.md)',
     '- [Specification relationship graphs](relationships.md)',
     '',
-    '## Counts by status',
-    '',
-    markdownTable(
-      ['Status', 'Specifications'],
-      STATUS_ORDER.map((status) => [status, String(specifications.filter((item) => item.status === status).length)]),
-    ),
-    '',
     '## Counts by family',
     '',
     markdownTable(
@@ -133,11 +124,10 @@ function renderCatalog(corpus: SpecificationCorpus): string {
       `## ${family}`,
       '',
       markdownTable(
-        ['ID', 'Document', 'Status', 'Owns'],
+        ['ID', 'Document', 'Owns'],
         members.map((specification) => [
           specification.id,
           `[${escapeLinkText(specification.title)}](${relativeLink(outputPath, specification.path)})`,
-          specification.status,
           specification.owns,
         ]),
       ),
@@ -165,7 +155,6 @@ function renderGlossary(corpus: SpecificationCorpus): string {
         entry.term,
         rewriteInlineLinks(entry.definitionMarkdown, entry.ownerPath, outputPath),
         specificationLink(owner, outputPath, 'glossary'),
-        entry.ownerStatus,
       ],
     ]
   })
@@ -178,7 +167,7 @@ function renderGlossary(corpus: SpecificationCorpus): string {
     '',
     '[Back to the derived specification catalog](README.md)',
     '',
-    markdownTable(['Term', 'Definition', 'Owner', 'Owner status'], rows),
+    markdownTable(['Term', 'Definition', 'Owner'], rows),
   ].join('\n')}\n`
 }
 
@@ -437,7 +426,7 @@ function familySvgLabel(family: SpecificationFamily, scope: DiagramScope): strin
 }
 
 function specificationLabel(specification: SpecificationRecord): string {
-  return `${specification.id} — ${specification.title} (${specification.status})`
+  return `${specification.id} — ${specification.title}`
 }
 
 /** The internal edges that carry `kind`, each drawn as that kind alone. */

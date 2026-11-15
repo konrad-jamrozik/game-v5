@@ -87,7 +87,6 @@ function validCorpus(): SourceFile[] {
         '| --- | --- |',
         '| Spec ID | INDEX |',
         '| Family | Governance |',
-        '| Status | Draft |',
         '| Audience | Engine designer, Implementer |',
         '| Owns | Registry. |',
 
@@ -110,7 +109,6 @@ function validCorpus(): SourceFile[] {
         '| --- | --- |',
         '| Spec ID | CONV |',
         '| Family | Governance |',
-        '| Status | Draft |',
         '| Audience | Engine designer, Implementer |',
         '| Owns | Conventions. |',
 
@@ -139,7 +137,6 @@ function validCorpus(): SourceFile[] {
         '| --- | --- |',
         '| Spec ID | AAA |',
         '| Family | Foundation |',
-        '| Status | Draft |',
         '| Audience | Engine designer, Implementer |',
         '| Owns | Alpha rules. |',
 
@@ -179,7 +176,7 @@ function alphaInFamily(family: string): SourceFile[] {
       path: file.path.replace('foundation/alpha.md', `${directory}/alpha.md`),
       content:
         family === 'Implementation' && file.path.endsWith('/alpha.md')
-          ? content.replace('| Status | Draft |', '| Status | Draft |\n| Binding | Guidance |')
+          ? content.replace('| Owns | Alpha rules. |', '| Owns | Alpha rules. |\n| Binding | Guidance |')
           : content,
     }
   })
@@ -300,8 +297,8 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/foundation/alpha.md',
-      '| Status | Draft |',
-      '| Status | Draft |\n| Binding | Guidance |',
+      '| Owns | Alpha rules. |',
+      '| Owns | Alpha rules. |\n| Binding | Guidance |',
     )
     expect(diagnosticCodes(files)).toEqual(['SPEC114'])
   })
@@ -717,9 +714,14 @@ describe('specification linter', () => {
 
   test.each([
     [
-      'metadata status',
+      'Status metadata',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/foundation/alpha.md', '| Status | Draft |', '| Status | Final |'),
+        mutate(
+          files,
+          'docs/specs/foundation/alpha.md',
+          '| Owns | Alpha rules. |',
+          '| Owns | Alpha rules. |\n| Status | Draft |',
+        ),
       'SPEC105',
     ],
     [
@@ -733,8 +735,8 @@ describe('specification linter', () => {
         mutate(
           files,
           'docs/specs/foundation/alpha.md',
-          '| Status | Draft |',
-          '| Status | Draft |\n| Scope | Alpha rules |',
+          '| Owns | Alpha rules. |',
+          '| Owns | Alpha rules. |\n| Scope | Alpha rules |',
         ),
       'SPEC111',
     ],
@@ -825,17 +827,6 @@ describe('specification linter', () => {
         mutate(files, 'docs/specs/foundation/alpha.md', '[Rule](#rule): the same', '[Rule](#removed-rule): the same'),
       'SPEC606',
     ],
-    [
-      'accepted unresolved TODO',
-      (files: SourceFile[]) =>
-        mutate(
-          mutate(files, 'docs/specs/foundation/alpha.md', '| Status | Draft |', '| Status | Accepted |'),
-          'docs/specs/foundation/alpha.md',
-          'Contract.',
-          'TODO: Complete the contract.',
-        ),
-      'SPEC604',
-    ],
   ])('rejects %s', (_name, change, expectedCode) => {
     expect(diagnosticCodes(change(validCorpus()))).toContain(expectedCode)
   })
@@ -844,8 +835,8 @@ describe('specification linter', () => {
     const files = mutate(
       mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '# Alpha', '# ALPHA'),
       'docs/specs/foundation/alpha.md',
-      '| Status | Draft |',
-      '| Status | Final |',
+      '| Owns | Alpha rules. |',
+      '| Owns | Alpha rules. |\n| Status | Draft |',
     )
     const diagnostics = lintSpecifications({ files })
     expect(diagnostics).toEqual(
@@ -899,35 +890,16 @@ describe('specification linter', () => {
     const alpha = 'docs/specs/foundation/alpha.md'
     const acceptanceEnd = '[Rule](#rule): the same input has the same result.'
 
-    function withTodos(status: string, items: readonly string[]): SourceFile[] {
-      return mutate(
-        mutate(validCorpus(), alpha, '| Status | Draft |', `| Status | ${status} |`),
-        alpha,
-        acceptanceEnd,
-        lines([acceptanceEnd, '', '# TODOs', '', ...items]),
-      )
+    function withTodos(items: readonly string[]): SourceFile[] {
+      return mutate(validCorpus(), alpha, acceptanceEnd, lines([acceptanceEnd, '', '# TODOs', '', ...items]))
     }
 
     test.each([
-      ['Draft', ['- TODO: Choose the numeric representation.']],
-      ['Draft', ['- TODO (later): Skill gained from a Combat.']],
-      ['Stub', ['- TODO: Choose the numeric representation.', '- TODO (later): Skill gained from a Combat.']],
-      ['Accepted', ['- TODO (later): Skill gained from a Combat.']],
-    ])('accepts a %s specification with TODO items %j', (status, items) => {
-      expect(diagnosticCodes(withTodos(status, items))).toEqual([])
-    })
-
-    test('rejects an item beginning "TODO:" in an Accepted specification', () => {
-      expect(diagnosticCodes(withTodos('Accepted', ['- TODO: Choose the numeric representation.']))).toEqual([
-        'SPEC604',
-      ])
-    })
-
-    test('rejects a Stub specification without an item beginning "TODO:"', () => {
-      expect(diagnosticCodes(withTodos('Stub', ['- TODO (later): Skill gained from a Combat.']))).toEqual(['SPEC603'])
-      expect(diagnosticCodes(mutate(validCorpus(), alpha, '| Status | Draft |', '| Status | Stub |'))).toEqual([
-        'SPEC603',
-      ])
+      [['- TODO: Choose the numeric representation.']],
+      [['- TODO (later): Skill gained from a Combat.']],
+      [['- TODO: Choose the numeric representation.', '- TODO (later): Skill gained from a Combat.']],
+    ])('accepts a specification with TODO items %j', (items) => {
+      expect(diagnosticCodes(withTodos(items))).toEqual([])
     })
 
     test.each([
@@ -952,11 +924,11 @@ describe('specification linter', () => {
       ['prose', ['Choose the representation.', '', '- TODO: Choose the representation.']],
       ['no TODO item', ['- Choose the representation.']],
     ])('rejects a TODOs section with %s', (_name, items) => {
-      expect(diagnosticCodes(withTodos('Draft', items))).toContain('SPEC608')
+      expect(diagnosticCodes(withTodos(items))).toContain('SPEC608')
     })
 
     test('rejects an empty TODOs section', () => {
-      expect(diagnosticCodes(withTodos('Draft', []))).toEqual(['SPEC204'])
+      expect(diagnosticCodes(withTodos([]))).toEqual(['SPEC204'])
     })
 
     test('requires renaming Open decisions to TODOs', () => {
@@ -1176,7 +1148,12 @@ describe('specification linter', () => {
     expect(runSpecificationLint(validCorpus(), [], (message) => output.push(message))).toBe(0)
     expect(
       runSpecificationLint(
-        mutate(validCorpus(), 'docs/specs/foundation/alpha.md', '| Status | Draft |', '| Status | Final |'),
+        mutate(
+          validCorpus(),
+          'docs/specs/foundation/alpha.md',
+          '| Owns | Alpha rules. |',
+          '| Owns | Alpha rules. |\n| Status | Draft |',
+        ),
         [],
         (message) => output.push(message),
       ),

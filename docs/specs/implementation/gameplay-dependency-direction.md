@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------------------------------------------------- |
 | Spec ID     | DEPDIR                                                                                                   |
 | Family      | Implementation                                                                                           |
-| Status      | Draft                                                                                                    |
 | Binding     | Guidance                                                                                                 |
 | Audience    | Implementer                                                                                              |
 | Owns        | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |

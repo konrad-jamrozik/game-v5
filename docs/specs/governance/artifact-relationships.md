@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------------------------- |
 | Spec ID     | REL                                                                              |
 | Family      | Governance                                                                       |
-| Status      | Draft                                                                            |
 | Audience    | Engine designer, Implementer                                                     |
 | Owns        | Artifact relationship terminology, direction, inventories, and graph validation. |
 | Conventions | [Specification Conventions](spec-conventions.md)                                 |
@@ -18,7 +17,7 @@ Relationship kind, e.g. `uses` or `refines`, which says what the Dependent takes
 relationships are recorded in mirrored lists, and the relationships of each kind form a graph that is checked for
 cycles.
 
-A relationship records a connection, not a judgment: it does not change an artifact's status or accept a proposed rule,
+A relationship records a connection, not a judgment: it does not accept a proposed rule,
 and it proves nothing about an implementation or a test run.
 
 # Relationships
@@ -109,8 +108,8 @@ A refinement does not need an additional uses entry merely because it inherits t
 both Relationship kinds for a pair only when the prose identifies separate Relationship kinds. A document may refine multiple
 parents only when it identifies additional detail about each parent's subject.
 
-A Stub may declare an intended refinement when its prose names the parent contract and the detail its TODOs will
-provide. This records a planned refinement, not completed detail or acceptance. Preserve unresolved decisions and
+A specification may declare an intended refinement when its prose names the parent contract and the detail its TODOs
+will provide. This records a planned refinement, not completed detail. Preserve unresolved decisions and
 reassess the relationship when actual rules replace the TODOs. Merely referring to a future document is not enough.
 
 # Links that create no relationship
@@ -151,7 +150,7 @@ Every retained cycle must be documented in the informative [Specification relati
 register. Review the combined explicit uses/refines graph, including cycles longer than two edges, and separately
 check mixed cycles involving implicit follows relationships. Each cyclic component must enumerate its internal edges,
 their independently supplied meanings, their supporting contract passages, and a future removal approach with an
-exit criterion. Stub-based justifications remain provisional. The register reports relationships; it does not create
+exit criterion. Justifications that rest on TODOs remain provisional. The register reports relationships; it does not create
 them or authorize future contract changes. Links that create no relationship are not part of any graph.
 
 # Recording relationships
@@ -174,17 +173,16 @@ Adding, changing, or removing an explicit relationship must update both entries.
 documentation defect. Changes must preserve rule ownership and requirement traceability. Update the cycle register
 whenever a change introduces, alters, or removes a cycle.
 
-# Status and evidence
+# Evidence
 
-A relationship must not promote a Stub or Draft to Accepted. A refinement must
-identify the parent subject or behavior, the additional detail, and preservation of the Dependency's constraints.
-An intended Stub refinement must explicitly identify the detail still to be specified. An `implements` or `verifies` relationship must not be presented as evidence
+A refinement must identify the parent subject or behavior, the additional detail, and preservation of the Dependency's constraints.
+An intended refinement must explicitly identify the detail still to be specified. An `implements` or `verifies` relationship must not be presented as evidence
 that implementation is complete or tests pass.
 
 # Adoption
 
 New and existing registered specifications must record explicit relationships as defined here and apply the
-implicit relationships. Before acceptance, resolve relationship TODOs that affect the contract, verify mirrored entries,
+implicit relationships. Resolve relationship TODOs that affect the contract, verify mirrored entries,
 check links, and validate the graphs. Do not invent implementation or test relationships for planned artifacts.
 
 # Edge cases and failure behavior
@@ -199,7 +197,7 @@ check links, and validate the graphs. Do not invent implementation or test relat
 | One mirrored entry is missing or disagrees                     | Treat the inventory as defective and update both entries                                                                |
 | No implementation or test has been identified                  | Do not invent an `implements` or `verifies` relationship                                                                |
 | A requirement moves                                            | Update both entries, links, and requirement references in contract prose                                                |
-| A referenced specification remains a Stub                      | Preserve its status and record concrete unresolved contract work without inferring missing rules                        |
+| A referenced specification still has `TODO:` items             | Record concrete unresolved contract work without inferring missing rules                                                |
 | A Dependency links to a Dependent only to say who owns a topic | Record nothing; it is an owner link under [Links that create no relationship](#links-that-create-no-relationship)       |
 | A work-plan row orders reviews                                 | Record nothing; it is process information under [Links that create no relationship](#links-that-create-no-relationship) |
 
@@ -208,19 +206,19 @@ check links, and validate the graphs. Do not invent implementation or test relat
 ## Classification cases
 
 These cases exercise [Recording relationships](#recording-relationships), [Direction](#direction), and
-[Status and evidence](#status-and-evidence); they add no relationships to the named documents. The table is exhaustive.
+[Evidence](#evidence); they add no relationships to the named documents. The table is exhaustive.
 
-| Case                                                                                                                            | Expected classification and reason                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                   | Uses Campaign Instances; it applies the Campaign instance structure without elaborating its meaning |
-| Agents supplies the lifecycle of the Agent described by [Agent](../mechanics/domain-model.md#glossary)                          | Refines Domain Model; it adds detail to the same concept                                            |
-| Combat rounds a damage value with a rounding operation that Numbers defines                                                     | Uses Numbers; applying a rounding operation does not elaborate its meaning                          |
-| Timeline preserves references under [References](../foundation/campaign-instances.md#references) while restoring Campaign state | Uses Campaign Instances; satisfying the reference invariant alone is not refinement                 |
-| Saves persists the Timeline whose navigation Timeline defines                                                                   | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
-| Saves lists Campaign saves through an operation that [API hierarchy](../foundation/engine-contract.md#api-hierarchy) names      | Uses Engine Contract; applying an existing operation does not elaborate it                          |
-| A Stub names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields   | Intended refinement is permitted; the fields remain unspecified and status stays Stub               |
-| A document merely says it must obey [Campaign Instances](../foundation/campaign-instances.md)                                   | Uses, not Refines; no added detail about the identity convention is identified                      |
-| A refinement duplicates the same reliance as a Uses entry                                                                       | Keep only Refines; two Relationship kinds require distinct reliance                                 |
+| Case                                                                                                                                   | Expected classification and reason                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and GDR                                                                          | Uses Campaign Instances; it applies the Campaign instance structure without elaborating its meaning |
+| Agents supplies the lifecycle of the Agent described by [Agent](../mechanics/domain-model.md#glossary)                                 | Refines Domain Model; it adds detail to the same concept                                            |
+| Combat rounds a damage value with a rounding operation that Numbers defines                                                            | Uses Numbers; applying a rounding operation does not elaborate its meaning                          |
+| Timeline preserves references under [References](../foundation/campaign-instances.md#references) while restoring Campaign state        | Uses Campaign Instances; satisfying the reference invariant alone is not refinement                 |
+| Saves persists the Timeline whose navigation Timeline defines                                                                          | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
+| Saves lists Campaign saves through an operation that [API hierarchy](../foundation/engine-contract.md#api-hierarchy) names             | Uses Engine Contract; applying an existing operation does not elaborate it                          |
+| A specification names [Information boundary](../foundation/engine-contract.md#information-boundary) and TODOs for exact exposed fields | Intended refinement is permitted; the fields remain unspecified                                     |
+| A document merely says it must obey [Campaign Instances](../foundation/campaign-instances.md)                                          | Uses, not Refines; no added detail about the identity convention is identified                      |
+| A refinement duplicates the same reliance as a Uses entry                                                                              | Keep only Refines; two Relationship kinds require distinct reliance                                 |
 
 ## Complete coverage of Relationship kinds
 

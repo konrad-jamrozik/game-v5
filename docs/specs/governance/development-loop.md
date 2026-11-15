@@ -4,7 +4,6 @@
 | ----------- | --------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | LOOP                                                                                                            |
 | Family      | Governance                                                                                                      |
-| Status      | Draft                                                                                                           |
 | Audience    | Game designer, Implementer                                                                                      |
 | Owns        | How the game is developed in a loop between specifications and Implementations, and the LLM skills that run it. |
 | Conventions | [Specification conventions](spec-conventions.md)                                                                |

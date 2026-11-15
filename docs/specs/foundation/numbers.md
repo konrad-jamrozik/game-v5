@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | NUMBERS                                                                                                                                      |
 | Family      | Foundation                                                                                                                                   |
-| Status      | Draft                                                                                                                                        |
 | Audience    | Engine designer, Implementer                                                                                                                 |
 | Owns        | That every stored quantity is a whole number, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                               |

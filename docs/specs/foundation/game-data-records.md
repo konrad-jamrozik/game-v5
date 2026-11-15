@@ -4,7 +4,6 @@
 | ----------- | --------------------------------------------------------------------------------------------------------- |
 | Spec ID     | GDR                                                                                                       |
 | Family      | Foundation                                                                                                |
-| Status      | Draft                                                                                                     |
 | Audience    | Engine designer, Content designer, Implementer                                                            |
 | Owns        | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                            |

@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------------------------------------------------ |
 | Spec ID     | GHPAGES                                                                                                            |
 | Family      | Implementation                                                                                                     |
-| Status      | Draft                                                                                                              |
 | Binding     | Guidance                                                                                                           |
 | Audience    | Engine designer, Implementer                                                                                       |
 | Owns        | Guidance on publishing an Implementation to a public GitHub repository that checks and deploys it to GitHub Pages. |

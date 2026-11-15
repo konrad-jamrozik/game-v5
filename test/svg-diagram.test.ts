@@ -30,7 +30,7 @@ function kinds(...values: RelationshipKind[]): ReadonlySet<RelationshipKind> {
 
 function specification(id: string, family: SpecificationRecord['family']): SpecificationRecord {
   const directory = family.toLowerCase()
-  return { id, family, title: `Title ${id}`, status: 'Stub', owns: 'Rules.', path: `docs/specs/${directory}/${id}.md` }
+  return { id, family, title: `Title ${id}`, owns: 'Rules.', path: `docs/specs/${directory}/${id}.md` }
 }
 
 function relationship(dependencyId: string, dependentId: string, kind: RelationshipKind): RelationshipRecord {
@@ -223,7 +223,7 @@ describe('family SVG diagrams', () => {
     for (const path of files.keys()) expect(isGeneratedDiagramFilePath(path)).toBe(true)
     const uses = files.get('docs/images/mechanics-family-within-uses.svg') ?? ''
     expect(uses).toContain('LAYER 3')
-    expect(uses).toContain('TOP — Title TOP (Stub)')
+    expect(uses).toContain('TOP — Title TOP')
     expect(uses).not.toContain(' family<')
     expect(uses).not.toContain('class="edge edge-refines"')
     const refines = files.get('docs/images/mechanics-family-within-refines.svg') ?? ''

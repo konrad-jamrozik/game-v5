@@ -4,7 +4,6 @@
 | ----------- | ---------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | LEAD                                                                                                                   |
 | Family      | Mechanics                                                                                                              |
-| Status      | Draft                                                                                                                  |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                            |
 | Owns        | What a Lead GDR describes, Lead progression and its recording, Lead availability, and the effect of completing a Lead. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                         |

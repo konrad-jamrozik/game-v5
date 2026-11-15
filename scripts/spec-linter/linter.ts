@@ -45,13 +45,11 @@ import type {
   SpecificationCorpus,
   SpecificationFamily,
   SpecificationRecord,
-  SpecificationStatus,
 } from './types.ts'
 
 const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
 const CONVENTIONS_PATH = 'docs/specs/governance/spec-conventions.md'
-const ALLOWED_STATUSES: ReadonlySet<string> = new Set(['Stub', 'Draft', 'Accepted', 'Superseded'])
 const ALLOWED_BINDINGS: ReadonlySet<string> = new Set(['Guidance', 'Mandatory'])
 const PERSONAS = [
   'Game designer',
@@ -97,7 +95,6 @@ interface Specification {
   readonly metadata: Metadata
   readonly id: string | undefined
   readonly family: string | undefined
-  readonly status: string | undefined
   readonly title: string
 }
 
@@ -121,10 +118,6 @@ interface RelationshipRow {
 
 function isSpecificationFamily(value: string | undefined): value is SpecificationFamily {
   return value !== undefined && ALLOWED_FAMILIES.has(value)
-}
-
-function isSpecificationStatus(value: string | undefined): value is SpecificationStatus {
-  return value !== undefined && ALLOWED_STATUSES.has(value)
 }
 
 interface GlossaryTerm {
@@ -257,7 +250,6 @@ function parseInput(input: LintInput, diagnostics: Diagnostic[]): ParsedInput {
       metadata,
       id: metadata.values.get('Spec ID'),
       family: metadata.values.get('Family'),
-      status: metadata.values.get('Status'),
       title: first && isHeading(first) ? headingText(first) : '',
     })
   }
@@ -316,13 +308,13 @@ function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void 
       matches.push(specification)
       metadataIds.set(specification.id, matches)
     }
-    if (!specification.status || !ALLOWED_STATUSES.has(specification.status)) {
+    if (specification.metadata.values.has('Status')) {
       addDiagnostic(
         diagnostics,
         specification.path,
         specification.metadata.table,
         'SPEC105',
-        'Metadata Status must be Stub, Draft, Accepted, or Superseded.',
+        'Specifications have no status; remove the Status metadata row.',
       )
     }
     if (!specification.family || !ALLOWED_FAMILIES.has(specification.family)) {
@@ -1364,7 +1356,7 @@ function validateSectionReferences(parsed: ParsedInput, diagnostics: Diagnostic[
   }
 }
 
-function validateLifecycleAndSections(parsed: ParsedInput, diagnostics: Diagnostic[], includeDerived = false): void {
+function validateTodosAndSections(parsed: ParsedInput, diagnostics: Diagnostic[], includeDerived = false): void {
   for (const specification of parsed.specifications) {
     const todos = todoNodes(specification)
     for (const todo of todos) {
@@ -1378,27 +1370,6 @@ function validateLifecycleAndSections(parsed: ParsedInput, diagnostics: Diagnost
       )
     }
     validateTodosSection(specification, todos, diagnostics)
-    if (specification.status === 'Stub' && !todos.some((todo) => todo.blocking && todo.inTodosSection)) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        specification.metadata.table,
-        'SPEC603',
-        `Stub specifications must contain at least one item beginning "TODO:" in the ${TODOS_HEADING} section.`,
-      )
-    }
-    if (specification.status === 'Accepted') {
-      for (const todo of todos) {
-        if (!todo.blocking) continue
-        addDiagnostic(
-          diagnostics,
-          specification.path,
-          todo.node,
-          'SPEC604',
-          'Accepted specifications must not contain items beginning "TODO:"; only "TODO (later):" items are allowed.',
-        )
-      }
-    }
   }
   validateSectionReferences(parsed, diagnostics, includeDerived)
 }
@@ -1427,19 +1398,13 @@ function buildCorpus(
   const specifications: SpecificationRecord[] = []
   for (const specification of parsed.specifications) {
     const entry = entriesByPath.get(specification.path)
-    if (
-      !entry ||
-      !specification.id ||
-      !isSpecificationFamily(specification.family) ||
-      !isSpecificationStatus(specification.status)
-    ) {
+    if (!entry || !specification.id || !isSpecificationFamily(specification.family)) {
       continue
     }
     specifications.push({
       id: specification.id,
       family: specification.family,
       title: specification.title,
-      status: specification.status,
       owns: entry.owns,
       path: specification.path,
     })
@@ -1456,7 +1421,6 @@ function buildCorpus(
       definitionMarkdown: entry.definitionMarkdown,
       ownerId: owner.id,
       ownerPath: owner.path,
-      ownerStatus: owner.status,
     })
   }
   glossary.sort(
@@ -1521,7 +1485,7 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   validateFamilyOverviews(parsed, diagnostics)
   const relationships = validateRelationships(parsed.specifications, diagnostics)
   const glossary = validateTerminology(parsed.specifications, diagnostics)
-  validateLifecycleAndSections(parsed, diagnostics)
+  validateTodosAndSections(parsed, diagnostics)
   return {
     diagnostics: diagnostics.toSorted(compareDiagnostics),
     corpus: buildCorpus(parsed, entries, glossary, relationships),
@@ -1535,7 +1499,7 @@ export function lintSpecifications(input: LintInput): readonly Diagnostic[] {
 export function lintSectionReferences(input: LintInput, includeDerived = false): readonly Diagnostic[] {
   const diagnostics: Diagnostic[] = []
   const parsed = parseInput(input, diagnostics)
-  validateLifecycleAndSections(parsed, diagnostics, includeDerived)
+  validateTodosAndSections(parsed, diagnostics, includeDerived)
   return diagnostics.toSorted(compareDiagnostics)
 }
 

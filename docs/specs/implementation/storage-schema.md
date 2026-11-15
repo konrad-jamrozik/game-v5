@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------------------------- |
 | Spec ID     | SCHEMA                                                                           |
 | Family      | Implementation                                                                   |
-| Status      | Stub                                                                             |
 | Binding     | Guidance                                                                         |
 | Audience    | Implementer                                                                      |
 | Owns        | Non-behavioural guidance on the physical layout of everything the game persists. |

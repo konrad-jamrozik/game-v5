@@ -4,7 +4,6 @@
 | -------- | ------------------------------------------------------------------------ |
 | Spec ID  | INDEX                                                                    |
 | Family   | Governance                                                               |
-| Status   | Draft                                                                    |
 | Audience | Engine designer, Content designer, UI designer, AI designer, Implementer |
 | Owns     | Specification registration, navigation, and ownership summaries.         |
 
@@ -25,12 +24,12 @@ These documents give the context every specification assumes: what the game is m
 written and related, and how the work on them proceeds.
 
 - [Game Design Brief](../game-design-brief.md): strategic intent and architectural constraints.
-- [Specification conventions](governance/spec-conventions.md): accepted layout, precision requirements, ownership, and lifecycle.
+- [Specification conventions](governance/spec-conventions.md): layout, precision requirements, ownership, and how specifications change.
 - [Artifact Relationships](governance/artifact-relationships.md): definitions of `follows`, `refines`, `uses`,
   `implements`, and `verifies`, with direction, inventory rules, and examples for all artifacts.
 - [Specification relationship cycles](../spec-relationship-cycles.md): informative register of retained cycles,
   their contract meanings, and future removal criteria.
-- [Specification work plan and backlog](governance/work-plan.md): accepted review batches, parallel tracks, checkpoints, and current work state.
+- [Specification work plan and backlog](governance/work-plan.md): review batches, parallel tracks, checkpoints, and current work state.
 - [Outstanding work items](governance/work-todos.md): known issues in the specifications awaiting scheduling, each with its affected batches.
 
 # Family overviews
@@ -71,11 +70,11 @@ on by anything in its rectangle is drawn in the top row, nearest the specificati
 
 Each specification registers itself through its own metadata table, including its Spec ID, Family, and an Owns
 summary of what it owns. The generated [derived specification catalog](../derived/README.md) lists every
-specification by Family with its ID, title, status, and Owns summary, and links the derived glossary and relationship
+specification by Family with its ID, title, and Owns summary, and links the derived glossary and relationship
 graphs.
 
 # Work plan
 
-The [work plan and backlog](governance/work-plan.md) sets the accepted authoring sequence and review checkpoints. Start with
+The [work plan and backlog](governance/work-plan.md) sets the authoring sequence and review checkpoints. Start with
 the batch 1 specifications; grow GDRs alongside the reviewed mechanics. See that document for
 the full sequence, current work states, and treatment of cross-specification dependencies.

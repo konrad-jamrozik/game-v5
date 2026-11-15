@@ -4,7 +4,6 @@
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | ENDING                                                                                                                                                           |
 | Family      | Mechanics                                                                                                                                                        |
-| Status      | Draft                                                                                                                                                            |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                      |
 | Owns        | Panic and how this turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                                   |

@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------------------------------------ |
 | Spec ID     | SAVES                                                                                                  |
 | Family      | Foundation                                                                                             |
-| Status      | Draft                                                                                                  |
 | Audience    | Engine designer, UI designer, Implementer                                                              |
 | Owns        | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                         |

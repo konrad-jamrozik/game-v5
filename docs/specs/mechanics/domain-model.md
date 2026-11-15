@@ -4,7 +4,6 @@
 | ----------- | ----------------------------------------------------------------------------------------- |
 | Spec ID     | DOM                                                                                       |
 | Family      | Mechanics                                                                                 |
-| Status      | Draft                                                                                     |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                               |
 | Owns        | Game concepts, how they relate, and the structural invariants that span several concepts. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                            |

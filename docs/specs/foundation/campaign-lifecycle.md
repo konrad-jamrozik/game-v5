@@ -4,7 +4,6 @@
 | ----------- | ---------------------------------------------------------------------------------------------------------- |
 | Spec ID     | LIFE                                                                                                       |
 | Family      | Foundation                                                                                                 |
-| Status      | Draft                                                                                                      |
 | Audience    | Engine designer, UI designer, AI designer, Implementer                                                     |
 | Owns        | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                             |

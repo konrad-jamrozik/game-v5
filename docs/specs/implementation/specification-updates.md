@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | UPDATES                                                                                                                    |
 | Family      | Implementation                                                                                                             |
-| Status      | Draft                                                                                                                      |
 | Binding     | Guidance                                                                                                                   |
 | Audience    | Engine designer, Implementer                                                                                               |
 | Owns        | Non-behavioural guidance for bringing an Implementation from its Specification baseline to a later Specification revision. |

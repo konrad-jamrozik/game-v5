@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------ |
 | Spec ID     | CINST                                                                    |
 | Family      | Foundation                                                               |
-| Status      | Draft                                                                    |
 | Audience    | Engine designer, Content designer, Implementer                           |
 | Owns        | How every thing in a Campaign's world is modeled as a Campaign instance. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)           |

@@ -23,8 +23,6 @@ function sampleCorpus(): SpecificationCorpus {
         id: 'ZZZ',
         family: 'Mechanics',
         title: 'Zulu',
-        status: 'Stub',
-
         owns: 'Zulu rules.',
         path: 'docs/specs/mechanics/zulu.md',
       },
@@ -32,8 +30,6 @@ function sampleCorpus(): SpecificationCorpus {
         id: 'INDEX',
         family: 'Governance',
         title: 'Specification Index',
-        status: 'Draft',
-
         owns: 'Registration.',
         path: 'docs/specs/README.md',
       },
@@ -41,8 +37,6 @@ function sampleCorpus(): SpecificationCorpus {
         id: 'AAA',
         family: 'Foundation',
         title: 'Alpha "Quoted" & More',
-        status: 'Draft',
-
         owns: 'Alpha rules.',
         path: 'docs/specs/foundation/alpha.md',
       },
@@ -50,8 +44,6 @@ function sampleCorpus(): SpecificationCorpus {
         id: 'CONV',
         family: 'Governance',
         title: 'Conventions',
-        status: 'Accepted',
-
         owns: 'Writing conventions.',
         path: 'docs/specs/governance/spec-conventions.md',
       },
@@ -62,7 +54,6 @@ function sampleCorpus(): SpecificationCorpus {
         definitionMarkdown: 'Last definition.',
         ownerId: 'ZZZ',
         ownerPath: 'docs/specs/mechanics/zulu.md',
-        ownerStatus: 'Stub',
       },
       {
         term: 'alpha term',
@@ -70,7 +61,6 @@ function sampleCorpus(): SpecificationCorpus {
           'Uses **strong rules** from [Conventions](../governance/spec-conventions.md#glossary) and [Rule](#rule).',
         ownerId: 'AAA',
         ownerPath: 'docs/specs/foundation/alpha.md',
-        ownerStatus: 'Draft',
       },
     ],
     relationships: [
@@ -131,9 +121,8 @@ describe('derived specification renderer', () => {
   test('renders catalog fields, grouping, sorting, and counts', async () => {
     const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
     const catalog = outputs.get('docs/derived/README.md') ?? ''
-    expect(catalog).toContain('| Accepted   | 1              |')
     expect(catalog).toContain('| Governance     | 2              |')
-    expect(catalog).toContain('| AAA | [Alpha "Quoted" & More](../specs/foundation/alpha.md) | Draft  | Alpha rules. |')
+    expect(catalog).toContain('| AAA | [Alpha "Quoted" & More](../specs/foundation/alpha.md) | Alpha rules. |')
     expect(catalog.indexOf('| CONV')).toBeLessThan(catalog.indexOf('| INDEX'))
     expect(catalog).not.toContain('Scope')
     expect(catalog.indexOf('## Governance')).toBeLessThan(catalog.indexOf('## Foundation'))
@@ -166,7 +155,7 @@ describe('derived specification renderer', () => {
     const usesDiagram = diagrams.get('docs/images/uses-all.svg') ?? ''
     expect(refines).toContain('A → B means A is refined by B.')
     expect(refines).toContain('![Refines relationships](../../images/refines-all.svg)')
-    expect(refinesDiagram).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More (Draft)')
+    expect(refinesDiagram).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More')
     expect(arrows(refinesDiagram, 'refines')).toBe(1)
     expect(uses).toContain('A → B means A is used by B.')
     expect(uses).toContain('![Uses relationships](../../images/uses-all.svg)')
@@ -195,8 +184,6 @@ describe('derived specification renderer', () => {
           id: 'ENG',
           family: 'Foundation',
           title: 'Engine Contract',
-          status: 'Draft',
-
           owns: 'Engine behavior.',
           path: 'docs/specs/foundation/engine-contract.md',
         },
@@ -221,9 +208,9 @@ describe('derived specification renderer', () => {
     expect(refines.match(/!\[Refines relationships/g)).toHaveLength(1)
     expect(refines).toContain('(../../images/refines-all.svg)')
     const all = diagrams.get('docs/images/refines-all.svg') ?? ''
-    expect(all).toContain('ZZZ — Zulu (Stub)')
-    expect(all).toContain('ENG — Engine Contract (Draft)')
-    expect(all).toContain('CONV — Conventions (Accepted)')
+    expect(all).toContain('ZZZ — Zulu')
+    expect(all).toContain('ENG — Engine Contract')
+    expect(all).toContain('CONV — Conventions')
     expect(diagrams.has('docs/images/refines-engine-contract.svg')).toBe(false)
   })
 
@@ -237,8 +224,6 @@ describe('derived specification renderer', () => {
           id: 'DOM',
           family: 'Foundation',
           title: 'Domain Model',
-          status: 'Draft',
-
           owns: 'Shared domain.',
           path: 'docs/specs/foundation/domain-model.md',
         },
@@ -246,8 +231,6 @@ describe('derived specification renderer', () => {
           id: 'REL',
           family: 'Governance',
           title: 'Artifact Relationships',
-          status: 'Draft',
-
           owns: 'Relationship rules.',
           path: 'docs/specs/governance/artifact-relationships.md',
         },
@@ -282,10 +265,10 @@ describe('derived specification renderer', () => {
     expect(uses.indexOf('(../../images/uses-governance.svg)')).toBeGreaterThan(governanceStart)
     const game = diagrams.get('docs/images/uses-game.svg') ?? ''
     const governance = diagrams.get('docs/images/uses-governance.svg') ?? ''
-    expect(game).toContain('DOM — Domain Model (Draft)')
+    expect(game).toContain('DOM — Domain Model')
     expect(game).not.toContain('REL — ')
-    expect(governance).toContain('REL — Artifact Relationships (Draft)')
-    expect(governance).toContain('CONV — Conventions (Accepted)')
+    expect(governance).toContain('REL — Artifact Relationships')
+    expect(governance).toContain('CONV — Conventions')
     expect(governance).not.toContain('DOM — ')
   })
 
@@ -331,7 +314,7 @@ describe('family overview diagrams', () => {
     expect(across.match(/>Mechanics family</g)).toHaveLength(2)
     expect(across).toContain('class="edge edge-both"')
     expect(across).toContain('class="edge edge-uses"')
-    expect(across).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More (Draft)')
+    expect(across).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More')
     expect(across).not.toContain('CONV')
     expect(across).not.toContain('Governance family')
   })
@@ -347,7 +330,6 @@ describe('family overview diagrams', () => {
             id: 'BBB',
             family: 'Foundation',
             title: 'Beta',
-            status: 'Draft',
             owns: 'Beta rules.',
             path: 'docs/specs/foundation/beta.md',
           },
@@ -369,7 +351,7 @@ describe('family overview diagrams', () => {
     )
     const within = files.get('docs/images/foundation-family-within-uses.svg') ?? ''
     expect(within).toContain('AAA — ')
-    expect(within).toContain('BBB — Beta (Draft)')
+    expect(within).toContain('BBB — Beta')
     expect(within).toContain('LAYER 2')
     expect(within).not.toContain('Mechanics family')
     const across = files.get(acrossPath) ?? ''

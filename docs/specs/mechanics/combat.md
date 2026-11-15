@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Spec ID     | COMBAT                                                                                                                                                                         |
 | Family      | Mechanics                                                                                                                                                                      |
-| Status      | Draft                                                                                                                                                                          |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                    |
 | Owns        | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating, Combat outcomes, and the Combat report. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                                                 |

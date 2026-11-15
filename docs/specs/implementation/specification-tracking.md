@@ -4,7 +4,6 @@
 | ----------- | --------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | TRACK                                                                                                                       |
 | Family      | Implementation                                                                                                              |
-| Status      | Draft                                                                                                                       |
 | Binding     | Mandatory                                                                                                                   |
 | Audience    | Engine designer, Implementer                                                                                                |
 | Owns        | The Specification baseline and Specification map records that tie each Implementation to the specifications it conforms to. |

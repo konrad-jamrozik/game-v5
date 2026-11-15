@@ -4,7 +4,6 @@
 | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | BASICAI                                                                                                                 |
 | Family      | Autopilot AIs                                                                                                           |
-| Status      | Draft                                                                                                                   |
 | Audience    | AI designer, Implementer                                                                                                |
 | Owns        | The goals the Basic Autopilot AI pursues, how it prioritizes them within a turn, and what it deliberately leaves alone. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                          |

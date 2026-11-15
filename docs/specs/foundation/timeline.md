@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | Spec ID     | TIMELINE                                                                                                                             |
 | Family      | Foundation                                                                                                                           |
-| Status      | Draft                                                                                                                                |
 | Audience    | Engine designer, UI designer, Implementer                                                                                            |
 | Owns        | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                       |

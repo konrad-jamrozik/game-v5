@@ -4,7 +4,6 @@
 | ----------- | --------------------------------------------------------------------------------------------------------- |
 | Spec ID     | FEEDBACK                                                                                                  |
 | Family      | Implementation                                                                                            |
-| Status      | Draft                                                                                                     |
 | Binding     | Mandatory                                                                                                 |
 | Audience    | Engine designer, Implementer                                                                              |
 | Owns        | The feedback files of Specification problems and Implementation decisions that each Implementation keeps. |

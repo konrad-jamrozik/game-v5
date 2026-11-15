@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------------------------------------ |
 | Spec ID     | AUTO                                                                                                   |
 | Family      | Foundation                                                                                             |
-| Status      | Draft                                                                                                  |
 | Audience    | Engine designer, UI designer, AI designer, Implementer                                                 |
 | Owns        | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                         |

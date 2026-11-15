@@ -4,7 +4,6 @@
 | ----------- | ----------------------------------------------------------------------------------------- |
 | Spec ID     | DEV                                                                                       |
 | Family      | Foundation                                                                                |
-| Status      | Stub                                                                                      |
 | Audience    | Engine designer, Implementer                                                              |
 | Owns        | Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                            |

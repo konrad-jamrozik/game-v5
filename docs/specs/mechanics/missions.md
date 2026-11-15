@@ -4,7 +4,6 @@
 | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec ID     | MISSION                                                                                                                                                                                             |
 | Family      | Mechanics                                                                                                                                                                                           |
-| Status      | Draft                                                                                                                                                                                               |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                         |
 | Owns        | What a Mission site and a Mission have, Mission site creation, the Mission site and Mission lifecycles, the deployAgents action, Mission resolution, expiry, and the consequences for the Campaign. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                                                                      |

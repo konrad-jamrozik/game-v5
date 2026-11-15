@@ -4,7 +4,6 @@
 | ----------- | ------------------------------------------------------------------------------------------------ |
 | Spec ID     | WEB                                                                                              |
 | Family      | UI                                                                                               |
-| Status      | Stub                                                                                             |
 | Audience    | UI designer, Implementer                                                                         |
 | Owns        | Guidance on the screens of the browser user interface and what each shows the Player by default. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                   |

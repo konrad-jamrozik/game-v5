@@ -4,7 +4,6 @@
 | ----------- | -------------------------------------------------------------- |
 | Spec ID     | STACK                                                          |
 | Family      | Implementation                                                 |
-| Status      | Draft                                                          |
 | Binding     | Guidance                                                       |
 | Audience    | Implementer                                                    |
 | Owns        | A suggested technology stack for a browser Implementation.     |

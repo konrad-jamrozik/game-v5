@@ -39,7 +39,7 @@ question silently.
    entries about one formula, so one decision covers them.
 6. Make the accepted specification changes under the repository's `AGENTS.md` and
    [Specification Conventions](../../../docs/specs/governance/spec-conventions.md), run `npm run check`, and commit and
-   push as `AGENTS.md` directs, including its exception for Accepted specifications.
+   push as `AGENTS.md` directs, including its exceptions.
 7. For each declined problem, set its Resolution in the Implementation's feedback file to Declined, naming this repository's
    reviewed commit by its full hash and the user's reason, and commit that in the Implementation directory without
    adding a Git remote. Leave fixed problems Open: the next run of the `update-implementation` skill applies the

@@ -4,7 +4,6 @@
 | ----------- | ---------------------------------------------------------------------------- |
 | Spec ID     | CSTATE                                                                       |
 | Family      | Foundation                                                                   |
-| Status      | Accepted                                                                     |
 | Audience    | Engine designer, Content designer, Implementer                               |
 | Owns        | What Campaign state is made of, and how Campaign initialization produces it. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)               |
