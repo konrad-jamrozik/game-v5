@@ -22,7 +22,6 @@ tooling around it.
 
 - Uses [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 - Used by [Implementation Records](implementation-records.md)
-- Used by [Implementation Scaffold](implementation-scaffold.md)
 
 # Glossary
 

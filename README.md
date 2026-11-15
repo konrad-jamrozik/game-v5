@@ -7,8 +7,8 @@ renderer, state management, and persistence are left to each implementation.
 
 Each implementation lives in its own directory under `implementations/`, which it treats as its repository root, as
 required by [Implementation Placement](docs/specs/implementation/implementation-placement.md). The repository root has
-no game code, and its tooling, hooks, and CI ignore `implementations/`. A new implementation may start from
-[Implementation Scaffold](docs/specs/implementation/implementation-scaffold.md).
+no game code, and its tooling, hooks, and CI ignore `implementations/`. A browser implementation may consider the
+technology stack suggested by [Implementation Scaffold](docs/specs/implementation/implementation-scaffold.md).
 
 ## Design and continuation
 

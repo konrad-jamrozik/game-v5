@@ -26,7 +26,7 @@ requires each implementation to keep a record of the problems met in the specifi
 ## Implementation Scaffold
 
 [Implementation Scaffold](implementation-scaffold.md), Guidance, answers _what can a new implementation start from?_ It
-lists the files of a minimal Vite and TypeScript browser page.
+suggests the technology stack of game-ts for an implementation that uses a browser as its GUI.
 
 ## Gameplay Dependency Direction
 
@@ -40,9 +40,8 @@ implementers toward one physical layout for Game storage.
 
 # How they relate
 
-Implementation Records and Implementation Scaffold use Implementation Placement: the records are kept in its
-Implementation directory, and the scaffold fills it. Implementation
-Placement uses Bootstrap GDRs from the Content family, whose files each implementation copies. Gameplay Dependency
+Implementation Records uses Implementation Placement: the records are kept in its Implementation directory.
+Implementation Placement uses Bootstrap GDRs from the Content family, whose files each implementation copies. Gameplay Dependency
 Direction and Storage Schema use the Foundation family: Gameplay Dependency Direction uses its vocabulary and
 determinism guarantees, and Storage Schema uses its data ownership, Campaign save, and Timeline contracts. Gameplay
 Dependency Direction also uses Web UI from the UI family and Basic Autopilot AI from the Autopilot AIs family, whose
