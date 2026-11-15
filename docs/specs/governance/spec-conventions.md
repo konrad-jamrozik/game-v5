@@ -32,6 +32,7 @@ What a specification is and how it is identified and classified.
 | Specification | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records (GDRs), governance, or planned specification work. |
 | Registered    | Declared by its own metadata table, with a stable Spec ID, in a Markdown file under `docs/specs` that is not a Family overview.                                 |
 | Family        | A specification's single ownership category, declared in metadata and mapped to its directory.                                                                  |
+| Binding       | Whether an Implementation family specification is Guidance, which implementations may ignore, or Mandatory, which every implementation must follow.             |
 | Requirement   | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                             |
 
 ## Specification content
@@ -67,6 +68,9 @@ in a specification only if it meets at least one of the following criteria. This
    violated.
 2. **Designer-authored:** the statement is a GDR or a description of game behavior that the Engine designer must write down.
 3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
+4. **Repository constraint:** the statement is in an Implementation family specification whose Binding is Mandatory,
+   and it constrains where in this repository an implementation resides, which files outside that place it may touch,
+   or which records it keeps there, so that a check of the repository could fail when the statement is violated.
 
 Everything else is left to the implementer's discretion and must not be specified. E.g., the following are out
 of scope:
@@ -77,8 +81,9 @@ of scope:
 
 A statement about one of these matters belongs in a specification only when it states an observable consequence, and
 then the specification states the consequence rather than the mechanism. Non-observable steering for implementers,
-e.g. architecture or code-quality advice, is never a requirement. Record it, when it is worth recording, only in an
-Implementation Family document, as described in [Specification families and paths](#specification-families-and-paths).
+e.g. architecture or code-quality advice, is never a requirement unless it is a Repository constraint. Record it, when
+it is worth recording, only in an Implementation Family document, as described in
+[Specification families and paths](#specification-families-and-paths).
 
 # Document lifecycle and ownership
 
@@ -134,7 +139,9 @@ Each specification has a stable Spec ID, Family, title, status, Audience, Owns s
 metadata row lists the [Personas](#personas) who mainly read or act on the document, separated by commas, in the order
 of the Personas table; at least one Persona is required. Overview describes the
 subject of the specification under [Subject before document](#subject-before-document); do not add a Scope row to metadata. The Owns metadata
-row is a one-sentence summary of what the specification owns; the generated catalog lists it for navigation.
+row is a one-sentence summary of what the specification owns; the generated catalog lists it for navigation. Every
+Implementation family specification also has a Binding metadata row, as described in
+[Implementation binding](#implementation-binding); specifications of other Families have none.
 
 ## Specification families and paths
 
@@ -152,7 +159,7 @@ the exception of the root index, its file must be a direct child of the director
 | Content        | `content/`        | Versioned GDRs, named parameters, catalogs, and starting configurations                                           | Foundation, Mechanics                             |
 | UI             | `ui/`             | Non-behavioural guidance on how user interfaces present the engine API to the Player                              | Foundation, Mechanics                             |
 | Autopilot AIs  | `autopilot-ais/`  | The goals and priorities of each Autopilot AI a Game build offers                                                 | Foundation, Mechanics                             |
-| Implementation | `implementation/` | Non-behavioural steering for implementers, e.g. architecture or code-quality guidance                             | Foundation, Mechanics, Content, UI, Autopilot AIs |
+| Implementation | `implementation/` | Non-behavioural steering and repository constraints for implementers, e.g. architecture guidance                  | Foundation, Mechanics, Content, UI, Autopilot AIs |
 
 The Builds on column states which Families a Family builds on. A specification depends only on specifications of its
 own Family, of the Families its Family builds on, and of the Families those build on in turn; every specification also
@@ -161,12 +168,33 @@ Autopilot AIs build on; Implementation builds on the game engine, Content, UI, a
 [Family architecture](../README.md#family-architecture) in the specification index shows a diagram generated from
 the relationships the specifications actually declare, so it can be compared with this table.
 
-Implementation documents are non-behavioural. They steer implementers toward code that is easier to maintain and to check
-against the other specifications, but they own no game behavior, observable contract, or GDR, and no acceptance test depends on
-them. An implementation that ignores an Implementation document can still satisfy every other specification. An Implementation
-document may explain which observable contract its guidance supports; that contract remains owned and guaranteed by
-its own specification. Implementation documents are registered so that they participate in relationship inventories,
-generated views, and graph validation like every other specification.
+Implementation documents are non-behavioural. They own no game behavior, observable contract, or GDR, and no
+acceptance test through the engine API depends on them. Each one is either Guidance or Mandatory, as described in
+[Implementation binding](#implementation-binding). An Implementation document may explain which observable contract
+its guidance supports; that contract remains owned and guaranteed by its own specification. Implementation documents
+are registered so that they participate in relationship inventories, generated views, and graph validation like every
+other specification.
+
+### Implementation binding
+
+The Binding metadata row of an Implementation document states how strictly an implementation follows it. The
+following table is exhaustive.
+
+| Binding   | Meaning                                                                                                                                                        | Wording of the document's own statements                                                   |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Guidance  | Suggestions that steer implementers toward code that is easier to maintain and to check. An implementation that ignores the document is still correct.         | "should" or "is suggested"; never **must** or **must not**                                 |
+| Mandatory | Repository constraints that every implementation must meet. An implementation that violates one is incorrect even when it satisfies every other specification. | **Must** and **must not**, as in [Writing exact requirements](#writing-exact-requirements) |
+
+Binding applies to the whole document. A topic that has both suggestions and repository constraints is split into a
+Guidance document and a Mandatory document. A Guidance document may restate, with a link, a requirement that another
+specification owns, e.g. an undo rule of [Timeline](../foundation/timeline.md); the restated requirement keeps the
+wording of its owner. A Mandatory document states only Repository constraints, as defined in
+[What belongs in a specification](#what-belongs-in-a-specification); they are checked against the repository rather
+than through the engine API.
+
+Every Mandatory document applies to every implementation, whatever its platform, language, or engine and whatever the
+instructions it is built under; e.g., it applies equally to a browser implementation and to an implementation in a
+third-party game engine. Instructions given to an implementer do not waive it.
 
 UI documents are non-behavioural in the same way. They guide how a user interface presents the engine API to the
 Player, e.g. which screens exist and what each shows by default, but they add no gameplay information, engine API
@@ -657,7 +685,7 @@ Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Pro
 
 ## Deterministic validation
 
-Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, required layout, local links and anchors, relationship inventories and mirrors, Family overview presence, structure, and coverage, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document) and [Glossary groups](#glossary-groups), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
+Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, the Binding row under [Implementation binding](#implementation-binding), required layout, local links and anchors, relationship inventories and mirrors, Family overview presence, structure, and coverage, acyclic `follows` and `refines` graphs, objectively prohibited terminology, prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document) and [Glossary groups](#glossary-groups), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
 
 A successful deterministic lint means only that every machine-checkable convention passed. It does not accept a specification or establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. Review those semantic concerns separately.
 

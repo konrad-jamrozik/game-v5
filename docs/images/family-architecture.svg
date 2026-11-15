@@ -25,7 +25,7 @@
   <rect class="bg" x="0" y="0" width="1000" height="560"/>
   <rect class="box" x="385" y="28" width="230" height="66" rx="10"/>
   <text class="title" x="500" y="56">Implementation</text>
-  <text class="count" x="500" y="77">2 specifications</text>
+  <text class="count" x="500" y="77">5 specifications</text>
   <rect class="box" x="107" y="164" width="230" height="66" rx="10"/>
   <text class="title" x="222" y="192">Content</text>
   <text class="count" x="222" y="213">1 specification</text>

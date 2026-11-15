@@ -7,6 +7,14 @@ in `README.md` when the toolchain is unavailable.
 Choose verification commands as described in the [Verification](README.md#verification) section of `README.md`. Before
 declaring repository changes complete, run `npm run check` and report any failures.
 
+## Implementing the game
+
+When implementing the game, follow every specification in `docs/specs/implementation/` whose Binding metadata is
+Mandatory, e.g. [Implementation Placement](docs/specs/implementation/implementation-placement.md) and
+[Implementation Records](docs/specs/implementation/implementation-records.md). They apply whatever the task says about
+platform, language, or engine, e.g. equally to a browser implementation and to a Unity implementation, and no other
+instruction waives them.
+
 ## Marking examples
 
 In every document and in chat, introduce every example with "e.g.", as defined in

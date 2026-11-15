@@ -52,6 +52,7 @@ const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
 const CONVENTIONS_PATH = 'docs/specs/governance/spec-conventions.md'
 const ALLOWED_STATUSES: ReadonlySet<string> = new Set(['Stub', 'Draft', 'Accepted', 'Superseded'])
+const ALLOWED_BINDINGS: ReadonlySet<string> = new Set(['Guidance', 'Mandatory'])
 const PERSONAS = ['Engine designer', 'Content designer', 'UI designer', 'AI designer', 'Implementer', 'Player']
 const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Governance',
@@ -367,6 +368,24 @@ function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void 
         specification.metadata.table,
         'SPEC111',
         'Scope belongs in Overview, not in metadata.',
+      )
+    }
+    const binding = specification.metadata.values.get('Binding')
+    if (specification.family === 'Implementation' && (binding === undefined || !ALLOWED_BINDINGS.has(binding))) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        specification.metadata.table,
+        'SPEC114',
+        'Metadata Binding of an Implementation family specification must be Guidance or Mandatory.',
+      )
+    } else if (specification.family !== 'Implementation' && binding !== undefined) {
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        specification.metadata.table,
+        'SPEC114',
+        'Only Implementation family specifications have a Binding metadata row.',
       )
     }
   }

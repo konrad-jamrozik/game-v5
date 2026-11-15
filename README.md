@@ -1,7 +1,14 @@
 # Game v5
 
-A fresh, framework-neutral browser game repository. It currently displays a placeholder and has no runtime dependencies.
-The UI framework, renderer, game mechanics, state management, and persistence are deliberately undecided.
+The specifications of a browser game, the tooling that checks them, and the game's implementations. The UI framework,
+renderer, state management, and persistence are left to each implementation.
+
+## Implementations
+
+Each implementation lives in its own directory under `implementations/`, which it treats as its repository root, as
+required by [Implementation Placement](docs/specs/implementation/implementation-placement.md). The repository root has
+no game code, and its tooling, hooks, and CI ignore `implementations/`. A new implementation may start from
+[Implementation Scaffold](docs/specs/implementation/implementation-scaffold.md).
 
 ## Design and continuation
 
@@ -16,10 +23,8 @@ Then run:
 
 ```sh
 npm ci
-npm run dev
+npm run check
 ```
-
-Open the URL printed by Vite, normally `http://localhost:5173/game-v5/`. Application code lives in `src/`.
 
 ## Agent environment setup
 
@@ -45,10 +50,7 @@ The reported versions should satisfy the `engines` field in `package.json`. Then
 
 | Command                 | Purpose                                              |
 | ----------------------- | ---------------------------------------------------- |
-| `npm run dev`           | Start the development server                         |
-| `npm run build`         | Type-check and build into `dist/`                    |
-| `npm run preview`       | Serve the existing production build locally          |
-| `npm run typecheck`     | Check application, tests, and tooling                |
+| `npm run typecheck`     | Check tests and tooling                              |
 | `npm run lint:code`     | Run type-aware Oxlint; warnings fail                 |
 | `npm run lint:specs`    | Deterministically lint registered specifications     |
 | `npm run docs:generate` | Update views derived from registered specifications  |
@@ -81,8 +83,8 @@ reports missing, stale, or unexpected files without modifying them, and runs as 
 ## Strictness and tests
 
 The shared TypeScript configuration enables the strict family and the additional strictest-style checks, including exact
-optional properties and checked indexed access. Declaration files are checked (`skipLibCheck: false`). Application code has
-browser ambient types; tooling and tests have Node ambient types. Any included first-party JavaScript is also checked.
+optional properties and checked indexed access. Declaration files are checked (`skipLibCheck: false`). Tooling and tests
+have Node ambient types. Any included first-party JavaScript is also checked.
 Oxlint rejects explicit and unsafe `any`, unsafe assertions, unhandled or misused promises, and non-exhaustive switches.
 
 `npm ci` applies temporary declaration fixes through `scripts/patch-dependency-types.ts`: Tinybench 6.1.4's timestamp
@@ -92,7 +94,7 @@ checks package versions and fails if an upgrade needs review. Remove each fix on
 matches [Vitest's v5.0.0 source](https://github.com/vitest-dev/vitest/blob/v5.0.0/packages/browser/context.d.ts).
 
 Put unit tests in `test/**/*.test.ts` and import test APIs explicitly from `vitest`. The test environment is Node, suitable
-for framework-independent game logic. No browser runner or DOM emulation is installed.
+for the repository tooling. No browser runner or DOM emulation is installed.
 
 The specification linter has the repository's first tests. Coverage is available on demand; there is no initial coverage
 threshold.
@@ -106,19 +108,15 @@ npm run hooks:install
 ```
 
 The pre-commit hook runs specification linting first, followed by the derived-view check, formatting, and code linting. The pre-push hook runs the
-same validation pipeline as `npm run check` and CI: specification linting, formatting, code linting, tests, type checking,
-and the production build. The hooks invoke the installed project tools directly so Git clients and agents do not depend on
+same validation pipeline as `npm run check` and CI: specification linting, formatting, code linting, tests, and type
+checking. The hooks invoke the installed project tools directly so Git clients and agents do not depend on
 shell-specific npm initialization. A failing command aborts the Git operation. Git's `--no-verify` option can bypass
 client-side hooks, so CI remains authoritative.
 
-## Deployment and updates
+## CI and updates
 
-Pull requests and pushes to `main` run formatting, linting, tests, type checking, and a production build. Successful `main`
-builds deploy to [GitHub Pages](https://konrad-jamrozik.github.io/game-v5/). The workflow also supports manual dispatch.
-Repository **Settings > Pages > Build and deployment > Source** must be **GitHub Actions**.
-
-Vite's base URL is `/game-v5/`. Import application assets through Vite; reference files in `public/` using
-`import.meta.env.BASE_URL` when constructing URLs so they work under the Pages subpath.
+Pull requests and pushes to `main` run specification linting, the derived-view check, formatting, code linting, tests,
+and type checking. The workflow also supports manual dispatch. Nothing is deployed.
 
 Dependencies are pinned and installed reproducibly with `npm ci`. Dependabot opens grouped weekly updates for npm and
 GitHub Actions; updates require review and are not automatically merged.

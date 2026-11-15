@@ -26,6 +26,7 @@ game-ts.
 - Uses [Configuration](../foundation/configuration.md)
 - Uses [Domain Model](../mechanics/domain-model.md)
 - Uses [Game Data Records](../foundation/game-data-records.md)
+- Used by [Implementation Placement](../implementation/implementation-placement.md)
 - Used by [Storage Schema](../implementation/storage-schema.md)
 
 # Glossary

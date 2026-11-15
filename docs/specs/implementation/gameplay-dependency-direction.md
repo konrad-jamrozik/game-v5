@@ -5,6 +5,7 @@
 | Spec ID     | DEPDIR                                                                                                   |
 | Family      | Implementation                                                                                           |
 | Status      | Draft                                                                                                    |
+| Binding     | Guidance                                                                                                 |
 | Audience    | Implementer                                                                                              |
 | Owns        | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                                           |
@@ -32,9 +33,9 @@ state that contains it. User interface code and Autopilot AI code reach the game
 
 # Dependency direction
 
-Gameplay functions must receive only the inputs and dependencies they need; they must not reach any other part of
+Gameplay functions should receive only the inputs and dependencies they need; they should not reach any other part of
 Campaign state, directly or indirectly. This includes the code that creates Campaign instances during gameplay.
-Campaign instances must not hold references to the Campaign state that contains them. These restrictions exclude
+Campaign instances should not hold references to the Campaign state that contains them. This guidance excludes
 Session API and Developer API operations, which may access complete Campaign state.
 
 User interface code, e.g. the code of the [Web UI](../ui/web-ui.md), depends on game behavior only through the engine

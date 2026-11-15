@@ -114,30 +114,6 @@ specifications. The wording, however, describes a mechanism (snapshots and reads
 **Suggested resolution:** Keep the content, and reword it in terms of outcomes, following
 [Values a step uses](../mechanics/turn-advancement.md#values-a-step-uses), e.g. "uses the value after the Training step", rather than snapshots and reads.
 
-## Other
-
-### TODO-018: Must in Gameplay Dependency Direction
-
-**Category and priority:** Other.
-
-**Affected:** Gameplay Dependency Direction (DEPDIR), [Dependency direction](../implementation/gameplay-dependency-direction.md#dependency-direction).
-
-**Batches:** DEPDIR has no batch; it is an Implementation document outside the batch sequence.
-
-**Current wording:**
-
-> Gameplay functions must receive only the inputs and dependencies they need; they must not reach any other part of
-> Campaign state, directly or indirectly. This includes the code that creates Campaign instances during gameplay.
-> Campaign instances must not hold references to the Campaign state that contains them.
-
-**Why it is an issue:** [Specification families and paths](spec-conventions.md#specification-families-and-paths) says
-Implementation documents are non-behavioural and [What belongs in a specification](spec-conventions.md#what-belongs-in-a-specification)
-says such steering is never a requirement, while [Writing exact requirements](spec-conventions.md#writing-exact-requirements)
-reserves "must" for requirements.
-
-**Suggested resolution:** Replace "must" with "should" and label the section as guidance, or state in DEPDIR what
-"must" means inside an Implementation document.
-
 # Edge cases and failure behavior
 
 If the quoted wording of a Work item changes without resolving it, update the quotation. If an affected section is

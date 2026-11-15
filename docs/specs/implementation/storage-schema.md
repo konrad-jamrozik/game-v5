@@ -5,6 +5,7 @@
 | Spec ID     | SCHEMA                                                                           |
 | Family      | Implementation                                                                   |
 | Status      | Stub                                                                             |
+| Binding     | Guidance                                                                         |
 | Audience    | Implementer                                                                      |
 | Owns        | Non-behavioural guidance on the physical layout of everything the game persists. |
 | Conventions | [Specification conventions](../governance/spec-conventions.md)                   |
@@ -32,9 +33,6 @@ GDRs, e.g. the [Bootstrap GDRs](../content/bootstrap-gdrs.md), belong to the Gam
 copy of them; Campaign state refers to a GDR by its identifier.
 
 # Timeline storage
-
-**Informative rationale:** This section is guidance. It describes a storage problem and suggests one way to avoid it;
-an implementation may store a Timeline differently.
 
 ## The problem with one copy for each Committed state
 

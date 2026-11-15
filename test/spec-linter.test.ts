@@ -168,6 +168,23 @@ function validCorpus(): SourceFile[] {
   ]
 }
 
+/** Moves the alpha fixture into the given Family, adding the Binding row that the Implementation family requires. */
+function alphaInFamily(family: string): SourceFile[] {
+  const directory = familyDirectoryName(family)
+  return validCorpus().map((file) => {
+    const content = file.content
+      .replaceAll('Foundation', family)
+      .replaceAll('foundation/alpha.md', `${directory}/alpha.md`)
+    return {
+      path: file.path.replace('foundation/alpha.md', `${directory}/alpha.md`),
+      content:
+        family === 'Implementation' && file.path.endsWith('/alpha.md')
+          ? content.replace('| Status | Draft |', '| Status | Draft |\n| Binding | Guidance |')
+          : content,
+    }
+  })
+}
+
 function diagnosticCodes(files: readonly SourceFile[]): readonly string[] {
   return lintSpecifications({ files }).map((diagnostic) => diagnostic.code)
 }
@@ -252,16 +269,42 @@ describe('specification linter', () => {
   test.each(['Foundation', 'Governance', 'Mechanics', 'Content', 'UI', 'Autopilot AIs', 'Implementation'])(
     'accepts topic sections for %s',
     (family) => {
-      const directory = familyDirectoryName(family)
-      const files = validCorpus().map((file) => ({
-        path: file.path.replace('foundation/alpha.md', directory + '/alpha.md'),
-        content: file.content
-          .replaceAll('Foundation', family)
-          .replaceAll('foundation/alpha.md', directory + '/alpha.md'),
-      }))
-      expect(diagnosticCodes(files)).toEqual([])
+      expect(diagnosticCodes(alphaInFamily(family))).toEqual([])
     },
   )
+
+  test.each(['Guidance', 'Mandatory'])('accepts Implementation Binding %s', (binding) => {
+    const files = mutate(
+      alphaInFamily('Implementation'),
+      'docs/specs/implementation/alpha.md',
+      '| Binding | Guidance |',
+      `| Binding | ${binding} |`,
+    )
+    expect(diagnosticCodes(files)).toEqual([])
+  })
+
+  test.each([
+    ['missing', ''],
+    ['unknown', '| Binding | Optional |\n'],
+  ])('rejects a %s Implementation Binding', (_reason, row) => {
+    const files = mutate(
+      alphaInFamily('Implementation'),
+      'docs/specs/implementation/alpha.md',
+      '| Binding | Guidance |\n',
+      row,
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC114'])
+  })
+
+  test('rejects Binding metadata outside the Implementation family', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/foundation/alpha.md',
+      '| Status | Draft |',
+      '| Status | Draft |\n| Binding | Guidance |',
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC114'])
+  })
 
   test('rejects an empty topic section', () => {
     const files = mutate(
@@ -361,13 +404,12 @@ describe('specification linter', () => {
   test.each(['Governance', 'Mechanics', 'Content', 'UI', 'Autopilot AIs', 'Implementation'])(
     'allows omitting the separate acceptance section for %s specifications',
     (family) => {
-      const directory = familyDirectoryName(family)
-      const files = validCorpus().map((file) => ({
-        path: file.path.replace('foundation/alpha.md', `${directory}/alpha.md`),
-        content: file.content
-          .replaceAll('Foundation', family)
-          .replaceAll('foundation/alpha.md', `${directory}/alpha.md`)
-          .replace('# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n', ''),
+      const files = alphaInFamily(family).map((file) => ({
+        ...file,
+        content: file.content.replace(
+          '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
+          '',
+        ),
       }))
       expect(diagnosticCodes(files)).toEqual([])
     },
