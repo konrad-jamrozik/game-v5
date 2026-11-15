@@ -22,6 +22,8 @@ exhaustion. A Combatant whose current health reaches zero is dead, and one whose
 its skill is Incapacitated and stops fighting. A Combat ends as Prevailed, Wiped, or Retreated, every Combat ends, and
 its Combat report records every attack in its Combat log and becomes part of the Turn report.
 
+![How a Combat fits between a Mission and the Turn report: deploying Agents to a Mission site creates a Deployed Mission; in the Mission resolution step its Combat is fought from Combat start through Combat rounds, each attack appended to the Combat log, until it ends with one Combat outcome; the Combat produces exactly one Combat report, which is part of the Turn report returned by getTurnReport() and reduced in a History entry, and the Combat outcome decides whether the Mission is Won or Lost](../../images/combat-terms.svg)
+
 # Relationships
 
 - Uses [Agents](./agents-spec.md)

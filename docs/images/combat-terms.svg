@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="790" viewBox="0 0 1000 790" role="img" aria-label="How a Combat fits between a Mission and the Turn report: the player deploys Agents to a Mission site, creating a Deployed Mission; in the Mission resolution step of the Advance turn its Combat is fought from Combat start through Combat rounds, each attack appended to the Combat log, until the Combat ends with one Combat outcome; the Combat produces exactly one Combat report, which is part of the Turn report returned by getTurnReport() and kept in reduced form by a History entry, and the Combat outcome decides whether the Mission is Won or Lost">
+  <!-- Hand-kept diagram for docs/specs/mechanics/combat.md; not generated. -->
+  <style>
+    :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --accent: #2f7f95; --accenttint: #e6f2f5; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161d; --surface: #1a2029; --block: #232a35; --fg: #e6eaf0; --muted: #9aa5b5; --line: #3a4453; --accent: #6fb3c7; --accenttint: #18303a; }
+    }
+    text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 12.5px; fill: var(--fg); }
+    .bg { fill: var(--bg); }
+    .title { font-size: 15px; font-weight: 600; }
+    .lane { font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; fill: var(--muted); }
+    .b { font-weight: 600; }
+    .m { fill: var(--muted); }
+    .mid { text-anchor: middle; }
+    .lbl { fill: var(--muted); font-size: 11.5px; font-style: italic; }
+    .code { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 12px; fill: var(--muted); }
+    .stored { fill: var(--surface); stroke: var(--accent); stroke-width: 1.6; }
+    .report { fill: var(--accenttint); stroke: var(--accent); stroke-width: 1.8; }
+    .transient { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 6 4; }
+    .inner { fill: var(--block); stroke: var(--line); stroke-width: 1.2; }
+    .arrow { stroke: var(--muted); stroke-width: 1.5; fill: none; marker-end: url(#head); }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" style="fill: var(--muted)"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1000" height="790"/>
+  <text class="title" x="24" y="30">How a Mission's Combat produces its Combat report</text>
+
+  <!-- Turn t: Player actions -->
+  <text class="lane" x="24" y="62">TURN t: PLAYER ACTIONS</text>
+  <rect class="stored" x="24" y="72" width="280" height="86" rx="8"/>
+  <text class="b" x="40" y="96">Mission site</text>
+  <text class="m" x="40" y="116">Active; holds its Enemies</text>
+  <text class="m" x="40" y="134">created by an Investigation or a</text>
+  <text class="m" x="40" y="150">Faction operation occurrence</text>
+
+  <line class="arrow" x1="306" y1="115" x2="398" y2="115"/>
+  <text class="code mid" x="352" y="106">deployAgents</text>
+  <text class="lbl mid" x="352" y="132">creates</text>
+
+  <rect class="stored" x="400" y="72" width="280" height="86" rx="8"/>
+  <text class="b" x="416" y="96">Mission: Deployed</text>
+  <text class="m" x="416" y="116">at exactly one Mission site</text>
+  <text class="m" x="416" y="134">Current team: the Agents deployed</text>
+
+  <line class="arrow" x1="540" y1="160" x2="540" y2="204"/>
+  <text class="lbl" x="552" y="186">its Combat is fought</text>
+
+  <!-- Advance turn: Mission resolution -->
+  <text class="lane" x="24" y="196">ADVANCE TURN ENDING TURN t: MISSION RESOLUTION</text>
+  <rect class="transient" x="24" y="206" width="656" height="300" rx="10"/>
+  <text class="b" x="40" y="232">Combat</text>
+  <text class="m" x="96" y="232">exists only within the step; never part of a Committed state</text>
+
+  <rect class="inner" x="44" y="246" width="616" height="34" rx="6"/>
+  <text x="58" y="268"><tspan class="b">Combat start</tspan>: starting values and Combat ratings recorded</text>
+
+  <rect class="inner" x="44" y="296" width="139" height="44" rx="6"/>
+  <rect class="inner" x="203" y="296" width="139" height="44" rx="6"/>
+  <rect class="inner" x="362" y="296" width="139" height="44" rx="6"/>
+  <rect class="inner" x="521" y="296" width="139" height="44" rx="6"/>
+  <text class="b mid" x="113" y="323">Combat round 1</text>
+  <text class="b mid" x="272" y="323">Combat round 2</text>
+  <text class="b mid" x="431" y="323">…</text>
+  <text class="b mid" x="590" y="323">Combat round n</text>
+  <text class="m mid" x="352" y="360">In each Combat round every Combatant able to fight attacks once; each attack is appended ↓</text>
+
+  <rect class="inner" x="44" y="370" width="616" height="52" rx="6"/>
+  <text class="b" x="58" y="392">Combat log</text>
+  <text class="m" x="58" y="411">every attack in order: Combat round, attacker, defender, hit Probability, outcomes, health removed</text>
+
+  <rect class="inner" x="44" y="436" width="616" height="50" rx="6"/>
+  <text x="58" y="466"><tspan class="b">Combat ends</tspan> with exactly one <tspan class="b">Combat outcome</tspan>: Prevailed, Retreated, or Wiped</text>
+
+  <!-- Combat report -->
+  <line class="arrow" x1="180" y1="508" x2="180" y2="548"/>
+  <text class="lbl" x="192" y="532">produces exactly one</text>
+
+  <rect class="report" x="24" y="550" width="384" height="214" rx="8"/>
+  <text class="b" x="40" y="576">Combat report</text>
+  <text class="m" x="40" y="600">1  Combat outcome</text>
+  <text class="m" x="40" y="618">2  Number of Combat rounds</text>
+  <text class="m" x="40" y="636">3  Participants: both sides, in fixed order</text>
+  <text class="m" x="40" y="654">4  Starting values of each participant</text>
+  <text class="m" x="40" y="672">5  Final values and final condition</text>
+  <text class="m" x="40" y="690">6  Health removed: damage dealt and taken</text>
+  <text class="m" x="40" y="708">7  Combat ratings at Combat start and per Combat round</text>
+  <text class="m" x="40" y="726">8  <tspan class="b" style="fill: var(--fg)">Combat log</tspan></text>
+  <text class="m" x="40" y="744">9  Mission: the Instance ID of its Mission</text>
+
+  <!-- After the Advance turn commits -->
+  <text class="lane" x="704" y="390">AFTER THE ADVANCE TURN</text>
+  <rect class="stored" x="704" y="400" width="272" height="86" rx="8"/>
+  <text class="b" x="720" y="424">Mission: Won or Lost</text>
+  <text class="m" x="720" y="444">Won exactly when the Combat outcome</text>
+  <text class="m" x="720" y="462">is Prevailed; otherwise Lost</text>
+  <text class="m" x="720" y="480">retained in World history</text>
+  <line class="arrow" x1="660" y1="461" x2="702" y2="461"/>
+
+  <rect class="stored" x="704" y="550" width="272" height="92" rx="8"/>
+  <text class="b" x="720" y="574">Turn report</text>
+  <text class="code" x="806" y="574">getTurnReport()</text>
+  <text class="m" x="720" y="596">what the latest Advance turn did;</text>
+  <text class="m" x="720" y="614">holds each Combat report in full</text>
+  <line class="arrow" x1="410" y1="596" x2="702" y2="596"/>
+  <text class="lbl mid" x="556" y="588">part of</text>
+
+  <line class="arrow" x1="840" y1="644" x2="840" y2="680"/>
+  <text class="lbl" x="852" y="666">next Advance turn</text>
+
+  <rect class="stored" x="704" y="682" width="272" height="82" rx="8"/>
+  <text class="b" x="720" y="706">History entry</text>
+  <text class="code" x="820" y="706">getHistory()</text>
+  <text class="m" x="720" y="728">one per ended Turn, holding a reduced</text>
+  <text class="m" x="720" y="746">form of its Turn report</text>
+
+  <!-- Legend -->
+  <rect class="stored" x="440" y="690" width="24" height="14" rx="3"/>
+  <text class="m" x="474" y="702">part of Campaign state</text>
+  <rect class="transient" x="440" y="716" width="24" height="14" rx="3"/>
+  <text class="m" x="474" y="728">only during the step</text>
+</svg>
