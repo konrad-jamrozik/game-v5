@@ -18,10 +18,11 @@ or Mandatory, which every implementation must follow, as described in
 confines each implementation to its own directory beside this repository's local clone, e.g. `game-v5-impl-web/`,
 which the implementation treats as its repository root.
 
-## Implementation Records
+## Implementation Feedback
 
-[Implementation Records](implementation-records.md), Mandatory, answers _what must an implementer write down?_ It
-requires each implementation to keep a record of the problems met in the specifications and of the decisions made.
+[Implementation Feedback](implementation-feedback.md), Mandatory, answers _what must an implementer write down?_ It
+requires each implementation to keep feedback on the specifications: the problems it met in them and the decisions it
+made.
 
 ## Specification Tracking
 
@@ -58,11 +59,11 @@ implementers toward one physical layout for Game storage.
 
 # How they relate
 
-Implementation Records, Specification Tracking, and GitHub Pages Deployment use Implementation Placement: the records are
+Implementation Feedback, Specification Tracking, and GitHub Pages Deployment use Implementation Placement: their files are
 kept in its Implementation directory, and the published repository is that directory, published only once the Engine
-designer decides where. Specification Tracking also uses Implementation Records, keeping its two records beside theirs,
-and Specification Updates uses all three, because an update reads the tracking records and settles entries of the
-other records.
+designer decides where. Specification Tracking also uses Implementation Feedback, whose Specification problems are the only exceptions to
+conformance it allows, and Specification Updates uses all three, because an update reads the tracking files and settles
+feedback entries.
 Implementation Placement uses Bootstrap GDRs from the Content family, whose files each implementation copies. Gameplay Dependency
 Direction and Storage Schema use the Foundation family: Gameplay Dependency Direction uses its vocabulary and
 determinism guarantees, and Storage Schema uses its data ownership, Campaign save, and Timeline contracts. Gameplay
@@ -93,9 +94,9 @@ No refines relationships are declared within this family.
 
 The Implementation family is kept apart so that advice to implementers never becomes an observable contract. An
 implementation that ignores its Guidance documents can still satisfy every other specification. Mandatory documents
-are kept to placement and record-keeping constraints, which are checked against the files rather than through the
+are kept to placement, tracking, and feedback constraints, which are checked against the files rather than through the
 engine API, so that several independent implementations can coexist beside the specifications.
 
-Specification Tracking and Specification Updates are split for the same reason: the records an implementation keeps
+Specification Tracking and Specification Updates are split for the same reason: the files an implementation keeps
 can be checked in its files, so they are Mandatory, while the way an implementer uses them to catch up is advice that
 an implementation can ignore and still be correct.

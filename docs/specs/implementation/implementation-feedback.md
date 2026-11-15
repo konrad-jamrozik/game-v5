@@ -1,14 +1,14 @@
-# Implementation Records
+# Implementation Feedback
 
-| Metadata    | Value                                                                                              |
-| ----------- | -------------------------------------------------------------------------------------------------- |
-| Spec ID     | RECORDS                                                                                            |
-| Family      | Implementation                                                                                     |
-| Status      | Draft                                                                                              |
-| Binding     | Mandatory                                                                                          |
-| Audience    | Engine designer, Implementer                                                                       |
-| Owns        | The records of Specification problems and Implementation decisions that each Implementation keeps. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                     |
+| Metadata    | Value                                                                                                     |
+| ----------- | --------------------------------------------------------------------------------------------------------- |
+| Spec ID     | FEEDBACK                                                                                                  |
+| Family      | Implementation                                                                                            |
+| Status      | Draft                                                                                                     |
+| Binding     | Mandatory                                                                                                 |
+| Audience    | Engine designer, Implementer                                                                              |
+| Owns        | The feedback files of Specification problems and Implementation decisions that each Implementation keeps. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                            |
 
 # Overview
 
@@ -17,10 +17,10 @@ gaps, and how the implementer got past each such place is worth keeping. While a
 [Implementation](../governance/artifact-relationships.md#glossary) is built, its implementer meets problems in the
 specifications and makes decisions the specifications leave open or fail to settle.
 
-Every Implementation must therefore keep two records inside its
+Every Implementation must therefore keep this feedback in two files inside its
 [Implementation directory](implementation-placement.md#glossary): the Specification problems it met and the
 Implementation decisions it made, each decision linked to the problems it settles. The Engine designer reads the
-records to improve the specifications and to compare Implementations.
+feedback to improve the specifications and to compare Implementations.
 
 # Relationships
 
@@ -35,21 +35,21 @@ records to improve the specifications and to compare Implementations.
 | Specification problem   | A defect in the specifications that the implementer met while implementing them, in one of the Specification problem categories.       |
 | Implementation decision | A choice the implementer made about what the Implementation does or how it is built, in one of the Implementation decision categories. |
 
-# Record files
+# Feedback files
 
 Every Implementation must keep these two Markdown files in its Implementation directory:
 
-| Path                                  | Contents                                           |
-| ------------------------------------- | -------------------------------------------------- |
-| `records/specification-problems.md`   | Every Specification problem the implementer met    |
-| `records/implementation-decisions.md` | Every Implementation decision the implementer made |
+| Path                                   | Contents                                           |
+| -------------------------------------- | -------------------------------------------------- |
+| `feedback/specification-problems.md`   | Every Specification problem the implementer met    |
+| `feedback/implementation-decisions.md` | Every Implementation decision the implementer made |
 
-The records must be kept current while the Implementation is built: a change to the Implementation that meets a
+The feedback files must be kept current while the Implementation is built: a change to the Implementation that meets a
 Specification problem or makes an Implementation decision must add or update its entry in the same change. An entry
 must not be deleted when the specifications or the Implementation later change; it is updated to say what changed,
 e.g. that a later revision of the specifications resolved the problem.
 
-These records are required whatever the platform, language, or engine of the Implementation and whatever the
+These feedback files are required whatever the platform, language, or engine of the Implementation and whatever the
 instructions it is built under.
 
 ## Entry format
@@ -89,7 +89,7 @@ specifications category instead.
 
 ## Resolution
 
-A Specification problem stays in its record after it is dealt with, so each entry states whether the specifications
+A Specification problem stays in its feedback file after it is dealt with, so each entry states whether the specifications
 still have it, which lets the Engine designer find the problems left to settle without reading every entry. The
 following table is exhaustive.
 
@@ -132,8 +132,8 @@ group of suggestions treated alike.
 
 # Edge cases and failure behavior
 
-An Implementation that has met no Specification problem and made no Implementation decision yet still keeps both record
+An Implementation that has met no Specification problem and made no Implementation decision yet still keeps both feedback
 files, each holding only its H1 title.
 
-A Specification problem recorded before entries stated a Resolution is given one the next time its record file
+A Specification problem recorded before entries stated a Resolution is given one the next time its feedback file
 changes, judged against the specifications the Implementation then conforms to.

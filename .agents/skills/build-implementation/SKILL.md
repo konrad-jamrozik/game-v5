@@ -1,6 +1,6 @@
 ---
 name: build-implementation
-description: Build a new Implementation of the game from the specifications, keeping from the start the Specification baseline, Specification map, and records that let later changes to the specifications be applied without rebuilding it.
+description: Build a new Implementation of the game from the specifications, keeping from the start the Specification baseline, Specification map, and feedback files that let later changes to the specifications be applied without rebuilding it.
 ---
 
 # Build a new Implementation
@@ -8,7 +8,7 @@ description: Build a new Implementation of the game from the specifications, kee
 Use this skill when the user asks for a new Implementation of the game, e.g. "implement the game" or "build a web
 implementation". To bring an existing Implementation up to date, use the `update-implementation` skill instead.
 
-Building an Implementation is long and usually spread across subagents, and the records that make it cheap to update
+Building an Implementation is long and usually spread across subagents, and the tracking and feedback files that make it cheap to update
 later are the part most easily dropped along the way. This skill keeps them in place from the first step to the last.
 The rules belong to the Mandatory Implementation specifications, which every Implementation must follow under the
 repository's `AGENTS.md`; this skill only orders the work around them. When this skill and a specification disagree,
@@ -25,20 +25,20 @@ the specification wins.
 3. Read every specification in `docs/specs/implementation/` whose Binding is Mandatory, and follow
    [Implementation Placement](../../../docs/specs/implementation/implementation-placement.md) to choose the
    Implementation name and create the Implementation directory.
-4. In the new directory, write `records/specification-baseline.md` with the recorded commit, and the empty record
-   files that [Implementation Records](../../../docs/specs/implementation/implementation-records.md) and
+4. In the new directory, write `tracking/specification-baseline.md` with the recorded commit, and the empty record
+   files that [Implementation Feedback](../../../docs/specs/implementation/implementation-feedback.md) and
    [Specification Tracking](../../../docs/specs/implementation/specification-tracking.md) require, before any code.
 
 ## During the build
 
-- **One owner for the records.** Keep `records/` written by the orchestrating agent only. Parallel subagents editing
-  one Markdown file collide, and a subagent that was not told about the records forgets them.
-- **Every subagent brief asks for record input.** Each brief names the specifications the subagent implements and asks
+- **One owner for the tracking and feedback files.** Keep `tracking/` and `feedback/` written by the orchestrating agent only. Parallel subagents editing
+  one Markdown file collide, and a subagent that was not told about them forgets them.
+- **Every subagent brief asks for tracking and feedback input.** Each brief names the specifications the subagent implements and asks
   it to return, with its work:
   - the files it added, moved, or deleted, each with the Spec IDs it implements;
   - every Specification problem it met, with the affected specification, section, and quoted wording;
   - every Implementation decision it made, with the options considered and why it chose one.
-- **Record in the same change.** After each subagent returns, update the Specification map and the record files
+- **Record in the same change.** After each subagent returns, update the Specification map and the feedback files
   before committing its work, so that no commit holds code that the Specification map does not list.
 - **Leave the Specification baseline where it is.** Subagents read the specifications as they are on disk, so a commit
   made to them during the build may be partly followed. The Specification baseline still stays at the recorded
@@ -49,8 +49,8 @@ the specification wins.
 
 Check each of the following against the files, not from memory, and fix whatever fails:
 
-1. `records/specification-baseline.md` names the commit recorded before reading the specifications.
-2. `records/specification-map.md` has one section for each Spec ID registered at that commit, and no other. List
+1. `tracking/specification-baseline.md` names the commit recorded before reading the specifications.
+2. `tracking/specification-map.md` has one section for each Spec ID registered at that commit, and no other. List
    those Spec IDs with `git grep -h "^| Spec ID" <baseline> -- docs/specs` in this repository.
 3. Every path listed in the Specification map exists in the Implementation directory, and every file of the
    Implementation that implements a specification, including its tests, is listed.
@@ -66,5 +66,5 @@ Placement.
 
 Tell the user the Implementation directory, the Specification baseline, the result of each check above, the number of
 Open Specification problems, and whether the specifications received commits after the Specification baseline. Suggest
-the `absorb-implementation-records` skill for the Open Specification problems and the `update-implementation` skill
+the `absorb-implementation-feedback` skill for the Open Specification problems and the `update-implementation` skill
 for those later commits.

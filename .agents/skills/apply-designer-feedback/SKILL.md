@@ -17,9 +17,9 @@ follow it, and let it win when this skill disagrees.
 1. Identify the Implementation directory: the sibling directory of this repository that the user names, or the only
    one whose name starts with `game-v5-impl-`. Ask the user when several match.
 2. Find the specifications the feedback concerns. Search the specifications for the feature's terms, or go from the
-   Implementation's files back to Spec IDs through its `records/specification-map.md`. Read only the sections that
+   Implementation's files back to Spec IDs through its `tracking/specification-map.md`. Read only the sections that
    govern the observed behavior, at the Implementation's Specification baseline in
-   `records/specification-baseline.md`.
+   `tracking/specification-baseline.md`.
 3. Classify the feedback into one case of Designer feedback, and show the user the governing wording and what the
    Implementation does:
    - **The specifications say otherwise:** a conformance defect.

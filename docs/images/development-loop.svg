@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="The Development loop: the Game designer changes the specifications in the durable specification repository; the Implementer builds the Implementation with build-implementation, or updates it with update-implementation, in its disposable directory; Implementer feedback flows back into the specifications with absorb-implementation-records, repeating until no feedback is open; the Game designer plays and reviews the Implementation and turns Designer feedback into specification changes with apply-designer-feedback">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="The Development loop: the Game designer changes the specifications in the durable specification repository; the Implementer builds the Implementation with build-implementation, or updates it with update-implementation, in its disposable directory; Implementer feedback flows back into the specifications with absorb-implementation-feedback, repeating until no feedback is open; the Game designer plays and reviews the Implementation and turns Designer feedback into specification changes with apply-designer-feedback">
   <!-- Hand-kept diagram for docs/specs/governance/development-loop.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --accent: #2f7f95; --accenttint: #e6f2f5; }
@@ -63,7 +63,7 @@
 
   <rect class="inner" x="48" y="365" width="334" height="80" rx="6"/>
   <text class="b" x="62" y="389">Implementation family specifications</text>
-  <text class="m" x="62" y="408">Mandatory: placement, records, tracking</text>
+  <text class="m" x="62" y="408">Mandatory: placement, feedback, tracking</text>
   <text class="m" x="62" y="424">Guidance: technical suggestions and recipes</text>
   <text class="m" x="62" y="439">Skills sit beside them in .agents/skills/</text>
 
@@ -77,12 +77,12 @@
   <text class="m" x="632" y="263">changed only as derived from the specifications</text>
 
   <rect class="inner" x="618" y="285" width="334" height="65" rx="6"/>
-  <text class="b" x="632" y="309">Tracking records</text>
+  <text class="b" x="632" y="309">tracking/</text>
   <text class="m" x="632" y="328">Specification baseline: which commit it follows</text>
   <text class="m" x="632" y="343">Specification map: which files implement which spec</text>
 
   <rect class="inner" x="618" y="365" width="334" height="80" rx="6"/>
-  <text class="b" x="632" y="389">Implementer feedback</text>
+  <text class="b" x="632" y="389">feedback/ · Implementer feedback</text>
   <text class="m" x="632" y="408">Specification problems it met</text>
   <text class="m" x="632" y="424">Implementation decisions it made</text>
   <text class="m" x="632" y="439">each problem Open, Resolved, or Declined</text>
@@ -96,7 +96,7 @@
   <!-- 3: absorb feedback -->
   <path class="arrow" d="M616 405 L402 405"/>
   <text class="b mid" x="500" y="395">③ Absorb feedback</text>
-  <text class="code mid" x="500" y="424" style="font-size: 10.5px">absorb-implementation-records</text>
+  <text class="code mid" x="500" y="424" style="font-size: 10.5px">absorb-implementation-feedback</text>
 
   <!-- fixed-point cycle -->
   <path class="cycle" d="M540 380 C 572 350, 572 300, 540 272"/>

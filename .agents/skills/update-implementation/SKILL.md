@@ -24,7 +24,7 @@ Do not copy or restate their rules here; when this skill and those specification
 2. Take the target Specification revision as this repository's latest commit, unless the user names another. When the
    working tree of this repository has uncommitted changes under `docs/specs` or `content`, tell the user they are
    not applied, because they belong to no Specification revision.
-3. Read `records/specification-baseline.md` in the Implementation directory.
+3. Read `tracking/specification-baseline.md` in the Implementation directory.
    - If it is missing, the Implementation has never been tracked. Tell the user that adopting a Specification baseline
      needs one pass over the Implementation to write the Specification map, and do it only after the user agrees,
      under Edge cases and failure behavior of Specification Tracking.
@@ -48,5 +48,5 @@ Tell the user:
 - each normative change and the files it changed, and how many changes were editorial only;
 - each Specification problem whose Resolution changed, and each new Specification problem or Implementation decision;
 - the result of the Implementation's checks;
-- whether Open Specification problems remain, and that the `absorb-implementation-records` skill turns them into
+- whether Open Specification problems remain, and that the `absorb-implementation-feedback` skill turns them into
   specification changes.

@@ -23,8 +23,8 @@ Specification baseline forward, leaving every unchanged specification and every 
 
 # Relationships
 
+- Uses [Implementation Feedback](implementation-feedback.md)
 - Uses [Implementation Placement](implementation-placement.md)
-- Uses [Implementation Records](implementation-records.md)
 - Uses [Specification Tracking](specification-tracking.md)
 
 # Finding what changed
@@ -85,13 +85,13 @@ Specification map follows ownership. The following cases are complete:
 
 # Completing an update
 
-An update is complete when the Implementation conforms to the target Specification revision and its records say so, so
+An update is complete when the Implementation conforms to the target Specification revision and its tracking and feedback files say so, so
 that the next update can start from the new Specification baseline. In one change to the Implementation, the
 implementer should:
 
 1. change the code and its tests for every normative change;
 2. update the Specification map for every file added, moved, or deleted, and for every restructured specification;
-3. update [Implementation Records](implementation-records.md): set the Resolution of each Specification problem that
+3. update [Implementation Feedback](implementation-feedback.md): set the Resolution of each Specification problem that
    the target Specification revision settles, and record any new Specification problem or Implementation decision;
 4. run the Implementation's checks;
 5. set the Specification baseline to the target Specification revision.

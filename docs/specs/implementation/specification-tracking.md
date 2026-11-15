@@ -24,8 +24,8 @@ names, for each specification, the files that implement it, so each change leads
 
 # Relationships
 
+- Uses [Implementation Feedback](implementation-feedback.md)
 - Uses [Implementation Placement](implementation-placement.md)
-- Uses [Implementation Records](implementation-records.md)
 - Used by [Specification Updates](specification-updates.md)
 
 # Glossary
@@ -36,29 +36,30 @@ names, for each specification, the files that implement it, so each change leads
 | Specification baseline | The Specification revision whose specifications an Implementation currently conforms to.                           |
 | Specification map      | The record of which files of an Implementation implement each specification, keyed by the specification's Spec ID. |
 
-# Tracking record files
+# Tracking files
 
-Both records sit beside the [Record files](implementation-records.md#record-files) of Implementation Records, so that
-everything an Implementation keeps about the specifications is in one place. Every Implementation must keep these two
-Markdown files in its [Implementation directory](implementation-placement.md#glossary):
+Both records say where the Implementation stands against the specifications rather than what it learned from them, so
+they are kept together in their own directory, apart from the feedback files of
+[Feedback files](implementation-feedback.md#feedback-files) of Implementation Feedback. Every Implementation must keep these two Markdown
+files in its [Implementation directory](implementation-placement.md#glossary):
 
-| Path                                | Contents                               |
-| ----------------------------------- | -------------------------------------- |
-| `records/specification-baseline.md` | The Specification baseline             |
-| `records/specification-map.md`      | The Specification map at that baseline |
+| Path                                 | Contents                               |
+| ------------------------------------ | -------------------------------------- |
+| `tracking/specification-baseline.md` | The Specification baseline             |
+| `tracking/specification-map.md`      | The Specification map at that baseline |
 
-These records are required whatever the platform, language, or engine of the Implementation and whatever the
+These tracking files are required whatever the platform, language, or engine of the Implementation and whatever the
 instructions it is built under.
 
 # Specification baseline
 
 The Specification baseline states how far the Implementation has followed the specifications, so it must never claim
-more than the Implementation does. `records/specification-baseline.md` must hold the H1 `Specification baseline`
+more than the Implementation does. `tracking/specification-baseline.md` must hold the H1 `Specification baseline`
 followed by one line `Revision: <commit hash>`, where `<commit hash>` is the full hash of one commit of the
 repository that holds these specifications, e.g. `Revision: b63b86e0c4f1d2a9e8b7c6d5f4a3b2c1d0e9f8a7`.
 
 The Implementation must conform to every specification at its Specification baseline, except where an entry of its
-[Implementation Records](implementation-records.md) states otherwise, e.g. a Specification problem that the
+[Implementation Feedback](implementation-feedback.md) states otherwise, e.g. a Specification problem that the
 specifications at that revision leave unsettled. A Specification baseline therefore names a commit, never
 specifications with changes that are not committed.
 
@@ -74,7 +75,7 @@ brings the Implementation into conformance with the specifications at the new Sp
 # Specification map
 
 The Specification map turns a changed specification into the list of files that a change to it can affect, so it must
-cover every specification and stay accurate. `records/specification-map.md` must hold the H1 `Specification map`
+cover every specification and stay accurate. `tracking/specification-map.md` must hold the H1 `Specification map`
 followed by one H2 section for each specification registered at the Specification baseline, and for no other
 specification. Each heading is the Spec ID followed by the specification's title, e.g. `## COMBAT: Combat`, and the
 sections are in alphabetical order of Spec ID.

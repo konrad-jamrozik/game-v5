@@ -42,7 +42,7 @@ exhaustive.
 | Governance specifications            | How every specification is written, under [Specification Conventions](spec-conventions.md), and how the Development loop runs | An LLM at the Game designer's request, or the Game designer |
 | Design specifications                | The game: its concepts, rules, content, user interfaces, and Autopilot AIs                                                    | An LLM at the Game designer's request, or the Game designer |
 | Implementation family specifications | How an Implementer turns the specifications into an Implementation in the Game designer's environment                         | An LLM at the Game designer's request, or the Game designer |
-| Implementation                       | Code and tests that follow the specifications, together with the Implementer feedback and tracking records                    | The Implementer only, as derived from the specifications    |
+| Implementation                       | Code and tests that follow the specifications, together with its Implementer feedback and tracking files                      | The Implementer only, as derived from the specifications    |
 
 The Implementation family specifications come in three kinds, distinguished by how binding they are and what they
 cover:
@@ -104,20 +104,20 @@ disagree.
 
 The following table of LLM skills is exhaustive.
 
-| LLM skill                       | Task                                                                                                                    |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `spec-review`                   | Checks specifications against Specification Conventions and against each other.                                         |
-| `build-implementation`          | Builds a first Implementation from the specifications, keeping its records from the start.                              |
-| `update-implementation`         | Applies to an Implementation only the specification changes made since it last followed them.                           |
-| `absorb-implementation-records` | Turns open Implementer feedback into specification changes, with the Game designer deciding each one.                   |
-| `apply-designer-feedback`       | Turns Designer feedback into specification changes or conformance fixes, under [Designer feedback](#designer-feedback). |
+| LLM skill                        | Task                                                                                                                    |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `spec-review`                    | Checks specifications against Specification Conventions and against each other.                                         |
+| `build-implementation`           | Builds a first Implementation from the specifications, keeping its tracking and feedback files from the start.          |
+| `update-implementation`          | Applies to an Implementation only the specification changes made since it last followed them.                           |
+| `absorb-implementation-feedback` | Turns open Implementer feedback into specification changes, with the Game designer deciding each one.                   |
+| `apply-designer-feedback`        | Turns Designer feedback into specification changes or conformance fixes, under [Designer feedback](#designer-feedback). |
 
 LLM skills chain into workflows that cover whole rounds. The following workflows are complete:
 
 - **First build:** change the specifications, check them with `spec-review`, then run `build-implementation`.
 - **Specification change:** change the specifications, check them with `spec-review`, then run
   `update-implementation`.
-- **Implementer feedback to a fixed point:** run `absorb-implementation-records`, then `update-implementation`, and
+- **Implementer feedback to a fixed point:** run `absorb-implementation-feedback`, then `update-implementation`, and
   repeat while the update records new Implementer feedback.
 - **Designer feedback:** run `apply-designer-feedback`, then `update-implementation`.
 
