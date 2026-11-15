@@ -1,26 +1,26 @@
 # Combat
 
-| Metadata    | Value                                                                                                                                                                        |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | COMBAT                                                                                                                                                                       |
-| Family      | Mechanics                                                                                                                                                                    |
-| Status      | Draft                                                                                                                                                                        |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                  |
-| Owns        | Enemies and the Combat GDRs, how a Battle is fought Round by Round, attacks and their random outcomes, Incapacitated, Combat rating, Battle outcomes, and the Battle result. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                                               |
+| Metadata    | Value                                                                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | COMBAT                                                                                                                                                                         |
+| Family      | Mechanics                                                                                                                                                                      |
+| Status      | Draft                                                                                                                                                                          |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                    |
+| Owns        | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating, Combat outcomes, and the Combat report. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                                                                                                                 |
 
 # Overview
 
-A [Battle](domain-model.md#glossary) is one armed clash between the [Agents](agents-spec.md) deployed to a Mission site and the
+A [Combat](domain-model.md#glossary) is one armed clash between the [Agents](agents-spec.md) deployed to a Mission site and the
 [Enemies](domain-model.md#glossary) there, resolved in full within one Advance turn. It is fully automatic. Each Enemy
 is created from its EnemyArchetype together with its Mission site, and it never recovers.
 
-A Battle is fought in Rounds. In each Round every Agent and then every Enemy able to fight attacks the opponent with the
+A Combat is fought in Combat rounds. In each Combat round every Agent and then every Enemy able to fight attacks the opponent with the
 highest effective skill. An attack hits with a Probability set by the effective skills of attacker and defender, and a
 hit removes a random amount of current health around the attacker's weapon damage. Every attack, hit or miss, raises
 exhaustion. A Combatant whose current health reaches zero is dead, and one whose effective skill falls to a small fraction of
-its skill is Incapacitated and stops fighting. A Battle ends as Prevailed, Wiped, or Retreated, every Battle ends, and
-its Battle result records every attack.
+its skill is Incapacitated and stops fighting. A Combat ends as Prevailed, Wiped, or Retreated, every Combat ends, and
+its Combat report records every attack in its Combat log and becomes part of the Turn report.
 
 # Relationships
 
@@ -40,28 +40,29 @@ its Battle result records every attack.
 These terms are specific to Combat. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
 about skill, current health, exhaustion, and weapon damage are in the [Agents glossary](agents-spec.md#glossary).
 
-## Battles
+## Combats
 
-How a Battle is divided, and how it ends.
+How a Combat is divided, and how it ends.
 
 | Term           | Definition                                                                                                                                                |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Round          | One pass of a Battle in which every Combatant able to fight attacks once.                                                                                 |
-| Battle outcome | How a Battle ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. |
+| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                 |
+| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                     |
+| Combat outcome | How a Combat ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. |
 
-## Combatant condition in a Battle
+## Combatant condition in a Combat
 
-Whether a Combatant still takes part in a Battle, and how strong it and its side are.
+Whether a Combatant still takes part in a Combat, and how strong it and its side are.
 
 | Term          | Definition                                                                                                                                                     |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Incapacitated | Alive but too weakened to take further part in the current Battle.                                                                                             |
+| Incapacitated | Alive but too weakened to take further part in the current Combat.                                                                                             |
 | Able to fight | Alive and not Incapacitated, so still attacking and still liable to be attacked.                                                                               |
-| Combat rating | How strong a Combatant or a side is in a Battle: the effective skill of one Combatant, or the sum of the effective skill of a side's Combatants able to fight. |
+| Combat rating | How strong a Combatant or a side is in a Combat: the effective skill of one Combatant, or the sum of the effective skill of a side's Combatants able to fight. |
 
 # Combat GDRs
 
-Enemies and Battles are configured by the three Game Data Record (GDR) Types below and by five AgentParameters values.
+Enemies and Combats are configured by the three Game Data Record (GDR) Types below and by five AgentParameters values.
 The GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the
 YAML files it names.
 
@@ -89,26 +90,26 @@ A Weapon GDR describes damage configuration. The table below is exhaustive apart
 | `name`   | The display name of the Weapon.                                                             | [Player-visible information](#player-visible-information)                                                |
 | `damage` | The weapon damage of a newly created Combatant equipped with this Weapon, in health points. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation) in Agents, for Agents |
 
-A Combatant's weapon damage is a value of the Combatant, set from `damage` at creation; the Battle reads the
+A Combatant's weapon damage is a value of the Combatant, set from `damage` at creation; a Combat reads the
 Combatant's weapon damage, never the Weapon's `damage`. An Agent's weapon damage can differ from its Weapon's `damage`
 under [Modifiable values](agents-spec.md#modifiable-values) in Agents. Individual inventory items are out of scope.
 
 ## CombatParameters
 
-CombatParameters bundles the scalar values that Battles read. The table below is exhaustive apart from `id` and `type`.
+CombatParameters bundles the scalar values that Combats read. The table below is exhaustive apart from `id` and `type`.
 Each value is a ratio, not a stored quantity, and is read as the exact decimal number it is
 written as, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities) in Numbers.
 
-| Property                              | Meaning                                                                                                                                         | Read by                                               |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `weapon_damage_range`                 | How far a damage outcome may lie below or above the attacker's weapon damage, as a fraction of that weapon damage.                              | [Damage outcome](#damage-outcome)                     |
-| `retreat_below_agent_rating_fraction` | The fraction of the Agents' side's Combat rating at Battle start below which the team considers retreating.                                     | [End-of-round checks](#end-of-round-checks)           |
-| `retreat_at_enemy_to_agent_rating`    | The ratio of the Enemies' side's Combat rating to the Agents' side's Combat rating at or above which a team that considers retreating retreats. | [End-of-round checks](#end-of-round-checks)           |
-| `incapacitation_skill_fraction`       | The fraction of a Combatant's skill at or below which its effective skill makes it Incapacitated.                                               | [Incapacitation condition](#incapacitation-condition) |
+| Property                              | Meaning                                                                                                                                         | Read by                                                   |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `weapon_damage_range`                 | How far a damage outcome may lie below or above the attacker's weapon damage, as a fraction of that weapon damage.                              | [Damage outcome](#damage-outcome)                         |
+| `retreat_below_agent_rating_fraction` | The fraction of the Agents' side's Combat rating at Combat start below which the team considers retreating.                                     | [End-of-Combat-round checks](#end-of-combat-round-checks) |
+| `retreat_at_enemy_to_agent_rating`    | The ratio of the Enemies' side's Combat rating to the Agents' side's Combat rating at or above which a team that considers retreating retreats. | [End-of-Combat-round checks](#end-of-combat-round-checks) |
+| `incapacitation_skill_fraction`       | The fraction of a Combatant's skill at or below which its effective skill makes it Incapacitated.                                               | [Incapacitation condition](#incapacitation-condition)     |
 
 ## AgentParameters values this document reads
 
-Battles read five values of [AgentParameters](agents-spec.md#agentparameters):
+Combats read five values of [AgentParameters](agents-spec.md#agentparameters):
 
 | Property                           | Meaning and use                                                                      | Read by                                                                                        |
 | ---------------------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
@@ -153,7 +154,7 @@ different gameplay, under
 9. **Exact properties:** Each EnemyArchetype, Weapon, and CombatParameters GDR has exactly the properties its table above
    lists, apart from `id` and `type`: no listed property is missing and no other property is present.
 
-Rules 7 and 8 together guarantee that every Battle ends, under [Termination](#termination). Rule 8 is also necessary for
+Rules 7 and 8 together guarantee that every Combat ends, under [Termination](#termination). Rule 8 is also necessary for
 that guarantee: skill has no upper bound, and when the penalty factor at `X` exceeds `100 ×
 incapacitation_skill_fraction`, a Combatant with a large enough skill and current health equal to its base health is still able to fight at
 exhaustion `X`, so two such Combatants that keep missing would never stop.
@@ -183,7 +184,7 @@ effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agen
 current health is 0 is dead; being dead is a Derived value of its current health, not a lifecycle state.
 
 **Retention:** An Enemy keeps every property above for the whole Campaign, so that every reference to it resolves, e.g.
-from a Battle result. Once its Mission site no longer participates in current gameplay, the Enemy is retained in World
+from a Combat report. Once its Mission site no longer participates in current gameplay, the Enemy is retained in World
 history with its final values, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
 Enemy is ever removed.
@@ -215,57 +216,57 @@ EnemyArchetype are distinct Campaign instances that share neither Instance ID no
 
 **Proposed rule:** The following list is the exhaustive set of rules that change an Enemy's values after its creation:
 
-- An attack on the Enemy in a Battle lowers its current health, under [Effects of an attack](#effects-of-an-attack).
-- An attack made by or on the Enemy in a Battle raises its exhaustion, under [Effects of an attack](#effects-of-an-attack).
+- An attack on the Enemy in a Combat lowers its current health, under [Effects of an attack](#effects-of-an-attack).
+- An attack made by or on the Enemy in a Combat raises its exhaustion, under [Effects of an attack](#effects-of-an-attack).
 
 No rule raises an Enemy's current health or lowers its exhaustion: Enemies never recover. Skill, base health, Weapon, and
-weapon damage never change. An Enemy's values after its Battle are therefore its final values, and an Enemy whose Mission
+weapon damage never change. An Enemy's values after its Combat are therefore its final values, and an Enemy whose Mission
 site is never fought over keeps its initial values.
 
-# Battles
+# Combats
 
-## Battle inputs and outputs
+## Combat inputs and outputs
 
-**Proposed rule:** A Battle is fully automatic: the player chooses who is deployed, under [Missions](missions.md), and
-makes no choice during the Battle. A Battle is a function of the following inputs only. This list is exhaustive.
+**Proposed rule:** A Combat is fully automatic: the player chooses who is deployed, under [Missions](missions.md), and
+makes no choice during the Combat. A Combat is a function of the following inputs only. This list is exhaustive.
 
 1. **The Agents' side:** a list of one or more distinct Agents, each Serving. This is the Mission's Current team.
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
 3. **Current values:** the skill, current health, base health, exhaustion, and weapon damage of every Combatant in the two
-   lists, as they are when the Battle begins.
+   lists, as they are when the Combat begins.
 4. **GDR values:** the four values of CombatParameters, and `exhaustion_cap`, `exhaustion_free_points`,
    `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, and `exhaustion_per_defense` of AgentParameters.
 5. **Random outcomes:** the named random outcomes of its attacks, under [Hit outcome](#hit-outcome) and
    [Damage outcome](#damage-outcome).
 
 The order of each list is the fixed order of its side, under [Fixed order of each side](#fixed-order-of-each-side).
-Nothing else influences a Battle; e.g., the turn number, the Mission site's kind, and any other Agent or Enemy have no
+Nothing else influences a Combat; e.g., the turn number, the Mission site's kind, and any other Agent or Enemy have no
 effect. Its outputs are exhaustive too:
 
-1. The Battle result, under [Battle result](#battle-result).
+1. The Combat report, under [Combat report](#combat-report).
 2. The changed current health and exhaustion of the Combatants of both lists, and the Killed lifecycle state of every Agent whose
    current health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
 
 An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side
 that contains an Enemy twice, are internal invariant violations under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract, not expected
-cases. [Missions](missions.md) guarantees valid lists when it has a Battle fought.
+cases. [Missions](missions.md) guarantees valid lists when it has a Combat fought.
 
-## Battle-only properties
+## Combat-only properties
 
 **Proposed rule:** The exhaustive set of gained properties of the
 [Combatant Role Type](agents-spec.md#combatant-role-type) is one property:
 
 | Gained property | Type      | Initial value                                           | Meaning                                                                                              |
 | --------------- | --------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Incapacitated   | Yes or no | Set at Battle start under [Battle start](#battle-start) | Whether the Combatant is Incapacitated, under [Killed and Incapacitated](#killed-and-incapacitated). |
+| Incapacitated   | Yes or no | Set at Combat start under [Combat start](#combat-start) | Whether the Combatant is Incapacitated, under [Killed and Incapacitated](#killed-and-incapacitated). |
 
-Every Combatant in either list gains Incapacitated when the Battle begins and loses it when the Battle ends, whatever
-its value then. Its value at the end of the Battle is recorded in the Battle result, under
-[Battle result](#battle-result); it affects nothing after the Battle. E.g., an Agent that was Incapacitated at the end of
-a Battle is an ordinary Serving Agent afterward, with the current health and exhaustion the Battle left it.
+Every Combatant in either list gains Incapacitated when the Combat begins and loses it when the Combat ends, whatever
+its value then. Its value at the end of the Combat is recorded in the Combat report, under
+[Combat report](#combat-report); it affects nothing after the Combat. E.g., an Agent that was Incapacitated at the end of
+a Combat is an ordinary Serving Agent afterward, with the current health and exhaustion the Combat left it.
 
-A Combatant is able to fight, during a Battle, exactly when its current health is greater than 0 and it is not Incapacitated.
+A Combatant is able to fight, during a Combat, exactly when its current health is greater than 0 and it is not Incapacitated.
 Being able to fight is a Derived value.
 
 ## Incapacitation condition
@@ -285,16 +286,16 @@ and one of skill 125 at 12 or less, since 12 ≤ 12.5 < 13.
 A Combatant of skill 0 meets the condition whenever it is alive, because its effective skill is 0. A Combatant that does
 not meet it has an effective skill of at least 1, because its effective skill is greater than a value of at least 0.
 
-Outside a Battle, a Combatant is able to fight exactly when its current health is greater than 0 and it does not meet the
-incapacitation condition. This is the definition [Combat rating](#combat-rating) uses outside a Battle, e.g. for a Mission
-site's Enemies before any team is deployed. Within a Battle the two definitions always agree, under
-[Monotonicity within a Battle](#monotonicity-within-a-battle).
+Outside a Combat, a Combatant is able to fight exactly when its current health is greater than 0 and it does not meet the
+incapacitation condition. This is the definition [Combat rating](#combat-rating) uses outside a Combat, e.g. for a Mission
+site's Enemies before any team is deployed. Within a Combat the two definitions always agree, under
+[Monotonicity within a Combat](#monotonicity-within-a-combat).
 
-## Battle timing
+## Combat timing
 
-**Proposed rule:** A Battle begins and ends within one Turn advancement step of one Advance turn, the step in which
+**Proposed rule:** A Combat begins and ends within one Turn advancement step of one Advance turn, the step in which
 [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. No Committed state
-therefore contains a Battle in progress, a Round, or the Incapacitated property. Only the Battle's outputs are ever part
+therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part
 of Committed state.
 
 # Combat rating
@@ -308,46 +309,46 @@ Combat rating of a side = Σ effective skill(c)   over every Combatant c of the 
 ```
 
 Inputs: each effective skill is a whole number of at least 0; whether a Combatant is able to fight is decided under
-[Battle-only properties](#battle-only-properties) during a Battle and under
+[Combat-only properties](#combat-only-properties) during a Combat and under
 [Incapacitation condition](#incapacitation-condition) outside one. No rounding occurs, because every term is a whole
 number. The result is a whole number of at least 0; it is 0 exactly when no Combatant of the side is able to fight,
 because every Combatant able to fight has an effective skill of at least 1.
 
-Combat rating is a Derived value and is never stored, except where the Battle result records it under
-[Battle result](#battle-result). It is computed from the values at the moment it is read. **Informative rationale:**
+Combat rating is a Derived value and is never stored, except where the Combat report records it under
+[Combat report](#combat-report). It is computed from the values at the moment it is read. **Informative rationale:**
 game-ts also weighted current health and weapon damage; v5 uses effective skill alone, which already falls with lost current health and
 exhaustion.
 
-# Battle flow
+# Combat flow
 
 ## Fixed order of each side
 
-**Proposed rule:** Each side has a fixed order for the whole Battle: the order of its input list under
-[Battle inputs and outputs](#battle-inputs-and-outputs). The Agents' side is ordered as the Current team's list is given,
-and the Enemies' side as the Mission site's list of Enemies is given. The fixed order never changes during the Battle;
-a Combatant that dies or becomes Incapacitated keeps its position and is skipped. The Battle result records both orders.
+**Proposed rule:** Each side has a fixed order for the whole Combat: the order of its input list under
+[Combat inputs and outputs](#combat-inputs-and-outputs). The Agents' side is ordered as the Current team's list is given,
+and the Enemies' side as the Mission site's list of Enemies is given. The fixed order never changes during the Combat;
+a Combatant that dies or becomes Incapacitated keeps its position and is skipped. The Combat report records both orders.
 
 **Informative rationale:** The order is not derived from Instance IDs, because the format of an Instance ID is the
 Implementer's choice and so defines no order.
 
-## Battle start
+## Combat start
 
-**Proposed rule:** When a Battle begins, before any Round:
+**Proposed rule:** When a Combat begins, before any Combat round:
 
 1. Every Combatant of both sides gains Incapacitated, set to yes exactly when the Combatant meets the
    [Incapacitation condition](#incapacitation-condition) with its current values, and to no otherwise. An Enemy whose
    current health is already 0 is dead and is not Incapacitated.
-2. The Battle result records each Combatant's starting values and the Combat rating of each side, under
-   [Battle result](#battle-result). The Combat rating of the Agents' side at this moment is its starting Combat rating,
+2. The Combat report records each Combatant's starting values and the Combat rating of each side, under
+   [Combat report](#combat-report). The Combat rating of the Agents' side at this moment is its starting Combat rating,
    which the Retreated check reads.
-3. If no Enemy is able to fight, the Battle ends with the Battle outcome Prevailed after 0 Rounds. Otherwise, if no
-   Agent is able to fight, it ends with the Battle outcome Wiped after 0 Rounds. Otherwise the first Round begins.
+3. If no Enemy is able to fight, the Combat ends with the Combat outcome Prevailed after 0 Combat rounds. Otherwise, if no
+   Agent is able to fight, it ends with the Combat outcome Wiped after 0 Combat rounds. Otherwise the first Combat round begins.
 
-A Battle that ends at its start makes no attack and changes no value of any Combatant.
+A Combat that ends at its start makes no attack and changes no value of any Combatant.
 
-## Rounds
+## Combat rounds
 
-**Proposed rule:** Rounds are numbered from 1. Each Round consists of two phases, in this order:
+**Proposed rule:** Combat rounds are numbered from 1. Each Combat round consists of two phases, in this order:
 
 1. **Agents' phase:** each Agent of the Agents' side takes one turn, in the fixed order of its side.
 2. **Enemies' phase:** each Enemy of the Enemies' side takes one turn, in the fixed order of its side.
@@ -355,11 +356,11 @@ A Battle that ends at its start makes no attack and changes no value of any Comb
 On its turn, a Combatant that is not able to fight at that moment does nothing. A Combatant that is able to fight
 selects a target under [Target selection](#target-selection); if no opponent is able to fight it does nothing, and
 otherwise it makes exactly one attack on the target, under [Attacks](#attacks). Every effect of an attack applies
-immediately, before the next turn, so every later turn, target selection, and attack in the same Round reads the
-changed values. E.g., an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same Round.
+immediately, before the next turn, so every later turn, target selection, and attack in the same Combat round reads the
+changed values. E.g., an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same Combat round.
 
-After the Enemies' phase, the [End-of-round checks](#end-of-round-checks) decide whether the Battle ends or another
-Round begins.
+After the Enemies' phase, the [End-of-Combat-round checks](#end-of-combat-round-checks) decide whether the Combat ends or another
+Combat round begins.
 
 ## Target selection
 
@@ -376,9 +377,9 @@ the Victory path is winnable; this is evidence for the choice, not a requirement
 # Attacks
 
 An attack is made by one attacker on one defender, its target. It has one hit outcome and, when the hit outcome is a
-hit, one damage outcome. These are its only random outcomes; no other part of a Battle is random. Each outcome
+hit, one damage outcome. These are its only random outcomes; no other part of a Combat is random. Each outcome
 depends only on the values its section names, and is independent of every other random outcome, except that a damage
-outcome exists only for an attack whose hit outcome is a hit. No random outcome of a Battle is hidden from the player.
+outcome exists only for an attack whose hit outcome is a hit. No random outcome of a Combat is hidden from the player.
 
 ## Hit outcome
 
@@ -420,7 +421,7 @@ Each bound is evaluated exactly and rounded once, with Round up for `lo` and Rou
 [Rounding](../foundation/numbers.md#rounding) in Numbers, before the range is formed. Because w is a whole number,
 `w × (1 − weapon_damage_range) ≤ w ≤ w × (1 + weapon_damage_range)` gives `0 ≤ lo ≤ w ≤ hi`, so the range is never
 empty. Each of the `hi − lo + 1` values has the Probability `1 / (hi − lo + 1)`. The damage outcome does not depend on
-the defender. Weapon damage does not change during a Battle, so the range of one attacker is the same for all its
+the defender. Weapon damage does not change during a Combat, so the range of one attacker is the same for all its
 attacks.
 
 ## Effects of an attack
@@ -455,28 +456,28 @@ of these that holds:
 
 Only the defender can die in an attack, because only the defender loses current health. Both can become Incapacitated. A dead or
 Incapacitated Combatant is not able to fight: it makes no further attack and is never a target for the rest of the
-Battle, so its current health and exhaustion do not change again in that Battle. An Incapacitated Combatant is alive: an
-Incapacitated Agent survives the Battle and is not Killed.
+Combat, so its current health and exhaustion do not change again in that Combat. An Incapacitated Combatant is alive: an
+Incapacitated Agent survives the Combat and is not Killed.
 
 **Inherited behavior:** The incapacitation threshold, i.e. an effective skill at or below a fraction of skill, is taken
 from game-ts.
 
-## Monotonicity within a Battle
+## Monotonicity within a Combat
 
-Within a Battle, skill and base health are constant, current health never rises, and exhaustion never falls. Every factor of
+Within a Combat, skill and base health are constant, current health never rises, and exhaustion never falls. Every factor of
 the [Effective skill](agents-spec.md#effective-skill) formula that can change therefore never rises, so a Combatant's
-effective skill never rises during a Battle. It follows that a Combatant that meets the
+effective skill never rises during a Combat. It follows that a Combatant that meets the
 [Incapacitation condition](#incapacitation-condition) keeps meeting it, that no Combatant becomes able to fight again
 once it is not, and that only the attacker and defender of an attack can change whether they meet the condition. The
-evaluations under [Battle start](#battle-start) and [Killed and Incapacitated](#killed-and-incapacitated) therefore keep
-Incapacitated equal, at every moment of a Battle, to "alive and meets the incapacitation condition".
+evaluations under [Combat start](#combat-start) and [Killed and Incapacitated](#killed-and-incapacitated) therefore keep
+Incapacitated equal, at every moment of a Combat, to "alive and meets the incapacitation condition".
 
-# Battle end
+# Combat end
 
-## End-of-round checks
+## End-of-Combat-round checks
 
 **Inherited behavior** for the two retreat thresholds; **Proposed rule** for the order. After the Enemies' phase of
-each Round, these checks are made in this order, and the first that holds ends the Battle with its Battle outcome:
+each Combat round, these checks are made in this order, and the first that holds ends the Combat with its Combat outcome:
 
 1. **Prevailed:** No Enemy is able to fight.
 2. **Wiped:** No Agent is able to fight.
@@ -489,30 +490,30 @@ each Round, these checks are made in this order, and the first that holds ends t
    ```
 
    where `R_agents` and `R_enemies` are the Combat ratings of the Agents' side and the Enemies' side at the end of the
-   Round, and `R_start` is the starting Combat rating of the Agents' side under [Battle start](#battle-start).
+   Combat round, and `R_start` is the starting Combat rating of the Agents' side under [Combat start](#combat-start).
 
-When none holds, the next Round begins. The checks are made only after the Enemies' phase; e.g., a Round whose
+When none holds, the next Combat round begins. The checks are made only after the Enemies' phase; e.g., a Combat round whose
 Agents' phase leaves no Enemy able to fight still completes its Enemies' phase, in which no Enemy attacks, before the
-Battle ends as Prevailed. The number of Rounds of the Battle is the number of the Round after which a check held, or 0
-when the Battle ended at its start.
+Combat ends as Prevailed. The number of Combat rounds of the Combat is the number of the Combat round after which a check held, or 0
+when the Combat ended at its start.
 
-## Battle outcomes
+## Combat outcomes
 
-**Proposed rule:** A Battle ends with exactly one Battle outcome. The set is exhaustive:
+**Proposed rule:** A Combat ends with exactly one Combat outcome. The set is exhaustive:
 
-| Battle outcome | When                                                                                                                                   |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Prevailed      | No Enemy is able to fight, at Battle start or after a Round. Checked first, so it holds even when no Agent is able to fight either.    |
-| Wiped          | Some Enemy, but no Agent, is able to fight, at Battle start or after a Round.                                                          |
-| Retreated      | After a Round, Agents and Enemies are both able to fight and the Retreated check of [End-of-round checks](#end-of-round-checks) holds. |
+| Combat outcome | When                                                                                                                                                        |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prevailed      | No Enemy is able to fight, at Combat start or after a Combat round. Checked first, so it holds even when no Agent is able to fight either.                  |
+| Wiped          | Some Enemy, but no Agent, is able to fight, at Combat start or after a Combat round.                                                                        |
+| Retreated      | After a Combat round, Agents and Enemies are both able to fight and the Retreated check of [End-of-Combat-round checks](#end-of-combat-round-checks) holds. |
 
-A Battle outcome is final. Every Agent of a Battle that ends as Retreated or Wiped keeps the values the Battle left it;
-the Battle outcome itself changes no Combatant value. Whether the Mission is then Won or Lost, and what becomes of
-each surviving Agent, follows from the Battle outcome under [Missions](missions.md).
+A Combat outcome is final. Every Agent of a Combat that ends as Retreated or Wiped keeps the values the Combat left it;
+the Combat outcome itself changes no Combatant value. Whether the Mission is then Won or Lost, and what becomes of
+each surviving Agent, follows from the Combat outcome under [Missions](missions.md).
 
 ## Termination
 
-**Proposed rule:** Every Battle ends, after at most `N × X` Rounds, where `N` is the number of Combatants of both sides
+**Proposed rule:** Every Combat ends, after at most `N × X` Combat rounds, where `N` is the number of Combatants of both sides
 and `X` is `exhaustion_cap`. This holds for every Game build that passes [Combat GDR validation](#combat-gdr-validation),
 whatever the random outcomes, including when every hit outcome is a miss, and including Combatants that never attack or
 are never attacked. The argument is:
@@ -521,53 +522,57 @@ are never attacked. The argument is:
    `100 × incapacitation_skill_fraction` by rule 8 of [Combat GDR validation](#combat-gdr-validation). Since current health
    divided by base health is at most 1 and Round down never raises a value, its effective skill is at most
    `skill × penalty factor / 100 ≤ incapacitation_skill_fraction × skill`. It meets the
-   [Incapacitation condition](#incapacitation-condition), so it is Incapacitated: at Battle start, or after the attack
+   [Incapacitation condition](#incapacitation-condition), so it is Incapacitated: at Combat start, or after the attack
    that raised its exhaustion to `X`. Every Combatant able to fight therefore has an exhaustion below `X`.
 2. **Every attack raises total exhaustion.** Attacker and defender are both able to fight before the attack, so each has
    an exhaustion below `X`, and the attack raises the attacker's by at least `min(1, exhaustion_per_attack)` and the
    defender's by at least `min(1, exhaustion_per_defense)`. By rule 7 one of these is at least 1. The sum of the
-   exhaustion of all Combatants of the Battle thus rises by at least 1 with every attack.
-3. **Total exhaustion is bounded.** No rule lowers exhaustion during a Battle, and each Combatant's exhaustion is at most
+   exhaustion of all Combatants of the Combat thus rises by at least 1 with every attack.
+3. **Total exhaustion is bounded.** No rule lowers exhaustion during a Combat, and each Combatant's exhaustion is at most
    `X`, so the sum starts at 0 or more and never exceeds `N × X`. At most `N × X` attacks can therefore happen in one
-   Battle.
-4. **Every Round that is fought has an attack.** A Round begins only when an Agent and an Enemy are both able to fight,
-   under [Battle start](#battle-start) and [End-of-round checks](#end-of-round-checks). Let `a` be the first Agent in
-   the fixed order of its side that is able to fight when the Round begins. Before `a`'s turn only Agents that are not
+   Combat.
+4. **Every Combat round that is fought has an attack.** A Combat round begins only when an Agent and an Enemy are both able to fight,
+   under [Combat start](#combat-start) and [End-of-Combat-round checks](#end-of-combat-round-checks). Let `a` be the first Agent in
+   the fixed order of its side that is able to fight when the Combat round begins. Before `a`'s turn only Agents that are not
    able to fight have had a turn, so no attack has happened, `a` is still able to fight, and an Enemy is still able to
    fight; so `a` attacks.
 
-By 3 and 4 no Battle has more than `N × X` Rounds. A Combatant that is never attacked and never attacks plays no part in
+By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is never attacked and never attacks plays no part in
 this argument: the bound counts attacks, not the exhaustion of each Combatant.
 
-# Battle result
+# Combat report
 
-**Proposed rule:** Every Battle produces exactly one Battle result. It holds exactly the following facts, and this list
+**Proposed rule:** Every Combat produces exactly one Combat report. It holds exactly the following facts, and this list
 is exhaustive:
 
-1. **Battle outcome:** Prevailed, Retreated, or Wiped.
-2. **Number of Rounds:** a whole number of at least 0.
+1. **Combat outcome:** Prevailed, Retreated, or Wiped.
+2. **Number of Combat rounds:** a whole number of at least 0.
 3. **Participants:** the Agents' side and the Enemies' side, each as the list of Instance IDs in its fixed order.
 4. **Starting values:** for each participant, its skill, current health, base health, exhaustion, weapon damage, effective
-   skill, and Incapacitated value when the Battle began, after [Battle start](#battle-start) step 1.
-5. **Final values:** for each participant, its current health, exhaustion, and effective skill when the Battle ended, and its
+   skill, and Incapacitated value when the Combat began, after [Combat start](#combat-start) step 1.
+5. **Final values:** for each participant, its current health, exhaustion, and effective skill when the Combat ended, and its
    final condition: able to fight, Incapacitated, or dead. A dead Agent is Killed.
 6. **Health removed:** for each participant, the damage it dealt, i.e. the sum of the health removed by its attacks, and
    the damage it took, i.e. the sum of the health removed by attacks on it.
-7. **Combat ratings:** the Combat rating of each side at Battle start and at the end of every Round.
-8. **Attacks:** every attack, in the order in which it was made, each with its Round number, its attacker and defender
+7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
+8. **Combat log:** every attack, in the order in which it was made, each with its Combat round number, its attacker and defender
    by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the
    damage outcome when there is one, the health removed, the current health and exhaustion of the attacker and the defender
    after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
+9. **Mission:** the Instance ID of the Mission whose Combat it records, which [Missions](missions.md) supplies when it
+   has the Combat fought. It influences nothing in the Combat.
 
-A participant's skill, base health, and weapon damage do not change in a Battle, so its final values need not repeat
+A participant's skill, base health, and weapon damage do not change in a Combat, so its final values need not repeat
 them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above.
 
-The Battle result is an Authoritative value. [Game concepts](domain-model.md#game-concepts) in Domain
-Model places it in the Mission whose Battle it is. Once produced, it is never rewritten or
-recomputed, even when the values of its participants change later, under
+The Combat report is an Authoritative value. It is part of the [Turn report](../foundation/campaign-state.md#glossary) of
+the Advance turn in which its Combat was fought, and no Mission or other Campaign instance holds it.
+`player.queries.getTurnReport()` returns every fact above until the next Advance turn replaces that Turn report, under
+[Current state, Turn report, and history](../foundation/engine-contract.md#current-state-turn-report-and-history) in
+Engine Contract. How the Turn report organizes its Combat reports is left to the implementation. Once produced, a
+Combat report is never rewritten or recomputed, even when the values of its participants change later, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. Whatever
-presents a Battle later uses the retained values. Every fact above remains available while the Battle result belongs to
-the Turn report; after the next Advance turn, only the facts that its History entry holds need to remain available,
+presents a Combat later uses the retained values. After the next Advance turn, only the facts that its History entry holds need to remain available,
 under [Turn report and history](../foundation/campaign-state.md#turn-report-and-history) in Campaign State.
 
 # Player-visible information
@@ -581,34 +586,34 @@ moment it exists, without a reveal condition. The table is exhaustive.
 | An Enemy's Instance ID, its EnemyArchetype including the EnemyArchetype's `name`, and its Mission site                                           | Yes                        |
 | An Enemy's skill, current health, base health, exhaustion, Weapon, and weapon damage                                                             | Yes                        |
 | An Enemy's effective skill and Combat rating, and the Combat rating of any side, e.g. of a Mission site's Enemies                                | Yes                        |
-| Every fact of a Battle result, including every random outcome it records                                                                         | Yes                        |
+| Every fact of a Combat report, including every random outcome it records                                                                         | Yes                        |
 | Every property of each EnemyArchetype, Weapon, and CombatParameters GDR, and the meaning of `exhaustion_per_attack` and `exhaustion_per_defense` | Yes                        |
 
-Incapacitated and a Battle in progress never exist in a Committed state, under [Battle timing](#battle-timing), so the
-player observes them only through the Battle result. **Unknown versus absent:** No value in the table above is hidden,
+Incapacitated and a Combat in progress never exist in a Committed state, under [Combat timing](#combat-timing), so the
+player observes them only through the Combat report. **Unknown versus absent:** No value in the table above is hidden,
 so Player API never reports one as unknown. A damage outcome is absent, not zero, for an attack whose hit outcome is a
-miss; its health removed is 0. A Mission whose Battle has not been fought has no Battle result; Player API reports it as
-absent.
+miss; its health removed is 0. A Turn report holds a Combat report only for each Combat its Advance turn fought; a
+Mission whose Combat has not been fought has no Combat report anywhere.
 
 # Edge cases and failure behavior
 
-- **Empty Enemies' side:** No Enemy is able to fight at Battle start, so the Battle ends as Prevailed after 0 Rounds,
-  with no attack and no change to any Agent ([Battle start](#battle-start)).
-- **No Agent able to fight at Battle start:** When every Agent meets the incapacitation condition at Battle start, e.g.
-  because of high exhaustion, and some Enemy is able to fight, the Battle ends as Wiped after 0 Rounds; every Agent
-  survives unchanged ([Battle start](#battle-start)).
+- **Empty Enemies' side:** No Enemy is able to fight at Combat start, so the Combat ends as Prevailed after 0 Combat rounds,
+  with no attack and no change to any Agent ([Combat start](#combat-start)).
+- **No Agent able to fight at Combat start:** When every Agent meets the incapacitation condition at Combat start, e.g.
+  because of high exhaustion, and some Enemy is able to fight, the Combat ends as Wiped after 0 Combat rounds; every Agent
+  survives unchanged ([Combat start](#combat-start)).
 - **Single Combatant on a side:** A side of one Combatant is valid. Every attacker of the other side targets it while it
   is able to fight ([Target selection](#target-selection)).
-- **Agent with lost current health or with exhaustion at Battle start:** The Battle starts from the Agent's current health and exhaustion. Its
+- **Agent with lost current health or with exhaustion at Combat start:** The Combat starts from the Agent's current health and exhaustion. Its
   effective skill and the starting Combat rating reflect them, and it is Incapacitated from the start if it meets the
-  incapacitation condition ([Battle start](#battle-start), [Combat rating](#combat-rating)).
+  incapacitation condition ([Combat start](#combat-start), [Combat rating](#combat-rating)).
 - **Enemy with effective skill 0:** An alive Enemy whose effective skill is 0, e.g. one with skill 0, meets the
-  incapacitation condition, so it is Incapacitated from Battle start, never attacks, and is never a target
+  incapacitation condition, so it is Incapacitated from Combat start, never attacks, and is never a target
   ([Incapacitation condition](#incapacitation-condition)).
-- **Enemy already dead at Battle start:** An Enemy with current health 0 is dead, not able to fight, and not Incapacitated
-  ([Battle start](#battle-start)).
+- **Enemy already dead at Combat start:** An Enemy with current health 0 is dead, not able to fight, and not Incapacitated
+  ([Combat start](#combat-start)).
 - **Attacker with no target:** An attacker able to fight with no opponent able to fight does nothing on its turn and
-  gains no exhaustion ([Rounds](#rounds)).
+  gains no exhaustion ([Combat rounds](#combat-rounds)).
 - **Zero divisor:** The hit Probability's divisor is at least 2, because both effective skills are at least 1
   ([Hit outcome](#hit-outcome)).
 - **Damage above remaining current health:** Current health falls to 0, not below; the health removed is the defender's remaining
@@ -619,12 +624,12 @@ absent.
   [Combat GDR validation](#combat-gdr-validation) such a Combatant is Incapacitated ([Termination](#termination)).
 - **Simultaneous end conditions:** When no Combatant of either side is able to fight, the outcome is Prevailed. When no
   Agent is able to fight and the Retreated check would also hold, the outcome is Wiped
-  ([End-of-round checks](#end-of-round-checks)).
+  ([End-of-Combat-round checks](#end-of-combat-round-checks)).
 - **Ties in target selection:** The earliest opponent in the fixed order wins the tie ([Target selection](#target-selection)).
-- **Every attack misses:** The Battle still ends, through Incapacitated or Retreated, within `N × exhaustion_cap` Rounds
+- **Every attack misses:** The Combat still ends, through Incapacitated or Retreated, within `N × exhaustion_cap` Combat rounds
   ([Termination](#termination)).
 - **Invalid inputs:** An empty Agents' side, a duplicate Combatant, or an Agent that is not Serving is an internal
-  invariant violation ([Battle inputs and outputs](#battle-inputs-and-outputs)).
+  invariant violation ([Combat inputs and outputs](#combat-inputs-and-outputs)).
 - **Invalid GDRs:** A Game build that fails [Combat GDR validation](#combat-gdr-validation), e.g. with a Weapon `damage`
   of 0, a `weapon_damage_range` of 1.5, or `exhaustion_per_attack` and `exhaustion_per_defense` both 0, is defective and
   no Campaign is created from it.
@@ -667,7 +672,7 @@ of each EnemyArchetype. Each has a distinct fresh Instance ID, Mission site s1, 
 | `soldier`      | 120   | 30             | 30          | 0          | `rifle`       | 14            | 120             | 12 or less                                                  |
 | `cult_leader`  | 300   | 40             | 40          | 0          | `heavy_rifle` | 22            | 300             | 30 or less                                                  |
 
-If s1 expires and its Battle is never fought, these values never change. All of them are Player-visible information
+If s1 expires and its Combat is never fought, these values never change. All of them are Player-visible information
 ([Player-visible information](#player-visible-information)).
 
 ## Damage bounds for each Weapon
@@ -700,7 +705,7 @@ This example exercises [Hit outcome](#hit-outcome). Each hit Probability is repo
 
 ## Target selection with ties
 
-This example exercises [Target selection](#target-selection) and [Rounds](#rounds). Mid-Battle, the Agents' side is a1
+This example exercises [Target selection](#target-selection) and [Combat rounds](#combat-rounds). Mid-Combat, the Agents' side is a1
 with current health 29 of 30 (effective skill `round down(96.67…) = 96`), a2, a3, and a4, a test Agent of skill 130 with current health
 equal to its base health and exhaustion 100 (effective skill `round down(130 × 5 / 100) = 6`, Incapacitated since 6 ≤ 13). The Enemies'
 side is e1 `initiate` (40), e2 `soldier` (120), and e3 `soldier` (120), all able to fight.
@@ -712,40 +717,40 @@ side is e1 `initiate` (40), e2 `soldier` (120), and e3 `soldier` (120), all able
 - In the Enemies' phase, while a2 and a3 both still have effective skill 100, an attacking Enemy targets a2, because a2
   is earlier. a4, whose skill is the highest, is never a target, because it is not able to fight.
 
-## Complete Battle: two Agents against two initiates
+## Complete Combat: two Agents against two initiates
 
-This example exercises [Battle start](#battle-start), [Rounds](#rounds), [Target selection](#target-selection),
+This example exercises [Combat start](#combat-start), [Combat rounds](#combat-rounds), [Target selection](#target-selection),
 [Hit outcome](#hit-outcome), [Damage outcome](#damage-outcome), [Effects of an attack](#effects-of-an-attack),
-[Killed and Incapacitated](#killed-and-incapacitated), [End-of-round checks](#end-of-round-checks), and
-[Battle result](#battle-result). The Agents' side is a1, a2; the Enemies' side is e1, e2, both `initiate`.
+[Killed and Incapacitated](#killed-and-incapacitated), [End-of-Combat-round checks](#end-of-combat-round-checks), and
+[Combat report](#combat-report). The Agents' side is a1, a2; the Enemies' side is e1, e2, both `initiate`.
 
-At Battle start nobody meets the incapacitation condition. The starting Combat rating of the Agents' side is 200, and of
+At Combat start nobody meets the incapacitation condition. The starting Combat rating of the Agents' side is 200, and of
 the Enemies' side 80. The Retreated check therefore needs a Combat rating of the Agents' side below 0.5 × 200 = 100.
 
-| Round | Attacker → target         | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after       | Target after         |
-| ----- | ------------------------- | --- | --- | --------------- | ----------------- | -------------- | -------------------- | -------------------- |
-| 1     | a1 → e1 (tie, e1 earlier) | 100 | 40  | 10000 / 11600   | hit; damage 12    | 12             | a1: h30, x1, eff 100 | e1: h8, x1, eff 16   |
-| 1     | a2 → e2 (40 beats 16)     | 100 | 40  | 10000 / 11600   | hit; damage 15    | 15             | a2: h30, x1, eff 100 | e2: h5, x1, eff 10   |
-| 1     | e1 → a1 (tie, a1 earlier) | 16  | 100 | 256 / 10256     | miss              | 0              | e1: h8, x2, eff 16   | a1: h30, x2, eff 100 |
-| 1     | e2 → a1 (tie, a1 earlier) | 10  | 100 | 100 / 10100     | hit; damage 7     | 7              | e2: h5, x2, eff 10   | a1: h23, x3, eff 76  |
-| 2     | a1 → e1 (16 beats 10)     | 76  | 16  | 5776 / 6032     | hit; damage 9     | 8              | a1: h23, x4, eff 76  | e1: h0, x3, dead     |
-| 2     | a2 → e2 (only target)     | 100 | 10  | 10000 / 10100   | miss              | 0              | a2: h30, x2, eff 100 | e2: h5, x3, eff 10   |
-| 2     | e2 → a2 (100 beats 76)    | 10  | 100 | 100 / 10100     | miss              | 0              | e2: h5, x4, eff 10   | a2: h30, x3, eff 100 |
-| 3     | a1 → e2 (only target)     | 76  | 10  | 5776 / 5876     | hit; damage 5     | 5              | a1: h23, x5, eff 76  | e2: h0, x5, dead     |
+| Combat round | Attacker → target         | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after       | Target after         |
+| ------------ | ------------------------- | --- | --- | --------------- | ----------------- | -------------- | -------------------- | -------------------- |
+| 1            | a1 → e1 (tie, e1 earlier) | 100 | 40  | 10000 / 11600   | hit; damage 12    | 12             | a1: h30, x1, eff 100 | e1: h8, x1, eff 16   |
+| 1            | a2 → e2 (40 beats 16)     | 100 | 40  | 10000 / 11600   | hit; damage 15    | 15             | a2: h30, x1, eff 100 | e2: h5, x1, eff 10   |
+| 1            | e1 → a1 (tie, a1 earlier) | 16  | 100 | 256 / 10256     | miss              | 0              | e1: h8, x2, eff 16   | a1: h30, x2, eff 100 |
+| 1            | e2 → a1 (tie, a1 earlier) | 10  | 100 | 100 / 10100     | hit; damage 7     | 7              | e2: h5, x2, eff 10   | a1: h23, x3, eff 76  |
+| 2            | a1 → e1 (16 beats 10)     | 76  | 16  | 5776 / 6032     | hit; damage 9     | 8              | a1: h23, x4, eff 76  | e1: h0, x3, dead     |
+| 2            | a2 → e2 (only target)     | 100 | 10  | 10000 / 10100   | miss              | 0              | a2: h30, x2, eff 100 | e2: h5, x3, eff 10   |
+| 2            | e2 → a2 (100 beats 76)    | 10  | 100 | 100 / 10100     | miss              | 0              | e2: h5, x4, eff 10   | a2: h30, x3, eff 100 |
+| 3            | a1 → e2 (only target)     | 76  | 10  | 5776 / 5876     | hit; damage 5     | 5              | a1: h23, x5, eff 76  | e2: h0, x5, dead     |
 
-End-of-round checks:
+End-of-Combat-round checks:
 
-| After Round | Combat rating, Agents' side | Combat rating, Enemies' side | Result                                                             |
-| ----------- | --------------------------- | ---------------------------- | ------------------------------------------------------------------ |
-| 1           | 76 + 100 = 176              | 16 + 10 = 26                 | Enemies and Agents able to fight; 176 is not below 100: next Round |
-| 2           | 176                         | 10                           | Next Round, for the same reasons                                   |
-| 3           | 176                         | 0                            | Prevailed                                                          |
+| After Combat round | Combat rating, Agents' side | Combat rating, Enemies' side | Result                                                                    |
+| ------------------ | --------------------------- | ---------------------------- | ------------------------------------------------------------------------- |
+| 1                  | 76 + 100 = 176              | 16 + 10 = 26                 | Enemies and Agents able to fight; 176 is not below 100: next Combat round |
+| 2                  | 176                         | 10                           | Next Combat round, for the same reasons                                   |
+| 3                  | 176                         | 0                            | Prevailed                                                                 |
 
-In Round 2, e1 is dead before the Enemies' phase, so it does not attack. In Round 2 the damage outcome 9 exceeds e1's
-remaining current health 8, so e1's current health is 0 and the health removed is 8. In Round 3, a2's turn comes after e2 is dead; with
+In Combat round 2, e1 is dead before the Enemies' phase, so it does not attack. In Combat round 2 the damage outcome 9 exceeds e1's
+remaining current health 8, so e1's current health is 0 and the health removed is 8. In Combat round 3, a2's turn comes after e2 is dead; with
 no opponent able to fight, a2 does nothing and gains no exhaustion, and the Enemies' phase has no attack.
 
-The Battle result holds: Battle outcome Prevailed; 3 Rounds; participants [a1, a2] and [e1, e2]; the starting values
+The Combat report holds: Combat outcome Prevailed; 3 Combat rounds; participants [a1, a2] and [e1, e2]; the starting values
 above; final values a1 current health 23, exhaustion 5, effective skill 76, able to fight; a2 current health 30, exhaustion 3, effective
 skill 100, able to fight; e1 current health 0, exhaustion 3, dead; e2 current health 0, exhaustion 5, dead; damage dealt a1 25, a2 15,
 e1 0, e2 7, and damage taken a1 7, a2 0, e1 20, e2 20; the Combat ratings in the table; and the 8 attacks above with
@@ -753,104 +758,104 @@ their outcomes. a1 and a2 are both still Serving.
 
 ## Retreated
 
-This example exercises [End-of-round checks](#end-of-round-checks) and [Battle outcomes](#battle-outcomes). The Agents'
+This example exercises [End-of-Combat-round checks](#end-of-combat-round-checks) and [Combat outcomes](#combat-outcomes). The Agents'
 side is a1; the Enemies' side is e1, a `soldier`. The starting Combat rating of the Agents' side is 100.
 
-| Round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Attacker after       | Target after         |
-| ----- | ----------------- | --- | --- | --------------- | ----------------- | -------------------- | -------------------- |
-| 1     | a1 → e1           | 100 | 120 | 10000 / 24400   | miss              | a1: h30, x1, eff 100 | e1: h30, x1, eff 120 |
-| 1     | e1 → a1           | 120 | 100 | 14400 / 24400   | hit; damage 21    | e1: h30, x2, eff 120 | a1: h9, x2, eff 30   |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Attacker after       | Target after         |
+| ------------ | ----------------- | --- | --- | --------------- | ----------------- | -------------------- | -------------------- |
+| 1            | a1 → e1           | 100 | 120 | 10000 / 24400   | miss              | a1: h30, x1, eff 100 | e1: h30, x1, eff 120 |
+| 1            | e1 → a1           | 120 | 100 | 14400 / 24400   | hit; damage 21    | e1: h30, x2, eff 120 | a1: h9, x2, eff 30   |
 
 a1's effective skill is `round down(100 × 9 × 100 / 3000) = 30`, above its threshold 10, so it is able to fight. After
-Round 1, an Enemy and an Agent are able to fight, so neither Prevailed nor Wiped holds. The Retreated check holds:
-30 < 0.5 × 100 = 50, and 120 ≥ 0.8 × 30 = 24. The Battle ends as Retreated after 1 Round. a1 survives with current health 9 and
+Combat round 1, an Enemy and an Agent are able to fight, so neither Prevailed nor Wiped holds. The Retreated check holds:
+30 < 0.5 × 100 = 50, and 120 ≥ 0.8 × 30 = 24. The Combat ends as Retreated after 1 Combat round. a1 survives with current health 9 and
 exhaustion 2; the damage outcome 21 is the highest value for `rifle`.
 
 ## Wiped, with the Retreated check also holding
 
-This example exercises [End-of-round checks](#end-of-round-checks), [Killed and Incapacitated](#killed-and-incapacitated),
-and an Agent whose current health is already below its base health at Battle start. The Agents' side is a1 with current health 6 of 30, so effective skill
+This example exercises [End-of-Combat-round checks](#end-of-combat-round-checks), [Killed and Incapacitated](#killed-and-incapacitated),
+and an Agent whose current health is already below its base health at Combat start. The Agents' side is a1 with current health 6 of 30, so effective skill
 `round down(100 × 6 × 100 / 3000) = 20`; the Enemies' side is e1, a `cult_leader`. The starting Combat rating of the
 Agents' side is 20.
 
-| Round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after       | Target after             |
-| ----- | ----------------- | --- | --- | --------------- | ----------------- | -------------- | -------------------- | ------------------------ |
-| 1     | a1 → e1           | 20  | 300 | 400 / 90400     | miss              | 0              | a1: h6, x1, eff 20   | e1: h40, x1, eff 300     |
-| 1     | e1 → a1           | 300 | 20  | 90000 / 90400   | hit; damage 11    | 6              | e1: h40, x2, eff 300 | a1: h0, x2, dead, Killed |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after       | Target after             |
+| ------------ | ----------------- | --- | --- | --------------- | ----------------- | -------------- | -------------------- | ------------------------ |
+| 1            | a1 → e1           | 20  | 300 | 400 / 90400     | miss              | 0              | a1: h6, x1, eff 20   | e1: h40, x1, eff 300     |
+| 1            | e1 → a1           | 300 | 20  | 90000 / 90400   | hit; damage 11    | 6              | e1: h40, x2, eff 300 | a1: h0, x2, dead, Killed |
 
-a1 becomes Killed when its current health reaches 0. After Round 1, e1 is able to fight and no Agent is, so the outcome is Wiped
-after 1 Round. The Retreated check would also hold, since 0 < 0.5 × 20 and 300 ≥ 0.8 × 0, but Wiped is checked first.
+a1 becomes Killed when its current health reaches 0. After Combat round 1, e1 is able to fight and no Agent is, so the outcome is Wiped
+after 1 Combat round. The Retreated check would also hold, since 0 < 0.5 × 20 and 300 ≥ 0.8 × 0, but Wiped is checked first.
 
-## Incapacitated during a Battle
+## Incapacitated during a Combat
 
 This example exercises [Killed and Incapacitated](#killed-and-incapacitated), [Target selection](#target-selection),
-[Combat rating](#combat-rating), and [Battle-only properties](#battle-only-properties). The Agents' side is a1 with
+[Combat rating](#combat-rating), and [Combat-only properties](#combat-only-properties). The Agents' side is a1 with
 exhaustion 94, so penalty factor `100 − 1 × 89 = 11` and effective skill 11, and a2; the Enemies' side is e1, an
-`initiate`. At Battle start a1's 11 is above its threshold 10, so nobody is Incapacitated, and the starting Combat
+`initiate`. At Combat start a1's 11 is above its threshold 10, so nobody is Incapacitated, and the starting Combat
 rating of the Agents' side is 111.
 
-| Round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after                      | Target after         |
-| ----- | ----------------- | --- | --- | --------------- | ----------------- | -------------- | ----------------------------------- | -------------------- |
-| 1     | a1 → e1           | 11  | 40  | 121 / 1721      | miss              | 0              | a1: h30, x95, eff 10, Incapacitated | e1: h20, x1, eff 40  |
-| 1     | a2 → e1           | 100 | 40  | 10000 / 11600   | hit; damage 10    | 10             | a2: h30, x1, eff 100                | e1: h10, x2, eff 20  |
-| 1     | e1 → a2           | 20  | 100 | 400 / 10400     | miss              | 0              | e1: h10, x3, eff 20                 | a2: h30, x2, eff 100 |
-| 2     | a2 → e1           | 100 | 20  | 10000 / 10400   | hit; damage 13    | 10             | a2: h30, x3, eff 100                | e1: h0, x4, dead     |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after                      | Target after         |
+| ------------ | ----------------- | --- | --- | --------------- | ----------------- | -------------- | ----------------------------------- | -------------------- |
+| 1            | a1 → e1           | 11  | 40  | 121 / 1721      | miss              | 0              | a1: h30, x95, eff 10, Incapacitated | e1: h20, x1, eff 40  |
+| 1            | a2 → e1           | 100 | 40  | 10000 / 11600   | hit; damage 10    | 10             | a2: h30, x1, eff 100                | e1: h10, x2, eff 20  |
+| 1            | e1 → a2           | 20  | 100 | 400 / 10400     | miss              | 0              | e1: h10, x3, eff 20                 | a2: h30, x2, eff 100 |
+| 2            | a2 → e1           | 100 | 20  | 10000 / 10400   | hit; damage 13    | 10             | a2: h30, x3, eff 100                | e1: h0, x4, dead     |
 
 At exhaustion 95, a1's penalty factor is 10 and its effective skill 10 ≤ 0.1 × 100, so its own attack made it
-Incapacitated. In the Enemies' phase of Round 1, e1 targets a2, not a1. After Round 1 the Combat rating of the Agents'
-side is 100, because a1 no longer counts; 100 is not below 0.5 × 111 = 55.5, so the Battle continues. In Round 2, a1
-does nothing. After Round 2 the outcome is Prevailed. The Battle result records a1's final condition as Incapacitated
-with current health 30 and exhaustion 95. After the Battle, a1 has no Incapacitated property; it is a Serving Agent with current health
+Incapacitated. In the Enemies' phase of Combat round 1, e1 targets a2, not a1. After Combat round 1 the Combat rating of the Agents'
+side is 100, because a1 no longer counts; 100 is not below 0.5 × 111 = 55.5, so the Combat continues. In Combat round 2, a1
+does nothing. After Combat round 2 the outcome is Prevailed. The Combat report records a1's final condition as Incapacitated
+with current health 30 and exhaustion 95. After the Combat, a1 has no Incapacitated property; it is a Serving Agent with current health
 30 and exhaustion 95.
 
 ## Prevailed when neither side can fight on
 
-This example exercises [End-of-round checks](#end-of-round-checks) and [Battle outcomes](#battle-outcomes). The
+This example exercises [End-of-Combat-round checks](#end-of-combat-round-checks) and [Combat outcomes](#combat-outcomes). The
 Agents' side is a1 with exhaustion 92, so penalty factor 13 and effective skill 13; the Enemies' side is e1, an
 `initiate`. The starting Combat rating of the Agents' side is 13.
 
-| Round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after                      | Target after         |
-| ----- | ----------------- | --- | --- | --------------- | ----------------- | -------------- | ----------------------------------- | -------------------- |
-| 1     | a1 → e1           | 13  | 40  | 169 / 1769      | hit; damage 15    | 15             | a1: h30, x93, eff 12                | e1: h5, x1, eff 10   |
-| 1     | e1 → a1           | 10  | 12  | 100 / 244       | miss              | 0              | e1: h5, x2, eff 10                  | a1: h30, x94, eff 11 |
-| 2     | a1 → e1           | 11  | 10  | 121 / 221       | hit; damage 5     | 5              | a1: h30, x95, eff 10, Incapacitated | e1: h0, x3, dead     |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after                      | Target after         |
+| ------------ | ----------------- | --- | --- | --------------- | ----------------- | -------------- | ----------------------------------- | -------------------- |
+| 1            | a1 → e1           | 13  | 40  | 169 / 1769      | hit; damage 15    | 15             | a1: h30, x93, eff 12                | e1: h5, x1, eff 10   |
+| 1            | e1 → a1           | 10  | 12  | 100 / 244       | miss              | 0              | e1: h5, x2, eff 10                  | a1: h30, x94, eff 11 |
+| 2            | a1 → e1           | 11  | 10  | 121 / 221       | hit; damage 5     | 5              | a1: h30, x95, eff 10, Incapacitated | e1: h0, x3, dead     |
 
-After Round 1 the Retreated check fails, because 11 is not below 0.5 × 13 = 6.5. After Round 2 no Enemy and no Agent is
-able to fight; Prevailed is checked first, so the outcome is Prevailed after 2 Rounds. a1 survives.
+After Combat round 1 the Retreated check fails, because 11 is not below 0.5 × 13 = 6.5. After Combat round 2 no Enemy and no Agent is
+able to fight; Prevailed is checked first, so the outcome is Prevailed after 2 Combat rounds. a1 survives.
 
-## Battles that end at their start
+## Combats that end at their start
 
-This example exercises [Battle start](#battle-start) and the edge cases of
-[Edge cases and failure behavior](#edge-cases-and-failure-behavior). Each row is a separate Battle; none makes an attack
+This example exercises [Combat start](#combat-start) and the edge cases of
+[Edge cases and failure behavior](#edge-cases-and-failure-behavior). Each row is a separate Combat; none makes an attack
 or changes a value.
 
-| Agents' side                                                  | Enemies' side                                                                       | Battle outcome and Rounds                                                                                      |
-| ------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| a1                                                            | Empty                                                                               | Prevailed, 0 Rounds                                                                                            |
-| a1                                                            | e1, from a test EnemyArchetype with `skill` 0: effective skill 0 ≤ 0, Incapacitated | Prevailed, 0 Rounds                                                                                            |
-| a1 with exhaustion 100: effective skill 5 ≤ 10, Incapacitated | e1, an `initiate`                                                                   | Wiped, 0 Rounds; a1 survives with current health 30 and exhaustion 100                                         |
-| a1 with exhaustion 95, Incapacitated, and a2                  | e1, an `initiate`                                                                   | No end at start: a2 is able to fight, so Round 1 begins; the starting Combat rating of the Agents' side is 100 |
+| Agents' side                                                  | Enemies' side                                                                       | Combat outcome and Combat rounds                                                                                      |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| a1                                                            | Empty                                                                               | Prevailed, 0 Combat rounds                                                                                            |
+| a1                                                            | e1, from a test EnemyArchetype with `skill` 0: effective skill 0 ≤ 0, Incapacitated | Prevailed, 0 Combat rounds                                                                                            |
+| a1 with exhaustion 100: effective skill 5 ≤ 10, Incapacitated | e1, an `initiate`                                                                   | Wiped, 0 Combat rounds; a1 survives with current health 30 and exhaustion 100                                         |
+| a1 with exhaustion 95, Incapacitated, and a2                  | e1, an `initiate`                                                                   | No end at start: a2 is able to fight, so Combat round 1 begins; the starting Combat rating of the Agents' side is 100 |
 
 ## Every attack misses
 
 This example exercises [Termination](#termination). It injects a miss for every hit outcome, so no damage outcome exists
-and no current health changes; only exhaustion rises, by 2 per Round for each Combatant, from attacking and defending.
+and no current health changes; only exhaustion rises, by 2 per Combat round for each Combatant, from attacking and defending.
 
-**Against an initiate:** The Agents' side is a1; the Enemies' side is e1, an `initiate`. After Round r with r ≥ 3, both
+**Against an initiate:** The Agents' side is a1; the Enemies' side is e1, an `initiate`. After Combat round r with r ≥ 3, both
 have exhaustion 2r, a1 has effective skill `105 − 2r`, and e1 has `round down(40 × (105 − 2r) / 100)`. The Retreated
-check never holds, because the Enemies' Combat rating stays below 0.8 times the Agents'; e.g., after Round 28 the Agents'
-side has 49 < 50, but the Enemies' side has `round down(19.6) = 19`, which is less than 0.8 × 49 = 39.2. In Round 47,
+check never holds, because the Enemies' Combat rating stays below 0.8 times the Agents'; e.g., after Combat round 28 the Agents'
+side has 49 < 50, but the Enemies' side has `round down(19.6) = 19`, which is less than 0.8 × 49 = 39.2. In Combat round 47,
 a1's attack raises e1's exhaustion to 93: penalty factor 12 and effective skill `round down(4.8) = 4 ≤ 4`, so e1 is
 Incapacitated and does not attack in the Enemies' phase. a1 has exhaustion 93 and effective skill 12, above 10. The
-Battle ends as Prevailed after 47 Rounds and 93 attacks, within the bound `N × X = 2 × 100 = 200`.
+Combat ends as Prevailed after 47 Combat rounds and 93 attacks, within the bound `N × X = 2 × 100 = 200`.
 
-**Against a soldier:** The Agents' side is a1; the Enemies' side is e1, a `soldier`. After Round 27 both have exhaustion
-54 and a1 has effective skill 51, which is not below 50. After Round 28 both have exhaustion 56: a1 has 49 < 50, and e1
-has `round down(120 × 49 / 100) = 58 ≥ 0.8 × 49 = 39.2`. The Battle ends as Retreated after 28 Rounds.
+**Against a soldier:** The Agents' side is a1; the Enemies' side is e1, a `soldier`. After Combat round 27 both have exhaustion
+54 and a1 has effective skill 51, which is not below 50. After Combat round 28 both have exhaustion 56: a1 has 49 < 50, and e1
+has `round down(120 × 49 / 100) = 58 ≥ 0.8 × 49 = 39.2`. The Combat ends as Retreated after 28 Combat rounds.
 
 ## Combat ratings of Mission sites
 
-This example exercises [Combat rating](#combat-rating) outside a Battle, with newly created Enemies whose counts come
+This example exercises [Combat rating](#combat-rating) outside a Combat, with newly created Enemies whose counts come
 from the MissionSiteArchetypes of [Bootstrap GDRs](../content/bootstrap-gdrs.md):
 
 | Enemies                                    | Combat rating of the Enemies' side |

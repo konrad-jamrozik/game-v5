@@ -17,9 +17,9 @@ Investigation, or Deployed on a Mission at a Mission site. Every order takes one
 Agent starts working, except deployment, which is immediate.
 
 How well an Agent works and fights is its effective skill: its skill, lowered by lost current health and by exhaustion above a
-free amount. Training is the only way an Agent gains skill, and only a Battle raises exhaustion. Every Agent is created
+free amount. Training is the only way an Agent gains skill, and only a Combat raises exhaustion. Every Agent is created
 from the one AgentArchetype, and a Campaign starts with an initial roster of Agents. An Agent is Serving until it is
-Killed in a Battle or Dismissed, and it is never removed.
+Killed in a Combat or Dismissed, and it is never removed.
 
 # Relationships
 
@@ -41,7 +41,7 @@ Killed in a Battle or Dismissed, and it is never removed.
 # Glossary
 
 These terms are specific to Agents. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
-about regaining health, Battles, and the Agency's caps are in the [Agent Recovery](agent-recovery.md#glossary),
+about regaining health, Combats, and the Agency's caps are in the [Agent Recovery](agent-recovery.md#glossary),
 [Combat](combat.md#glossary), and [Economy and Upgrades](economy-and-upgrades.md#glossary) glossaries.
 
 ## Combatant attributes
@@ -50,7 +50,7 @@ What makes an Agent or an Enemy able to work and to fight, and how worn down it 
 
 | Term            | Definition                                                                                                                                                                                                   |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Skill           | How capable a Combatant is at its work and in a Battle, as a whole number.                                                                                                                                   |
+| Skill           | How capable a Combatant is at its work and in a Combat, as a whole number.                                                                                                                                   |
 | Effective skill | A Combatant's skill as reduced by its lost current health and its exhaustion; the value every rule uses when a Combatant works or fights.                                                                    |
 | Base health     | The highest current health a Combatant can have.                                                                                                                                                             |
 | Current health  | How much more harm a Combatant can take now, from zero up to its base health under [Attribute ranges](#attribute-ranges); an Agent whose current health reaches zero is dead.                                |
@@ -156,7 +156,7 @@ weapon values. An Agent also has two Derived values, which are never stored: its
 [Agents that can be ordered](#agents-that-can-be-ordered). An Agent has no Turn series.
 
 **Retention:** An Agent keeps every property above for the whole Campaign, whatever its lifecycle state, so that every
-reference to it resolves, e.g. from a Battle result or a Participation history. A Killed or Dismissed Agent no longer
+reference to it resolves, e.g. from a Combat report or a Participation history. A Killed or Dismissed Agent no longer
 participates in current gameplay and is retained in World history with its final values, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
 Agent is ever removed.
@@ -166,7 +166,7 @@ Agent is ever removed.
 **Proposed rule:** Whenever an Agent stops belonging to the Current team of an Investigation or of a Mission, for any
 reason, that Investigation or Mission is added to the Agent's Participation history, unless it is already there. E.g.,
 the reason may be that the player orders the Agent elsewhere, that the Investigation completes, or that the Mission's
-Battle is fought. Nothing is ever removed from a Participation history, and recording it neither assigns nor
+Combat is fought. Nothing is ever removed from a Participation history, and recording it neither assigns nor
 reserves the Agent, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain
 Model.
 
@@ -177,7 +177,7 @@ exhaustive. Every Agent is Serving when it is created. The transition table is:
 
 | Source state | Target state | Trigger                                                                                                                    | Condition                                                                                                  |
 | ------------ | ------------ | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Serving      | Killed       | The Agent's current health reaches zero in a Battle, under [Killed and Incapacitated](combat.md#killed-and-incapacitated). | The Agent is Deployed.                                                                                     |
+| Serving      | Killed       | The Agent's current health reaches zero in a Combat, under [Killed and Incapacitated](combat.md#killed-and-incapacitated). | The Agent is Deployed.                                                                                     |
 | Serving      | Dismissed    | The `dismissAgents` Player action dismisses the Agent.                                                                     | The preconditions under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents) hold for the Agent. |
 
 Every transition not listed is impossible; e.g., a Killed Agent never becomes Serving again, and a Dismissed Agent
@@ -200,25 +200,25 @@ and the Investigation or Mission it belonged to, if any, is recorded under
 
 The Combatant Role Type is a Role Type under [Role Types](../foundation/campaign-state.md#role-types) in Campaign
 State. It states what a Campaign instance Type must have for its Campaign instances to be Combatants, and what a
-Combatant gains while a Battle lasts.
+Combatant gains while a Combat lasts.
 
 - **Adoption condition:** a Campaign instance Type can adopt the Combatant Role Type if the State of its Campaign
   instances has all of the following properties: skill, current health, base health, exhaustion, and equipped weapon
   values. This set is exhaustive.
 - **Adopters:** Agent and Enemy adopt the Combatant Role Type. This set is exhaustive.
-- **Gained properties:** every Combatant taking part in a Battle gains properties that mean something only while
-  that Battle lasts, e.g. whether it is [Incapacitated](combat.md#glossary). It gains them when the Battle begins and
-  loses them when the Battle ends. The exhaustive set of gained properties is under
-  [Battle-only properties](combat.md#battle-only-properties) in Combat.
+- **Gained properties:** every Combatant taking part in a Combat gains properties that mean something only while
+  that Combat lasts, e.g. whether it is [Incapacitated](combat.md#glossary). It gains them when the Combat begins and
+  loses them when the Combat ends. The exhaustive set of gained properties is under
+  [Combat-only properties](combat.md#combat-only-properties) in Combat.
 
-The properties named by the adoption condition persist outside a Battle; e.g., an Agent has current health and
-exhaustion between Battles. What outlasts a Battle is its Battle result and every change the Battle made to those properties,
+The properties named by the adoption condition persist outside a Combat; e.g., an Agent has current health and
+exhaustion between Combats. What outlasts a Combat is its Combat report and every change the Combat made to those properties,
 e.g. lost current health.
 
 The Combatant Role Type is not a Campaign instance Type, so a Combatant is never a Campaign instance separate from
 its Agent or Enemy. If it were, every Agent would be two Campaign instances with two Instance IDs, and current health would
-belong to the second one instead of to the Agent. A Battle instead changes the participating Agent and Enemy Campaign
-instances themselves: the Agent changed by a Battle is the same Agent that returns to the Agency.
+belong to the second one instead of to the Agent. A Combat instead changes the participating Agent and Enemy Campaign
+instances themselves: the Agent changed by a Combat is the same Agent that returns to the Agency.
 
 ## Attribute ranges
 
@@ -239,7 +239,7 @@ base health instead. The rule that changes the value applies these clamps as par
 
 **Inherited behavior:** A Combatant's effective skill is a Derived value computed by this formula. It is shared by
 Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and every rule that uses a
-Combatant's capability, e.g. Investigation progress or a Battle's hit probability, reads effective skill rather than
+Combatant's capability, e.g. Investigation progress or a Combat's hit probability, reads effective skill rather than
 skill.
 
 ```text
@@ -285,9 +285,9 @@ creation. A rule not listed here changes none of them.
 | Value          | Raised by                                                                                                               | Lowered by                          |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
 | Skill          | [Training growth](#training-growth)                                                                                     | No rule                             |
-| Current health | [Agent Recovery](agent-recovery.md)                                                                                     | [Combat](combat.md), in a Battle    |
+| Current health | [Agent Recovery](agent-recovery.md)                                                                                     | [Combat](combat.md), in a Combat    |
 | Base health    | No rule                                                                                                                 | No rule                             |
-| Exhaustion     | [Combat](combat.md), in a Battle, by `exhaustion_per_attack` and `exhaustion_per_defense`                               | [Agent Recovery](agent-recovery.md) |
+| Exhaustion     | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`                               | [Agent Recovery](agent-recovery.md) |
 | Weapon damage  | The [Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect), under [Modifiable values](#modifiable-values) | No rule                             |
 
 No Current assignment raises exhaustion: Standby, Contracting, Training, Recovery, and Investigations leave it
@@ -344,8 +344,8 @@ table means an Investigation with its reference.
 | Standby, Contracting, Training, or an Investigation; At assignment | Deployed on a Mission; At assignment                                      | The player deploys it, through the `deployAgents` Player action.                                                         | [Missions](missions.md)                                    |
 | Any Current assignment; In transit                                 | The same Current assignment; At assignment                                | Advance turn, in the Transit step.                                                                                       | This document, under [Transit rule](#transit-rule)         |
 | An Investigation; At assignment                                    | Standby; In transit                                                       | Advance turn: the Investigation completes in the Investigation progress step.                                            | [Investigations](investigations.md)                        |
-| Deployed; At assignment                                            | Recovery; In transit                                                      | Advance turn: the Agent survives the Battle in the Mission resolution step with current health below its base health.    | [Missions](missions.md)                                    |
-| Deployed; At assignment                                            | Standby; In transit                                                       | Advance turn: the Agent survives the Battle in the Mission resolution step with current health equal to its base health. | [Missions](missions.md)                                    |
+| Deployed; At assignment                                            | Recovery; In transit                                                      | Advance turn: the Agent survives the Combat in the Mission resolution step with current health below its base health.    | [Missions](missions.md)                                    |
+| Deployed; At assignment                                            | Standby; In transit                                                       | Advance turn: the Agent survives the Combat in the Mission resolution step with current health equal to its base health. | [Missions](missions.md)                                    |
 | Recovery; At assignment                                            | Standby; At assignment                                                    | Advance turn: the Agent's current health reaches its base health in the Agent recovery step.                             | [Agent Recovery](agent-recovery.md)                        |
 
 Every change not listed is impossible; e.g., an Agent on Recovery cannot be ordered to Contracting, a Deployed Agent
@@ -353,7 +353,7 @@ cannot be recalled, and an Agent In transit cannot be ordered anywhere. Recallin
 or an Investigation is ordering it to Standby.
 
 A Serving Agent's Current assignment and Task phase also end, without a replacement, when it leaves the Serving
-lifecycle state under [Agent lifecycle](#agent-lifecycle): a Deployed Agent that is Killed in a Battle, and an Agent
+lifecycle state under [Agent lifecycle](#agent-lifecycle): a Deployed Agent that is Killed in a Combat, and an Agent
 that is dismissed under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents). A new Agent starts on Standby: At assignment when it belongs to the
 [Initial roster](#initial-roster), and In transit when it is created during play under [Agent creation](#agent-creation).
 
@@ -369,7 +369,7 @@ are complete:
 2. **Arrival:** An Agent that is In transit in the Turn-end state of an Advance turn, i.e. in the Committed state in
    which that Advance turn began, becomes At assignment in the Transit step of that Advance turn. Completing its transit
    is all that happens to it in that Advance turn: it earns no income, trains nothing, adds no Investigation progress,
-   fights in no Battle, and recovers neither current health nor exhaustion.
+   fights in no Combat, and recovers neither current health nor exhaustion.
 3. **Departure:** An Agent that becomes In transit during an Advance turn is still In transit in the Committed state
    after that Advance turn. The Transit step applies only to Agents that were In transit in the Turn-end state.
 
@@ -387,7 +387,7 @@ statement 2:
   [Investigations](investigations.md).
 
 **Deployed:** Deploying to a Mission site is the one order that does not start In transit. The moment the player
-deploys, a new Mission at that Mission site is created and the selected Agents are Deployed on it At assignment, and the Battle is fought in the next
+deploys, a new Mission at that Mission site is created and the selected Agents are Deployed on it At assignment, and the Combat is fought in the next
 Advance turn, under [Missions](missions.md). The way back does take transit: survivors become In transit during that
 Advance turn, so under statement 3 they are still In transit when it ends, and they arrive in the Advance turn after it.
 
@@ -552,7 +552,7 @@ lifecycle state explains why. An empty Participation history is reported as empt
   ([Effective skill](#effective-skill)).
 - **Exhaustion at the cap:** A rule that would raise exhaustion above `exhaustion_cap` leaves it at `exhaustion_cap`
   ([Attribute ranges](#attribute-ranges)).
-- **Zero current health:** A Serving Agent never has zero current health in a Committed state: the Battle that brings
+- **Zero current health:** A Serving Agent never has zero current health in a Committed state: the Combat that brings
   its current health to zero
   makes it Killed ([Agent lifecycle](#agent-lifecycle)). An Enemy with zero current health has an effective skill of 0
   ([Effective skill](#effective-skill)).
@@ -626,7 +626,7 @@ lies from 0 to the Combatant's skill.
 
 ## Exhaustion and current health clamps
 
-This example exercises [Attribute ranges](#attribute-ranges). An Agent has exhaustion 99. In one Battle it attacks once
+This example exercises [Attribute ranges](#attribute-ranges). An Agent has exhaustion 99. In one Combat it attacks once
 and defends once, so [Combat](combat.md) raises its exhaustion by `exhaustion_per_attack` 1 and `exhaustion_per_defense`
 1; the result is 100, not 101, because `exhaustion_cap` is 100, and further attacks leave it at 100. Its effective skill
 at current health equal to its base health is then 5, from the computations above. A second Combatant has current
@@ -693,7 +693,7 @@ current health 30 of 30, are deployed to Mission site s1 during Turn 5 through t
 | Moment                         | a1                                                                                   | a2                                                                                    |
 | ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
 | Right after deployment, Turn 5 | Deployed on m1, At assignment                                                        | Deployed on m1, At assignment                                                         |
-| Advance turn ending turn 5     | Fights in the Battle; ends with current health 30 of 30; becomes Standby, In transit | Fights in the Battle; ends with current health 18 of 30; becomes Recovery, In transit |
+| Advance turn ending turn 5     | Fights in the Combat; ends with current health 30 of 30; becomes Standby, In transit | Fights in the Combat; ends with current health 18 of 30; becomes Recovery, In transit |
 | Turn 6                         | Standby, In transit; cannot be ordered                                               | Recovery, In transit; cannot be ordered                                               |
 | Advance turn ending turn 6     | Arrives in Transit; recovers no exhaustion                                           | Arrives in Transit; recovers no current health                                        |
 | Turn 7                         | Standby, At assignment; can be ordered                                               | Recovery, At assignment; cannot be ordered                                            |
@@ -800,7 +800,7 @@ has; adding a property `rank` to `field_agent`; and setting `training_skill_gain
 
 # TODOs
 
-- TODO (later): Skill gained from Missions and Battles, under [Changes to attributes](#changes-to-attributes).
+- TODO (later): Skill gained from Missions and Combats, under [Changes to attributes](#changes-to-attributes).
 - TODO (later): Exhaustion gained from a Current assignment, under [Changes to attributes](#changes-to-attributes).
 - TODO (later): Readiness thresholds, under [Agents that can be ordered](#agents-that-can-be-ordered).
 - TODO (later): Forced withdrawal of an exhausted Agent, under [Current assignment changes](#current-assignment-changes).

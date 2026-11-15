@@ -710,7 +710,7 @@ earlier Turn; and a8 Dismissed. Projected income is 20 + 30 × 1 = 50 and projec
 
 In the Advance turn ending turn 9, Agency income counts only a5, because a2 arrives in the Transit step: money
 300 + 50 = 350. Upkeep counts the six Serving Agents a1 to a6, including the arriving a2 and a6, the Deployed a3, and
-a4 on Recovery, and neither a7 nor a8: money 350 − 60 = 290. In the Mission resolution step, a3 is Killed in the Battle
+a4 on Recovery, and neither a7 nor a8: money 350 − 60 = 290. In the Mission resolution step, a3 is Killed in the Combat
 at s1. In Turn 10, projected upkeep is 10 × 5 = 50: a3 paid upkeep in the Advance turn in which it was Killed and pays
 none afterwards.
 
@@ -784,7 +784,7 @@ money 1000, three Agents Deployed on a Mission at Mission site s1, and six Agent
 Agents is 3, so deploying two Agents to Mission site s2 would make 5, more than 4, and Missions rejects it; deploying
 one would make 4 and is within the Transport cap. Instead the player calls `purchaseUpgrade(transport_cap)`: money
 becomes 0, acquisitions of `transport_cap` become 1, and the Transport cap becomes 4 + 2 × 1 = 6 at once, so deploying
-three Agents to s2 now makes 6 and is within the Transport cap. After the Battle at s1 in the next Advance turn, its
+three Agents to s2 now makes 6 and is within the Transport cap. After the Combat at s1 in the next Advance turn, its
 survivors are no longer Deployed and stop counting.
 
 ## Training cap

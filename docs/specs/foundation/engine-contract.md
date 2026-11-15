@@ -340,7 +340,7 @@ for them.
 | `player.queries.getHistory()`      | The Player-visible information of every [History entry](campaign-state.md#glossary), in Turn order, from Turn 1.                                                                | Reduced |
 
 `getCurrentState()` returns nothing that is retained only in [World history](campaign-state.md#glossary). E.g., a
-Mission whose Battle has been fought no longer participates in current gameplay, so its Battle result is returned by
+Mission whose Combat has been fought no longer participates in current gameplay, so the Combat report of its Combat is returned by
 `getTurnReport()` after the Advance turn that fought it, and in reduced form by `getHistory()`, but not by
 `getCurrentState()`.
 

@@ -282,7 +282,7 @@ The turn, Panic, and Lead progression start from values that no GDR supplies: th
 - TODO (later): The Factions Exalt and Black Lotus, each with its own Leads reusing the existing MissionSiteArchetypes,
   under [Factions GDRs](#factions-gdrs).
 - TODO (later): Faction suppression after a Won Mission, under [Factions GDRs](#factions-gdrs).
-- TODO (later): Skill gained by surviving a Mission and by attacking and defending in a Battle, under
+- TODO (later): Skill gained by surviving a Mission and by attacking and defending in a Combat, under
   [Agents GDRs](#agents-gdrs).
 - TODO (later): The Upgrades raising training skill gain, exhaustion recovery, health recovery, and Agent base health, under
   [Economy and Upgrades GDRs](#economy-and-upgrades-gdrs).

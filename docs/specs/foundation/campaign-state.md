@@ -46,7 +46,7 @@ The components into which Campaign state divides, and whether model data stays a
 | Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that select or adjust gameplay behavior. Each parameter is either adjustable during play through permitted operations or fixed after creation.                                |
 | Retained               | Describes model data kept available for rules, Player API queries, reference resolution, or restoration. Retained describes availability; World history describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state.                 |
 | Turn series            | Retained data in World history recording one value at stated moments of every turn of the Campaign, from campaign creation onward, under [Turn series](#turn-series). The specification owning the value declares it.                                                                     |
-| Turn report            | Retained data in World history describing what one committed Advance turn did, e.g. each Battle it fought and how that Battle went. A Campaign has at most one Turn report: the one of its most recent committed Advance turn, under [Turn report and history](#turn-report-and-history). |
+| Turn report            | Retained data in World history describing what one committed Advance turn did, e.g. each Combat it fought and how that Combat went. A Campaign has at most one Turn report: the one of its most recent committed Advance turn, under [Turn report and history](#turn-report-and-history). |
 | History entry          | Retained data in World history describing one ended Turn: a reduced form of its Turn-start state, of its Turn-end state, and of the Turn report of the Advance turn that ended it. Reduced means holding only part of that information, to bound what is retained.                        |
 
 ## Campaign instances
@@ -208,8 +208,8 @@ a retained reference to enemy_1 must still resolve. Retention does not introduce
 name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
 changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
 retained references must be preserved under [Campaign instances](#campaign-instances) and [References](#references).
-An evolving collection can contain immutable historical records: e.g., adding a Battle result does not permit rewriting
-an earlier retained Battle result.
+An evolving collection can contain immutable historical records: e.g., adding a Combat report does not permit rewriting
+an earlier retained Combat report.
 
 # Turn series
 

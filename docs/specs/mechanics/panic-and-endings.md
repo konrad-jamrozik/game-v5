@@ -385,7 +385,7 @@ Advance turn ending turn 12:
 
 - Agency income adds 0, because funding is 0 and no Agent is on Contracting.
 - Upkeep takes `10 × 4 = 40`, so money is 0.
-- In Mission resolution, the Battle of the Mission at the `raid_safehouse` Mission site is stipulated to be Prevailed, so
+- In Mission resolution, the Combat of the Mission at the `raid_safehouse` Mission site is stipulated to be Prevailed, so
   the Mission is Won. It adds money 100 and funding 5, so money is 100 and funding is 5, and it adds a Panic reduction of 2.
 - In Mission site expiration, the Response Mission site is Expired and adds a Panic increase of 8, and funding falls
   from 5 to 4.
@@ -476,9 +476,9 @@ In the Advance turn ending turn 150:
 
 - Agency income adds 0, because funding is 0 and no Agent is on Contracting.
 - Upkeep takes `10 × 4 = 40`, so money is -10.
-- In Mission resolution, the Battle of the Mission at the `raid_hq` Mission site is stipulated to be Prevailed, so that
+- In Mission resolution, the Combat of the Mission at the `raid_hq` Mission site is stipulated to be Prevailed, so that
   Mission is Won and makes Red Dawn Defeated, with the Defeated turn 150, under [Defeat](factions.md#defeat) in Factions. In the same step,
-  the Battle of the Response Mission is stipulated to be Wiped, so that Mission is Lost and adds a Panic increase of 8
+  the Combat of the Response Mission is stipulated to be Wiped, so that Mission is Lost and adds a Panic increase of 8
   to the Pending panic change. Funding stays 0, because a funding change of -1 is floored at 0.
 - The Panic step gives `max(0, min(100, 95 + 8)) = 100`.
 

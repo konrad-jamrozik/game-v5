@@ -85,7 +85,7 @@
   <rect class="full" x="623" y="249" width="64" height="34" rx="6"/>
   <text class="tf mid" x="655" y="270">full</text>
   <text class="m" x="700" y="264">the Advance turn that ended Turn 7,</text>
-  <text class="m" x="700" y="279">e.g. every Battle result with its attacks</text>
+  <text class="m" x="700" y="279">e.g. every Combat report with its Combat log</text>
 
   <!-- getCurrentState(): current Committed state -->
   <rect class="full" x="778" y="305" width="64" height="34" rx="6"/>

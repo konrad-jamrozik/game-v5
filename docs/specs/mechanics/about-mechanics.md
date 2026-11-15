@@ -55,7 +55,7 @@ progress, stochastic completion, leaving and abandonment, and the rule that a Le
 
 ## Combat
 
-[Combat](combat.md) answers _how does a Battle play out?_ It owns Enemies, fully automatic Battles and their
+[Combat](combat.md) answers _how does a Combat play out?_ It owns Enemies, fully automatic Combats and their
 reproducible results, independently of what those results mean for the Campaign.
 
 ## Missions
@@ -63,7 +63,7 @@ reproducible results, independently of what those results mean for the Campaign.
 [Missions](missions.md) answers _what happens at a place where Enemies are present, and what follows from its result?_
 It owns the Mission site and the Mission: a Mission site's creation, including which MissionSiteArchetype a Faction
 operation occurrence creates its Response Mission site from, the lifecycles of both, deploying Agents to a Mission site,
-which creates its Mission, and turning Battle results into Campaign consequences.
+which creates its Mission, and turning Combat reports into Campaign consequences.
 
 ## Factions
 
@@ -89,12 +89,12 @@ depends on no Mechanics document is in layer 1. The first diagram below shows ea
 A document in an earlier layer states what its things are and what can happen to them. A document in a later layer
 states when it happens and by how much. A document may link to those later details, but never depends on them.
 
-E.g., Agents states what current health and base health are and that current health can go down and up. Combat states
-how a Battle lowers current health, and Agent Recovery states how it goes back up.
+E.g., Agents states what current health and base health are and that current health can go down and up. The Combat
+specification states how a Combat lowers current health, and Agent Recovery states how it goes back up.
 
-A document refines an earlier one when it adds detail to the same subject, e.g. Combat refines Agents with how current
-health goes down. It uses an earlier one when it reads that subject to describe its own, e.g. Combat uses Agent skill to
-resolve a Battle.
+A document refines an earlier one when it adds detail to the same subject, e.g. the Combat specification refines Agents with
+how current health goes down. It uses an earlier one when it reads that subject to describe its own, e.g. the Combat specification uses Agent skill
+to resolve a Combat.
 
 E.g., Panic and Endings uses Economy and Upgrades, which is in layer 3, so Panic and Endings is in layer 4, and Missions,
 which uses Panic and Endings, is in layer 5.
@@ -117,7 +117,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 - **Agents versus the documents that change an Agent:** Agents is the complete list of what an Agent has and which
   values can be modified, so no Agent property is introduced by a higher document.
-- **Combat versus Missions:** a Battle's resolution is kept separate from its Campaign consequences, so Combat can be
+- **Combat versus Missions:** a Combat's resolution is kept separate from its Campaign consequences, so Combat can be
   tested and tuned without the Campaign around it.
 - **Leads and Progression versus Investigations:** what is available is separated from how the player pursues it, so
   the progression graph can change without touching investigation mathematics.

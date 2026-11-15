@@ -894,9 +894,9 @@ describe('specification linter', () => {
 
     test.each([
       ['Draft', ['- TODO: Choose the numeric representation.']],
-      ['Draft', ['- TODO (later): Skill gained from a Battle.']],
-      ['Stub', ['- TODO: Choose the numeric representation.', '- TODO (later): Skill gained from a Battle.']],
-      ['Accepted', ['- TODO (later): Skill gained from a Battle.']],
+      ['Draft', ['- TODO (later): Skill gained from a Combat.']],
+      ['Stub', ['- TODO: Choose the numeric representation.', '- TODO (later): Skill gained from a Combat.']],
+      ['Accepted', ['- TODO (later): Skill gained from a Combat.']],
     ])('accepts a %s specification with TODO items %j', (status, items) => {
       expect(diagnosticCodes(withTodos(status, items))).toEqual([])
     })
@@ -908,7 +908,7 @@ describe('specification linter', () => {
     })
 
     test('rejects a Stub specification without an item beginning "TODO:"', () => {
-      expect(diagnosticCodes(withTodos('Stub', ['- TODO (later): Skill gained from a Battle.']))).toEqual(['SPEC603'])
+      expect(diagnosticCodes(withTodos('Stub', ['- TODO (later): Skill gained from a Combat.']))).toEqual(['SPEC603'])
       expect(diagnosticCodes(mutate(validCorpus(), alpha, '| Status | Draft |', '| Status | Stub |'))).toEqual([
         'SPEC603',
       ])

@@ -53,7 +53,7 @@ parts of the format that are undecided.
 
 **v5 requirement:** The key order of a mapping in a GDR file, as authored, is significant: it is preserved when the GDR
 is read, and a specification may rely on it. E.g., [Missions](../mechanics/missions.md) relies on the authored order of
-the `enemies` mapping of a MissionSiteArchetype for the fixed order of the Enemies of a Battle. A decimal value in a GDR
+the `enemies` mapping of a MissionSiteArchetype for the fixed order of the Enemies of a Combat. A decimal value in a GDR
 file is read as the exact decimal number it is written as, never as a binary floating-point approximation, under
 [Whole-number quantities](numbers.md#whole-number-quantities) in Numbers.
 
@@ -361,7 +361,7 @@ image: images/enemies/thug.png
 subject: thug
 ```
 
-Combat reads Thug's base health 10 as its Archetype initial value; no game behavior reads its display name, its description,
+The Combat specification reads Thug's base health 10 as its Archetype initial value; no game behavior reads its display name, its description,
 or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible
 view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the encyclopedia once the player is
 entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.

@@ -16,7 +16,7 @@ The main domain concepts are:
 - **Investigations:** Investigations of given Leads, with assigned agents, accumulated progress, and uncertain completion.
 - **Initiative missions:** agency efforts to advance objectives, typically uncovered through investigations.
 - **Faction operations and Response missions:** enemy activity and the agency’s opportunities to intervene.
-- **Combat:** automatic battles with targeting, skill contests, damage, exhaustion, incapacitation, retreat, casualties, and experience.
+- **Combat:** automatic combat with targeting, skill contests, damage, exhaustion, incapacitation, retreat, casualties, and experience.
 - **Factions:** opponents that escalate, launch operations, can be suppressed, and can eventually be defeated.
 - **Economy and panic:** money, recurring funding, upkeep, upgrades, and global pressure.
 - **Turn reports and history:** what the latest Advance turn did in full, and every earlier Turn in reduced form.
@@ -104,7 +104,7 @@ Suppression provides another choice: **buy time now or pursue permanent defeat**
 
 Deployment size trades confidence in one mission against coverage elsewhere. Transport capacity makes this a constraint even when enough agents exist.
 
-Experienced agents are both powerful and valuable. Deploying them improves immediate prospects but risks losing accumulated training and combat experience. Injury also has a cost beyond the battle: prolonged recovery reduces future agency output.
+Experienced agents are both powerful and valuable. Deploying them improves immediate prospects but risks losing accumulated training and combat experience. Injury also has a cost beyond the combat: prolonged recovery reduces future agency output.
 
 **Attempting and failing must differ materially from ignoring a mission.** Damage inflicted on the enemy should provide a meaningful benefit even when the agency ultimately retreats or loses.
 
@@ -112,7 +112,7 @@ This is a v5 requirement rather than an inherited reward rule: existing mission 
 
 ### G. Preparation matters more than tactical retries
 
-Missions are auto-battles. The player chooses whether to commit and which agents to send, then accepts automatic resolution without controlling individual attacks.
+Missions are resolved by automatic combat. The player chooses whether to commit and which agents to send, then accepts automatic resolution without controlling individual attacks.
 
 Seeded determinism prevents replaying an identical attempt to obtain fresh rolls. Improving preparation may require revisiting earlier recruitment, training, recovery, and allocation decisions, abandoning the progress made since.
 

@@ -13,7 +13,7 @@
 
 The Basic Autopilot AI is the [Autopilot AI](../foundation/engine-contract.md#glossary) that a Game build offers so that
 a Campaign can be played without a human making every decision. It plays a sound, cautious Campaign rather than an
-optimal one. It keeps the Agency solvent, lets Agents rest after a Battle before it gives them new work, deploys Agents
+optimal one. It keeps the Agency solvent, lets Agents rest after a Combat before it gives them new work, deploys Agents
 to Mission sites only when they have a good chance of succeeding, keeps Investigations going so that new Mission sites
 appear, and spends surplus money on growing and improving the Agency.
 
@@ -59,7 +59,7 @@ goals, e.g. how large a safety margin is, are the Implementer's choice; the info
 | Goal                         | What the Basic Autopilot AI aims for                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Stay solvent                 | Expected income covers projected upkeep with a margin to spare, so that money does not run down toward a Defeat for Money below zero. When Expected income does not even cover projected upkeep, restoring income takes precedence over every other use of Agents. No purchase brings money below the Savings floor.                                                                                                                                                                                                                                       |
-| Keep Agents fit              | Only a Battle raises exhaustion, and exhaustion falls only on Standby and on Recovery. An Agent whose exhaustion is too high for a Rested Agent is therefore left on Standby, or brought back to it, until it is a Rested Agent. Only Rested Agents receive new work, and the Agent reserve stays untouched, except for urgent income.                                                                                                                                                                                                                     |
+| Keep Agents fit              | Only a Combat raises exhaustion, and exhaustion falls only on Standby and on Recovery. An Agent whose exhaustion is too high for a Rested Agent is therefore left on Standby, or brought back to it, until it is a Rested Agent. Only Rested Agents receive new work, and the Agent reserve stays untouched, except for urgent income.                                                                                                                                                                                                                     |
 | Deploy only to win           | A team is deployed to a Mission site only when its [Combat rating](../mechanics/combat.md#combat-rating) exceeds the Combat rating of the Mission site's Enemies by a safety margin, it has enough Agents for the number of Enemies, and the Transport cap allows it. Otherwise the Basic Autopilot AI deploys nobody to that Mission site rather than send a team that is likely to lose: a Mission site cannot be attempted twice, and a Lost Mission site gains nothing over an Expired one.                                                            |
 | Answer the most urgent first | Mission sites are considered in order of urgency. A Response Mission site comes before an Initiative Mission site, because a Response Mission site whose Mission is not Won is penalized, while an Initiative Mission site whose Mission is not Won only has to be found again. Among Mission sites of the same kind, the one that expires soonest comes first.                                                                                                                                                                                            |
 | Keep Mission sites coming    | A small share of the roster, growing with the roster, investigates Leads. Every Lead creates a Mission site when an Investigation of it completes, and progression advances only when the Mission at that Mission site is Won. A Lead is therefore investigated only if the Basic Autopilot AI could currently form a winning team for the Mission site the Lead creates. Among such Leads, one whose Won Mission site makes further Leads available or makes a Faction Defeated comes first. Effort is concentrated on few Leads rather than spread thin. |
@@ -89,7 +89,7 @@ therefore plays by the following principles. The list is exhaustive.
    [Abandonment](../mechanics/investigations.md#abandonment) in Investigations. Exhaustion is no reason to recall an
    investigating Agent either: the Agents it sends to Investigations are Rested Agents, and an Investigation raises no
    exhaustion.
-5. **It deploys late without loss.** A deployment takes effect at once and the Battle is fought in the next Advance
+5. **It deploys late without loss.** A deployment takes effect at once and the Combat is fought in the next Advance
    turn, under [Deploying Agents](../mechanics/missions.md#deploying-agents) in Missions. It can therefore deploy to a
    Mission site in the last Turn before that Mission site would expire, and it can form a team from Rested Agents that
    are on Training without first recalling them.
@@ -113,7 +113,7 @@ and money.
 6. Order the remaining Rested Agents on Standby to Training, then to Contracting (Leave no Agent idle).
 7. While money stays above the Savings floor, make the most needed purchase, then decide again (Grow with the threat).
 
-An Agent that returns from a Battle arrives on Standby or on Recovery and is left there until it is a Rested Agent,
+An Agent that returns from a Combat arrives on Standby or on Recovery and is left there until it is a Rested Agent,
 under [Exhaustion recovery](../mechanics/agent-recovery.md#exhaustion-recovery) in Agent Recovery. Step 1 therefore
 applies only to an Agent that was ordered to work while its exhaustion was too high for a Rested Agent: one that step 2
 sent to Contracting for urgent income, or one that a human player ordered before Autopilot was engaged.
@@ -146,7 +146,7 @@ and [Player-visible information](../mechanics/combat.md#player-visible-informati
 | Case                                                                                 | Behavior                                                                                                                                                     |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | No Mission site can be won with the Rested Agents available                          | It deploys nobody that turn and keeps the Agents working toward income, Investigations, and Training.                                                        |
-| A Mission site is in the last Turn before it would expire                            | It deploys to it as to any other Mission site, because the Battle is fought in the next Advance turn.                                                        |
+| A Mission site is in the last Turn before it would expire                            | It deploys to it as to any other Mission site, because the Combat is fought in the next Advance turn.                                                        |
 | An Investigation completes while no winning team can be formed any more              | It deploys nobody. The Mission site becomes Expired, the Lead becomes available again, and the Lead is investigated again once a winning team can be formed. |
 | Money is below the Savings floor                                                     | It buys nothing that turn.                                                                                                                                   |
 | Expected income is below projected upkeep and no Agent can be ordered to Contracting | It buys nothing, makes its other Player actions as usual, and advances the turn. It does not dismiss Agents to lower upkeep.                                 |
@@ -185,7 +185,7 @@ game-ts differs from the Basic Autopilot AI in the following deliberate ways. Th
 - game-ts kept counts of its own purchases in AI state; the Basic Autopilot AI reads them from Player-visible
   information instead.
 - In game-ts every kind of work raised exhaustion, so its AI recalled any working Agent whose exhaustion rose above
-  30%. Here only a Battle raises exhaustion, so the Basic Autopilot AI recalls only the Agents it sent to work for
+  30%. Here only a Combat raises exhaustion, so the Basic Autopilot AI recalls only the Agents it sent to work for
   urgent income, and otherwise rests Agents by leaving them on Standby.
 - In game-ts an order took effect at once. Here it costs one Advance turn of transit, so the Basic Autopilot AI follows
   the principles under [Orders and transit](#orders-and-transit).

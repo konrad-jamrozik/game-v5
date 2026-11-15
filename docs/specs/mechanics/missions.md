@@ -17,7 +17,7 @@ occurrence. A Mission site is Active until the player deploys a team of Agents t
 until it is Expired after a number of Advance turns or Cancelled because its target Faction is Defeated.
 
 Deploying Agents creates the Mission site's one [Mission](domain-model.md#glossary), at once and without transit. Its
-Battle is fought in the next Advance turn: the Mission is Won when the Battle outcome is Prevailed, and Lost when it is
+Combat is fought in the next Advance turn: the Mission is Won when the Combat outcome is Prevailed, and Lost when it is
 Retreated or Wiped. A Won Initiative Mission can give money, funding, a Panic reduction, and the defeat of its target
 Faction; a Won Response Mission gives money and funding. A Lost Response Mission and an Expired Response Mission site
 raise Panic and change funding.
@@ -272,7 +272,7 @@ The set is exhaustive. Every Mission site is Active when it is created. The tran
 | ------------ | ------------ | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Active       | Attempted    | The `deployAgents` Player action names the Mission site.                                                   | Every precondition under [Deploying Agents](#deploying-agents) holds.        | A new Mission at the Mission site comes into existence, Deployed, with its Current team, and those Agents are Deployed at once, under [Deploying Agents](#deploying-agents). |
 | Active       | Expired      | Advance turn, in the Turn advancement step Mission site expiration: its Turns until expiry reaches 0.      | The Mission site already existed in the Turn-end state of this Advance turn. | The Expired consequences apply, under [Mission site expiration](#mission-site-expiration) and [Consequences](#consequences). It never has a Mission.                         |
-| Active       | Cancelled    | Advance turn, at the end of the Turn advancement step Mission resolution, after every Battle of that step. | Its target Faction is Defeated.                                              | None, under [Consequences](#consequences). It never has a Mission.                                                                                                           |
+| Active       | Cancelled    | Advance turn, at the end of the Turn advancement step Mission resolution, after every Combat of that step. | Its target Faction is Defeated.                                              | None, under [Consequences](#consequences). It never has a Mission.                                                                                                           |
 
 Every transition not listed is impossible; e.g., an Attempted Mission site is never Cancelled or Expired, and nothing
 leaves Attempted, Expired, or Cancelled. Attempted, Expired, and Cancelled are final. A Mission site cannot be attempted
@@ -297,7 +297,6 @@ exactly the following properties. This table is exhaustive.
 | Team sent     | Constants | The ordered list of Immutable references to the Agents of the `agents` parameter of `deployAgents`, in that order.            | Authoritative value. Non-empty. No rule changes it after creation.                                                                             |
 | Lifecycle     | State     | Deployed, Won, or Lost, under [Mission lifecycle](#mission-lifecycle).                                                        | Authoritative value.                                                                                                                           |
 | Current team  | State     | The ordered list of the Agents deployed on the Mission, in the order of Team sent, while they are Deployed; afterwards empty. | Authoritative value. Agrees with Current assignments under [Current versus historical teams](domain-model.md#current-versus-historical-teams). |
-| Battle result | State     | The Battle result of the Mission's Battle, or absent before it is fought.                                                     | Authoritative value, under [Battle result](combat.md#battle-result) in Combat. Never rewritten once present.                                   |
 
 A Mission also has Derived values, which are never stored: its kind, which is the kind of its Mission site, so that it is
 an Initiative Mission or a Response Mission under [Mission site kind and provenance](#mission-site-kind-and-provenance);
@@ -310,17 +309,15 @@ one is an internal invariant violation, reported under
 1. Its Mission site is Attempted, and no other Mission references that Mission site.
 2. Its Current team equals its Team sent exactly when the lifecycle state is Deployed, and is empty when it is Won or
    Lost.
-3. Its Battle result is present exactly when the lifecycle state is Won or Lost.
 
 **Retention:** A Mission keeps every property above for the whole Campaign, whatever its lifecycle state, so that every
-reference to it resolves, e.g. from a Participation history or Lead progression. The one exception is its Battle result,
-which may be reduced after the next Advance turn, under [Battle result](combat.md#battle-result) in Combat. A Won or Lost Mission no longer
+reference to it resolves, e.g. from a Participation history or Lead progression. A Won or Lost Mission no longer
 participates in current gameplay and is retained in World history with its final values, under
 [Historical fact preservation](../foundation/campaign-state.md#historical-fact-preservation) in Campaign State. No
 Mission is ever removed.
 
-The Agents who took part in a Mission remain recorded after its Current team is empty: in its Team sent, in the
-participants of its Battle result, in their fixed order, and in each Agent's Participation history, under
+The Agents who took part in a Mission remain recorded after its Current team is empty: in its Team sent and in each
+Agent's Participation history, under
 [Participation history records](agents-spec.md#participation-history-records) in Agents.
 
 ## Mission at a Mission site
@@ -332,24 +329,25 @@ deployed to never has a Mission. Both are retained for the whole Campaign, so th
 site always resolves.
 
 A Mission is its own Campaign instance, not a part of its Mission site's State, because it carries facts the Mission
-site does not have, e.g. the Turn it was deployed in, the team sent, its own lifecycle from deployment to its outcome,
-and its Battle result; and because Current assignments, Participation history, and Lead progression reference it
-directly. A Battle result, by contrast, is not a Campaign instance: it is a part of the Mission that holds it.
+site does not have, e.g. the Turn it was deployed in, the team sent, its own lifecycle from deployment to its outcome;
+and because Current assignments, Participation history, and Lead progression reference it
+directly. The Combat report of its Combat, by contrast, is not part of the Mission: it is part of the Turn report of the
+Advance turn that fought the Combat, under [Combat report](combat.md#combat-report) in Combat.
 
 The Mission site and its Mission have separate lifecycles, under [Mission site lifecycle](#mission-site-lifecycle) and
 [Mission lifecycle](#mission-lifecycle). The Mission site's lifecycle describes the opportunity, e.g. whether a team
 can still be deployed to it or whether it expired unattended; the Mission's lifecycle describes the attempt, e.g.
-whether its Battle is still to be fought and whether it was Won or Lost.
+whether its Combat is still to be fought and whether it was Won or Lost.
 
 # Mission lifecycle
 
 **Proposed rule:** A Mission is in exactly one of the lifecycle states Deployed, Won, and Lost. The set is exhaustive.
 Every Mission is Deployed when it is created, under [Deploying Agents](#deploying-agents). The transition table is:
 
-| Source state | Target state | Trigger                                                                                        | Condition                                 | Effects                                                                                                                                                                               |
-| ------------ | ------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Deployed     | Won          | Advance turn, in the Turn advancement step Mission resolution: the Mission's Battle is fought. | The Battle outcome is Prevailed.          | The Mission gains its Battle result; its Agents return or are Killed; the Won consequences apply, under [Mission resolution](#mission-resolution) and [Consequences](#consequences).  |
-| Deployed     | Lost         | Advance turn, in the Turn advancement step Mission resolution: the Mission's Battle is fought. | The Battle outcome is Retreated or Wiped. | The Mission gains its Battle result; its Agents return or are Killed; the Lost consequences apply, under [Mission resolution](#mission-resolution) and [Consequences](#consequences). |
+| Source state | Target state | Trigger                                                                                        | Condition                                 | Effects                                                                                                                                                                                   |
+| ------------ | ------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Deployed     | Won          | Advance turn, in the Turn advancement step Mission resolution: the Mission's Combat is fought. | The Combat outcome is Prevailed.          | Its Combat report joins the Turn report; its Agents return or are Killed; the Won consequences apply, under [Mission resolution](#mission-resolution) and [Consequences](#consequences).  |
+| Deployed     | Lost         | Advance turn, in the Turn advancement step Mission resolution: the Mission's Combat is fought. | The Combat outcome is Retreated or Wiped. | Its Combat report joins the Turn report; its Agents return or are Killed; the Lost consequences apply, under [Mission resolution](#mission-resolution) and [Consequences](#consequences). |
 
 Every transition not listed is impossible; e.g., nothing leaves Won or Lost. Won and Lost are final, and a Lost Mission
 stays Lost.
@@ -367,7 +365,7 @@ Mission site.
 | Parameter     | Meaning                                                                                                                                                                                       |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `missionSite` | An Instance ID, meant to identify one Mission site of the Campaign.                                                                                                                           |
-| `agents`      | A list of Instance IDs, each meant to identify one Agent of the Campaign. Its order becomes the order of the Mission's Current team and so the fixed order of the Agents' side of the Battle. |
+| `agents`      | A list of Instance IDs, each meant to identify one Agent of the Campaign. Its order becomes the order of the Mission's Current team and so the fixed order of the Agents' side of the Combat. |
 
 Preconditions: the action is rejected, as a whole, when any of the following holds:
 
@@ -409,7 +407,7 @@ Turn:
   initial values, under [Campaign instance creation](../foundation/campaign-state.md#campaign-instance-creation) in
   Campaign State: the MissionArchetype as its Archetype reference; the Mission site as its Mission site; the current
   turn number as its Turn deployed; the Agents of `agents`, in that order, as its Team sent and as its Current team;
-  lifecycle state Deployed; and no Battle result.
+  and lifecycle state Deployed.
 - For every Agent in `agents`: its Current assignment becomes Deployed with a Mutable reference to the new Mission, and
   its Task phase is At assignment at once, without transit, under [Transit rule](agents-spec.md#transit-rule) and
   [Current assignment changes](agents-spec.md#current-assignment-changes) in Agents.
@@ -421,7 +419,7 @@ Turn:
 
 Nothing else changes; e.g., no money is spent, the Mission site's Turns until expiry is unchanged, and the Agents' skill,
 current health, and exhaustion are unchanged. The Agents count toward the Transport cap at once and until the Mission resolution
-step of the next Advance turn, under [Agency caps](economy-and-upgrades.md#agency-caps). The Battle is fought in that
+step of the next Advance turn, under [Agency caps](economy-and-upgrades.md#agency-caps). The Combat is fought in that
 step.
 
 **No recall:** No Player action removes an Agent from a Mission's Current team or returns an Attempted Mission site to
@@ -443,19 +441,20 @@ applies.
 
 For each Deployed Mission M, at Mission site S:
 
-1. **Battle:** A Battle is fought under [Combat](combat.md). Its Agents' side is M's Current team, in its order; its
+1. **Combat:** A Combat is fought under [Combat](combat.md). Its Agents' side is M's Current team, in its order; its
    Enemies' side is S's Enemies list, in its order, under [Fixed order of each side](combat.md#fixed-order-of-each-side).
    The current values of every Combatant are their Step-start values of this step, under
-   [Battle inputs and outputs](combat.md#battle-inputs-and-outputs). Every Agent of M's Current team is Serving,
+   [Combat inputs and outputs](combat.md#combat-inputs-and-outputs). Every Agent of M's Current team is Serving,
    Deployed on M, and At assignment, because no Player action or earlier step can change a Deployed Agent's lifecycle
-   state or Current assignment, so the lists are valid Battle inputs.
-2. **Battle result:** The Battle result becomes M's Battle result.
-3. **Lifecycle:** M becomes Won when the Battle outcome is Prevailed, and Lost when it is Retreated or Wiped, under
-   [Battle outcomes](combat.md#battle-outcomes).
-4. **Killed Agents:** Every Agent whose current health reached 0 in the Battle is Killed under
+   state or Current assignment, so the lists are valid Combat inputs.
+2. **Combat report:** The Combat's Combat report, which names M as its Mission, becomes part of the Turn report of this
+   Advance turn, under [Combat report](combat.md#combat-report) in Combat.
+3. **Lifecycle:** M becomes Won when the Combat outcome is Prevailed, and Lost when it is Retreated or Wiped, under
+   [Combat outcomes](combat.md#combat-outcomes).
+4. **Killed Agents:** Every Agent whose current health reached 0 in the Combat is Killed under
    [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat; [Agent lifecycle](agents-spec.md#agent-lifecycle)
    in Agents removes its Current assignment and Task phase and records M in its Participation history.
-5. **Survivors:** Every other Agent of M's Current team survives, including an Agent that ended the Battle
+5. **Survivors:** Every other Agent of M's Current team survives, including an Agent that ended the Combat
    Incapacitated. Its Current assignment becomes Recovery when its current health is below its base health, and Standby when
    its current health equals its base health; in both cases its Task phase becomes In transit, under
    [Current assignment changes](agents-spec.md#current-assignment-changes) in Agents. It leaves M's Current team, and M
@@ -466,7 +465,7 @@ For each Deployed Mission M, at Mission site S:
 7. **Consequences:** The consequences of M's new lifecycle state apply, under [Consequences](#consequences).
 
 S stays Attempted. A Won Mission is also recorded in Lead progression against the Lead that created its Mission site,
-under [Leads and Progression](leads-and-progression.md). A Mission raises an Agent's exhaustion only through its Battle,
+under [Leads and Progression](leads-and-progression.md). A Mission raises an Agent's exhaustion only through its Combat,
 under [Combat](combat.md), and changes an Agent's skill in no way, under
 [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents.
 
@@ -486,9 +485,9 @@ step is not cancelled: its Mission is resolved like every other Deployed Mission
 The result of the step is the same whichever order an implementation resolves the Deployed Missions in, under
 [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn Advancement:
 
-- **Battles are independent:** An Agent belongs to at most one Current team and an Enemy to exactly one Mission site, so
-  no Combatant takes part in two Battles. A Battle depends only on its own inputs and its own named random outcomes,
-  under [Battle inputs and outputs](combat.md#battle-inputs-and-outputs), so no Battle reads a value another Battle of
+- **Combats are independent:** An Agent belongs to at most one Current team and an Enemy to exactly one Mission site, so
+  no Combatant takes part in two Combats. A Combat depends only on its own inputs and its own named random outcomes,
+  under [Combat inputs and outputs](combat.md#combat-inputs-and-outputs), so no Combat reads a value another Combat of
   the step changes.
 - **Consequences are sums:** Money changes are added to money, and addition does not depend on order. Funding changes
   are summed and floored once for the step, under [Funding changes](economy-and-upgrades.md#funding-changes). Panic
@@ -593,14 +592,13 @@ The table is exhaustive.
 | A Mission site's rewards and penalties, i.e. the amounts under [Consequences](#consequences) for each final state                                                                         | Yes                        |
 | A Mission's Instance ID, its MissionArchetype, its Mission site, its Turn deployed, and its Team sent, in its order                                                                       | Yes                        |
 | A Mission's lifecycle state                                                                                                                                                               | Yes                        |
-| A Mission's Current team, in its order, and its Battle result, whose facts are Player-visible under [Player-visible information](combat.md#player-visible-information) in Combat          | Yes                        |
+| A Mission's Current team, in its order                                                                                                                                                    | Yes                        |
 
 A Response Mission site's MissionSiteArchetype is the value of its
 [MissionSiteArchetype selection](#missionsitearchetype-selection) outcome, so that value is Player-visible through the
 Mission site from the Committed state in which the Mission site exists. **Unknown versus absent:** No value in the table is hidden, so
 Player API never reports one as unknown. A Mission site that no team has been deployed to has no Mission; Player API
-reports its Mission as absent, and the visible lifecycle state of the Mission site explains why. A Mission whose Battle has not been fought
-has no Battle result, reported as absent. Turns until expiry is always present; a value of 0 appears only on an Expired
+reports its Mission as absent, and the visible lifecycle state of the Mission site explains why. Turns until expiry is always present; a value of 0 appears only on an Expired
 Mission site. An empty Current team of a Won or Lost Mission is reported as empty, not as absent.
 
 # Edge cases and failure behavior
@@ -611,11 +609,11 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   ([Mission site expiration](#mission-site-expiration)).
 - **Creation and expiration in one Advance turn:** A Mission site created in Investigation progress or Faction activity
   does not count down in the same Advance turn ([Mission site expiration](#mission-site-expiration)).
-- **Several Missions resolved in one step:** Each has its own Battle; money, funding, and Panic changes add up, and
+- **Several Missions resolved in one step:** Each has its own Combat; money, funding, and Panic changes add up, and
   funding is floored once for the step ([Order independence](#order-independence)).
 - **Win that defeats a Faction while other Mission sites target it:** Every Active Mission site targeting that Faction
   is Cancelled at the end of the step. A Deployed Mission at a Mission site targeting it in the same step still has its
-  Battle, and is Won or Lost with its full consequences, e.g. a Won Response Mission still pays the operation level's `on_win`
+  Combat, and is Won or Lost with its full consequences, e.g. a Won Response Mission still pays the operation level's `on_win`
   ([Cancellation](#cancellation)).
 - **Two wins that defeat the same Faction in one step:** The Faction is Defeated once, with one Defeated turn
   ([Order independence](#order-independence)).
@@ -623,10 +621,10 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   target Faction is already Defeated is Active only until the Cancellation part of Mission resolution in the same
   Advance turn, which cancels it; no Committed state shows it Active. A Defeated Faction creates no Response Mission site,
   under [Defeat](factions.md#defeat) ([Cancellation](#cancellation)).
-- **All Agents Killed:** The Battle outcome is Wiped, so the Mission is Lost with its Lost consequences. The Mission
-  keeps its Battle result and its Team sent, its Current team is empty, and the Killed Agents no longer count toward the
+- **All Agents Killed:** The Combat outcome is Wiped, so the Mission is Lost with its Lost consequences. The Mission
+  keeps its Team sent, its Current team is empty, and the Killed Agents no longer count toward the
   Transport cap ([Resolving one Mission](#resolving-one-mission)).
-- **Incapacitated survivors:** An Agent that ends the Battle Incapacitated is alive and returns like any survivor:
+- **Incapacitated survivors:** An Agent that ends the Combat Incapacitated is alive and returns like any survivor:
   Recovery if its current health is below its base health, Standby if its current health equals its base health ([Resolving one Mission](#resolving-one-mission)).
 - **Transport cap exactly reached:** Deploying Agents so that the number of Deployed Agents equals the Transport cap is
   accepted; one more is rejected ([Deploying Agents](#deploying-agents)).
@@ -683,7 +681,7 @@ All examples use the Bootstrap GDR values from `content/missions/mission_site_ar
 The Campaign has one Faction, Red Dawn, from `red_dawn`, which is not Defeated unless an example says otherwise. "The
 Advance turn ending turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
 `field_agent` with skill 100, current health 30 of 30, exhaustion 0, weapon damage 10, and effective skill 100, and no Upgrade
-has been acquired, so the Transport cap is 4. In the Battle traces, Combat's rules decide every target and every value;
+has been acquired, so the Transport cap is 4. In the Combat traces, Combat's rules decide every target and every value;
 the injected named random outcomes are each attack's hit outcome and, for a hit, its damage outcome, under
 [Hit outcome](combat.md#hit-outcome) and [Damage outcome](combat.md#damage-outcome) in Combat; "h" is current health and "x" is
 exhaustion. Money, funding, and Panic before each example are stated in it; Panic changes only in the Panic step, from
@@ -724,7 +722,7 @@ The Combat rating of s1's Enemies is 3 × 40 = 120, and its rewards are money 5,
 At assignment, so no Agent is on Contracting and no Agent is Deployed. s1 is the only Mission site. The player
 calls `deployAgents(s1, [a1, a2, a3, a4])`. 0 + 4 = 4 is not more than the Transport cap 4, so the action succeeds: s1 is
 Attempted, and Mission m1 is created with Archetype `standard_mission`, Mission site s1, Turn deployed 6, Team sent and
-Current team [a1, a2, a3, a4], lifecycle Deployed, and no Battle result. Each Agent is Deployed on m1, At assignment.
+Current team [a1, a2, a3, a4], and lifecycle Deployed. Each Agent is Deployed on m1, At assignment.
 s1's Turns until expiry stays 4. A further `deployAgents` of any Agent to any Mission site in Turn 6 is
 rejected, because 4 + 1 is more than 4.
 
@@ -732,27 +730,27 @@ rejected, because 4 + 1 is more than 4.
 Pending panic change is 0. In Agency income, under [Agency income](economy-and-upgrades.md#agency-income) in Economy and
 Upgrades, money rises by funding 20 plus 30 × 0 for no Agent on Contracting, to 420. In Upkeep, under
 [Upkeep](economy-and-upgrades.md#upkeep), money falls by 10 × 4 for the four Serving Agents, all Deployed, to 380. No
-Investigation is Active, so Investigation progress changes nothing. In Mission resolution, the Battle of m1 has the Agents' side [a1, a2, a3, a4] and the Enemies' side [e1, e2, e3]:
+Investigation is Active, so Investigation progress changes nothing. In Mission resolution, the Combat of m1 has the Agents' side [a1, a2, a3, a4] and the Enemies' side [e1, e2, e3]:
 
-| Round | Attacker → target              | Injected outcomes | Result                         |
-| ----- | ------------------------------ | ----------------- | ------------------------------ |
-| 1     | a1 → e1 (tie at 40, earliest)  | hit; damage 15    | e1: h5, x1, effective skill 10 |
-| 1     | a2 → e2 (40 beats 10)          | hit; damage 15    | e2: h5, x1, effective skill 10 |
-| 1     | a3 → e3 (40 beats 10)          | hit; damage 15    | e3: h5, x1, effective skill 10 |
-| 1     | a4 → e1 (tie at 10, earliest)  | hit; damage 5     | e1: h0, dead                   |
-| 1     | e2 → a1 (tie at 100, earliest) | miss              | a1: x2 after this attack       |
-| 1     | e3 → a1 (tie at 100, earliest) | miss              | a1: x3 after this attack       |
-| 2     | a1 → e2 (tie at 10, earliest)  | hit; damage 5     | e2: h0, dead                   |
-| 2     | a2 → e3 (only target)          | hit; damage 5     | e3: h0, dead                   |
+| Combat round | Attacker → target              | Injected outcomes | Result                         |
+| ------------ | ------------------------------ | ----------------- | ------------------------------ |
+| 1            | a1 → e1 (tie at 40, earliest)  | hit; damage 15    | e1: h5, x1, effective skill 10 |
+| 1            | a2 → e2 (40 beats 10)          | hit; damage 15    | e2: h5, x1, effective skill 10 |
+| 1            | a3 → e3 (40 beats 10)          | hit; damage 15    | e3: h5, x1, effective skill 10 |
+| 1            | a4 → e1 (tie at 10, earliest)  | hit; damage 5     | e1: h0, dead                   |
+| 1            | e2 → a1 (tie at 100, earliest) | miss              | a1: x2 after this attack       |
+| 1            | e3 → a1 (tie at 100, earliest) | miss              | a1: x3 after this attack       |
+| 2            | a1 → e2 (tie at 10, earliest)  | hit; damage 5     | e2: h0, dead                   |
+| 2            | a2 → e3 (only target)          | hit; damage 5     | e3: h0, dead                   |
 
-a3 and a4 have no target in Round 2, and no Enemy attacks in its Enemies' phase. After Round 1 the Agents' Combat rating
-is 400, so the Battle continues; after Round 2 no Enemy is able to fight, and the Battle outcome is Prevailed after 2
-Rounds. Every Agent ends with current health 30 of 30; a1 has exhaustion 4, a2 2, a3 1, and a4 1.
+a3 and a4 have no target in Combat round 2, and no Enemy attacks in its Enemies' phase. After Combat round 1 the Agents' Combat rating
+is 400, so the Combat continues; after Combat round 2 no Enemy is able to fight, and the Combat outcome is Prevailed after 2
+Combat rounds. Every Agent ends with current health 30 of 30; a1 has exhaustion 4, a2 2, a3 1, and a4 1.
 
 | Value after the Advance turn ending turn 6 | Result                                                                                                                    |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
 | s1                                         | Attempted; Turns until expiry 4                                                                                           |
-| m1                                         | Won; it holds the Battle result above, an empty Current team, and its unchanged Team sent [a1, a2, a3, a4]                |
+| m1                                         | Won; an empty Current team and its unchanged Team sent [a1, a2, a3, a4]; the Turn report holds the Combat report above    |
 | a1, a2, a3, a4                             | Serving; Standby, In transit, because each has current health equal to its base health; m1 in each Participation history  |
 | Money                                      | 380 + 5 = 385 after Mission resolution; no later step of this Advance turn changes money, so the turn ends with money 385 |
 | Funding                                    | max(0, 20 + 0) = 20                                                                                                       |
@@ -792,18 +790,18 @@ of the Advance turn ending turn 45 uses 19. s2 never has a Mission, and its Enem
 Mission m2 is created with the Current team [a1]. In Mission resolution of
 the Advance turn ending turn 42:
 
-| Round | Attacker → target              | Injected outcomes | Result                                                             |
-| ----- | ------------------------------ | ----------------- | ------------------------------------------------------------------ |
-| 1     | a1 → e5 (tie at 120, earliest) | miss              | a1: x1; e5: x1                                                     |
-| 1     | e1 → a1                        | miss              | a1: x2                                                             |
-| 1     | e2 → a1                        | miss              | a1: x3                                                             |
-| 1     | e3 → a1                        | miss              | a1: x4                                                             |
-| 1     | e4 → a1                        | miss              | a1: x5                                                             |
-| 1     | e5 → a1                        | hit; damage 21    | a1: h9, x6, effective skill `round down(100 × 9 × 99 / 3000) = 29` |
-| 1     | e6 → a1                        | miss              | a1: h9, x7, effective skill `round down(100 × 9 × 98 / 3000) = 29` |
+| Combat round | Attacker → target              | Injected outcomes | Result                                                             |
+| ------------ | ------------------------------ | ----------------- | ------------------------------------------------------------------ |
+| 1            | a1 → e5 (tie at 120, earliest) | miss              | a1: x1; e5: x1                                                     |
+| 1            | e1 → a1                        | miss              | a1: x2                                                             |
+| 1            | e2 → a1                        | miss              | a1: x3                                                             |
+| 1            | e3 → a1                        | miss              | a1: x4                                                             |
+| 1            | e4 → a1                        | miss              | a1: x5                                                             |
+| 1            | e5 → a1                        | hit; damage 21    | a1: h9, x6, effective skill `round down(100 × 9 × 99 / 3000) = 29` |
+| 1            | e6 → a1                        | miss              | a1: h9, x7, effective skill `round down(100 × 9 × 98 / 3000) = 29` |
 
-After Round 1, an Enemy and an Agent are able to fight, and the Retreated check holds: 29 < 0.5 × 100 = 50, and the
-Enemies' Combat rating 400 ≥ 0.8 × 29. The Battle outcome is Retreated, so m2 is Lost. a1 survives with current health 9 of 30,
+After Combat round 1, an Enemy and an Agent are able to fight, and the Retreated check holds: 29 < 0.5 × 100 = 50, and the
+Enemies' Combat rating 400 ≥ 0.8 × 29. The Combat outcome is Retreated, so m2 is Lost. a1 survives with current health 9 of 30,
 so its Current assignment becomes Recovery, In transit. A Panic increase of 8 is added and funding becomes
 max(0, 20 − 1) = 19, the same consequences as the Ignored variant, two Advance turns earlier; money is unchanged. s2 does
 not count down in Mission site expiration, because it is Attempted, not Active.
@@ -812,21 +810,21 @@ not count down in Mission site expiration, because it is Attempted, not Active.
 Attempted and Mission m2 is created with the Current team [a1, a2, a3, a4]. In Mission
 resolution of the Advance turn ending turn 41:
 
-| Round | Attacker → target                  | Injected outcomes   | Result                                                                                                                                                                   |
-| ----- | ---------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1     | a1 → e5 (tie at 120, earliest)     | hit; damage 15      | e5: h15, effective skill 60                                                                                                                                              |
-| 1     | a2 → e6 (120 beats 60)             | hit; damage 15      | e6: h15, effective skill 60                                                                                                                                              |
-| 1     | a3 → e5 (tie at 60, earliest)      | hit; damage 15      | e5: h0, dead                                                                                                                                                             |
-| 1     | a4 → e6 (60 beats 40)              | hit; damage 15      | e6: h0, dead                                                                                                                                                             |
-| 1     | e1, e2, e3, e4 → a1, each          | miss, each          | a1: x5                                                                                                                                                                   |
-| 2     | a1 → e1 (tie at 40, earliest)      | hit; damage 15      | e1: h5, effective skill 10                                                                                                                                               |
-| 2     | a2 → e2 (40 beats 10)              | hit; damage 15      | e2: h5, effective skill 10                                                                                                                                               |
-| 2     | a3 → e3 (40 beats 10)              | hit; damage 15      | e3: h5, effective skill 10                                                                                                                                               |
-| 2     | a4 → e4 (40 beats 10)              | hit; damage 15      | e4: h5, effective skill 10                                                                                                                                               |
-| 2     | e1, e2, e3, e4 → a2, each          | miss, each          | a2: x6. a1, at x6, has effective skill 99, so each initiate targets a2, whose exhaustion is at most 5, and so whose effective skill is 100, before each of these attacks |
-| 3     | a1 → e1, a2 → e2, a3 → e3, a4 → e4 | hit; damage 5, each | e1, e2, e3, e4: h0, dead                                                                                                                                                 |
+| Combat round | Attacker → target                  | Injected outcomes   | Result                                                                                                                                                                   |
+| ------------ | ---------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1            | a1 → e5 (tie at 120, earliest)     | hit; damage 15      | e5: h15, effective skill 60                                                                                                                                              |
+| 1            | a2 → e6 (120 beats 60)             | hit; damage 15      | e6: h15, effective skill 60                                                                                                                                              |
+| 1            | a3 → e5 (tie at 60, earliest)      | hit; damage 15      | e5: h0, dead                                                                                                                                                             |
+| 1            | a4 → e6 (60 beats 40)              | hit; damage 15      | e6: h0, dead                                                                                                                                                             |
+| 1            | e1, e2, e3, e4 → a1, each          | miss, each          | a1: x5                                                                                                                                                                   |
+| 2            | a1 → e1 (tie at 40, earliest)      | hit; damage 15      | e1: h5, effective skill 10                                                                                                                                               |
+| 2            | a2 → e2 (40 beats 10)              | hit; damage 15      | e2: h5, effective skill 10                                                                                                                                               |
+| 2            | a3 → e3 (40 beats 10)              | hit; damage 15      | e3: h5, effective skill 10                                                                                                                                               |
+| 2            | a4 → e4 (40 beats 10)              | hit; damage 15      | e4: h5, effective skill 10                                                                                                                                               |
+| 2            | e1, e2, e3, e4 → a2, each          | miss, each          | a2: x6. a1, at x6, has effective skill 99, so each initiate targets a2, whose exhaustion is at most 5, and so whose effective skill is 100, before each of these attacks |
+| 3            | a1 → e1, a2 → e2, a3 → e3, a4 → e4 | hit; damage 5, each | e1, e2, e3, e4: h0, dead                                                                                                                                                 |
 
-After Round 3 no Enemy is able to fight, so the Battle outcome is Prevailed and m2 is Won. Every Agent ends with current health
+After Combat round 3 no Enemy is able to fight, so the Combat outcome is Prevailed and m2 is Won. Every Agent ends with current health
 30 of 30 and becomes Standby, In transit. Money becomes 300 + 30 = 330 and funding becomes max(0, 20 + 5) = 25; no Panic
 change is added. The Agency income step of the Advance turn ending turn 42 uses funding 25. The operation level's
 `on_win` is applied once: money rises by 30, not 60, and no rule of Factions adds a second reward.
@@ -849,10 +847,10 @@ This example exercises [Consequences](#consequences), [Cancellation](#cancellati
   Agency has acquired the Upgrade `transport_cap` four times, so the Transport cap is 4 + 2 × 4 = 12 and both teams fit.
 - Mission site s5, from `foil_recruitment_push`, target Faction Red Dawn, is Active with Turns until expiry 2.
 
-Money is 1000, funding 25, and Panic 40. In Mission resolution of the Advance turn ending turn 150, both Battles are
-fought. Their injected hit and damage outcomes are chosen so that the Battle of m3 has the Battle outcome Prevailed and
-the Battle of m4 the Battle outcome Prevailed; this example does not repeat the two traces, which Combat's rules decide,
-and checks only what follows from the two Battle outcomes.
+Money is 1000, funding 25, and Panic 40. In Mission resolution of the Advance turn ending turn 150, both Combats are
+fought. Their injected hit and damage outcomes are chosen so that the Combat of m3 has the Combat outcome Prevailed and
+the Combat of m4 the Combat outcome Prevailed; this example does not repeat the two traces, which Combat's rules decide,
+and checks only what follows from the two Combat outcomes.
 
 | Effect  | Result                                                                                                                                                                                                                               |
 | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -889,7 +887,7 @@ Contracting, At assignment. Each call is made on its own from this state, and ea
 After the last call, `deployAgents` of a5 to any Active Mission site in Turn 15 is rejected, because 4 + 1 is more than 4.
 If the player instead first purchases the Upgrade `transport_cap`, the Transport cap is 6, under
 [Agency caps](economy-and-upgrades.md#agency-caps), and `deployAgents(s7, [a4, a8])` succeeds with 3 + 2 = 5; a8 leaves
-Contracting at once. In the Advance turn ending turn 15, the Battles of m6 and of the Mission at s7 are fought, and their survivors stop
+Contracting at once. In the Advance turn ending turn 15, the Combats of m6 and of the Mission at s7 are fought, and their survivors stop
 counting toward the Transport cap.
 
 ## Deploying on the last Turn
@@ -900,7 +898,7 @@ turn 4, as in [The full life of an apprehend_member Mission site](#the-full-life
 counts down to 4, 3, 2, and 1 in the Advance turns ending turns 5 to 8, so during Turn 9 its Turns until expiry is 1.
 
 - **Deployed in Turn 9:** The player calls `deployAgents(s1, [a1, a2, a3, a4])`, so s1 is Attempted and its Mission is
-  Deployed. In the Advance turn ending turn 9, the Battle is fought in Mission resolution and the Mission becomes Won or
+  Deployed. In the Advance turn ending turn 9, the Combat is fought in Mission resolution and the Mission becomes Won or
   Lost; with the injected outcomes of the full-life example it is Won, with money +5 and a Panic reduction of 1. s1 is
   not Active in Mission site expiration, so it is not Expired, and its Turns until expiry stays 1.
 - **Not deployed:** In Mission site expiration of the Advance turn ending turn 9, s1 counts down to 0 and is Expired. As
@@ -929,7 +927,7 @@ increase of 3 and a funding change of 0. If a team were deployed to it and its M
 This example exercises [Order independence](#order-independence) and [Consequences](#consequences). Funding is 0, money
 200, and Panic 50. In Mission resolution of one Advance turn, Mission m10 at Mission site s10 from `apprehend_member` is
 Won, Mission m11 at Mission site s11 from `foil_sabotage` is Won, and Mission m12 at Mission site s12 from
-`foil_recruitment_push` is Lost, each by the outcome of its own Battle. The changes are money +5 + 30 = +35, so money is 235; funding changes 0, +5, and 0, so funding is
+`foil_recruitment_push` is Lost, each by the outcome of its own Combat. The changes are money +5 + 30 = +35, so money is 235; funding changes 0, +5, and 0, so funding is
 max(0, 0 + 0 + 5 + 0) = 5; and Panic contributions of −1 and +3, so the Pending panic change is 2 from this step. In a
 second variant, m11 is Lost instead: money is 200 + 5 = 205; the funding changes are 0, −1, and 0, so funding is
 max(0, 0 + 0 − 1 + 0) = 0; and the Panic contributions are −1, +8, and +3, a Pending panic change of 10 from this step. Every processing order of m10, m11, and m12 gives the same Committed state.
@@ -938,7 +936,7 @@ max(0, 0 + 0 − 1 + 0) = 0; and the Panic contributions are −1, +8, and +3, a
 
 This example exercises [Mission site properties](#mission-site-properties) and [Mission properties](#mission-properties).
 The fixture of [A. Valid relationships](domain-model.md#a-valid-relationships) in Domain Model, in which Mission site s1
-is Attempted and its Mission m1 is Deployed with the Team sent and Current team {a2} and no Battle result, satisfies
+is Attempted and its Mission m1 is Deployed with the Team sent and Current team {a2}, satisfies
 every invariant under [Mission site properties](#mission-site-properties) and [Mission properties](#mission-properties).
 Each row independently changes that fixture and describes an invalid state.
 
@@ -946,7 +944,6 @@ Each row independently changes that fixture and describes an invalid state.
 | -------------------------------------------- | ------------------------------------------------------------------ |
 | s1 is Active while m1 references it          | A Mission references the Mission site exactly when it is Attempted |
 | A second Mission m2 also references s1       | At most one Mission references a Mission site                      |
-| m1 is Won and has no Battle result           | The Battle result is present exactly when Won or Lost              |
 | m1 is Won and its Current team is still {a2} | The Current team is empty when Won or Lost                         |
 | m1 is Deployed with an empty Current team    | The Current team equals the Team sent exactly when Deployed        |
 | s1 is Expired with Turns until expiry 1      | Turns until expiry is 0 exactly when Expired                       |
@@ -987,6 +984,6 @@ following test changes independently makes the Game build defective, so no Campa
   [F. Mission commitment: force concentration, casualties, and partial success](../../game-design-brief.md#f-mission-commitment-force-concentration-casualties-and-partial-success)
   in the game design brief requires; under [Consequences](#consequences).
 - TODO (later): Faction suppression by a consequence of a Mission or a Mission site, under [Consequences](#consequences).
-- TODO (later): Exhaustion gained after a Mission beyond its Battle, under [Resolving one Mission](#resolving-one-mission).
+- TODO (later): Exhaustion gained after a Mission beyond its Combat, under [Resolving one Mission](#resolving-one-mission).
 - TODO (later): Skill gained by surviving a Mission, under [Resolving one Mission](#resolving-one-mission).
 - TODO (later): A second attempt at a Mission site, under [Mission site lifecycle](#mission-site-lifecycle).

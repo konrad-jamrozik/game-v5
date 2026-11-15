@@ -102,7 +102,7 @@ does a Killed or Dismissed Agent.
 
 The table applies to an Agent that satisfies statements 1 to 3 above. The list of rows is exhaustive. An Agent on Standby
 does not regain current health in the Agent recovery step: only Recovery restores current health, and [Missions](missions.md) sends an
-Agent to Recovery exactly when it survives a Battle with current health below its base health.
+Agent to Recovery exactly when it survives a Combat with current health below its base health.
 
 The recovery rules of the next two sections read each Agent's own values at the start of the Agent recovery step, and the
 Current assignment, Task phase, current health, and exhaustion of no other Agent. Whatever order an implementation processes the
@@ -195,18 +195,18 @@ on Standby and on Recovery.
    its exhaustion falls by `exhaustion_recovery_per_turn` in the same step. Neither amount depends on the other, and the
    current health reaching base health does not change how much exhaustion is recovered in that step. An Agent that reaches
    base health in the step may still have exhaustion above 0 when it becomes Standby.
-3. **Battle and recovery never meet in one Advance turn:** Under [Battle timing](combat.md#battle-timing), a Battle
+3. **Combat and recovery never meet in one Advance turn:** Under [Combat timing](combat.md#combat-timing), a Combat
    lowers current health and raises exhaustion within the one Turn advancement step in which it is fought, the Mission
    resolution step. An Agent that survives is In transit from that step on, so at the Agent recovery step of the same Advance turn it fails statement 3
    of [Which Agents recover](#which-agents-recover) and recovers nothing. The first Advance turn in which it can recover is
    the one after the Advance turn in which it arrives, under [Transit rule](agents-spec.md#transit-rule). The Agent's
-   current health and exhaustion after the Battle are therefore exactly the values the Battle left, until that Advance turn.
+   current health and exhaustion after the Combat are therefore exactly the values the Combat left, until that Advance turn.
 4. **Order of the steps:** Within one Advance turn, the Agent recovery step follows the Mission resolution step and every
    earlier step, so it reads current health and exhaustion as they are after those steps, under
    [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn Advancement. No step after the Agent recovery
    step changes an Agent's current health or exhaustion.
 5. **No dependence on how damage was taken:** Health recovery reads only the Agent's base health and current health, and
-   exhaustion recovery reads only its exhaustion. Neither depends on which Battle, which attacker, or how much damage
+   exhaustion recovery reads only its exhaustion. Neither depends on which Combat, which attacker, or how much damage
    produced the current health lost, or on how many attacks produced the exhaustion.
 
 # Player-visible information
@@ -260,7 +260,7 @@ A reported value of 0 can only occur for an Agent on Recovery with current healt
   any Agent on Recovery: current health after equals base health, the Agent becomes Standby, At assignment, and its exhaustion
   recovers once ([Health recovery](#health-recovery), [Several changes in one turn](#several-changes-in-one-turn)). Its
   Recovery turns remaining is 0 ([Player-visible information](#player-visible-information)).
-- **Agent returning from a Battle in this Advance turn:** It is In transit at the Agent recovery step and recovers nothing
+- **Agent returning from a Combat in this Advance turn:** It is In transit at the Agent recovery step and recovers nothing
   in this Advance turn ([Several changes in one turn](#several-changes-in-one-turn)).
 - **Agent arriving in this Advance turn:** An Agent on Recovery or Standby that arrives in the Transit step recovers
   nothing in this Advance turn and recovers from the next one ([Which Agents recover](#which-agents-recover)).
@@ -294,7 +294,7 @@ The values they read are:
 | `agent_parameters` | `exhaustion_cap` 100, which no example reaches                          |
 
 "The Advance turn ending turn t" is the Advance turn committed during Turn t. No Upgrade has been acquired in any
-example. The Battle values that [Combat](combat.md) produces are stipulated as inputs.
+example. The Combat values that [Combat](combat.md) produces are stipulated as inputs.
 
 ## Health recovery rate
 
@@ -313,12 +313,12 @@ Health recovery rate is `round up( p × 30 / 100 )` for an Agent with base healt
 Rounding down would give 0 for the first two rows, so the Agent would never recover; Round up gives at least 1 for every
 valid percentage.
 
-## Returning from a Battle until Standby
+## Returning from a Combat until Standby
 
 This example exercises [Which Agents recover](#which-agents-recover), [Health recovery](#health-recovery),
 [Exhaustion recovery](#exhaustion-recovery), and [Several changes in one turn](#several-changes-in-one-turn), with
 [Transit rule](agents-spec.md#transit-rule). Agent a1 is on Standby, At assignment, with current health 30 of 30, and is deployed
-to Mission site s1 during Turn 5. As a stipulated input, the Battle in the Advance turn ending turn 5 leaves a1 with
+to Mission site s1 during Turn 5. As a stipulated input, the Combat in the Advance turn ending turn 5 leaves a1 with
 current health 22 and exhaustion 14, and a1 survives; [Missions](missions.md) therefore sends a1 to Recovery, In transit. The Health
 recovery rate of a1 is 1. Its Recovery turns remaining, once it is At assignment, is `round up( (30 − 22) / 1 )` = 8.
 
@@ -342,7 +342,7 @@ recovery rate of a1 is 1. Its Recovery turns remaining, once it is At assignment
 During Turns 6 and 7, `assignAgents([a1], Standby)` is rejected because a1 cannot be ordered, and no Player action ends
 the Recovery early. a1 recovers in 8 Advance turns, the ones ending turns 7 to 14, which equals its Recovery turns
 remaining of 8 on turn 7; on turn 5 and turn 6 the Recovery turns remaining reported is also 8, and it counts down by 1
-in each Advance turn from the Advance turn ending turn 7. The Battle's lost current health and gained exhaustion are untouched in
+in each Advance turn from the Advance turn ending turn 7. The Combat's lost current health and gained exhaustion are untouched in
 the Advance turn ending turn 5 because a1 was Deployed in the Turn-end state and In transit at the step.
 
 ## Standby recovers exhaustion only
@@ -374,7 +374,7 @@ changes nothing else about them that this table shows.
 | c5    | Standby; At assignment                                  | Standby; At assignment                                                 | 9                         | The only Agent in this table that recovers                                             |
 
 Agent c5 has current health 30 of 30. In the next Advance turn c3 and c4 are At assignment in the Turn-end state, so they recover
-exhaustion from 14 to 9. A Deployed Agent whose Battle is fought in the Mission resolution step is not in this table: it
+exhaustion from 14 to 9. A Deployed Agent whose Combat is fought in the Mission resolution step is not in this table: it
 is In transit at the step if it survives, as in the previous example.
 
 ## Current health reaching base health and exhaustion reaching 0 in one step
