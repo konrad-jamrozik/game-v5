@@ -22,6 +22,12 @@ of the specifications directory rather than in this one.
 [Specification Conventions](spec-conventions.md) answers _how is a specification written?_ It owns layout, metadata,
 Families and paths, ownership rules, terminology, and lifecycle.
 
+## Development Loop
+
+[Development Loop](development-loop.md) answers _how is the game developed?_ It explains how the Game designer keeps
+design control while LLMs write the specifications and Implementations, and how feedback from each Implementation flows
+back into the specifications.
+
 ## Artifact Relationships
 
 [Artifact Relationships](artifact-relationships.md) answers _how do artifacts declare their dependencies?_ It owns the
@@ -69,11 +75,15 @@ No relationships are declared with specifications in other families.
   only specifications, so it is owned separately from specification layout.
 - **Work plan versus work items:** the plan owns the schedule; the work-item register only records issues, so adding an
   issue never changes the schedule.
+- **Development Loop versus Specification Conventions:** the conventions say how one specification is written; the
+  Development Loop says how specifications and Implementations change together, so the process can change without
+  touching the writing rules.
 - **Index versus everything else:** the index only navigates; ownership stays with each registered
   document.
 
 # Reading order
 
 Start with the [Game Specification Index](../README.md) and [Specification Conventions](spec-conventions.md), then
-[Artifact Relationships](artifact-relationships.md). Consult the [work plan](work-plan.md) and
+[Artifact Relationships](artifact-relationships.md). Read the [Development Loop](development-loop.md) before building or
+updating an Implementation. Consult the [work plan](work-plan.md) and
 [outstanding work items](work-todos.md) when planning work.

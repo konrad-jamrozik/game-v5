@@ -12,7 +12,7 @@ These informative views are derived from the registered Markdown specifications.
 | Status     | Specifications |
 | ---------- | -------------- |
 | Stub       | 3              |
-| Draft      | 35             |
+| Draft      | 36             |
 | Accepted   | 3              |
 | Superseded | 0              |
 
@@ -20,7 +20,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | Family         | Specifications |
 | -------------- | -------------- |
-| Governance     | 5              |
+| Governance     | 6              |
 | Foundation     | 14             |
 | Mechanics      | 11             |
 | Content        | 1              |
@@ -30,13 +30,14 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Governance
 
-| ID    | Document                                                                | Status | Owns                                                                                     |
-| ----- | ----------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------- |
-| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Draft  | How specifications are written, reviewed, and maintained.                                |
-| INDEX | [Game Specification Index](../specs/README.md)                          | Draft  | Specification registration, navigation, and ownership summaries.                         |
-| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Draft  | Specification authoring order, review checkpoints, and work tracking.                    |
-| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft  | Artifact relationship terminology, direction, inventories, and graph validation.         |
-| TODOS | [Outstanding Work Items](../specs/governance/work-todos.md)             | Draft  | Known outstanding specification issues awaiting scheduling, with their affected batches. |
+| ID    | Document                                                                | Status | Owns                                                                                                            |
+| ----- | ----------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
+| CONV  | [Specification Conventions](../specs/governance/spec-conventions.md)    | Draft  | How specifications are written, reviewed, and maintained.                                                       |
+| INDEX | [Game Specification Index](../specs/README.md)                          | Draft  | Specification registration, navigation, and ownership summaries.                                                |
+| LOOP  | [Development Loop](../specs/governance/development-loop.md)             | Draft  | How the game is developed in a loop between specifications and Implementations, and the LLM skills that run it. |
+| PLAN  | [Specification Work Plan and Backlog](../specs/governance/work-plan.md) | Draft  | Specification authoring order, review checkpoints, and work tracking.                                           |
+| REL   | [Artifact Relationships](../specs/governance/artifact-relationships.md) | Draft  | Artifact relationship terminology, direction, inventories, and graph validation.                                |
+| TODOS | [Outstanding Work Items](../specs/governance/work-todos.md)             | Draft  | Known outstanding specification issues awaiting scheduling, with their affected batches.                        |
 
 ## Foundation
 

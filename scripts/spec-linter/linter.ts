@@ -53,7 +53,15 @@ const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
 const CONVENTIONS_PATH = 'docs/specs/governance/spec-conventions.md'
 const ALLOWED_STATUSES: ReadonlySet<string> = new Set(['Stub', 'Draft', 'Accepted', 'Superseded'])
 const ALLOWED_BINDINGS: ReadonlySet<string> = new Set(['Guidance', 'Mandatory'])
-const PERSONAS = ['Engine designer', 'Content designer', 'UI designer', 'AI designer', 'Implementer', 'Player']
+const PERSONAS = [
+  'Game designer',
+  'Engine designer',
+  'Content designer',
+  'UI designer',
+  'AI designer',
+  'Implementer',
+  'Player',
+]
 const ALLOWED_FAMILIES: ReadonlySet<string> = new Set([
   'Governance',
   'Foundation',
