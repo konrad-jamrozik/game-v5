@@ -4,7 +4,7 @@
 
 # What this family is for
 
-Implementation documents steer implementers and constrain where implementations reside in the repository. They are
+Implementation documents steer implementers and constrain where implementations reside. They are
 non-behavioural: they own no game behavior, observable contract, or GDR, and no acceptance test through the engine API
 depends on them. Each document's Binding metadata row says whether it is Guidance, which an implementation may ignore,
 or Mandatory, which every implementation must follow, as described in
@@ -15,8 +15,8 @@ or Mandatory, which every implementation must follow, as described in
 ## Implementation Placement
 
 [Implementation Placement](implementation-placement.md), Mandatory, answers _where does an implementation live?_ It
-confines each implementation to its own directory under `implementations/`, which the implementation treats as its
-repository root.
+confines each implementation to its own directory beside this repository's local clone, e.g. `game-v5-impl-web/`,
+which the implementation treats as its repository root.
 
 ## Implementation Records
 
@@ -65,5 +65,5 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 The Implementation family is kept apart so that advice to implementers never becomes an observable contract. An
 implementation that ignores its Guidance documents can still satisfy every other specification. Mandatory documents
-are kept to repository constraints, which are checked against the repository rather than through the engine API, so
-that several independent implementations can coexist in one repository.
+are kept to placement and record-keeping constraints, which are checked against the files rather than through the
+engine API, so that several independent implementations can coexist beside the specifications.

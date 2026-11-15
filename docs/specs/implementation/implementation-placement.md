@@ -1,22 +1,22 @@
 # Implementation Placement
 
-| Metadata    | Value                                                                        |
-| ----------- | ---------------------------------------------------------------------------- |
-| Spec ID     | PLACE                                                                        |
-| Family      | Implementation                                                               |
-| Status      | Draft                                                                        |
-| Binding     | Mandatory                                                                    |
-| Audience    | Implementer                                                                  |
-| Owns        | Where in this repository each implementation and everything it needs reside. |
-| Conventions | [Specification conventions](../governance/spec-conventions.md)               |
+| Metadata    | Value                                                                                  |
+| ----------- | -------------------------------------------------------------------------------------- |
+| Spec ID     | PLACE                                                                                  |
+| Family      | Implementation                                                                         |
+| Status      | Draft                                                                                  |
+| Binding     | Mandatory                                                                              |
+| Audience    | Implementer                                                                            |
+| Owns        | Where each implementation and everything it needs reside, relative to this repository. |
+| Conventions | [Specification conventions](../governance/spec-conventions.md)                         |
 
 # Overview
 
 An [Implementation](../governance/artifact-relationships.md#glossary) of the game is the code, tests, and tooling that
-produce a playable Game build from the specifications. Each Implementation resides in its own Implementation directory
-under `implementations/` and treats that directory as the root of its repository, as if nothing else in the repository
-existed. Several Implementations may exist side by side, each independent of the others and of the specifications and
-tooling around it.
+produce a playable Game build from the specifications. Each Implementation resides in its own Implementation directory,
+which is a sibling of the Specification repository directory and is meant to become a standalone repository of its own.
+The Implementation treats its Implementation directory as the root of its repository, as if nothing else existed.
+Several Implementations may exist side by side, each independent of the others and of the Specification repository.
 
 # Relationships
 
@@ -25,42 +25,56 @@ tooling around it.
 
 # Glossary
 
-| Term                     | Definition                                                                                                    |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Implementation directory | The directory `implementations/<implementation-name>/` that holds exactly one Implementation.                 |
-| Implementation name      | The `<implementation-name>` path segment of an Implementation directory, which identifies the Implementation. |
+| Term                               | Definition                                                                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Specification repository directory | The root directory of the local clone of the repository that holds these specifications.                                                                |
+| Implementation directory           | A directory `<implementation-name>/` that has the same parent directory as the Specification repository directory and holds exactly one Implementation. |
+| Implementation name                | The `<implementation-name>` name of an Implementation directory, which identifies the Implementation.                                                   |
 
 # Implementation directory
 
-Every Implementation must reside entirely in its Implementation directory. Every file that the Implementation consists
-of, or that is needed to install, develop, build, test, or run it, must be inside that directory; e.g., its package
-manifest, lockfile, TypeScript and build configuration, lint and format configuration, scripts, tests, and Git ignore
-rules.
+Every Implementation must reside entirely in its Implementation directory, never inside the Specification repository
+directory. E.g., when the Specification repository directory is `repos/game-v5/`, an Implementation resides in
+`repos/game-v5-impl-web/`.
+
+Every file that the Implementation consists of, or that is needed to install, develop, build, test, or run it, must be
+inside that directory; e.g., its package manifest, lockfile, TypeScript and build configuration, lint and format
+configuration, scripts, tests, and Git ignore rules.
 
 The Implementation name must consist of lowercase letters, digits, and single hyphens, must start with a letter, and
-must differ from the name of every other Implementation directory. Which name an Implementation uses is the
-Implementer's choice.
+must differ from the name of every other directory in the parent directory of the Specification repository directory.
+The Implementation name should start with the name of the Specification repository directory followed by `-impl-`,
+e.g. `game-v5-impl-web`. Which name an Implementation uses within these constraints is the Implementer's choice.
+
+## Creating the Implementation directory
+
+The Implementer creates the Implementation directory as a new local directory. The Implementer must not initialize it
+as a Git repository, add a Git remote to it, or publish it; whether it becomes a standalone repository, and where that
+repository is hosted, is decided after the Implementation is reviewed. The Implementation must nevertheless be ready to
+become one, e.g. by holding its own Git ignore rules.
 
 # Repository root of an Implementation
 
 An Implementation must treat its Implementation directory as its repository root and must behave as if nothing outside
 it existed:
 
-- It must not add, change, or delete any file outside its Implementation directory.
+- It must not add, change, or delete any file outside its Implementation directory; e.g., it must not add files to the
+  Specification repository directory.
 - It must not read, import, extend, or execute any file outside its Implementation directory; e.g., it must not import
-  from another Implementation, extend the root `tsconfig.json`, call the root npm scripts, or resolve packages from the
-  root `node_modules`.
-- Nothing outside its Implementation directory may be required to install, build, test, or run it; e.g., root Git
-  hooks, root CI workflows, and root deployment configuration must not be added or changed for it.
+  from another Implementation, extend the `tsconfig.json` of the Specification repository directory, call its npm
+  scripts, or resolve packages from its `node_modules`.
+- Nothing outside its Implementation directory may be required to install, build, test, or run it; e.g., Git hooks, CI
+  workflows, and deployment configuration of the Specification repository must not be added or changed for it.
 
 ## Game data in an Implementation
 
-The [Bootstrap GDRs](../content/bootstrap-gdrs.md) are authored under the root `content/` directory. An Implementation
-that builds them into its Game build must hold its own copy of the GDR files it uses inside its Implementation
-directory, and its Game build must read that copy rather than the root `content/` directory.
+The [Bootstrap GDRs](../content/bootstrap-gdrs.md) are authored under the `content/` directory of the Specification
+repository directory. An Implementation that builds them into its Game build must hold its own copy of the GDR files it
+uses inside its Implementation directory, and its Game build must read that copy rather than the `content/` directory
+of the Specification repository directory.
 
 # Edge cases and failure behavior
 
-An Implementation that needs a change outside its Implementation directory, e.g. a new root CI job, cannot obtain it
-under these constraints; it provides the equivalent inside its Implementation directory instead, e.g. a script in its
-own package manifest that runs its checks.
+An Implementation that needs a change outside its Implementation directory, e.g. a new CI job in the Specification
+repository, cannot obtain it under these constraints; it provides the equivalent inside its Implementation directory
+instead, e.g. a script in its own package manifest that runs its checks.

@@ -1,13 +1,15 @@
 # Game v5
 
-The specifications of a browser game, the tooling that checks them, and the game's implementations. The UI framework,
+The specifications of a browser game and the tooling that checks them. The UI framework,
 renderer, state management, and persistence are left to each implementation.
 
 ## Implementations
 
-Each implementation lives in its own directory under `implementations/`, which it treats as its repository root, as
-required by [Implementation Placement](docs/specs/implementation/implementation-placement.md). The repository root has
-no game code, and its tooling, hooks, and CI ignore `implementations/`. A browser implementation may consider the
+Each implementation lives outside this repository, in its own directory beside this repository's local clone, which it
+treats as its repository root, as required by
+[Implementation Placement](docs/specs/implementation/implementation-placement.md); e.g., beside `repos/game-v5/` an
+implementer creates `repos/game-v5-impl-web/`. That directory starts as a plain local directory and may later become a
+standalone repository. This repository has no game code. A browser implementation may consider the
 technology stack suggested by [Tech Stack Suggestion](docs/specs/implementation/tech-stack-suggestion.md).
 
 ## Design and continuation
