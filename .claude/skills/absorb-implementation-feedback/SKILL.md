@@ -47,9 +47,9 @@ its Gate 2 local diff, and its handling of push conflicts. Steps 0, 6, and 7 bel
 6. When every problem has a decision, publish the Gate 1 plan Artifact covering every accepted specification change
    and every decline, and wait for approval. Then make the approved specification changes in the worktree under
    [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), show the Gate 2 local
-   diff, and wait for approval. Then commit, push, remove the worktree, and update the main local clone, under steps 5
+   diff, and wait for approval. Then commit, push, release the worktree, and update the main local clone, under steps 5
    to 7 of Spec repo changes in a worktree.
-7. After the worktree is removed, for each declined problem, set its Resolution in the Implementation's feedback file
+7. After the worktree is released, for each declined problem, set its Resolution in the Implementation's feedback file
    to Declined, naming the Spec repo's reviewed commit by its full hash and the user's reason, and commit that in the
    Implementation repo without adding a Git remote. Leave fixed problems Open: the next run of the `update-implementation` skill applies the
    change to the code and sets them Resolved.

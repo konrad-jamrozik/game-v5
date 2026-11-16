@@ -49,6 +49,18 @@ The reported versions should satisfy the `engines` field in `package.json`. Then
 `npm ci`. A bundled agent runtime is not a substitute for the repository toolchain unless it exposes both `node` and
 `npm`; this repository's validation commands call npm recursively.
 
+### T3 Code
+
+When agents run in [T3 Code](https://github.com/pingdotgg/t3code), the skills that change the specifications create
+their worktree through T3 Code, as [Spec repo changes in a worktree](.claude/skills/spec-repo-worktree.md) directs, so
+that each thread shows the worktree it works in. Set up T3 Code once, under **Settings › Worktrees**, applying settings
+for all projects across all environments:
+
+- **Worktree location:** `~/repos/worktrees`, so that worktrees sit next to the repositories instead of in the T3 home
+  folder.
+- **Delete worktrees with deleted threads:** on, so that deleting a finished thread also removes its worktree; a
+  worktree with local changes is kept.
+
 ## Commands
 
 | Command                   | Purpose                                                     |

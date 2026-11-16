@@ -8,12 +8,30 @@ changes in `AGENTS.md`. The Spec repo and Implementation repo are defined in the
 [Implementation Placement](../../docs/specs/implementation/mandatory/implementation-placement.md#glossary); the main local
 clone is the Spec repo's root directory, e.g. `repos/game-v5/`.
 
-1. **Create the worktree** at the start of the skill, before reading any specification: call the `EnterWorktree` tool
-   with a name of the form `<skill-name>-<yyyymmdd-hhmm>`. It creates the worktree under `.claude/worktrees/` on a new
-   local branch and moves the session into it. Run `git fetch origin` and confirm that `HEAD` equals `origin/main`; a
-   new worktree with no changes may be reset to `origin/main` when it does not. Then run `npm ci` and
-   `npm run hooks:install` in it. Read and edit specifications only in the worktree. When the session is already in a
-   worktree, ask the user how to proceed instead.
+The steps differ by host. In T3 Code, recognized by its tools being available, e.g. `t3_worktree_status`, the worktree
+must be created through T3 Code so that the thread is attached to it and T3 Code shows its branch and path; a worktree
+created any other way, e.g. with `EnterWorktree`, is invisible to T3 Code. In any other host, use `EnterWorktree` and
+`ExitWorktree`.
+
+Name every worktree `<id>-<skill-name>-<yyyymmdd-hhmm>`, where `<id>` is 4 random lowercase hexadecimal characters
+generated fresh for it, e.g. `a3f9-apply-designer-feedback-20261115-2230`, so that worktrees from the same skill stay
+distinguishable even where a host truncates their names. Generate `<id>` with
+`node -e "console.log(require('crypto').randomBytes(2).toString('hex'))"`; never make it up.
+
+1. **Create the worktree** at the start of the skill, before reading any specification. When the session is already in
+   a worktree, e.g. `t3_worktree_status` reports `attached: true`, ask the user how to proceed instead.
+   - **T3 Code:** call `t3_worktree_handoff` with the worktree name as `branch`, `baseRef: "main"`, and
+     `startFromOrigin: true`, as the last call of the turn. It creates the worktree in the location set in T3 Code's
+     settings, attaches the thread to it, and ends the live session. Its `continuationPrompt` names the skill, restates
+     the user's request in full, and says that step 1 of Spec repo changes in a worktree is done up to the checks
+     below, so the session resumes in the worktree with them.
+   - **Any other host:** call `EnterWorktree` with the worktree name. It creates the worktree under
+     `.claude/worktrees/` on a new local branch and moves the session into it.
+
+   Then, in the worktree, run `git fetch origin` and confirm that `HEAD` equals `origin/main`; a new worktree with no
+   changes may be reset to `origin/main` when it does not. Then run `npm ci` and `npm run hooks:install` in it. Read
+   and edit specifications only in the worktree.
+
 2. **Find the Implementation repo from the main local clone**, never from the worktree: the main local clone is the
    parent directory of `git rev-parse --path-format=absolute --git-common-dir`, and Implementation repos are its
    siblings.
@@ -41,18 +59,22 @@ clone is the Spec repo's root directory, e.g. `repos/game-v5/`.
    After pushing, give the user the commit diff link, as under
    [Committing and publishing changes](../../AGENTS.md#committing-and-publishing-changes) in `AGENTS.md`.
 
-6. **Remove the worktree** once the push succeeded: run `git fetch origin`, confirm with
-   `git merge-base --is-ancestor HEAD origin/main` that `origin/main` holds the pushed commits, and only then call
-   `ExitWorktree` with `action: "remove"` and `discard_changes: true`. The flag is needed because `ExitWorktree`
-   compares against the main local clone's `main`, which does not hold the pushed commits yet. When the user abandons
-   the change, or approval is still pending at the end of the session, use `action: "keep"` and give the user the
-   worktree's absolute path.
-7. **Update the main local clone**, from it, with `git fetch origin` and `git merge --ff-only origin/main`, and tell
-   the user whether it succeeded. Do not use `git pull`: with `pull.rebase` set, it refuses whenever the main local
-   clone has any uncommitted change. When the merge fails, e.g. because uncommitted changes there would be
-   overwritten, the main local clone is not on `main`, or its `main` has commits missing from `origin/main`, tell the
-   user why and leave the main local clone as it is: never stash, merge otherwise, or reset it.
+6. **Release the worktree** once the push succeeded: run `git fetch origin` and confirm with
+   `git merge-base --is-ancestor HEAD origin/main` that `origin/main` holds the pushed commits.
+   - **T3 Code:** leave the worktree in place, because the thread's session runs inside it, and tell the user its
+     absolute path; T3 Code removes it with the thread, as set up in Agent environment setup in `README.md`.
+   - **Any other host:** only then call `ExitWorktree` with `action: "remove"` and `discard_changes: true`. The flag is
+     needed because `ExitWorktree` compares against the main local clone's `main`, which does not hold the pushed
+     commits yet. When the user abandons the change, or approval is still pending at the end of the session, use
+     `action: "keep"` and give the user the worktree's absolute path.
+7. **Update the main local clone** with `git fetch origin` and `git merge --ff-only origin/main` run in it, from it in
+   any other host and through `git -C <main local clone>` in T3 Code, and tell the user whether it succeeded. Do not
+   use `git pull`: with `pull.rebase` set, it refuses whenever the main local clone has any uncommitted change. When
+   the merge fails, e.g. because uncommitted changes there would be overwritten, the main local clone is not on
+   `main`, or its `main` has commits missing from `origin/main`, tell the user why and leave the main local clone as it
+   is: never stash, merge otherwise, or reset it.
 
-While the session is in the worktree, run Git only in the worktree: the harness refuses Git commands aimed at the main
-local clone, e.g. through `git -C`, and may refuse those aimed at an Implementation repo. Make every Git change in
-those repositories, e.g. a commit in an Implementation repo, only after the worktree is removed in step 6.
+Until step 6, make Git changes only in the worktree; make every Git change in the main local clone or an
+Implementation repo, e.g. a commit in an Implementation repo, only after step 6. Outside T3 Code, while the session is
+in the worktree, the harness also refuses Git commands aimed at the main local clone, e.g. through `git -C`, and may
+refuse those aimed at an Implementation repo.
