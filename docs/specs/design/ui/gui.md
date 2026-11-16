@@ -5,7 +5,7 @@
 | Spec ID     | GUI                                                                                                                                                                        |
 | Family      | UI                                                                                                                                                                         |
 | Audience    | UI designer, Implementer                                                                                                                                                   |
-| Owns        | Guidance on the screens of the graphical user interface and what each shows the Player by default.                                                                         |
+| Owns        | Guidance on the screens of the graphical user interface, what each shows the Player by default, and the confirmations it asks for.                                         |
 | Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -27,6 +27,17 @@ The Main menu lists the [Campaign saves](../foundation/engine-contract.md#persis
 with all its Campaign saves, under [Deleting Campaign saves](../foundation/saves.md#deleting-campaign-saves) in Saves.
 Because deleting cannot be undone, the GUI asks the Player to confirm each deletion first, naming the Campaign save or
 the Campaign and how many Campaign saves it removes.
+
+# Confirming interrupted Assignments
+
+Taking an [Agent](../mechanics/domain-model.md#agency-and-agents) off [Contracting](../mechanics/agents-spec.md#assignments) or an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) interrupts its work and costs it an Advance turn
+[In transit](../mechanics/domain-model.md#agency-and-agents), under [Transit rule](../mechanics/agents-spec.md#transit-rule) in Agents, so the GUI guards against doing it by mistake.
+Before it makes any [Player action](../foundation/engine-contract.md#player-actions-and-turns) that changes the [Assignment](../mechanics/domain-model.md#agency-and-agents) of an Agent on Contracting or an
+Investigation, whatever the new Assignment, the GUI asks the Player to confirm, e.g. before `assignAgents`, `startInvestigation`, or
+`assignAgentsToInvestigation`. The confirmation names each such Agent and says that it spends the next Advance turn In
+transit doing nothing. For an Investigation, it also names each Investigation that loses members and each that becomes
+Abandoned and loses its progress, under [Abandonment](../mechanics/investigations.md#abandonment) in Investigations. An order that interrupts no
+such Agent, e.g. moving an Agent between Standby and Training, needs no confirmation.
 
 # TODOs
 

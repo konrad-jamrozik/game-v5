@@ -139,10 +139,10 @@ earlier Investigations of that Lead.
 is exhaustive. Every Investigation is Active when it is created. It stays Active until it becomes Completed or
 Abandoned. The transition table is:
 
-| Source state | Target state | Trigger                                                                                                                                                                                           | Condition                                                                           | Effects                            |
-| ------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
-| Active       | Completed    | Advance turn, in the [Turn advancement step](domain-model.md#turn-advancement-steps) Investigation progress.                                                                                      | The Investigation completion outcome of the Investigation is "completes".           | Under [Completion](#completion).   |
-| Active       | Abandoned    | A Player action changes the Assignment of a member of the Investigation's Current team to something else: `assignAgents`, `deployAgents`, `startInvestigation`, or `assignAgentsToInvestigation`. | The Investigation's Current team is empty after every change of that Player action. | Under [Abandonment](#abandonment). |
+| Source state | Target state | Trigger                                                                                                                                                                           | Condition                                                                           | Effects                            |
+| ------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
+| Active       | Completed    | Advance turn, in the [Turn advancement step](domain-model.md#turn-advancement-steps) Investigation progress.                                                                      | The Investigation completion outcome of the Investigation is "completes".           | Under [Completion](#completion).   |
+| Active       | Abandoned    | A Player action changes the Assignment of a member of the Investigation's Current team to something else: `assignAgents`, `startInvestigation`, or `assignAgentsToInvestigation`. | The Investigation's Current team is empty after every change of that Player action. | Under [Abandonment](#abandonment). |
 
 Every transition not listed is impossible; e.g., an Abandoned Investigation never becomes Active again, a Completed
 Investigation is never Abandoned, and no Turn advancement step makes an Investigation Abandoned. Completed and Abandoned
@@ -265,8 +265,10 @@ list is exhaustive:
 
 1. **Assigned elsewhere:** A Player action changes the Agent's Assignment from that Investigation to something
    else. The Player actions that can do so are exactly `assignAgents` under [Assigning Agents](agents-spec.md#assigning-agents)
-   in Agents, `deployAgents` under [Deploying Agents](missions.md#deploying-agents) in Missions, and `startInvestigation`
-   and `assignAgentsToInvestigation`, each with an Agent whose Assignment is another Investigation.
+   in Agents, and `startInvestigation` and `assignAgentsToInvestigation`, each with an Agent whose Assignment is
+   another Investigation. `deployAgents` is not one of them, because only an Agent on a
+   [Base Assignment](agents-spec.md#assignments) can be deployed, under [Deploying Agents](missions.md#deploying-agents)
+   in Missions.
 2. **Completion:** The Investigation becomes Completed, under [Completion](#completion).
 
 No other rule removes an Agent from an Investigation's Current team: an Agent on an Investigation cannot be dismissed,

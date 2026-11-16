@@ -225,8 +225,8 @@ A cap with no Upgrade of its effect identifier equals its base. No rounding occu
 bound.
 
 **Counting Training:** An Agent assigned to Training occupies a place under the Training cap from the moment of the
-assignment, while it is still [In transit](domain-model.md#agency-and-agents), and keeps it until its Assignment stops being Training. An Agent
-travelling away from Training, e.g. one assigned from Training to [Standby](agents-spec.md#assignments), no longer counts.
+assignment, including while it is still [In transit](domain-model.md#agency-and-agents) from an [Away Assignment](agents-spec.md#assignments), and keeps it until its Assignment stops being Training. An Agent
+assigned away from Training, e.g. to [Standby](agents-spec.md#assignments), no longer counts from that moment.
 
 **Counting Deployed Agents:** A Deployed Agent occupies a place under the Transport cap from the moment it is deployed
 until its Assignment stops being Deployed in the Mission resolution step, whether it returns or is [Killed](agents-spec.md#agent-statuses).
@@ -809,18 +809,18 @@ survivors are no longer Deployed and stop counting.
 
 This example exercises [Training cap on assigning Agents](#training-cap-on-assigning-agents),
 [Agency caps](#agency-caps), and [Cap Upgrades](#cap-upgrades). During Turn 20 the Agency has money 250. Agents t1, t2,
-and t3 are on Training, At assignment; a1 to a6 are on Standby, At assignment. The Training cap is 4 and T is 3. The
+and t3 are on Training, At assignment; a1 is on Contracting, At assignment; a2 to a6 are on Standby, At assignment. The Training cap is 4 and T is 3. The
 calls are made in this order:
 
-| Call                                       | Result                                                                    | T after |
-| ------------------------------------------ | ------------------------------------------------------------------------- | ------- |
-| `assignAgents([a1, a2], Training)`         | Rejected as a whole: 3 + 2 = 5 is more than 4. Neither a1 nor a2 changes. | 3       |
-| `assignAgents([a1], Training)`             | Succeeds: 3 + 1 = 4. a1 is on Training, In transit, and already counts.   | 4       |
-| `assignAgents([a2], Training)`             | Rejected: 4 + 1 = 5 is more than 4, although a1 has not yet arrived.      | 4       |
-| `assignAgents([a2], Contracting)`          | Succeeds: the Training cap does not apply.                                | 4       |
-| `purchaseUpgrade(training_cap)`            | Succeeds: money 50; the Training cap becomes 4 + 4 × 1 = 8.               | 4       |
-| `assignAgents([a3, a4, a5, a6], Training)` | Succeeds: 4 + 4 = 8.                                                      | 8       |
-| `assignAgents([t1], Standby)`              | Succeeds: t1 is no longer on Training and frees its place at once.        | 7       |
+| Call                                       | Result                                                                                   | T after |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------- | ------- |
+| `assignAgents([a1, a2], Training)`         | Rejected as a whole: 3 + 2 = 5 is more than 4. Neither a1 nor a2 changes.                | 3       |
+| `assignAgents([a1], Training)`             | Succeeds: 3 + 1 = 4. a1 is on Training, In transit from Contracting, and already counts. | 4       |
+| `assignAgents([a2], Training)`             | Rejected: 4 + 1 = 5 is more than 4, although a1 has not yet arrived.                     | 4       |
+| `assignAgents([a2], Contracting)`          | Succeeds: the Training cap does not apply.                                               | 4       |
+| `purchaseUpgrade(training_cap)`            | Succeeds: money 50; the Training cap becomes 4 + 4 × 1 = 8.                              | 4       |
+| `assignAgents([a3, a4, a5, a6], Training)` | Succeeds: 4 + 4 = 8.                                                                     | 8       |
+| `assignAgents([t1], Standby)`              | Succeeds: t1 is no longer on Training and frees its place at once.                       | 7       |
 
 A second `purchaseUpgrade(training_cap)` in the same Turn is rejected, because money 50 is less than 200.
 

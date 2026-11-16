@@ -87,11 +87,11 @@ These informative views are derived from the registered Markdown specifications.
 
 ## UI
 
-| ID  | Document                                              | Owns                                                                                                                       |
-| --- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| CLI | [Command-Line Interface](../specs/design/ui/cli.md)   | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.   |
-| GUI | [Graphical User Interface](../specs/design/ui/gui.md) | Guidance on the screens of the graphical user interface and what each shows the Player by default.                         |
-| VIS | [Visual Design](../specs/design/ui/visual-design.md)  | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts. |
+| ID  | Document                                              | Owns                                                                                                                               |
+| --- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| CLI | [Command-Line Interface](../specs/design/ui/cli.md)   | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.           |
+| GUI | [Graphical User Interface](../specs/design/ui/gui.md) | Guidance on the screens of the graphical user interface, what each shows the Player by default, and the confirmations it asks for. |
+| VIS | [Visual Design](../specs/design/ui/visual-design.md)  | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts.         |
 
 ## Autopilot AIs
 

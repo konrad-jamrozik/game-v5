@@ -365,7 +365,9 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 5. An Instance ID in `agents` identifies no Agent of the Campaign.
 6. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned)
    in Agents.
-7. The Agents would exceed the [Transport cap](economy-and-upgrades.md#glossary):
+7. An Agent in `agents` has an Assignment other than a [Base Assignment](agents-spec.md#assignments), i.e. other than
+   [Standby](agents-spec.md#assignments) or [Training](agents-spec.md#assignments). An Agent on [Contracting](agents-spec.md#assignments) or an Investigation must first be recalled to base.
+8. The Agents would exceed the [Transport cap](economy-and-upgrades.md#glossary):
 
    ```text
    D + number of Agents in agents  >  Transport cap
@@ -400,11 +402,6 @@ Turn:
 - For every Agent in `agents`: its Assignment becomes Deployed with a Mutable reference to the new Mission, and
   its [Agent status](domain-model.md#agency-and-agents) is [At assignment](agents-spec.md#agent-statuses) at once, without transit, under [Transit rule](agents-spec.md#transit-rule) and
   [Assignment changes](agents-spec.md#assignment-changes) in Agents.
-- For every Agent in `agents` whose Assignment was an Investigation: it leaves that Investigation's Current team,
-  and the Investigation is recorded in its Participation history under
-  [Participation history records](agents-spec.md#participation-history-records). Leaving has the effects on the
-  Investigation under [Investigations](investigations.md), e.g. the Investigation is Abandoned when its last member
-  leaves.
 
 Nothing else changes; e.g., no money is spent, the Mission site's Turns until expiration is unchanged, and the Agents' base skill,
 current health, and exhaustion are unchanged. The Agents count toward the Transport cap at once and until the Mission resolution
@@ -629,8 +626,9 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   Mission, or to an Expired one ([Deploying Agents](#deploying-agents)).
 - **Mixed valid and invalid Agents:** One invalid Agent rejects the whole action; no Agent and no Mission site changes, and no Mission is created
   ([Deploying Agents](#deploying-agents)).
-- **Agents taken from an Investigation:** They leave its Current team at once, with the effects on the Investigation
-  under [Investigations](investigations.md) ([Deploying Agents](#deploying-agents)).
+- **Agents away:** An Agent on Contracting or an Investigation is rejected; it must first be recalled to a
+  [Base Assignment](agents-spec.md#assignments), which costs an Advance turn of transit, so deploying never takes an
+  Agent off an Investigation ([Deploying Agents](#deploying-agents)).
 - **Elimination of a Faction already Eliminated:** A Won Initiative Mission whose MissionSiteArchetype has
   `eliminate_target_faction` true and whose target Faction is already Eliminated changes nothing about that Faction; its other `on_win` amounts still apply
   ([Consequences](#consequences)).
@@ -870,6 +868,7 @@ Contracting, At assignment. Each call is made on its own from this state, and ea
 | `deployAgents(s7, [a4, a4])` | Rejected: a4 is listed twice.                                                                                 |
 | `deployAgents(s7, [a6])`     | Rejected: a6 is In transit and cannot be assigned.                                                            |
 | `deployAgents(s7, [a7])`     | Rejected: a7 is on Recovery and cannot be assigned.                                                           |
+| `deployAgents(s7, [a8])`     | Rejected: a8 is on Contracting, not on Standby or Training.                                                   |
 | `deployAgents(s7, [a1])`     | Rejected: a1 is Deployed and cannot be assigned.                                                              |
 | `deployAgents(s6, [a4])`     | Rejected: s6 is Attempted, not Active; it already has its Mission m6.                                         |
 | `deployAgents(s8, [a4])`     | Rejected: s8 is Expired.                                                                                      |
@@ -877,8 +876,7 @@ Contracting, At assignment. Each call is made on its own from this state, and ea
 
 After the last call, `deployAgents` of a5 to any Active Mission site in Turn 15 is rejected, because 4 + 1 is more than 4.
 If the player instead first purchases the Upgrade `transport_cap`, the Transport cap is 6, under
-[Agency caps](economy-and-upgrades.md#agency-caps), and `deployAgents(s7, [a4, a8])` succeeds with 3 + 2 = 5; a8 leaves
-Contracting at once. In the Advance turn ending Turn 15, the Combats of m6 and of the Mission at s7 are fought, and their survivors stop
+[Agency caps](economy-and-upgrades.md#agency-caps), and `deployAgents(s7, [a4, a5])` succeeds with 3 + 2 = 5. In the Advance turn ending Turn 15, the Combats of m6 and of the Mission at s7 are fought, and their survivors stop
 counting toward the Transport cap.
 
 ## Deploying on the last Turn

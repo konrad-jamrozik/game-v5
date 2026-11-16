@@ -57,7 +57,9 @@ It does not try to predict Faction behavior, and it does not dismiss Agents.
 
 # Assignments and transit
 
-Every assignment other than a deployment costs one Advance turn of transit before the Agent works, and an Agent [In transit](../mechanics/domain-model.md#agency-and-agents)
+Every assignment to, from, or between Contracting and Investigations costs one Advance turn of transit before the Agent
+works, while moving between Standby and Training and deploying cost none; only an Agent on Standby or Training can be
+deployed, and an Agent [In transit](../mechanics/domain-model.md#agency-and-agents)
 cannot be assigned, under [Transit rule](../mechanics/agents-spec.md#transit-rule) in Agents. The Basic Autopilot AI
 therefore plays by the following principles. The list is exhaustive.
 
@@ -68,8 +70,8 @@ therefore plays by the following principles. The list is exhaustive.
    and an Agent In transit to an Investigation counts as investigating. Otherwise it would assign more Agents every Turn
    while the first ones are still travelling. Expected income is this principle applied to income.
 3. **It does not move an Agent that is doing useful work.** It assigns an Agent away from Contracting or Training only
-   when a step of [Turn routine](#turn-routine) says so, because each such Assignment costs the Agent an Advance turn in
-   which it does nothing.
+   when a step of [Turn routine](#turn-routine) says so, because leaving Contracting costs the Agent an Advance turn in
+   which it does nothing, and leaving Training ends its growth.
 4. **It leaves Investigations whole.** It never assigns an Agent away from an Active Investigation. Assigning the last
    member elsewhere would make the Investigation Abandoned and lose its progress, under
    [Abandonment](../mechanics/investigations.md#abandonment) in Investigations. Exhaustion is no reason to recall an

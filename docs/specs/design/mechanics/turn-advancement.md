@@ -105,7 +105,8 @@ statements are complete:
 5. **Departure:** An Agent that becomes In transit during an Advance turn, in step 5 or step 6, is still In transit in
    the Committed state after it, and arrives in step 1 of the next Advance turn.
 
-**Deployed Agents:** Deploying to a Mission site is the one assignment that does not start In transit. The `deployAgents`
+**Deployed Agents:** Deploying to a Mission site does not start In transit, and neither does moving an Agent between
+Standby and Training, under [Transit rule](agents-spec.md#transit-rule) in Agents. The `deployAgents`
 [Player action](../foundation/engine-contract.md#player-actions-and-turns) makes the selected Agents Deployed, At assignment, at once, under
 [Deploying Agents](missions.md#deploying-agents) in Missions, so in the next Advance turn they are At assignment in the
 Turn-end state and fight in step 6 of that Advance turn. Every Mission Deployed in the Turn-end state is therefore
@@ -113,7 +114,7 @@ resolved in step 6 of the first Advance turn after the deployment, and none wait
 transit: the survivors become In transit in step 6, are still In transit when that Advance turn ends, arrive in step 1 of
 the next Advance turn, and can be assigned, or start recovering in step 9, only in the Advance turn after that one.
 
-**Informative rationale:** With one Advance turn for every transit, an Agent given any order other than deployment
+**Informative rationale:** With one Advance turn for every transit, an Agent given an order that starts In transit
 works for the first time in the second Advance turn after the order, e.g. an Agent assigned to Contracting during Turn 5
 arrives in the Advance turn ending Turn 5 and earns its first income in the Advance turn ending Turn 6.
 
