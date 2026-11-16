@@ -537,11 +537,11 @@ Standby to rest.
 step](turn-advancement.md#glossary) of its work, after that step has read the Agent's values for the work itself. The
 following table is exhaustive:
 
-| Work Assignment  | The Agents that work                                                                                                                                                        | Step and the work read first                                                                                                                                                      | Exhaustion gained                   |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| Contracting      | Every Agent counted in the contracting income, under [Agency income](economy-and-upgrades.md#agency-income) in Economy and Upgrades                                         | Agency income, after the Agency's income is added                                                                                                                                 | `exhaustion_per_contracting_turn`   |
-| Training         | Every Agent that has a Training gain outcome, under [Training growth](#training-growth)                                                                                     | Training, after its Training gain outcome and any gain of base skill                                                                                                              | `exhaustion_per_training_turn`      |
-| An Investigation | Every working member of an Investigation, under [Progress gain](investigations.md#progress-gain) in Investigations, whether or not that Investigation completes in the step | Investigation progress, after the Investigation's progress gain, completion outcome, and any completion, under [Investigation progress](investigations.md#investigation-progress) | `exhaustion_per_investigation_turn` |
+| Work Assignment  | The Agents that work                                                                                                                                                        | Step and the work read first                                                                                                                                                    | Exhaustion gained                   |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Contracting      | Every Agent counted in the contracting income, under [Agency income](economy-and-upgrades.md#agency-income) in Economy and Upgrades                                         | Agency income, after the Agency's income is added                                                                                                                               | `exhaustion_per_contracting_turn`   |
+| Training         | Every Agent that has a Training gain outcome, under [Training growth](#training-growth)                                                                                     | Training, after its Training gain outcome and any gain of base skill                                                                                                            | `exhaustion_per_training_turn`      |
+| An Investigation | Every working member of an Investigation, under [Progress gain](investigations.md#progress-gain) in Investigations, whether or not that Investigation completes in the step | Investigation progress, after the Investigation's progress gain, Completion check, and any completion, under [Investigation progress](investigations.md#investigation-progress) | `exhaustion_per_investigation_turn` |
 
 ```text
 exhaustion after = exhaustion before + exhaustion gained
@@ -572,7 +572,8 @@ Contracting or an Investigation, which are Away Assignments, and stays At assign
 Assignment, under [Transit rule](#transit-rule). An Agent that leaves an Investigation this way leaves its Current team
 under [Leaving an Investigation](investigations.md#leaving-an-investigation) in Investigations, and the Investigation
 becomes Abandoned when it was the last member, under [Abandonment](investigations.md#abandonment). The work the Agent did
-in this step still counts: e.g., the income it earned and the Investigation progress it added are kept.
+in this step still counts: e.g., the income it earned is kept, and the Investigation progress it added was added before
+the Investigation loses progress for its leaving, under [Progress loss](investigations.md#progress-loss).
 
 A Forced return makes the Agent Fit for work again only after it has rested, under [Start-work gate](#start-work-gate)
 and [Agent Recovery](agent-recovery.md). E.g., with the Bootstrap values, an Agent on Contracting that reaches exhaustion
@@ -729,8 +730,8 @@ Agent has no Assignment; Player API reports it as absent, and the visible Agent 
 - **Forced return from Training:** The Agent is on Standby, At assignment, at once, so it recovers exhaustion in the Agent
   recovery step of the same Advance turn, under [Which Agents recover](agent-recovery.md#which-agents-recover) in Agent
   Recovery ([Forced return](#forced-return)).
-- **Forced return of the last member of an Investigation:** The Investigation becomes Abandoned and its progress is
-  lost, although this turn's progress was added first ([Forced return](#forced-return)).
+- **Forced return of the last member of an Investigation:** The Investigation loses all its progress under
+  Progress loss, although this turn's progress was added first, and becomes Abandoned ([Forced return](#forced-return)).
 - **Zero current health:** A Serving Agent never has zero current health in a Committed state: the Combat that brings
   its current health to zero
   makes it Killed ([Agent status](#agent-status)). An Enemy with zero current health has an effective skill of 0

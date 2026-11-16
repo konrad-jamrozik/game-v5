@@ -38,7 +38,7 @@ Domain Model concept it serves.
 | [Campaign configuration](../foundation/campaign-state.md#glossary)                                     | One [Campaign configuration preset](../foundation/configuration.md#glossary) and one parameter GDR naming it as the default                                     | 2     |
 | Agency                                                                                                 | One AgencyArchetype                                                                                                                                             | 1     |
 | Agent                                                                                                  | One AgentArchetype and one parameter GDR                                                                                                                        | 2     |
-| Lead and [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Three Leads of one Faction and one InvestigationArchetype                                                                                                       | 4     |
+| Lead and [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Three Leads of one Faction, one InvestigationArchetype, and one parameter GDR                                                                                   | 5     |
 | [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)           | Three MissionSiteArchetypes of kind initiative and two of kind response                                                                                         | 5     |
 | Mission                                                                                                | One MissionArchetype                                                                                                                                            | 1     |
 | Enemy and [Combat](../mechanics/domain-model.md#combat)                                                | Three EnemyArchetypes, three Weapons, and one parameter GDR                                                                                                     | 7     |
@@ -46,7 +46,7 @@ Domain Model concept it serves.
 | Economy and upgrades                                                                                   | One parameter GDR and four [Upgrades](../mechanics/economy-and-upgrades.md#glossary)                                                                            | 5     |
 | Faction                                                                                                | One FactionArchetype, three [Faction activity levels](../mechanics/factions.md#glossary), and two [Faction operation levels](../mechanics/factions.md#glossary) | 6     |
 | Panic and endings                                                                                      | One parameter GDR                                                                                                                                               | 1     |
-| **Total**                                                                                              |                                                                                                                                                                 | 35    |
+| **Total**                                                                                              |                                                                                                                                                                 | 36    |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of
 Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
@@ -109,11 +109,12 @@ Leads and the MissionSiteArchetype it creates by GDR identifier, so no relations
 
 Type owner: [Investigations](../mechanics/investigations.md).
 
-| GDR                      | Type                   | GDR purpose | What it supplies                                                                           |
-| ------------------------ | ---------------------- | ----------- | ------------------------------------------------------------------------------------------ |
-| `standard_investigation` | InvestigationArchetype | Archetype   | The [Archetype](../foundation/core-concepts.md#campaign-instances) of every Investigation. |
+| GDR                        | Type                    | GDR purpose           | What it supplies                                                                                                                                                                                                                                 |
+| -------------------------- | ----------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `standard_investigation`   | InvestigationArchetype  | Archetype             | The [Archetype](../foundation/core-concepts.md#campaign-instances) of every Investigation.                                                                                                                                                       |
+| `investigation_parameters` | InvestigationParameters | Calculation parameter | The team efficiency exponent 0.8, the greatest [Actual required progress](../mechanics/investigations.md#glossary) of 150% of a Lead's [Required progress](../mechanics/leads-and-progression.md#glossary), and the assessment threshold of 25%. |
 
-An Investigation reads the `difficulty` of its Lead, under
+An Investigation reads the `required_progress` of its Lead, under
 [Lead properties this document reads](../mechanics/investigations.md#lead-properties-this-document-reads).
 
 ## Missions GDRs
@@ -200,6 +201,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 | `content/economy-and-upgrades/upgrades.yaml`           | Upgrade                 | `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`                             |
 | `content/leads-and-progression/leads.yaml`             | Lead                    | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`               |
 | `content/investigations/investigation_archetypes.yaml` | InvestigationArchetype  | `standard_investigation`                                                                  |
+| `content/investigations/investigation_parameters.yaml` | InvestigationParameters | `investigation_parameters`                                                                |
 | `content/missions/mission_site_archetypes.yaml`        | MissionSiteArchetype    | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage` |
 | `content/missions/mission_archetypes.yaml`             | MissionArchetype        | `standard_mission`                                                                        |
 | `content/combat/enemy_archetypes.yaml`                 | EnemyArchetype          | `initiate`, `soldier`, `cult_leader`                                                      |
@@ -296,7 +298,7 @@ value that deliberately differs from its game-ts counterpart, and why.
 | EnemyArchetypes                                             | 9 enemy kinds                                                                                          | 3                                         | `initiate` merges initiate and operative; `soldier` merges soldier, handler, and lieutenant; `cult_leader` replaces commander and above. |
 | `cult_leader` base skill and base health                    | Cult leader: base skill 800, base health 80                                                            | game-ts commander values                  | An 800-skill Enemy cannot be beaten after a three-step Victory path.                                                                     |
 | `initiate` Weapon                                           | Base weapon damage 8                                                                                   | `sidearm`                                 | Sharing the Agents' Weapon saves one Weapon GDR.                                                                                         |
-| `locate_red_dawn_hq` difficulty                             | 25                                                                                                     | Lower                                     | The HQ is the third step of three, not the eighth of eight.                                                                              |
+| `locate_red_dawn_hq` `required_progress`                    | 25                                                                                                     | Lower                                     | The HQ is the third step of three, not the eighth of eight.                                                                              |
 | `raid_hq` expiration and Enemies                            | Expires in 40 Turns; 111 Enemies                                                                       | Shorter; ten Enemies                      | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |
 | Starting transport cap                                      | 6                                                                                                      | Lower, raised by `transport_cap`          | Transport capacity becomes something the Agency invests in.                                                                              |
 | Starting training cap                                       | 0                                                                                                      | Above zero, raised by `training_cap`      | Training is available from the first Turn.                                                                                               |

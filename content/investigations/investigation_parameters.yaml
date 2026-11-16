@@ -1,0 +1,5 @@
+id: investigation_parameters
+type: InvestigationParameters
+team_efficiency_exponent: 0.8 # team efficiency is n^0.8 / n for n working members
+required_progress_max_pct: 150 # Actual required progress is drawn from 100% to this % of required_progress
+assessment_threshold_pct: 25 # required_progress is revealed once progress reaches this % of it

@@ -51,7 +51,8 @@ that pursue it.
 ## Investigations
 
 [Investigations](investigations.md) answers _how does pursuing a Lead progress and complete?_ It owns Investigation
-progress, stochastic completion, leaving and abandonment, and the rule that a Lead has at most one Active Investigation.
+progress, the Actual required progress it must reach, what the player knows of it, progress lost when members leave,
+abandonment, and the rule that a Lead has at most one Active Investigation.
 
 ## Combat
 

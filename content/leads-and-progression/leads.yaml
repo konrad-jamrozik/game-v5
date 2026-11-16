@@ -3,7 +3,7 @@ type: Lead
 name: Locate Red Dawn member
 description: Track down a Red Dawn member for apprehension.
 faction: red_dawn
-difficulty: 3
+required_progress: 3
 requires: []
 on_completion:
   create_mission_site: apprehend_member
@@ -13,7 +13,7 @@ type: Lead
 name: Locate Red Dawn safehouse
 description: The captured member revealed a Red Dawn safehouse.
 faction: red_dawn
-difficulty: 6
+required_progress: 6
 requires:
   - mission_won: apprehend_member
 on_completion:
@@ -24,7 +24,7 @@ type: Lead
 name: Locate Red Dawn HQ
 description: Intelligence from the safehouse points to the Red Dawn headquarters.
 faction: red_dawn
-difficulty: 10 # game-ts: 25
+required_progress: 10 # game-ts: 25
 requires:
   - mission_won: raid_safehouse
 on_completion:

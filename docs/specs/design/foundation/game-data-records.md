@@ -283,7 +283,7 @@ id: lead_1
 type: Lead
 name: Criminal organizations
 description: Investigate local criminal organizations to find cult connections.
-difficulty: 3
+required_progress: 3
 ```
 
 Suppose Lead lead_1 is referenced by Investigation investigation-1, created with InvestigationArchetype investigation_archetype_1. Its Instance ID is investigation-1; its Constants contains the
@@ -345,7 +345,7 @@ E.g., lead_1 as YAML. The GDR holds no completion count:
 id: lead_1
 type: Lead
 name: Criminal organizations
-difficulty: 3
+required_progress: 3
 # No completion count: Campaign state holds the Investigations,
 # and the count is derived from them by matching this id.
 ```

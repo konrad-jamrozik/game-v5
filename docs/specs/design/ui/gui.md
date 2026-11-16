@@ -35,8 +35,9 @@ Taking an [Agent](../mechanics/domain-model.md#agency-and-agents) off [Contracti
 Before it makes any [Player action](../foundation/engine-contract.md#player-actions-and-turns) that changes the [Assignment](../mechanics/domain-model.md#agency-and-agents) of an Agent on Contracting or an
 Investigation, whatever the new Assignment, the GUI asks the Player to confirm, e.g. before `assignAgents`, `startInvestigation`, or
 `assignAgentsToInvestigation`. The confirmation names each such Agent and says that it spends the next Advance turn In
-transit doing nothing. For an Investigation, it also names each Investigation that loses members and each that becomes
-Abandoned and loses its progress, under [Abandonment](../mechanics/investigations.md#abandonment) in Investigations. An order that interrupts no
+transit doing nothing. For an Investigation, it also names each Investigation that loses members, with its
+[Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) before and after the loss, under [Progress loss](../mechanics/investigations.md#progress-loss) in Investigations, and each that becomes
+Abandoned and loses all its progress, under [Abandonment](../mechanics/investigations.md#abandonment). An order that interrupts no
 such Agent, e.g. moving an Agent between Standby and Training, needs no confirmation.
 
 # Warning on deploying tired Agents

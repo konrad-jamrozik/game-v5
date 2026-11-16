@@ -12,7 +12,7 @@
 
 Leads are how the [Agency](domain-model.md#agency-and-agents) closes in on a [Faction](domain-model.md#factions). A [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) is a [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) that
 describes one line of inquiry into one Faction: each completed [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of it creates one [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions)
-targeting that Faction. Its Lead difficulty says how hard it is to investigate, and it may require other Leads first, so
+targeting that Faction. Its Required progress says how much work it takes at least, and it may require other Leads first, so
 Leads form chains that reach deeper into a Faction.
 
 What moves the Agency along a chain is winning, not investigating. A Lead's prerequisites name MissionSiteArchetypes,
@@ -27,12 +27,13 @@ progress, or once its Faction is [Eliminated](factions.md#glossary), and its Lea
 
 These terms are specific to [Leads](domain-model.md#leads-investigations-mission-sites-and-missions). [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions) and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
 
-| Term               | Definition                                                                                                                           |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Lead difficulty    | How hard a Lead is to investigate.                                                                                                   |
-| Blocking condition | A condition of Lead availability that does not hold for a Lead and so makes the Lead not available.                                  |
-| Discovered Lead    | A Lead whose prerequisites hold, under [Lead discovery](#lead-discovery). Only a discovered Lead is Player-visible.                  |
-| Lead status        | The Player-visible summary of a discovered Lead's availability: Available, Inactive, or Archived, under [Lead status](#lead-status). |
+| Term               | Definition                                                                                                                                                                                                                                              | Prohibited synonyms                                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Required progress  | The [progress points](domain-model.md#leads-investigations-mission-sites-and-missions) an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of a Lead needs at least to complete, set by the Lead's `required_progress`. | Lead difficulty; resistance                                                                                             |
+| Blocking condition | A condition of Lead availability that does not hold for a Lead and so makes the Lead not available.                                                                                                                                                     |                                                                                                                         |
+| Discovered Lead    | A Lead whose prerequisites hold, under [Lead discovery](#lead-discovery). Only a discovered Lead is Player-visible.                                                                                                                                     |                                                                                                                         |
+| Completed Lead     | A Lead with at least one Completed Investigation, i.e. whose completion count is at least 1, under [Missions from a Lead](#missions-from-a-lead).                                                                                                       | Investigated Lead; successfully investigated Lead. An Abandoned or Active Investigation has also investigated its Lead. |
+| Lead status        | The Player-visible summary of a discovered Lead's availability: Available, Inactive, or Archived, under [Lead status](#lead-status).                                                                                                                    |                                                                                                                         |
 
 # Lead GDRs
 
@@ -46,14 +47,14 @@ under [Game concepts](domain-model.md#game-concepts) in Domain Model; it is not 
 never changes during a [Campaign](../foundation/core-concepts.md#campaign-and-session). A Lead has no lifecycle states. The table below is exhaustive apart from the `id` and
 `type` that every GDR has.
 
-| Property        | Shape                                                                                                                                       | Meaning                                                                                                                                                                                                                                                                                                                                                                                   | Read by                                                                          |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `name`          | Non-empty text.                                                                                                                             | The display name of the Lead.                                                                                                                                                                                                                                                                                                                                                             | [Player-visible information](#player-visible-information)                        |
-| `description`   | Non-empty text.                                                                                                                             | The display description of the Lead.                                                                                                                                                                                                                                                                                                                                                      | [Player-visible information](#player-visible-information)                        |
-| `faction`       | The identifier of a FactionArchetype.                                                                                                       | The [Faction](domain-model.md#factions) the Lead concerns: the Faction whose [Archetype](../foundation/core-concepts.md#campaign-instances) is this FactionArchetype. It decides the target Faction of the [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) the Lead creates, and blocks the Lead once that Faction is [Eliminated](factions.md#glossary). | [Lead availability](#lead-availability); [Completion effect](#completion-effect) |
-| `difficulty`    | A whole number of at least 1.                                                                                                               | The Lead difficulty of the Lead.                                                                                                                                                                                                                                                                                                                                                          | [Investigations](investigations.md)                                              |
-| `requires`      | A list, possibly empty, of prerequisites. Each prerequisite is a map with exactly one key, the prerequisite kind, and a value for that key. | The prerequisites that must all hold before the Lead is available, under [Prerequisites](#prerequisites).                                                                                                                                                                                                                                                                                 | [Prerequisites](#prerequisites)                                                  |
-| `on_completion` | A map with exactly one key, the effect kind, and a value for that key.                                                                      | What happens when an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of the Lead completes, under [Completion effect](#completion-effect).                                                                                                                                                                                                               | [Completion effect](#completion-effect)                                          |
+| Property            | Shape                                                                                                                                       | Meaning                                                                                                                                                                                                                                                                                                                                                                                   | Read by                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `name`              | Non-empty text.                                                                                                                             | The display name of the Lead.                                                                                                                                                                                                                                                                                                                                                             | [Player-visible information](#player-visible-information)                        |
+| `description`       | Non-empty text.                                                                                                                             | The display description of the Lead.                                                                                                                                                                                                                                                                                                                                                      | [Player-visible information](#player-visible-information)                        |
+| `faction`           | The identifier of a FactionArchetype.                                                                                                       | The [Faction](domain-model.md#factions) the Lead concerns: the Faction whose [Archetype](../foundation/core-concepts.md#campaign-instances) is this FactionArchetype. It decides the target Faction of the [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) the Lead creates, and blocks the Lead once that Faction is [Eliminated](factions.md#glossary). | [Lead availability](#lead-availability); [Completion effect](#completion-effect) |
+| `required_progress` | A whole number of at least 1.                                                                                                               | The Required progress of the Lead, in progress points.                                                                                                                                                                                                                                                                                                                                    | [Investigations](investigations.md)                                              |
+| `requires`          | A list, possibly empty, of prerequisites. Each prerequisite is a map with exactly one key, the prerequisite kind, and a value for that key. | The prerequisites that must all hold before the Lead is available, under [Prerequisites](#prerequisites).                                                                                                                                                                                                                                                                                 | [Prerequisites](#prerequisites)                                                  |
+| `on_completion`     | A map with exactly one key, the effect kind, and a value for that key.                                                                      | What happens when an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of the Lead completes, under [Completion effect](#completion-effect).                                                                                                                                                                                                               | [Completion effect](#completion-effect)                                          |
 
 Exactly one prerequisite kind and exactly one effect kind exist, and these two tables are exhaustive:
 
@@ -77,11 +78,11 @@ rules is defective: no Campaign is created from it, and the violation is reporte
 different gameplay, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in
 Engine Contract.
 
-1. **Known properties:** Each Lead has `name`, `description`, `faction`, `difficulty`, `requires`, and `on_completion`,
+1. **Known properties:** Each Lead has `name`, `description`, `faction`, `required_progress`, `requires`, and `on_completion`,
    and no property other than those listed in its table above, apart from `id` and `type`. Its `name` and `description`
    are non-empty text.
 2. **Faction resolves:** `faction` is the identifier of a FactionArchetype the Game build supplies.
-3. **Difficulty is valid:** `difficulty` is a whole number of at least 1.
+3. **Required progress is valid:** `required_progress` is a whole number of at least 1.
 4. **Prerequisite kinds are known:** `requires` is a list, and each of its entries is a map with exactly one key, which is
    `mission_won`. An entry with any other key, or with more than one key, is invalid.
 5. **Prerequisite references resolve:** The value of each `mission_won` entry is the identifier of a MissionSiteArchetype
@@ -117,7 +118,9 @@ later becomes [Eliminated](domain-model.md#factions), so whatever these rules de
 
 No rule counts completions either. A Lead's completion count, i.e. the number of Completed Investigations of
 the Lead, is a [Derived value](../foundation/core-concepts.md#value-classification) calculated from Investigation Campaign
-instances, and no rule of a Mechanics specification reads it.
+instances, and no rule of a Mechanics specification reads it. A Lead whose completion count is at least 1 is a
+Completed Lead. Whether a Lead is a Completed Lead is a Derived value too, and once true it stays true for the rest of
+the Campaign, because Completed Investigations are retained.
 
 A Mission becomes Won in the [Turn advancement step](turn-advancement.md#glossary) Mission resolution, under
 [Mission resolution](missions.md#mission-resolution) in Missions, so every later step of that Advance turn sees the
@@ -284,14 +287,15 @@ discovers no Lead holds an empty list.
 discovered Lead, from the Committed state in which it is discovered, under [Lead discovery](#lead-discovery), whether or
 not the Lead is available. The table is exhaustive.
 
-| Value                                                                                                                                                                                          | Player-visible information |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| Every discovered Lead, with every property: `name`, `description`, `faction`, `difficulty`, `requires`, and `on_completion`                                                                    | Yes                        |
-| The MissionSiteArchetype that each discovered Lead creates, including every property of that GDR, which [Missions](missions.md) states is Player-visible                                       | Yes                        |
-| For each prerequisite of each discovered Lead, whether it holds                                                                                                                                | Yes                        |
-| For each discovered Lead, whether it is available, and for each of the four conditions of [Lead availability](#lead-availability), whether it holds, so that the Blocking conditions are known | Yes                        |
-| For each discovered Lead, its [Lead status](#lead-status)                                                                                                                                      | Yes                        |
-| The Leads discovered in an Advance turn, under [Turn report](#turn-report)                                                                                                                     | Yes                        |
+| Value                                                                                                                                                                                          | Player-visible information                                                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Every discovered Lead, with every property: `name`, `description`, `faction`, `requires`, and `on_completion`                                                                                  | Yes                                                                                                                                              |
+| The `required_progress` of every discovered Lead                                                                                                                                               | Yes once an Investigation of the Lead has reached the threshold under [Assessment](investigations.md#assessment) in Investigations; otherwise no |
+| The MissionSiteArchetype that each discovered Lead creates, including every property of that GDR, which [Missions](missions.md) states is Player-visible                                       | Yes                                                                                                                                              |
+| For each prerequisite of each discovered Lead, whether it holds                                                                                                                                | Yes                                                                                                                                              |
+| For each discovered Lead, whether it is available, and for each of the four conditions of [Lead availability](#lead-availability), whether it holds, so that the Blocking conditions are known | Yes                                                                                                                                              |
+| For each discovered Lead, its [Lead status](#lead-status)                                                                                                                                      | Yes                                                                                                                                              |
+| The Leads discovered in an Advance turn, under [Turn report](#turn-report)                                                                                                                     | Yes                                                                                                                                              |
 
 An undiscovered Lead is hidden completely: Player API returns neither the Lead nor any of its values, nor whether or
 how many undiscovered Leads exist, and no other channel under
@@ -303,9 +307,9 @@ by this.
 The player can therefore see why a discovered Lead is not available: every Blocking condition is reported, not only
 the first. For a discovered Lead, condition 1 and each of its prerequisites always hold, and are reported as holding.
 Whether an Investigation of a Lead can be started now, which also depends on whether the Lead already has an Active
-Investigation, is Player-visible under [Investigations](investigations.md). **Unknown versus absent:** No value in the
-table above is unknown to the player, so Player API never reports one as unknown. An undiscovered Lead is absent, not
-unknown: it is left out of every result. A discovered Lead with an empty `requires` is reported with an empty list of
+Investigation, is Player-visible under [Investigations](investigations.md). **Unknown versus absent:** Apart from a
+`required_progress` that [Assessment](investigations.md#assessment) has not yet revealed, which is reported as unknown,
+no value in the table above is unknown to the player. An undiscovered Lead is absent, not unknown: it is left out of every result. A discovered Lead with an empty `requires` is reported with an empty list of
 prerequisites, and condition 1 is reported as holding. A discovered Lead of an Eliminated Faction is reported as not
 available, with condition 4 as a Blocking condition and Lead status Archived.
 
@@ -374,15 +378,15 @@ All examples use the Bootstrap GDR values from `content/leads-and-progression/le
 `content/missions/mission_site_archetypes.yaml`, and the Campaign has the one Faction Red Dawn, from `red_dawn`, unless an
 example states a test GDR. The values they read are:
 
-| GDR                         | Values read                                                                                                               |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `locate_red_dawn_member`    | `faction` `red_dawn`; `difficulty` 3; `requires` empty; `on_completion` `create_mission_site` `apprehend_member`          |
-| `locate_red_dawn_safehouse` | `faction` `red_dawn`; `difficulty` 6; `requires` `mission_won` `apprehend_member`; `create_mission_site` `raid_safehouse` |
-| `locate_red_dawn_hq`        | `faction` `red_dawn`; `difficulty` 10; `requires` `mission_won` `raid_safehouse`; `create_mission_site` `raid_hq`         |
-| `apprehend_member`          | `kind` initiative; `expires_in_turns` 5                                                                                   |
-| `raid_safehouse`            | `kind` initiative; `expires_in_turns` 8                                                                                   |
-| `raid_hq`                   | `kind` initiative; `expires_in_turns` 20; `on_win` `eliminate_target_faction` true                                        |
-| `foil_sabotage`             | `kind` response                                                                                                           |
+| GDR                         | Values read                                                                                                                      |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `locate_red_dawn_member`    | `faction` `red_dawn`; `required_progress` 3; `requires` empty; `on_completion` `create_mission_site` `apprehend_member`          |
+| `locate_red_dawn_safehouse` | `faction` `red_dawn`; `required_progress` 6; `requires` `mission_won` `apprehend_member`; `create_mission_site` `raid_safehouse` |
+| `locate_red_dawn_hq`        | `faction` `red_dawn`; `required_progress` 10; `requires` `mission_won` `raid_safehouse`; `create_mission_site` `raid_hq`         |
+| `apprehend_member`          | `kind` initiative; `expires_in_turns` 5                                                                                          |
+| `raid_safehouse`            | `kind` initiative; `expires_in_turns` 8                                                                                          |
+| `raid_hq`                   | `kind` initiative; `expires_in_turns` 20; `on_win` `eliminate_target_faction` true                                               |
+| `foil_sabotage`             | `kind` response                                                                                                                  |
 
 In the examples, the three Leads are called by their identifiers, "member", "safehouse", and "hq" for
 `locate_red_dawn_member`, `locate_red_dawn_safehouse`, and `locate_red_dawn_hq`. "The Advance turn ending Turn t" is the
@@ -499,7 +503,7 @@ Investigations, does not resume the progress of i1.
 
 This example exercises [Completion effect](#completion-effect), [What changes availability](#what-changes-availability),
 and [Edge cases and failure behavior](#edge-cases-and-failure-behavior). It uses a test Lead `test_lead` with `faction`
-`red_dawn`, `difficulty` 1, `requires` empty, and `on_completion` `create_mission_site` `apprehend_member`, supplied
+`red_dawn`, `required_progress` 1, `requires` empty, and `on_completion` `create_mission_site` `apprehend_member`, supplied
 alongside the Bootstrap GDRs.
 
 Initial state: Turn 60. A Mission site s6 from `raid_hq`, created by an Investigation i6 of hq that completed earlier, is
@@ -518,7 +522,7 @@ after that Advance turn.
 ## Two Leads requiring the same MissionSiteArchetype
 
 This example exercises [Prerequisites](#prerequisites) and [What changes availability](#what-changes-availability). It uses
-two test Leads `test_lead_a` and `test_lead_b`, each with `faction` `red_dawn`, `difficulty` 1, `requires`
+two test Leads `test_lead_a` and `test_lead_b`, each with `faction` `red_dawn`, `required_progress` 1, `requires`
 `mission_won` `apprehend_member`, and `on_completion` `create_mission_site` `apprehend_member`.
 
 Initial state: the initial Campaign state. Both test Leads are blocked by condition 1 only. When the Advance turn in which
@@ -539,8 +543,9 @@ the result is that the Game build is defective and no Campaign is created from i
 | hq's `requires` names `no_such_site`                                                            | Prerequisite references resolve |
 | hq's `requires` names `raid_safehouse` twice                                                    | Prerequisite references resolve |
 | member's `faction` is `apprehend_member`, which is not a FactionArchetype                       | Faction resolves                |
-| member's `difficulty` is 0                                                                      | Difficulty is valid             |
-| member's `difficulty` is 2.5                                                                    | Difficulty is valid             |
+| member's `required_progress` is 0                                                               | Required progress is valid      |
+| member's `required_progress` is 2.5                                                             | Required progress is valid      |
+| member has a property `difficulty`                                                              | Known properties                |
 | member's `create_mission_site` is `foil_sabotage`, a MissionSiteArchetype of kind response      | Completion effect is valid      |
 | member's `on_completion` holds `create_mission_site` and a second effect                        | Completion effect is valid      |
 | member's `on_completion` is `create_mission` `apprehend_member`, an effect kind that is unknown | Completion effect is valid      |
@@ -548,7 +553,7 @@ the result is that the Game build is defective and no Campaign is created from i
 | member has a property `repeatable`                                                              | Known properties                |
 
 The unchanged Bootstrap GDRs satisfy every rule: the prerequisite relation leads from hq to safehouse to member and ends
-there; every `faction` is `red_dawn`; the difficulties 3, 6, and 10 are whole numbers of at least 1; and each Lead creates
+there; every `faction` is `red_dawn`; the Required progress values 3, 6, and 10 are whole numbers of at least 1; and each Lead creates
 a MissionSiteArchetype of kind initiative.
 
 ## Player-visible information
@@ -557,12 +562,15 @@ This example exercises [Player-visible information](#player-visible-information)
 
 In the Committed state after the Advance turn ending Turn 5 in
 [The first Mission Won](#the-first-mission-won), a Player API query of the Leads returns exactly member and safehouse.
-For safehouse it returns its name, description, `faction` `red_dawn`, `difficulty` 6, `requires` as a list of one
+For safehouse it returns its name, description, `faction` `red_dawn`, `required_progress` as unknown, `requires` as a list of one
 prerequisite, `mission_won` `apprehend_member`, with the state that it holds; `on_completion` `create_mission_site`
 `raid_safehouse` together with every property of `raid_safehouse`; availability Yes; the four conditions, all holding;
 and Lead status Available. For member it returns availability No, condition 2 as the only condition not holding, and
 Lead status Archived. It returns nothing about hq. `getTurnReport()` lists `locate_red_dawn_safehouse` as discovered.
-The result is the same for the Session controller and an Autopilot AI, and nothing is reported as unknown.
+The result is the same for the Session controller and an Autopilot AI. Only safehouse's `required_progress` is
+reported as unknown, because no Investigation of safehouse exists yet to reveal it under
+[Assessment](investigations.md#assessment); member's `required_progress` 3 is reported, because member is a Completed
+Lead, whose Completed Investigation revealed it.
 
 # TODOs
 
@@ -570,7 +578,8 @@ The result is the same for the Session controller and an Autopilot AI, and nothi
   through another Lead, as game-ts's dependency on a Lead, under [Prerequisites](#prerequisites).
 - TODO (later): A condition that makes a Lead Inactive while a Mission site of another Lead is in progress, as game-ts's
   negated dependency, under [Lead availability](#lead-availability).
-- TODO (later): Repeatable Leads, under [What changes availability](#what-changes-availability).
+- TODO (later): Repeatable Leads, under [What changes availability](#what-changes-availability). The Game designer's
+  notes are in [Lead repeatability](../../../design-notes/lead-repeatability.md).
 - TODO (later): Further prerequisite kinds, under [Prerequisites](#prerequisites).
 - TODO (later): Further completion effect kinds, e.g. a Lead completion that gives information, money, funding, Agent
   improvement, or a Campaign objective directly, under [Completion effect](#completion-effect).
