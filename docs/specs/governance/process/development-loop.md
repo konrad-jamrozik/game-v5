@@ -90,7 +90,7 @@ specifications already say about it. The following cases are complete:
 
 Several tasks of the Development loop recur, and each needs the same few specifications and the same order of steps.
 An LLM skill captures one such task, so that an LLM agent does not have to rediscover what matters for it each time. LLM skills
-are kept in `.agents/skills/` of the specification repository, beside the specifications they serve. An LLM skill states no
+are kept in `.claude/skills/` of the specification repository, beside the specifications they serve. An LLM skill states no
 rule of its own: it points to the specifications that own the rules, and the specifications win when the two
 disagree.
 

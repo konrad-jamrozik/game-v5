@@ -65,7 +65,7 @@
   <text class="b" x="62" y="389">Implementation specifications</text>
   <text class="m" x="62" y="408">Mandatory: placement, feedback, tracking</text>
   <text class="m" x="62" y="424">Guidance and Recipes: suggestions and tasks</text>
-  <text class="m" x="62" y="439">Skills sit beside them in .agents/skills/</text>
+  <text class="m" x="62" y="439">Skills sit beside them in .claude/skills/</text>
 
   <!-- Implementation directory -->
   <rect class="disposable" x="600" y="170" width="370" height="295" rx="10"/>
