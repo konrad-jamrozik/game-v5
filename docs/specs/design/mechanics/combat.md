@@ -192,8 +192,8 @@ exhaustive.
 These are exactly the properties the [Combatant Role Type](agents-spec.md#combatant-role-type) requires; Weapon and
 base weapon damage together are the equipped weapon values. An Enemy also has two Derived values, which are never stored: its
 effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents, and its Combat rating, under
-[Combat rating](#combat-rating). An Enemy has no lifecycle, no Current assignment, and no Turn series. An Enemy whose
-current health is 0 is dead; being dead is a Derived value of its current health, not a lifecycle state.
+[Combat rating](#combat-rating). An Enemy has no lifecycle, no Assignment, and no Turn series. An Enemy whose
+current health is 0 is dead; being dead is a Derived value of its current health, not a stored state.
 
 **Retention:** An Enemy keeps every property above for the whole Campaign, so that every reference to it resolves, e.g.
 from a Combat report. Once its Mission site no longer participates in current gameplay, the Enemy is retained in World
@@ -261,7 +261,7 @@ Nothing else influences a Combat; e.g., the turn number, the Mission site's kind
 effect. Its outputs are exhaustive too:
 
 1. The Combat report, under [Combat report](#combat-report).
-2. The changed current health and exhaustion of the Combatants of both lists, and the Killed lifecycle state of every Agent whose
+2. The changed current health and exhaustion of the Combatants of both lists, and the Agent status Killed of every Agent whose
    current health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
 
 An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side
@@ -469,7 +469,7 @@ defender is affected.
 of these that holds:
 
 1. **Dead:** Its current health is 0. It is dead and is not Incapacitated. A dead Agent becomes Killed at this moment, under
-   [Agent lifecycle](agents-spec.md#agent-lifecycle) in Agents. A dead Enemy stays an Enemy with current health 0.
+   [Agent status](agents-spec.md#agent-status) in Agents. A dead Enemy stays an Enemy with current health 0.
 2. **Incapacitated:** It meets the [Incapacitation condition](#incapacitation-condition). Its Incapacitated property
    becomes yes, if it was not already.
 3. Otherwise nothing changes.

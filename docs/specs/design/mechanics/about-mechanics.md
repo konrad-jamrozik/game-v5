@@ -29,8 +29,8 @@ ending.
 
 ## Agents
 
-[Agents](agents-spec.md) answers _what does an Agent have, and what can it be ordered to do?_ It owns what an Agent has,
-the Combatant Role Type that Agents and Enemies share, the Agent lifecycle, Current assignments and the transit rule, effective skill, Training, and Agent creation.
+[Agents](agents-spec.md) answers _what does an Agent have, and what can it be assigned to do?_ It owns what an Agent has,
+the Combatant Role Type that Agents and Enemies share, Agent status, Assignments and the transit rule, effective skill, Training, and Agent creation.
 
 ## Agent Recovery
 
@@ -131,8 +131,8 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
   single system.
 - **Domain Model versus the other Mechanics documents:** Domain Model holds each concept's definition and the rules
   relating one concept to another; what a single concept has and does on its own belongs to the Mechanics document
-  that refines it. E.g., that an Agent's Current assignment places the Agent in a Current team is in Domain Model, and
-  the Agent lifecycle states are in Agents. A statement belongs where the first of these questions that answers yes
+  that refines it. E.g., that an Agent's Assignment places the Agent in a Current team is in Domain Model, and
+  the Agent statuses are in Agents. A statement belongs where the first of these questions that answers yes
   places it:
   1. Does it say what a word means? It is a Glossary definition in Domain Model, unless the word is about a single
      concept only.

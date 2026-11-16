@@ -55,13 +55,13 @@ and [Campaign Instances](../foundation/campaign-instances.md#glossary) glossarie
 
 The player-controlled organization, its Agents, what each Agent is doing, and what each has taken part in.
 
-| Term                  | Definition                                                                                                             | Prohibited synonyms                                              |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Agency                | The organization the player controls in a Campaign. It holds the money, funding, and upgrades, and employs the Agents. |                                                                  |
-| Agent                 | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                           |                                                                  |
-| Current assignment    | What an Agent is currently ordered to do, e.g. take part in a particular Investigation or Mission.                     | Assignment. The lifecycle label At assignment remains unchanged. |
-| Task phase            | Whether an Agent is carrying out its Current assignment (At assignment) or still travelling to it (In transit).        |                                                                  |
-| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                              | Participation; agent history; past participation                 |
+| Term                  | Definition                                                                                                                                                                                              | Prohibited synonyms                              |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Agency                | The organization the player controls in a Campaign. It holds the money, funding, and upgrades, and employs the Agents.                                                                                  |                                                  |
+| Agent                 | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                                                                                                            |                                                  |
+| Assignment            | What an Agent is currently assigned to do, e.g. take part in a particular Investigation or Mission.                                                                                                     | Current assignment                               |
+| Agent status          | Where an Agent stands: carrying out its Assignment (At assignment), still travelling to it (In transit), regaining current health at Recovery (Recovering), or no longer serving (Killed or Dismissed). | Task phase; Agent lifecycle state                |
+| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                                                                                                               | Participation; agent history; past participation |
 
 ## Leads, Investigations, Mission sites, and Missions
 
@@ -138,7 +138,7 @@ flowchart TD
     CampaignState -->|contains| MissionSites["Mission sites"]
     CampaignState -->|contains| Missions["Missions"]
     Investigations -->|each investigates| Lead["One Lead GDR"]
-    Agents -->|each has| Assignment["Current assignment and Task phase"]
+    Agents -->|each has| Assignment["Assignment and Agent status"]
     Assignment -->|can reference| Investigations
     Assignment -->|when Deployed, references| Missions
     Agents -->|each has| Participation["Participation history"]
@@ -159,16 +159,16 @@ Arrows show the labelled relationships, not inheritance.
 Campaign instances reference each other as follows. Every row holds in every Committed state. Each concept has further
 references, listed with its properties.
 
-| From                                  | To                                                                                                    | How many                                                                                 | Reference           |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------- |
-| Agent                                 | The Agency                                                                                            | Exactly one                                                                              | Immutable reference |
-| Agent, through its Current assignment | An Investigation, or the Mission the Agent is Deployed on                                             | At most one                                                                              | Mutable reference   |
-| Investigation                         | The Lead GDR it investigates                                                                          | Exactly one                                                                              | Immutable reference |
-| Mission site                          | The Faction it targets                                                                                | Exactly one                                                                              | Immutable reference |
-| Initiative Mission site               | Its origin: the Investigation whose completion created it                                             | Exactly one                                                                              | Immutable reference |
-| Response Mission site                 | Its origin: the Faction operation occurrence that created it, which identifies the initiating Faction | Exactly one; each Faction operation occurrence creates exactly one Response Mission site | Immutable reference |
-| Mission                               | The Mission site at which it takes place                                                              | Exactly one; a Mission site has at most one Mission                                      | Immutable reference |
-| Enemy                                 | The Mission site at which it is present                                                               | Exactly one                                                                              | Immutable reference |
+| From                          | To                                                                                                    | How many                                                                                 | Reference           |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------- |
+| Agent                         | The Agency                                                                                            | Exactly one                                                                              | Immutable reference |
+| Agent, through its Assignment | An Investigation, or the Mission the Agent is Deployed on                                             | At most one                                                                              | Mutable reference   |
+| Investigation                 | The Lead GDR it investigates                                                                          | Exactly one                                                                              | Immutable reference |
+| Mission site                  | The Faction it targets                                                                                | Exactly one                                                                              | Immutable reference |
+| Initiative Mission site       | Its origin: the Investigation whose completion created it                                             | Exactly one                                                                              | Immutable reference |
+| Response Mission site         | Its origin: the Faction operation occurrence that created it, which identifies the initiating Faction | Exactly one; each Faction operation occurrence creates exactly one Response Mission site | Immutable reference |
+| Mission                       | The Mission site at which it takes place                                                              | Exactly one; a Mission site has at most one Mission                                      | Immutable reference |
+| Enemy                         | The Mission site at which it is present                                                               | Exactly one                                                                              | Immutable reference |
 
 A Mission site is either an Initiative Mission site or a Response Mission site, so every Mission site has exactly one
 origin. An Initiative Mission site identifies, through its origin Investigation, the Lead that created it. A Faction
@@ -219,12 +219,12 @@ site have different Instance IDs.
 
 # Current versus historical teams
 
-The Current team of an Investigation or Mission must agree with Current assignments: an Agent whose Current assignment
-references Investigation I belongs to the Current team of I, including while In transit, and an Agent whose Current
-assignment references Mission M belongs to the Current team of M. Whether an Agent In transit contributes is decided
+The Current team of an Investigation or Mission must agree with Assignments: an Agent whose Assignment
+references Investigation I belongs to the Current team of I, including while In transit, and an Agent whose
+Assignment references Mission M belongs to the Current team of M. Whether an Agent In transit contributes is decided
 under [Transit rule](agents-spec.md#transit-rule) and [Progress gain](investigations.md#progress-gain). An Agent cannot belong to more
 than one Current team. In Committed state, the Agent-side and team-side views of Current team membership agree, and
-no Current assignment references an Investigation that is no longer Active or a Mission that is no longer Deployed.
+no Assignment references an Investigation that is no longer Active or a Mission that is no longer Deployed.
 
 Participation history describes the same relationship for the past: an Agent's Participation history and the past
 participants of an Investigation or Mission are one relationship seen from opposite sides. Agents recorded in
@@ -233,15 +233,15 @@ Agent; e.g., a Won Mission retains an Agent's Participation history after that A
 
 # Edge cases and failure behavior
 
-| Case                                                                                        | Result and owner                                                                                                                                                                                                                                                                                                                |
-| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| An Agent is In transit to an Investigation                                                  | The Agent belongs to its Current team; arrival and progress timing belong to Agents and Investigations                                                                                                                                                                                                                          |
-| An Investigation concludes while members of its Current team are In transit                 | In the next Committed state no Current assignment references it; the replacement Current assignments belong to Agents and Investigations                                                                                                                                                                                        |
-| The player deploys Agents to a Mission site                                                 | A new Mission at that Mission site comes into existence, whose Current team is those Agents, and each of them is Deployed with a Current assignment that references the Mission, under [Current versus historical teams](#current-versus-historical-teams); preconditions, rejection, and transit belong to Missions and Agents |
-| A team is to be deployed to a Mission site that already has a Mission                       | Never valid: a Mission site has at most one Mission, under [How concepts relate](#how-concepts-relate); Missions owns the rejection                                                                                                                                                                                             |
-| A Mission retains an Agent in its Participation history after it is Won or Lost             | The Agent's Current assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams)                                                                                                                                                                                                       |
-| The roster is empty, or no Mission sites or Investigations exist                            | Valid; [Panic and Endings](panic-and-endings.md) owns Defeat conditions                                                                                                                                                                                                                                                         |
-| A Faction is Eliminated while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-instances.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes                                                                                                                                      |
+| Case                                                                                        | Result and owner                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| An Agent is In transit to an Investigation                                                  | The Agent belongs to its Current team; arrival and progress timing belong to Agents and Investigations                                                                                                                                                                                                                   |
+| An Investigation concludes while members of its Current team are In transit                 | In the next Committed state no Assignment references it; the replacement Assignments belong to Agents and Investigations                                                                                                                                                                                                 |
+| The player deploys Agents to a Mission site                                                 | A new Mission at that Mission site comes into existence, whose Current team is those Agents, and each of them is Deployed with an Assignment that references the Mission, under [Current versus historical teams](#current-versus-historical-teams); preconditions, rejection, and transit belong to Missions and Agents |
+| A team is to be deployed to a Mission site that already has a Mission                       | Never valid: a Mission site has at most one Mission, under [How concepts relate](#how-concepts-relate); Missions owns the rejection                                                                                                                                                                                      |
+| A Mission retains an Agent in its Participation history after it is Won or Lost             | The Agent's Assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams)                                                                                                                                                                                                        |
+| The roster is empty, or no Mission sites or Investigations exist                            | Valid; [Panic and Endings](panic-and-endings.md) owns Defeat conditions                                                                                                                                                                                                                                                  |
+| A Faction is Eliminated while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-instances.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes                                                                                                                               |
 
 # Acceptance examples
 
@@ -258,8 +258,8 @@ Given Turn 3 and:
   M1 (Mission), F1 (Faction), and E1 (Enemy), plus the GDRs L1 and L2 (Leads) and W1 (weapon). These are test GDRs with no other
   required properties in this fixture.
 - Faction f1 with Archetype F1.
-- Agent a1 whose Current assignment references Investigation i1, In transit.
-- Agent a2, Deployed on Mission m1, so that its Current assignment references m1, At assignment.
+- Agent a1 whose Assignment references Investigation i1, In transit.
+- Agent a2, Deployed on Mission m1, so that its Assignment references m1, At assignment.
 - Investigation i0 referring to L2, no longer Active, with an empty Current team.
 - Active Investigation i1 referring to L1, Current team {a1}.
 - Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Attempted.
@@ -271,16 +271,16 @@ Given Turn 3 and:
 Each Campaign instance has the following allocation of the properties named in the sections above; the properties
 that Mechanics specifications add are assumed valid:
 
-| Campaign instance | Instance ID         | Archetype | Constants                                                              | State                                                                                                      |
-| ----------------- | ------------------- | --------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| ag1               | ag1                 | G1        | Empty                                                                  | Resources, upgrades, roster {a1, a2}                                                                       |
-| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                             | Current assignment, Task phase, the properties the Combatant Role Type requires, and Participation history |
-| i0                | i0                  | I1        | Lead L2                                                                | Not Active, empty Current team, Participation history                                                      |
-| i1                | i1                  | I1        | Lead L1                                                                | Active, Current team {a1}, Participation history                                                           |
-| s1                | s1                  | S1        | Initiative kind; origin Investigation i0 of Lead L2; target Faction f1 | Attempted, Enemies {e1}                                                                                    |
-| m1                | m1                  | M1        | Mission site s1; Turn deployed 3; team sent {a2}                       | Deployed, Current team {a2}                                                                                |
-| e1                | e1                  | E1        | Mission site s1                                                        | The properties the Combatant Role Type requires                                                            |
-| f1                | f1                  | F1        | Empty                                                                  | The values under [Faction State](factions.md#faction-state)                                                |
+| Campaign instance | Instance ID         | Archetype | Constants                                                              | State                                                                                                |
+| ----------------- | ------------------- | --------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| ag1               | ag1                 | G1        | Empty                                                                  | Resources, upgrades, roster {a1, a2}                                                                 |
+| a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                             | Assignment, Agent status, the properties the Combatant Role Type requires, and Participation history |
+| i0                | i0                  | I1        | Lead L2                                                                | Not Active, empty Current team, Participation history                                                |
+| i1                | i1                  | I1        | Lead L1                                                                | Active, Current team {a1}, Participation history                                                     |
+| s1                | s1                  | S1        | Initiative kind; origin Investigation i0 of Lead L2; target Faction f1 | Attempted, Enemies {e1}                                                                              |
+| m1                | m1                  | M1        | Mission site s1; Turn deployed 3; team sent {a2}                       | Deployed, Current team {a2}                                                                          |
+| e1                | e1                  | E1        | Mission site s1                                                        | The properties the Combatant Role Type requires                                                      |
+| f1                | f1                  | F1        | Empty                                                                  | The values under [Faction State](factions.md#faction-state)                                          |
 
 Campaign state c1 holds Turn 3 and collections containing Agency ag1, Agents a1 and a2,
 Investigations i0 and i1, Mission site s1, Mission m1, and Faction f1; e1 is reached through s1, and the Mission of
@@ -293,7 +293,7 @@ These relationships satisfy [Agency per Campaign](#agency-per-campaign),
 [Current versus historical teams](#current-versus-historical-teams), and [How concepts relate](#how-concepts-relate).
 Current team membership does not assert that a1 makes progress while In transit. The rules of a single concept are
 checked against this fixture by the Mechanics specification that refines it; e.g.,
-[Acceptance examples](agents-spec.md#acceptance-examples) in Agents checks the Agent lifecycle.
+[Acceptance examples](agents-spec.md#acceptance-examples) in Agents checks Agent status.
 
 ## B. Invalid variants
 
@@ -305,7 +305,7 @@ Each row independently changes fixture A and describes an invalid state.
 | Give m1 the same Instance ID as s1                                               | [Campaign instance identity scope](#campaign-instance-identity-scope) |
 | Add a second Agency                                                              | [Agency per Campaign](#agency-per-campaign)                           |
 | List a1 in the Current team of m1 while a1 is assigned to i1                     | [Current versus historical teams](#current-versus-historical-teams)   |
-| Make m1 Won while the Current assignment of a2 still references m1               | [Current versus historical teams](#current-versus-historical-teams)   |
+| Make m1 Won while the Assignment of a2 still references m1                       | [Current versus historical teams](#current-versus-historical-teams)   |
 | Mark s1 as a Response Mission site without a Faction operation occurrence origin | [How concepts relate](#how-concepts-relate)                           |
 | Add a second Mission whose Mission site reference identifies s1                  | [How concepts relate](#how-concepts-relate)                           |
 | Remove the Mission site reference of m1                                          | [How concepts relate](#how-concepts-relate)                           |
@@ -317,15 +317,15 @@ Given i1 is Completed and the Combat of m1 is fought and m1 becomes Won, a valid
 
 - i1 no longer Active, with an empty Current team, and a1 retained in its Participation history.
 - s1 still Attempted, and m1 still its Mission; m1 now has an empty Current team, and a2 has m1 in its Participation
-  history; the Turn report holds the Combat report of m1's Combat; no Current assignment of a2 references m1.
-- a1 and a2 each with a Current assignment that references neither i1 nor m1.
+  history; the Turn report holds the Combat report of m1's Combat; no Assignment of a2 references m1.
+- a1 and a2 each with an Assignment that references neither i1 nor m1.
 
 This satisfies [Current versus historical teams](#current-versus-historical-teams) and
 [How concepts relate](#how-concepts-relate).
 Assigning a1 to another Investigation does not rewrite the Participation history of i1, and assigning a2 elsewhere
 does not rewrite the Participation history of m1. A later Investigation of L1 has a new Instance ID
-([Campaign instance identity scope](#campaign-instance-identity-scope)). This fixture does not choose the replacement Current
-assignments or Turn timing.
+([Campaign instance identity scope](#campaign-instance-identity-scope)). This fixture does not choose the replacement
+Assignments or Turn timing.
 
 ## D. Initial Campaign state
 

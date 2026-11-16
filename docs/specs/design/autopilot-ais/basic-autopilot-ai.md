@@ -42,13 +42,13 @@ These terms are specific to the Basic Autopilot AI. General terms are in the
 [Domain Model glossary](../mechanics/domain-model.md#glossary) and the
 [Engine Contract glossary](../foundation/engine-contract.md#glossary).
 
-| Term               | Definition                                                                                                                                                                                            |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Basic Autopilot AI | The Autopilot AI described by this document.                                                                                                                                                          |
-| Rested Agent       | An Agent that can be ordered, whose Current assignment is Standby or Training, and whose exhaustion is low enough for the Basic Autopilot AI to give it new work.                                     |
-| Agent reserve      | The share of the roster that the Basic Autopilot AI keeps as Rested Agents rather than assigning, so that it can still react to an urgent Mission site.                                               |
-| Savings floor      | The money the Basic Autopilot AI keeps unspent so that the Agency can pay several Turns of upkeep even if contracting income falls short.                                                             |
-| Expected income    | The projected income the Agency will have once every Agent now In transit to Contracting has arrived: its funding plus the contracting income of every Agent whose Current assignment is Contracting. |
+| Term               | Definition                                                                                                                                                                                    |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Basic Autopilot AI | The Autopilot AI described by this document.                                                                                                                                                  |
+| Rested Agent       | An Agent that can be assigned, whose Assignment is Standby or Training, and whose exhaustion is low enough for the Basic Autopilot AI to give it new work.                                    |
+| Agent reserve      | The share of the roster that the Basic Autopilot AI keeps as Rested Agents rather than assigning, so that it can still react to an urgent Mission site.                                       |
+| Savings floor      | The money the Basic Autopilot AI keeps unspent so that the Agency can pay several Turns of upkeep even if contracting income falls short.                                                     |
+| Expected income    | The projected income the Agency will have once every Agent now In transit to Contracting has arrived: its funding plus the contracting income of every Agent whose Assignment is Contracting. |
 
 # Goals
 
@@ -70,22 +70,22 @@ goals, e.g. how large a safety margin is, are the Implementer's choice; the info
 The Basic Autopilot AI does not try to maximize score, speed, or any other measure of the Campaign beyond these goals.
 It does not try to predict Faction behavior, and it does not dismiss Agents.
 
-# Orders and transit
+# Assignments and transit
 
-Every order other than a deployment costs one Advance turn of transit before the Agent works, and an Agent In transit
-cannot be ordered, under [Transit rule](../mechanics/agents-spec.md#transit-rule) in Agents. The Basic Autopilot AI
+Every assignment other than a deployment costs one Advance turn of transit before the Agent works, and an Agent In transit
+cannot be assigned, under [Transit rule](../mechanics/agents-spec.md#transit-rule) in Agents. The Basic Autopilot AI
 therefore plays by the following principles. The list is exhaustive.
 
-1. **It orders only Agents that can be ordered.** It gives no order to an Agent that is In transit, on Recovery, or
+1. **It assigns only Agents that can be assigned.** It gives no Assignment to an Agent that is In transit, on Recovery, or
    Deployed, and it waits for a hired Agent to arrive, i.e. until the next Turn.
 2. **It counts an Agent In transit as already doing its destination work.** When it measures a goal, e.g. whether
    income covers upkeep or how many Agents investigate Leads, an Agent In transit to Contracting counts as contracting
-   and an Agent In transit to an Investigation counts as investigating. Otherwise it would order more Agents every Turn
+   and an Agent In transit to an Investigation counts as investigating. Otherwise it would assign more Agents every Turn
    while the first ones are still travelling. Expected income is this principle applied to income.
-3. **It does not move an Agent that is doing useful work.** It orders an Agent away from Contracting or Training only
-   when a step of [Turn routine](#turn-routine) says so, because each such order costs the Agent an Advance turn in
+3. **It does not move an Agent that is doing useful work.** It assigns an Agent away from Contracting or Training only
+   when a step of [Turn routine](#turn-routine) says so, because each such Assignment costs the Agent an Advance turn in
    which it does nothing.
-4. **It leaves Investigations whole.** It never orders an Agent away from an Active Investigation. Ordering the last
+4. **It leaves Investigations whole.** It never assigns an Agent away from an Active Investigation. Assigning the last
    member elsewhere would make the Investigation Abandoned and lose its progress, under
    [Abandonment](../mechanics/investigations.md#abandonment) in Investigations. Exhaustion is no reason to recall an
    investigating Agent either: the Agents it sends to Investigations are Rested Agents, and an Investigation raises no
@@ -98,26 +98,26 @@ therefore plays by the following principles. The list is exhaustive.
 # Turn routine
 
 During each Turn the Basic Autopilot AI makes its Player actions in the following order, and then ends the Turn.
-Each step sees the Current assignments the earlier steps produced, so an earlier step has first claim on Rested Agents
+Each step sees the Assignments the earlier steps produced, so an earlier step has first claim on Rested Agents
 and money.
 
 1. Recall to Standby each Agent on Contracting or Training whose exhaustion is too high for a Rested Agent, so that it
    can rest. An Agent on Contracting is recalled only while Expected income still covers projected upkeep with the
    margin without it (Keep Agents fit).
-2. If Expected income is below projected upkeep, order Agents to Contracting until it is not. This step may draw on the
+2. If Expected income is below projected upkeep, assign Agents to Contracting until it is not. This step may draw on the
    Agent reserve and on less rested Agents (Stay solvent).
 3. Deploy to Mission sites, most urgent first, while a winning team can be formed (Deploy only to win, Answer the most
    urgent first).
-4. Order Agents to Contracting until Expected income covers projected upkeep with the margin (Stay solvent).
+4. Assign Agents to Contracting until Expected income covers projected upkeep with the margin (Stay solvent).
 5. Bring the number of Agents investigating Leads up to its target share, adding Agents to an Active Investigation
    before starting an Investigation of another Lead (Keep Mission sites coming).
-6. Order the remaining Rested Agents on Standby to Training, then to Contracting (Leave no Agent idle).
+6. Assign the remaining Rested Agents on Standby to Training, then to Contracting (Leave no Agent idle).
 7. While money stays above the Savings floor, make the most needed purchase, then decide again (Grow with the threat).
 
 An Agent that returns from a Combat arrives on Standby or on Recovery and is left there until it is a Rested Agent,
 under [Exhaustion recovery](../mechanics/agent-recovery.md#exhaustion-recovery) in Agent Recovery. Step 1 therefore
-applies only to an Agent that was ordered to work while its exhaustion was too high for a Rested Agent: one that step 2
-sent to Contracting for urgent income, or one that a human player ordered before Autopilot was engaged.
+applies only to an Agent that was assigned to work while its exhaustion was too high for a Rested Agent: one that step 2
+sent to Contracting for urgent income, or one that a human player assigned before Autopilot was engaged.
 
 Mission sites come before routine Contracting because a Mission site expires, while contracting income can be restored
 on a later Turn. Investigations come after both because they only pay off later, and Training comes last because it
@@ -144,16 +144,16 @@ and [Player-visible information](../mechanics/combat.md#player-visible-informati
 
 # Edge cases and failure behavior
 
-| Case                                                                                 | Behavior                                                                                                                                                     |
-| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| No Mission site can be won with the Rested Agents available                          | It deploys nobody that Turn and keeps the Agents working toward income, Investigations, and Training.                                                        |
-| A Mission site is in the last Turn before it would expire                            | It deploys to it as to any other Mission site, because the Combat is fought in the next Advance turn.                                                        |
-| An Investigation completes while no winning team can be formed any more              | It deploys nobody. The Mission site becomes Expired, the Lead becomes available again, and the Lead is investigated again once a winning team can be formed. |
-| Money is below the Savings floor                                                     | It buys nothing that Turn.                                                                                                                                   |
-| Expected income is below projected upkeep and no Agent can be ordered to Contracting | It buys nothing, makes its other Player actions as usual, and ends the Turn. It does not dismiss Agents to lower upkeep.                                     |
-| Every Agent is exhausted or cannot be ordered, or the roster is empty                | It makes no assignment and ends the Turn; buying an Agent still follows Grow with the threat.                                                                |
-| A Player action it attempts is rejected                                              | It does not retry the same Player action in that Turn and continues with the next step, so a rejection cannot make it repeat itself until it fails.          |
-| Only Leads that create Mission sites it cannot currently win remain                  | It leaves those Leads uninvestigated until the Agency is strong enough.                                                                                      |
+| Case                                                                                  | Behavior                                                                                                                                                     |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| No Mission site can be won with the Rested Agents available                           | It deploys nobody that Turn and keeps the Agents working toward income, Investigations, and Training.                                                        |
+| A Mission site is in the last Turn before it would expire                             | It deploys to it as to any other Mission site, because the Combat is fought in the next Advance turn.                                                        |
+| An Investigation completes while no winning team can be formed any more               | It deploys nobody. The Mission site becomes Expired, the Lead becomes available again, and the Lead is investigated again once a winning team can be formed. |
+| Money is below the Savings floor                                                      | It buys nothing that Turn.                                                                                                                                   |
+| Expected income is below projected upkeep and no Agent can be assigned to Contracting | It buys nothing, makes its other Player actions as usual, and ends the Turn. It does not dismiss Agents to lower upkeep.                                     |
+| Every Agent is exhausted or cannot be assigned, or the roster is empty                | It makes no assignment and ends the Turn; buying an Agent still follows Grow with the threat.                                                                |
+| A Player action it attempts is rejected                                               | It does not retry the same Player action in that Turn and continues with the next step, so a rejection cannot make it repeat itself until it fails.          |
+| Only Leads that create Mission sites it cannot currently win remain                   | It leaves those Leads uninvestigated until the Agency is strong enough.                                                                                      |
 
 # TODOs
 
@@ -189,6 +189,6 @@ game-ts differs from the Basic Autopilot AI in the following deliberate ways. Th
   30%. Here only a Combat raises exhaustion, so the Basic Autopilot AI recalls only the Agents it sent to work for
   urgent income, and otherwise rests Agents by leaving them on Standby.
 - In game-ts an order took effect at once. Here it costs one Advance turn of transit, so the Basic Autopilot AI follows
-  the principles under [Orders and transit](#orders-and-transit).
+  the principles under [Assignments and transit](#assignments-and-transit).
 - In game-ts some Leads advanced progression directly. Here every Lead creates a Mission site, so the Basic Autopilot
   AI chooses Leads by whether it could win that Mission site.

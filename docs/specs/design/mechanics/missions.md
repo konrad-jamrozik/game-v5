@@ -297,13 +297,13 @@ set when it is created and never changes. It is created only by the `deployAgent
 [Mission at a Mission site](#mission-at-a-mission-site). Its Constants and State have
 exactly the following properties. This table is exhaustive.
 
-| Property      | Part      | Value                                                                                                                         | Classification and range                                                                                                                       |
-| ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mission site  | Constants | An Immutable reference to the Mission site at which the Mission takes place.                                                  | Authoritative value. Always exactly one Mission site of the Campaign.                                                                          |
-| Turn deployed | Constants | The turn number of the Turn in which the `deployAgents` Player action created the Mission.                                    | Authoritative value. A whole number of at least 1.                                                                                             |
-| Team sent     | Constants | The ordered list of Immutable references to the Agents of the `agents` parameter of `deployAgents`, in that order.            | Authoritative value. Non-empty. No rule changes it after creation.                                                                             |
-| Lifecycle     | State     | Deployed, Won, or Lost, under [Mission lifecycle](#mission-lifecycle).                                                        | Authoritative value.                                                                                                                           |
-| Current team  | State     | The ordered list of the Agents deployed on the Mission, in the order of Team sent, while they are Deployed; afterwards empty. | Authoritative value. Agrees with Current assignments under [Current versus historical teams](domain-model.md#current-versus-historical-teams). |
+| Property      | Part      | Value                                                                                                                         | Classification and range                                                                                                               |
+| ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Mission site  | Constants | An Immutable reference to the Mission site at which the Mission takes place.                                                  | Authoritative value. Always exactly one Mission site of the Campaign.                                                                  |
+| Turn deployed | Constants | The turn number of the Turn in which the `deployAgents` Player action created the Mission.                                    | Authoritative value. A whole number of at least 1.                                                                                     |
+| Team sent     | Constants | The ordered list of Immutable references to the Agents of the `agents` parameter of `deployAgents`, in that order.            | Authoritative value. Non-empty. No rule changes it after creation.                                                                     |
+| Lifecycle     | State     | Deployed, Won, or Lost, under [Mission lifecycle](#mission-lifecycle).                                                        | Authoritative value.                                                                                                                   |
+| Current team  | State     | The ordered list of the Agents deployed on the Mission, in the order of Team sent, while they are Deployed; afterwards empty. | Authoritative value. Agrees with Assignments under [Current versus historical teams](domain-model.md#current-versus-historical-teams). |
 
 A Mission also has Derived values, which are never stored: its kind, which is the kind of its Mission site, so that it is
 an Initiative Mission or a Response Mission under [Mission site kind and provenance](#mission-site-kind-and-provenance);
@@ -338,7 +338,7 @@ site always resolves.
 
 A Mission is its own Campaign instance, not a part of its Mission site's State, because it carries facts the Mission
 site does not have, e.g. the Turn it was deployed in, the team sent, its own lifecycle from deployment to its outcome;
-and because Current assignments and Participation history reference it
+and because Assignments and Participation history reference it
 directly. The Combat report of its Combat, by contrast, is not part of the Mission: it is part of the Turn report of the
 Advance turn that fought the Combat, under [Combat report](combat.md#combat-report) in Combat.
 
@@ -360,8 +360,8 @@ Every Mission is Deployed when it is created, under [Deploying Agents](#deployin
 Every transition not listed is impossible; e.g., nothing leaves Won or Lost. Won and Lost are final, and a Lost Mission
 stays Lost.
 
-"Deployed" names both the lifecycle state of a Mission that has a non-empty Current team and the Current assignment of
-each Agent in that Current team; the two always hold together, under [Orders and Task phase](agents-spec.md#orders-and-task-phase)
+"Deployed" names both the lifecycle state of a Mission that has a non-empty Current team and the Assignment of
+each Agent in that Current team; the two always hold together, under [Assignment and Agent status](agents-spec.md#assignment-and-agent-status)
 in Agents. A Mission is Deployed from the `deployAgents` Player action that creates it until the next Advance turn,
 because every Deployed Mission is resolved in the first Mission resolution step after the action.
 
@@ -382,7 +382,7 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 3. `agents` is empty.
 4. `agents` contains the same Instance ID more than once.
 5. An Instance ID in `agents` identifies no Agent of the Campaign.
-6. An Agent in `agents` cannot be ordered, under [Agents that can be ordered](agents-spec.md#agents-that-can-be-ordered)
+6. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned)
    in Agents.
 7. The Agents would exceed the Transport cap:
 
@@ -390,7 +390,7 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
    D + number of Agents in agents  >  Transport cap
    ```
 
-   where D is the number of Serving Agents whose Current assignment is Deployed, over every Mission together, in
+   where D is the number of Serving Agents whose Assignment is Deployed, over every Mission together, in
    the Committed state in which the action is requested, and the Transport cap is computed under
    [Agency caps](economy-and-upgrades.md#agency-caps) in Economy and Upgrades. Every Agent in `agents` adds one, because
    precondition 6 already rejects an Agent that is Deployed. The action is accepted when the sum is equal to or less than
@@ -416,10 +416,10 @@ Turn:
   Campaign Instances: the MissionArchetype as its Archetype reference; the Mission site as its Mission site; the current
   turn number as its Turn deployed; the Agents of `agents`, in that order, as its Team sent and as its Current team;
   and lifecycle state Deployed.
-- For every Agent in `agents`: its Current assignment becomes Deployed with a Mutable reference to the new Mission, and
-  its Task phase is At assignment at once, without transit, under [Transit rule](agents-spec.md#transit-rule) and
-  [Current assignment changes](agents-spec.md#current-assignment-changes) in Agents.
-- For every Agent in `agents` whose Current assignment was an Investigation: it leaves that Investigation's Current team,
+- For every Agent in `agents`: its Assignment becomes Deployed with a Mutable reference to the new Mission, and
+  its Agent status is At assignment at once, without transit, under [Transit rule](agents-spec.md#transit-rule) and
+  [Assignment changes](agents-spec.md#assignment-changes) in Agents.
+- For every Agent in `agents` whose Assignment was an Investigation: it leaves that Investigation's Current team,
   and the Investigation is recorded in its Participation history under
   [Participation history records](agents-spec.md#participation-history-records). Leaving has the effects on the
   Investigation under [Investigations](investigations.md), e.g. the Investigation is Abandoned when its last member
@@ -431,8 +431,8 @@ step of the next Advance turn, under [Agency caps](economy-and-upgrades.md#agenc
 step.
 
 **No recall:** No Player action removes an Agent from a Mission's Current team or returns an Attempted Mission site to
-Active. A Deployed Agent cannot be ordered or dismissed, under
-[Agents that can be ordered](agents-spec.md#agents-that-can-be-ordered) in Agents. Several `deployAgents` actions in one
+Active. A Deployed Agent cannot be assigned or dismissed, under
+[Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents. Several `deployAgents` actions in one
 Turn may each deploy a team to a different Active Mission site, as long as each satisfies the Transport cap with the
 Agents the earlier ones deployed.
 
@@ -454,18 +454,18 @@ For each Deployed Mission M, at Mission site S:
    The current values of every Combatant are their Step-start values of this step, under
    [Combat inputs and outputs](combat.md#combat-inputs-and-outputs). Every Agent of M's Current team is Serving,
    Deployed on M, and At assignment, because no Player action or earlier step can change a Deployed Agent's lifecycle
-   state or Current assignment, so the lists are valid Combat inputs.
+   state or Assignment, so the lists are valid Combat inputs.
 2. **Combat report:** The Combat's Combat report, which names M as its Mission, becomes part of the Turn report of this
    Advance turn, under [Combat report](combat.md#combat-report) in Combat.
 3. **Lifecycle:** M becomes Won when the Combat outcome is Prevailed, and Lost when it is Retreated or Wiped, under
    [Combat outcomes](combat.md#combat-outcomes).
 4. **Killed Agents:** Every Agent whose current health reached 0 in the Combat is Killed under
-   [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat; [Agent lifecycle](agents-spec.md#agent-lifecycle)
-   in Agents removes its Current assignment and Task phase and records M in its Participation history.
+   [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat; [Agent status](agents-spec.md#agent-status)
+   in Agents removes its Assignment and Agent status and records M in its Participation history.
 5. **Survivors:** Every other Agent of M's Current team survives, including an Agent that ended the Combat
-   Incapacitated. Its Current assignment becomes Recovery when its current health is below its base health, and Standby when
-   its current health equals its base health; in both cases its Task phase becomes In transit, under
-   [Current assignment changes](agents-spec.md#current-assignment-changes) in Agents. It leaves M's Current team, and M
+   Incapacitated. Its Assignment becomes Recovery when its current health is below its base health, and Standby when
+   its current health equals its base health; in both cases its Agent status becomes In transit, under
+   [Assignment changes](agents-spec.md#assignment-changes) in Agents. It leaves M's Current team, and M
    is recorded in its Participation history under [Participation history records](agents-spec.md#participation-history-records).
    Under [Transit rule](agents-spec.md#transit-rule), it is still In transit when this Advance turn ends. It then
    regains current health and exhaustion under [Agent Recovery](agent-recovery.md).
@@ -768,7 +768,7 @@ Combat rounds. Every Agent ends with current health 30 of 30; a1 has exhaustion 
 | Pending panic change                       | −1 from m1, the only contribution, so the Panic step gives Panic max(0, min(100, 10 − 1)) = 9                             |
 
 s1 is not Active in Mission site expiration, so it does not count down. The four Agents arrive in the Advance turn ending
-Turn 7 and can be ordered in Turn 8. No later Player action can deploy Agents to s1.
+Turn 7 and can be assigned in Turn 8. No later Player action can deploy Agents to s1.
 
 ## foil_sabotage ignored, Lost, and Won
 
@@ -812,7 +812,7 @@ the Advance turn ending Turn 42:
 
 After Combat round 1, an Enemy and an Agent are able to fight, and the Retreated check holds: 29 < 0.5 × 100 = 50, and the
 Enemies' Combat rating 400 ≥ 0.8 × 29. The Combat outcome is Retreated, so m2 is Lost. a1 survives with current health 9 of 30,
-so its Current assignment becomes Recovery, In transit. A Panic increase of 8 is added and funding becomes
+so its Assignment becomes Recovery, In transit. A Panic increase of 8 is added and funding becomes
 max(0, 20 − 1) = 19, the same Consequences as the Ignored variant, two Advance turns earlier; money is unchanged. s2 does
 not count down in Mission site expiration, because it is Attempted, not Active.
 
@@ -879,7 +879,7 @@ Advance turn ending Turn 151 with a Panic increase of 3 and a funding change of 
 
 This example exercises [Deploying Agents](#deploying-agents). During Turn 15, a1, a2, and a3 are Deployed on Mission m6 at
 Mission site s6, from `foil_recruitment_push`, which is therefore Attempted. Mission site s7, from `apprehend_member`, is Active, and Mission site s8 is Expired. a4
-and a5 are on Standby, At assignment; a6 is on Training, In transit; a7 is on Recovery, At assignment; a8 is on
+and a5 are on Standby, At assignment; a6 is on Training, In transit; a7 is on Recovery, Recovering; a8 is on
 Contracting, At assignment. Each call is made on its own from this state, and each rejected call changes nothing:
 
 | Call                         | Result                                                                                                        |
@@ -887,9 +887,9 @@ Contracting, At assignment. Each call is made on its own from this state, and ea
 | `deployAgents(s7, [a4, a5])` | Rejected: 3 + 2 = 5 is more than the Transport cap 4. Neither a4 nor a5 changes, and s7 stays Active.         |
 | `deployAgents(s7, [])`       | Rejected: `agents` is empty.                                                                                  |
 | `deployAgents(s7, [a4, a4])` | Rejected: a4 is listed twice.                                                                                 |
-| `deployAgents(s7, [a6])`     | Rejected: a6 is In transit and cannot be ordered.                                                             |
-| `deployAgents(s7, [a7])`     | Rejected: a7 is on Recovery and cannot be ordered.                                                            |
-| `deployAgents(s7, [a1])`     | Rejected: a1 is Deployed and cannot be ordered.                                                               |
+| `deployAgents(s7, [a6])`     | Rejected: a6 is In transit and cannot be assigned.                                                            |
+| `deployAgents(s7, [a7])`     | Rejected: a7 is on Recovery and cannot be assigned.                                                           |
+| `deployAgents(s7, [a1])`     | Rejected: a1 is Deployed and cannot be assigned.                                                              |
 | `deployAgents(s6, [a4])`     | Rejected: s6 is Attempted, not Active; it already has its Mission m6.                                         |
 | `deployAgents(s8, [a4])`     | Rejected: s8 is Expired.                                                                                      |
 | `deployAgents(s7, [a4])`     | Succeeds: 3 + 1 = 4 equals the Transport cap. s7 is Attempted, and its new Mission has the Current team [a4]. |

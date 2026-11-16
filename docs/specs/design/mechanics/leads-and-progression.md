@@ -424,7 +424,7 @@ This example exercises [What changes availability](#what-changes-availability) a
 [Lead availability](#lead-availability).
 
 Initial state: the initial Campaign state, in Turn 1. The player starts Investigation i1 of member in Turn 1, and in
-Turn 2 orders every Agent of its Current team elsewhere, so that i1 is Abandoned in the same Player action, under
+Turn 2 assigns every Agent of its Current team elsewhere, so that i1 is Abandoned in the same Player action, under
 [Investigations](investigations.md).
 
 Result: member is available with no Blocking condition in every Committed state of this example, before and after the

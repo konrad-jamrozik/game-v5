@@ -14,8 +14,8 @@ A wounded or worn-down Agent works and fights worse, so getting it back to full 
 [Agent](domain-model.md#glossary) regains lost current health only on Recovery, and sheds exhaustion only on Standby or
 Recovery.
 
-Recovery is gradual and cannot be rushed. In each Advance turn, an Agent At assignment on Recovery regains a share of
-its base health, an Agent At assignment on Standby or Recovery loses a fixed amount of exhaustion, and an Agent In
+Recovery is gradual and cannot be rushed. In each Advance turn, a Recovering Agent regains a share of its base health, a
+Recovering Agent or an Agent At assignment on Standby loses a fixed amount of exhaustion, and an Agent In
 transit recovers nothing. Recovery ends by itself the moment current health reaches base health: the Agent becomes
 Standby at once, without transit, and the player cannot end Recovery sooner. Both rates come from one RecoveryParameters
 Game Data Record (GDR).
@@ -37,10 +37,10 @@ effective skill, and Agent Recovery says how they return over time.
 
 These terms are specific to Agent Recovery. General terms are in the [Agents glossary](agents-spec.md#glossary).
 
-| Term                     | Definition                                                                                                                                                                                                               |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Health recovery rate     | The current health, as a whole number, that one Agent regains in each Advance turn in which it recovers; it depends on the Agent's base health.                                                                          |
-| Recovery turns remaining | The number of further Advance turns in which an Agent on Recovery will regain current health before its current health reaches its base health, counted from the first Advance turn in which the Agent is At assignment. |
+| Term                     | Definition                                                                                                                                                                                                            |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Health recovery rate     | The current health, as a whole number, that one Agent regains in each Advance turn in which it recovers; it depends on the Agent's base health.                                                                       |
+| Recovery turns remaining | The number of further Advance turns in which an Agent on Recovery will regain current health before its current health reaches its base health, counted from the first Advance turn in which the Agent is Recovering. |
 
 # Recovery parameters
 
@@ -82,9 +82,10 @@ the violation is reported as a data defect, never repaired into different gamepl
 when all of the following hold:
 
 1. It is Serving.
-2. Its Task phase is At assignment in the Turn-end state, i.e. in the Committed state in which this Advance turn began.
-3. Its Task phase is At assignment at the start of the Agent recovery step.
-4. Its Current assignment at the start of the Agent recovery step is the Current assignment the rule names.
+2. It is not In transit in the Turn-end state, i.e. in the Committed state in which this Advance turn began: its Agent
+   status there is At assignment or Recovering.
+3. It is not In transit at the start of the Agent recovery step.
+4. Its Assignment at the start of the Agent recovery step is the Assignment the rule names.
 
 Statements 2 and 3 are both needed: statement 2 excludes an Agent that arrived in the Transit step of this Advance turn,
 and statement 3 excludes an Agent that became In transit in an earlier step of this Advance turn, e.g. a Mission survivor
@@ -94,21 +95,21 @@ becomes In transit during it, recover nothing in this Advance turn. A Deployed A
 it does not recover. Contracting, Training, and an Investigation do not recover current health or exhaustion either, and neither
 does a Killed or Dismissed Agent.
 
-| Current assignment at step start | Current health recovers | Exhaustion recovers |
-| -------------------------------- | ----------------------- | ------------------- |
-| Recovery                         | Yes                     | Yes                 |
-| Standby                          | No                      | Yes                 |
-| Contracting                      | No                      | No                  |
-| Training                         | No                      | No                  |
-| An Investigation                 | No                      | No                  |
-| Deployed on a Mission            | No                      | No                  |
+| Assignment at step start | Current health recovers | Exhaustion recovers |
+| ------------------------ | ----------------------- | ------------------- |
+| Recovery                 | Yes                     | Yes                 |
+| Standby                  | No                      | Yes                 |
+| Contracting              | No                      | No                  |
+| Training                 | No                      | No                  |
+| An Investigation         | No                      | No                  |
+| Deployed on a Mission    | No                      | No                  |
 
 The table applies to an Agent that satisfies statements 1 to 3 above. The list of rows is exhaustive. An Agent on Standby
 does not regain current health in the Agent recovery step: only Recovery restores current health, and [Missions](missions.md) sends an
 Agent to Recovery exactly when it survives a Combat with current health below its base health.
 
 The recovery rules of the next two sections read each Agent's own values at the start of the Agent recovery step, and the
-Current assignment, Task phase, current health, and exhaustion of no other Agent. Whatever order an implementation processes the
+Assignment, Agent status, current health, and exhaustion of no other Agent. Whatever order an implementation processes the
 Agents in, the result is the same, under [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn
 Advancement.
 
@@ -147,25 +148,25 @@ where current health before is the Agent's current health at the start of the st
 base health, so the clamp under [Attribute ranges](agents-spec.md#attribute-ranges) is applied by this rule and
 current health never exceeds base health.
 
-**Recovery ends:** When current health after equals base health, the Agent's Current assignment becomes Standby and its Task
-phase stays At assignment, at once, in the same Agent recovery step. No transit occurs. This is the move from Recovery
-to Standby that [Current assignment changes](agents-spec.md#current-assignment-changes) lists and
+**Recovery ends:** When current health after equals base health, the Agent's Assignment becomes Standby and its Agent
+status becomes At assignment, at once, in the same Agent recovery step. No transit occurs. This is the move from Recovery
+to Standby that [Assignment changes](agents-spec.md#assignment-changes) lists and
 [Transit rule](agents-spec.md#transit-rule) excepts from starting In transit. The following transition table lists the
-only transitions of a Current assignment that the recovery rules make; every transition not listed here is impossible
+only transitions of an Assignment that the recovery rules make; every transition not listed here is impossible
 for them.
 
-| Source state            | Target state           | Trigger                           | Condition                                                                                                               |
-| ----------------------- | ---------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Recovery; At assignment | Standby; At assignment | Advance turn, Agent recovery step | The Agent satisfies [Which Agents recover](#which-agents-recover), and its current health after equals its base health. |
+| Source state         | Target state           | Trigger                           | Condition                                                                                                               |
+| -------------------- | ---------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Recovery; Recovering | Standby; At assignment | Advance turn, Agent recovery step | The Agent satisfies [Which Agents recover](#which-agents-recover), and its current health after equals its base health. |
 
-An Agent on Recovery whose current health after is below its base health stays on Recovery, At assignment, and recovers again
+An Agent on Recovery whose current health after is below its base health stays on Recovery, Recovering, and recovers again
 in the next Advance turn. Health recovery is the only way an Agent leaves Recovery.
 
-**Recovery cannot be ended early:** An Agent on Recovery cannot be ordered, under
-[Agents that can be ordered](agents-spec.md#agents-that-can-be-ordered), and no Player action ends Recovery. The player
+**Recovery cannot be ended early:** An Agent on Recovery cannot be assigned, under
+[Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned), and no Player action ends Recovery. The player
 does not start, change, or end Recovery; it begins and ends without any Player action. The player waits until current health
-reaches base health. While an Agent is on Recovery, At assignment, it earns no income and trains
-nothing, and it adds no Investigation progress, because its Current assignment is Recovery.
+reaches base health. While an Agent is on Recovery, Recovering, it earns no income and trains
+nothing, and it adds no Investigation progress, because its Assignment is Recovery.
 
 # Exhaustion recovery
 
@@ -196,7 +197,7 @@ order in which they are applied.
 1. **One recovery per Agent per step:** The Agent recovery step is applied once per Advance turn, and each Agent
    recovers at most once in it. An Agent that moves from Recovery to Standby in the Agent recovery step has already
    been counted as an Agent on Recovery: it recovers current health, recovers exhaustion exactly once, and then becomes Standby.
-   It does not recover exhaustion a second time as an Agent on Standby in the same step, because the Current assignment
+   It does not recover exhaustion a second time as an Agent on Standby in the same step, because the Assignment
    that decides eligibility is the one at the start of the step.
 2. **Current health and exhaustion are independent:** The current health of an Agent on Recovery rises by the Health recovery rate and
    its exhaustion falls by `exhaustion_recovery_per_turn` in the same step. Neither amount depends on the other, and the
@@ -232,7 +233,7 @@ The Health recovery rate and the Recovery turns remaining are Derived values. Th
 change of the Agent's base health or current health at once, under
 [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract.
 
-**Recovery turns remaining:** For a Serving Agent whose Current assignment is Recovery, whatever its Task phase,
+**Recovery turns remaining:** For a Serving Agent whose Assignment is Recovery, whatever its Agent status,
 
 ```text
 Recovery turns remaining = round up( (base health − current health) / Health recovery rate )
@@ -242,14 +243,14 @@ where base health and current health are the Agent's current values, in health p
 base health, and the Health recovery rate is the Derived value above, a whole number of at least 1 so that the divisor
 is never zero. The expression is evaluated exactly and Round up is applied once, at the end. The result is a whole number
 from 0 to base health. It counts the Advance turns in which the Agent recovers, from the first Advance turn in which
-the Agent is At assignment at the start: the Advance turn in which the Agent arrives is not counted, and neither is any
-Advance turn in which it is In transit. The Agent's current health equals its base health, and its Current assignment is Standby, after the last
+the Agent is Recovering at the start: the Advance turn in which the Agent arrives is not counted, and neither is any
+Advance turn in which it is In transit. The Agent's current health equals its base health, and its Assignment is Standby, after the last
 counted Advance turn. E.g., an Agent In transit to Recovery with Recovery turns remaining 8 recovers nothing in the
 Advance turn in which it arrives, and recovers current health in each of the 8 Advance turns after that one.
 
 **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. The Health
 recovery rate is reported for every Serving Agent. The Recovery turns remaining is reported as absent, not as zero, for an
-Agent whose Current assignment is not Recovery, and for a Killed or Dismissed Agent; the Current assignment explains why.
+Agent whose Assignment is not Recovery, and for a Killed or Dismissed Agent; the Assignment explains why.
 A reported value of 0 can only occur for an Agent on Recovery with current health equal to base health, which
 [Edge cases and failure behavior](#edge-cases-and-failure-behavior) describes.
 
@@ -273,13 +274,13 @@ A reported value of 0 can only occur for an Agent on Recovery with current healt
   nothing in this Advance turn and recovers from the next one ([Which Agents recover](#which-agents-recover)).
 - **Agent whose Investigation completed in this Advance turn:** Its team is on Standby, In transit, from the
   Investigation progress step on, so its exhaustion does not recover in this Advance turn ([Which Agents recover](#which-agents-recover)).
-- **Recovery interrupted by a new Current assignment:** No Player action can give an Agent on Recovery a new Current
-  assignment, because it cannot be ordered ([Agents that can be ordered](agents-spec.md#agents-that-can-be-ordered)); the
-  only change of its Current assignment is the move to Standby in the Agent recovery step. Whether an Agent on Recovery
+- **Recovery interrupted by a new Assignment:** No Player action can give a Recovering Agent a new
+  Assignment, because it cannot be assigned ([Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned)); the
+  only change of its Assignment is the move to Standby in the Agent recovery step. Whether an Agent on Recovery
   may be dismissed is decided under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents).
 - **An Agent that is Killed:** A Killed Agent is not Serving, so it recovers nothing and has no Recovery turns remaining.
 - **Base health of 1:** The Health recovery rate is at least 1, so an Agent on Recovery with base health 1 and
-  current health 0 cannot exist, because a Serving Agent has positive current health ([Agent lifecycle](agents-spec.md#agent-lifecycle)).
+  current health 0 cannot exist, because a Serving Agent has positive current health ([Agent status](agents-spec.md#agent-status)).
 - **Percentage above 100:** The Health recovery rate may exceed base health; current health after is still base health
   ([Recovery GDR validation](#recovery-gdr-validation)).
 - **Exhaustion recovery rate of 0:** Exhaustion never falls on Standby or Recovery; health recovery and the move to
@@ -327,26 +328,26 @@ This example exercises [Which Agents recover](#which-agents-recover), [Health re
 [Transit rule](agents-spec.md#transit-rule). Agent a1 is on Standby, At assignment, with current health 30 of 30, and is deployed
 to Mission site s1 during Turn 5. As a stipulated input, the Combat in the Advance turn ending Turn 5 leaves a1 with
 current health 22 and exhaustion 14, and a1 survives; [Missions](missions.md) therefore sends a1 to Recovery, In transit. The Health
-recovery rate of a1 is 1. Its Recovery turns remaining, once it is At assignment, is `round up( (30 − 22) / 1 )` = 8.
+recovery rate of a1 is 1. Its Recovery turns remaining, once it is Recovering, is `round up( (30 − 22) / 1 )` = 8.
 
-| Moment                      | Current assignment; Task phase     | Current health | Exhaustion | What happens in the Agent recovery step                                                               |
-| --------------------------- | ---------------------------------- | -------------- | ---------- | ----------------------------------------------------------------------------------------------------- |
-| Turn 5, after deployment    | Deployed; At assignment            | 30             | 0          | Not applicable yet                                                                                    |
-| Advance turn ending Turn 5  | Recovery; In transit afterwards    | 22             | 14         | a1 is In transit at the step: no recovery                                                             |
-| Turn 6                      | Recovery; In transit               | 22             | 14         | Not applicable                                                                                        |
-| Advance turn ending Turn 6  | Recovery; At assignment afterwards | 22             | 14         | a1 arrives in the Transit step, so it was In transit in the Turn-end state: no recovery               |
-| Turn 7                      | Recovery; At assignment            | 22             | 14         | Not applicable; a1 cannot be ordered                                                                  |
-| Advance turn ending Turn 7  | Recovery; At assignment            | 23             | 9          | First recovery: current health +1; exhaustion −5                                                      |
-| Advance turn ending Turn 8  | Recovery; At assignment            | 24             | 4          | Current health +1; exhaustion −5                                                                      |
-| Advance turn ending Turn 9  | Recovery; At assignment            | 25             | 0          | Current health +1; exhaustion 4 − 5 is clamped to 0                                                   |
-| Advance turn ending Turn 10 | Recovery; At assignment            | 26             | 0          | Current health +1; exhaustion stays 0                                                                 |
-| Advance turn ending Turn 11 | Recovery; At assignment            | 27             | 0          | Current health +1                                                                                     |
-| Advance turn ending Turn 12 | Recovery; At assignment            | 28             | 0          | Current health +1                                                                                     |
-| Advance turn ending Turn 13 | Recovery; At assignment            | 29             | 0          | Current health +1                                                                                     |
-| Advance turn ending Turn 14 | Standby; At assignment             | 30             | 0          | Current health +1 reaches base health 30; a1 becomes Standby, At assignment, at once, with no transit |
-| Turn 15                     | Standby; At assignment             | 30             | 0          | a1 can be ordered                                                                                     |
+| Moment                      | Assignment; Agent status        | Current health | Exhaustion | What happens in the Agent recovery step                                                               |
+| --------------------------- | ------------------------------- | -------------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| Turn 5, after deployment    | Deployed; At assignment         | 30             | 0          | Not applicable yet                                                                                    |
+| Advance turn ending Turn 5  | Recovery; In transit afterwards | 22             | 14         | a1 is In transit at the step: no recovery                                                             |
+| Turn 6                      | Recovery; In transit            | 22             | 14         | Not applicable                                                                                        |
+| Advance turn ending Turn 6  | Recovery; Recovering afterwards | 22             | 14         | a1 arrives in the Transit step, so it was In transit in the Turn-end state: no recovery               |
+| Turn 7                      | Recovery; Recovering            | 22             | 14         | Not applicable; a1 cannot be assigned                                                                 |
+| Advance turn ending Turn 7  | Recovery; Recovering            | 23             | 9          | First recovery: current health +1; exhaustion −5                                                      |
+| Advance turn ending Turn 8  | Recovery; Recovering            | 24             | 4          | Current health +1; exhaustion −5                                                                      |
+| Advance turn ending Turn 9  | Recovery; Recovering            | 25             | 0          | Current health +1; exhaustion 4 − 5 is clamped to 0                                                   |
+| Advance turn ending Turn 10 | Recovery; Recovering            | 26             | 0          | Current health +1; exhaustion stays 0                                                                 |
+| Advance turn ending Turn 11 | Recovery; Recovering            | 27             | 0          | Current health +1                                                                                     |
+| Advance turn ending Turn 12 | Recovery; Recovering            | 28             | 0          | Current health +1                                                                                     |
+| Advance turn ending Turn 13 | Recovery; Recovering            | 29             | 0          | Current health +1                                                                                     |
+| Advance turn ending Turn 14 | Standby; At assignment          | 30             | 0          | Current health +1 reaches base health 30; a1 becomes Standby, At assignment, at once, with no transit |
+| Turn 15                     | Standby; At assignment          | 30             | 0          | a1 can be assigned                                                                                    |
 
-During Turns 6 and 7, `assignAgents([a1], Standby)` is rejected because a1 cannot be ordered, and no Player action ends
+During Turns 6 and 7, `assignAgents([a1], Standby)` is rejected because a1 cannot be assigned, and no Player action ends
 the Recovery early. a1 recovers in 8 Advance turns, the ones ending Turns 7 to 14, which equals its Recovery turns
 remaining of 8 on Turn 7; on Turn 5 and Turn 6 the Recovery turns remaining reported is also 8, and it counts down by 1
 in each Advance turn from the Advance turn ending Turn 7. The Combat's lost current health and gained exhaustion are untouched in
@@ -372,13 +373,13 @@ This example exercises [Which Agents recover](#which-agents-recover). In one Adv
 exhaustion 14. Agents c1 to c4 have current health 30 of 30; the Agent recovery step finds them as follows, and the Advance turn
 changes nothing else about them that this table shows.
 
-| Agent | Current assignment and Task phase in the Turn-end state | Current assignment; Task phase at the start of the Agent recovery step | Exhaustion after the step | Reason                                                                                 |
-| ----- | ------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------- |
-| c1    | Contracting; At assignment                              | Contracting; At assignment                                             | 14                        | Contracting does not recover                                                           |
-| c2    | Training; At assignment                                 | Training; At assignment                                                | 14                        | Training does not recover                                                              |
-| c3    | Standby; In transit                                     | Standby; At assignment                                                 | 14                        | It arrived in the Transit step: In transit in the Turn-end state                       |
-| c4    | An Investigation; At assignment                         | Standby; In transit                                                    | 14                        | The Investigation completed in the Investigation progress step: In transit at the step |
-| c5    | Standby; At assignment                                  | Standby; At assignment                                                 | 9                         | The only Agent in this table that recovers                                             |
+| Agent | Assignment and Agent status in the Turn-end state | Assignment; Agent status at the start of the Agent recovery step | Exhaustion after the step | Reason                                                                                 |
+| ----- | ------------------------------------------------- | ---------------------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------- |
+| c1    | Contracting; At assignment                        | Contracting; At assignment                                       | 14                        | Contracting does not recover                                                           |
+| c2    | Training; At assignment                           | Training; At assignment                                          | 14                        | Training does not recover                                                              |
+| c3    | Standby; In transit                               | Standby; At assignment                                           | 14                        | It arrived in the Transit step: In transit in the Turn-end state                       |
+| c4    | An Investigation; At assignment                   | Standby; In transit                                              | 14                        | The Investigation completed in the Investigation progress step: In transit at the step |
+| c5    | Standby; At assignment                            | Standby; At assignment                                           | 9                         | The only Agent in this table that recovers                                             |
 
 Agent c5 has current health 30 of 30. In the next Advance turn c3 and c4 are At assignment in the Turn-end state, so they recover
 exhaustion from 14 to 9. A Deployed Agent whose Combat is fought in the Mission resolution step is not in this table: it
@@ -387,26 +388,26 @@ is In transit at the step if it survives, as in the previous example.
 ## Current health reaching base health and exhaustion reaching 0 in one step
 
 This example exercises [Several changes in one Turn](#several-changes-in-one-turn), [Health recovery](#health-recovery),
-and [Exhaustion recovery](#exhaustion-recovery). Agents d1 and d2 are on Recovery, At assignment, in the Turn-end state,
+and [Exhaustion recovery](#exhaustion-recovery). Agents d1 and d2 are on Recovery, Recovering, in the Turn-end state,
 each with current health 29 of 30.
 
-| Agent | Exhaustion before | Current health after | Exhaustion after | Current assignment after the step | Explanation                                                                                                           |
-| ----- | ----------------- | -------------------- | ---------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| d1    | 3                 | 30                   | 0                | Standby; At assignment            | Current health 29 + 1 reaches base health; exhaustion 3 − 5 is clamped to 0                                           |
-| d2    | 8                 | 30                   | 3                | Standby; At assignment            | Exhaustion recovers once: 8 − 5 = 3; a second recovery as an Agent on Standby would have given 0, and does not happen |
+| Agent | Exhaustion before | Current health after | Exhaustion after | Assignment after the step | Explanation                                                                                                           |
+| ----- | ----------------- | -------------------- | ---------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| d1    | 3                 | 30                   | 0                | Standby; At assignment    | Current health 29 + 1 reaches base health; exhaustion 3 − 5 is clamped to 0                                           |
+| d2    | 8                 | 30                   | 3                | Standby; At assignment    | Exhaustion recovers once: 8 − 5 = 3; a second recovery as an Agent on Standby would have given 0, and does not happen |
 
 Both Agents are on Standby, At assignment, in the Turn-start state after the Advance turn, without any transit, and can be
-ordered in the next Turn. In the following Advance turn d2 recovers exhaustion as an Agent on Standby, from 3 to 0.
+assigned in the next Turn. In the following Advance turn d2 recovers exhaustion as an Agent on Standby, from 3 to 0.
 
 ## Recovery clamp with a test Health recovery rate
 
 This example exercises [Health recovery](#health-recovery) and the Recovery turns remaining under
 [Player-visible information](#player-visible-information), with the test value `health_recovery_pct_per_turn` 7 in place of
-the Bootstrap value; every other value is the Bootstrap value. Agent e1 is on Recovery, At assignment, with current health 22 of
+the Bootstrap value; every other value is the Bootstrap value. Agent e1 is on Recovery, Recovering, with current health 22 of
 30 and exhaustion 0. The Health recovery rate is `round up( 7 × 30 / 100 )` = `round up( 2.1 )` = 3, and the Recovery turns
 remaining is `round up( (30 − 22) / 3 )` = `round up( 2.67 )` = 3.
 
-| Moment                | Current health | Recovery turns remaining                      | Current assignment     | Explanation                              |
+| Moment                | Current health | Recovery turns remaining                      | Assignment             | Explanation                              |
 | --------------------- | -------------- | --------------------------------------------- | ---------------------- | ---------------------------------------- |
 | Before the first step | 22             | 3                                             | Recovery               |                                          |
 | After the first step  | 25             | 2                                             | Recovery               | 22 + 3 = 25                              |
@@ -416,16 +417,16 @@ remaining is `round up( (30 − 22) / 3 )` = `round up( 2.67 )` = 3.
 ## Recovery with current health already at base health
 
 This example exercises the case that cannot occur under [Edge cases and failure behavior](#edge-cases-and-failure-behavior).
-Agent f1 is on Recovery, At assignment, in the Turn-end state, with current health 30 of 30 and exhaustion 12. In the Agent recovery
+Agent f1 is on Recovery, Recovering, in the Turn-end state, with current health 30 of 30 and exhaustion 12. In the Agent recovery
 step f1 has current health after 30, so it becomes Standby, At assignment, and its exhaustion recovers once to 7. Its Recovery
 turns remaining before the step was `round up( (30 − 30) / 1 )` = 0.
 
 ## Independence between Agents
 
-This example exercises [Which Agents recover](#which-agents-recover). Agents g1 and g2 are both on Recovery, At assignment,
+This example exercises [Which Agents recover](#which-agents-recover). Agents g1 and g2 are both on Recovery, Recovering,
 in the Turn-end state. g1 has current health 29 and exhaustion 4; g2 has current health 10 and exhaustion 20. After the Agent recovery
 step, g1 has current health 30, exhaustion 0, and is on Standby, At assignment; g2 has current health 11, exhaustion 15, and is on
-Recovery, At assignment. Each result is the same whichever Agent an implementation processes first, because neither result
+Recovery, Recovering. Each result is the same whichever Agent an implementation processes first, because neither result
 reads the other Agent.
 
 # TODOs

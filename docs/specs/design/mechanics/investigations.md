@@ -12,14 +12,14 @@
 
 Investigating a Lead takes Agents and time, and when the work will pay off is never certain. An
 [Investigation](domain-model.md#glossary) is one team's effort on one Lead: the player starts it, adds Agents to it,
-and may order them elsewhere. A Lead has at most one Active Investigation at a time.
+and may assign them elsewhere. A Lead has at most one Active Investigation at a time.
 
 The work accumulates. In every Advance turn, Investigation progress grows by the effective skill of the members working
 on it, and the Investigation then completes with a Probability that rises with that progress and reaches 1 at its
 Lead's `difficulty` × 100. A larger team therefore brings completion closer, but never to a known Turn. A completed
 Investigation applies its Lead's completion effect, e.g. creating an Initiative Mission site, and sends its members to
 Standby. Progress survives a member leaving but not the whole team leaving: an Investigation whose last member is
-ordered elsewhere becomes Abandoned, and a later Investigation of the same Lead starts again from 0.
+assigned elsewhere becomes Abandoned, and a later Investigation of the same Lead starts again from 0.
 
 # Relationships
 
@@ -99,7 +99,7 @@ This table is exhaustive.
 | Turn started           | Constants | The turn number of the Turn in which the `startInvestigation` Player action created the Investigation. | Authoritative value. A whole number of at least 1.                                                                                                                                                             |
 | Lifecycle              | State     | Active, Completed, or Abandoned, under [Investigation lifecycle](#investigation-lifecycle).            | Authoritative value.                                                                                                                                                                                           |
 | Investigation progress | State     | The Investigation progress, in skill points.                                                           | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). Changes only under [Progress gain](#progress-gain). |
-| Current team           | State     | The set of Agents whose Current assignment references the Investigation, whatever their Task phase.    | Authoritative value. It has no order. It agrees with Current assignments under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model.                             |
+| Current team           | State     | The set of Agents whose Assignment references the Investigation, whatever their Agent status.          | Authoritative value. It has no order. It agrees with Assignments under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model.                                     |
 
 An Investigation also has one Derived value, which is never stored: its projected completion probability, under
 [Projected completion probability](#projected-completion-probability). The Agents who took part in an Investigation
@@ -155,10 +155,10 @@ earlier Investigations of that Lead.
 is exhaustive. Every Investigation is Active when it is created. It stays Active until it becomes Completed or
 Abandoned. The transition table is:
 
-| Source state | Target state | Trigger                                                                                                                                                                                                   | Condition                                                                           | Effects                            |
-| ------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
-| Active       | Completed    | Advance turn, in the Turn advancement step Investigation progress.                                                                                                                                        | The Investigation completion outcome of the Investigation is "completes".           | Under [Completion](#completion).   |
-| Active       | Abandoned    | A Player action changes the Current assignment of a member of the Investigation's Current team to something else: `assignAgents`, `deployAgents`, `startInvestigation`, or `assignAgentsToInvestigation`. | The Investigation's Current team is empty after every change of that Player action. | Under [Abandonment](#abandonment). |
+| Source state | Target state | Trigger                                                                                                                                                                                           | Condition                                                                           | Effects                            |
+| ------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
+| Active       | Completed    | Advance turn, in the Turn advancement step Investigation progress.                                                                                                                                | The Investigation completion outcome of the Investigation is "completes".           | Under [Completion](#completion).   |
+| Active       | Abandoned    | A Player action changes the Assignment of a member of the Investigation's Current team to something else: `assignAgents`, `deployAgents`, `startInvestigation`, or `assignAgentsToInvestigation`. | The Investigation's Current team is empty after every change of that Player action. | Under [Abandonment](#abandonment). |
 
 Every transition not listed is impossible; e.g., an Abandoned Investigation never becomes Active again, a Completed
 Investigation is never Abandoned, and no Turn advancement step makes an Investigation Abandoned. Completed and Abandoned
@@ -185,7 +185,7 @@ its changes. The action is rejected, as a whole, when any of the following holds
 4. `agents` is empty.
 5. `agents` contains the same Instance ID more than once.
 6. An Instance ID in `agents` identifies no Agent of the Campaign.
-7. An Agent in `agents` cannot be ordered, under [Agents that can be ordered](agents-spec.md#agents-that-can-be-ordered)
+7. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned)
    in Agents.
 
 Other preconditions apply to every Player action, e.g. that the Campaign has no Campaign ending, under
@@ -203,10 +203,10 @@ Turn:
 
 - A new Investigation is created under [Investigation creation](#investigation-creation), with the Lead of `lead` and the
   Agents of `agents` as its Current team.
-- For every Agent in `agents`: its Current assignment becomes that new Investigation, with a Mutable reference to it, and
-  its Task phase becomes In transit, under [Transit rule](agents-spec.md#transit-rule) and
-  [Current assignment changes](agents-spec.md#current-assignment-changes) in Agents.
-- For every Agent in `agents` whose Current assignment was another Investigation: it leaves that Investigation's Current
+- For every Agent in `agents`: its Assignment becomes that new Investigation, with a Mutable reference to it, and
+  its Agent status becomes In transit, under [Transit rule](agents-spec.md#transit-rule) and
+  [Assignment changes](agents-spec.md#assignment-changes) in Agents.
+- For every Agent in `agents` whose Assignment was another Investigation: it leaves that Investigation's Current
   team under [Leaving an Investigation](#leaving-an-investigation), which may make that Investigation Abandoned in this
   same Player action.
 
@@ -247,7 +247,7 @@ its changes. The action is rejected, as a whole, when any of the following holds
 3. `agents` is empty.
 4. `agents` contains the same Instance ID more than once.
 5. An Instance ID in `agents` identifies no Agent of the Campaign.
-6. An Agent in `agents` cannot be ordered, under [Agents that can be ordered](agents-spec.md#agents-that-can-be-ordered)
+6. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned)
    in Agents.
 7. An Agent in `agents` already belongs to the Investigation's Current team.
 
@@ -260,11 +260,11 @@ failed precondition, and no change.
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same
 Turn:
 
-- For every Agent in `agents`: its Current assignment becomes the Investigation, with a Mutable reference to it, and its
-  Task phase becomes In transit, under [Transit rule](agents-spec.md#transit-rule) and
-  [Current assignment changes](agents-spec.md#current-assignment-changes) in Agents. It joins the Investigation's Current
+- For every Agent in `agents`: its Assignment becomes the Investigation, with a Mutable reference to it, and its
+  Agent status becomes In transit, under [Transit rule](agents-spec.md#transit-rule) and
+  [Assignment changes](agents-spec.md#assignment-changes) in Agents. It joins the Investigation's Current
   team.
-- For every Agent in `agents` whose Current assignment was another Investigation: it leaves that Investigation's Current
+- For every Agent in `agents` whose Assignment was another Investigation: it leaves that Investigation's Current
   team under [Leaving an Investigation](#leaving-an-investigation), which may make that Investigation Abandoned in this
   same Player action.
 
@@ -277,18 +277,18 @@ Nothing else changes; in particular, the Investigation's Investigation progress 
 **Proposed rule:** An Agent leaves the Current team of an Investigation on exactly the following occasions, and this
 list is exhaustive:
 
-1. **Ordered elsewhere:** A Player action changes the Agent's Current assignment from that Investigation to something
+1. **Assigned elsewhere:** A Player action changes the Agent's Assignment from that Investigation to something
    else. The Player actions that can do so are exactly `assignAgents` under [Assigning Agents](agents-spec.md#assigning-agents)
    in Agents, `deployAgents` under [Deploying Agents](missions.md#deploying-agents) in Missions, and `startInvestigation`
-   and `assignAgentsToInvestigation`, each with an Agent whose Current assignment is another Investigation.
+   and `assignAgentsToInvestigation`, each with an Agent whose Assignment is another Investigation.
 2. **Completion:** The Investigation becomes Completed, under [Completion](#completion).
 
 No other rule removes an Agent from an Investigation's Current team: an Agent on an Investigation cannot be dismissed,
 because `dismissAgents` requires Standby, and it cannot be Killed, because only a Deployed Agent can be Killed, under
-[Agent lifecycle](agents-spec.md#agent-lifecycle) in Agents. Whenever an Agent leaves, the Investigation is added to its
+[Agent status](agents-spec.md#agent-status) in Agents. Whenever an Agent leaves, the Investigation is added to its
 Participation history under [Participation history records](agents-spec.md#participation-history-records) in Agents.
 
-**Progress is kept:** When a member is ordered elsewhere, the Investigation keeps its whole Investigation progress,
+**Progress is kept:** When a member is assigned elsewhere, the Investigation keeps its whole Investigation progress,
 whichever member leaves and however much it contributed. The remaining members continue from that progress.
 
 ## Abandonment
@@ -297,11 +297,11 @@ whichever member leaves and however much it contributed. The remaining members c
 becomes Abandoned in that same Player action, after all of the action's other changes. No Committed state therefore
 contains an Active Investigation with an empty Current team.
 
-Every member of the Current team counts, whatever its Task phase. A member In transit toward the Investigation belongs to
+Every member of the Current team counts, whatever its Agent status. A member In transit toward the Investigation belongs to
 its Current team, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain
-Model, and cannot be ordered, under [Agents that can be ordered](agents-spec.md#agents-that-can-be-ordered) in Agents, so
+Model, and cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents, so
 it cannot leave. An Investigation with at least one member In transit is therefore never Abandoned. An Investigation
-becomes Abandoned exactly when the Player action orders elsewhere every member that remains in its Current team.
+becomes Abandoned exactly when the Player action assigns elsewhere every member that remains in its Current team.
 
 When an Investigation becomes Abandoned:
 
@@ -314,7 +314,7 @@ When an Investigation becomes Abandoned:
 Abandonment changes no condition of [Lead availability](leads-and-progression.md#lead-availability) in Leads and
 Progression. With no Active Investigation of the Lead left, condition 2 of
 [One Active Investigation per Lead](#one-active-investigation-per-lead) holds again. One Player action may make several
-Investigations Abandoned, e.g. an `assignAgents` action that orders the last member of each of two Investigations to
+Investigations Abandoned, e.g. an `assignAgents` action that assigns the last member of each of two Investigations to
 Contracting.
 
 # Investigation progress
@@ -399,8 +399,8 @@ this list is exhaustive:
    [Completion effect](leads-and-progression.md#completion-effect) in Leads and Progression. With the effect
    `create_mission_site`, this creates one Initiative Mission site whose origin is this Investigation, under
    [Mission site creation](missions.md#mission-site-creation) in Missions.
-3. **Members:** Every member of the Current team, whatever it contributed, gets the Current assignment Standby and the
-   Task phase In transit, under [Current assignment changes](agents-spec.md#current-assignment-changes) in Agents. This
+3. **Members:** Every member of the Current team, whatever it contributed, gets the Assignment Standby and the
+   Agent status In transit, under [Assignment changes](agents-spec.md#assignment-changes) in Agents. This
    includes every member that arrived in the Transit step of this Advance turn and added no progress, under the
    destination-ends exception of [Transit rule](agents-spec.md#transit-rule). Every member that was In transit in the
    Turn-end state arrived in the Transit step, so every member is At assignment when this change applies. Each member
@@ -435,7 +435,7 @@ complete and apply its Lead's completion effect.
 A Mission site created that way targets a Faction that is already Eliminated. It is created Active in Investigation
 progress and becomes Cancelled in the Cancellation part of Mission resolution of the same Advance turn, under
 [Cancellation](missions.md#cancellation) in Missions, so no Committed state shows it Active. The player can instead end
-such an Investigation by ordering its members elsewhere, which makes it Abandoned under [Abandonment](#abandonment).
+such an Investigation by assigning its members elsewhere, which makes it Abandoned under [Abandonment](#abandonment).
 
 **Informative rationale:** Ending such an Investigation automatically would add a second trigger of Abandoned, and a
 transition during Advance turn, for a case with no gameplay effect: its Mission site is Cancelled either way.
@@ -448,7 +448,7 @@ Investigation or its members before that Advance turn.
 
 ```text
 S′                                = sum of the effective skill of every member of the Current team
-                                    whose Task phase is At assignment in this Committed state
+                                    whose Agent status is At assignment in this Committed state
 projected completion probability  = min(1, (Investigation progress + S′) / (difficulty × 100))
 ```
 
@@ -480,7 +480,7 @@ exhaustive.
 | An Investigation's Lead and Turn started                                                                                                                                                                                                                             | Yes                        |
 | An Investigation's lifecycle state                                                                                                                                                                                                                                   | Yes                        |
 | An Investigation's Investigation progress                                                                                                                                                                                                                            | Yes                        |
-| An Investigation's Current team, with each member's Task phase, which [Player-visible information](agents-spec.md#player-visible-information) in Agents makes visible                                                                                                | Yes                        |
+| An Investigation's Current team, with each member's Agent status, which [Player-visible information](agents-spec.md#player-visible-information) in Agents makes visible                                                                                              | Yes                        |
 | An Active Investigation's projected completion probability                                                                                                                                                                                                           | Yes                        |
 | For each Lead, whether it can be investigated now under [One Active Investigation per Lead](#one-active-investigation-per-lead), with each condition that does not hold, including the Instance ID of the Lead's Active Investigation when condition 2 does not hold | Yes                        |
 
@@ -515,7 +515,7 @@ completion probability, reported as absent; the visible lifecycle state explains
   Turn-end state of the first Advance turn after `startInvestigation`, so S is 0, Investigation progress stays 0, and the
   completion probability is 0 ([Progress gain](#progress-gain), [Completion probability](#completion-probability)).
 - **No working member but earlier progress:** An Active Investigation whose every remaining member is In transit, e.g.
-  after its only working member was ordered elsewhere while a newly added Agent travels to it, gains no progress, but its
+  after its only working member was assigned elsewhere while a newly added Agent travels to it, gains no progress, but its
   completion probability is computed from its unchanged Investigation progress and may be above 0. If it completes, the
   arrived members go to Standby, In transit ([Completion probability](#completion-probability), [Completion](#completion)).
 - **Progress reaching or exceeding difficulty × 100:** The completion probability is exactly 1 and the Investigation
@@ -600,7 +600,7 @@ i1, In transit.
 | Advance turn ending Turn 4 | a1              | 100 | 300                    | min(1, 300 / 300) = 1      | None needed       | i1 is Completed. Mission site from `apprehend_member` created; a1 on Standby, In transit. |
 
 After the Advance turn ending Turn 4, i1 has an empty Current team and Investigation progress 300, a1 has i1 in its
-Participation history, and a1 cannot be ordered during Turn 5; it arrives in the Advance turn ending Turn 5. Had the
+Participation history, and a1 cannot be assigned during Turn 5; it arrives in the Advance turn ending Turn 5. Had the
 injected outcome of the Advance turn ending Turn 2 been "completes", i1 would have been Completed then, with
 Investigation progress 100. The cumulative Probability that i1 completes by the Advance turn ending Turn 3 is
 1/3 + (2/3 × 2/3) = 7/9, and by the Advance turn ending Turn 4 it is 1; no rule reads it. a1's exhaustion stays 0
@@ -640,7 +640,7 @@ Agent with effective skill 100. S is 140.
 
 a5's exhaustion stays 65 throughout, because investigating neither raises nor lowers exhaustion, so its effective skill
 stays 40. An Agent whose current health is below its base health cannot be a member at all, because such an Agent is on Recovery and cannot
-be ordered. Separately, one Agent with base skill 130 after Training, current health 30 of 30, and exhaustion 0, alone on a
+be assigned. Separately, one Agent with base skill 130 after Training, current health 30 of 30, and exhaustion 0, alone on a
 difficulty 3 Lead, adds 130 per Advance turn of work, giving the completion probabilities 130 / 300 = 13/30, then
 260 / 300 = 13/15, then min(1, 390 / 300) = 1.
 
@@ -654,7 +654,7 @@ a Mission at an `apprehend_member` Mission site targeting Red Dawn is Won, the p
 [Lead availability](leads-and-progression.md#lead-availability), and it has no Active Investigation. During Turn 10 the
 player calls `startInvestigation(locate_red_dawn_safehouse, [a1, a2])`, creating Investigation i4 (difficulty 6).
 
-| Moment                                           | Current team (Task phase)           | S   | Investigation progress | Completion probability     | Injected outcome  |
+| Moment                                           | Current team (Agent status)         | S   | Investigation progress | Completion probability     | Injected outcome  |
 | ------------------------------------------------ | ----------------------------------- | --- | ---------------------- | -------------------------- | ----------------- |
 | Advance turn ending Turn 10                      | a1, a2 (both arrive)                | 0   | 0                      | 0                          | None needed       |
 | Advance turn ending Turn 11                      | a1, a2 (At assignment)              | 200 | 200                    | 200 / 600 = 1/3            | Does not complete |
@@ -738,7 +738,7 @@ turn ending Turn 50 begins.
 This example exercises [Starting an Investigation](#starting-an-investigation) and
 [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation). During Turn 15: Investigation i11 is Active
 with Current team {a7}, a7 At assignment; Investigation i12 is Completed; a1 is on Contracting, At assignment; a2 is on
-Standby, In transit; a3 is on Recovery, At assignment; a4 is Deployed; and `locate_red_dawn_safehouse` is available. Each
+Standby, In transit; a3 is on Recovery, Recovering; a4 is Deployed; and `locate_red_dawn_safehouse` is available. Each
 call is made on its own from this state, and each rejected call changes nothing.
 
 | Call                                                      | Result                                                                                                                                  |

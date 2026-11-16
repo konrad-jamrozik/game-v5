@@ -161,7 +161,7 @@ table is exhaustive.
 The Agency also has these Derived values, which are never stored: its Agent cap, Transport cap, and Training cap, under
 [Agency caps](#agency-caps); its projected income and projected upkeep, under
 [Projected income and upkeep](#projected-income-and-upkeep); and its roster, i.e. every Agent whose Agency reference
-identifies it, whatever that Agent's lifecycle state, under [Agent properties](agents-spec.md#agent-properties) in
+identifies it, whatever that Agent's Agent status, under [Agent properties](agents-spec.md#agent-properties) in
 Agents. Its money has the two Turn series under [Turn series of money](#turn-series-of-money); funding and Acquisitions
 have none.
 
@@ -231,33 +231,33 @@ same formula from a base value of EconomyParameters and the Upgrade bonus of the
 cap = base + Upgrade bonus of the cap's effect identifier
 ```
 
-| Cap           | base                 | Effect identifier | What it limits                                                                                                             | Applied by                                                                              |
-| ------------- | -------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Agent cap     | `base_agent_cap`     | `agent_cap`       | The number of Serving Agents, whatever their Current assignment and Task phase.                                            | [Hiring Agents](#hiring-agents)                                                         |
-| Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Current assignment is Deployed, over every Mission together.      | The `deployAgents` Player action under [Deploying Agents](missions.md#deploying-agents) |
-| Training cap  | `base_training_cap`  | `training_cap`    | The number of Serving Agents whose Current assignment is Training, counting both those At assignment and those In transit. | [Training cap on assigning Agents](#training-cap-on-assigning-agents)                   |
+| Cap           | base                 | Effect identifier | What it limits                                                                                                     | Applied by                                                                              |
+| ------------- | -------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| Agent cap     | `base_agent_cap`     | `agent_cap`       | The number of Serving Agents, whatever their Assignment and Agent status.                                          | [Hiring Agents](#hiring-agents)                                                         |
+| Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Assignment is Deployed, over every Mission together.      | The `deployAgents` Player action under [Deploying Agents](missions.md#deploying-agents) |
+| Training cap  | `base_training_cap`  | `training_cap`    | The number of Serving Agents whose Assignment is Training, counting both those At assignment and those In transit. | [Training cap on assigning Agents](#training-cap-on-assigning-agents)                   |
 
 Inputs: base is a whole number of Agents of at least 0, and the Upgrade bonus is a whole number of Agents of at least 0.
 A cap with no Upgrade of its effect identifier equals its base. No rounding occurs, because every term is a whole number. Each cap is a whole number of at least its base, with no upper
 bound.
 
-**Counting Training:** An Agent ordered to Training occupies a place under the Training cap from the moment of the
-order, while it is still In transit, and keeps it until its Current assignment stops being Training. An Agent
-travelling away from Training, e.g. one ordered from Training to Standby, no longer counts.
+**Counting Training:** An Agent assigned to Training occupies a place under the Training cap from the moment of the
+assignment, while it is still In transit, and keeps it until its Assignment stops being Training. An Agent
+travelling away from Training, e.g. one assigned from Training to Standby, no longer counts.
 
 **Counting Deployed Agents:** A Deployed Agent occupies a place under the Transport cap from the moment it is deployed
-until its Current assignment stops being Deployed in the Mission resolution step, whether it returns or is Killed.
+until its Assignment stops being Deployed in the Mission resolution step, whether it returns or is Killed.
 
 Each cap is computed from the current Acquisitions whenever a rule reads it, so a purchase raises it at once, under
 [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract.
 
 ## Counts above a cap
 
-A cap limits only the actions that add to the count it limits: hiring for the Agent cap, ordering to Training for the
+A cap limits only the actions that add to the count it limits: hiring for the Agent cap, assigning to Training for the
 Training cap, and deployment for the Transport cap. No rule lowers a cap, because Acquisitions only rise, but a
 count can exceed its cap through a Player cheat action, e.g. `addAgents` under [Adding Agents](agents-spec.md#adding-agents)
-in Agents, which ignores the Agent cap. When a count exceeds its cap, nothing is removed and no Agent's Current
-assignment changes; only further additions are rejected until the count is below the cap again. A count above a cap is
+in Agents, which ignores the Agent cap. When a count exceeds its cap, nothing is removed and no Agent's
+Assignment changes; only further additions are rejected until the count is below the cap again. A count above a cap is
 not an invariant violation.
 
 # Agency income and upkeep
@@ -277,16 +277,16 @@ money after = money before + income
 
 Inputs:
 
-| Symbol                         | Meaning                                                                                                                                                                                         | Unit and domain                                |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| funding                        | The Agency's funding, as the Step-start value of the Agency income step.                                                                                                                        | Money; a whole number of at least 0.           |
-| `contracting_income_per_agent` | The value of EconomyParameters.                                                                                                                                                                 | Money per Agent; a whole number of at least 0. |
-| C                              | The number of Agents that are Serving, whose Current assignment is Contracting, and that were At assignment in the Turn-end state, under [Transit rule](agents-spec.md#transit-rule) in Agents. | Agents; a whole number of at least 0.          |
-| money before                   | The Agency's money as the Step-start value of the Agency income step.                                                                                                                           | Money; any whole number.                       |
+| Symbol                         | Meaning                                                                                                                                                                                 | Unit and domain                                |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| funding                        | The Agency's funding, as the Step-start value of the Agency income step.                                                                                                                | Money; a whole number of at least 0.           |
+| `contracting_income_per_agent` | The value of EconomyParameters.                                                                                                                                                         | Money per Agent; a whole number of at least 0. |
+| C                              | The number of Agents that are Serving, whose Assignment is Contracting, and that were At assignment in the Turn-end state, under [Transit rule](agents-spec.md#transit-rule) in Agents. | Agents; a whole number of at least 0.          |
+| money before                   | The Agency's money as the Step-start value of the Agency income step.                                                                                                                   | Money; any whole number.                       |
 
 An Agent that arrives at Contracting in the Transit step of the same Advance turn is not counted in C. No rounding
 occurs, because every term is a whole number. Income is a whole number of at least 0, so money never falls in this step.
-The Transit step changes neither funding nor any Agent's lifecycle state or Current assignment, so funding and C equal
+The Transit step changes neither funding nor any Agent's Assignment, so funding and C equal
 their values in the Turn-end state.
 
 ## Upkeep
@@ -301,11 +301,11 @@ money after = money before − upkeep
 
 Inputs:
 
-| Symbol             | Meaning                                                                                                                  | Unit and domain                                |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
-| `upkeep_per_agent` | The value of EconomyParameters.                                                                                          | Money per Agent; a whole number of at least 0. |
-| S                  | The number of Serving Agents, as Step-start values of the Upkeep step, whatever their Current assignment and Task phase. | Agents; a whole number of at least 0.          |
-| money before       | The Agency's money as the Step-start value of the Upkeep step, i.e. after the Agency income step.                        | Money; any whole number.                       |
+| Symbol             | Meaning                                                                                                            | Unit and domain                                |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| `upkeep_per_agent` | The value of EconomyParameters.                                                                                    | Money per Agent; a whole number of at least 0. |
+| S                  | The number of Serving Agents, as Step-start values of the Upkeep step, whatever their Assignment and Agent status. | Agents; a whole number of at least 0.          |
+| money before       | The Agency's money as the Step-start value of the Upkeep step, i.e. after the Agency income step.                  | Money; any whole number.                       |
 
 S counts every Serving Agent, including one that is In transit, one that arrived in the Transit step of the same Advance
 turn, one on Recovery, and one that is Deployed, under the upkeep exception of [Transit rule](agents-spec.md#transit-rule)
@@ -329,7 +329,7 @@ projected upkeep = upkeep_per_agent × S'
 ```
 
 where funding is the Agency's funding in the current Committed state; C' is the number of Agents that are Serving,
-whose Current assignment is Contracting, and whose Task phase is At assignment in the current Committed state; and S'
+whose Assignment is Contracting, and whose Agent status is At assignment in the current Committed state; and S'
 is the number of Serving Agents in the current Committed state. Each is a whole number of money of at least 0, with no
 rounding.
 
@@ -337,7 +337,7 @@ When Advance turn is committed from the current Committed state, that state beco
 income step adds exactly the projected income and the Upkeep step charges exactly the projected upkeep. The Agency's
 money after the Upkeep step is therefore money + projected income − projected upkeep. Later steps of the same Advance
 turn, e.g. the consequences of a Mission site, may change money further; the projections do not include them. Both
-values follow every Player action at once; e.g., hiring raises projected upkeep by `upkeep_per_agent`, and ordering an
+values follow every Player action at once; e.g., hiring raises projected upkeep by `upkeep_per_agent`, and assigning an
 Agent from Contracting to Standby lowers projected income by `contracting_income_per_agent`.
 
 # Hiring Agents
@@ -384,7 +384,7 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 3. An Instance ID in `agents` identifies no Agent of the Campaign.
 4. An Agent in `agents` is not Serving.
 5. An Agent in `agents` is In transit.
-6. An Agent in `agents` has a Current assignment other than Standby.
+6. An Agent in `agents` has an Assignment other than Standby.
 
 Together, conditions 4 to 6 mean that every listed Agent must be Serving, At assignment, and on Standby. An Agent on
 Contracting, Training, Recovery, or an Investigation, and a Deployed Agent, must first reach Standby, At assignment.
@@ -398,8 +398,8 @@ is the Implementer's choice. A rejected action changes nothing, under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same
-Turn, to every Agent in `agents`: the Agent becomes Dismissed under [Agent lifecycle](agents-spec.md#agent-lifecycle) in
-Agents, which removes its Current assignment and Task phase. No money is refunded or spent, and nothing else changes.
+Turn, to every Agent in `agents`: the Agent becomes Dismissed under [Agent status](agents-spec.md#agent-status) in
+Agents, which removes its Assignment and Agent status. No money is refunded or spent, and nothing else changes.
 A Dismissed Agent stops counting toward the Agent cap and in projected upkeep at once, and is not counted in any later
 Upkeep step. It stays in the Agency's roster and in World history with its final values.
 
@@ -413,15 +413,15 @@ when:
 T + number of Agents in agents  >  Training cap
 ```
 
-where T is the number of Serving Agents whose Current assignment is Training, At assignment or In transit, in the
+where T is the number of Serving Agents whose Assignment is Training, At assignment or In transit, in the
 Committed state in which the action is requested, and the Training cap is under [Agency caps](#agency-caps). Every Agent
 in `agents` adds one, because the preconditions under [Assigning Agents](agents-spec.md#assigning-agents) already
-reject an Agent whose Current assignment is Training.
+reject an Agent whose Assignment is Training.
 The action is accepted when the sum is equal to or less than the Training cap.
 
 The rejection follows the rejection behavior of `assignAgents` in Agents: the whole action is rejected, no listed Agent
 changes, and the error identifies this precondition. This precondition does not apply when `assignment` is `Standby` or
-`Contracting`, even when T exceeds the Training cap, under [Counts above a cap](#counts-above-a-cap). Ordering an Agent
+`Contracting`, even when T exceeds the Training cap, under [Counts above a cap](#counts-above-a-cap). Assigning an Agent
 away from Training frees its place at once, within the same Turn.
 
 # Upgrades
@@ -494,7 +494,7 @@ Upgrade.
 
 A Cap Upgrade changes no stored value beyond the Acquisitions: the cap it raises is a Derived value under
 [Agency caps](#agency-caps), so it rises by the Increment at once, within the same Turn, and every Player action after the
-purchase sees the raised cap. A Cap Upgrade changes no Agent's Current assignment.
+purchase sees the raised cap. A Cap Upgrade changes no Agent's Assignment.
 
 ### Weapon damage Upgrade
 
@@ -503,7 +503,7 @@ Base weapon damage is the only Agent value an Upgrade may change, under
 `agent_weapon_damage`, i.e. of a Weapon damage Upgrade, has two results:
 
 1. **Serving Agents:** When the purchase is committed, the base weapon damage of every Serving Agent rises by that Upgrade's
-   Increment, whatever the Agent's Current assignment and Task phase; e.g., a Deployed Agent, an Agent In transit, and
+   Increment, whatever the Agent's Assignment and Agent status; e.g., a Deployed Agent, an Agent In transit, and
    an Agent on Recovery are all raised. Killed and Dismissed Agents keep their base weapon damage, which is retained in World
    history, under [Agent properties](agents-spec.md#agent-properties) in Agents.
 2. **Agents created later:** Every Agent created after the purchase, under
@@ -740,7 +740,7 @@ Turn-end state.
 
 This example exercises [Upkeep](#upkeep) and [Agency income](#agency-income). The Turn-end state of Turn 9 has money 300
 and funding 20, and these Agents: a1 on Standby, At assignment; a2 on Contracting, In transit; a3 Deployed on a Mission at
-Mission site s1; a4 on Recovery, At assignment; a5 on Contracting, At assignment; a6 on Training, In transit; a7 Killed in an
+Mission site s1; a4 on Recovery, Recovering; a5 on Contracting, At assignment; a6 on Training, In transit; a7 Killed in an
 earlier Turn; and a8 Dismissed. Projected income is 20 + 30 × 1 = 50 and projected upkeep is 10 × 6 = 60.
 
 In the Advance turn ending Turn 9, Agency income counts only a5, because a2 arrives in the Transit step: money
@@ -800,22 +800,22 @@ Standby, At assignment; a3 is on Standby, In transit; a4 is on Contracting, At a
 Killed. Projected upkeep is 10 × 5 = 50. Each call is made on its own from this state, and each rejected call changes
 nothing:
 
-| Call                      | Result                                                                                                                       |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `dismissAgents([])`       | Rejected: `agents` is empty.                                                                                                 |
-| `dismissAgents([a1, a1])` | Rejected: a1 is listed twice.                                                                                                |
-| `dismissAgents([a3])`     | Rejected: a3 is In transit.                                                                                                  |
-| `dismissAgents([a4])`     | Rejected: a4 is on Contracting.                                                                                              |
-| `dismissAgents([a5])`     | Rejected: a5 is Deployed.                                                                                                    |
-| `dismissAgents([a6])`     | Rejected: a6 is not Serving.                                                                                                 |
-| `dismissAgents([a1, a3])` | Rejected as a whole: a3 is In transit. a1 stays Serving, on Standby.                                                         |
-| `dismissAgents([a1, a2])` | Succeeds: a1 and a2 are Dismissed and have no Current assignment. Money stays 120, and projected upkeep becomes 10 × 3 = 30. |
+| Call                      | Result                                                                                                               |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `dismissAgents([])`       | Rejected: `agents` is empty.                                                                                         |
+| `dismissAgents([a1, a1])` | Rejected: a1 is listed twice.                                                                                        |
+| `dismissAgents([a3])`     | Rejected: a3 is In transit.                                                                                          |
+| `dismissAgents([a4])`     | Rejected: a4 is on Contracting.                                                                                      |
+| `dismissAgents([a5])`     | Rejected: a5 is Deployed.                                                                                            |
+| `dismissAgents([a6])`     | Rejected: a6 is not Serving.                                                                                         |
+| `dismissAgents([a1, a3])` | Rejected as a whole: a3 is In transit. a1 stays Serving, on Standby.                                                 |
+| `dismissAgents([a1, a2])` | Succeeds: a1 and a2 are Dismissed and have no Assignment. Money stays 120, and projected upkeep becomes 10 × 3 = 30. |
 
 ## Transport cap
 
 This example exercises [Agency caps](#agency-caps) and [Cap Upgrades](#cap-upgrades); the rejection itself is made by the
 `deployAgents` Player action under [Deploying Agents](missions.md#deploying-agents). During Turn 15 the Agency has
-money 1000, three Agents Deployed on a Mission at Mission site s1, and six Agents that can be ordered. The Transport cap is 4 and the number of Deployed
+money 1000, three Agents Deployed on a Mission at Mission site s1, and six Agents that can be assigned. The Transport cap is 4 and the number of Deployed
 Agents is 3, so deploying two Agents to Mission site s2 would make 5, more than 4, and Missions rejects it; deploying
 one would make 4 and is within the Transport cap. Instead the player calls `purchaseUpgrade(transport_cap)`: money
 becomes 0, Acquisitions of `transport_cap` become 1, and the Transport cap becomes 4 + 2 × 1 = 6 at once, so deploying

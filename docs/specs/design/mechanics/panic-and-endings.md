@@ -528,7 +528,7 @@ Initial state: the Committed state after the Advance turn ending Turn 12 in
 money 100, the Campaign ending Defeat, and the 4 surviving Agents In transit.
 
 - `assignAgents` for one of the 4 Agents is rejected, and the error identifies that the Campaign has a Campaign ending,
-  although that Agent also fails the precondition that it can be ordered. The Agent's Current assignment is unchanged.
+  although that Agent also fails the precondition that it can be assigned. The Agent's Assignment is unchanged.
 - `advanceTurn()` is rejected. The turn number is still 13, Panic is still 100, and no Timeline entry or other Committed
   state is produced.
 - A Player cheat action, e.g. `addMoney(100)` with Dev mode enabled, is rejected, and money is still 100.
