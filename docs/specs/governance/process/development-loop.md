@@ -10,13 +10,13 @@
 
 # Overview
 
-The Game designer delegates as much of the game's development to LLMs as possible, but no more: LLMs write the
+The [Game designer](../conventions/spec-conventions.md#participants) delegates as much of the game's development to LLMs as possible, but no more: LLMs write the
 specifications and the code, while the Game designer keeps every creative and design decision. That is how the game
 can be developed fast and still be tightly designed and fun to play, rather than generic.
 
-The split rests on one rule: the design lives only in the specifications, and an Implementation is derived from them
+The split rests on one rule: the design lives only in the specifications, and an [Implementation](../conventions/artifact-relationships.md#artifacts) is derived from them
 and can be rebuilt at any time. Every change therefore enters as a change to the specifications and reaches the code
-only through an Implementation update. Building and updating an Implementation teaches the Implementer where the
+only through an Implementation update. Building and updating an Implementation teaches the [Implementer](../conventions/spec-conventions.md#participants) where the
 specifications fall short, which becomes Implementer feedback; playing it shows the Game designer what to change, which
 becomes Designer feedback. Both flow back into the specifications, and the loop repeats.
 
@@ -35,16 +35,16 @@ The Development loop rests on one asymmetry: the specifications are the only dur
 Implementation is a product of them that can be thrown away and rebuilt. The following table of what takes part is
 exhaustive.
 
-| Artifact                      | What it holds                                                                                                                                | Who changes it                                              |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Governance specifications     | How every specification is written, under [Specification Conventions](../conventions/spec-conventions.md), and how the Development loop runs | An LLM at the Game designer's request, or the Game designer |
-| Design specifications         | The game: its concepts, rules, content, user interfaces, and Autopilot AIs                                                                   | An LLM at the Game designer's request, or the Game designer |
-| Implementation specifications | How an Implementer turns the specifications into an Implementation in the Game designer's environment                                        | An LLM at the Game designer's request, or the Game designer |
-| Implementation                | Code and tests that follow the specifications, together with its Implementer feedback and tracking files                                     | The Implementer only, as derived from the specifications    |
+| Artifact                                                                   | What it holds                                                                                                                                  | Who changes it                                              |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Governance specifications                                                  | How every specification is written, under [Specification Conventions](../conventions/spec-conventions.md), and how the Development loop runs   | An LLM at the Game designer's request, or the Game designer |
+| [Design specifications](../conventions/spec-conventions.md#specifications) | The game: its concepts, rules, content, user interfaces, and [Autopilot AIs](../../design/foundation/engine-contract.md#principals-and-access) | An LLM at the Game designer's request, or the Game designer |
+| Implementation specifications                                              | How an Implementer turns the specifications into an Implementation in the Game designer's environment                                          | An LLM at the Game designer's request, or the Game designer |
+| Implementation                                                             | Code and tests that follow the specifications, together with its Implementer feedback and tracking files                                       | The Implementer only, as derived from the specifications    |
 
 The Implementation specifications divide into Families by how binding they are, as described in
 [About Implementation specifications](../../implementation/about-implementation.md#families). Only the Mandatory
-Family binds every Implementation, and it requires exactly what the Development loop needs from one: where it lives,
+[Family](../conventions/spec-conventions.md#specifications) binds every Implementation, and it requires exactly what the Development loop needs from one: where it lives,
 its Implementer feedback, and a record of which specifications it follows.
 
 The specifications live in one repository and each Implementation in its own directory outside it. Every change to an
@@ -86,29 +86,29 @@ specifications already say about it. The following cases are complete:
 - **The specifications leave it open,** as an Implementer's choice or through a gap: the Game designer either
   specifies it, and an update follows, or accepts the Implementer's choice.
 
-One observation usually involves several Families of the Design specifications at once, e.g. a missing Mission site
-involves the rule that creates it, the GDR that supplies it, and the screen that shows it. The case is therefore decided
+One observation usually involves several Families of the Design specifications at once, e.g. a missing [Mission site](../../design/mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)
+involves the rule that creates it, the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) that supplies it, and the screen that shows it. The case is therefore decided
 for each Family involved, and a specification change goes to the Family that falls short, not to the first one found.
 The Implementation is a conformance defect only when every Family involved already specifies what the Game designer
 expects, e.g. the rule and its GDR are both present and the Implementation still leaves the feature out. Otherwise the
 following table, which is exhaustive, decides what changes:
 
-| Where the specifications fall short                                                                      | What changes                                                                |
-| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| The feature is not specified, so no GDR can supply it                                                    | Foundation or Mechanics first, then Content for the GDRs the new rule reads |
-| The feature is specified, but its GDR is missing or has the wrong values                                 | Content only                                                                |
-| What a user interface shows, how it arranges it, or how it looks, while the engine API already allows it | UI, including its visual design                                             |
-| How an Autopilot AI chooses its Player actions                                                           | Autopilot AIs                                                               |
+| Where the specifications fall short                                                                                   | What changes                                                                |
+| --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| The feature is not specified, so no GDR can supply it                                                                 | Foundation or Mechanics first, then Content for the GDRs the new rule reads |
+| The feature is specified, but its GDR is missing or has the wrong values                                              | Content only                                                                |
+| What a user interface shows, how it arranges it, or how it looks, while the engine API already allows it              | UI, including its visual design                                             |
+| How an Autopilot AI chooses its [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns) | Autopilot AIs                                                               |
 
-Whether a value is Player-visible at all is a rule of Foundation or Mechanics, not of UI: a user interface presents
-the Player-visible information and cannot reveal what the rules hide, though it can choose how prominently to show it.
+Whether a value is [Player](../conventions/spec-conventions.md#participants)-visible at all is a rule of Foundation or Mechanics, not of UI: a user interface presents
+the [Player-visible information](../../design/foundation/engine-contract.md#api-surfaces) and cannot reveal what the rules hide, though it can choose how prominently to show it.
 Implementer feedback is placed by the same table.
 
 # LLM skills and workflows
 
 Several tasks of the Development loop recur, and each needs the same few specifications and the same order of steps.
 An LLM skill captures one such task, so that an LLM agent does not have to rediscover what matters for it each time. LLM skills
-are kept in `.claude/skills/` of the Spec repo, beside the specifications they serve. An LLM skill states no
+are kept in `.claude/skills/` of the [Spec repo](../../implementation/mandatory/implementation-placement.md#glossary), beside the specifications they serve. An LLM skill states no
 rule of its own: it points to the specifications that own the rules, and the specifications win when the two
 disagree.
 
@@ -150,7 +150,7 @@ specifications, where the Game designer decides it, and everything that only car
 ## Why each part exists
 
 **Why does an Implementation live outside the Spec repo?** To make the line between the design and
-its product physical. Everything in an Implementation repo can be thrown away and rebuilt, so nothing there may
+its product physical. Everything in an [Implementation repo](../../implementation/mandatory/implementation-placement.md#glossary) can be thrown away and rebuilt, so nothing there may
 be the only record of a decision. The separation also lets several Implementations exist side by side, and keeps any
 of them from depending on files of the Spec repo.
 

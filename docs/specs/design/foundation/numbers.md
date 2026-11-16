@@ -49,7 +49,7 @@ terms about saves, actions, and the seed are in the [Engine Contract](engine-con
 # Whole-number quantities
 
 **v5 requirement:** Every stored quantity is a whole number, with no exception. A stored quantity is any value that
-Campaign state holds or that a Campaign save keeps, whatever it measures, e.g. an amount of money, a count, or a number
+[Campaign state](core-concepts.md#campaign-and-session) holds or that a [Campaign save](engine-contract.md#persisted-data) keeps, whatever it measures, e.g. an amount of money, a count, or a number
 of percent. E.g., a stored quantity of 12 percent is stored as the whole number 12, never as 0.12 or 12.0 with a
 fractional part. A whole number is an integer: it has no fractional part, and its size is limited only by a range
 stated for its quantity.
@@ -59,7 +59,7 @@ different places. v5 replaces that with the single scheme of whole numbers, name
 that every acceptance example is exact.
 
 No Campaign state, Campaign save, or engine API value that represents a stored quantity may hold a fractional part, and
-no implementation may hold one in an unrounded form between Player actions. A value that is not stored may have a
+no implementation may hold one in an unrounded form between [Player actions](engine-contract.md#player-actions-and-turns). A value that is not stored may have a
 fractional part only as an intermediate result inside a single formula, under [Exact evaluation](#exact-evaluation).
 
 **Ranges.** Unless the Mechanics specification that defines a quantity states otherwise, a stored quantity is a
@@ -69,7 +69,7 @@ another may count from 1. Arithmetic that would take a stored quantity outside i
 the specification that defines the quantity, e.g. by clamping or by rejecting a Player action; it is never silently
 clamped.
 
-**Fractional GDR values.** A Game Data Record (GDR) value that is a ratio rather than a quantity, e.g. a damage range
+**Fractional [GDR](core-concepts.md#game-build-and-content) values.** A Game Data Record (GDR) value that is a ratio rather than a quantity, e.g. a damage range
 of 0.5, is not a stored quantity. It is read as the exact decimal number it is written as, i.e. as the ratio of whole
 numbers it denotes (0.5 is 1 over 2), never as a binary floating-point approximation. **Proposed rule:** a formula that reads such a
 value computes with it exactly, under [Exact evaluation](#exact-evaluation).
@@ -110,7 +110,7 @@ only where the formula names a rounding. The result must equal the result of tha
   formula states its terms does not change the result, because exact arithmetic is associative and commutative for the
   operations used.
 - The size of a result has no limit. An implementation must compute exactly for every value that can
-  arise in a Campaign. It must not wrap around, saturate, or approximate; a stored quantity and an intermediate result
+  arise in a [Campaign](core-concepts.md#campaign-and-session). It must not wrap around, saturate, or approximate; a stored quantity and an intermediate result
   that exceed what its machine representation holds must be handled with a wider exact representation.
 - A division whose divisor is zero has no value. A formula whose divisor can be zero states what happens in that case;
   if it does not, a zero divisor is an internal invariant violation under
@@ -141,10 +141,10 @@ the default meaning of "p percent of x".
 **v5 requirement:** A Probability is an exact ratio `n / d` of two whole numbers with `d` greater than zero, as the
 glossary defines. The following rules are complete:
 
-- **Never stored:** A Probability is a Derived value computed when needed. No Campaign state, Campaign save, or
+- **Never stored:** A Probability is a [Derived value](core-concepts.md#value-classification) computed when needed. No Campaign state, Campaign save, or
   engine API value holds a Probability as a stored quantity; where the engine API reports one, e.g. in a
   query, it reports the pair `n` and `d` of whole numbers, not a rounded decimal. A Mechanics specification that
-  shows a Probability to the player states its presentation under its Player-visible information.
+  shows a Probability to the player states its presentation under its [Player-visible information](engine-contract.md#api-surfaces).
 - **Never rounded:** No rounding is applied to a Probability, neither Round down nor Round up, unless a formula states a
   rounding explicitly for a displayed value. Two ratios are the same Probability when their cross products are equal;
   e.g., 10000 / 11600 and 25 / 29 are the same Probability.
@@ -155,7 +155,7 @@ glossary defines. The following rules are complete:
 - **Comparison:** Deciding whether a random outcome with a Probability `n / d` takes the stated value must give the same
   result on every machine for the same random outcome. The decision is exact: a Probability of 0 never takes the value,
   a Probability of 1 always takes the value, and no floating-point intermediate may change which side of the comparison
-  a random outcome falls on. Among Campaigns that differ only in their Campaign seed, the value is taken in exactly
+  a random outcome falls on. Among Campaigns that differ only in their [Campaign seed](determinism-and-randomness.md#glossary), the value is taken in exactly
   `n / d` of them, as [Random outcomes](determinism-and-randomness.md#random-outcomes) requires.
 
 # Uniform whole-number outcomes

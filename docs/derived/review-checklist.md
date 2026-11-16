@@ -14,7 +14,7 @@ Applies to every specification.
   - [What belongs in a specification](../specs/governance/conventions/spec-conventions.md#what-belongs-in-a-specification)
   - [Following the conventions](../specs/governance/conventions/spec-conventions.md#following-the-conventions) — **linted**
 - [Document lifecycle and ownership](../specs/governance/conventions/spec-conventions.md#document-lifecycle-and-ownership)
-  - [Personas](../specs/governance/conventions/spec-conventions.md#personas-1)
+  - [Personas](../specs/governance/conventions/spec-conventions.md#personas)
   - [Changing specifications](../specs/governance/conventions/spec-conventions.md#changing-specifications)
   - [One owner per rule](../specs/governance/conventions/spec-conventions.md#one-owner-per-rule)
 - [Predictable layout and allowed variation](../specs/governance/conventions/spec-conventions.md#predictable-layout-and-allowed-variation)
@@ -68,7 +68,7 @@ Applies to every specification.
   - [Real and apparent dependencies](../specs/governance/conventions/artifact-relationships.md#real-and-apparent-dependencies)
 - [Recording relationships](../specs/governance/conventions/artifact-relationships.md#recording-relationships)
 - [Implicit relationships](../specs/governance/conventions/artifact-relationships.md#implicit-relationships)
-- [Relationship inventories](../specs/governance/conventions/artifact-relationships.md#relationship-inventories) — **linted**
+- [Relationship inventories](../specs/governance/conventions/artifact-relationships.md#relationship-inventories)
 - [Evidence](../specs/governance/conventions/artifact-relationships.md#evidence)
 - [Adoption](../specs/governance/conventions/artifact-relationships.md#adoption)
 

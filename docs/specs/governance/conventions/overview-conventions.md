@@ -14,8 +14,8 @@ A reader meets a subject first through its overview, and decides there whether t
 orients rather than inventories: it gives the idea that explains the subject before any of its parts, so that the
 details read as consequences instead of a list to memorize.
 
-The same aim shapes overviews at every level. A specification's Overview introduces one subject; a Family overview
-explains how the specifications of a Family divide their subjects between them; a Specification kind overview explains
+The same aim shapes overviews at every level. A specification's Overview introduces one subject; a [Family](spec-conventions.md#specifications) overview
+explains how the specifications of a Family divide their subjects between them; a [Specification kind](spec-conventions.md#specifications) overview explains
 how its Families divide. Overview Conventions refines Specification Conventions, which places Overview first among the
 framing sections; Overview Conventions says what an overview says.
 
@@ -75,14 +75,14 @@ Each Family that has at least one registered specification has an informative Fa
 `docs/specs/<kind directory>/<family directory>/about-<family directory>.md`, e.g.
 `design/foundation/about-foundation.md`. A Family overview is not a
 specification: it has no metadata, Spec ID, or relationship inventory, and it owns no game behavior, contract,
-term, or GDR. It explains what question each specification in the Family answers, how they relate, and why the
+term, or [GDR](../../design/foundation/core-concepts.md#game-build-and-content). It explains what question each specification in the Family answers, how they relate, and why the
 boundaries between them sit where they do, linking each specification instead of restating its content.
 
 A Family overview begins with the H1 `About the <Family> family` and contains the H1 sections What this family is for,
 Documents, How they relate, and Why these boundaries, in that order; further sections, e.g. Reading order, may follow.
 It links every registered specification of its Family. The How they relate section contains one pair of
 `<!-- generated:family-diagram:start -->` and `<!-- generated:family-diagram:end -->` markers. `npm run docs:generate`
-replaces the content between them with diagrams of the Family's Explicit relationships, both within the Family and with
+replaces the content between them with diagrams of the Family's [Explicit relationships](artifact-relationships.md#relationship-structure), both within the Family and with
 other Families, so the diagrams are never edited by hand. The prose outside the markers is maintained by hand: update it
 when adding, renaming, re-scoping, or moving a specification in that Family.
 

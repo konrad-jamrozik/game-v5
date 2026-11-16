@@ -10,13 +10,13 @@
 
 # Overview
 
-The Design specifications are abstract on purpose, while an Implementation is built in a concrete environment, e.g. a
-directory on the Game designer's machine with a particular toolchain. Implementation specifications bridge the two, and
+The [Design specifications](spec-conventions.md#specifications) are abstract on purpose, while an [Implementation](artifact-relationships.md#artifacts) is built in a concrete environment, e.g. a
+directory on the [Game designer](spec-conventions.md#participants)'s machine with a particular toolchain. Implementation specifications bridge the two, and
 they must do it without ever becoming part of the design: an Implementation that ignores their advice must still be a
 correct Implementation of the game.
 
 What decides how far one binds is its Binding. A Mandatory specification states the few constraints that the
-Development loop needs from every Implementation, and a Guidance specification only suggests. Implementation Specification Conventions refines
+[Development loop](../process/development-loop.md#glossary) needs from every Implementation, and a Guidance specification only suggests. Implementation Specification Conventions refines
 Specification Conventions: Specification Conventions says how any specification is written, and Implementation Specification Conventions says what
 an Implementation specification states and how strongly.
 
@@ -28,9 +28,9 @@ an Implementation specification states and how strongly.
 
 Terms about specifications in general are in the Specification Conventions glossary.
 
-| Term    | Definition                                                                                                                                                                               |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Binding | Whether an Implementation specification is Guidance, which implementations may ignore, or Mandatory, which every implementation must follow; it follows from the specification's Family. |
+| Term    | Definition                                                                                                                                                                                                                     |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Binding | Whether an Implementation specification is Guidance, which implementations may ignore, or Mandatory, which every implementation must follow; it follows from the specification's [Family](spec-conventions.md#specifications). |
 
 # What belongs in an Implementation specification
 
@@ -43,7 +43,7 @@ an Implementation specification only if it meets at least one of the following c
 2. **Implementation steering:** the statement is in a Guidance specification, and it suggests how to build or maintain
    an Implementation, e.g. architecture or code-quality advice, or the steps of one recurring task.
 
-Implementation specifications are non-behavioural. They own no game behavior, observable contract, or GDR, and no
+Implementation specifications are non-behavioural. They own no game behavior, observable contract, or [GDR](../../design/foundation/core-concepts.md#game-build-and-content), and no
 acceptance test through the engine API depends on them. Each one is either Guidance or Mandatory, as described in
 [Implementation binding](#implementation-binding). An Implementation specification may explain which observable
 contract its guidance supports; that contract remains owned and guaranteed by its own specification. Implementation
@@ -56,10 +56,10 @@ Not every Implementation specification binds every Implementation. The Binding o
 Family: a specification of the Mandatory Family is Mandatory, and a specification of the Guidance or Recipes Family is
 Guidance. The following table is exhaustive.
 
-| Binding   | Meaning                                                                                                                                                        | Wording of the document's own statements                                                        |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| Guidance  | Suggestions that steer implementers toward code that is easier to maintain and to check. An implementation that ignores the document is still correct.         | "should" or "is suggested"; never **must** or **must not**                                      |
-| Mandatory | Repository constraints that every implementation must meet. An implementation that violates one is incorrect even when it satisfies every other specification. | **Must** and **must not**, as in [Requirement wording](spec-conventions.md#requirement-wording) |
+| Binding   | Meaning                                                                                                                                                        | Wording of the document's own statements                                                   |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Guidance  | Suggestions that steer implementers toward code that is easier to maintain and to check. An implementation that ignores the document is still correct.         | "should" or "is suggested"; never **must** or **must not**                                 |
+| Mandatory | Repository constraints that every implementation must meet. An implementation that violates one is incorrect even when it satisfies every other specification. | **Must** and **must not**, as in [Requirement wording](spec-conventions.md#specifications) |
 
 Binding applies to the whole document. A topic that has both suggestions and repository constraints is split into a
 Mandatory document and a Guidance or Recipes document. A Guidance document may restate, with a link, a requirement that another

@@ -51,17 +51,17 @@ the owning Glossary defines Product list. Use the defined term, or the title of 
 section. Coin a new phrase only when no defined term or owning section expresses the concept; if the phrase then names a
 concept the specification relies on, define it under the rules above.
 
-Game Data Record has the approved abbreviation **GDR**. Introduce it as **Game Data Record (GDR)**
+[Game Data Record](../../design/foundation/core-concepts.md#game-build-and-content) has the approved abbreviation **GDR**. Introduce it as **Game Data Record (GDR)**
 or **Game Data Records (GDRs)** at the first relevant mention in a document; use **GDR** or **GDRs**
 afterward, including headings, tables, and diagram labels. The owning Glossary retains **Game Data Record (GDR)**
 as its term label. This abbreviation is an exception to the full-term rule below, not a separate modeling concept.
 
-Player-visible information names the information exposed to an ordinary player. **Player-visible** may be used
-as an adjective describing that exposure, e.g., "this value is Player-visible"; it does not name a separate concept.
+[Player-visible information](../../design/foundation/engine-contract.md#api-surfaces) names the information exposed to an ordinary player. **Player-visible** may be used
+as an adjective describing that exposure, e.g., "this value is [Player](spec-conventions.md#participants)-visible"; it does not name a separate concept.
 
 Use the full glossary term on every mention. Do not abbreviate it, drop words, split its words across a compound,
 or substitute a generic noun after introducing the full term. E.g., use GDR rather than "content"
-or "entry", and Campaign instance rather than "instance", when referring to those modeling concepts. Grammatical plurals and possessives must retain every word of the term:
+or "entry", and [Campaign instance](../../design/foundation/core-concepts.md#campaign-instances) rather than "instance", when referring to those modeling concepts. Grammatical plurals and possessives must retain every word of the term:
 GDRs (under the approved abbreviation exception) and Campaign instance's are valid; entries and instance's are not substitutes.
 
 This rule applies throughout specifications and all other project documentation, including headings, tables, diagram
@@ -75,9 +75,9 @@ replace it with the canonical term and record it as a Prohibited synonym of that
 leave terminology unresolved.
 
 Relationship content uses `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
-The modeling term [Type](../../design/foundation/core-concepts.md#glossary) describes data independently of a programming
+The modeling term [Type](../../design/foundation/core-concepts.md#data-modeling) describes data independently of a programming
 language. Explicit programming-language terminology remains valid for programming contracts and explanatory analogies;
-“relationship type” remains a prohibited substitute for “Relationship kind.”
+“relationship type” remains a prohibited substitute for “[Relationship kind](artifact-relationships.md#relationship-structure).”
 
 # Non-terms
 
@@ -96,8 +96,8 @@ The following list of Non-terms is exhaustive:
 | game behavior           | Context-dependent | What the specification at hand describes the executable implementation doing; e.g., a mechanic's effects or the engine's query guarantees.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | rule; rules; game rules | Context-dependent | The usual meaning: a statement of how the game behaves or of what must hold. A validation rule in these conventions is also a rule. A rule about the game takes one of the following five shapes, and this list is exhaustive: a calculation, i.e. a formula that produces a value; an eligibility condition, deciding whether an action is permitted; an effect, changing the game's data; a creation, stating when new data comes into existence and with which initial values; or an invariant, something that must always hold. The shapes describe usage only: a specification never labels a rule with its shape, and no obligation attaches to a shape. |
 | rule set; ruleset       | Context-dependent | Another way of saying "rules": the rules that apply in some context, taken together. It has no separate meaning.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| modeling role           | Context-dependent | Which modeling concept an element is or exemplifies; e.g., the "Modeling role" column of the worked-example tables in Game Data Records, whose values include Type, GDR, and Authoritative value. Also used when specifying a game concept, below. Unrelated to the defined term Role Type.                                                                                                                                                                                                                                                                                                                                                                    |
-| playthrough             | Defines a term    | One play of the game, used in the definition of Campaign.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| modeling role           | Context-dependent | Which modeling concept an element is or exemplifies; e.g., the "Modeling role" column of the worked-example tables in Game Data Records, whose values include Type, GDR, and [Authoritative value](../../design/foundation/core-concepts.md#value-classification). Also used when specifying a game concept, below. Unrelated to the defined term [Role Type](../../design/foundation/campaign-instances.md#glossary).                                                                                                                                                                                                                                         |
+| playthrough             | Defines a term    | One play of the game, used in the definition of [Campaign](../../design/foundation/core-concepts.md#campaign-and-session).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 # Prohibited synonyms
 

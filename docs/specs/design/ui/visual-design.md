@@ -52,14 +52,14 @@ What a screen shows and which operations it offers is owned by the [Graphical Us
 specifications it uses, never by an Artboard. An element that appears on an Artboard but that no specification
 requires must not be implemented. E.g., the following appear only on Artboards:
 
-- The Resume button in the header of each Campaign on the Main menu.
-- The sample values, e.g. Turn 16, Money 625, and the Agent IDs.
+- The Resume button in the header of each [Campaign](../foundation/core-concepts.md#campaign-and-session) on the [Main menu](../foundation/campaign-lifecycle.md#glossary).
+- The sample values, e.g. Turn 16, Money 625, and the [Agent](../mechanics/domain-model.md#agency-and-agents) IDs.
 - The labels, order, and grouping of the controls in the Campaign status bar, e.g. "Menu" instead of "Main menu", and
   the missing keyboard-shortcut hints.
 
 ## Main menu Artboard
 
-The Main menu shows the Campaign saves grouped by Campaign on the left and the New Campaign and Settings panels stacked
+The Main menu shows the [Campaign saves](../foundation/engine-contract.md#persisted-data) grouped by Campaign on the left and the New Campaign and Settings panels stacked
 on the right.
 
 ![Main menu Artboard in the Field HUD direction: Campaign saves grouped by Campaign on the left, with Load and Delete on each save and Delete campaign in each Campaign header; New Campaign and Settings panels on the right](../../../images/artboards/gui-main-menu.png)
@@ -81,42 +81,42 @@ interface has a dark theme only; the light theme is a TODO.
 Each colour has one role, so that the same colour always means the same thing across screens. This table is
 exhaustive.
 
-| Token          | Value                    | Role                                                                                         |
-| -------------- | ------------------------ | -------------------------------------------------------------------------------------------- |
-| Background     | `#0D0D0B`                | The page behind all panels, and the fill of inputs.                                          |
-| Surface        | `#151512`                | Panels, cards, and chart frames.                                                             |
-| Raised         | `#22211C`                | Neutral buttons, the selected tab, and row dividers inside panels.                           |
-| Divider        | `#2B2A24`                | Dividers between panel sections, and empty meter segments.                                   |
-| Border         | `#3A382F`                | Borders of controls, table header rules, chart baselines, and the top edge of a plain card.  |
-| Text           | `#E8E4D8`                | Primary text and the lines of neutral chart series.                                          |
-| Text secondary | `#B8B3A6`                | Supporting prose, e.g. the game description on the Main menu.                                |
-| Text muted     | `#9C978A`                | Labels, hints, and idle states, e.g. an Agent on standby.                                    |
-| Axis           | `#8F8A7D`                | Chart axis labels.                                                                           |
-| Accent         | `#FF7A1A`                | The primary action, the selected-tab marker, the current Campaign's card edge, and Panic.    |
-| Accent dim     | `#7A4A22`                | A partly filled meter segment.                                                               |
-| Accent text    | `#FF8A33`                | Text that needs attention, e.g. a tab count, a low health value, or an expired Mission site. |
-| On accent      | `#1A0B00`                | Text on an Accent fill.                                                                      |
-| Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won Mission, or an Agent on an assignment.               |
-| Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the Panic limit.           |
-| Danger border  | `#5E2A26`                | The border of a destructive button.                                                          |
-| Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                               |
+| Token          | Value                    | Role                                                                                                                                                                         |
+| -------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Background     | `#0D0D0B`                | The page behind all panels, and the fill of inputs.                                                                                                                          |
+| Surface        | `#151512`                | Panels, cards, and chart frames.                                                                                                                                             |
+| Raised         | `#22211C`                | Neutral buttons, the selected tab, and row dividers inside panels.                                                                                                           |
+| Divider        | `#2B2A24`                | Dividers between panel sections, and empty meter segments.                                                                                                                   |
+| Border         | `#3A382F`                | Borders of controls, table header rules, chart baselines, and the top edge of a plain card.                                                                                  |
+| Text           | `#E8E4D8`                | Primary text and the lines of neutral chart series.                                                                                                                          |
+| Text secondary | `#B8B3A6`                | Supporting prose, e.g. the game description on the Main menu.                                                                                                                |
+| Text muted     | `#9C978A`                | Labels, hints, and idle states, e.g. an Agent on standby.                                                                                                                    |
+| Axis           | `#8F8A7D`                | Chart axis labels.                                                                                                                                                           |
+| Accent         | `#FF7A1A`                | The primary action, the selected-tab marker, the current Campaign's card edge, and [Panic](../mechanics/domain-model.md#campaign-standing).                                  |
+| Accent dim     | `#7A4A22`                | A partly filled meter segment.                                                                                                                                               |
+| Accent text    | `#FF8A33`                | Text that needs attention, e.g. a tab count, a low health value, or an expired [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). |
+| On accent      | `#1A0B00`                | Text on an Accent fill.                                                                                                                                                      |
+| Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or an Agent on an assignment.               |
+| Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                             |
+| Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                          |
+| Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                               |
 
 ## Typography
 
 Three typefaces separate three kinds of text: condensed headings name things, the body font explains them, and the
 monospaced font carries every number and identifier. All three are Google Fonts. This table is exhaustive.
 
-| Style           | Font             | Weight | Size  | Case and spacing                | Use                                                       |
-| --------------- | ---------------- | ------ | ----- | ------------------------------- | --------------------------------------------------------- |
-| Screen title    | Barlow Condensed | 700    | 56 px | Uppercase, 0.04 em              | The game title on the Main menu.                          |
-| Section heading | Barlow Condensed | 700    | 22 px | Uppercase, 0.08 em              | The heading of a Main menu column.                        |
-| Panel heading   | Barlow Condensed | 700    | 18 px | Uppercase, 0.08 em              | The heading of a panel, a table, or a headline chart.     |
-| Label           | Barlow Condensed | 600    | 13 px | Uppercase, 0.12 em, Text muted  | Field labels, table headers, and status bar labels.       |
-| Button          | Barlow Condensed | 600    | 14 px | Uppercase, 0.1 em               | Button and tab text; 17 px on a screen's main action.     |
-| Body            | Barlow           | 400    | 15 px | Sentence case, line height 1.45 | Prose, table cells that hold words, and input text.       |
-| Figure          | JetBrains Mono   | 400    | 15 px | Tabular figures                 | Every number and identifier, e.g. Money or a Campaign ID. |
-| Headline figure | JetBrains Mono   | 400    | 22 px | Tabular figures                 | A status bar value and the current value of a chart.      |
-| Axis            | JetBrains Mono   | 400    | 11 px | Axis colour                     | Chart axis labels.                                        |
+| Style           | Font             | Weight | Size  | Case and spacing                | Use                                                                                             |
+| --------------- | ---------------- | ------ | ----- | ------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Screen title    | Barlow Condensed | 700    | 56 px | Uppercase, 0.04 em              | The game title on the Main menu.                                                                |
+| Section heading | Barlow Condensed | 700    | 22 px | Uppercase, 0.08 em              | The heading of a Main menu column.                                                              |
+| Panel heading   | Barlow Condensed | 700    | 18 px | Uppercase, 0.08 em              | The heading of a panel, a table, or a headline chart.                                           |
+| Label           | Barlow Condensed | 600    | 13 px | Uppercase, 0.12 em, Text muted  | Field labels, table headers, and status bar labels.                                             |
+| Button          | Barlow Condensed | 600    | 14 px | Uppercase, 0.1 em               | Button and tab text; 17 px on a screen's main action.                                           |
+| Body            | Barlow           | 400    | 15 px | Sentence case, line height 1.45 | Prose, table cells that hold words, and input text.                                             |
+| Figure          | JetBrains Mono   | 400    | 15 px | Tabular figures                 | Every number and identifier, e.g. Money or a [Campaign ID](../foundation/saves.md#identifiers). |
+| Headline figure | JetBrains Mono   | 400    | 22 px | Tabular figures                 | A status bar value and the current value of a chart.                                            |
+| Axis            | JetBrains Mono   | 400    | 11 px | Axis colour                     | Chart axis labels.                                                                              |
 
 ## Spacing and shape
 
@@ -194,7 +194,7 @@ Charts must let the Player read a trend across the whole Campaign without squint
 with its title on the left and its current value on the right in the Headline figure style.
 
 - A chart's vertical axis starts at 0 and labels its top and bottom values; the horizontal axis labels the first and
-  last Turn, in the Axis style.
+  last [Turn](../foundation/engine-contract.md#player-actions-and-turns), in the Axis style.
 - Grid lines are Raised; the baseline is Border.
 - A series is a 2 px line in Text colour with its latest point marked by a dot.
 - At a window 1280 px wide, a chart's plot area is at least 120 px tall, and at most three charts sit side by side.
@@ -209,5 +209,5 @@ Danger line at the limit value with a Limit band below it, labelled "LOSS AT" an
 - TODO: Define the light theme's Design tokens under [Colours](#colours), since the Settings panel lets the Player
   choose a light theme, including the value of every colour token and the contrast each text colour keeps against its
   fill.
-- TODO (later): Artboards for the Mission sites, Leads, Agency, and Turn report tabs, under
+- TODO (later): Artboards for the Mission sites, [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), [Agency](../mechanics/domain-model.md#agency-and-agents), and [Turn report](../foundation/world-history.md#glossary) tabs, under
   [Reading Artboards](#reading-artboards).

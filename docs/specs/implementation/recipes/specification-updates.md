@@ -11,11 +11,11 @@
 # Overview
 
 An Implementation that falls behind the specifications is best brought up to date by reading only what changed, not by
-reading everything again. The changes since its Specification baseline are a difference between two Specification
-revisions, and that difference, rather than the full specifications, is the work to do.
+reading everything again. The changes since its [Specification baseline](../mandatory/specification-tracking.md#glossary) are a difference between two [Specification
+revisions](../mandatory/specification-tracking.md#glossary), and that difference, rather than the full specifications, is the work to do.
 
 The difference is suggested to drive every step. It shows which specifications changed and which of their sections,
-and the Specification map, under [Specification Tracking](../mandatory/specification-tracking.md), leads from each changed
+and the [Specification map](../mandatory/specification-tracking.md#glossary), under [Specification Tracking](../mandatory/specification-tracking.md), leads from each changed
 specification to the files that implement it. The implementer then reads those files, makes the change, and moves the
 Specification baseline forward, leaving every unchanged specification and every unaffected file unread.
 
@@ -31,7 +31,7 @@ The difference between the Specification baseline and the target Specification r
 changes to apply, so it is suggested to be computed first and read before anything else. In the
 [Spec repo](../mandatory/implementation-placement.md#glossary), the implementer should run
 `git diff --find-renames <baseline>..<target> -- docs/specs content`, where `<baseline>` is the Specification baseline
-and `<target>` is the target Specification revision, usually the latest commit. The `content` path covers the GDR files
+and `<target>` is the target Specification revision, usually the latest commit. The `content` path covers the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files
 that the Implementation copies under [Game data in an Implementation](../mandatory/implementation-placement.md#game-data-in-an-implementation).
 
 Commit messages between the two Specification revisions explain why things changed and help to read the difference,
@@ -89,8 +89,8 @@ implementer should:
 
 1. change the code and its tests for every normative change;
 2. update the Specification map for every file added, moved, or deleted, and for every restructured specification;
-3. update [Implementation Feedback](../mandatory/implementation-feedback.md): set the Resolution of each Specification problem that
-   the target Specification revision settles, and record any new Specification problem or Implementation decision;
+3. update [Implementation Feedback](../mandatory/implementation-feedback.md): set the Resolution of each [Specification problem](../mandatory/implementation-feedback.md#glossary) that
+   the target Specification revision settles, and record any new Specification problem or [Implementation decision](../mandatory/implementation-feedback.md#glossary);
 4. run the Implementation's checks;
 5. set the Specification baseline to the target Specification revision.
 

@@ -57,7 +57,7 @@ followed by one line `Revision: <commit hash>`, where `<commit hash>` is the ful
 repository that holds these specifications, e.g. `Revision: b63b86e0c4f1d2a9e8b7c6d5f4a3b2c1d0e9f8a7`.
 
 The Implementation must conform to every specification at its Specification baseline, except where an entry of its
-[Implementation Feedback](implementation-feedback.md) states otherwise, e.g. a Specification problem that the
+[Implementation Feedback](implementation-feedback.md) states otherwise, e.g. a [Specification problem](implementation-feedback.md#glossary) that the
 specifications at that revision leave unsettled. A Specification baseline therefore names a commit, never
 specifications with changes that are not committed.
 

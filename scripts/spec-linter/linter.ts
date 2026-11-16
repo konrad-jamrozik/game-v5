@@ -41,6 +41,7 @@ import {
 } from './overviews.ts'
 import { decodeUrlPart, directoryOf, isExternalUrl, normalizePath, resolvePath, splitUrl } from './paths.ts'
 import { type EvidenceFinding, findRelationshipEvidence } from './relationship-evidence.ts'
+import { findFirstMentions, type TermMention } from './term-mentions.ts'
 import type {
   Diagnostic,
   GlossaryRecord,
@@ -142,6 +143,8 @@ interface GlossaryTerm {
   readonly prohibitedSynonymsMarkdown: string
   readonly specification: Specification
   readonly node: Node
+  /** The anchor of the Glossary group heading above the term's table, or of the Glossary heading when it has none. */
+  readonly anchor: string
 }
 
 interface FamilyOverview {
@@ -1325,7 +1328,15 @@ function glossaryTerms(specification: Specification, diagnostics: Diagnostic[]):
       )
     }
   }
+  const slugs = new Map(headingsWithSlugs(specification.document).map(({ heading, slug }) => [heading, slug]))
+  const anchors = new Map<Node, string>()
+  let group: Heading = glossary
+  for (const node of sectionNodes(specification.document, glossary)) {
+    if (isHeading(node) && node.depth === 2) group = node
+    if (isTable(node)) anchors.set(node, slugs.get(group) ?? 'glossary')
+  }
   for (const table of termTables) {
+    const anchor = anchors.get(table) ?? 'glossary'
     const rows = tableRows(table)
     const columns = rows[0]?.length ?? 2
     for (const row of rows.slice(1)) {
@@ -1365,6 +1376,7 @@ function glossaryTerms(specification: Specification, diagnostics: Diagnostic[]):
         prohibitedSynonymsMarkdown: synonymsCell ? inlineMarkdown(synonymsCell) : '',
         specification,
         node: cell,
+        anchor,
       })
     }
   }
@@ -1519,6 +1531,16 @@ function validateSectionReferences(parsed: ParsedInput, diagnostics: Diagnostic[
       new Map(headingsWithSlugs(specification.document).map(({ heading, slug }) => [slug, headingText(heading)])),
     ]),
   )
+  // A term link names the term, not the Glossary group it lands on, so its text need not be the group's title.
+  const glossaryGroups = new Set(
+    parsed.specifications.flatMap((specification) => {
+      let inGlossary = false
+      return headingsWithSlugs(specification.document).flatMap(({ heading, slug }) => {
+        if (heading.depth === 1) inGlossary = headingText(heading) === 'Glossary'
+        return inGlossary && heading.depth === 2 ? [`${specification.path}#${slug}`] : []
+      })
+    }),
+  )
   for (const [path, document] of parsed.allDocuments) {
     if (!includeDerived && path.startsWith('docs/derived/')) continue
     visit(document.tree, (node) => {
@@ -1553,7 +1575,11 @@ function validateSectionReferences(parsed: ParsedInput, diagnostics: Diagnostic[
           'SPEC606',
           'Section reference "' + node.url + '" does not resolve to a specification heading.',
         )
-      } else if (title !== 'Glossary' && textOf(node) !== title) {
+      } else if (
+        title !== 'Glossary' &&
+        !glossaryGroups.has(`${destinationPath}#${fragment}`) &&
+        textOf(node) !== title
+      ) {
         addDiagnostic(
           diagnostics,
           path,
@@ -1694,6 +1720,7 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   validateFamilyOverviews(parsed, diagnostics)
   const relationships = validateRelationships(parsed.specifications, diagnostics)
   const glossary = validateTerminology(parsed.specifications, diagnostics)
+  validateTermLinks(firstMentions(parsed, glossary), diagnostics)
   validateTodosAndSections(parsed, diagnostics)
   return {
     diagnostics: diagnostics.toSorted(compareDiagnostics),
@@ -1719,6 +1746,46 @@ export function relationshipEvidence(input: LintInput): readonly EvidenceFinding
       : [],
   )
   return findRelationshipEvidence({ specifications, glossary: corpus.glossary, relationships: corpus.relationships })
+}
+
+function firstMentions(parsed: ParsedInput, glossary: readonly GlossaryTerm[]): readonly TermMention[] {
+  // The specification index navigates to every specification, so it is exempt like the other overviews.
+  const specifications = parsed.specifications.flatMap((specification) =>
+    isSpecificationFamily(specification.family) && specification.path !== parsed.indexPath
+      ? [{ ...specification, family: specification.family }]
+      : [],
+  )
+  const definitions = glossary.map((entry) => ({
+    term: entry.term,
+    ownerPath: entry.specification.path,
+    anchor: entry.anchor,
+  }))
+  return findFirstMentions(specifications, definitions)
+}
+
+/** Requires the first mention of each term another specification owns to link to the term's Glossary group. */
+function validateTermLinks(mentions: readonly TermMention[], diagnostics: Diagnostic[]): void {
+  for (const mention of mentions) {
+    if (mention.link === 'correct') continue
+    diagnostics.push({
+      code: mention.link === 'none' ? 'SPEC508' : 'SPEC509',
+      path: mention.specificationPath,
+      line: mention.line,
+      column: mention.column,
+      message:
+        (mention.link === 'none'
+          ? `The first mention of "${mention.term}" must link to its Glossary group: `
+          : `The first mention of "${mention.term}" links to the wrong anchor; link to its Glossary group: `) +
+        `${mention.ownerPath}#${mention.anchor}. Run npm run docs:link-terms to fix it.`,
+    })
+  }
+}
+
+/** Finds the first mention of each term another specification owns, from one parse of the input. */
+export function termMentions(input: LintInput): readonly TermMention[] {
+  const diagnostics: Diagnostic[] = []
+  const parsed = parseInput(input, diagnostics)
+  return firstMentions(parsed, validateTerminology(parsed.specifications, diagnostics))
 }
 
 export function lintSpecifications(input: LintInput): readonly Diagnostic[] {

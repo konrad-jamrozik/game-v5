@@ -10,15 +10,15 @@
 
 # Overview
 
-The game often needs to know not only how things are but how they were, e.g. to chart money over the last 200 Turns or
-to report what each Combat did last Turn. A past value usually cannot be recomputed from the present, so the Campaign
+The game often needs to know not only how things are but how they were, e.g. to chart money over the last 200 [Turns](engine-contract.md#player-actions-and-turns) or
+to report what each [Combat](../mechanics/domain-model.md#combat) did last Turn. A past value usually cannot be recomputed from the present, so the [Campaign](core-concepts.md#campaign-and-session)
 must keep it.
 
-World history is the part of World state that does. It keeps the historical facts that rules and queries need, a Turn
+[World history](campaign-state.md#glossary) is the part of [World state](campaign-state.md#glossary) that does. It keeps the historical facts that rules and queries need, a Turn
 series for each value whose past is charted, and a record of every ended Turn, in full for the most recent one and
-reduced for the rest; Player API returns the present, the most recent Turn report, and earlier Turns through separate
+reduced for the rest; [Player API](engine-contract.md#api-surfaces) returns the present, the most recent Turn report, and earlier Turns through separate
 queries. World History refines [Campaign State](campaign-state.md), which places World history within
-World state. Unlike the Timeline, which records only the undo and redo of the current Turn, World history is consulted
+World state. Unlike the [Timeline](engine-contract.md#persisted-data), which records only the undo and redo of the current Turn, World history is consulted
 by game behavior.
 
 # Relationships
@@ -34,12 +34,12 @@ by game behavior.
 
 These terms are specific to World History. General terms are in the [Campaign State glossary](campaign-state.md#glossary).
 
-| Term          | Definition                                                                                                                                                                                                                                                                                |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Retained      | Describes model data kept available for rules, Player API queries, reference resolution, or restoration. Retained describes availability; World history describes data about past Campaign state or events. Retention does not establish mutability or a lifecycle state.                 |
-| Turn series   | Retained data in World history recording one value at stated moments of every Turn of the Campaign, from campaign creation onward, under [Turn series](#turn-series). The specification owning the value declares it.                                                                     |
-| Turn report   | Retained data in World history describing what one committed Advance turn did, e.g. each Combat it fought and how that Combat went. A Campaign has at most one Turn report: the one of its most recent committed Advance turn, under [Turn report and history](#turn-report-and-history). |
-| History entry | Retained data in World history describing one ended Turn: a reduced form of its Turn-start state, of its Turn-end state, and of the Turn report of the Advance turn that ended it. Reduced means holding only part of that information, to bound what is retained.                        |
+| Term          | Definition                                                                                                                                                                                                                                                                                                                                                       |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Retained      | Describes model data kept available for rules, Player API queries, reference resolution, or restoration. Retained describes availability; World history describes data about past [Campaign state](core-concepts.md#campaign-and-session) or events. Retention does not establish mutability or a lifecycle state.                                               |
+| Turn series   | Retained data in World history recording one value at stated moments of every Turn of the Campaign, from campaign creation onward, under [Turn series](#turn-series). The specification owning the value declares it.                                                                                                                                            |
+| Turn report   | Retained data in World history describing what one committed Advance turn did, e.g. each Combat it fought and how that Combat went. A Campaign has at most one Turn report: the one of its most recent committed Advance turn, under [Turn report and history](#turn-report-and-history).                                                                        |
+| History entry | Retained data in World history describing one ended Turn: a reduced form of its [Turn-start state](engine-contract.md#player-actions-and-turns), of its [Turn-end state](engine-contract.md#player-actions-and-turns), and of the Turn report of the Advance turn that ended it. Reduced means holding only part of that information, to bound what is retained. |
 
 # Historical fact preservation
 
@@ -47,20 +47,20 @@ A past value cannot always be recovered from its current replacement. E.g., a qu
 current health must retain that value of 10 or the original inputs needed to reconstruct it, because its current health of 7 does not
 replace that historical fact. When a rule or query needs the historical basis, the original inputs or historical
 value must be preserved; required historical values must not be overwritten with current calculations. A past
-calculation retained as a historical fact is an Authoritative value, under
-[Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. This does not
+calculation retained as a historical fact is an [Authoritative value](core-concepts.md#value-classification), under
+[Authoritative and Derived values](core-concepts.md#value-classification) in Core Concepts. This does not
 require retaining every intermediate calculation or every possible chart. The values that a chart or a comparison
 across Turns needs are retained exactly where a specification declares a Turn series, under
 [Turn series](#turn-series).
 
-When a Campaign instance no longer participates in current gameplay, data required by rules, queries, or retained
-references must remain in World history rather than being deleted. E.g., if enemy_1 no longer participates in a Mission,
+When a [Campaign instance](core-concepts.md#campaign-instances) no longer participates in current gameplay, data required by rules, queries, or retained
+references must remain in World history rather than being deleted. E.g., if enemy_1 no longer participates in a [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions),
 a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
 name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
-changes require retention and which data must remain available. The Instance ID and relationships needed to resolve
+changes require retention and which data must remain available. The [Instance ID](campaign-instances.md#glossary) and relationships needed to resolve
 retained references must be preserved under [Campaign instance identity](campaign-instances.md#campaign-instance-identity)
 and [References](campaign-instances.md#references) in Campaign Instances. An evolving collection can contain immutable
-historical records: e.g., adding a Combat report does not permit rewriting an earlier retained Combat report.
+historical records: e.g., adding a [Combat report](../mechanics/domain-model.md#combat) does not permit rewriting an earlier retained Combat report.
 
 # Turn series
 
@@ -82,15 +82,15 @@ A Turn series follows these complete rules:
   records is a Derived value. It is never recomputed from current Campaign state.
 - **Moments within the current Turn:** A declaration may name a moment that is not yet final while the Turn is in
   progress; e.g., the number of upgrades purchased during the Turn so far. The recorded value for the current Turn is
-  then the value in the current Committed state, and it becomes final when the Turn ends.
-- **Part of Campaign state:** A Turn series is World history, so every Campaign save holds it in full, and restoration
+  then the value in the current [Committed state](engine-contract.md#player-actions-and-turns), and it becomes final when the Turn ends.
+- **Part of Campaign state:** A Turn series is World history, so every [Campaign save](engine-contract.md#persisted-data) holds it in full, and restoration
   restores it together with the rest of Campaign state. After undo, redo, or load, each Turn series holds exactly the
   recorded values of the restored Committed state.
 
-A Turn series is Player-visible information exactly when the specification declaring it says so. Player API returns a
+A Turn series is [Player-visible information](engine-contract.md#api-surfaces) exactly when the specification declaring it says so. Player API returns a
 Player-visible Turn series in full: every recorded value from campaign creation up to the current Committed state,
-each with the Turn and the recorded moment it belongs to. The result is the same for the Session controller and an
-Autopilot AI, and after undo, redo, or load it holds the recorded values of the restored Committed state. A
+each with the Turn and the recorded moment it belongs to. The result is the same for the [Session controller](engine-contract.md#principals-and-access) and an
+[Autopilot AI](engine-contract.md#principals-and-access), and after undo, redo, or load it holds the recorded values of the restored Committed state. A
 specification describing a chart names the Turn series the chart shows and declares none itself.
 
 # Turn report and history
@@ -99,7 +99,7 @@ The Turn report and the History entries keep what happened in a Campaign: the Tu
 committed Advance turn, and one reduced History entry for every ended Turn. They follow these complete rules:
 
 - **Written only by Advance turn:** The Advance turn that ends Turn t replaces the Turn report with its own and adds
-  the History entry for Turn t. No other Player action changes the Turn report or any History entry. Before the first
+  the History entry for Turn t. No other [Player action](engine-contract.md#player-actions-and-turns) changes the Turn report or any History entry. Before the first
   committed Advance turn of a Campaign, there is no Turn report and no History entry.
 - **Never rewritten:** A History entry is never rewritten once added, and a Turn report is never rewritten while it is
   the most recent one.

@@ -16,7 +16,7 @@ quickly. The Command-Line Interface (CLI) serves them: it is the engine API of t
 reading commands and writing results.
 
 Because it adds no presentation of its own, the CLI is headless: it shows what the engine API returns and nothing else.
-Everything a Player can do in the game can therefore be done through it, from the Main menu to the end of a Campaign.
+Everything a Player can do in the game can therefore be done through it, from the [Main menu](../foundation/campaign-lifecycle.md#glossary) to the end of a [Campaign](../foundation/core-concepts.md#campaign-and-session).
 
 # Relationships
 
@@ -27,10 +27,10 @@ Everything a Player can do in the game can therefore be done through it, from th
 
 # Reach of the CLI
 
-Every Session API and Player API operation under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) is
-reachable through the CLI, and so is every Developer API operation while Dev mode is enabled. A whole Session can
+Every [Session API](../foundation/engine-contract.md#api-surfaces) and [Player API](../foundation/engine-contract.md#api-surfaces) operation under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) is
+reachable through the CLI, and so is every [Developer API](../foundation/engine-contract.md#api-surfaces) operation while [Dev mode](../foundation/engine-contract.md#principals-and-access) is enabled. A whole [Session](../foundation/core-concepts.md#campaign-and-session) can
 therefore be carried out through it, under [Session lifecycle](../foundation/campaign-lifecycle.md#session-lifecycle):
-e.g. creating a Campaign, playing it to its end, saving and loading it, navigating the Timeline, and engaging Autopilot.
+e.g. creating a Campaign, playing it to its end, saving and loading it, navigating the [Timeline](../foundation/engine-contract.md#persisted-data), and engaging [Autopilot](../foundation/engine-contract.md#autopilot).
 
 # Output forms
 

@@ -10,10 +10,10 @@
 
 # Overview
 
-A Design specification is the only durable record of a design decision: an Implementation is built from it and can be
+A [Design specification](spec-conventions.md#specifications) is the only durable record of a design decision: an [Implementation](artifact-relationships.md#artifacts) is built from it and can be
 rebuilt from it at any time. So it must say everything that matters to the game and nothing that does not. What
-matters is what a player, a save, or a replay could notice, together with the GDRs that the Game designer authors;
-everything else is left to the Implementer, who decides it differently in every Implementation.
+matters is what a player, a save, or a replay could notice, together with the [GDRs](../../design/foundation/core-concepts.md#game-build-and-content) that the [Game designer](spec-conventions.md#participants) authors;
+everything else is left to the [Implementer](spec-conventions.md#participants), who decides it differently in every Implementation.
 
 What it says must also be exact enough to test. Every rule names its inputs, its boundaries, and its outcome, and an
 acceptance example shows it at work. Design Specification Conventions refines Specification Conventions: Specification Conventions says
@@ -27,10 +27,10 @@ how any specification is written, and Design Specification Conventions says what
 
 Terms about specifications in general are in the Specification Conventions glossary.
 
-| Term               | Definition                                                                                                                                                                    |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                             |
-| Evidence basis     | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under Relationships. |
+| Term               | Definition                                                                                                                                                                                                                        |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                                                                                 |
+| Evidence basis     | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under [Relationships](artifact-relationships.md#relationship-structure). |
 
 # What belongs in a Design specification
 
@@ -39,7 +39,7 @@ belongs in a Design specification only if it meets at least one of the following
 
 1. **Observable:** a black-box test through the engine API, a save, or a replay could fail when the statement is
    violated.
-2. **Designer-authored:** the statement is a GDR or a description of game behavior that the Engine designer must write down.
+2. **Designer-authored:** the statement is a GDR or a description of game behavior that the [Engine designer](spec-conventions.md#participants) must write down.
 3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
 
 Everything else is left to the implementer's discretion and must not be specified. E.g., the following are out
@@ -58,14 +58,14 @@ recording, only in an Implementation specification, under
 ## Non-behavioural Design specifications
 
 Some Design specifications describe how the engine API is used rather than how the game behaves, so that a user
-interface or an Autopilot AI can be designed without changing any rule.
+interface or an [Autopilot AI](../../design/foundation/engine-contract.md#principals-and-access) can be designed without changing any rule.
 
 UI specifications are non-behavioural. They guide how a user interface presents the engine API to the
-Player, e.g. which screens exist, what each shows by default, and how the graphical user interface looks, but they add no gameplay information, engine API
+[Player](spec-conventions.md#participants), e.g. which screens exist, what each shows by default, and how the graphical user interface looks, but they add no gameplay information, engine API
 operation, or GDR. What a user interface may show and call remains owned by the Foundation specifications that define
 the engine API and by the specification that owns each value.
 
-Autopilot AIs specifications describe how an Autopilot AI chooses its Player actions, e.g. which goals it pursues and in
+Autopilot AIs specifications describe how an Autopilot AI chooses its [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns), e.g. which goals it pursues and in
 what order, but they add no engine API operation, game behavior, or GDR. What every Autopilot AI receives and may call
 remains owned by the Foundation specifications that define the engine API.
 
@@ -77,9 +77,9 @@ question open.
 When specifying a game concept, state its applicable modeling role and mutability. Use prose,
 property tables, and diagrams for conceptual descriptions; a programming-language declaration is not required. State
 multiplicity with an explicit scope, the conditions under which it comes into existence, its lifecycle states when it
-has any, Authoritative values versus Derived values, and
+has any, [Authoritative values](../../design/foundation/core-concepts.md#value-classification) versus [Derived values](../../design/foundation/core-concepts.md#value-classification), and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
-these dimensions differ within one Campaign instance. Link to the owning specification for details; explicitly retain
+these dimensions differ within one [Campaign instance](../../design/foundation/core-concepts.md#campaign-instances). Link to the owning specification for details; explicitly retain
 unresolved decisions rather than filling them with assumptions.
 
 # Writing exact rules
@@ -154,7 +154,7 @@ GDR tables define stable GDR identifiers, units, values, references, and their o
 
 ## Specialized material
 
-Some subjects recur across Design specifications and have settled shapes. Give each specialized subject its own topic section, or a subsection of the closest topic. The following shapes are common within a Family; they are not additional metadata categories or directories.
+Some subjects recur across Design specifications and have settled shapes. Give each specialized subject its own topic section, or a subsection of the closest topic. The following shapes are common within a [Family](spec-conventions.md#specifications); they are not additional metadata categories or directories.
 
 | Specialized material | Examples of subsections                    |
 | -------------------- | ------------------------------------------ |

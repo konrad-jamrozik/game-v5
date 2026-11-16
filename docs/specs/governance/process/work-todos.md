@@ -14,7 +14,7 @@ Reviewing the specifications keeps turning up problems that cannot all be fixed 
 issue in the registered specifications, one that should be addressed eventually but is not yet scheduled, completely
 enough that a reader with no other context can act on it.
 
-Each Work item is tied to the review that will settle it: it names the Batch of each affected specification, as listed
+Each Work item is tied to the review that will settle it: it names the [Batch](work-plan.md#glossary) of each affected specification, as listed
 in [Batch sequence](work-plan.md#batch-sequence) in the [Specification Work Plan and Backlog](work-plan.md), so that it
 can be handled when that Batch is drafted or reviewed. Recording a Work item neither schedules it nor changes any Batch
 status, and each specification remains authoritative until it is revised. A link from a Work item to a
@@ -37,7 +37,7 @@ Batch is defined in the [Specification Work Plan and Backlog glossary](work-plan
 Add a Work item when an issue is found that is not fixed in the same change. Give it the next unused label, the form
 `TODO-NNN` with three digits, and a heading of the form `TODO-NNN: short title` under the matching category. Never
 reuse a label. The label is a short handle for discussion; references from other documents link to the Work item's
-heading, as required by [Requirement wording](../conventions/spec-conventions.md#requirement-wording).
+heading, as required by [Requirement wording](../conventions/spec-conventions.md#specifications).
 
 Remove a Work item in the same change that resolves it, or when the issue no longer exists. Do not mark Work items as
 done or keep resolved ones; Git history is the record. When a resolution changes only part of a Work item, update the
@@ -71,15 +71,15 @@ The Work items below were measured against these recorded rules and decisions:
 
 - **Scope rule:** [What belongs in a Design specification](../conventions/design-spec-conventions.md#what-belongs-in-a-design-specification). A statement
   belongs only if it is Observable (a black-box test through the engine API, a save, or a replay could fail),
-  Designer-authored (a GDR or a description of game behavior), or Vocabulary. Everything else is the implementer's choice.
+  Designer-authored (a [GDR](../../design/foundation/core-concepts.md#game-build-and-content) or a description of game behavior), or Vocabulary. Everything else is the implementer's choice.
 - **Determinism decision:** [Determinism](../../design/foundation/determinism-and-randomness.md#determinism) and
-  [Campaign seed](../../design/foundation/determinism-and-randomness.md#campaign-seed). Every Campaign has a Campaign seed, supplied by
-  the Session controller at campaign creation or chosen by the engine, and every random outcome derives from it and
-  from nothing else. The same Game build, initial Campaign configuration, Campaign seed, and ordered committed
-  Player actions reproduce the same Campaign state. Determinism is required only within one
+  [Campaign seed](../../design/foundation/determinism-and-randomness.md#glossary). Every [Campaign](../../design/foundation/core-concepts.md#campaign-and-session) has a Campaign seed, supplied by
+  the [Session controller](../../design/foundation/engine-contract.md#principals-and-access) at campaign creation or chosen by the engine, and every random outcome derives from it and
+  from nothing else. The same [Game build](../../design/foundation/core-concepts.md#game-build-and-content), initial [Campaign configuration](../../design/foundation/campaign-state.md#glossary), Campaign seed, and ordered committed
+  [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns) reproduce the same [Campaign state](../../design/foundation/core-concepts.md#campaign-and-session). Determinism is required only within one
   implementation and Game build. How random outcomes are derived from the Campaign seed, the order of random draws,
-  the order of Campaign instance creation within one Player action, and the sequence and format of generated Instance IDs
-  are the implementer's choice. Acceptance examples assert replay equality, including from the same Campaign seed, or
+  the order of [Campaign instance](../../design/foundation/core-concepts.md#campaign-instances) creation within one Player action, and the sequence and format of generated [Instance IDs](../../design/foundation/campaign-instances.md#glossary)
+  are the implementer's choice. [Acceptance examples](../conventions/design-spec-conventions.md#glossary) assert replay equality, including from the same Campaign seed, or
   use fixed injected random outcomes, never which outcome a particular Campaign seed produces.
 - **Creation decision:** creation of Campaign instances is specified by the specification of the creating
   behavior, under [Campaign instance creation](../../design/foundation/campaign-instances.md#campaign-instance-creation).
@@ -114,7 +114,7 @@ observable or designer-authored outcome.
 specifications. The wording, however, describes a mechanism (snapshots and reads) rather than the outcome.
 
 **Suggested resolution:** Keep the content, and reword it in terms of outcomes, following
-[Values a step uses](../../design/mechanics/turn-advancement.md#values-a-step-uses), e.g. "uses the value after the Training step", rather than snapshots and reads.
+[Values a step uses](../../design/mechanics/turn-advancement.md#values-a-step-uses), e.g. "uses the value after the [Training](../../design/mechanics/agents-spec.md#assignments) step", rather than snapshots and reads.
 
 # Edge cases and failure behavior
 

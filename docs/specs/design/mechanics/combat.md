@@ -10,15 +10,15 @@
 
 # Overview
 
-A [Combat](domain-model.md#glossary) is where preparation is tested. The player decides which [Agents](agents-spec.md)
-to deploy to a Mission site and then has no further say: the Agents and the [Enemies](domain-model.md#glossary) there
+A [Combat](domain-model.md#combat) is where preparation is tested. The player decides which [Agents](agents-spec.md)
+to deploy to a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) and then has no further say: the Agents and the [Enemies](domain-model.md#glossary) there
 fight automatically, and the whole Combat is resolved within one Advance turn.
 
-Everything about a Combat follows from one rule: fighting only wears Combatants down. Every attack, hit or miss, raises
+Everything about a Combat follows from one rule: fighting only wears [Combatants](domain-model.md#combat) down. Every attack, hit or miss, raises
 exhaustion, and a hit removes current health, so effective skill can only fall while a Combat lasts. A Combatant whose
-current health reaches zero is Killed, and one whose effective skill falls too far is Incapacitated and stops fighting.
-The Combat is fought in Combat rounds until no Enemy can fight on, no Agent can, or the Agents retreat, and because
-exhaustion keeps rising, every Combat ends. Its Combat report records every attack.
+current health reaches zero is [Killed](agents-spec.md#agent-statuses), and one whose effective skill falls too far is Incapacitated and stops fighting.
+The Combat is fought in Combat rounds until no [Enemy](domain-model.md#combat) can fight on, no [Agent](domain-model.md#agency-and-agents) can, or the Agents retreat, and because
+exhaustion keeps rising, every Combat ends. Its [Combat report](domain-model.md#combat) records every attack.
 
 Combat refines [Agents](agents-spec.md): Agents says what makes a Combatant strong, and Combat says how that strength is
 spent against an opponent.
@@ -43,21 +43,21 @@ spent against an opponent.
 These terms are specific to Combat. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
 about base skill, current health, exhaustion, and base weapon damage are in the [Agents glossary](agents-spec.md#glossary).
 
-## Combats
+## Combat rounds and results
 
 How a Combat is divided, and how it ends.
 
-| Term           | Definition                                                                                                                                                                    | Prohibited synonyms                        |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                                     | Round, naming a pass of a Combat           |
-| Agents' phase  | The first part of a Combat round, in which each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.                                              |                                            |
-| Enemies' phase | The second part of a Combat round, in which each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.                                            |                                            |
-| Combat turn    | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing.                                                                          | Turn, naming a Combatant's part in a phase |
-| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                                         |                                            |
-| Health removed | The current health one attack takes from its defender: the smaller of the damage outcome and the defender's current health before the attack, or 0 on a miss.                 | Damage, as a noun on its own               |
-| Damage dealt   | The sum of the health removed by every attack one participant made in one Combat.                                                                                             |                                            |
-| Damage taken   | The sum of the health removed by every attack on one participant in one Combat. It is equivalent to the participant's health lost: the current health it lost in that Combat. |                                            |
-| Combat outcome | How a Combat ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew.                     | Battle outcome                             |
+| Term           | Definition                                                                                                                                                                                     | Prohibited synonyms                        |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                                                      | Round, naming a pass of a Combat           |
+| Agents' phase  | The first part of a Combat round, in which each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.                                                               |                                            |
+| Enemies' phase | The second part of a Combat round, in which each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.                                                             |                                            |
+| Combat turn    | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing.                                                                                           | Turn, naming a Combatant's part in a phase |
+| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                                                          |                                            |
+| Health removed | The current health one attack takes from its defender: the smaller of the damage outcome and the defender's current health before the attack, or 0 on a miss.                                  | Damage, as a noun on its own               |
+| Damage dealt   | The sum of the health removed by every attack one participant made in one Combat.                                                                                                              |                                            |
+| Damage taken   | The sum of the health removed by every attack on one participant in one Combat. It is equivalent to the participant's health lost: the current health it lost in that Combat.                  |                                            |
+| Combat outcome | How a Combat ended for the [Agency](domain-model.md#agency-and-agents)'s team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome                             |
 
 ## Combatant condition in a Combat
 
@@ -71,13 +71,13 @@ Whether a Combatant still takes part in a Combat, and how strong it and its side
 
 # Combat GDRs
 
-Enemies and Combats are configured by the three Game Data Record (GDR) Types below and by five AgentParameters values.
-The GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the
+Enemies and Combats are configured by the three [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) below and by five AgentParameters values.
+The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the
 YAML files it names.
 
 ## EnemyArchetype
 
-An EnemyArchetype is the Archetype of an Enemy. The table below is exhaustive apart from the `id` and `type` that every
+An EnemyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-instances) of an Enemy. The table below is exhaustive apart from the `id` and `type` that every
 GDR has.
 
 | Property      | Meaning                                                                | Read by                                                   |
@@ -125,7 +125,7 @@ Combats read five values of [AgentParameters](agents-spec.md#agentparameters):
 | `exhaustion_per_attack`            | The exhaustion an attacking Combatant gains from each of its attacks, hit or miss.   | [Effects of an attack](#effects-of-an-attack)                                                  |
 | `exhaustion_per_defense`           | The exhaustion a defending Combatant gains from each attack made on it, hit or miss. | [Effects of an attack](#effects-of-an-attack)                                                  |
 | `exhaustion_cap`                   | The clamp of exhaustion under [Attribute ranges](agents-spec.md#attribute-ranges).   | [Effects of an attack](#effects-of-an-attack); [Combat GDR validation](#combat-gdr-validation) |
-| `exhaustion_free_points`           | An input of [Effective skill](agents-spec.md#effective-skill).                       | [Combat GDR validation](#combat-gdr-validation)                                                |
+| `exhaustion_free_points`           | An input of [Effective skill](agents-spec.md#combatant-attributes).                  | [Combat GDR validation](#combat-gdr-validation)                                                |
 | `skill_penalty_pct_per_exhaustion` | An input of [Effective skill](agents-spec.md#effective-skill).                       | [Combat GDR validation](#combat-gdr-validation)                                                |
 
 ## Combat GDR validation
@@ -133,9 +133,9 @@ Combats read five values of [AgentParameters](agents-spec.md#agentparameters):
 **Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for
 EnemyArchetype, Weapon, CombatParameters, `exhaustion_per_attack`, and `exhaustion_per_defense`, and it adds to
 [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these
-rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into
+rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into
 different gameplay, under
-[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+[Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in Engine Contract.
 
 1. **One CombatParameters:** The Game build supplies exactly one CombatParameters GDR.
 2. **EnemyArchetype values are valid:** Each EnemyArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a
@@ -175,29 +175,29 @@ to its Mission site alone and never recovers.
 
 ## Enemy properties
 
-**Proposed rule:** An Enemy is a Campaign instance whose Archetype is an EnemyArchetype. Its Archetype reference is set
-when it is created and never changes. Its Constants and State have exactly the following properties. This table is
+**Proposed rule:** An Enemy is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is an EnemyArchetype. Its Archetype reference is set
+when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties. This table is
 exhaustive.
 
-| Property           | Part      | Value                                                                     | Classification and range                                                                                                |
-| ------------------ | --------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Mission site       | Constants | An Immutable reference to the Mission site at which the Enemy is present. | Authoritative value. Always exactly one Mission site, under [How concepts relate](domain-model.md#how-concepts-relate). |
-| Base skill         | State     | The Enemy's base skill.                                                   | Authoritative value. A whole number of at least 0. No rule changes it after creation.                                   |
-| Current health     | State     | The Enemy's current health.                                               | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                          |
-| Base health        | State     | The Enemy's base health.                                                  | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                   |
-| Exhaustion         | State     | The Enemy's exhaustion.                                                   | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                          |
-| Weapon             | State     | A reference to the Weapon GDR the Enemy is equipped with.                 | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule changes it after creation.        |
-| Base weapon damage | State     | The Enemy's base weapon damage.                                           | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                   |
+| Property                                                  | Part      | Value                                                                     | Classification and range                                                                                                                                                       |
+| --------------------------------------------------------- | --------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Mission site                                              | Constants | An Immutable reference to the Mission site at which the Enemy is present. | [Authoritative value](../foundation/core-concepts.md#value-classification). Always exactly one Mission site, under [How concepts relate](domain-model.md#how-concepts-relate). |
+| [Base skill](agents-spec.md#combatant-attributes)         | State     | The Enemy's base skill.                                                   | Authoritative value. A whole number of at least 0. No rule changes it after creation.                                                                                          |
+| [Current health](agents-spec.md#combatant-attributes)     | State     | The Enemy's current health.                                               | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                                                                                 |
+| [Base health](agents-spec.md#combatant-attributes)        | State     | The Enemy's base health.                                                  | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                                                                          |
+| Exhaustion                                                | State     | The Enemy's exhaustion.                                                   | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges).                                                                                 |
+| Weapon                                                    | State     | A reference to the Weapon GDR the Enemy is equipped with.                 | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule changes it after creation.                                                               |
+| [Base weapon damage](agents-spec.md#combatant-attributes) | State     | The Enemy's base weapon damage.                                           | Authoritative value. A whole number of at least 1. No rule changes it after creation.                                                                                          |
 
 These are exactly the properties the [Combatant Role Type](agents-spec.md#combatant-role-type) requires; Weapon and
-base weapon damage together are the equipped weapon values. An Enemy also has two Derived values, which are never stored: its
+base weapon damage together are the equipped weapon values. An Enemy also has two [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its
 effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents, and its Combat rating, under
-[Combat rating](#combat-rating). An Enemy has no lifecycle, no Assignment, and no Turn series. An Enemy whose
+[Combat rating](#combat-rating). An Enemy has no lifecycle, no [Assignment](domain-model.md#agency-and-agents), and no [Turn series](../foundation/world-history.md#glossary). An Enemy whose
 current health is 0 is dead; being dead is a Derived value of its current health, not a stored state.
 
 **Retention:** An Enemy keeps every property above for the whole Campaign, so that every reference to it resolves, e.g.
-from a Combat report. Once its Mission site no longer participates in current gameplay, the Enemy is retained in World
-history with its final values, under
+from a Combat report. Once its Mission site no longer participates in current gameplay, the Enemy is retained in [World
+history](../foundation/campaign-state.md#glossary) with its final values, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Enemy is ever removed.
 
@@ -205,7 +205,7 @@ Enemy is ever removed.
 
 **Proposed rule:** Every Enemy is created together with the Mission site at which it is present, under
 [Missions](missions.md). Each new Enemy has a fresh
-Instance ID under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model,
+[Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model,
 and the following initial values, under
 [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is
 exhaustive.
@@ -221,7 +221,7 @@ exhaustive.
 | Weapon              | The Weapon GDR that the EnemyArchetype's `weapon` references. | `weapon` of the EnemyArchetype.         |
 | Base weapon damage  | The `base_weapon_damage` of that Weapon GDR.                  | `base_weapon_damage` of the Weapon GDR. |
 
-No Upgrade and no Campaign configuration value changes any initial value above. Two Enemies created from the same
+No [Upgrade](economy-and-upgrades.md#glossary) and no [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above. Two Enemies created from the same
 EnemyArchetype are distinct Campaign instances that share neither Instance ID nor current health.
 
 ## Changes to Enemy values
@@ -247,7 +247,7 @@ it produces, and when it happens.
 **Proposed rule:** A Combat is fully automatic: the player chooses who is deployed, under [Missions](missions.md), and
 makes no choice during the Combat. A Combat is a function of the following inputs only. This list is exhaustive.
 
-1. **The Agents' side:** a list of one or more distinct Agents, each Serving. This is the Mission's Current team.
+1. **The Agents' side:** a list of one or more distinct Agents, each [Serving](agents-spec.md#agent-statuses). This is the [Mission](domain-model.md#leads-investigations-mission-sites-and-missions)'s [Current team](domain-model.md#leads-investigations-mission-sites-and-missions).
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
 3. **Current values:** the base skill, current health, base health, exhaustion, and base weapon damage of every Combatant in the two
    lists, as they are when the Combat begins.
@@ -261,7 +261,7 @@ Nothing else influences a Combat; e.g., the turn number, the Mission site's kind
 effect. Its outputs are exhaustive too:
 
 1. The Combat report, under [Combat report](#combat-report).
-2. The changed current health and exhaustion of the Combatants of both lists, and the Agent status Killed of every Agent whose
+2. The changed current health and exhaustion of the Combatants of both lists, and the [Agent status](domain-model.md#agency-and-agents) Killed of every Agent whose
    current health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
 
 An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side
@@ -310,7 +310,7 @@ site's Enemies before any team is deployed. Within a Combat the two definitions 
 
 ## Combat timing
 
-**Proposed rule:** A Combat begins and ends within one Turn advancement step of one Advance turn, the step in which
+**Proposed rule:** A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which
 [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. No Committed state
 therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part
 of Committed state.
@@ -392,7 +392,7 @@ target.
 
 **Informative rationale:** game-ts used a five-step target selection with random self-removal. Among four simple
 targeting rules simulated with the Bootstrap GDR values, targeting the strongest opponent was the only one under which
-the Victory path is winnable; this is evidence for the choice, not a requirement.
+the [Victory path](../content/bootstrap-gdrs.md#glossary) is winnable; this is evidence for the choice, not a requirement.
 
 # Attacks
 
@@ -404,7 +404,7 @@ outcome exists only for an attack whose hit outcome is a hit. No random outcome 
 ## Hit outcome
 
 **Inherited behavior:** Each attack has one named random outcome, the hit outcome, whose possible values are hit and
-miss. It is a hit with the Probability
+miss. It is a hit with the [Probability](../foundation/numbers.md#glossary)
 
 ```text
 hit Probability = A² / (A² + D²)
@@ -437,11 +437,11 @@ hi = round down( w × (1 + weapon_damage_range) )
 | w                     | The attacker's effective weapon damage. | Health points; a whole number of at least 1.        |
 | `weapon_damage_range` | The CombatParameters value.             | An exact decimal number from 0 to 1, both included. |
 
-Each bound is evaluated exactly and rounded once, with Round up for `lo` and Round down for `hi`, under
+Each bound is evaluated exactly and rounded once, with [Round up](../foundation/numbers.md#glossary) for `lo` and [Round down](../foundation/numbers.md#glossary) for `hi`, under
 [Rounding](../foundation/numbers.md#rounding) in Numbers, before the range is formed. Because w is a whole number,
 `w × (1 − weapon_damage_range) ≤ w ≤ w × (1 + weapon_damage_range)` gives `0 ≤ lo ≤ w ≤ hi`, so the range is never
 empty. Each of the `hi − lo + 1` values has the Probability `1 / (hi − lo + 1)`. The damage outcome does not depend on
-the defender. Effective weapon damage does not change during a Combat, so the range of one attacker is the same for all its
+the defender. [Effective weapon damage](agents-spec.md#combatant-attributes) does not change during a Combat, so the range of one attacker is the same for all its
 attacks.
 
 ## Effects of an attack
@@ -595,13 +595,13 @@ the Advance turn in which its Combat was fought, and no Mission or other Campaig
 Engine Contract. How the Turn report organizes its Combat reports is left to the implementation. Once produced, a
 Combat report is never rewritten or recomputed, even when the values of its participants change later, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. Whatever
-presents a Combat later uses the retained values. After the next Advance turn, only the facts that its History entry holds need to remain available,
+presents a Combat later uses the retained values. After the next Advance turn, only the facts that its [History entry](../foundation/world-history.md#glossary) holds need to remain available,
 under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
 
 # Player-visible information
 
-**Proposed rule:** Every value below is Player-visible information under
-[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API from the
+**Proposed rule:** Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under
+[Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces) from the
 moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value                                                                                                                                            | Player-visible information |

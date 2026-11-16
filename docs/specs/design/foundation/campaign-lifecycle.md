@@ -10,9 +10,9 @@
 
 # Overview
 
-Running the game and playing a Campaign are separate things. A [Session](core-concepts.md#glossary) is one run of the
-game, from start to exit, while a Campaign is a playthrough that can span many Sessions through its Campaign saves. The
-game starts at the Main menu, where the Session has no Current campaign, and only a few Session API operations work
+Running the game and playing a [Campaign](core-concepts.md#campaign-and-session) are separate things. A [Session](core-concepts.md#campaign-and-session) is one run of the
+game, from start to exit, while a Campaign is a playthrough that can span many Sessions through its [Campaign saves](engine-contract.md#persisted-data). The
+game starts at the Main menu, where the Session has no [Current campaign](engine-contract.md#session-data), and only a few [Session API](engine-contract.md#api-surfaces) operations work
 there, e.g. listing Campaign saves.
 
 A Session plays at most one Campaign at a time, its Current campaign. Creating a Campaign or loading a Campaign save
@@ -44,11 +44,11 @@ These terms are specific to Campaign Lifecycle. General terms are in the
 # Session lifecycle
 
 A Session starts when the game starts and ends when the game exits. A newly opened Session is at the Main menu, with no
-Current campaign and Dev mode disabled.
+Current campaign and [Dev mode](engine-contract.md#principals-and-access) disabled.
 
 ![Campaign lifecycle: a Session starts with no Current campaign, create or load selects one, close removes it, and the Session ends when the game exits](../../../images/diagrams/campaign-lifecycle.svg)
 
-`session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status.
+`session.getStatus()` reports whether a Current campaign exists and the Session's access and [Autopilot](engine-contract.md#autopilot) status.
 
 # Campaign selection
 
@@ -56,16 +56,16 @@ The Campaign selection decides which Campaign, if any, the Session is playing.
 
 The following operations are the complete set that change the Campaign selection:
 
-- **Create:** `session.campaign.create(options)` creates a Campaign using the current Game build and the
-  Session's new-Campaign setup, and selects it as the Current campaign. A newly created Campaign has a Timeline with no
-  Player actions, no Autopilot memory, and no Campaign save, so the Session has no Current save.
+- **Create:** `session.campaign.create(options)` creates a Campaign using the current [Game build](core-concepts.md#game-build-and-content) and the
+  Session's new-Campaign setup, and selects it as the Current campaign. A newly created Campaign has a [Timeline](engine-contract.md#persisted-data) with no
+  [Player actions](engine-contract.md#player-actions-and-turns), no [Autopilot memory](engine-contract.md#persisted-data), and no Campaign save, so the Session has no [Current save](engine-contract.md#session-data).
 - **Load:** `session.saves.load(save)` restores a Campaign save and selects its Campaign as the Current campaign.
   What loading restores is stated under [Loading](saves.md#loading).
 - **Close:** `session.campaign.close()` removes the Current campaign and returns the Session to the Main menu.
 
 Every successful create, load, or close has these effects:
 
-- Access granted for the previous Current campaign ends; e.g., an Autopilot AI's access ends under
+- Access granted for the previous Current campaign ends; e.g., an [Autopilot AI](engine-contract.md#principals-and-access)'s access ends under
   [API hierarchy](engine-contract.md#api-hierarchy).
 - Dev mode is disabled, under [Dev mode](developer-access.md#dev-mode).
 - The previous Current campaign is not saved; closing or replacing it never writes a Campaign save.
@@ -82,7 +82,7 @@ every `session.globalConfiguration` operation, `session.saves.list()`, `session.
 `session.saves.deleteCampaign(campaign)`, `session.campaign.create(options)`, every
 `session.newCampaignSetup` operation, and `session.autopilot.listAutopilotAis()`. Every other operation that depends on a
 Campaign fails when no Current campaign exists, and the failure changes nothing, under
-[Committed state integrity](engine-contract.md#committed-state-integrity).
+[Committed state integrity](engine-contract.md#player-actions-and-turns).
 
 # Acceptance examples
 

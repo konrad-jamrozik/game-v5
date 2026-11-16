@@ -15,7 +15,7 @@ see every later change played the same way without asking the implementer to pub
 public repository's static files from a stable address, and GitHub Actions can rebuild those files on every push.
 
 So publishing is one pipeline that starts at a push: each push to the default branch of the public repository runs the
-Implementation's own checks, and only a push whose checks pass replaces the Game build that players reach. A failed
+Implementation's own checks, and only a push whose checks pass replaces the [Game build](../../design/foundation/core-concepts.md#game-build-and-content) that players reach. A failed
 check leaves the previous Game build online.
 
 Implementation Placement forbids publishing an Implementation until the Engine designer decides where it is hosted;
@@ -32,7 +32,7 @@ hold. The list is exhaustive.
 
 - **The Engine designer requested it.** The Engine designer has asked for the Implementation to be published to a
   public GitHub repository under the Engine designer's personal GitHub account. Until then the Implementation stays
-  local, under [Creating the Implementation repo](../mandatory/implementation-placement.md#creating-the-implementation-repo).
+  local, under [Creating the Implementation repo](../mandatory/implementation-placement.md#glossary).
   A request for a private repository, for an organization account, or for another host is a different request, and this
   guidance does not apply to it.
 - **GitHub Pages can host the Implementation.** The Implementation's web Game build is a set of static files that a
@@ -55,7 +55,7 @@ git status   # confirm nothing that belongs in .gitignore is staged
 git commit -m "Initial commit"
 ```
 
-The Git ignore rules should exclude installed dependencies, build output, test results, and local Game storage, e.g.
+The Git ignore rules should exclude installed dependencies, build output, test results, and local [Game storage](../../design/foundation/engine-contract.md#persisted-data), e.g.
 `node_modules/`, `dist/`, and `test-results/` for a Node implementation. Generated source files that the
 Implementation's checks or build step read should stay committed, because the CI workflow starts from a clean checkout.
 

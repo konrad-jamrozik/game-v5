@@ -10,14 +10,14 @@
 
 # Overview
 
-A Campaign outlives the Session it is played in only through its Campaign saves. A Campaign save is a persisted copy of
-one Campaign at one Committed state, together with its Timeline and Autopilot memory, as the
+A [Campaign](core-concepts.md#campaign-and-session) outlives the [Session](core-concepts.md#campaign-and-session) it is played in only through its [Campaign saves](engine-contract.md#persisted-data). A Campaign save is a persisted copy of
+one Campaign at one [Committed state](engine-contract.md#player-actions-and-turns), together with its [Timeline](engine-contract.md#persisted-data) and [Autopilot memory](engine-contract.md#persisted-data), as the
 [Engine Contract](engine-contract.md) defines it. Loading it lets play continue exactly as if it had never stopped.
 
-Campaign saves come from two sources. The Session controller saves on request, either over the Current save or as a
+Campaign saves come from two sources. The [Session controller](engine-contract.md#principals-and-access) saves on request, either over the [Current save](engine-contract.md#session-data) or as a
 new Campaign save that keeps an earlier line of play intact. The engine writes Autosaves by itself, so that play can
-resume even after the game stops unexpectedly, and so that undo can reach back across recent Turns. Every Campaign save
-is bounded by the Save size limit, and a Game build may reject a Campaign save written by a different Game build. The
+resume even after the game stops unexpectedly, and so that undo can reach back across recent [Turns](engine-contract.md#player-actions-and-turns). Every Campaign save
+is bounded by the Save size limit, and a [Game build](core-concepts.md#game-build-and-content) may reject a Campaign save written by a different Game build. The
 Session controller deletes the Campaign saves it no longer wants, one at a time or a whole Campaign at once, e.g. those
 that a different Game build wrote and that can no longer be loaded.
 
@@ -33,17 +33,17 @@ that a different Game build wrote and that can no longer be loaded.
 
 # Glossary
 
-General terms are in the [Engine Contract glossary](engine-contract.md#glossary). The Independent identifier is in the
+General terms are in the [Engine Contract glossary](engine-contract.md#glossary). The [Independent identifier](determinism-and-randomness.md#glossary) is in the
 [Determinism and Randomness glossary](determinism-and-randomness.md#glossary).
 
 ## Identifiers
 
 The identifiers of Campaigns and their Campaign saves.
 
-| Term             | Definition                                                                                                                                                                                                    |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign ID      | The Independent identifier identifying one Campaign, assigned when the Campaign is created and shared by every Campaign save of that Campaign. It is not Campaign state, and game behavior never consults it. |
-| Campaign save ID | The Independent identifier identifying one Campaign save, assigned when that Campaign save is created.                                                                                                        |
+| Term             | Definition                                                                                                                                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Campaign ID      | The Independent identifier identifying one Campaign, assigned when the Campaign is created and shared by every Campaign save of that Campaign. It is not [Campaign state](core-concepts.md#campaign-and-session), and game behavior never consults it. |
+| Campaign save ID | The Independent identifier identifying one Campaign save, assigned when that Campaign save is created.                                                                                                                                                 |
 
 ## Autosave kinds
 
@@ -53,17 +53,17 @@ The Campaign saves the engine writes itself.
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Autosave            | A Campaign save that the engine writes without a save request from the Session controller, under [Autosaves](#autosaves).                                         |
 | Current Autosave    | The Autosave holding the Committed state the Campaign is at now, kept up to date at all times so that play can resume after the Session ends for whatever reason. |
-| Turn-end Autosave   | The Autosave holding the Turn-end state of one Turn, written when the player ends the Turn.                                                                       |
-| Engagement Autosave | The Autosave holding the Committed state in which the most recent Autopilot engagement began.                                                                     |
+| Turn-end Autosave   | The Autosave holding the [Turn-end state](engine-contract.md#player-actions-and-turns) of one Turn, written when the player ends the Turn.                        |
+| Engagement Autosave | The Autosave holding the Committed state in which the most recent [Autopilot engagement](engine-contract.md#autopilot) began.                                     |
 
 ## Limits
 
 The bounds on Campaign saves.
 
-| Term            | Definition                                                                                                     |
-| --------------- | -------------------------------------------------------------------------------------------------------------- |
-| Save size limit | The maximum size of one Campaign save, fixed by the Game build.                                                |
-| Autosave limit  | The number of Turns whose Turn-end Autosave is kept for one Campaign. It is a setting in Global configuration. |
+| Term            | Definition                                                                                                                                          |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Save size limit | The maximum size of one Campaign save, fixed by the Game build.                                                                                     |
+| Autosave limit  | The number of Turns whose Turn-end Autosave is kept for one Campaign. It is a setting in [Global configuration](engine-contract.md#persisted-data). |
 
 # Campaign save contents
 
@@ -79,13 +79,13 @@ a Campaign save is encoded and stored is the Implementer's choice.
 
 One Campaign may have several Campaign saves, which share its Campaign ID and have distinct Campaign save IDs. E.g., a
 player may keep a Campaign save from before a risky decision and another from after it. Two Campaigns created with
-equal creation inputs, including the same Campaign seed, and given equal Player actions have equal Campaign state but
+equal creation inputs, including the same [Campaign seed](determinism-and-randomness.md#glossary), and given equal [Player actions](engine-contract.md#player-actions-and-turns) have equal Campaign state but
 distinct Campaign IDs. Because the Campaign seed is Campaign state, under
 [Campaign seed](determinism-and-randomness.md#campaign-seed), every Campaign save holds it.
 
 # Saving
 
-Saving captures the Current campaign at its current Committed state. It is available at every Committed state,
+Saving captures the [Current campaign](engine-contract.md#session-data) at its current Committed state. It is available at every Committed state,
 including before the player ends the Turn, and it is not a Player action.
 
 `session.saves.save()` writes the Current campaign to its Current save, replacing that Campaign save's contents.
@@ -104,8 +104,8 @@ A successful `session.saves.load(save)` atomically:
 
 - restores the Campaign state, Timeline, and Autopilot memory held by the Campaign save;
 - selects that Campaign as the Current campaign and that Campaign save as the Current save;
-- leaves no active Autopilot engagement and Dev mode disabled, under
-  [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle.
+- leaves no active Autopilot engagement and [Dev mode](engine-contract.md#principals-and-access) disabled, under
+  [Campaign selection](campaign-lifecycle.md#glossary) in Campaign Lifecycle.
 
 Loading an Autosave differs in one respect: the Current campaign then has no Current save, so a later `save()`
 creates a new Campaign save and leaves the Autosave unchanged.
@@ -127,7 +127,7 @@ The following list of Autosaves is complete.
 | ------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | --------------------------------------------------------------- |
 | Current Autosave    | When a Campaign is created or loaded, and whenever what a Campaign save holds changes for the Current campaign | The current Committed state of the Current campaign          | One for each Campaign                                           |
 | Turn-end Autosave   | When an Advance turn commits outside an Autopilot engagement                                                   | The Turn-end state of the Turn that Advance turn ends        | One for each of the most recent Turns, up to the Autosave limit |
-| Engagement Autosave | When Autopilot is engaged                                                                                      | The Committed state in which the Autopilot engagement begins | One for each Campaign                                           |
+| Engagement Autosave | When [Autopilot](engine-contract.md#autopilot) is engaged                                                      | The Committed state in which the Autopilot engagement begins | One for each Campaign                                           |
 
 [Timeline](timeline.md) states one further Autosave, and when Autosaves of abandoned play are removed.
 
@@ -135,12 +135,12 @@ The following rules are complete.
 
 - **The Current Autosave is always current:** The engine replaces the Current Autosave whenever the Campaign state,
   the Timeline, or the Autopilot memory of the Current campaign changes, whichever operation changes it; e.g., a
-  Player action of the Session controller, each Player action of an Autopilot AI, an undo, or a load. Loading
+  Player action of the Session controller, each Player action of an [Autopilot AI](engine-contract.md#principals-and-access), an undo, or a load. Loading
   the Current Autosave therefore resumes the Campaign exactly where the Session that wrote it left it, e.g. after
   the player quit without saving or the application stopped unexpectedly.
 - **The Current Autosave cannot be turned off:** No setting disables the Current Autosave, and it does not count
   toward the Autosave limit.
-- **Autosave limit:** The Autosave limit is a whole number of at least 0, and its Game build default is 5. Writing a
+- **Autosave limit:** The Autosave limit is a whole number of at least 0, and its [Game build default](engine-contract.md#persisted-data) is 5. Writing a
   Turn-end Autosave that brings the Campaign above the Autosave limit removes the Turn-end Autosave of the earliest
   Turn. With an Autosave limit of 0, no Turn-end Autosave is written. The Autosave limit counts only Turn-end
   Autosaves.
@@ -152,9 +152,9 @@ The following rules are complete.
 
 # Listing Campaign saves
 
-`session.saves.list()` reports every Campaign save in Game storage, of every Campaign, including every
+`session.saves.list()` reports every Campaign save in [Game storage](engine-contract.md#persisted-data), of every Campaign, including every
 Autosave. It needs no Current campaign, so a Session can list Campaign saves before loading one; e.g., a user interface's
-Main menu lists them for the player to choose from. For each Campaign save it reports at least:
+[Main menu](campaign-lifecycle.md#glossary) lists them for the player to choose from. For each Campaign save it reports at least:
 
 - its Campaign save ID and its Campaign ID, so the Campaign saves of one Campaign can be grouped;
 - whether it is an Autosave, and of which kind;
@@ -195,7 +195,7 @@ The following rules are complete.
 The Save size limit is 100 MiB. It is a safety measure against unbounded storage use, not a gameplay rule.
 
 If a Campaign save would exceed the Save size limit, the save operation fails: no Campaign save is written or
-changed, the Current save is unchanged, and the Session keeps its Current campaign and Timeline. World history, being
+changed, the Current save is unchanged, and the Session keeps its Current campaign and Timeline. [World history](campaign-state.md#glossary), being
 Campaign state, is never omitted to reduce the size of a Campaign save.
 
 # Game build compatibility
@@ -243,7 +243,7 @@ replaced is removed rather than left holding an earlier Committed state.
 - **Keeping a line of play by saving as new:** Load Campaign save S1 and commit three actions. `saveAsNew()` creates
   S2 and makes it the Current save. Commit another action, then `save()`. S2 holds all four actions; S1 still holds
   the original Campaign state. Both have the same Campaign ID ([Saving](#saving)).
-- **Campaign configuration isolation:** Save Campaign A, then load a Campaign save of Campaign B with different
+- **[Campaign configuration](campaign-state.md#glossary) isolation:** Save Campaign A, then load a Campaign save of Campaign B with different
   Campaign configuration. The saved values of B apply. Loading the Campaign save of A restores the saved values of A
   ([Loading](#loading)).
 - **Listing before loading:** Create Campaign A, `save()`, Advance turn, and `saveAsNew()`. End the Session and start

@@ -4,11 +4,13 @@ import { describe, expect, test } from 'vitest'
 
 import { runDerivedDocumentation, type DerivedDocsIO } from '../scripts/derived-docs.ts'
 import { runSpecificationLint as runSpecificationLintRaw } from '../scripts/lint-specs.ts'
+import { linkTerms } from '../scripts/link-terms.ts'
 import {
   analyzeSpecifications as analyzeSpecificationsRaw,
   lintSectionReferences,
   lintSpecifications as lintSpecificationsRaw,
   relationshipEvidence as relationshipEvidenceRaw,
+  termMentions as termMentionsRaw,
 } from '../scripts/spec-linter/linter.ts'
 import {
   FAMILY_DIAGRAM_END,
@@ -1561,5 +1563,80 @@ describe('relationship evidence', () => {
   test('reports a term applied against the recorded order as upward', () => {
     const files = widgetCorpus('- Uses [Beta](beta.md)', '- Used by [Alpha](alpha.md)', 'Each Widget is counted.')
     expect(evidence(files)).toContain('upward alpha.md -> beta.md widget x1')
+  })
+})
+
+describe('term mentions', () => {
+  /** Alpha owns the term Widget in an ungrouped Glossary; Beta's Rule section says the given text. */
+  function mentionCorpus(betaRule: string): SourceFile[] {
+    return pairCorpus('', '').map((file) => {
+      if (file.path.endsWith('/alpha.md')) {
+        return {
+          ...file,
+          content: insertSection(
+            file.content,
+            ['Overview', 'Relationships'],
+            '# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Widget | A thing Alpha has. |',
+          ),
+        }
+      }
+      if (file.path.endsWith('/beta.md')) {
+        return { ...file, content: file.content.replace('Beta must be deterministic.', betaRule) }
+      }
+      return file
+    })
+  }
+
+  function mentions(betaRule: string): readonly string[] {
+    return termMentionsRaw({ files: withOverviews(mentionCorpus(betaRule)) }).map(
+      (mention) => `${posix.basename(mention.specificationPath)} ${mention.text} ${mention.link} #${mention.anchor}`,
+    )
+  }
+
+  test('reports only the first mention of a term another specification owns', () => {
+    expect(mentions('Each Widget is counted, and every Widget is kept.')).toEqual(['beta.md Widget none #glossary'])
+  })
+
+  test('accepts a first mention linked to the Glossary group of its owner', () => {
+    expect(mentions('Each [Widget](alpha.md#glossary) is counted.')).toEqual(['beta.md Widget correct #glossary'])
+  })
+
+  test('skips a capitalized one-word term that opens a sentence', () => {
+    expect(mentions('Widget counting is exact. Each Widgets total is kept.')).toEqual([
+      'beta.md Widgets none #glossary',
+    ])
+  })
+
+  test('skips terms of Governance specifications in other specifications', () => {
+    expect(mentions('Each Convention is followed.')).toEqual([])
+  })
+
+  function linkedBeta(betaRule: string): string | undefined {
+    const files = withOverviews(mentionCorpus(betaRule))
+    return linkTerms(files).find((file) => file.path.endsWith('/beta.md'))?.content
+  }
+
+  test('links an unlinked first mention to the Glossary group of its owner', () => {
+    expect(linkedBeta('Each Widget is counted, and every Widget is kept.')).toContain(
+      'Each [Widget](alpha.md#glossary) is counted, and every Widget is kept.',
+    )
+  })
+
+  test('corrects the anchor of a first mention linked to its owner elsewhere', () => {
+    expect(linkedBeta('Each [Widget](alpha.md#rule) is counted.')).toContain(
+      'Each [Widget](alpha.md#glossary) is counted.',
+    )
+  })
+
+  test('rejects an unlinked first mention and a link to the wrong anchor', () => {
+    const termCodes = (rule: string): readonly string[] =>
+      diagnosticCodes(mentionCorpus(rule)).filter((code) => code === 'SPEC508' || code === 'SPEC509')
+    expect(termCodes('Each Widget is counted.')).toEqual(['SPEC508'])
+    expect(termCodes('Each [Widget](alpha.md#rule) is counted.')).toEqual(['SPEC509'])
+    expect(termCodes('Each [Widget](alpha.md#glossary) is counted.')).toEqual([])
+  })
+
+  test('changes nothing once every first mention is linked', () => {
+    expect(linkedBeta('Each [Widget](alpha.md#glossary) is counted.')).toBeUndefined()
   })
 })

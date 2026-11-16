@@ -51,7 +51,7 @@ defined by its structure, because that structure is its meaning.
 
 A Glossary row may record the words that must not stand in for its term, so that a writer who looks the term up also
 sees what not to write. A Term and Definition table may have a third column, `Prohibited synonyms`, and then every
-table of that Glossary has it. A cell of that column lists the Prohibited synonyms of the row's term, under
+table of that Glossary has it. A cell of that column lists the [Prohibited synonyms](terminology-conventions.md#glossary) of the row's term, under
 [Prohibited synonyms](terminology-conventions.md#prohibited-synonyms), separated by semicolons. When the synonym is prohibited only
 in some uses, a sentence after the list states the use it is prohibited in, or the ordinary uses that remain valid. A
 row whose term has no Prohibited synonym leaves the cell empty.

@@ -12,7 +12,7 @@
 
 Each Implementation of the game must stand on its own, so that it can later be published as a repository of its own
 and none depends on another. An [Implementation](../../governance/conventions/artifact-relationships.md#glossary) is
-the code, tests, and tooling that produce a playable Game build from the specifications.
+the code, tests, and tooling that produce a playable [Game build](../../design/foundation/core-concepts.md#game-build-and-content) from the specifications.
 
 Each Implementation must reside in its own Implementation repo, a sibling of the Spec repo, and must treat that
 Implementation repo as if nothing else existed. Several Implementations may therefore exist side by side, each
@@ -74,8 +74,8 @@ nothing outside it existed:
 
 ## Game data in an Implementation
 
-The [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md) are authored under the `content/` directory of the Spec
-repo. An Implementation that builds them into its Game build must hold its own copy of the GDR files it uses inside its
+The [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md#glossary) are authored under the `content/` directory of the Spec
+repo. An Implementation that builds them into its Game build must hold its own copy of the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files it uses inside its
 Implementation repo, and its Game build must read that copy rather than the `content/` directory of the Spec repo.
 
 # Edge cases and failure behavior

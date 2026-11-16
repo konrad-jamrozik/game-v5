@@ -30,11 +30,11 @@ already known to work.
 The Headless milestone is reached when each of the following can be done through the Command-Line Interface alone. The
 list is exhaustive.
 
-- Create a Campaign and play it to its end.
-- Save it, and load the Campaign save again.
-- Undo and redo within a Turn and across Turns.
-- Engage Autopilot and let it play.
-- Enable Dev mode and use the Developer API.
+- Create a [Campaign](../../design/foundation/core-concepts.md#campaign-and-session) and play it to its end.
+- Save it, and load the [Campaign save](../../design/foundation/engine-contract.md#persisted-data) again.
+- Undo and redo within a [Turn](../../design/foundation/engine-contract.md#player-actions-and-turns) and across Turns.
+- Engage [Autopilot](../../design/foundation/engine-contract.md#autopilot) and let it play.
+- Enable [Dev mode](../../design/foundation/engine-contract.md#principals-and-access) and use the [Developer API](../../design/foundation/engine-contract.md#api-surfaces).
 
 Work on the Graphical User Interface is suggested to begin only after the Headless milestone. A change to the engine API
 that the Graphical User Interface later needs is made reachable through the Command-Line Interface in the same change,

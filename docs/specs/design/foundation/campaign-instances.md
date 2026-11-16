@@ -10,15 +10,15 @@
 
 # Overview
 
-Most of a Campaign's world is made of things that come and go, e.g. Agents are hired and lost, and Mission sites appear
-and expire. The engine models every such thing the same way, as a Campaign instance. Its Instance ID never changes, and
-its Archetype is the shared Game Data Record (GDR) it was made from; its Constants stay fixed for its life, and its
-State is what play changes.
+Most of a [Campaign](core-concepts.md#campaign-and-session)'s world is made of things that come and go, e.g. Agents are hired and lost, and [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) appear
+and expire. The engine models every such thing the same way, as a [Campaign instance](core-concepts.md#campaign-instances). Its Instance ID never changes, and
+its [Archetype](core-concepts.md#campaign-instances) is the shared [Game Data Record](core-concepts.md#game-build-and-content) (GDR) it was made from; its [Constants](core-concepts.md#campaign-instances) stay fixed for its life, and its
+[State](core-concepts.md#campaign-instances) is what play changes.
 
 Because every thing has this one shape, any of them can be created, referenced, and inspected in the same terms. A
 Campaign instance can also take on a shared capability through a Role Type, e.g. taking part in combat, without
 changing that shape. Campaign Instances builds on [Campaign State](campaign-state.md), which places every Campaign
-instance in World state.
+instance in [World state](campaign-state.md#glossary).
 
 # Relationships
 
@@ -36,16 +36,16 @@ instance in World state.
 
 These terms are specific to Campaign Instances. Campaign instance, Archetype, State, Constants, and other general terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Campaign State glossary](campaign-state.md#glossary).
 
-| Term        | Definition                                                                                                                                                                                                      | Prohibited synonyms                                                                   |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Instance ID | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary). | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names. |
-| Role Type   | A Type that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration.                   |                                                                                       |
+| Term        | Definition                                                                                                                                                                                                                      | Prohibited synonyms                                                                   |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Instance ID | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary).                 | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names. |
+| Role Type   | A [Type](core-concepts.md#data-modeling) that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration. |                                                                                       |
 
 # Campaign instance structure
 
 Every thing in a Campaign's world is described in the same terms, so any two of them can be compared, inspected, and
 referenced alike. A Campaign instance Type always has exactly four properties: Instance ID, an Archetype reference,
-Constants, and State. Every Campaign instance has exactly these four properties. The singleton Agency is not exempt:
+Constants, and State. Every Campaign instance has exactly these four properties. The singleton [Agency](../mechanics/domain-model.md#agency-and-agents) is not exempt:
 its Archetype reference is required like that of any other Campaign instance.
 
 The four-property shape is the ubiquitous language for Campaign instances. It is chosen for uniformity and ease of
@@ -54,7 +54,7 @@ belongs in this specification under the vocabulary criterion of
 [What belongs in a Design specification](../../governance/conventions/design-spec-conventions.md#what-belongs-in-a-design-specification) and must not be
 removed or weakened as an implementation detail.
 
-How full Campaign state inspection presents each Campaign instance is owned by
+How full [Campaign state](core-concepts.md#campaign-and-session) inspection presents each Campaign instance is owned by
 [Inspection contract](developer-access.md#inspection-contract) in Developer Access.
 
 # Campaign instance creation
@@ -91,9 +91,9 @@ of its own, so nothing references a Role Type's occurrence; references target th
 
 # References
 
-Campaign instances can point at one another and at GDRs, e.g. an Investigation at its Lead. Every reference names a
-target of its expected Type. In Committed state, Campaign instance references resolve within the same Campaign, and GDR
-references resolve against the current Game build. Required historical references remain resolvable, under [Historical fact preservation](world-history.md#historical-fact-preservation) in World History. Relationships must not
+Campaign instances can point at one another and at GDRs, e.g. an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) at its [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). Every reference names a
+target of its expected Type. In [Committed state](engine-contract.md#player-actions-and-turns), Campaign instance references resolve within the same Campaign, and GDR
+references resolve against the current [Game build](core-concepts.md#game-build-and-content). Required historical references remain resolvable, under [Historical fact preservation](world-history.md#historical-fact-preservation) in World History. Relationships must not
 be inferred from display names or identifier text.
 
 References that can change belong in State; fixed references belong in Constants. Instance ID and the Archetype reference

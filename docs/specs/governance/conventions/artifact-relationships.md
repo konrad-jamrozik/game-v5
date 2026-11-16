@@ -40,7 +40,7 @@ The things that relationships connect.
 | Artifact       | An identified [specification](spec-conventions.md#glossary), [requirement](spec-conventions.md#glossary), implementation, test, or other item that can participate in a relationship |                     |
 | Implementation | An executable artifact intended to satisfy a specification or requirement                                                                                                            |                     |
 
-## Relationships
+## Relationship structure
 
 Directional connections between artifacts and how they are recorded.
 
@@ -92,13 +92,13 @@ artifact must not depend on itself.
 
 Each Relationship kind describes how the Dependent relates to the Dependency.
 
-| Relationship kind | Meaning                                                                                                                  | Permitted artifacts                                       | Illustrative example                                                                                                            |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules                               | Document → document governed by those rules               | Specification Conventions → Agents                                                                                              |
-| `refines`         | The Dependency hands off to the Dependent the detail of a term the Dependency owns, and the Dependent states that detail | Specification → refining specification                    | Domain Model → Agents                                                                                                           |
-| `uses`            | The Dependent's Normative text applies a term the Dependency owns or a Named rule of the Dependency                      | Specification → specification                             | Core Concepts → Engine Contract                                                                                                 |
-| `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency                                   | Specification or requirement → implementation             | Engine Contract → identified engine implementation                                                                              |
-| `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency                                            | Specification or requirement → acceptance example or test | [Committed state integrity](../../design/foundation/engine-contract.md#committed-state-integrity) → identified restoration test |
+| Relationship kind | Meaning                                                                                                                  | Permitted artifacts                                       | Illustrative example                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules                               | Document → document governed by those rules               | Specification Conventions → Agents                                                                                             |
+| `refines`         | The Dependency hands off to the Dependent the detail of a term the Dependency owns, and the Dependent states that detail | Specification → refining specification                    | Domain Model → Agents                                                                                                          |
+| `uses`            | The Dependent's Normative text applies a term the Dependency owns or a Named rule of the Dependency                      | Specification → specification                             | Core Concepts → Engine Contract                                                                                                |
+| `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency                                   | Specification or requirement → implementation             | Engine Contract → identified engine implementation                                                                             |
+| `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency                                            | Specification or requirement → acceptance example or test | [Committed state integrity](../../design/foundation/engine-contract.md#player-actions-and-turns) → identified restoration test |
 
 A refining specification is a part of the specification it refines: it states what that specification leaves to it.
 An implementation can `implement` a specification; a specification does not implement its implementation. A test can
@@ -112,20 +112,20 @@ readers of the same text record the same relationships.
 ## Uses
 
 A specification uses another when its Normative text applies a term the other owns, or applies a Named rule of the
-other by linking that section in a clause that relies on it. E.g., "Each new Enemy gets its initial values under
-Campaign instance creation in Campaign Instances" applies a Named rule of Campaign Instances, and "An Enemy is a
+other by linking that section in a clause that relies on it. E.g., "Each new [Enemy](../../design/mechanics/domain-model.md#combat) gets its initial values under
+[Campaign instance](../../design/foundation/core-concepts.md#campaign-instances) creation in Campaign Instances" applies a Named rule of Campaign Instances, and "An Enemy is a
 Campaign instance" applies a term Campaign Instances owns; either makes the specification use Campaign Instances.
 
 Only Normative text counts. A term that appears only in the Overview, in an acceptance example, or in an example
 introduced with "e.g." creates no relationship, because those parts illustrate or orient and state no rule.
-Acceptance examples check the rules the specification states elsewhere, so they add no reliance of their own.
+[Acceptance examples](design-spec-conventions.md#glossary) check the rules the specification states elsewhere, so they add no reliance of their own.
 
 ## Refines
 
 A specification refines another when the other hands off to it, through a Handoff, the detail of a term the other
-owns, and the refining specification states that detail. E.g., Engine Contract owns the term Timeline and its Engine
-subsystems table names the Timeline and links Timeline as the specification that states it, so Timeline refines Engine
-Contract; Agents owns current health and its table of changes to attributes links Combat as the specification that
+owns, and the refining specification states that detail. E.g., Engine Contract owns the term [Timeline](../../design/foundation/engine-contract.md#persisted-data) and its [Engine
+subsystems](../../design/foundation/engine-contract.md#engine-subsystem-kinds) table names the Timeline and links Timeline as the specification that states it, so Timeline refines Engine
+Contract; Agents owns current health and its table of changes to attributes links [Combat](../../design/mechanics/domain-model.md#combat) as the specification that
 states how current health is lowered, so Combat refines Agents.
 
 A specification that applies a term without being handed its detail uses the term's owner and does not refine it,
@@ -136,7 +136,7 @@ detail, and the relationship is reassessed when the detail is written.
 ## Pointers that create no relationship
 
 A Pointer whose term another specification owns creates no relationship. It only says where a term is
-stated, e.g. "The Autopilot limit is stated in What an Autopilot engagement holds in Autopilot" in a specification that
+stated, e.g. "The [Autopilot limit](../../design/foundation/autopilot.md#glossary) is stated in What an [Autopilot engagement](../../design/foundation/engine-contract.md#autopilot) holds in [Autopilot](../../design/foundation/engine-contract.md#autopilot)" in a specification that
 leaves Autopilot limit to Autopilot, so it may point in either direction, including from a Dependency to one of its own Dependents.
 
 A sentence that both names a term and applies it is not a Pointer: it applies the term, and the specification uses the
@@ -230,7 +230,7 @@ whenever a change introduces, alters, or removes a mixed cycle.
 
 # Implicit relationships
 
-Some relationships hold for every specification, or for every specification of one Specification kind, so recording
+Some relationships hold for every specification, or for every specification of one [Specification kind](spec-conventions.md#specifications), so recording
 them in every Relationships list would add entries that carry no information. The following relationships exist
 without explicit table rows:
 
@@ -339,18 +339,18 @@ check links, and validate the graphs. Do not invent implementation or test relat
 These cases exercise [Choosing uses or refines](#choosing-uses-or-refines), [Recording relationships](#recording-relationships),
 [Direction](#direction), and [Evidence](#evidence); they add no relationships to the named documents. The table is exhaustive.
 
-| Case                                                                                                                                        | Expected classification and reason                                                            |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                               | Uses Campaign Instances; it applies the term Campaign instance, which Campaign Instances owns |
-| Domain Model owns Agent and points to Agents as the specification that states what an Agent has; Agents states it                           | Refines Domain Model; Domain Model hands off the detail of a term it owns                     |
-| Combat rounds a value with a rounding operation that Numbers defines                                                                        | Uses Numbers; it applies a Named rule of Numbers                                              |
-| Timeline preserves references under [References](../../design/foundation/campaign-instances.md#references) while restoring Campaign state   | Uses Campaign Instances; it applies a Named rule of Campaign Instances                        |
-| Engine Contract owns Timeline and its Engine subsystems table points to Timeline as its owner                                               | Timeline refines Engine Contract; the table row is a Handoff                                  |
-| A specification names [Information boundary](../../design/foundation/player-api.md#information-boundary) and TODOs for exact exposed fields | Uses Player API; the TODO leaves the fields unspecified but the Named rule is applied         |
-| A specification uses a term of another only in an example introduced with "e.g."                                                            | No relationship; the example is not Normative text                                            |
-| A specification names a term another specification owns and links that owner, stating no rule                                               | No relationship; the sentence is a Pointer                                                    |
-| A specification adds much detail about a term it applies, but the term's owner has no Handoff to it                                         | Uses, not Refines; detail without a Handoff is not refinement                                 |
-| A refinement is also recorded as a Uses entry for the same pair                                                                             | Keep only Refines; a pair has at most one of `uses` and `refines`                             |
+| Case                                                                                                                                                                                                       | Expected classification and reason                                                                                                               |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Domain Model describes agents using Campaign instance and [GDR](../../design/foundation/core-concepts.md#game-build-and-content)                                                                           | Uses Campaign Instances; it applies the term Campaign instance, which Campaign Instances owns                                                    |
+| Domain Model owns [Agent](../../design/mechanics/domain-model.md#agency-and-agents) and points to Agents as the specification that states what an Agent has; Agents states it                              | Refines Domain Model; Domain Model hands off the detail of a term it owns                                                                        |
+| [Combat rounds](../../design/mechanics/combat.md#combat-rounds-and-results) a value with a rounding operation that Numbers defines                                                                         | Uses Numbers; it applies a Named rule of Numbers                                                                                                 |
+| Timeline preserves references under [References](../../design/foundation/campaign-instances.md#references) while restoring [Campaign state](../../design/foundation/core-concepts.md#campaign-and-session) | Uses Campaign Instances; it applies a Named rule of Campaign Instances                                                                           |
+| Engine Contract owns Timeline and its Engine subsystems table points to Timeline as its owner                                                                                                              | Timeline refines Engine Contract; the table row is a Handoff                                                                                     |
+| A specification names [Information boundary](../../design/foundation/player-api.md#information-boundary) and TODOs for exact exposed fields                                                                | Uses [Player API](../../design/foundation/engine-contract.md#api-surfaces); the TODO leaves the fields unspecified but the Named rule is applied |
+| A specification uses a term of another only in an example introduced with "e.g."                                                                                                                           | No relationship; the example is not Normative text                                                                                               |
+| A specification names a term another specification owns and links that owner, stating no rule                                                                                                              | No relationship; the sentence is a Pointer                                                                                                       |
+| A specification adds much detail about a term it applies, but the term's owner has no Handoff to it                                                                                                        | Uses, not Refines; detail without a Handoff is not refinement                                                                                    |
+| A refinement is also recorded as a Uses entry for the same pair                                                                                                                                            | Keep only Refines; a pair has at most one of `uses` and `refines`                                                                                |
 
 ## Complete coverage of Relationship kinds
 

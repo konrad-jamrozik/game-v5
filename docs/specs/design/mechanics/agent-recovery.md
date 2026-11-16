@@ -10,15 +10,15 @@
 
 # Overview
 
-A wounded or worn-down Agent works and fights worse, so getting it back to full strength matters, and it takes time. An
-[Agent](domain-model.md#glossary) regains lost current health only on Recovery, and sheds exhaustion only on Standby or
+A wounded or worn-down [Agent](domain-model.md#agency-and-agents) works and fights worse, so getting it back to full strength matters, and it takes time. An
+[Agent](domain-model.md#glossary) regains lost current health only on [Recovery](agents-spec.md#assignments), and sheds exhaustion only on [Standby](agents-spec.md#assignments) or
 Recovery.
 
-Recovery is gradual and cannot be rushed. In each Advance turn, a Recovering Agent regains a share of its base health, a
-Recovering Agent or an Agent At assignment on Standby loses a fixed amount of exhaustion, and an Agent In
-transit recovers nothing. Recovery ends by itself the moment current health reaches base health: the Agent becomes
+Recovery is gradual and cannot be rushed. In each Advance turn, a [Recovering](agents-spec.md#agent-statuses) Agent regains a share of its base health, a
+Recovering Agent or an Agent [At assignment](agents-spec.md#agent-statuses) on Standby loses a fixed amount of exhaustion, and an Agent [In
+transit](agents-spec.md#agent-statuses) recovers nothing. Recovery ends by itself the moment current health reaches base health: the Agent becomes
 Standby at once, without transit, and the player cannot end Recovery sooner. Both rates come from one RecoveryParameters
-Game Data Record (GDR).
+[Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR).
 
 Agent Recovery refines [Agents](agents-spec.md): Agents says what current health and exhaustion are and how they lower
 effective skill, and Agent Recovery says how they return over time.
@@ -45,25 +45,25 @@ These terms are specific to Agent Recovery. General terms are in the [Agents glo
 
 # Recovery parameters
 
-The GDRs a Game build supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md) and the
+The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the
 YAML files it names.
 
 RecoveryParameters bundles the two recovery rates. This table is exhaustive apart from the `id` and `type` that every
 GDR has.
 
-| Property                       | Meaning                                                                                                      | Read by                                     |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------- |
-| `health_recovery_pct_per_turn` | A Percent value: the percent of an Agent's base health that its current health rises by in one Advance turn. | [Health recovery](#health-recovery)         |
-| `exhaustion_recovery_per_turn` | The exhaustion an Agent loses in one Advance turn.                                                           | [Exhaustion recovery](#exhaustion-recovery) |
+| Property                       | Meaning                                                                                                                                           | Read by                                     |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `health_recovery_pct_per_turn` | A [Percent value](../foundation/numbers.md#glossary): the percent of an Agent's base health that its current health rises by in one Advance turn. | [Health recovery](#health-recovery)         |
+| `exhaustion_recovery_per_turn` | The exhaustion an Agent loses in one Advance turn.                                                                                                | [Exhaustion recovery](#exhaustion-recovery) |
 
-The Bootstrap GDRs have no Upgrade that changes either recovery rate, so both rates are constants of the Game build.
+The Bootstrap GDRs have no [Upgrade](economy-and-upgrades.md#glossary) that changes either recovery rate, so both rates are constants of the Game build.
 
 ## Recovery GDR validation
 
 **Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for
-RecoveryParameters. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it, and
+RecoveryParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and
 the violation is reported as a data defect, never repaired into different gameplay, under
-[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+[Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in Engine Contract.
 
 1. **One RecoveryParameters:** The Game build supplies exactly one RecoveryParameters GDR.
 2. **Exact properties:** The RecoveryParameters GDR has exactly the properties its table above lists, apart from `id` and
@@ -82,19 +82,19 @@ the violation is reported as a data defect, never repaired into different gamepl
 **Proposed rule:** In the Agent recovery step of every Advance turn, the recovery rules below apply to an Agent exactly
 when all of the following hold:
 
-1. It is Serving.
-2. It is not In transit in the Turn-end state, i.e. in the Committed state in which this Advance turn began: its Agent
-   status there is At assignment or Recovering.
+1. It is [Serving](agents-spec.md#agent-statuses).
+2. It is not In transit in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), i.e. in the Committed state in which this Advance turn began: its [Agent
+   status](domain-model.md#agency-and-agents) there is At assignment or Recovering.
 3. It is not In transit at the start of the Agent recovery step.
-4. Its Assignment at the start of the Agent recovery step is the Assignment the rule names.
+4. Its [Assignment](domain-model.md#agency-and-agents) at the start of the Agent recovery step is the Assignment the rule names.
 
 Statements 2 and 3 are both needed: statement 2 excludes an Agent that arrived in the Transit step of this Advance turn,
-and statement 3 excludes an Agent that became In transit in an earlier step of this Advance turn, e.g. a Mission survivor
-or the team of an Investigation that completed. Together they apply the
+and statement 3 excludes an Agent that became In transit in an earlier step of this Advance turn, e.g. a [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) survivor
+or the team of an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) that completed. Together they apply the
 [Transit rule](agents-spec.md#transit-rule): an Agent that is In transit when the Advance turn begins, and an Agent that
-becomes In transit during it, recover nothing in this Advance turn. A Deployed Agent is never on Standby or Recovery, so
-it does not recover. Contracting, Training, and an Investigation do not recover current health or exhaustion either, and neither
-does a Killed or Dismissed Agent.
+becomes In transit during it, recover nothing in this Advance turn. A [Deployed](agents-spec.md#assignments) Agent is never on Standby or Recovery, so
+it does not recover. Contracting, [Training](agents-spec.md#assignments), and an Investigation do not recover current health or exhaustion either, and neither
+does a [Killed](agents-spec.md#agent-statuses) or [Dismissed](agents-spec.md#agent-statuses) Agent.
 
 | Assignment at step start | Current health recovers | Exhaustion recovers |
 | ------------------------ | ----------------------- | ------------------- |
@@ -107,11 +107,11 @@ does a Killed or Dismissed Agent.
 
 The table applies to an Agent that satisfies statements 1 to 3 above. The list of rows is exhaustive. An Agent on Standby
 does not regain current health in the Agent recovery step: only Recovery restores current health, and [Missions](missions.md) sends an
-Agent to Recovery exactly when it survives a Combat with current health below its base health.
+Agent to Recovery exactly when it survives a [Combat](domain-model.md#combat) with current health below its base health.
 
 The recovery rules of the next two sections read each Agent's own values at the start of the Agent recovery step, and the
 Assignment, Agent status, current health, and exhaustion of no other Agent. Whatever order an implementation processes the
-Agents in, the result is the same, under [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn
+Agents in, the result is the same, under [Values a step uses](turn-advancement.md#values-a-step-uses) in [Turn](../foundation/engine-contract.md#player-actions-and-turns)
 Advancement.
 
 # Health recovery
@@ -121,7 +121,7 @@ resulting current health fractional.
 
 **Proposed rule:** v5 keeps every current health a whole number, under
 [Whole-number quantities](../foundation/numbers.md#whole-number-quantities) in Numbers, so the amount recovered in one
-Advance turn is rounded up. The Health recovery rate of an Agent is the following Derived value:
+Advance turn is rounded up. The Health recovery rate of an Agent is the following [Derived value](../foundation/core-concepts.md#value-classification):
 
 ```text
 Health recovery rate = round up( p × base health / 100 )
@@ -133,7 +133,7 @@ Health recovery rate = round up( p × base health / 100 )
 | base health | The Agent's base health.                              | Health points; a whole number of at least 1. |
 
 Evaluation and rounding: the expression is evaluated exactly, under [Percent values](../foundation/numbers.md#percent-values)
-and [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers: multiply, then divide by 100, then Round up
+and [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers: multiply, then divide by 100, then [Round up](../foundation/numbers.md#glossary)
 once at the end. Range: the result is a whole number of at least 1, because p and base health are positive and so the
 exact value is positive and Round up of a positive number is at least 1. The Health recovery rate may exceed base
 health when p exceeds 100.
@@ -164,10 +164,10 @@ An Agent on Recovery whose current health after is below its base health stays o
 in the next Advance turn. Health recovery is the only way an Agent leaves Recovery.
 
 **Recovery cannot be ended early:** An Agent on Recovery cannot be assigned, under
-[Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned), and no Player action ends Recovery. The player
+[Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned), and no [Player action](../foundation/engine-contract.md#player-actions-and-turns) ends Recovery. The player
 does not start, change, or end Recovery; it begins and ends without any Player action. The player waits until current health
 reaches base health. While an Agent is on Recovery, Recovering, it earns no income and trains
-nothing, and it adds no Investigation progress, because its Assignment is Recovery.
+nothing, and it adds no [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions), because its Assignment is Recovery.
 
 # Exhaustion recovery
 
@@ -183,14 +183,14 @@ property of RecoveryParameters, in exhaustion points, a whole number of at least
 rounding occurs. The result is a whole number from 0 to exhaustion before, so the clamp under
 [Attribute ranges](agents-spec.md#attribute-ranges) is applied by this rule and exhaustion never falls below 0.
 
-Exhaustion recovers on Standby and on Recovery alone. It does not recover on Contracting, Training, or an Investigation,
+Exhaustion recovers on Standby and on Recovery alone. It does not recover on [Contracting](agents-spec.md#assignments), Training, or an Investigation,
 nor while the Agent is In transit or Deployed, under [Which Agents recover](#which-agents-recover). The rate is the same
 on Standby and on Recovery.
 
 # Several changes in one Turn
 
 One Advance turn can change an Agent's current health and exhaustion in more than one way, e.g. through Health recovery
-and Exhaustion recovery in the same step. These rules fix how such changes combine, so the result never depends on the
+and [Exhaustion](agents-spec.md#combatant-attributes) recovery in the same step. These rules fix how such changes combine, so the result never depends on the
 order in which they are applied.
 
 **Proposed rule:** The following statements are complete.
@@ -200,12 +200,12 @@ order in which they are applied.
    been counted as an Agent on Recovery: it recovers current health, recovers exhaustion exactly once, and then becomes Standby.
    It does not recover exhaustion a second time as an Agent on Standby in the same step, because the Assignment
    that decides eligibility is the one at the start of the step.
-2. **Current health and exhaustion are independent:** The current health of an Agent on Recovery rises by the Health recovery rate and
+2. **[Current health](agents-spec.md#combatant-attributes) and exhaustion are independent:** The current health of an Agent on Recovery rises by the Health recovery rate and
    its exhaustion falls by `exhaustion_recovery_per_turn` in the same step. Neither amount depends on the other, and the
    current health reaching base health does not change how much exhaustion is recovered in that step. An Agent that reaches
    base health in the step may still have exhaustion above 0 when it becomes Standby.
 3. **Combat and recovery never meet in one Advance turn:** Under [Combat timing](combat.md#combat-timing), a Combat
-   lowers current health and raises exhaustion within the one Turn advancement step in which it is fought, the Mission
+   lowers current health and raises exhaustion within the one [Turn advancement step](turn-advancement.md#glossary) in which it is fought, the Mission
    resolution step. An Agent that survives is In transit from that step on, so at the Agent recovery step of the same Advance turn it fails statement 3
    of [Which Agents recover](#which-agents-recover) and recovers nothing. The first Advance turn in which it can recover is
    the one after the Advance turn in which it arrives, under [Transit rule](agents-spec.md#transit-rule). The Agent's
@@ -220,8 +220,8 @@ order in which they are applied.
 
 # Player-visible information
 
-**Proposed rule:** Every value below is Player-visible information under
-[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API, from the
+**Proposed rule:** Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under
+[Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the
 moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value                                                                                                   | Player-visible information |
@@ -280,7 +280,7 @@ A reported value of 0 can only occur for an Agent on Recovery with current healt
   only change of its Assignment is the move to Standby in the Agent recovery step. Whether an Agent on Recovery
   may be dismissed is decided under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents).
 - **An Agent that is Killed:** A Killed Agent is not Serving, so it recovers nothing and has no Recovery turns remaining.
-- **Base health of 1:** The Health recovery rate is at least 1, so an Agent on Recovery with base health 1 and
+- **[Base health](agents-spec.md#combatant-attributes) of 1:** The Health recovery rate is at least 1, so an Agent on Recovery with base health 1 and
   current health 0 cannot exist, because a Serving Agent has positive current health ([Agent status](agents-spec.md#agent-status)).
 - **Percentage above 100:** The Health recovery rate may exceed base health; current health after is still base health
   ([Recovery GDR validation](#recovery-gdr-validation)).
@@ -327,7 +327,7 @@ valid percentage.
 This example exercises [Which Agents recover](#which-agents-recover), [Health recovery](#health-recovery),
 [Exhaustion recovery](#exhaustion-recovery), and [Several changes in one Turn](#several-changes-in-one-turn), with
 [Transit rule](agents-spec.md#transit-rule). Agent a1 is on Standby, At assignment, with current health 30 of 30, and is deployed
-to Mission site s1 during Turn 5. As a stipulated input, the Combat in the Advance turn ending Turn 5 leaves a1 with
+to [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) s1 during Turn 5. As a stipulated input, the Combat in the Advance turn ending Turn 5 leaves a1 with
 current health 22 and exhaustion 14, and a1 survives; [Missions](missions.md) therefore sends a1 to Recovery, In transit. The Health
 recovery rate of a1 is 1. Its Recovery turns remaining, once it is Recovering, is `round up( (30 − 22) / 1 )` = 8.
 
@@ -397,7 +397,7 @@ each with current health 29 of 30.
 | d1    | 3                 | 30                   | 0                | Standby; At assignment    | Current health 29 + 1 reaches base health; exhaustion 3 − 5 is clamped to 0                                           |
 | d2    | 8                 | 30                   | 3                | Standby; At assignment    | Exhaustion recovers once: 8 − 5 = 3; a second recovery as an Agent on Standby would have given 0, and does not happen |
 
-Both Agents are on Standby, At assignment, in the Turn-start state after the Advance turn, without any transit, and can be
+Both Agents are on Standby, At assignment, in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) after the Advance turn, without any transit, and can be
 assigned in the next Turn. In the following Advance turn d2 recovers exhaustion as an Agent on Standby, from 3 to 0.
 
 ## Recovery clamp with a test Health recovery rate
