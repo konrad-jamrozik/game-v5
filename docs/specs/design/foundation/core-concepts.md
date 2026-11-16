@@ -99,14 +99,6 @@ Classifications of a value, whether a GDR or Campaign state supplies it.
 | Authoritative value | A value that a GDR supplies, or a value of Campaign state that specifications define by its initial value and the changes game behavior makes to it, rather than by a formula over other values.      | Authoritative fact               |
 | Derived value       | A value that specifications define by a formula over the Authoritative values of one Campaign state and of GDRs. It always equals that formula applied to the Campaign state as it is at that moment. | Computed value; calculated value |
 
-# Vocabulary and contract ownership
-
-Type and Property describe data independently of a programming language. Game build supplies shared data and the
-executable implementation of game behavior; each specification describes the game behavior it owns in ordinary
-specification prose. These meanings apply across the complete game contract. Glossary definitions establish vocabulary
-without choosing an API, storage representation, or campaign-data composition. More detailed constraints belong to the
-specifications using that vocabulary.
-
 # Campaign versus Session
 
 Campaign identifies a playthrough; Campaign state describes its data. A Session is the runtime context of one running
@@ -118,56 +110,24 @@ does not make it part of the Session.
 
 # Authoritative and Derived values
 
-The classification states how specifications define a value. An Authoritative value is a value that a GDR supplies,
-or a value of Campaign state defined by its initial value and the changes game behavior makes to it. A Derived value
-is defined by a formula over the Authoritative values of one Campaign state and of GDRs.
+A Derived value's formula reads only the current Campaign state and GDRs, never an earlier Campaign state. Replaying a
+Campaign would reproduce every value, but that does not make a value Derived. The classification has the following
+consequences:
 
-The formula of a Derived value uses only one Campaign state, as it is at one moment. It never uses an earlier
-Campaign state or the changes that led to the current one. The game is deterministic, so replaying a Campaign from
-its start would reproduce every value; that does not make a value a Derived value. E.g., an Agent's
-base skill is an Authoritative value although replaying the Campaign would reproduce it, because no formula over the
-current Campaign state defines it.
+- **A Derived value follows its inputs:** when an Authoritative value its formula uses changes, the Derived value
+  changes too, without any rule saying so.
+- **An Authoritative value changes only when game behavior changes it:** game behavior changes only the Authoritative
+  values its specification says it changes. E.g., an unlock recorded as earned stays earned after its condition stops
+  holding.
+- **Campaign state consists of Authoritative values:** two Campaign states are equal exactly when their Authoritative
+  values are equal.
 
-The classification has the following complete set of consequences:
-
-- **A Derived value follows its inputs:** whenever an Authoritative value its formula uses changes, the Derived value
-  changes with it, without any rule stating so. E.g., total upkeep is the upkeep rate times the number of serving
-  Agents, so it rises as soon as an Agent is hired.
-- **An Authoritative value changes only when game behavior changes it:** it does not follow the values it was once
-  calculated from. E.g., an unlock recorded as earned remains earned after the condition that earned it stops
-  holding. Game behavior changes only the Authoritative values that the specification describing it states it
-  changes; every other Authoritative value keeps its value.
-- **Campaign state consists of Authoritative values:** a Derived value adds no information to Campaign state, so two
-  Campaign states are equal exactly when their Authoritative values are equal.
-
-Which values are Authoritative values and which are Derived values is the Engine designer's decision, because the
-first two consequences are observable game behavior. When several values determine one another, e.g. base health,
-current health, and damage taken, the specification owning them chooses which are Authoritative values and defines
-the others as Derived values. The choice decides what the player observes. E.g., current health always equals
-base health minus damage taken, and a level-up raises base health by 5. When base health and damage taken
-are the Authoritative values, current health rises by 5; when base health and current health are the
-Authoritative values, current health keeps its value and damage taken rises by 5.
-
-The way a specification defines a value determines its classification, so a specification needs no separate
-statement of it: a value defined by a formula over the current Campaign state and GDRs is a Derived value, and a
-value defined by its initial value and the changes game behavior makes to it is an Authoritative value. The
-classification does not state what an implementation stores; e.g., an implementation may keep a calculated copy of a
-Derived value, provided no observable result differs.
-
-The classification is independent of mutability: e.g., a GDR's shared base health is an Authoritative value even
-though it never changes during gameplay. It is also independent of player visibility: either kind may be hidden from
-the player.
-
-E.g., each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
-value. With two enemies at current health 10, the total is 20; after an attack removes 3 of enemy_1's current health, it is 17. Hiding either the
-individual current health or the total from the player does not change either classification.
-
-E.g., each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle
-property within its State property. The values of these two properties are Authoritative values. The completion count
-for a Lead is a Derived value: count the Investigation Campaign instances whose Lead reference property identifies that
-Lead GDR and whose lifecycle property has the value Completed. The count for lead_1 is 1 after investigation_2
-completes; investigation_1's Abandoned lifecycle excludes it. Campaign state has no separate completion record and no
-Authoritative completion count.
+Which values are Authoritative is the Engine designer's choice, because the player can see the difference. E.g.,
+current health always equals base health minus damage taken, and a level-up raises base health by 5. If base health
+and damage taken are Authoritative, current health rises by 5. If base health and current health are Authoritative,
+damage taken rises by 5 instead. The way a specification defines a value fixes its classification, so no separate
+label is needed. The classification is independent of mutability, of player visibility, and of what an implementation
+stores.
 
 # Acceptance examples
 

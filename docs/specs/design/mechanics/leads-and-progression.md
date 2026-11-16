@@ -126,9 +126,8 @@ later becomes Eliminated, so whatever these rules derive from it holds for the r
 [Authoritative and Derived values](../foundation/core-concepts.md#authoritative-and-derived-values) in Core Concepts.
 
 No rule counts completions either. A Lead's completion count, i.e. the number of Completed Investigations of
-the Lead, is a Derived value calculated from Investigation Campaign instances, as
-[Authoritative and Derived values](../foundation/core-concepts.md#authoritative-and-derived-values) in Core Concepts describes, and no rule
-of a Mechanics specification reads it.
+the Lead, is a [Derived value](../foundation/core-concepts.md#glossary) calculated from Investigation Campaign
+instances, and no rule of a Mechanics specification reads it.
 
 A Mission becomes Won in the Turn advancement step Mission resolution, under
 [Mission resolution](missions.md#mission-resolution) in Missions, so every later step of that Advance turn sees the

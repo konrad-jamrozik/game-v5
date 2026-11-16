@@ -100,7 +100,7 @@ which Campaign instances the initial Campaign state contains, under
 supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor
 part of the new-Campaign setup; campaign creation receives it separately, under
 [Campaign seed](determinism-and-randomness.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after
-creation, under [Campaign state composition](campaign-state.md#campaign-state-composition).
+creation, under the [Campaign State glossary](campaign-state.md#glossary).
 
 ## Game build default preset
 
@@ -205,7 +205,7 @@ The Mechanics specification that introduces a Campaign configuration value state
 
 - its Type and its permitted values;
 - whether it is adjustable during play or fixed after creation, under
-  [Campaign state composition](campaign-state.md#campaign-state-composition);
+  the [Campaign State glossary](campaign-state.md#glossary);
 - for a value fixed after creation, how campaign creation uses it; e.g., starting money becomes the Agency's initial
   money;
 - for a value adjustable during play, when a change takes effect and whether it affects existing World state, future

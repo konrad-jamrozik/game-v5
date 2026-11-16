@@ -11,15 +11,13 @@
 # Overview
 
 Each Campaign has its own world, its own past, and its own settings, e.g. its Agents, the Missions it has fought, and
-its starting money. Together these are its Campaign state, and game behavior consults nothing else. Campaign State
-refines [Engine Contract](engine-contract.md): Engine Contract decides which data the engine keeps and promises that
-every Committed state is valid, and Campaign State looks inside one part of that data, the Campaign's own, and says
-what shape it must have. That shape changes for different reasons than sessions, access, and the Engine API do.
+its starting money. Together these are its Campaign state, and game behavior consults nothing else.
+Campaign State refines Core Concepts: Core Concepts says what Campaign state is, and Campaign State says what it is
+made of.
 
 Campaign state is organized by what changes it. Play changes the World state, which holds both the world as it is now
 and the World history the game must remember. The Campaign configuration holds the settings the Campaign was created
-with, of which play may adjust only a few. Every thing in the world, e.g. an Agent or a Mission site, is a
-[Campaign instance](campaign-instances.md) of one common shape.
+with, of which play may adjust only a few. Every thing in the world, e.g. an Agent or a Mission site, is a [Campaign instance](campaign-instances.md) of one common shape.
 
 # Relationships
 
@@ -62,28 +60,8 @@ Campaign state
 └── Campaign configuration
 ```
 
-Campaign state includes both World state and Campaign configuration. E.g., an Investigation's progress is
-World state, while a campaign-wide investigation difficulty multiplier is Campaign configuration. Both belong to
-the particular Campaign, regardless of which Session selects it. Campaign configuration supplies inputs to game
-behavior; changing it does not modify the Game build's game behavior or immutable GDRs.
-
-World state divides into Current world state and World history. E.g., an Agent's current health is Current world
-state, while a record of the missions that Agent took part in is World history. World history is a subcomponent of World state,
-including when it records past Campaign configuration values or changes.
-Current Campaign configuration belongs to its own component of Campaign state; historical records about it belong
-to World history within World state. This conceptual hierarchy does not require a particular storage layout. What Campaign
-state excludes is stated under [Data ownership](engine-contract.md#data-ownership) in Engine Contract.
-Each Campaign configuration value is either adjustable during play or fixed after creation. E.g., an investigation
-difficulty multiplier can be adjustable during play, while starting money is fixed after creation and remains in
-Campaign configuration as the value the Campaign started with. Mechanics specify which class each value has, the
-permitted changes to adjustable values, and when their effects apply.
-
-Every Campaign instance is part of World state, never of Campaign configuration. A Campaign instance that participates
-in current gameplay is part of Current world state. When a Campaign instance no longer participates in current
-gameplay, its data that must remain available is part of World history, under
-[Historical fact preservation](world-history.md#historical-fact-preservation) in World History. Placing a Campaign
-instance in this hierarchy does not change its four properties under
-[Campaign instance structure](campaign-instances.md#campaign-instance-structure) in Campaign Instances.
+Every Campaign instance is part of World state, never of Campaign configuration. The hierarchy is conceptual and
+requires no storage layout.
 
 # Campaign initialization
 

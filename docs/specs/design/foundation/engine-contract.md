@@ -15,11 +15,10 @@ or an LLM-based agent calling the API directly, uses the same Engine API and get
 the engine, e.g. [Saves](./saves.md) or [Turn Advancement](../mechanics/turn-advancement.md), has its own
 specification; Engine Contract holds what is true of the engine as a whole.
 
-Seen whole, the engine has a shape and keeps promises. Its shape is how it divides: into engine subsystems, into API
-operations grouped by which callers may use them, and into data kept beyond a Session and data held only within one.
-Its promises hold whichever engine subsystem is involved: a Player action happens completely or not at all, no caller
-sees half-finished or invalid Campaign state, and every answer equals what the current Campaign state implies.
-[Player API](./player-api.md) builds on them for what the player sees and does.
+The engine divides into engine subsystems, into API operations grouped by which callers may use them, and into data
+kept beyond a Session or held only within one. Whichever engine subsystem is involved, it keeps three promises: a
+Player action happens completely or not at all, no caller sees half-finished or invalid Campaign state, and every
+answer equals what the current Campaign state implies.
 
 # Relationships
 
@@ -317,16 +316,6 @@ following table is the complete Engine subsystem inventory.
 | Turn advancement           | API subsystem        | [Turn Advancement](../mechanics/turn-advancement.md)        | The canonical order of everything Advance turn applies, and which values each part uses.                                   |
 | Determinism and randomness | Supporting subsystem | [Determinism and Randomness](determinism-and-randomness.md) | Reproducible Campaigns, random outcomes, and unique identifiers.                                                           |
 | Numbers                    | Supporting subsystem | [Numbers](numbers.md)                                       | Which quantities are whole numbers, the precision of the rest, and rounding.                                               |
-
-Every Engine API operation belongs to exactly one API subsystem, except gameplay queries, gameplay actions other
-than Advance turn, and Player cheat actions: `player.queries` returns the Player-visible information that the
-specifications owning each value declare, the Mechanics specification owning each gameplay action owns that action,
-under [Gameplay actions](player-api.md#gameplay-actions) in Player API, and the Mechanics specification owning the value a
-Player cheat action changes owns that operation, under the rules that
-[Player cheat actions](developer-access.md#player-cheat-actions) in Developer Access states for every Player cheat action.
-Gameplay is not an Engine subsystem. Specifications of vocabulary and shared rules, e.g.
-[Core Concepts](core-concepts.md), [Campaign State](campaign-state.md), and [Player API](player-api.md), are not Engine
-subsystems either.
 
 # Single-player scope
 

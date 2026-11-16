@@ -34,8 +34,7 @@ instance in World state.
 
 # Glossary
 
-These terms are specific to Campaign Instances. Campaign instance, Archetype, State, Constants, and other general terms are in the [Core Concepts glossary](core-concepts.md#glossary)
-and the [Campaign State glossary](campaign-state.md#glossary).
+These terms are specific to Campaign Instances. Campaign instance, Archetype, State, Constants, and other general terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Campaign State glossary](campaign-state.md#glossary).
 
 | Term        | Definition                                                                                                                                                                                                      | Prohibited synonyms                                                                   |
 | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -60,18 +59,11 @@ How full Campaign state inspection presents each Campaign instance is owned by
 
 # Campaign instance creation
 
-Things come into existence both when a Campaign is created and during play, and each needs a complete set of starting
-values from a known source. Creation of a Campaign instance, during campaign initialization or gameplay, is specified
-by the specification that owns the creating behavior. That specification states when the Campaign instance is created,
-its Type, and the initial values of its Archetype reference, Constants, and State, together with the source of each
-value; e.g., a named GDR or a value in Campaign state. The initial values need not all come from the Campaign
-instance's Archetype: the creating specification may take some of them from another GDR, e.g. one serving the Campaign
-instance initialization purpose under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs) or a Referenced GDR
-(e.g., the Lead GDR supplying an Investigation's hidden difficulty), or from a value in Campaign state. Every newly
-created Campaign instance has a fresh Instance ID under [Campaign instance identity](#campaign-instance-identity).
-Which code creates Campaign instances, and what that code receives, is left to the implementer: the creating
-specification does not state that code, its signature, or its dependencies. It states the resulting facts instead,
-e.g. which Campaign instance owns the new one.
+The specification that owns a creating behavior, at Campaign initialization or during play, states when a Campaign
+instance is created, its Type, and the initial value of its Archetype reference, its Constants and its State, with the
+source of each. E.g., a source can be its Archetype, another GDR, or a value of Campaign state. Every new Campaign
+instance gets a fresh Instance ID under [Campaign instance identity](#campaign-instance-identity). Which code creates
+it is the Implementer's choice.
 
 # Campaign instance identity
 
@@ -99,11 +91,9 @@ of its own, so nothing references a Role Type's occurrence; references target th
 
 # References
 
-Campaign instances point at one another and at GDRs, e.g. an Investigation at its Lead, and every such pointer must
-always lead somewhere valid. References identify a particular target and its expected Type. In Committed state,
-Campaign instance references must resolve within the same Campaign; GDR references identify the GDR ID and must
-resolve against the current Game build. Required historical references remain resolvable, under
-[Historical fact preservation](world-history.md#historical-fact-preservation) in World History. Relationships must not
+Campaign instances can point at one another and at GDRs, e.g. an Investigation at its Lead. Every reference names a
+target of its expected Type. In Committed state, Campaign instance references resolve within the same Campaign, and GDR
+references resolve against the current Game build. Required historical references remain resolvable, under [Historical fact preservation](world-history.md#historical-fact-preservation) in World History. Relationships must not
 be inferred from display names or identifier text.
 
 References that can change belong in State; fixed references belong in Constants. Instance ID and the Archetype reference
