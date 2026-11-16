@@ -31,13 +31,13 @@
   <text class="count" x="361" y="213">3 specifications</text>
   <rect class="box" x="524" y="164" width="230" height="66" rx="10"/>
   <text class="title" x="639" y="192">Guidance</text>
-  <text class="count" x="639" y="213">3 specifications</text>
+  <text class="count" x="639" y="213">4 specifications</text>
   <rect class="box" x="107" y="300" width="230" height="66" rx="10"/>
   <text class="title" x="222" y="328">Content</text>
   <text class="count" x="222" y="349">1 specification</text>
   <rect class="box" x="385" y="300" width="230" height="66" rx="10"/>
   <text class="title" x="500" y="328">UI</text>
-  <text class="count" x="500" y="349">1 specification</text>
+  <text class="count" x="500" y="349">2 specifications</text>
   <rect class="box" x="663" y="300" width="230" height="66" rx="10"/>
   <text class="title" x="778" y="328">Autopilot AIs</text>
   <text class="count" x="778" y="349">1 specification</text>

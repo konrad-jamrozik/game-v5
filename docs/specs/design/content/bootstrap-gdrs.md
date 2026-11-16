@@ -291,7 +291,7 @@ The Turn and Panic start from values that no GDR supplies: the Turn under
 # Appendix: Derivation from game-ts
 
 This appendix is informative. **Inherited behavior** evidence comes from game-ts revision `f1835a29`, in
-`web/src/lib/data_tables/` and `web/src/lib/factories/gameStateFactory.ts`.
+its data tables and its initial game state factory.
 
 The items under [TODOs](#todos) list exhaustively the game-ts content that the Bootstrap GDRs exclude, in the order in
 which it is expected to return.
@@ -312,4 +312,4 @@ value that deliberately differs from its game-ts counterpart, and why.
 | Panic reduction of Initiative Mission site wins             | 0.05% and 0.1%                                       | 1% and 2%                                 | Keeps wins and losses on the same scale.                                                                                                 |
 | Victory                                                     | Completing the Lead Peace on Earth                   | Every Faction eliminated                  | One Lead fewer, and the condition does not depend on a specially named GDR.                                                              |
 | Faction discovery                                           | Through a profile Lead                               | Every Faction is known from the start     | Removes the profile and interrogation Leads.                                                                                             |
-| Upgrades                                                    | 8, with no distinction between cap and stat upgrades | 4: three cap upgrades and `weapon_damage` | game-ts left distinguishing the two kinds of upgrade as an open item in `upgrades.ts`.                                                   |
+| Upgrades                                                    | 8, with no distinction between cap and stat upgrades | 4: three cap upgrades and `weapon_damage` | game-ts left distinguishing the two kinds of upgrade as an open item in its upgrade definitions.                                         |

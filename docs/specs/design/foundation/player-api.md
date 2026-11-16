@@ -11,7 +11,7 @@
 # Overview
 
 A player knows only what the game chooses to show, and acts only through the moves the game offers. That holds
-whoever is playing, e.g. a human at a browser interface or an Autopilot AI, and on every channel the engine answers
+whoever is playing, e.g. a human at a graphical interface or an Autopilot AI, and on every channel the engine answers
 through, not only in query results.
 
 Player API is the API surface where this happens, under [API hierarchy](engine-contract.md#api-hierarchy) in Engine
@@ -26,6 +26,7 @@ identifier reveals what the queries hide. The specification owning each value or
 - Used by [Agent Recovery](../mechanics/agent-recovery.md)
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Combat](../mechanics/combat.md)
+- Used by [Command-Line Interface](../ui/command-line-interface.md)
 - Used by [Developer Access](./developer-access.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Factions](../mechanics/factions.md)

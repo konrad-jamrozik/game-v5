@@ -18,15 +18,23 @@ e.g. to open the detailed view of an Agent that is recovering.
 
 # Documents
 
-## Web UI
+## Command-Line Interface
 
-[Web UI](web-ui.md) answers _which screens does the browser user interface need, and what does each show by default?_
-It owns that guidance for the game's browser user interface.
+[Command-Line Interface](command-line-interface.md) answers _how is the whole game played from a terminal, without
+graphics?_ It owns the guidance for the game's headless interface to the engine API, with readable and structured
+output.
+
+## Graphical User Interface
+
+[Graphical User Interface](graphical-user-interface.md) answers _which screens does the graphical user interface need,
+and what does each show by default?_ It owns that guidance for the game's graphical user interface.
 
 # How they relate
 
-Web UI uses Engine Contract and Campaign Lifecycle from the Foundation family and Domain Model from the Mechanics
-family, and Gameplay Dependency Direction in the Guidance family uses it.
+Both interfaces present the same engine API and neither depends on the other. Each uses Engine Contract and Campaign
+Lifecycle from the Foundation family; the Command-Line Interface also uses Player API, and the Graphical User Interface
+uses Domain Model from the Mechanics family. Headless First in the Guidance family uses both, and Gameplay Dependency
+Direction uses the Graphical User Interface.
 
 <!-- generated:family-diagram:start -->
 
@@ -34,7 +42,13 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ## Within the family
 
-This family has a single specification, so there are no relationships within it.
+### Uses
+
+No uses relationships are declared within this family.
+
+### Refines
+
+No refines relationships are declared within this family.
 
 ## Across families
 

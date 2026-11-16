@@ -24,11 +24,12 @@ closing the Current campaign never writes a Campaign save, and every new Session
 
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
+- Used by [Command-Line Interface](../ui/command-line-interface.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Developer Access](./developer-access.md)
+- Used by [Graphical User Interface](../ui/graphical-user-interface.md)
 - Used by [Saves](./saves.md)
-- Used by [Web UI](../ui/web-ui.md)
 
 # Glossary
 

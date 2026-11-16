@@ -14,7 +14,7 @@ files of an Implementation rather than through the engine API.
 ## Implementation Placement
 
 [Implementation Placement](implementation-placement.md) answers _where does an implementation live?_ It confines each
-implementation to its own directory beside this repository's local clone, e.g. `game-v5-impl-web/`, which the
+implementation to its own directory beside this repository's local clone, e.g. `game-v5-impl-a/`, which the
 implementation treats as its repository root.
 
 ## Implementation Feedback

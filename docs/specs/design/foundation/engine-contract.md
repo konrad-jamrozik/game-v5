@@ -10,8 +10,8 @@
 
 # Overview
 
-The engine is the whole game except its user interfaces. Every way of playing, e.g. a browser interface, a terminal, or
-an LLM-based agent calling the API directly, uses the same Engine API and gets exactly the same results. Each part of
+The engine is the whole game except its user interfaces. Every way of playing, e.g. a graphical interface, a command line,
+or an LLM-based agent calling the API directly, uses the same Engine API and gets exactly the same results. Each part of
 the engine, e.g. [Saves](./saves.md) or [Turn Advancement](../mechanics/turn-advancement.md), has its own
 specification; Engine Contract holds what is true of the engine as a whole.
 
@@ -31,6 +31,7 @@ sees half-finished or invalid Campaign state, and every answer equals what the c
 - Used by [Campaign Instances](./campaign-instances.md)
 - Used by [Campaign Lifecycle](./campaign-lifecycle.md)
 - Used by [Combat](../mechanics/combat.md)
+- Used by [Command-Line Interface](../ui/command-line-interface.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Developer Access](./developer-access.md)
@@ -39,6 +40,8 @@ sees half-finished or invalid Campaign state, and every answer equals what the c
 - Used by [Factions](../mechanics/factions.md)
 - Used by [Game Data Records](./game-data-records.md)
 - Used by [Gameplay Dependency Direction](../../implementation/guidance/gameplay-dependency-direction.md)
+- Used by [Graphical User Interface](../ui/graphical-user-interface.md)
+- Used by [Headless First](../../implementation/guidance/headless-first.md)
 - Used by [Investigations](../mechanics/investigations.md)
 - Used by [Leads and Progression](../mechanics/leads-and-progression.md)
 - Used by [Missions](../mechanics/missions.md)
@@ -48,7 +51,6 @@ sees half-finished or invalid Campaign state, and every answer equals what the c
 - Used by [Storage Schema](../../implementation/guidance/storage-schema.md)
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](../mechanics/turn-advancement.md)
-- Used by [Web UI](../ui/web-ui.md)
 - Used by [World History](./world-history.md)
 - Refined by [Campaign State](./campaign-state.md)
 
@@ -70,12 +72,12 @@ The parts of the engine that each have one owning specification, listed under [E
 
 Kinds of engine API caller and the Session access settings that govern them.
 
-| Term               | Definition                                                                                                                                                                                                                                                                                                                                                                                                    | Prohibited synonyms                                                                         |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                                                          | Role; execution role. Ordinary uses of "role" and the term Role Type remain valid.          |
-| Session controller | The Principal holding Session authority: managing the Session, changing Global configuration, selecting the Current campaign, navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using a terminal or browser interface, or an LLM-based agent driving the API; the Principal's authority does not depend on which kind of caller holds it. | Holistic AI; overarching AI                                                                 |
-| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory. The name avoids using Agent for a Principal.                                                                                                                                                                                                                     | Delegated AI; Delegated agent; scoped AI; intellect. Agent remains the game-domain concept. |
-| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                                                            |                                                                                             |
+| Term               | Definition                                                                                                                                                                                                                                                                                                                                                                                                          | Prohibited synonyms                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                                                                | Role; execution role. Ordinary uses of "role" and the term Role Type remain valid.          |
+| Session controller | The Principal holding Session authority: managing the Session, changing Global configuration, selecting the Current campaign, navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using a command-line or graphical interface, or an LLM-based agent driving the API; the Principal's authority does not depend on which kind of caller holds it. | Holistic AI; overarching AI                                                                 |
+| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory. The name avoids using Agent for a Principal.                                                                                                                                                                                                                           | Delegated AI; Delegated agent; scoped AI; intellect. Agent remains the game-domain concept. |
+| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                                                                  |                                                                                             |
 
 ## Autopilot
 
@@ -136,16 +138,16 @@ else a Session holds.
 
 # API hierarchy
 
-The engine API is the source of truth for execution and access behavior. Every user interface, e.g. a terminal or
-browser interface, is an adapter over the same API: it exposes the Session controller workflow and independently
+The engine API is the source of truth for execution and access behavior. Every user interface, e.g. a command-line or
+graphical interface, is an adapter over the same API: it exposes the Session controller workflow and independently
 implements no gameplay, Timeline, visibility, or Autopilot rules. The engine grants Session controller authority by Principal, never by the kind of
 caller holding it. An Autopilot AI never inherits that authority, whatever model or software implements it.
 
 Every user interface is equivalent to the engine API it adapts: an action taken through any user interface has exactly
 the result that the same operation called directly through the engine API has, and no user interface shows gameplay
 information that the engine API does not return; e.g., graphics never add information that Player API withholds.
-E.g., assigning the same Agents to the same mission through the
-terminal interface, the browser interface, and the engine API produces equal Campaign state and equal query results.
+E.g., assigning the same Agents to the same mission through the command-line interface, the graphical interface, and
+the engine API produces equal Campaign state and equal query results.
 
 The complete namespace inventory is `session`, `player`, `developer`, and `autopilotMemory`. The following tree is the
 required starter operation inventory. Additional gameplay and developer operations may be added under the same

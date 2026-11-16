@@ -16,10 +16,10 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Foundation    | 15             |
 | Design             | Mechanics     | 11             |
 | Design             | Content       | 1              |
-| Design             | UI            | 1              |
+| Design             | UI            | 2              |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 3              |
-| Implementation     | Guidance      | 3              |
+| Implementation     | Guidance      | 4              |
 | Implementation     | Recipes       | 2              |
 
 ## Conventions
@@ -87,9 +87,10 @@ These informative views are derived from the registered Markdown specifications.
 
 ## UI
 
-| ID  | Document                               | Owns                                                                                             |
-| --- | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| WEB | [Web UI](../specs/design/ui/web-ui.md) | Guidance on the screens of the browser user interface and what each shows the Player by default. |
+| ID  | Document                                                                   | Owns                                                                                                                     |
+| --- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| CLI | [Command-Line Interface](../specs/design/ui/command-line-interface.md)     | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal. |
+| GUI | [Graphical User Interface](../specs/design/ui/graphical-user-interface.md) | Guidance on the screens of the graphical user interface and what each shows the Player by default.                       |
 
 ## Autopilot AIs
 
@@ -107,11 +108,12 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Guidance
 
-| ID     | Document                                                                                           | Owns                                                                                                     |
-| ------ | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| DEPDIR | [Gameplay Dependency Direction](../specs/implementation/guidance/gameplay-dependency-direction.md) | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
-| SCHEMA | [Storage Schema](../specs/implementation/guidance/storage-schema.md)                               | Non-behavioural guidance on the physical layout of everything the game persists.                         |
-| STACK  | [Tech Stack Suggestion](../specs/implementation/guidance/tech-stack-suggestion.md)                 | A suggested technology stack for a browser Implementation.                                               |
+| ID       | Document                                                                                           | Owns                                                                                                                                                       |
+| -------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DEPDIR   | [Gameplay Dependency Direction](../specs/implementation/guidance/gameplay-dependency-direction.md) | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs.                                                   |
+| HEADLESS | [Headless First](../specs/implementation/guidance/headless-first.md)                               | Guidance that an Implementation becomes fully playable headlessly, through its Command-Line Interface, before work on its Graphical User Interface begins. |
+| SCHEMA   | [Storage Schema](../specs/implementation/guidance/storage-schema.md)                               | Non-behavioural guidance on the physical layout of everything the game persists.                                                                           |
+| STACK    | [Tech Stack Suggestion](../specs/implementation/guidance/tech-stack-suggestion.md)                 | A suggested technology stack for a browser Implementation.                                                                                                 |
 
 ## Recipes
 

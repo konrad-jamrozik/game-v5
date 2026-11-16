@@ -38,16 +38,16 @@ Implementations may therefore exist side by side, each independent of the others
 
 Every Implementation must reside entirely in its Implementation directory, never inside the Specification repository
 directory. E.g., when the Specification repository directory is `repos/game-v5/`, an Implementation resides in
-`repos/game-v5-impl-web/`.
+`repos/game-v5-impl-a/`.
 
 Every file that the Implementation consists of, or that is needed to install, develop, build, test, or run it, must be
-inside that directory; e.g., its package manifest, lockfile, TypeScript and build configuration, lint and format
+inside that directory; e.g., its dependency declarations, build and project configuration, lint and format
 configuration, scripts, tests, and Git ignore rules.
 
 The Implementation name must consist of lowercase letters, digits, and single hyphens, must start with a letter, and
 must differ from the name of every other directory in the parent directory of the Specification repository directory.
 The Implementation name should start with the name of the Specification repository directory followed by `-impl-`,
-e.g. `game-v5-impl-web`. Which name an Implementation uses within these constraints is the Implementer's choice.
+e.g. `game-v5-impl-a`. Which name an Implementation uses within these constraints is the Implementer's choice.
 
 ## Creating the Implementation directory
 
@@ -69,8 +69,8 @@ it existed:
 - It must not add, change, or delete any file outside its Implementation directory; e.g., it must not add files to the
   Specification repository directory.
 - It must not read, import, extend, or execute any file outside its Implementation directory; e.g., it must not import
-  from another Implementation, extend the `tsconfig.json` of the Specification repository directory, call its npm
-  scripts, or resolve packages from its `node_modules`.
+  from another Implementation, extend the build or project configuration of the Specification repository directory, run
+  its scripts, or use the dependencies installed for it.
 - Nothing outside its Implementation directory may be required to install, build, test, or run it; e.g., Git hooks, CI
   workflows, and deployment configuration of the Specification repository must not be added or changed for it.
 
@@ -85,4 +85,4 @@ of the Specification repository directory.
 
 An Implementation that needs a change outside its Implementation directory, e.g. a new CI job in the Specification
 repository, cannot obtain it under these constraints; it provides the equivalent inside its Implementation directory
-instead, e.g. a script in its own package manifest that runs its checks.
+instead, e.g. a script of its own that runs its checks.

@@ -167,7 +167,7 @@ status summaries consistent with document metadata.
 ## Separate implementation authorization
 
 Do not treat the completion of a draft or batch as authorization to implement game code. Implementation
-scope and milestones are selected separately. Graphics, animation, and possible browser-based 3D specifications are
+scope and milestones are selected separately. Graphics, animation, and possible 3D presentation specifications are
 not written until those stages are requested.
 
 # First implementation milestone assessment

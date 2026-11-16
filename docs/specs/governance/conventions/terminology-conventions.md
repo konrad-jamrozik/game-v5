@@ -76,7 +76,7 @@ leave terminology unresolved.
 
 Relationship content uses `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
 The modeling term [Type](../../design/foundation/core-concepts.md#glossary) describes data independently of a programming
-language. Explicit TypeScript terminology remains valid for programming contracts and explanatory analogies;
+language. Explicit programming-language terminology remains valid for programming contracts and explanatory analogies;
 “relationship type” remains a prohibited substitute for “Relationship kind.”
 
 # Non-terms

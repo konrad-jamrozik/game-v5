@@ -1,16 +1,15 @@
 # Game v5
 
-The specifications of a browser game and the tooling that checks them. The UI framework,
-renderer, state management, and persistence are left to each implementation.
+The specifications of a turn-based strategy game and the tooling that checks them. The platform, language, UI
+technology, state management, and persistence are left to each implementation.
 
 ## Implementations
 
 Each implementation lives outside this repository, in its own directory beside this repository's local clone, which it
 treats as its repository root, as required by
 [Implementation Placement](docs/specs/implementation/mandatory/implementation-placement.md); e.g., beside `repos/game-v5/` an
-implementer creates `repos/game-v5-impl-web/`. That directory starts as a plain local directory and may later become a
-standalone repository. This repository has no game code. A browser implementation may consider the
-technology stack suggested by [Tech Stack Suggestion](docs/specs/implementation/guidance/tech-stack-suggestion.md).
+implementer creates `repos/game-v5-impl-a/`. That directory starts as a plain local directory and may later become a
+standalone repository. This repository has no game code.
 
 ## Design and continuation
 
@@ -19,6 +18,8 @@ The [Game Design Brief](docs/game-design-brief.md) records gameplay intent. The
 [work plan](docs/specs/governance/process/work-plan.md) tracks review progress.
 
 ## Getting started
+
+This repository's toolchain checks the specifications only; it implies nothing about the toolchain of an implementation.
 
 Use Node **26.13.1** (see `.node-version`) and its bundled npm **11.20.0**. A Node version manager can install that version.
 Then run:

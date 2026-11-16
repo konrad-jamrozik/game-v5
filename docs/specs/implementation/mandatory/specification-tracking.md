@@ -79,8 +79,8 @@ specification. Each heading is the Spec ID followed by the specification's title
 sections are in alphabetical order of Spec ID.
 
 Each section must list, as one path per bullet relative to the Implementation directory, every file of the
-Implementation that implements the specification, including its tests, e.g. `- src/mechanics/combat/` and
-`- test/mechanics/combat.test.ts`. A directory path stands for every file in it. One file may be listed under several
+Implementation that implements the specification, including its tests, e.g. `- engine/combat/` and
+`- tests/combat/`. A directory path stands for every file in it. One file may be listed under several
 specifications. A specification that no file implements, e.g. a Governance specification, has a section holding the
 single line `No files.` instead of a list.
 

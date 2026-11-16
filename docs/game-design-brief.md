@@ -4,7 +4,7 @@
 
 This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, Game Data Records (GDRs), and interfaces. Adapt the strategic ideas from [game-ts](https://github.com/konrad-jamrozik/game-ts/); exact formulas, balance, GDRs, and framework choices remain open.
 
-The game is a **web-based, turn-based agency-management strategy game**, with presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
+The game is a **turn-based agency-management strategy game with a graphical user interface (GUI)**, with presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
 
 **Core loop:** allocate agents → investigate Leads → uncover Leads and Missions → deploy teams → resolve the turn → manage consequences and reinvest.
 
@@ -120,7 +120,7 @@ This reduces the value of retrying combat, but does not eliminate foreknowledge 
 
 ## 3. Shared API and progressive interfaces
 
-The foundation is a **well-defined TypeScript API consisting of exposed functions and types**, not necessarily an HTTP service.
+The foundation is a **well-defined engine API consisting of exposed operations and types**, not necessarily an HTTP service.
 
 Humans and AI players must be able to play completely through it. It provides Player-visible information, decision-relevant information expressed as Derived values, action discovery, constraints, commands, structured outcomes, and undo/redo.
 
@@ -128,17 +128,17 @@ Player API always exposes **all information needed to play and only information 
 
 Supported interfaces develop progressively:
 
-1. **TypeScript API:** a complete headless gameplay interface.
-2. **Terminal CLI:** readable human output and structured machine output over the same API.
-3. **Functional web UI:** feature-rich grids, trees, charts, buttons, and detail views. Prioritize filtering, sorting, selection, relationships, readability, and useful colors.
+1. **Engine API:** a complete headless gameplay interface.
+2. **Command-line interface (CLI):** readable human output and structured machine output over the same API.
+3. **Functional GUI:** feature-rich grids, trees, charts, buttons, and detail views. Prioritize filtering, sorting, selection, relationships, readability, and useful colors.
 4. **Visual enrichment:** static graphics and selected animations.
-5. **Possible browser-based 3D:** a future presentation layer over the same gameplay foundation.
+5. **Possible 3D presentation:** a future presentation layer over the same gameplay foundation.
 
 Earlier interfaces remain supported. Graphics must not become necessary to access gameplay information or actions.
 
-The engine owns rules, validation, visibility, and consequences. Clients own presentation or player strategy. GDRs remain separate from Campaign instances. Browser and terminal dependencies stay outside the engine.
+The engine owns rules, validation, visibility, and consequences. Clients own presentation or player strategy. GDRs remain separate from Campaign instances. GUI and CLI dependencies stay outside the engine.
 
-Only these interfaces are in scope. Dedicated native game engines, e.g. Unity, are excluded. Choose the web framework later, with grid and tree capabilities as major criteria.
+Only these interfaces are in scope. Choose the GUI technology later, with grid and tree capabilities as major criteria.
 
 ## 4. Turns, determinism, and the Timeline
 
@@ -166,7 +166,7 @@ The immediate deliverable is the Markdown brief, not implementation. Exact formu
 Future validation should establish that:
 
 - A campaign is playable through the API and CLI without dev access.
-- Equivalent API, CLI, and web commands produce identical results.
+- Equivalent API, CLI, and GUI commands produce identical results.
 - Player information is complete within its visibility boundary.
 - Seeded replay and undo/redo reproduce outcomes, Turn reports, and generated IDs.
 - Invalid commands cannot partially spend resources or assign agents.

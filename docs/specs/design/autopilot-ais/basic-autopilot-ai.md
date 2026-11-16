@@ -163,7 +163,7 @@ and [Player-visible information](../mechanics/combat.md#player-visible-informati
 # Appendix: Derivation from game-ts
 
 This appendix is informative. The Basic Autopilot AI follows the basic AI player of game-ts revision `f1835a29`, in
-`web/src/ai/intellects/basic/` and `docs/ai/basic_intellect.md`. Its goals and Turn routine are kept as far as the
+its basic intellect code and `docs/ai/basic_intellect.md`. Its goals and Turn routine are kept as far as the
 Mechanics specifications allow; the following table lists the game-ts values the Implementer can start from. game-ts
 stated exhaustion in percent; the same numbers are exhaustion points here.
 
