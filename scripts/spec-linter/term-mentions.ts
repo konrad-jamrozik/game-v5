@@ -11,7 +11,7 @@ import {
   tableRows,
   textOf,
 } from './markdown.ts'
-import { FAMILY_KIND } from './overviews.ts'
+import { FAMILY_KIND, FAMILY_ORDER } from './overviews.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from './paths.ts'
 import type { SpecificationFamily } from './types.ts'
 
@@ -216,8 +216,11 @@ export function findFirstMentions(
     ),
   )
   const spellings = new Set(definitions.flatMap((definition) => termForms(definition.term)))
-  // A title spelled differently from every term names a specification, e.g. "Campaign State", not the term "State".
-  const titles = specifications.map((specification) => specification.title).filter((title) => !spellings.has(title))
+  // A title or Family name spelled differently from every term names a specification or a Family, e.g. "Campaign
+  // State" is not the term "State", and "Autopilot AIs" is not the plural of the term "Autopilot AI".
+  const titles = [...specifications.map((specification) => specification.title), ...FAMILY_ORDER].filter(
+    (title) => !spellings.has(title),
+  )
   const titlePattern =
     titles.length === 0
       ? undefined

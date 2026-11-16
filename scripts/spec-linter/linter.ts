@@ -1425,6 +1425,7 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   const mentions = firstMentions(parsed, glossary)
   validateTermLinks(mentions, diagnostics)
   validateReferenceCycles(mentions, diagnostics)
+  validateConventionsIndependence(parsed, diagnostics)
   validateTodosAndSections(parsed, diagnostics)
   return {
     diagnostics: diagnostics.toSorted(compareDiagnostics),
@@ -1469,6 +1470,36 @@ function validateTermLinks(mentions: readonly TermMention[], diagnostics: Diagno
  * Rejects a cycle among References: each first mention whose specification and Term owner reference each other,
  * directly or through others, is reported. Tarjan's algorithm visits each specification and Reference once.
  */
+/**
+ * Rejects a link from a Conventions specification to a Design or Implementation specification: the conventions govern
+ * those specifications, so they must not rely on them, not even by citing them. The specification index is exempt,
+ * because it navigates to every specification.
+ */
+function validateConventionsIndependence(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
+  const kindByPath = new Map(
+    parsed.specifications.flatMap((specification) =>
+      isSpecificationFamily(specification.family) ? [[specification.path, FAMILY_KIND[specification.family]]] : [],
+    ),
+  )
+  for (const specification of parsed.specifications) {
+    if (specification.family !== 'Conventions' || specification.path === parsed.indexPath) continue
+    visit(specification.document.tree, (node) => {
+      if (!isLink(node) || isExternalUrl(node.url)) return
+      const path = decodeUrlPart(splitUrl(node.url).path)
+      if (!path) return
+      const kind = kindByPath.get(resolvePath(specification.path, path))
+      if (kind === undefined || kind === 'Governance') return
+      addDiagnostic(
+        diagnostics,
+        specification.path,
+        node,
+        'SPEC416',
+        `A Conventions specification must not rely on a ${kind} specification, not even by linking it; state the rule without the game term, or move it to the specification that owns the term.`,
+      )
+    })
+  }
+}
+
 function validateReferenceCycles(mentions: readonly TermMention[], diagnostics: Diagnostic[]): void {
   const adjacency = new Map<string, Set<string>>()
   for (const mention of mentions) {

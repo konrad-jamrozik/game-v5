@@ -24,7 +24,7 @@ wording, examples, and unspecified content.
 ## Design Specification Conventions
 
 [Design Specification Conventions](design-spec-conventions.md) answers _what does a Design specification state, and
-how exactly?_ It owns what may be specified about the game, and how rules, formulas, GDRs, and acceptance examples are
+how exactly?_ It owns what may be specified about the game, and how rules, formulas, game data, and acceptance examples are
 written.
 
 ## Implementation Specification Conventions

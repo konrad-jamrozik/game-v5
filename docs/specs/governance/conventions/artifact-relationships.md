@@ -81,15 +81,15 @@ e.g. "Widget Assembly Record (WAR)", is mentioned by either the full name or the
 mention follows from how the Term owner writes the term:
 
 - **Capitalized terms:** a term its owner writes with a capital mid-sentence is mentioned only with that capital, so
-  that an ordinary word, e.g. "turn", is not read as the term "Turn".
+  that an ordinary word, e.g. "order", is not read as the term "Order".
 - **Lowercase terms:** a term of several words that its owner writes lowercase more often than capitalized, or a
   one-word term that its owner writes lowercase at least five times as often, is mentioned in either case, e.g.
   "widget weight" and, opening a sentence, "Widget weight". A Glossary table capitalizes every term, so the table
   alone does not decide.
 - **Sentence openings:** a capitalized one-word term opening a sentence, a list item, or a table cell is not a
   mention, because it can be an ordinary word, e.g. "State the result".
-- **Specification titles:** a title spelled differently from every term names that specification, so the words in it
-  are not mentions, e.g. "Widget Model" is not a mention of the term "Model". A term spelled exactly like its owner's
+- **Specification titles and [Family](spec-conventions.md#specifications) names:** a title or Family name spelled differently from every term names that
+  specification or Family, so the words in it are not mentions, e.g. "Widget Model" is not a mention of the term "Model". A term spelled exactly like its owner's
   title names that specification too, and makes no Reference.
 - **Longer terms first:** where one term contains another, the longer one is the mention, e.g. "widget weight" rather
   than "widget".
@@ -101,8 +101,7 @@ text by code and recorded nowhere else: a specification has no section listing w
 references it. The derived views and the [Family](spec-conventions.md#specifications) diagrams draw the Reference graph. A specification's Family and folder decide
 neither what it references nor its Layer.
 
-A specification relates to an [Implementation](spec-conventions.md#artifacts) through the [Implementation repo](../../implementation/mandatory/implementation-placement.md#glossary)'s [Specification map](../../implementation/mandatory/specification-tracking.md#glossary), not through
-References. A test or acceptance example checks rules the specification states; it makes no Reference.
+A test or acceptance example checks rules the specification states; it makes no Reference.
 
 # Reference graph
 

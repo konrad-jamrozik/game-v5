@@ -1,18 +1,18 @@
 # Design Specification Conventions
 
-| Metadata    | Value                                                                                                 |
-| ----------- | ----------------------------------------------------------------------------------------------------- |
-| Spec ID     | DCONV                                                                                                 |
-| Family      | Conventions                                                                                           |
-| Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer                              |
-| Owns        | What a Design specification may state, and how exactly it states rules, formulas, GDRs, and examples. |
-| Conventions | [Specification Conventions](spec-conventions.md)                                                      |
+| Metadata    | Value                                                                                                      |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| Spec ID     | DCONV                                                                                                      |
+| Family      | Conventions                                                                                                |
+| Audience    | Engine designer, Content designer, UI designer, AI designer, Implementer                                   |
+| Owns        | What a Design specification may state, and how exactly it states rules, formulas, game data, and examples. |
+| Conventions | [Specification Conventions](spec-conventions.md)                                                           |
 
 # Overview
 
 A [Design specification](spec-conventions.md#specifications) is the only durable record of a design decision: an [Implementation](spec-conventions.md#artifacts) is built from it and can be
 rebuilt from it at any time. So it must say everything that matters to the game and nothing that does not. What
-matters is what a player, a save, or a replay could notice, together with the [GDRs](../../design/foundation/core-concepts.md#game-build-and-content) that the [Game designer](spec-conventions.md#participants) authors;
+matters is what a player, a save, or a replay could notice, together with the game data that the [Game designer](spec-conventions.md#participants) authors;
 everything else is left to the [Implementer](spec-conventions.md#participants), who decides it differently in every Implementation.
 
 What it says must also be exact enough to test. Every rule names its inputs, its boundaries, and its outcome, and an
@@ -34,7 +34,7 @@ belongs in a Design specification only if it meets at least one of the following
 
 1. **Observable:** a black-box test through the engine API, a save, or a replay could fail when the statement is
    violated.
-2. **Designer-authored:** the statement is a [GDR](../../design/foundation/core-concepts.md#game-build-and-content) or a description of game behavior that the [Engine designer](spec-conventions.md#participants) must write down.
+2. **Designer-authored:** the statement is game data or a description of game behavior that the [Engine designer](spec-conventions.md#participants) must write down.
 3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
 
 Everything else is left to the implementer's discretion and must not be specified. E.g., the following are out
@@ -53,15 +53,15 @@ recording, only in an [Implementation](spec-conventions.md#artifacts) specificat
 ## Non-behavioural Design specifications
 
 Some Design specifications describe how the engine API is used rather than how the game behaves, so that a user
-interface or an [Autopilot AI](../../design/foundation/engine-contract.md#principals-and-access) can be designed without changing any rule.
+interface or an AI that plays the game can be designed without changing any rule.
 
 UI specifications are non-behavioural. They guide how a user interface presents the engine API to the
 [Player](spec-conventions.md#participants), e.g. which screens exist, what each shows by default, and how the graphical user interface looks, but they add no gameplay information, engine API
-operation, or GDR. What a user interface may show and call remains owned by the Foundation specifications that define
+operation, or game data. What a user interface may show and call remains owned by the Foundation specifications that define
 the engine API and by the specification that owns each value.
 
-Autopilot AIs specifications describe how an Autopilot AI chooses its [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns), e.g. which goals it pursues and in
-what order, but they add no engine API operation, game behavior, or GDR. What every Autopilot AI receives and may call
+Autopilot AIs specifications describe how an AI that plays the game chooses its actions, e.g. which goals it pursues
+and in what order, but they add no engine API operation, game behavior, or game data. What every such AI receives and may call
 remains owned by the Foundation specifications that define the engine API.
 
 # Specifying a game concept
@@ -72,9 +72,9 @@ question open.
 When specifying a game concept, state its applicable modeling role and mutability. Use prose,
 property tables, and diagrams for conceptual descriptions; a programming-language declaration is not required. State
 multiplicity with an explicit scope, the conditions under which it comes into existence, its lifecycle states when it
-has any, [Authoritative values](../../design/foundation/core-concepts.md#value-classification) versus [Derived values](../../design/foundation/core-concepts.md#value-classification), and
+has any, which of its values are stored and which are computed from others, and
 which values affect current gameplay versus serve only historical explanation. Classify properties separately when
-these dimensions differ within one [Campaign instance](../../design/foundation/core-concepts.md#campaign-instances). Link to the owning specification for details; explicitly retain
+these dimensions differ within one modeled thing. Link to the owning specification for details; explicitly retain
 unresolved decisions rather than filling them with assumptions.
 
 # Writing exact rules
@@ -141,11 +141,11 @@ Distinguish the true probability, conditional probability, cumulative probabilit
 
 Include worked numerical examples for normal cases and boundaries. Equations, prose, pseudocode, and examples must agree. An unexplained "chance increases over time" or "diminishing returns" is not a complete rule.
 
-## Contracts and GDRs
+## Contracts and game data
 
 Public API specifications define exact names, types, argument shapes, outputs, and errors when they are complete. Conceptual domain specifications need not mirror implementation storage layouts.
 
-GDR tables define stable GDR identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not an implicit GDR. Use parameter references instead of copying balance values throughout mechanics specifications.
+Tables of game data define its stable identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not implied game data. Use parameter references instead of copying balance values throughout specifications.
 
 ## Specialized material
 
@@ -181,7 +181,7 @@ the concepts, linking to the applicable [requirements](spec-conventions.md#speci
 need not be organized as test fixtures or command sequences. Every acceptance example must identify all applicable
 items in this checklist:
 
-- Hyperlinks to the requirement sections exercised and, when needed for reproducibility, the game revision and GDR fixture.
+- Hyperlinks to the requirement sections exercised and, when needed for reproducibility, the game revision and game data fixture.
 - Initial state and inputs, including fixed injected random outcomes for stochastic results, each
   identified by the name its rule gives it under [Formulas and uncertainty](#formulas-and-uncertainty); never assert outcomes
   that depend on a particular seed, and otherwise compare replayed results for equality.
@@ -201,6 +201,6 @@ Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Pro
 
 A rule and its examples are written together and must stay together. Boundary cases and failures must be defined for
 every rule, worked examples and acceptance examples must agree with the rules they illustrate, and related contracts and
-GDR tables must agree with each other.
+tables of game data must agree with each other.
 
 When specified behavior changes, link to affected requirement sections by title and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.

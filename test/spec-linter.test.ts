@@ -1420,6 +1420,33 @@ describe('term mentions', () => {
     expect(mentions('Counting follows [Widget rules](alpha.md#rule).')).toEqual([])
   })
 
+  test('does not read a Family name as the plural of a term', () => {
+    const files = mentionCorpus('Counting is exact.').map((file) =>
+      file.path.endsWith('/alpha.md')
+        ? {
+            ...file,
+            content: file.content.replace(
+              '| Gear | Another thing Alpha has. |',
+              '| Autopilot AI | A tool Alpha has. |',
+            ),
+          }
+        : file.path.endsWith('/beta.md')
+          ? { ...file, content: file.content.replace('Counting is exact.', 'The Autopilot AIs Family is separate.') }
+          : file,
+    )
+    expect(termMentionsRaw({ files: withOverviews(files) })).toEqual([])
+  })
+
+  test('rejects a link from a Conventions specification to a Design specification', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/governance/conventions/spec-conventions.md',
+      'The implicit inventory.',
+      'The implicit inventory, e.g. [Alpha](../../design/foundation/alpha.md).',
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC416'])
+  })
+
   test('rejects a cycle of References', () => {
     const files = mentionCorpus(
       'Each [Widget](alpha.md#parts) is counted.',

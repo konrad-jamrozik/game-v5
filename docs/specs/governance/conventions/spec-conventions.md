@@ -25,14 +25,14 @@ each Specification kind.
 
 What a specification is and how it is identified and classified.
 
-| Term                 | Definition                                                                                                                                                                                   | Prohibited synonyms |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| Specification        | A registered artifact that defines rules, contracts, Game Data Records ([GDRs](../../design/foundation/core-concepts.md#game-build-and-content)), governance, or planned specification work. |                     |
-| Registered           | Declared by its own metadata table, with a stable Spec ID, in a Markdown file under `docs/specs` that is not an overview of a Specification kind or a Family.                                |                     |
-| Specification kind   | One of the three broad divisions of the specifications, Governance, Design, and Implementation, which differ in what their specifications govern.                                            |                     |
-| Family               | A subdivision of a Specification kind that is a specification's single ownership category, declared in metadata and mapped to its directory.                                                 |                     |
-| Design specification | A specification of the Design Specification kind, which describes the game itself.                                                                                                           |                     |
-| Requirement          | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                                          |                     |
+| Term                 | Definition                                                                                                                                                    | Prohibited synonyms |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Specification        | A registered artifact that defines rules, contracts, game data, governance, or planned specification work.                                                    |                     |
+| Registered           | Declared by its own metadata table, with a stable Spec ID, in a Markdown file under `docs/specs` that is not an overview of a Specification kind or a Family. |                     |
+| Specification kind   | One of the three broad divisions of the specifications, Governance, Design, and Implementation, which differ in what their specifications govern.             |                     |
+| Family               | A subdivision of a Specification kind that is a specification's single ownership category, declared in metadata and mapped to its directory.                  |                     |
+| Design specification | A specification of the Design Specification kind, which describes the game itself.                                                                            |                     |
+| Requirement          | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                           |                     |
 
 ## Artifacts
 
@@ -52,8 +52,8 @@ The kinds of participant in making, changing, or playing the game.
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | Persona          | A kind of participant in making, changing, or playing the game, defined by what the participant does with the game. The Personas are Game designer, Engine designer, Content designer, UI designer, AI designer, Implementer, and Player. | Audience; actor; user role. The Audience metadata row keeps its name, and ordinary uses of "role" remain valid. |
 | Game designer    | The Persona that does all the design of the game, encompassing what the Engine designer, Content designer, UI designer, and AI designer do.                                                                                               |                                                                                                                 |
-| Engine designer  | The Persona that designs the engine and its game behavior, decides which inputs to that behavior GDRs supply, and establishes these specification conventions.                                                                            | Ruleset designer                                                                                                |
-| Content designer | The Persona that authors GDRs conforming to the [Types](../../design/foundation/core-concepts.md#data-modeling) the Engine designer exposes for content.                                                                                  |                                                                                                                 |
+| Engine designer  | The Persona that designs the engine and its game behavior, decides which inputs to that behavior game data supplies, and establishes these specification conventions.                                                                     | Ruleset designer                                                                                                |
+| Content designer | The Persona that authors game data within the structures the Engine designer exposes for content.                                                                                                                                         |                                                                                                                 |
 | UI designer      | The Persona that designs player-facing interfaces over the engine API.                                                                                                                                                                    |                                                                                                                 |
 | AI designer      | The Persona that designs an AI that plays the game.                                                                                                                                                                                       |                                                                                                                 |
 | Implementer      | The Persona that implements specifications as code and tests.                                                                                                                                                                             | Implementor                                                                                                     |
@@ -71,24 +71,27 @@ Every registered specification declares exactly one of these Families in metadat
 from that Family. With the exception of the root index, its file must be a direct child of the directory the following
 table names for its Family. The following table is exhaustive.
 
-| Specification kind | Family                                                                            | Directory                   | Ownership boundary                                                                                                                   | Builds on                                                    |
-| ------------------ | --------------------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| Governance         | Conventions                                                                       | `governance/conventions/`   | How specifications are written, registered, and related                                                                              | Nothing                                                      |
-| Governance         | Process                                                                           | `governance/process/`       | How the game is developed, and how work on the specifications is planned and tracked                                                 | Nothing                                                      |
-| Design             | Foundation                                                                        | `design/foundation/`        | Cross-cutting vocabulary, modeling, engine execution, numeric, undo and redo, and save contracts                                     | Nothing                                                      |
-| Design             | Mechanics                                                                         | `design/mechanics/`         | Game concepts, player-facing game-system rules, transitions, formulas, and effects, and the order of Advance turn                    | Foundation                                                   |
-| Design             | Content                                                                           | `design/content/`           | Versioned GDRs, named parameters, catalogs, and starting configurations                                                              | Foundation, Mechanics                                        |
-| Design             | UI                                                                                | `design/ui/`                | Non-behavioural guidance on how user interfaces present the engine API to the Player                                                 | Foundation, Mechanics                                        |
-| Design             | [Autopilot AIs](../../design/foundation/engine-contract.md#principals-and-access) | `design/autopilot-ais/`     | The goals and priorities of each Autopilot AI a [Game build](../../design/foundation/core-concepts.md#game-build-and-content) offers | Foundation, Mechanics                                        |
-| Implementation     | Mandatory                                                                         | `implementation/mandatory/` | Repository constraints that every Implementation must meet                                                                           | Foundation, Mechanics, Content, UI, Autopilot AIs            |
-| Implementation     | Guidance                                                                          | `implementation/guidance/`  | Technical suggestions on matters the Design specifications leave open, e.g. architecture guidance                                    | Foundation, Mechanics, Content, UI, Autopilot AIs            |
-| Implementation     | Recipes                                                                           | `implementation/recipes/`   | Suggested steps for carrying out one recurring implementation task, e.g. publishing an Implementation                                | Foundation, Mechanics, Content, UI, Autopilot AIs, Mandatory |
+| Specification kind | Family        | Directory                   | Ownership boundary                                                                                                | Builds on                                                    |
+| ------------------ | ------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Governance         | Conventions   | `governance/conventions/`   | How specifications are written, registered, and related                                                           | Nothing                                                      |
+| Governance         | Process       | `governance/process/`       | How the game is developed, and how work on the specifications is planned and tracked                              | Nothing                                                      |
+| Design             | Foundation    | `design/foundation/`        | Cross-cutting vocabulary, modeling, engine execution, numeric, undo and redo, and save contracts                  | Nothing                                                      |
+| Design             | Mechanics     | `design/mechanics/`         | Game concepts, player-facing game-system rules, transitions, formulas, and effects, and the order of Advance turn | Foundation                                                   |
+| Design             | Content       | `design/content/`           | Versioned game data, named parameters, catalogs, and starting configurations                                      | Foundation, Mechanics                                        |
+| Design             | UI            | `design/ui/`                | Non-behavioural guidance on how user interfaces present the engine API to the Player                              | Foundation, Mechanics                                        |
+| Design             | Autopilot AIs | `design/autopilot-ais/`     | The goals and priorities of each AI that plays the game for the player                                            | Foundation, Mechanics                                        |
+| Implementation     | Mandatory     | `implementation/mandatory/` | Repository constraints that every Implementation must meet                                                        | Foundation, Mechanics, Content, UI, Autopilot AIs            |
+| Implementation     | Guidance      | `implementation/guidance/`  | Technical suggestions on matters the Design specifications leave open, e.g. architecture guidance                 | Foundation, Mechanics, Content, UI, Autopilot AIs            |
+| Implementation     | Recipes       | `implementation/recipes/`   | Suggested steps for carrying out one recurring implementation task, e.g. publishing an Implementation             | Foundation, Mechanics, Content, UI, Autopilot AIs, Mandatory |
 
 The Builds on column states which Families a Family builds on. A specification depends only on specifications of its
 own Family, of the Families its Family builds on, and of the Families those build on in turn; every specification also
 follows Specification Conventions, as its Conventions metadata row shows. Foundation and
 Mechanics together form the game engine, which Content, UI, and Autopilot AIs build on; every Implementation Family
-builds on all the Design Families, and Recipes also builds on Mandatory.
+builds on all the Design Families, and Recipes also builds on Mandatory. The Conventions specifications rely on no
+Design or Implementation specification, because they govern them: they state their rules without the terms those
+specifications own and do not link them, and a writing rule about one such term belongs to the specification that
+owns it.
 [Family architecture](../../README.md#family-architecture) in the specification index shows a diagram generated from
 the links between the specifications, so it can be compared with this table.
 
@@ -132,15 +135,15 @@ grants no engine API authority. Most Personas write specifications within their 
 The following table is the exhaustive set of Personas. The last column names the Families each Persona mainly works with, as listed in
 [Specification kinds and Families](#specification-kinds-and-families), and links key specifications in them.
 
-| Persona          | Filled by    | What the Persona does                                                                                                                                                              | Primary Families                                                                                                                                        |
-| ---------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Game designer    | Human        | Does all the design of the game, encompassing the Engine designer, Content designer, UI designer, and AI designer Personas, and decides how much of that work to delegate to LLMs. | All Families                                                                                                                                            |
-| Engine designer  | Human        | Designs the engine and its game behavior, decides which inputs to that behavior GDRs supply and so become content, and establishes these specification conventions.                | Conventions, Foundation, Mechanics; e.g. [Specification Conventions](spec-conventions.md), [Core Concepts](../../design/foundation/core-concepts.md)    |
-| Content designer | Human or LLM | Authors GDRs, including the initial campaign content and in-game encyclopedia articles, within the Types the Engine designer exposes for content.                                  | Foundation, Mechanics; e.g. [Game Data Records](../../design/foundation/game-data-records.md)                                                           |
-| UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                                                       | UI, Foundation; e.g. [Engine Contract](../../design/foundation/engine-contract.md), [Campaign Lifecycle](../../design/foundation/campaign-lifecycle.md) |
-| AI designer      | Human or LLM | Designs an AI that plays the game, e.g. an Autopilot AI.                                                                                                                           | Autopilot AIs, Foundation; e.g. [Autopilot](../../design/foundation/autopilot.md), [Engine Contract](../../design/foundation/engine-contract.md)        |
-| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                                       | Foundation, Mechanics, UI, Autopilot AIs, Mandatory, Guidance, Recipes                                                                                  |
-| Player           | Human or LLM | Plays the game.                                                                                                                                                                    | None directly; plays through a user interface                                                                                                           |
+| Persona          | Filled by    | What the Persona does                                                                                                                                                              | Primary Families                                                       |
+| ---------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Game designer    | Human        | Does all the design of the game, encompassing the Engine designer, Content designer, UI designer, and AI designer Personas, and decides how much of that work to delegate to LLMs. | All Families                                                           |
+| Engine designer  | Human        | Designs the engine and its game behavior, decides which inputs to that behavior game data supplies and so become content, and establishes these specification conventions.         | Conventions, Foundation, Mechanics                                     |
+| Content designer | Human or LLM | Authors game data, including the initial content and in-game encyclopedia articles, within the structures the Engine designer exposes for content.                                 | Foundation, Mechanics                                                  |
+| UI designer      | Human or LLM | Designs player-facing interfaces over the shared engine API.                                                                                                                       | UI, Foundation                                                         |
+| AI designer      | Human or LLM | Designs an AI that plays the game.                                                                                                                                                 | Autopilot AIs, Foundation                                              |
+| Implementer      | LLM          | Implements specifications as code and tests.                                                                                                                                       | Foundation, Mechanics, UI, Autopilot AIs, Mandatory, Guidance, Recipes |
+| Player           | Human or LLM | Plays the game.                                                                                                                                                                    | None directly; plays through a user interface                          |
 
 ## Changing specifications
 
@@ -182,7 +185,7 @@ Readers find their way through many specifications by knowing where everything s
    1. `# Overview`, describing the subject of the specification
    2. `# Glossary`
 2. Topic sections: one or more H1 sections, each named after a subject the specification owns; e.g.,
-   `# Agent recovery`. Topic sections state the specification's definitions, game behavior, requirements, and
+   `# Order cancellation`. Topic sections state the specification's definitions, game behavior, requirements, and
    constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
 3. Closing sections:
    1. `# Edge cases and failure behavior`
@@ -214,7 +217,7 @@ structure, and customer accounts", split the specification so that each part has
 Write about the subject, not about the document. Do not announce what a section will say, summarize what it said,
 explain why a rule is placed where it is, except in the statement of the subject's place under
 [Specification Overview](overview-conventions.md#specification-overview),
-or describe how the document treats GDR values, examples, or other documents.
+or describe how the document treats game data values, examples, or other documents.
 
 ### Orientation before detail
 
@@ -239,7 +242,7 @@ A requirement is read by an LLM that takes every word literally, so its wording 
 obligatory. Use plain English by default. **Must** and **must not** express requirements; **may** expresses a permitted alternative. Avoid "usually", "approximately", "appropriate", and "should" in implementation-critical rules unless their measurable meaning is defined. Rationale and suggestions belong in clearly labeled informative text.
 
 Name each coherent requirement or contract with a descriptive section title, without a numbered requirement label or
-Spec ID prefix. E.g., Engine Contract uses the heading **[Derived value](../../design/foundation/core-concepts.md#value-classification) consistency**. Section titles replace
+Spec ID prefix. E.g., a specification of a store uses the heading **Order total consistency**. Section titles replace
 numbered labels throughout specifications, examples, TODOs, and other authored documents. Document-level Spec IDs remain registry and metadata identifiers;
 they are not requirement-reference labels.
 
@@ -250,7 +253,7 @@ distinct, descriptive titles within their document so references are unambiguous
 
 Reference a requirement or other specification section with a Markdown hyperlink whose visible text is the exact
 section title and whose destination is that section's heading anchor. E.g., use
-[Derived value consistency](../../design/foundation/engine-contract.md#derived-value-consistency). Link each relevant section
+`[Order total consistency](orders.md#order-total-consistency)`. Link each relevant section
 individually rather than using numbered labels, ranges, or a document-only link when a specific contract is meant.
 When a title changes or a section moves, update every reference and anchor together. When removing a section, remove
 or revise its references; Git history retains the historical record.
@@ -263,8 +266,8 @@ Use relative Markdown links between specifications.
 
 Introduce every example with "e.g." so a reader never has to infer whether a statement is general or illustrative.
 This applies to whole example sentences, clauses, inline enumerations, bullet lists, and illustrative tables. Write
-"E.g., Factions can be redesigned without touching Campaign State.", not a bare "Factions can be
-redesigned without touching Campaign State." following a general statement. Do not use "for example" or
+"E.g., Orders can be redesigned without touching Store Model.", not a bare "Orders can be
+redesigned without touching Store Model." following a general statement. Do not use "for example" or
 "for instance" as the marker. "Such as", "including", and "illustrates" alone do not mark an example. A section,
 table, or list explicitly titled or labeled "Examples", "Acceptance examples", or "Worked example" is already marked,
 and its items need no further "e.g.". This rule applies to every authored document in the repository, not only
@@ -289,7 +292,7 @@ and whatever it has not settled yet must be visible rather than hidden.
 
 ## Deterministic validation
 
-Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, Family directories under [Specification kinds and Families](#specification-kinds-and-families), required layout, local links and anchors, linked first mentions of terms and the absence of cycles among the specifications under [Deterministic validation](artifact-relationships.md#deterministic-validation), the Conventions row under [Following the conventions](#following-the-conventions), Specification kind and Family overview presence, structure, and coverage under [Family overviews](overview-conventions.md#family-overviews), objectively prohibited terminology, the shape of the [Prohibited synonyms column](glossary-conventions.md#prohibited-synonyms-column), prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document), [Specification Overview](overview-conventions.md#specification-overview), and [Glossary groups](glossary-conventions.md#glossary-groups), topic sections and their subsections that open with a list, table, or subsection instead of a lead under [Orientation before detail](#orientation-before-detail), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
+Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, Family directories under [Specification kinds and Families](#specification-kinds-and-families), required layout, local links and anchors, linked first mentions of terms and the absence of cycles among the specifications under [Deterministic validation](artifact-relationships.md#deterministic-validation), links from a Conventions specification to a Design or Implementation specification, the Conventions row under [Following the conventions](#following-the-conventions), Specification kind and Family overview presence, structure, and coverage under [Family overviews](overview-conventions.md#family-overviews), objectively prohibited terminology, the shape of the [Prohibited synonyms column](glossary-conventions.md#prohibited-synonyms-column), prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document), [Specification Overview](overview-conventions.md#specification-overview), and [Glossary groups](glossary-conventions.md#glossary-groups), topic sections and their subsections that open with a list, table, or subsection instead of a lead under [Orientation before detail](#orientation-before-detail), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
 
 A successful deterministic lint means only that every machine-checkable convention passed. It does not establish conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. A review checks every rule of the conventions that a specification follows, under [Following the conventions](#following-the-conventions), including those the linter cannot check.
 
@@ -310,8 +313,8 @@ game as it is now.
 
 A TODO states what is missing and what a complete answer must include. E.g., prefer:
 
-> TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful [Turns](../../design/foundation/engine-contract.md#player-actions-and-turns), progress-removal behavior, rounding, and a numerical example.
+> TODO: Define the discount applied to a repeat Order, including its conditioning on earlier cancelled Orders, its upper limit, rounding, and a numerical example.
 
-Avoid vague placeholders; e.g., "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation. A `TODO (later):` item names the feature in one line, e.g. "TODO (later): Skill gained from a [Combat](../../design/mechanics/domain-model.md#combat)."
+Avoid vague placeholders; e.g., "TODO: implement discounts." Documentation TODOs request decisions or contract content, not implementation. A `TODO (later):` item names the feature in one line, e.g. "TODO (later): Gift wrapping."
 
 Do not invent a default to close a TODO unless it is explicitly labeled as a proposal.

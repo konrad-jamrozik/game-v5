@@ -74,7 +74,7 @@ Applies to Design specifications.
 - [Writing exact rules](../specs/governance/conventions/design-spec-conventions.md#writing-exact-rules)
   - [Formula and state machine notations](../specs/governance/conventions/design-spec-conventions.md#formula-and-state-machine-notations)
   - [Formulas and uncertainty](../specs/governance/conventions/design-spec-conventions.md#formulas-and-uncertainty)
-  - [Contracts and GDRs](../specs/governance/conventions/design-spec-conventions.md#contracts-and-gdrs)
+  - [Contracts and game data](../specs/governance/conventions/design-spec-conventions.md#contracts-and-game-data)
   - [Specialized material](../specs/governance/conventions/design-spec-conventions.md#specialized-material)
 - [Scope exclusions](../specs/governance/conventions/design-spec-conventions.md#scope-exclusions)
 - [Examples, conformance, and evidence](../specs/governance/conventions/design-spec-conventions.md#examples-conformance-and-evidence)

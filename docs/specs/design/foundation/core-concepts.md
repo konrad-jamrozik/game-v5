@@ -105,6 +105,13 @@ The way a specification defines a value fixes its classification, so no separate
 label is needed. The classification is independent of mutability, of player visibility, and of what an implementation
 stores.
 
+# The GDR abbreviation
+
+Game Data Record has the approved abbreviation GDR. Introduce it as **Game Data Record (GDR)** or
+**Game Data Records (GDRs)** at the first relevant mention in a document, and use **GDR** or **GDRs** afterward,
+including headings, tables, and diagram labels. The Glossary keeps **Game Data Record (GDR)** as the term label.
+Every other term of the game is written in full, e.g. Campaign instance rather than "instance".
+
 # Acceptance examples
 
 - **Data and visibility:** An established resource amount is an Authoritative value, while its calculated total is a

@@ -93,12 +93,12 @@ The Implementation is a conformance defect only when every Family involved alrea
 expects, e.g. the rule and its GDR are both present and the Implementation still leaves the feature out. Otherwise the
 following table, which is exhaustive, decides what changes:
 
-| Where the specifications fall short                                                                                      | What changes                                                                |
-| ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
-| The feature is not specified, so no [GDR](../../design/foundation/core-concepts.md#game-build-and-content) can supply it | Foundation or Mechanics first, then Content for the GDRs the new rule reads |
-| The feature is specified, but its GDR is missing or has the wrong values                                                 | Content only                                                                |
-| What a user interface shows, how it arranges it, or how it looks, while the engine API already allows it                 | UI, including its visual design                                             |
-| How an Autopilot AI chooses its [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns)    | Autopilot AIs                                                               |
+| Where the specifications fall short                                                                                                                                                       | What changes                                                                |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| The feature is not specified, so no [GDR](../../design/foundation/core-concepts.md#game-build-and-content) can supply it                                                                  | Foundation or Mechanics first, then Content for the GDRs the new rule reads |
+| The feature is specified, but its GDR is missing or has the wrong values                                                                                                                  | Content only                                                                |
+| What a user interface shows, how it arranges it, or how it looks, while the engine API already allows it                                                                                  | UI, including its visual design                                             |
+| How an [Autopilot AI](../../design/foundation/engine-contract.md#principals-and-access) chooses its [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns) | Autopilot AIs                                                               |
 
 Whether a value is [Player](../conventions/spec-conventions.md#participants)-visible at all is a rule of Foundation or Mechanics, not of UI: a user interface presents
 the [Player-visible information](../../design/foundation/engine-contract.md#api-surfaces) and cannot reveal what the rules hide, though it can choose how prominently to show it.

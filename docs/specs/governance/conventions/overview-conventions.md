@@ -71,7 +71,7 @@ Each [Family](spec-conventions.md#specifications) that has at least one [registe
 `docs/specs/<kind directory>/<family directory>/about-<family directory>.md`, e.g.
 `design/foundation/about-foundation.md`. A Family overview is not a
 specification: it has no metadata or Spec ID, and it owns no game behavior, contract,
-term, or [GDR](../../design/foundation/core-concepts.md#game-build-and-content). It explains what question each specification in the Family answers, how they relate, and why the
+term, or game data. It explains what question each specification in the Family answers, how they relate, and why the
 boundaries between them sit where they do, linking each specification instead of restating its content.
 
 A Family overview begins with the H1 `About the <Family> family` and contains the H1 sections What this family is for,

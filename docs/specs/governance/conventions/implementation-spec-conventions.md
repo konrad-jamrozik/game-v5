@@ -39,7 +39,7 @@ an Implementation specification only if it meets at least one of the following c
 2. **Implementation steering:** the statement is in a Guidance specification, and it suggests how to build or maintain
    an Implementation, e.g. architecture or code-quality advice, or the steps of one recurring task.
 
-Implementation specifications are non-behavioural. They own no game behavior, observable contract, or [GDR](../../design/foundation/core-concepts.md#game-build-and-content), and no
+Implementation specifications are non-behavioural. They own no game behavior, observable contract, or game data, and no
 acceptance test through the engine API depends on them. Each one is either Guidance or Mandatory, as described in
 [Implementation binding](#implementation-binding). An Implementation specification may explain which observable
 contract its guidance supports; that contract remains owned and guaranteed by its own specification. Implementation
