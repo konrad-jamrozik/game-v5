@@ -25,7 +25,7 @@ GitHub repository, whose CI workflow checks every push and deploys the passing o
 # How they relate
 
 Both Recipes specifications carry out a task on files that the Mandatory family requires. GitHub Pages Deployment uses
-Implementation Placement, because the published repository is the Implementation directory. Specification Updates uses
+Implementation Placement, because the published repository is the Implementation repo. Specification Updates uses
 all three Mandatory specifications, because an update reads the tracking files and settles feedback entries.
 
 <!-- generated:family-diagram:start -->

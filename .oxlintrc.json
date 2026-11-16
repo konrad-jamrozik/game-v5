@@ -8,7 +8,7 @@
   "options": {
     "typeAware": true
   },
-  "ignorePatterns": ["node_modules", "dist", "coverage"],
+  "ignorePatterns": ["node_modules", "dist", "coverage", ".claude/worktrees"],
   "rules": {
     "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
     "typescript/no-explicit-any": "error",

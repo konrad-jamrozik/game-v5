@@ -103,7 +103,7 @@ These informative views are derived from the registered Markdown specifications.
 | ID       | Document                                                                                  | Owns                                                                                                                        |
 | -------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | FEEDBACK | [Implementation Feedback](../specs/implementation/mandatory/implementation-feedback.md)   | The feedback files of Specification problems and Implementation decisions that each Implementation keeps.                   |
-| PLACE    | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to this repository.                                      |
+| PLACE    | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to the Spec repo.                                        |
 | TRACK    | [Specification Tracking](../specs/implementation/mandatory/specification-tracking.md)     | The Specification baseline and Specification map records that tie each Implementation to the specifications it conforms to. |
 
 ## Guidance

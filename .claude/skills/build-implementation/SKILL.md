@@ -16,16 +16,17 @@ the specification wins.
 
 ## Before reading the specifications
 
-1. Run `git status --short -- docs/specs content` in this repository. When it lists changes, tell the user that no
-   Specification revision holds them and ask whether to commit them first or build from the last commit without
-   them. Do not start until the user answers.
+1. Refuse to start unless the main local clone of the Spec repo is on `main`, has no uncommitted or untracked
+   files, and is at the same commit as `origin/main`. Run `git fetch origin`, then check `git branch --show-current`,
+   `git status --porcelain`, and `git rev-parse HEAD origin/main` there. When any check fails, tell the user exactly
+   which and stop; never pull, stash, commit, or reset to make it pass.
 2. Record `git rev-parse HEAD` now, before any subagent reads the specifications. That commit is the Specification
    baseline, under [Specification baseline](../../../docs/specs/implementation/mandatory/specification-tracking.md#specification-baseline),
    even when the specifications receive new commits during the build.
 3. Read every specification in `docs/specs/implementation/mandatory/`, and follow
    [Implementation Placement](../../../docs/specs/implementation/mandatory/implementation-placement.md) to choose the
-   Implementation name and create the Implementation directory.
-4. In the new directory, write `tracking/specification-baseline.md` with the recorded commit, and the empty record
+   Implementation name and create the Implementation repo.
+4. In the new Implementation repo, write `tracking/specification-baseline.md` with the recorded commit, and the empty record
    files that [Implementation Feedback](../../../docs/specs/implementation/mandatory/implementation-feedback.md) and
    [Specification Tracking](../../../docs/specs/implementation/mandatory/specification-tracking.md) require, before any code.
 
@@ -51,20 +52,20 @@ Check each of the following against the files, not from memory, and fix whatever
 
 1. `tracking/specification-baseline.md` names the commit recorded before reading the specifications.
 2. `tracking/specification-map.md` has one section for each Spec ID registered at that commit, and no other. List
-   those Spec IDs with `git grep -h "^| Spec ID" <baseline> -- docs/specs` in this repository.
-3. Every path listed in the Specification map exists in the Implementation directory, and every file of the
+   those Spec IDs with `git grep -h "^| Spec ID" <baseline> -- docs/specs` in the Spec repo.
+3. Every path listed in the Specification map exists in the Implementation repo, and every file of the
    Implementation that implements a specification, including its tests, is listed.
 4. Every Specification problem states a Resolution and links its Implementation decisions, and every Guidance
    or Recipes specification has a Treatment of guidance Implementation decision, under Implementation
    Records.
-5. The Implementation's own checks pass, run from its Implementation directory.
+5. The Implementation's own checks pass, run from its Implementation repo.
 
-Commit the result in the Implementation directory. Never add a Git remote or push from it, under Implementation
+Commit the result in the Implementation repo. Never add a Git remote or push from it, under Implementation
 Placement.
 
 ## Report
 
-Tell the user the Implementation directory, the Specification baseline, the result of each check above, the number of
+Tell the user the Implementation repo, the Specification baseline, the result of each check above, the number of
 Open Specification problems, and whether the specifications received commits after the Specification baseline. Suggest
 the `absorb-implementation-feedback` skill for the Open Specification problems and the `update-implementation` skill
 for those later commits.

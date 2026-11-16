@@ -16,13 +16,17 @@ question silently.
 
 ## Workflow
 
-1. Identify the Implementation directory: the sibling directory of this repository that the user names, or the only
+Every change to the Spec repo follows [Spec repo changes in a worktree](../../../AGENTS.md#spec-repo-changes-in-a-worktree) in the repository's `AGENTS.md`: its worktree, its Gate 1 plan Artifact,
+its Gate 2 local diff, and its handling of push conflicts. Steps 0, 6, and 7 below name where each applies.
+
+0. Create the Spec repo worktree, under step 1 of Spec repo changes in a worktree, before reading any specification.
+1. Identify the Implementation repo: the sibling of the Spec repo's main local clone that the user names, or the only
    one whose name starts with `game-v5-impl-`. Ask the user when several match.
 2. Read `feedback/specification-problems.md` there and select the entries whose Resolution is Open or that state no
    Resolution. Read only those entries and the Implementation decisions they link to in
    `feedback/implementation-decisions.md`. Review Implementation decisions on their own, e.g. to make an Implementer's
    choice a requirement, only when the user asks.
-3. Read `tracking/specification-baseline.md`. When this repository's latest commit is ahead of it, check with
+3. Read `tracking/specification-baseline.md`. When the worktree's `HEAD`, which is the latest `origin/main`, is ahead of it, check with
    `git diff <baseline>..HEAD` on each problem's affected specifications whether a later commit already removed the
    problem, and set those aside as already fixed.
 4. For each remaining problem, read only the affected specification sections the entry names, and propose one outcome
@@ -37,16 +41,18 @@ question silently.
      Implementation may record the same problem again.
 5. Present the proposals to the user in small groups and wait for each decision. Group related problems, e.g. two
    entries about one formula, so one decision covers them.
-6. Make the accepted specification changes under the repository's `AGENTS.md` and
-   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), run `npm run check`, and commit and
-   push as `AGENTS.md` directs, including its exceptions.
-7. For each declined problem, set its Resolution in the Implementation's feedback file to Declined, naming this repository's
-   reviewed commit by its full hash and the user's reason, and commit that in the Implementation directory without
+6. When every problem has a decision, publish the Gate 1 plan Artifact covering every accepted specification change
+   and every decline, and wait for approval. Then make the approved specification changes in the worktree under
+   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), show the Gate 2 local
+   diff, and wait for approval. Then commit, push, update the main local clone, and remove the worktree, under steps 5
+   to 7 of Spec repo changes in a worktree.
+7. For each declined problem, set its Resolution in the Implementation's feedback file to Declined, naming the Spec
+   repo's reviewed commit by its full hash and the user's reason, and commit that in the Implementation repo without
    adding a Git remote. Leave fixed problems Open: the next run of the `update-implementation` skill applies the
    change to the code and sets them Resolved.
 
 ## Report
 
 Tell the user, for each reviewed problem, its identifier and the outcome, with the specification commit that carries
-it. List the problems set aside as already fixed, and suggest running the `update-implementation` skill to apply the
+it, and whether the main local clone of the Spec repo was updated. List the problems set aside as already fixed, and suggest running the `update-implementation` skill to apply the
 new specification changes to the Implementation.

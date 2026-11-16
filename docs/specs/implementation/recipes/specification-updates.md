@@ -29,7 +29,7 @@ Specification baseline forward, leaving every unchanged specification and every 
 
 The difference between the Specification baseline and the target Specification revision is the complete list of
 changes to apply, so it is suggested to be computed first and read before anything else. In the
-[Specification repository directory](../mandatory/implementation-placement.md#glossary), the implementer should run
+[Spec repo](../mandatory/implementation-placement.md#glossary), the implementer should run
 `git diff --find-renames <baseline>..<target> -- docs/specs content`, where `<baseline>` is the Specification baseline
 and `<target>` is the target Specification revision, usually the latest commit. The `content` path covers the GDR files
 that the Implementation copies under [Game data in an Implementation](../mandatory/implementation-placement.md#game-data-in-an-implementation).

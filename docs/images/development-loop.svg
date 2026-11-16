@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="The Development loop: the Game designer changes the specifications in the durable specification repository; the Implementer builds the Implementation with build-implementation, or updates it with update-implementation, in its disposable directory; Implementer feedback flows back into the specifications with absorb-implementation-feedback, repeating until no feedback is open; the Game designer plays and reviews the Implementation and turns Designer feedback into specification changes with apply-designer-feedback">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="The Development loop: the Game designer changes the specifications in the durable Spec repo; the Implementer builds the Implementation with build-implementation, or updates it with update-implementation, in its disposable Implementation repo; Implementer feedback flows back into the specifications with absorb-implementation-feedback, repeating until no feedback is open; the Game designer plays and reviews the Implementation and turns Designer feedback into specification changes with apply-designer-feedback">
   <!-- Hand-kept diagram for docs/specs/governance/process/development-loop.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --accent: #2f7f95; --accenttint: #e6f2f5; }
@@ -47,9 +47,9 @@
   <text class="b" x="618" y="70">④ Play and review</text>
   <text class="m" x="618" y="98">forms Designer feedback</text>
 
-  <!-- Specification repository -->
+  <!-- Spec repo -->
   <rect class="durable" x="30" y="170" width="370" height="295" rx="10"/>
-  <text class="lane" x="48" y="192">SPECIFICATION REPOSITORY · DURABLE</text>
+  <text class="lane" x="48" y="192">SPEC REPO · DURABLE</text>
 
   <rect class="inner" x="48" y="205" width="334" height="65" rx="6"/>
   <text class="b" x="62" y="229">Governance specifications</text>
@@ -67,9 +67,9 @@
   <text class="m" x="62" y="424">Guidance and Recipes: suggestions and tasks</text>
   <text class="m" x="62" y="439">Skills sit beside them in .claude/skills/</text>
 
-  <!-- Implementation directory -->
+  <!-- Implementation repo -->
   <rect class="disposable" x="600" y="170" width="370" height="295" rx="10"/>
-  <text class="lane" x="618" y="192">IMPLEMENTATION DIRECTORY · DISPOSABLE</text>
+  <text class="lane" x="618" y="192">IMPLEMENTATION REPO · DISPOSABLE</text>
 
   <rect class="inner" x="618" y="205" width="334" height="65" rx="6"/>
   <text class="b" x="632" y="229">Implementation</text>

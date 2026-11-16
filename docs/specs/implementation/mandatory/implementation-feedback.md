@@ -16,7 +16,7 @@ gaps, and how the implementer got past each such place is worth keeping. While a
 specifications and makes decisions the specifications leave open or fail to settle.
 
 Every Implementation must therefore keep this feedback in two files inside its
-[Implementation directory](implementation-placement.md#glossary): the Specification problems it met and the
+[Implementation repo](implementation-placement.md#glossary): the Specification problems it met and the
 Implementation decisions it made, each decision linked to the problems it settles. The Engine designer reads the
 feedback to improve the specifications and to compare Implementations.
 
@@ -35,7 +35,7 @@ feedback to improve the specifications and to compare Implementations.
 
 # Feedback files
 
-Every Implementation must keep these two Markdown files in its Implementation directory:
+Every Implementation must keep these two Markdown files in its Implementation repo:
 
 | Path                                   | Contents                                           |
 | -------------------------------------- | -------------------------------------------------- |
@@ -60,7 +60,7 @@ entry states:
 - **Category:** one category from the tables below.
 - **Affected specifications:** each affected specification by Spec ID and section heading, e.g. `DEPDIR, Dependency
 direction`, with the relevant wording quoted. Specifications are named rather than linked, because the
-  Implementation refers to no file outside its Implementation directory, as
+  Implementation refers to no file outside its Implementation repo, as
   [Implementation Placement](implementation-placement.md) requires.
 - **Description:** what the problem or decision is.
 - **Links:** for a Specification problem, the identifiers of the Implementation decisions that settle it; for an

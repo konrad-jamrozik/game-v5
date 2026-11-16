@@ -39,7 +39,7 @@ names, for each specification, the files that implement it, so each change leads
 Both records say where the Implementation stands against the specifications rather than what it learned from them, so
 they are kept together in their own directory, apart from the feedback files of
 [Feedback files](implementation-feedback.md#feedback-files) of Implementation Feedback. Every Implementation must keep these two Markdown
-files in its [Implementation directory](implementation-placement.md#glossary):
+files in its [Implementation repo](implementation-placement.md#glossary):
 
 | Path                                 | Contents                               |
 | ------------------------------------ | -------------------------------------- |
@@ -78,7 +78,7 @@ followed by one H2 section for each specification registered at the Specificatio
 specification. Each heading is the Spec ID followed by the specification's title, e.g. `## COMBAT: Combat`, and the
 sections are in alphabetical order of Spec ID.
 
-Each section must list, as one path per bullet relative to the Implementation directory, every file of the
+Each section must list, as one path per bullet relative to the Implementation repo, every file of the
 Implementation that implements the specification, including its tests, e.g. `- engine/combat/` and
 `- tests/combat/`. A directory path stands for every file in it. One file may be listed under several
 specifications. A specification that no file implements, e.g. a Governance specification, has a section holding the
@@ -100,5 +100,5 @@ Specification map in the change that moves the Specification baseline past that 
 move to the sections of the specifications that now cover them. A specification that is split keeps its Spec ID in the
 part that retains it, and each new part receives its own section.
 
-A path listed in the Specification map must exist in the Implementation directory; a file that is deleted is removed
+A path listed in the Specification map must exist in the Implementation repo; a file that is deleted is removed
 from every section that lists it in the same change.

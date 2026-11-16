@@ -90,7 +90,7 @@ specifications already say about it. The following cases are complete:
 
 Several tasks of the Development loop recur, and each needs the same few specifications and the same order of steps.
 An LLM skill captures one such task, so that an LLM agent does not have to rediscover what matters for it each time. LLM skills
-are kept in `.claude/skills/` of the specification repository, beside the specifications they serve. An LLM skill states no
+are kept in `.claude/skills/` of the Spec repo, beside the specifications they serve. An LLM skill states no
 rule of its own: it points to the specifications that own the rules, and the specifications win when the two
 disagree.
 
@@ -131,10 +131,10 @@ specifications, where the Game designer decides it, and everything that only car
 
 ## Why each part exists
 
-**Why does an Implementation live outside the specification repository?** To make the line between the design and
-its product physical. Everything in an Implementation's directory can be thrown away and rebuilt, so nothing there may
+**Why does an Implementation live outside the Spec repo?** To make the line between the design and
+its product physical. Everything in an Implementation repo can be thrown away and rebuilt, so nothing there may
 be the only record of a decision. The separation also lets several Implementations exist side by side, and keeps any
-of them from depending on files of the specification repository.
+of them from depending on files of the Spec repo.
 
 **Why is an Implementation never changed directly?** Because a direct change lives only in a disposable artifact. A
 rebuild loses it, another Implementation never receives it, and the specifications still say the old thing, so the

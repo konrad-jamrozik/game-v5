@@ -32,7 +32,7 @@ hold. The list is exhaustive.
 
 - **The Engine designer requested it.** The Engine designer has asked for the Implementation to be published to a
   public GitHub repository under the Engine designer's personal GitHub account. Until then the Implementation stays
-  local, under [Creating the Implementation directory](../mandatory/implementation-placement.md#creating-the-implementation-directory).
+  local, under [Creating the Implementation repo](../mandatory/implementation-placement.md#creating-the-implementation-repo).
   A request for a private repository, for an organization account, or for another host is a different request, and this
   guidance does not apply to it.
 - **GitHub Pages can host the Implementation.** The Implementation's web Game build is a set of static files that a
@@ -45,13 +45,11 @@ implementer should ask the Engine designer to run `gh auth login` rather than as
 
 # Local repository
 
-The remote repository is created from a local Git repository whose root is the
-[Implementation directory](../mandatory/implementation-placement.md#glossary). If the Implementation directory is not a Git
-repository yet, the implementer should initialize one with `main` as its default branch and commit the whole
-Implementation:
+The remote repository is created from the
+[Implementation repo](../mandatory/implementation-placement.md#glossary). Before creating it, the implementer should
+commit the whole Implementation on its `main` branch:
 
 ```sh
-git init -b main
 git add -A
 git status   # confirm nothing that belongs in .gitignore is staged
 git commit -m "Initial commit"
@@ -71,7 +69,7 @@ account, with the local repository as its source, and push in the same command:
 gh repo create <account>/<implementation-name> --public --source . --remote origin --push
 ```
 
-E.g., for the account `konrad-jamrozik` and the Implementation directory `game-v5-impl-web/`, the repository is
+E.g., for the account `konrad-jamrozik` and the Implementation repo `game-v5-impl-web/`, the repository is
 `konrad-jamrozik/game-v5-impl-web` and the Game build is served at
 `https://konrad-jamrozik.github.io/game-v5-impl-web/`.
 
@@ -94,9 +92,9 @@ should use hash-based routing instead, because GitHub Pages answers a request fo
 # Continuous integration workflow
 
 The CI workflow is what turns a push into a deployment: it repeats the Implementation's checks on a clean machine and
-deploys only their result. It should reside in the Implementation directory, at `.github/workflows/deploy-pages.yml`,
+deploys only their result. It should reside in the Implementation repo, at `.github/workflows/deploy-pages.yml`,
 like every other file needed to build the Implementation under
-[Implementation directory](../mandatory/implementation-placement.md#implementation-directory).
+[Implementation repo](../mandatory/implementation-placement.md#implementation-repo).
 
 The workflow should have two jobs:
 

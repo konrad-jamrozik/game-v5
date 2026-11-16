@@ -14,7 +14,7 @@ files of an Implementation rather than through the engine API.
 ## Implementation Placement
 
 [Implementation Placement](implementation-placement.md) answers _where does an implementation live?_ It confines each
-implementation to its own directory beside this repository's local clone, e.g. `game-v5-impl-a/`, which the
+implementation to its own Implementation repo beside the Spec repo, e.g. `game-v5-impl-a/`, which the
 implementation treats as its repository root.
 
 ## Implementation Feedback
@@ -31,7 +31,7 @@ specification to the files that implement it.
 # How they relate
 
 Implementation Feedback and Specification Tracking use Implementation Placement: their files are kept in its
-Implementation directory. Specification Tracking also uses Implementation Feedback, whose Specification problems are
+Implementation repo. Specification Tracking also uses Implementation Feedback, whose Specification problems are
 the only exceptions to conformance it allows. Implementation Placement uses Bootstrap GDRs from the Content family,
 whose files each implementation copies.
 
