@@ -11,7 +11,7 @@
 # Overview
 
 Money is how the Agency turns what it earns today into strength tomorrow, and keeping the Agency running costs money
-every turn. In every Advance turn the [Agency](domain-model.md#glossary) receives income, its funding plus what its
+every Turn. In every Advance turn the [Agency](domain-model.md#glossary) receives income, its funding plus what its
 Agents earn on Contracting, and pays upkeep for every Serving Agent, whether or not that Agent is working. Money may run
 negative, but funding, the recurring part of income, never falls below zero.
 
@@ -509,7 +509,7 @@ Agents. The effect changes no other Agent value, no Weapon GDR, and no Enemy.
 [Turn series](../foundation/world-history.md#turn-series) in World History. Each records the Agency's money, a whole
 number of money that may be negative.
 
-| Turn series                | Recorded moment of each turn                                                                             |
+| Turn series                | Recorded moment of each Turn                                                                             |
 | -------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Money at the start of turn | The Turn-start state of the Turn: the Committed state in which the Turn starts, before any action of it. |
 | Money at the end of turn   | The Turn-end state of the Turn: the Committed state in which the Advance turn that ends the Turn begins. |
@@ -643,7 +643,7 @@ value. The values they read are:
 | `sidearm`           | `damage` 10                                                                                                                                  |
 | `operation_level_2` | `on_win` money 30 and funding 5; `on_ignored_or_lost` funding −1                                                                             |
 
-"The Advance turn ending turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. Unless an
+"The Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. Unless an
 example states otherwise, no rule of [Missions](missions.md) changes money or funding in the Advance turns it describes,
 i.e. no Mission is Won or Lost and no Mission site is Expired in them.
 
@@ -680,9 +680,9 @@ starts from the Campaign under [Campaign creation](#campaign-creation), with Age
 
 **Turn 1:** The player calls `assignAgents([a1, a2], Contracting)` and `assignAgents([a3], Training)`; a4 stays on
 Standby. a1, a2, and a3 are In transit, so projected income stays 20 + 30 × 0 = 20 and projected upkeep stays
-10 × 4 = 40. Money is 500 when the player advances the turn.
+10 × 4 = 40. Money is 500 when the player ends the Turn.
 
-| Step of the Advance turn ending turn 1 | What happens                                                                              | Money |
+| Step of the Advance turn ending Turn 1 | What happens                                                                              | Money |
 | -------------------------------------- | ----------------------------------------------------------------------------------------- | ----- |
 | Transit                                | a1, a2, and a3 arrive.                                                                    | 500   |
 | Agency income                          | C = 0, because a1 and a2 were In transit in the Turn-end state: 20 + 30 × 0 = 20.         | 520   |
@@ -693,7 +693,7 @@ Standby. a1, a2, and a3 are In transit, so projected income stays 20 + 30 × 0 =
 20, so money becomes 430 and Agent a5 is created on Standby, In transit. Projected income is 20 + 30 × 2 = 80, from a1
 and a2, and projected upkeep is 10 × 5 = 50.
 
-| Step of the Advance turn ending turn 2 | What happens                                                                                  | Money |
+| Step of the Advance turn ending Turn 2 | What happens                                                                                  | Money |
 | -------------------------------------- | --------------------------------------------------------------------------------------------- | ----- |
 | Transit                                | a5 arrives.                                                                                   | 430   |
 | Agency income                          | C = 2: 20 + 30 × 2 = 80.                                                                      | 510   |
@@ -704,7 +704,7 @@ and a2, and projected upkeep is 10 × 5 = 50.
 **Turn 3:** The player calls `assignAgents([a5], Contracting)` and `assignAgents([a1], Standby)`. Only a2 is on
 Contracting, At assignment, so projected income is 20 + 30 × 1 = 50; projected upkeep is 10 × 5 = 50.
 
-| Step of the Advance turn ending turn 3 | What happens                                                                                      | Money |
+| Step of the Advance turn ending Turn 3 | What happens                                                                                      | Money |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------- | ----- |
 | Transit                                | a1 and a5 arrive.                                                                                 | 460   |
 | Agency income                          | C = 1, a2 only, because a5 has just arrived and a1 is no longer on Contracting: 20 + 30 × 1 = 50. | 510   |
@@ -723,7 +723,7 @@ and funding 20, and these Agents: a1 on Standby, At assignment; a2 on Contractin
 Mission site s1; a4 on Recovery, At assignment; a5 on Contracting, At assignment; a6 on Training, In transit; a7 Killed in an
 earlier Turn; and a8 Dismissed. Projected income is 20 + 30 × 1 = 50 and projected upkeep is 10 × 6 = 60.
 
-In the Advance turn ending turn 9, Agency income counts only a5, because a2 arrives in the Transit step: money
+In the Advance turn ending Turn 9, Agency income counts only a5, because a2 arrives in the Transit step: money
 300 + 50 = 350. Upkeep counts the six Serving Agents a1 to a6, including the arriving a2 and a6, the Deployed a3, and
 a4 on Recovery, and neither a7 nor a8: money 350 − 60 = 290. In the Mission resolution step, a3 is Killed in the Combat
 at s1. In Turn 10, projected upkeep is 10 × 5 = 50: a3 paid upkeep in the Advance turn in which it was Killed and pays
@@ -745,8 +745,8 @@ This example exercises [Funding changes](#funding-changes) and [Agency income](#
 `operation_level_2`, each applied under [Consequences](missions.md#consequences).
 
 - **Win:** With funding 20, a Response Mission at a site of Faction operation level 2 is Won in the Mission resolution step
-  of the Advance turn ending turn 6. That Advance turn's Agency income step already used funding 20. Money rises by 30,
-  and funding becomes max(0, 20 + 5) = 25. The Agency income step of the Advance turn ending turn 7 uses funding 25, and
+  of the Advance turn ending Turn 6. That Advance turn's Agency income step already used funding 20. Money rises by 30,
+  and funding becomes max(0, 20 + 5) = 25. The Agency income step of the Advance turn ending Turn 7 uses funding 25, and
   projected income in Turn 7 includes it.
 - **Loss at the floor:** With funding 0, such a Mission site is Expired in the Mission site expiration step. Funding
   becomes max(0, 0 − 1) = 0.

@@ -533,9 +533,9 @@ Each Mission site counts down independently of every other, and the funding chan
 step are summed and floored once, under [Funding changes](economy-and-upgrades.md#funding-changes), so the result does
 not depend on processing order.
 
-**Timing consequence:** A Mission site created during the Advance turn ending turn t with `expires_in_turns` E has Turns
+**Timing consequence:** A Mission site created during the Advance turn ending Turn t with `expires_in_turns` E has Turns
 until expiration E during Turn t + 1, can be deployed to in each of Turns t + 1 to t + E, and is Expired in the Advance turn
-ending turn t + E if no team is deployed to it. A team deployed during Turn t + E, when Turns until expiration is 1, still
+ending Turn t + E if no team is deployed to it. A team deployed during Turn t + E, when Turns until expiration is 1, still
 fights, because Mission resolution precedes Mission site expiration, and the Mission site is then Attempted, not Active.
 
 # Consequences
@@ -689,7 +689,7 @@ All examples use the Bootstrap GDR values from `content/missions/mission_site_ar
 | `standard_mission`       | The MissionArchetype; no rule reads its properties                                                                                       |
 
 The Campaign has one Faction, Red Dawn, from `red_dawn`, which is not Eliminated unless an example says otherwise. "The
-Advance turn ending turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
+Advance turn ending Turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
 `field_agent` with skill 100, current health 30 of 30, exhaustion 0, weapon damage 10, and effective skill 100, and no Upgrade
 has been acquired, so the Transport cap is 4. In the Combat traces, Combat's rules decide every target and every value;
 the injected named random outcomes are each attack's hit outcome and, for a hit, its damage outcome, under
@@ -708,12 +708,12 @@ This example exercises [Mission site creation](#mission-site-creation), [Enemy c
 [Mission lifecycle](#mission-lifecycle), [Resolving one Mission](#resolving-one-mission), and
 [Consequences](#consequences).
 
-**Creation, Advance turn ending turn 4.** In Investigation progress, Investigation i1 completes, under
+**Creation, Advance turn ending Turn 4.** In Investigation progress, Investigation i1 completes, under
 [Investigations](investigations.md), and its creating rule supplies the MissionSiteArchetype `apprehend_member`, the
 origin Investigation i1, and the target Faction Red Dawn; e.g., the creating rule is the completion effect of
 `locate_red_dawn_member` under [Leads and Progression](leads-and-progression.md). Mission site s1 is created:
 
-| Value                  | s1 after the Advance turn ending turn 4                                          |
+| Value                  | s1 after the Advance turn ending Turn 4                                          |
 | ---------------------- | -------------------------------------------------------------------------------- |
 | Archetype              | `apprehend_member`, as supplied                                                  |
 | Kind                   | Initiative                                                                       |
@@ -726,7 +726,7 @@ origin Investigation i1, and the target Faction Red Dawn; e.g., the creating rul
 
 The Combat rating of s1's Enemies is 3 × 40 = 120, and its rewards are money 5, funding change 0, and Panic reduction 1.
 
-**Countdown.** In the Advance turn ending turn 5, s1 counts down to 4.
+**Countdown.** In the Advance turn ending Turn 5, s1 counts down to 4.
 
 **Deploying, Turn 6.** The Agency's roster is exactly the four Serving Agents a1, a2, a3, and a4; each is on Standby,
 At assignment, so no Agent is on Contracting and no Agent is Deployed. s1 is the only Mission site. The player
@@ -736,7 +736,7 @@ Current team [a1, a2, a3, a4], and lifecycle Deployed. Each Agent is Deployed on
 s1's Turns until expiration stays 4. A further `deployAgents` of any Agent to any Mission site in Turn 6 is
 rejected, because 4 + 1 is more than 4.
 
-**Resolution, Advance turn ending turn 6.** Money is 400, funding 20, and Panic 10 when the Advance turn begins, and the
+**Resolution, Advance turn ending Turn 6.** Money is 400, funding 20, and Panic 10 when the Advance turn begins, and the
 Pending panic change is 0. In Agency income, under [Agency income](economy-and-upgrades.md#agency-income) in Economy and
 Upgrades, money rises by funding 20 plus 30 × 0 for no Agent on Contracting, to 420. In Upkeep, under
 [Upkeep](economy-and-upgrades.md#upkeep), money falls by 10 × 4 for the four Serving Agents, all Deployed, to 380. No
@@ -757,24 +757,24 @@ a3 and a4 have no target in Combat round 2, and no Enemy attacks in its Enemies'
 is 400, so the Combat continues; after Combat round 2 no Enemy is able to fight, and the Combat outcome is Prevailed after 2
 Combat rounds. Every Agent ends with current health 30 of 30; a1 has exhaustion 4, a2 2, a3 1, and a4 1.
 
-| Value after the Advance turn ending turn 6 | Result                                                                                                                    |
+| Value after the Advance turn ending Turn 6 | Result                                                                                                                    |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
 | s1                                         | Attempted; Turns until expiration 4                                                                                       |
 | m1                                         | Won; an empty Current team and its unchanged Team sent [a1, a2, a3, a4]; the Turn report holds the Combat report above    |
 | a1, a2, a3, a4                             | Serving; Standby, In transit, because each has current health equal to its base health; m1 in each Participation history  |
-| Money                                      | 380 + 5 = 385 after Mission resolution; no later step of this Advance turn changes money, so the turn ends with money 385 |
+| Money                                      | 380 + 5 = 385 after Mission resolution; no later step of this Advance turn changes money, so the Turn ends with money 385 |
 | Funding                                    | max(0, 20 + 0) = 20                                                                                                       |
 | Pending panic change                       | −1 from m1, the only contribution, so the Panic step gives Panic max(0, min(100, 10 − 1)) = 9                             |
 | Lead progression                           | A win of m1 against `locate_red_dawn_member`, recorded by [Leads and Progression](leads-and-progression.md)               |
 
 s1 is not Active in Mission site expiration, so it does not count down. The four Agents arrive in the Advance turn ending
-turn 7 and can be ordered in Turn 8. No later Player action can deploy Agents to s1.
+Turn 7 and can be ordered in Turn 8. No later Player action can deploy Agents to s1.
 
 ## foil_sabotage ignored, Lost, and Won
 
 This example exercises [Consequences](#consequences), [Mission site expiration](#mission-site-expiration),
 [Resolving one Mission](#resolving-one-mission), [Mission site lifecycle](#mission-site-lifecycle), and
-[Mission lifecycle](#mission-lifecycle), and compares the three outcomes of the same Mission site. In the Advance turn ending turn 40, a Faction operation occurrence
+[Mission lifecycle](#mission-lifecycle), and compares the three outcomes of the same Mission site. In the Advance turn ending Turn 40, a Faction operation occurrence
 of Red Dawn with Faction operation level `operation_level_2` creates Mission site s2 from `foil_sabotage`, under
 [Faction operation occurrence generation](factions.md#faction-operation-occurrence-generation): Response, origin Red Dawn
 and `operation_level_2`, target Faction Red Dawn, Turn created 40, Active, Turns until expiration 4, and the Enemies list
@@ -790,15 +790,15 @@ change.
 | 43   | 2                                                          |
 | 44   | 1                                                          |
 
-**Ignored.** No team is deployed. s2 counts down to 3, 2, and 1 in the Advance turns ending turns 41, 42, and 43. In
-Mission site expiration of the Advance turn ending turn 44 it reaches 0 and is Expired: a Panic increase of 8 is added to
+**Ignored.** No team is deployed. s2 counts down to 3, 2, and 1 in the Advance turns ending Turns 41, 42, and 43. In
+Mission site expiration of the Advance turn ending Turn 44 it reaches 0 and is Expired: a Panic increase of 8 is added to
 the Pending panic change, so Panic becomes 18 when nothing else contributes, and funding becomes max(0, 20 − 1) = 19.
-Money is not changed by s2. The Agency income step of the Advance turn ending turn 44 had already used funding 20; that
-of the Advance turn ending turn 45 uses 19. s2 never has a Mission, and its Enemies keep their initial values.
+Money is not changed by s2. The Agency income step of the Advance turn ending Turn 44 had already used funding 20; that
+of the Advance turn ending Turn 45 uses 19. s2 never has a Mission, and its Enemies keep their initial values.
 
 **Lost.** During Turn 42, with Turns until expiration 3, the player calls `deployAgents(s2, [a1])`, so s2 is Attempted and
 Mission m2 is created with the Current team [a1]. In Mission resolution of
-the Advance turn ending turn 42:
+the Advance turn ending Turn 42:
 
 | Combat round | Attacker → target              | Injected outcomes | Result                                                             |
 | ------------ | ------------------------------ | ----------------- | ------------------------------------------------------------------ |
@@ -818,7 +818,7 @@ not count down in Mission site expiration, because it is Attempted, not Active.
 
 **Won.** During Turn 41, with Turns until expiration 4, the player calls `deployAgents(s2, [a1, a2, a3, a4])`, so s2 is
 Attempted and Mission m2 is created with the Current team [a1, a2, a3, a4]. In Mission
-resolution of the Advance turn ending turn 41:
+resolution of the Advance turn ending Turn 41:
 
 | Combat round | Attacker → target                  | Injected outcomes   | Result                                                                                                                                                                   |
 | ------------ | ---------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -836,14 +836,14 @@ resolution of the Advance turn ending turn 41:
 
 After Combat round 3 no Enemy is able to fight, so the Combat outcome is Prevailed and m2 is Won. Every Agent ends with current health
 30 of 30 and becomes Standby, In transit. Money becomes 300 + 30 = 330 and funding becomes max(0, 20 + 5) = 25; no Panic
-change is added. The Agency income step of the Advance turn ending turn 42 uses funding 25. The operation level's
+change is added. The Agency income step of the Advance turn ending Turn 42 uses funding 25. The operation level's
 `on_win` is applied once: money rises by 30, not 60, and no rule of Factions adds a second reward.
 
 | Variant | Final states                                        | Money change | Funding after the step | Panic contribution |
 | ------- | --------------------------------------------------- | ------------ | ---------------------- | ------------------ |
-| Ignored | s2 Expired, Advance turn ending turn 44; no Mission | 0            | 19                     | +8                 |
-| Lost    | s2 Attempted; m2 Lost, Advance turn ending turn 42  | 0            | 19                     | +8                 |
-| Won     | s2 Attempted; m2 Won, Advance turn ending turn 41   | +30          | 25                     | 0                  |
+| Ignored | s2 Expired, Advance turn ending Turn 44; no Mission | 0            | 19                     | +8                 |
+| Lost    | s2 Attempted; m2 Lost, Advance turn ending Turn 42  | 0            | 19                     | +8                 |
+| Won     | s2 Attempted; m2 Won, Advance turn ending Turn 41   | +30          | 25                     | 0                  |
 
 ## A Won raid_hq Mission eliminates Red Dawn and cancels an Active Mission site
 
@@ -857,7 +857,7 @@ This example exercises [Consequences](#consequences), [Cancellation](#cancellati
   Agency has acquired the Upgrade `transport_cap` four times, so the Transport cap is 4 + 2 × 4 = 12 and both teams fit.
 - Mission site s5, from `foil_recruitment_push`, target Faction Red Dawn, is Active with Turns until expiration 2.
 
-Money is 1000, funding 25, and Panic 40. In Mission resolution of the Advance turn ending turn 150, both Combats are
+Money is 1000, funding 25, and Panic 40. In Mission resolution of the Advance turn ending Turn 150, both Combats are
 fought. Their injected hit and damage outcomes are chosen so that the Combat of m3 has the Combat outcome Prevailed and
 the Combat of m4 the Combat outcome Prevailed; this example does not repeat the two traces, which Combat's rules decide,
 and checks only what follows from the two Combat outcomes.
@@ -873,7 +873,7 @@ and checks only what follows from the two Combat outcomes.
 Resolving m4 before m3 gives the same Committed state: s5 is cancelled only after both resolutions. s5 does not count down
 in Mission site expiration, and it never has a Mission. Whether the Campaign now ends in Victory is decided under
 [Panic and Endings](panic-and-endings.md). Had s5 been left Active without an elimination, it would have been Expired in the
-Advance turn ending turn 151 with a Panic increase of 3 and a funding change of 0.
+Advance turn ending Turn 151 with a Panic increase of 3 and a funding change of 0.
 
 ## Transport cap and other rejections of deployAgents
 
@@ -897,21 +897,21 @@ Contracting, At assignment. Each call is made on its own from this state, and ea
 After the last call, `deployAgents` of a5 to any Active Mission site in Turn 15 is rejected, because 4 + 1 is more than 4.
 If the player instead first purchases the Upgrade `transport_cap`, the Transport cap is 6, under
 [Agency caps](economy-and-upgrades.md#agency-caps), and `deployAgents(s7, [a4, a8])` succeeds with 3 + 2 = 5; a8 leaves
-Contracting at once. In the Advance turn ending turn 15, the Combats of m6 and of the Mission at s7 are fought, and their survivors stop
+Contracting at once. In the Advance turn ending Turn 15, the Combats of m6 and of the Mission at s7 are fought, and their survivors stop
 counting toward the Transport cap.
 
 ## Deploying on the last Turn
 
 This example exercises [Mission site expiration](#mission-site-expiration) and
 [Mission resolution](#mission-resolution). Mission site s1 from `apprehend_member` is created in the Advance turn ending
-turn 4, as in [The full life of an apprehend_member Mission site](#the-full-life-of-an-apprehend_member-mission-site). It
-counts down to 4, 3, 2, and 1 in the Advance turns ending turns 5 to 8, so during Turn 9 its Turns until expiration is 1.
+Turn 4, as in [The full life of an apprehend_member Mission site](#the-full-life-of-an-apprehend_member-mission-site). It
+counts down to 4, 3, 2, and 1 in the Advance turns ending Turns 5 to 8, so during Turn 9 its Turns until expiration is 1.
 
 - **Deployed in Turn 9:** The player calls `deployAgents(s1, [a1, a2, a3, a4])`, so s1 is Attempted and its Mission is
-  Deployed. In the Advance turn ending turn 9, the Combat is fought in Mission resolution and the Mission becomes Won or
+  Deployed. In the Advance turn ending Turn 9, the Combat is fought in Mission resolution and the Mission becomes Won or
   Lost; with the injected outcomes of the full-life example it is Won, with money +5 and a Panic reduction of 1. s1 is
   not Active in Mission site expiration, so it is not Expired, and its Turns until expiration stays 1.
-- **Not deployed:** In Mission site expiration of the Advance turn ending turn 9, s1 counts down to 0 and is Expired. As
+- **Not deployed:** In Mission site expiration of the Advance turn ending Turn 9, s1 counts down to 0 and is Expired. As
   an Initiative Mission site it has no consequence: money, funding, and Panic are unchanged by it. Whether
   `locate_red_dawn_member` is available again is decided under [Leads and Progression](leads-and-progression.md).
 
@@ -919,7 +919,7 @@ counts down to 4, 3, 2, and 1 in the Advance turns ending turns 5 to 8, so durin
 
 This example exercises [Mission site creation](#mission-site-creation),
 [MissionSiteArchetype selection](#missionsitearchetype-selection), [Enemy creation](#enemy-creation), and
-[Mission site expiration](#mission-site-expiration). In the Faction activity step of the Advance turn ending turn 15, a
+[Mission site expiration](#mission-site-expiration). In the Faction activity step of the Advance turn ending Turn 15, a
 Faction operation occurrence of Red Dawn has the Faction operation level `operation_level_1`. The MissionSiteArchetypes
 of kind response whose `operation_level` is 1 are exactly `foil_recruitment_push`, so `n` is 1 and the injected
 MissionSiteArchetype selection outcome is `foil_recruitment_push`, with Probability 1. With a test MissionSiteArchetype
@@ -928,7 +928,7 @@ values would have Probability 1 / 2. Mission site s9 is
 created: Response; origin Red Dawn and `operation_level_1`; target Faction Red Dawn; Turn created 15; Active; Turns until
 expiration 3; Enemies e1 to e5, each of `initiate`, in that order; no Mission. Mission site expiration came before Faction
 activity in that Advance turn, so s9 has Turns until expiration 3 during Turn 16. It counts down to 2 and 1 in the Advance
-turns ending turns 16 and 17 and, if no team is deployed, is Expired in the Advance turn ending turn 18, adding a Panic
+turns ending Turns 16 and 17 and, if no team is deployed, is Expired in the Advance turn ending Turn 18, adding a Panic
 increase of 3 and a funding change of 0. If a team were deployed to it and its Mission Won instead, it would add money
 10 and a funding change of 0.
 

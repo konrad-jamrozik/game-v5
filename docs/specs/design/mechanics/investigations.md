@@ -573,7 +573,7 @@ All examples use the Bootstrap GDR values from `content/investigations/investiga
 | `field_agent`               | `skill` 100; `base_health` 30                                    |
 | `agent_parameters`          | `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1 |
 
-"The Advance turn ending turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
+"The Advance turn ending Turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
 `field_agent` with skill 100, current health 30 of 30, exhaustion 0, and effective skill 100, on Standby, At assignment, and the
 Lead named is available under [Leads and Progression](leads-and-progression.md). The injected named random outcome is
 each Investigation's Investigation completion outcome, under [Completion probability](#completion-probability); a row
@@ -593,17 +593,17 @@ i1, In transit.
 | Moment                     | Working members | S   | Investigation progress | Completion probability     | Injected outcome  | Result                                                                                    |
 | -------------------------- | --------------- | --- | ---------------------- | -------------------------- | ----------------- | ----------------------------------------------------------------------------------------- |
 | Turn 1, after the action   |                 |     | 0                      | Projected: 0 / 300 = 0     |                   | a1 is In transit, so S′ is 0.                                                             |
-| Advance turn ending turn 1 | None            | 0   | 0                      | min(1, 0 / 300) = 0        | None needed       | a1 arrives in Transit and adds nothing. i1 stays Active.                                  |
+| Advance turn ending Turn 1 | None            | 0   | 0                      | min(1, 0 / 300) = 0        | None needed       | a1 arrives in Transit and adds nothing. i1 stays Active.                                  |
 | Turn 2                     |                 |     | 0                      | Projected: 100 / 300 = 1/3 |                   | a1 is At assignment, so S′ is 100.                                                        |
-| Advance turn ending turn 2 | a1              | 100 | 100                    | 100 / 300 = 1/3            | Does not complete | i1 stays Active.                                                                          |
-| Advance turn ending turn 3 | a1              | 100 | 200                    | 200 / 300 = 2/3            | Does not complete | i1 stays Active.                                                                          |
-| Advance turn ending turn 4 | a1              | 100 | 300                    | min(1, 300 / 300) = 1      | None needed       | i1 is Completed. Mission site from `apprehend_member` created; a1 on Standby, In transit. |
+| Advance turn ending Turn 2 | a1              | 100 | 100                    | 100 / 300 = 1/3            | Does not complete | i1 stays Active.                                                                          |
+| Advance turn ending Turn 3 | a1              | 100 | 200                    | 200 / 300 = 2/3            | Does not complete | i1 stays Active.                                                                          |
+| Advance turn ending Turn 4 | a1              | 100 | 300                    | min(1, 300 / 300) = 1      | None needed       | i1 is Completed. Mission site from `apprehend_member` created; a1 on Standby, In transit. |
 
-After the Advance turn ending turn 4, i1 has an empty Current team and Investigation progress 300, a1 has i1 in its
-Participation history, and a1 cannot be ordered during Turn 5; it arrives in the Advance turn ending turn 5. Had the
-injected outcome of the Advance turn ending turn 2 been "completes", i1 would have been Completed then, with
-Investigation progress 100. The cumulative Probability that i1 completes by the Advance turn ending turn 3 is
-1/3 + (2/3 × 2/3) = 7/9, and by the Advance turn ending turn 4 it is 1; no rule reads it. a1's exhaustion stays 0
+After the Advance turn ending Turn 4, i1 has an empty Current team and Investigation progress 300, a1 has i1 in its
+Participation history, and a1 cannot be ordered during Turn 5; it arrives in the Advance turn ending Turn 5. Had the
+injected outcome of the Advance turn ending Turn 2 been "completes", i1 would have been Completed then, with
+Investigation progress 100. The cumulative Probability that i1 completes by the Advance turn ending Turn 3 is
+1/3 + (2/3 × 2/3) = 7/9, and by the Advance turn ending Turn 4 it is 1; no rule reads it. a1's exhaustion stays 0
 throughout.
 
 ## Four Agents on a difficulty 10 Lead
@@ -614,10 +614,10 @@ This example exercises [Progress gain](#progress-gain), [Completion probability]
 
 | Moment                      | S   | Investigation progress | Completion probability                | Injected outcome  | Result                                                                                                                  |
 | --------------------------- | --- | ---------------------- | ------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Advance turn ending turn 20 | 0   | 0                      | 0                                     | None needed       | All four arrive in Transit. i3 stays Active.                                                                            |
-| Advance turn ending turn 21 | 400 | 400                    | 400 / 1000 = 2/5                      | Does not complete | i3 stays Active.                                                                                                        |
-| Advance turn ending turn 22 | 400 | 800                    | 800 / 1000 = 4/5                      | Does not complete | i3 stays Active.                                                                                                        |
-| Advance turn ending turn 23 | 400 | 1200                   | min(1, 1200 / 1000) = min(1, 6/5) = 1 | None needed       | i3 is Completed with Investigation progress 1200. Mission site from `raid_hq` created; all four on Standby, In transit. |
+| Advance turn ending Turn 20 | 0   | 0                      | 0                                     | None needed       | All four arrive in Transit. i3 stays Active.                                                                            |
+| Advance turn ending Turn 21 | 400 | 400                    | 400 / 1000 = 2/5                      | Does not complete | i3 stays Active.                                                                                                        |
+| Advance turn ending Turn 22 | 400 | 800                    | 800 / 1000 = 4/5                      | Does not complete | i3 stays Active.                                                                                                        |
+| Advance turn ending Turn 23 | 400 | 1200                   | min(1, 1200 / 1000) = min(1, 6/5) = 1 | None needed       | i3 is Completed with Investigation progress 1200. Mission site from `raid_hq` created; all four on Standby, In transit. |
 
 The final Investigation progress 1200 exceeds `difficulty` × 100 = 1000, which is valid for a Completed Investigation.
 
@@ -656,16 +656,16 @@ player calls `startInvestigation(locate_red_dawn_safehouse, [a1, a2])`, creating
 
 | Moment                                           | Current team (Task phase)           | S   | Investigation progress | Completion probability     | Injected outcome  |
 | ------------------------------------------------ | ----------------------------------- | --- | ---------------------- | -------------------------- | ----------------- |
-| Advance turn ending turn 10                      | a1, a2 (both arrive)                | 0   | 0                      | 0                          | None needed       |
-| Advance turn ending turn 11                      | a1, a2 (At assignment)              | 200 | 200                    | 200 / 600 = 1/3            | Does not complete |
+| Advance turn ending Turn 10                      | a1, a2 (both arrive)                | 0   | 0                      | 0                          | None needed       |
+| Advance turn ending Turn 11                      | a1, a2 (At assignment)              | 200 | 200                    | 200 / 600 = 1/3            | Does not complete |
 | Turn 12: `assignAgents([a2], Contracting)`       | a1 (At assignment)                  |     | 200                    | Projected: 300 / 600 = 1/2 |                   |
-| Advance turn ending turn 12                      | a1 (At assignment)                  | 100 | 300                    | 300 / 600 = 1/2            | Does not complete |
+| Advance turn ending Turn 12                      | a1 (At assignment)                  | 100 | 300                    | 300 / 600 = 1/2            | Does not complete |
 | Turn 13: `assignAgentsToInvestigation(i4, [a3])` | a1 (At assignment), a3 (In transit) |     | 300                    | Projected: 400 / 600 = 2/3 |                   |
-| Advance turn ending turn 13                      | a1 (At assignment), a3 (arrives)    | 100 | 400                    | 400 / 600 = 2/3            | Completes         |
+| Advance turn ending Turn 13                      | a1 (At assignment), a3 (arrives)    | 100 | 400                    | 400 / 600 = 2/3            | Completes         |
 
 In Turn 12, a2 leaves i4 at once and i4 keeps its Investigation progress of 200; a2 is on Contracting, In transit, and
 has i4 in its Participation history. i4 is not Abandoned, because a1 remains. In Turn 13, a3 does not count toward the
-projected completion probability, because it is In transit. In the Advance turn ending turn 13, a3 arrives and adds
+projected completion probability, because it is In transit. In the Advance turn ending Turn 13, a3 arrives and adds
 nothing, so S is a1's 100 alone. i4 is Completed; a Mission site from `raid_safehouse` is created; a1 and a3 both get
 Standby, In transit, including a3, which added no progress; both have i4 in their Participation history; i4's Current
 team is empty.
@@ -708,7 +708,7 @@ L1 is Active with Current team {a1, a2}, both At assignment, and Investigation p
 ## Two Investigations in one step
 
 This example exercises [Independence within the step](#independence-within-the-step). It uses the test Leads L1 and L2
-above. When the Advance turn ending turn 40 begins, Investigation i8 of L1 has Investigation progress 100 and working
+above. When the Advance turn ending Turn 40 begins, Investigation i8 of L1 has Investigation progress 100 and working
 member a1 (effective skill 100), and Investigation i9 of L2 has Investigation progress 100 and working member a2
 (effective skill 100). In Investigation progress, i8 reaches 200 with completion probability min(1, 200 / 200) = 1 and
 completes; i9 reaches 200 with completion probability 200 / 400 = 1/2, and its injected outcome is "does not complete".
@@ -720,15 +720,15 @@ Investigation progress 200. Processing i9 before i8 gives the same Committed sta
 This example exercises [Lead no longer available](#lead-no-longer-available). It uses test GDRs: two Factions, F1 and
 F2, and a test Lead L3 of F1 with `difficulty` 4 whose `create_mission_site` names a test MissionSiteArchetype m3 of
 kind initiative. Investigation i10 of L3 has working member a1 (effective skill 100) and Investigation progress 100 when the Advance
-turn ending turn 50 begins.
+turn ending Turn 50 begins.
 
-- Advance turn ending turn 50: in Investigation progress, i10 reaches 200, completion probability 200 / 400 = 1/2,
+- Advance turn ending Turn 50: in Investigation progress, i10 reaches 200, completion probability 200 / 400 = 1/2,
   injected outcome "does not complete". In Mission resolution, a Won Mission makes F1 Eliminated, under
   [Missions](missions.md). The Campaign does not end, because F2 is not Eliminated.
 - Turn 51: i10 is still Active, with Current team {a1} and projected completion probability (200 + 100) / 400 = 3/4. A
   `startInvestigation(L3, [a2])` is rejected, because L3 is not available, its Faction being Eliminated, and also because
   i10 is an Active Investigation of L3; the error identifies at least one of the two failed preconditions.
-- Advance turn ending turn 51: i10 reaches 300, completion probability 300 / 400 = 3/4, injected outcome "completes".
+- Advance turn ending Turn 51: i10 reaches 300, completion probability 300 / 400 = 3/4, injected outcome "completes".
   i10 is Completed, a1 is on Standby, In transit, and Mission site s3 from m3 is created Active with target Faction F1.
   In the Cancellation part of Mission resolution of the same Advance turn, s3 becomes Cancelled under
   [Cancellation](missions.md#cancellation); no Committed state shows s3 Active.

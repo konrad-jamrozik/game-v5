@@ -11,12 +11,12 @@
 # Overview
 
 Autopilot lets the player hand play over to an AI for a while and then take it back, e.g. to let an Autopilot AI play
-out the next few turns. During each Autopilot engagement, the Autopilot AI plays the Current campaign through Player API
+out the next few Turns. During each Autopilot engagement, the Autopilot AI plays the Current campaign through Player API
 in place of the Session controller, as the [Engine Contract glossary](engine-contract.md#glossary) defines it.
 
 The guiding principle is that an Autopilot AI plays as an ordinary player would, and no further. It receives only
 Player-visible information, and it never learns when its Autopilot engagement will end. The Session controller fixes
-that end in advance as an Autopilot limit, counted in Player actions or turn advancements, and can disengage Autopilot
+that end in advance as an Autopilot limit, counted in Player actions or Turn advancements, and can disengage Autopilot
 sooner. What the Autopilot AI plans beyond one Autopilot engagement it keeps in Autopilot memory, which moves with the
 Campaign through undo, redo, and load, so it never holds a plan written at an Undone action.
 
@@ -36,9 +36,9 @@ Timeline entry and Undone action are in the [Timeline glossary](timeline.md#glos
 
 | Term                    | Definition                                                                                                                                                                                 | Prohibited synonyms |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
-| Autopilot limit         | The bound on an Autopilot engagement, fixed when Autopilot is engaged and measured in Player actions or turn advancements.                                                                 | Delegation scope    |
+| Autopilot limit         | The bound on an Autopilot engagement, fixed when Autopilot is engaged and measured in Player actions or Turn advancements.                                                                 | Delegation scope    |
 | Autopilot engagement ID | The Independent identifier identifying one Autopilot engagement, assigned when Autopilot is engaged.                                                                                       |                     |
-| Autopilot progress      | The Player actions and turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |                     |
+| Autopilot progress      | The Player actions and Turn advancements counted toward the Autopilot limit in the current Autopilot engagement, reported to the Session controller. The Autopilot AI does not receive it. |                     |
 
 # Available Autopilot AIs
 
@@ -63,10 +63,10 @@ Autopilot engagement may be active in a Session. The complete Autopilot limit in
 | Autopilot limit     | Input                      | Successful completion                                                                   |
 | ------------------- | -------------------------- | --------------------------------------------------------------------------------------- |
 | `singleAction`      | No action count            | One Player API action successfully commits, including Advance turn if chosen.           |
-| `untilTurnAdvanced` | No turn count              | The first Advance turn action successfully commits, after any preceding Player actions. |
+| `untilTurnAdvanced` | No Turn count              | The first Advance turn action successfully commits, after any preceding Player actions. |
 | `turnAdvancements`  | A positive integer `count` | Exactly `count` Advance turn actions successfully commit.                               |
 
-Only Player actions or turn advancements count toward an Autopilot limit; e.g., a query or a rejected action
+Only Player actions or Turn advancements count toward an Autopilot limit; e.g., a query or a rejected action
 counts toward none. Autopilot disengages immediately at its Autopilot limit; another mutation through that Autopilot
 engagement is rejected.
 
@@ -119,12 +119,12 @@ Campaign mutations are serialized. During an Autopilot engagement, the Session c
 Session status, Timeline status, and Autopilot status, read and change Global configuration, and disengage Autopilot. All other Session API operations,
 Session controller gameplay mutations, and Developer API operations are unavailable until disengagement completes.
 `session.autopilot.disengage(engagementId)` requests disengagement between atomic actions. An action already executing either
-commits completely or fails without effects. Disengagement never implicitly advances a turn or undoes earlier
+commits completely or fails without effects. Disengagement never implicitly ends a Turn or undoes earlier
 Player actions. Failure of the Autopilot AI follows the same boundary rule. A late response from a completed Autopilot engagement
 cannot change Campaign state or write Autopilot memory. Timeline navigation remains available after disengagement.
 
 Engaging Autopilot writes an Autosave, and no Turn-end Autosave is written during an Autopilot engagement, under
-[Autosaves](saves.md#autosaves). An Autopilot engagement that advances the turn is
+[Autosaves](saves.md#autosaves). An Autopilot engagement that ends the Turn is
 therefore reversed as a whole through [Autosave navigation](timeline.md#autosave-navigation), while the Timeline
 entries of its last Turn are reversed one by one. Completing disengagement writes no Autosave of its own: the Current
 Autosave already holds the Committed state in which the Autopilot engagement ended.

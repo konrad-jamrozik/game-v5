@@ -81,7 +81,7 @@ Type owner: [Agents](../mechanics/agents-spec.md).
 | GDR                | Type            | GDR purpose                                             | What it supplies                                                                                                                                                                                   |
 | ------------------ | --------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `field_agent`      | AgentArchetype  | Archetype                                               | Every Agent's skill, Weapon, and `base_health` when created. An Agent starts with both its base health and its current health equal to `base_health`.                                              |
-| `agent_parameters` | AgentParameters | Campaign instance initialization, Calculation parameter | The size of the initial roster; the exhaustion cap, the exhaustion without effect, and the skill lost per further point; exhaustion per attack and per defense; skill gained per turn of Training. |
+| `agent_parameters` | AgentParameters | Campaign instance initialization, Calculation parameter | The size of the initial roster; the exhaustion cap, the exhaustion without effect, and the skill lost per further point; exhaustion per attack and per defense; skill gained per Turn of Training. |
 
 ## Economy and Upgrades GDRs
 
@@ -162,7 +162,7 @@ Type owner: [Agent Recovery](../mechanics/agent-recovery.md).
 
 | GDR        | Type               | GDR purpose           | What it supplies                                                                                          |
 | ---------- | ------------------ | --------------------- | --------------------------------------------------------------------------------------------------------- |
-| `recovery` | RecoveryParameters | Calculation parameter | Health recovered per turn, as a percentage of the Agent's base health, and exhaustion recovered per turn. |
+| `recovery` | RecoveryParameters | Calculation parameter | Health recovered per Turn, as a percentage of the Agent's base health, and exhaustion recovered per Turn. |
 
 ## Factions GDRs
 
@@ -264,7 +264,7 @@ exist with the Bootstrap GDRs and the source of each initial value, as
 | Mission                | [Initial Mission sites](../mechanics/missions.md#initial-mission-sites) in Missions, which states that no Mission exists initially                  |
 | Enemy                  | [Enemy creation](../mechanics/combat.md#enemy-creation) in Combat, applied by [Enemy creation](../mechanics/missions.md#enemy-creation) in Missions |
 
-The turn, Panic, and Lead progression start from values that no GDR supplies: the turn under
+The Turn, Panic, and Lead progression start from values that no GDR supplies: the Turn under
 [Turn number](../mechanics/turn-advancement.md#turn-number), Panic under
 [Initial values](../mechanics/panic-and-endings.md#initial-values), and Lead progression under
 [Lead progression](../mechanics/leads-and-progression.md#lead-progression).
@@ -306,9 +306,9 @@ value that deliberately differs from its game-ts counterpart, and why.
 | `cult_leader` skill and base health                         | Cult leader: skill 800, base health 80               | game-ts commander values                  | An 800-skill Enemy cannot be beaten after a three-step Victory path.                                                                     |
 | `initiate` Weapon                                           | Damage 8                                             | `sidearm`                                 | Sharing the Agents' Weapon saves one Weapon GDR.                                                                                         |
 | `locate_red_dawn_hq` difficulty                             | 25                                                   | Lower                                     | The HQ is the third step of three, not the eighth of eight.                                                                              |
-| `raid_hq` expiration and Enemies                            | Expires in 40 turns; 111 Enemies                     | Shorter; ten Enemies                      | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |
+| `raid_hq` expiration and Enemies                            | Expires in 40 Turns; 111 Enemies                     | Shorter; ten Enemies                      | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |
 | Starting transport cap                                      | 6                                                    | Lower, raised by `transport_cap`          | Transport capacity becomes something the Agency invests in.                                                                              |
-| Starting training cap                                       | 0                                                    | Above zero, raised by `training_cap`      | Training is available from the first turn.                                                                                               |
+| Starting training cap                                       | 0                                                    | Above zero, raised by `training_cap`      | Training is available from the first Turn.                                                                                               |
 | Panic change of `operation_level_1` and `operation_level_2` | 0.02% and 0.1% when ignored or lost                  | 3% and 8% when ignored or lost            | At the game-ts scale, Panic cannot end a Campaign as short as the Victory path.                                                          |
 | Panic reduction of Initiative Mission site wins             | 0.05% and 0.1%                                       | 1% and 2%                                 | Keeps wins and losses on the same scale.                                                                                                 |
 | Victory                                                     | Completing the Lead Peace on Earth                   | Every Faction eliminated                  | One Lead fewer, and the condition does not depend on a specially named GDR.                                                              |

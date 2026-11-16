@@ -135,7 +135,7 @@ the next Advance turn, and can be ordered, or start recovering in step 9, only i
 
 **Informative rationale:** With one Advance turn for every transit, an Agent given any order other than deployment
 works for the first time in the second Advance turn after the order, e.g. an Agent ordered to Contracting during Turn 5
-arrives in the Advance turn ending turn 5 and earns its first income in the Advance turn ending turn 6.
+arrives in the Advance turn ending Turn 5 and earns its first income in the Advance turn ending Turn 6.
 
 ## Same-turn interactions
 
@@ -153,7 +153,7 @@ that no other specification states:
   is Eliminated, already or in step 6 of the same Advance turn, is Cancelled in the cancellation part of step 6, so no
   Committed state shows it Active, under [Cancellation](missions.md#cancellation).
 - **Survivors do not recover in the Advance turn of their Combat:** A survivor of step 6 is In transit at step 9 and
-  recovers nothing, under [Several changes in one turn](agent-recovery.md#several-changes-in-one-turn) in Agent Recovery.
+  recovers nothing, under [Several changes in one Turn](agent-recovery.md#several-changes-in-one-turn) in Agent Recovery.
   The members of an Investigation completed in step 5 likewise recover no exhaustion in step 9.
 - **An Agent Killed in step 6:** It was Serving when step 3 began, so it was counted in Upkeep of this Advance turn, and
   it is counted in no later Advance turn. It stops counting toward the Transport cap in step 6.
@@ -221,7 +221,7 @@ which an implementation processes Campaign instances.
      `operation_every_turns`, under [Faction activity](factions.md#faction-activity).
    - In step 9, for one Agent: health recovery, then the move to Standby when current health equals its base health; eligibility for
      exhaustion recovery is still decided by the Current assignment when the step begins, under
-     [Several changes in one turn](agent-recovery.md#several-changes-in-one-turn).
+     [Several changes in one Turn](agent-recovery.md#several-changes-in-one-turn).
 3. **Cancellation in step 6:** The cancellation part of Mission resolution reads Eliminated after every Deployed Mission
    of the step has been resolved and its consequences applied, so a Faction made Eliminated by any Won Mission of the step
    counts, under [Cancellation](missions.md#cancellation).
@@ -325,7 +325,7 @@ All examples use the Bootstrap GDR values from `content/configuration/campaign_c
 | `faint`, `war`           | `operation_every_turns` [15, 25] and [8, 18]; `operation_level_weights` 1: 80, 2: 20 and 1: 20, 2: 80 |
 | `endings`                | `defeat_at_panic_pct` 100                                                                             |
 
-The Campaign has the one Faction Red Dawn, from `red_dawn`. "The Advance turn ending turn t" is the Advance turn
+The Campaign has the one Faction Red Dawn, from `red_dawn`. "The Advance turn ending Turn t" is the Advance turn
 committed during Turn t; the Campaign starts in Turn 1. Every Agent is a `field_agent`, and no Upgrade has been acquired
 unless an example says so. The injected named random outcomes are named as their rules name them: the Investigation
 completion outcome under [Completion probability](investigations.md#completion-probability), the Level duration,
@@ -351,9 +351,9 @@ Level duration outcome 60 and Operation interval outcome 15. There is no Investi
 
 **Turn 1:** The player calls `assignAgents([a1, a2], Contracting)`, `assignAgents([a3], Training)`, and
 `startInvestigation(locate_red_dawn_member, [a4])`, which creates Investigation i1 with Investigation progress 0. a1 to a4
-are In transit. Money is 500 when the player advances the turn.
+are In transit. Money is 500 when the player ends the Turn.
 
-| Step                       | Advance turn ending turn 1                                                                                                          | Money after | Advance turn ending turn 2                                                                                                                      | Money after |
+| Step                       | Advance turn ending Turn 1                                                                                                          | Money after | Advance turn ending Turn 2                                                                                                                      | Money after |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | 1. Transit                 | a1, a2, a3, and a4 arrive and are At assignment.                                                                                    | 500         | No Agent is In transit; nothing changes.                                                                                                        | 480         |
 | 2. Agency income           | No Agent on Contracting was At assignment in the Turn-end state: 20 + 30 × 0 = 20.                                                  | 520         | a1 and a2 count: 20 + 30 × 2 = 80.                                                                                                              | 560         |
@@ -368,10 +368,10 @@ are In transit. Money is 500 when the player advances the turn.
 | 11. Ending check           | Red Dawn is not Eliminated, Panic 0 is below 100, and money 480 is not below 0: the Campaign continues.                             | 480         | The Campaign continues.                                                                                                                         | 520         |
 | 12. Turn close             | Money at the end of turn for Turn 1 is 500; Money at the start of turn for Turn 2 is 480; the turn number becomes 2.                | 480         | Money at the end of turn for Turn 2 is 480; Money at the start of turn for Turn 3 is 520; the turn number becomes 3.                            | 520         |
 
-The Advance turn ending turn 1 does nothing but complete the four transits, apart from Agency income from funding, Upkeep,
+The Advance turn ending Turn 1 does nothing but complete the four transits, apart from Agency income from funding, Upkeep,
 and Faction activity, which do not depend on the Agents' work. The player makes no Player action in Turn 2; in Turn 2 the
 projected income is 80, the projected upkeep is 40, and i1's projected completion probability is 1/3, each equal to what
-the Advance turn ending turn 2 then applies. Both countdowns of Red Dawn are hidden from the player.
+the Advance turn ending Turn 2 then applies. Both countdowns of Red Dawn are hidden from the player.
 
 ## Deployment, Combat, return, and recovery
 
@@ -388,18 +388,18 @@ assignment, at once.
 | Moment                      | a1                                                                                                                                                                                                                     | a2                                                                                                                                                     |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Turn 5, after deployment    | Deployed, At assignment; cannot be ordered                                                                                                                                                                             | Deployed, At assignment; cannot be ordered                                                                                                             |
-| Advance turn ending turn 5  | Counted in Upkeep. In step 6 the Combat outcome is Prevailed and m1 is Won; a1 ends the Combat with current health 30, exhaustion 4, and becomes Standby, In transit. In step 9 it is In transit and recovers nothing. | Counted in Upkeep. In step 6 it ends the Combat with current health 18, exhaustion 7, and becomes Recovery, In transit. In step 9 it recovers nothing. |
+| Advance turn ending Turn 5  | Counted in Upkeep. In step 6 the Combat outcome is Prevailed and m1 is Won; a1 ends the Combat with current health 30, exhaustion 4, and becomes Standby, In transit. In step 9 it is In transit and recovers nothing. | Counted in Upkeep. In step 6 it ends the Combat with current health 18, exhaustion 7, and becomes Recovery, In transit. In step 9 it recovers nothing. |
 | Turn 6                      | Standby, In transit; cannot be ordered                                                                                                                                                                                 | Recovery, In transit; cannot be ordered                                                                                                                |
-| Advance turn ending turn 6  | Arrives in step 1; recovers nothing in step 9, because it was In transit in the Turn-end state                                                                                                                         | Arrives in step 1; recovers nothing                                                                                                                    |
+| Advance turn ending Turn 6  | Arrives in step 1; recovers nothing in step 9, because it was In transit in the Turn-end state                                                                                                                         | Arrives in step 1; recovers nothing                                                                                                                    |
 | Turn 7                      | Standby, At assignment; can be ordered                                                                                                                                                                                 | Recovery, At assignment; cannot be ordered                                                                                                             |
-| Advance turn ending turn 7  | If still on Standby: exhaustion 4 → max(0, 4 − 5) = 0                                                                                                                                                                  | Current health 18 + round up(2 × 30 / 100) = 19; exhaustion 7 → 2                                                                                      |
-| Advance turn ending turn 8  | Exhaustion stays 0                                                                                                                                                                                                     | Current health 20; exhaustion 2 → 0                                                                                                                    |
-| Advance turn ending turn 18 | Unaffected                                                                                                                                                                                                             | Current health 30, its base health; becomes Standby, At assignment, at once, in step 9                                                                 |
+| Advance turn ending Turn 7  | If still on Standby: exhaustion 4 → max(0, 4 − 5) = 0                                                                                                                                                                  | Current health 18 + round up(2 × 30 / 100) = 19; exhaustion 7 → 2                                                                                      |
+| Advance turn ending Turn 8  | Exhaustion stays 0                                                                                                                                                                                                     | Current health 20; exhaustion 2 → 0                                                                                                                    |
+| Advance turn ending Turn 18 | Unaffected                                                                                                                                                                                                             | Current health 30, its base health; becomes Standby, At assignment, at once, in step 9                                                                 |
 | Turn 19                     | Unaffected                                                                                                                                                                                                             | Standby, At assignment; can be ordered                                                                                                                 |
 
-In the Advance turn ending turn 5, m1's consequences add 5 to money and a Panic reduction of 1 to the Pending panic
+In the Advance turn ending Turn 5, m1's consequences add 5 to money and a Panic reduction of 1 to the Pending panic
 change, and s1 is not Active in step 7, so it does not count down. a2 regains 1 health in each of the 12 Advance turns
-ending turns 7 to 18, which equals its Recovery turns remaining of round up((30 − 18) / 1) = 12. Each Agent was counted
+ending Turns 7 to 18, which equals its Recovery turns remaining of round up((30 − 18) / 1) = 12. Each Agent was counted
 in Upkeep of every one of these Advance turns, because it stayed Serving.
 
 ## The last Faction Eliminated while Panic reaches the limit
@@ -455,7 +455,7 @@ This example exercises [Same-turn interactions](#same-turn-interactions) and
 has Investigation progress 200 and one member, a1, At assignment, with effective skill 100. Red Dawn is at `faint`, not
 Eliminated, with Turns until the next level 40 and Turns until the next operation 1. No Mission site exists.
 
-**Advance turn ending turn 30:** In step 5, i2's progress becomes 300 and its completion probability min(1, 300 / 300) = 1,
+**Advance turn ending Turn 30:** In step 5, i2's progress becomes 300 and its completion probability min(1, 300 / 300) = 1,
 so it is Completed with no injection needed; Mission site sA from `apprehend_member` is created, Active, with Turns until
 expiration 5, and a1 becomes Standby, In transit. In step 7, sA does not count down, because it did not exist in the Turn-end
 state. In step 8, Red Dawn's Turns until the next level becomes 39 and its Turns until the next operation becomes 0; with
@@ -468,14 +468,14 @@ No team is deployed to either Mission site:
 | Moment                      | Turns until expiration of sA | Turns until expiration of sB | What else happens                                                                                                    |
 | --------------------------- | ---------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | Turn 31                     | 5                            | 3                            | Both can be deployed to.                                                                                             |
-| Advance turn ending turn 31 | 4                            | 2                            |                                                                                                                      |
-| Advance turn ending turn 32 | 3                            | 1                            |                                                                                                                      |
-| Advance turn ending turn 33 | 2                            | 0: Expired                   | sB adds a Panic increase of 3 and a funding change of 0: Panic max(0, min(100, 10 + 3)) = 13 in step 10; funding 20. |
-| Advance turn ending turn 34 | 1                            |                              |                                                                                                                      |
-| Advance turn ending turn 35 | 0: Expired                   |                              | sA, an Initiative Mission site, has no consequence; `locate_red_dawn_member` is no longer blocked by it.             |
+| Advance turn ending Turn 31 | 4                            | 2                            |                                                                                                                      |
+| Advance turn ending Turn 32 | 3                            | 1                            |                                                                                                                      |
+| Advance turn ending Turn 33 | 2                            | 0: Expired                   | sB adds a Panic increase of 3 and a funding change of 0: Panic max(0, min(100, 10 + 3)) = 13 in step 10; funding 20. |
+| Advance turn ending Turn 34 | 1                            |                              |                                                                                                                      |
+| Advance turn ending Turn 35 | 0: Expired                   |                              | sA, an Initiative Mission site, has no consequence; `locate_red_dawn_member` is no longer blocked by it.             |
 
 sB can be deployed to during Turns 31, 32, and 33. A team deployed during Turn 33, when its Turns until expiration is 1,
-fights in step 6 of the Advance turn ending turn 33, before step 7, so sB is then Won or Lost instead of Expired.
+fights in step 6 of the Advance turn ending Turn 33, before step 7, so sB is then Won or Lost instead of Expired.
 
 ## Money below zero, Defeat, and Turn close
 

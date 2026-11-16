@@ -5,7 +5,7 @@
 | Spec ID     | BASICAI                                                                                                                                                                    |
 | Family      | Autopilot AIs                                                                                                                                                              |
 | Audience    | AI designer, Implementer                                                                                                                                                   |
-| Owns        | The goals the Basic Autopilot AI pursues, how it prioritizes them within a turn, and what it deliberately leaves alone.                                                    |
+| Owns        | The goals the Basic Autopilot AI pursues, how it prioritizes them within a Turn, and what it deliberately leaves alone.                                                    |
 | Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -16,9 +16,9 @@ optimal one: it never sends a team that is likely to lose, and it does not try t
 
 Its play follows from a few goals that can pull against each other, e.g. keeping the Agency solvent, deploying Agents
 only where they are likely to win, and keeping Investigations going so that new Mission sites appear. A fixed
-[Turn routine](#turn-routine) settles the conflicts: each turn, the Basic Autopilot AI makes its Player actions in a
-fixed order of priority and then advances the turn. It decides each Player action from the current Player-visible
-information alone and keeps no plan across turns, within what [Autopilot](../foundation/autopilot.md) lets any
+[Turn routine](#turn-routine) settles the conflicts: each Turn, the Basic Autopilot AI makes its Player actions in a
+fixed order of priority and then ends the Turn. It decides each Player action from the current Player-visible
+information alone and keeps no plan across Turns, within what [Autopilot](../foundation/autopilot.md) lets any
 Autopilot AI receive.
 
 # Relationships
@@ -47,7 +47,7 @@ These terms are specific to the Basic Autopilot AI. General terms are in the
 | Basic Autopilot AI | The Autopilot AI described by this document.                                                                                                                                                          |
 | Rested Agent       | An Agent that can be ordered, whose Current assignment is Standby or Training, and whose exhaustion is low enough for the Basic Autopilot AI to give it new work.                                     |
 | Agent reserve      | The share of the roster that the Basic Autopilot AI keeps as Rested Agents rather than assigning, so that it can still react to an urgent Mission site.                                               |
-| Savings floor      | The money the Basic Autopilot AI keeps unspent so that the Agency can pay several turns of upkeep even if contracting income falls short.                                                             |
+| Savings floor      | The money the Basic Autopilot AI keeps unspent so that the Agency can pay several Turns of upkeep even if contracting income falls short.                                                             |
 | Expected income    | The projected income the Agency will have once every Agent now In transit to Contracting has arrived: its funding plus the contracting income of every Agent whose Current assignment is Contracting. |
 
 # Goals
@@ -80,7 +80,7 @@ therefore plays by the following principles. The list is exhaustive.
    Deployed, and it waits for a hired Agent to arrive, i.e. until the next Turn.
 2. **It counts an Agent In transit as already doing its destination work.** When it measures a goal, e.g. whether
    income covers upkeep or how many Agents investigate Leads, an Agent In transit to Contracting counts as contracting
-   and an Agent In transit to an Investigation counts as investigating. Otherwise it would order more Agents every turn
+   and an Agent In transit to an Investigation counts as investigating. Otherwise it would order more Agents every Turn
    while the first ones are still travelling. Expected income is this principle applied to income.
 3. **It does not move an Agent that is doing useful work.** It orders an Agent away from Contracting or Training only
    when a step of [Turn routine](#turn-routine) says so, because each such order costs the Agent an Advance turn in
@@ -97,7 +97,7 @@ therefore plays by the following principles. The list is exhaustive.
 
 # Turn routine
 
-During each turn the Basic Autopilot AI makes its Player actions in the following order, and then advances the turn.
+During each Turn the Basic Autopilot AI makes its Player actions in the following order, and then ends the Turn.
 Each step sees the Current assignments the earlier steps produced, so an earlier step has first claim on Rested Agents
 and money.
 
@@ -120,7 +120,7 @@ applies only to an Agent that was ordered to work while its exhaustion was too h
 sent to Contracting for urgent income, or one that a human player ordered before Autopilot was engaged.
 
 Mission sites come before routine Contracting because a Mission site expires, while contracting income can be restored
-on a later turn. Investigations come after both because they only pay off later, and Training comes last because it
+on a later Turn. Investigations come after both because they only pay off later, and Training comes last because it
 only improves Agents.
 
 When choosing among Agents for any step, the Basic Autopilot AI prefers the most rested Rested Agent, and it prefers
@@ -132,9 +132,9 @@ actions.
 
 The Basic Autopilot AI decides each Player action from the current Player-visible information alone, which
 [What an Autopilot AI receives](../foundation/autopilot.md#what-an-autopilot-ai-receives) in Autopilot bounds. It keeps
-no plan across turns and writes no Autopilot memory: every fact it needs, e.g. how many Upgrades the Agency has bought
-or which Agents are In transit, is Player-visible. Because it does not receive its Autopilot limit, it plays every turn
-the same way whether Autopilot disengages after one Player action or after many turns.
+no plan across Turns and writes no Autopilot memory: every fact it needs, e.g. how many Upgrades the Agency has bought
+or which Agents are In transit, is Player-visible. Because it does not receive its Autopilot limit, it plays every Turn
+the same way whether Autopilot disengages after one Player action or after many Turns.
 
 To judge whether it could win the Mission site a Lead creates, it reads the MissionSiteArchetype the Lead
 creates and the EnemyArchetypes that MissionSiteArchetype names. Both are Player-visible from campaign creation, before
@@ -146,13 +146,13 @@ and [Player-visible information](../mechanics/combat.md#player-visible-informati
 
 | Case                                                                                 | Behavior                                                                                                                                                     |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| No Mission site can be won with the Rested Agents available                          | It deploys nobody that turn and keeps the Agents working toward income, Investigations, and Training.                                                        |
+| No Mission site can be won with the Rested Agents available                          | It deploys nobody that Turn and keeps the Agents working toward income, Investigations, and Training.                                                        |
 | A Mission site is in the last Turn before it would expire                            | It deploys to it as to any other Mission site, because the Combat is fought in the next Advance turn.                                                        |
 | An Investigation completes while no winning team can be formed any more              | It deploys nobody. The Mission site becomes Expired, the Lead becomes available again, and the Lead is investigated again once a winning team can be formed. |
-| Money is below the Savings floor                                                     | It buys nothing that turn.                                                                                                                                   |
-| Expected income is below projected upkeep and no Agent can be ordered to Contracting | It buys nothing, makes its other Player actions as usual, and advances the turn. It does not dismiss Agents to lower upkeep.                                 |
-| Every Agent is exhausted or cannot be ordered, or the roster is empty                | It makes no assignment and advances the turn; buying an Agent still follows Grow with the threat.                                                            |
-| A Player action it attempts is rejected                                              | It does not retry the same Player action in that turn and continues with the next step, so a rejection cannot make it repeat itself until it fails.          |
+| Money is below the Savings floor                                                     | It buys nothing that Turn.                                                                                                                                   |
+| Expected income is below projected upkeep and no Agent can be ordered to Contracting | It buys nothing, makes its other Player actions as usual, and ends the Turn. It does not dismiss Agents to lower upkeep.                                     |
+| Every Agent is exhausted or cannot be ordered, or the roster is empty                | It makes no assignment and ends the Turn; buying an Agent still follows Grow with the threat.                                                                |
+| A Player action it attempts is rejected                                              | It does not retry the same Player action in that Turn and continues with the next step, so a rejection cannot make it repeat itself until it fails.          |
 | Only Leads that create Mission sites it cannot currently win remain                  | It leaves those Leads uninvestigated until the Agency is strong enough.                                                                                      |
 
 # TODOs
@@ -172,7 +172,7 @@ stated exhaustion in percent; the same numbers are exhaustion points here.
 | Exhaustion at which an Agent is a Rested Agent | At most 5; at most 25 for urgent income |
 | Agent reserve                                  | 20% of the roster                       |
 | Contracting income target                      | 120% of upkeep                          |
-| Savings floor                                  | Five turns of half the upkeep           |
+| Savings floor                                  | Five Turns of half the upkeep           |
 | Combat rating safety margin                    | 120% of the Enemies' Combat rating      |
 | Agents needed for the number of Enemies        | One Agent per three Enemies             |
 | Agents investigating Leads                     | 1, plus 1 per 10 Agents                 |

@@ -404,7 +404,7 @@ states a test GDR. The values they read are:
 With the Bootstrap GDRs, under [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) in
 Missions, an occurrence of Faction operation level 1 creates a Response Mission site from `foil_recruitment_push`, and
 one of level 2 from `foil_sabotage`. The examples name those Mission sites only to show when they are created. "The
-Advance turn ending turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. In every
+Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. In every
 example, Red Dawn is not Eliminated unless the example says otherwise.
 
 ## Campaign creation through the first escalation
@@ -426,24 +426,24 @@ outcome is 15, a uniform whole-number outcome over 15 to 25 in which each of 11 
 | Eliminated                     | No                      |
 | Eliminated turn                | Absent                  |
 
-**Advance turns ending turns 1 to 14.** Each Advance turn subtracts one from each countdown and neither reaches zero.
-After the Advance turn ending turn 14, Turns until the next level is 46 and Turns until the next operation is 1.
+**Advance turns ending Turns 1 to 14.** Each Advance turn subtracts one from each countdown and neither reaches zero.
+After the Advance turn ending Turn 14, Turns until the next level is 46 and Turns until the next operation is 1.
 
-**First operation, Advance turn ending turn 15.** Turns until the next level becomes 45. Turns until the next operation
+**First operation, Advance turn ending Turn 15.** Turns until the next level becomes 45. Turns until the next operation
 becomes 0, so one Faction operation occurrence happens at `faint`. Injected outcomes: Operation level 1, with
 Probability 80 / 100; Operation interval 25, with Probability 1 / 11 over 15 to 25. Result: the occurrence has
 initiating Faction Red Dawn, Faction operation level `operation_level_1`, and turn number 15, and Missions creates one
 Response Mission site from it, e.g. from `foil_recruitment_push`; Turns until the next operation is 25.
 
-**Second operation, Advance turn ending turn 40.** The 25 Advance turns ending turns 16 to 40 bring Turns until the next
+**Second operation, Advance turn ending Turn 40.** The 25 Advance turns ending Turns 16 to 40 bring Turns until the next
 operation from 25 to 0 and Turns until the next level from 45 to 20. One Faction operation occurrence happens at
 `faint`. Injected outcomes: Operation level 2, with Probability 20 / 100; Operation interval 20, with Probability
 1 / 11. Result: the occurrence has Faction operation level `operation_level_2` and turn number 40, and Missions creates
 a second Response Mission site from it, e.g. from `foil_sabotage`, whether or not the first one is still Active; Turns
 until the next operation is 20.
 
-**First escalation and third operation, Advance turn ending turn 60.** The Advance turns ending turns 41 to 59 bring
-Turns until the next level to 1 and Turns until the next operation to 1. In the Advance turn ending turn 60:
+**First escalation and third operation, Advance turn ending Turn 60.** The Advance turns ending Turns 41 to 59 bring
+Turns until the next level to 1 and Turns until the next operation to 1. In the Advance turn ending Turn 60:
 
 1. Turns until the next level becomes 0, so Red Dawn moves to `faint`'s `next`, `active`. `active`'s `lasts_turns` is
    not null; injected Level duration outcome 90, with Probability 1 / 31 over 60 to 90. Turns until the next level is 90.
@@ -452,13 +452,13 @@ Turns until the next level to 1 and Turns until the next operation to 1. In the 
    under `faint`'s; Operation interval 11, over `active`'s 11 to 21, with Probability 1 / 11. Missions creates a
    Response Mission site of Faction operation level `operation_level_2`, e.g. from `foil_sabotage`.
 
-| Value                          | After the Advance turn ending turn 60 |
+| Value                          | After the Advance turn ending Turn 60 |
 | ------------------------------ | ------------------------------------- |
 | Faction activity level         | `active`                              |
 | Turns until the next level     | 90                                    |
 | Turns until the next operation | 11                                    |
 
-Three Response Mission sites have been created in total, in the Advance turns ending turns 15, 40, and 60. None of
+Three Response Mission sites have been created in total, in the Advance turns ending Turns 15, 40, and 60. None of
 them counted down toward expiration in the Advance turn that created it, under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
@@ -492,7 +492,7 @@ injected Operation interval of 18, the upper bound, it would happen in the eight
 This example exercises [Elimination](#elimination) and [Faction activity](#faction-activity).
 
 Initial state: during Turn 120, Red Dawn is at `active` with Turns until the next level 1 and Turns until the next
-operation 1. In the Advance turn ending turn 120, a Mission site consequence under
+operation 1. In the Advance turn ending Turn 120, a Mission site consequence under
 [Consequences](missions.md#consequences) makes Red Dawn Eliminated in Mission resolution. Result after that Advance turn: Eliminated is yes; Eliminated turn is 120; Faction
 activity level is still `active`; Turns until the next level is still 1 and Turns until the next operation is still 1,
 because Faction activity did not apply to Red Dawn; no Faction operation occurrence happened and no Response Mission
@@ -507,7 +507,7 @@ FactionArchetype `test_faction` with `name` Test Faction and `initial_activity_l
 
 At campaign creation the initial Campaign state contains exactly two Factions, Red Dawn at `faint` and Test Faction at
 `active`. Injected outcomes: Red Dawn's initial Level duration 70 and Operation interval 15; Test Faction's initial
-Level duration 60 and Operation interval 15 over `active`'s 11 to 21. In the Advance turn ending turn 15, both Factions'
+Level duration 60 and Operation interval 15 over `active`'s 11 to 21. In the Advance turn ending Turn 15, both Factions'
 Turns until the next operation reach 0, and two Faction operation occurrences happen. Injected outcomes: Red Dawn's
 Operation level 1 with Probability 80 / 100 and Operation interval 20; Test Faction's Operation level 2 with Probability
 60 / 100 and Operation interval 11. Result: two Faction operation occurrences, one of Faction operation level
@@ -520,7 +520,7 @@ operation is 20 and Test Faction's is 11. Processing Test Faction before Red Daw
 
 This example exercises [Player-visible information](#player-visible-information).
 
-In the Committed state after the Advance turn ending turn 15 in
+In the Committed state after the Advance turn ending Turn 15 in
 [Campaign creation through the first escalation](#campaign-creation-through-the-first-escalation), a Player API query
 of Factions returns, for Red Dawn: its Instance ID; FactionArchetype `red_dawn` with name Red Dawn; Faction activity
 level `faint` with name Faint, `lasts_turns` [60, 90], `operation_every_turns` [15, 25], weights 1: 80 and 2: 20, and

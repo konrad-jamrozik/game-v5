@@ -84,7 +84,7 @@ table names for its Family. The following table is exhaustive.
 | Implementation     | Recipes       | `implementation/recipes/`   | Suggested steps for carrying out one recurring implementation task, e.g. publishing an Implementation             | Foundation, Mechanics, Content, UI, Autopilot AIs, Mandatory |
 
 The Builds on column states which Families a Family builds on. A specification depends only on specifications of its
-own Family, of the Families its Family builds on, and of the Families those build on in turn; every specification also
+own Family, of the Families its Family builds on, and of the Families those build on in Turn; every specification also
 follows Specification Conventions implicitly, under [Implicit relationships](artifact-relationships.md#implicit-relationships). Foundation and
 Mechanics together form the game engine, which Content, UI, and Autopilot AIs build on; every Implementation Family
 builds on all the Design Families, and Recipes also builds on Mandatory.
@@ -313,7 +313,7 @@ game as it is now.
 
 A TODO states what is missing and what a complete answer must include. E.g., prefer:
 
-> TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful turns, progress-removal behavior, rounding, and a numerical example.
+> TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful Turns, progress-removal behavior, rounding, and a numerical example.
 
 Avoid vague placeholders; e.g., "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation. A `TODO (later):` item names the feature in one line, e.g. "TODO (later): Skill gained from a Combat."
 

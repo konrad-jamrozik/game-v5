@@ -178,9 +178,9 @@ operation occurrence that spans several Mission sites, or that has no Response M
 
 # Campaign and Agency
 
-A Campaign contains one Agency, the current turn, [Panic](panic-and-endings.md#glossary) and the
+A Campaign contains one Agency, the current Turn, [Panic](panic-and-endings.md#glossary) and the
 [Campaign ending](panic-and-endings.md#glossary), Lead progression, Agents, Factions,
-Investigations, Mission sites, and Missions. Campaign-wide properties, e.g. the current turn and Panic, belong directly to Campaign state, not to the
+Investigations, Mission sites, and Missions. Campaign-wide properties, e.g. the current Turn and Panic, belong directly to Campaign state, not to the
 Agency.
 
 ## Agency per Campaign
@@ -253,7 +253,7 @@ Mechanics specifications are assumed valid for these structural checks.
 
 ## A. Valid relationships
 
-Given turn 3 and:
+Given Turn 3 and:
 
 - Campaign state c1 with its single Agency ag1.
 - Archetypes supplied by the current Game build: G1 (Agency), A1 (Agent), I1 (Investigation), S1 (Mission site),
@@ -265,7 +265,7 @@ Given turn 3 and:
 - Investigation i0 referring to L2, no longer Active, with an empty Current team.
 - Active Investigation i1 referring to L1, Current team {a1}.
 - Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Attempted.
-- Mission m1 with Archetype M1 at Mission site s1, deployed in turn 3, Deployed, with Current team {a2}.
+- Mission m1 with Archetype M1 at Mission site s1, deployed in Turn 3, Deployed, with Current team {a2}.
 - Enemy e1 owned by s1, with Archetype E1.
 - Each Agent and Enemy has skill 100, current health 10 of base health 10, exhaustion 0, and equipped values referring to W1.
 - Other collections empty.
@@ -280,11 +280,11 @@ that Mechanics specifications add are assumed valid:
 | i0                | i0                  | I1        | Lead L2                                                                | Not Active, empty Current team, Participation history                                                      |
 | i1                | i1                  | I1        | Lead L1                                                                | Active, Current team {a1}, Participation history                                                           |
 | s1                | s1                  | S1        | Initiative kind; origin Investigation i0 of Lead L2; target Faction f1 | Attempted, Enemies {e1}                                                                                    |
-| m1                | m1                  | M1        | Mission site s1; turn deployed 3; team sent {a2}                       | Deployed, Current team {a2}                                                                                |
+| m1                | m1                  | M1        | Mission site s1; Turn deployed 3; team sent {a2}                       | Deployed, Current team {a2}                                                                                |
 | e1                | e1                  | E1        | Mission site s1                                                        | The properties the Combatant Role Type requires                                                            |
 | f1                | f1                  | F1        | Empty                                                                  | The values under [Faction State](factions.md#faction-state)                                                |
 
-Campaign state c1 holds turn 3, Lead progression, and collections containing Agency ag1, Agents a1 and a2,
+Campaign state c1 holds Turn 3, Lead progression, and collections containing Agency ag1, Agents a1 and a2,
 Investigations i0 and i1, Mission site s1, Mission m1, and Faction f1; e1 is reached through s1, and the Mission of
 s1 is m1, the Mission whose Mission site reference identifies s1. Required
 references resolve in c1. Immutable affiliation, origin, and target references are assumptions of this fixture, not
@@ -327,7 +327,7 @@ This satisfies [Current versus historical teams](#current-versus-historical-team
 Assigning a1 to another Investigation does not rewrite the Participation history of i1, and assigning a2 elsewhere
 does not rewrite the Participation history of m1. A later Investigation of L1 has a new Instance ID
 ([Campaign instance identity scope](#campaign-instance-identity-scope)). This fixture does not choose the replacement Current
-assignments or turn timing.
+assignments or Turn timing.
 
 ## D. Initial Campaign state
 

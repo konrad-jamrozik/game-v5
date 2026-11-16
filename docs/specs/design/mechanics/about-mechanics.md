@@ -23,7 +23,7 @@ its lifecycle, formulas, and transitions.
 
 ## Panic and Endings
 
-[Panic and Endings](panic-and-endings.md) answers _how does a Campaign end?_ It owns Panic and how each turn's changes
+[Panic and Endings](panic-and-endings.md) answers _how does a Campaign end?_ It owns Panic and how each Turn's changes
 to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign
 ending.
 
@@ -35,7 +35,7 @@ the Combatant Role Type that Agents and Enemies share, the Agent lifecycle, Curr
 ## Agent Recovery
 
 [Agent Recovery](agent-recovery.md) answers _how does an Agent get back to full strength?_ It owns how current health goes up
-and exhaustion goes down, and the result when several rules change one of those values in the same turn.
+and exhaustion goes down, and the result when several rules change one of those values in the same Turn.
 
 ## Economy and Upgrades
 

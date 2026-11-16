@@ -45,8 +45,8 @@ complete copy of Campaign state for each of them. Its size grows in two ways at 
 
 - **With the Timeline entries of the Turn:** a Turn with 50 Timeline entries keeps 51 copies of Campaign state.
 - **With the length of the Campaign:** each copy holds World history, including every
-  [Turn series](../../design/foundation/world-history.md#turn-series) in full. E.g., in turn 300, 51 copies each hold 300
-  turns of every Turn series, although the copies differ only in the recorded values of the current Turn.
+  [Turn series](../../design/foundation/world-history.md#turn-series) in full. E.g., in Turn 300, 51 copies each hold 300
+  Turns of every Turn series, although the copies differ only in the recorded values of the current Turn.
 
 A Campaign save holds the Timeline of its Turn, and every Autosave is a Campaign save, so the same growth repeats in
 each of them. It also brings Campaign saves closer to the [Save size limit](../../design/foundation/saves.md#save-size-limit).
@@ -70,7 +70,7 @@ Replay relies only on guarantees the specifications already give:
   committing it again never asks an Autopilot AI to choose, under
   [Restored Committed states](../../design/foundation/timeline.md#restored-committed-states).
 - **Only inexpensive actions:** Advance turn is not a Timeline entry, under
-  [Timeline entries](../../design/foundation/timeline.md#timeline-entries), so replay never applies turn advancement.
+  [Timeline entries](../../design/foundation/timeline.md#timeline-entries), so replay never applies Turn advancement.
 - **Same Game build:** a Campaign save is only ever loaded by a Game build that accepts it, under
   [Game build compatibility](../../design/foundation/saves.md#game-build-compatibility).
 
@@ -81,7 +81,7 @@ Use a different representation in memory and in a Campaign save.
 - **In memory, share what did not change:** represent each Committed state as an immutable value that shares every
   unchanged part with the Committed state before it. Undo and redo then select another Committed state without copying
   or computing anything, and 51 Committed states cost only what 50 Player actions changed. A Turn series suits this
-  well: it only ever grows at its end, so the recorded values of all earlier turns are shared and only the recorded
+  well: it only ever grows at its end, so the recorded values of all earlier Turns are shared and only the recorded
   values of the current Turn differ.
 - **In a Campaign save, store the Turn-start state and the Timeline entries:** write one Campaign state, the
   Turn-start state, followed by the ordered Timeline entries and the number of them that are Undone actions. Loading

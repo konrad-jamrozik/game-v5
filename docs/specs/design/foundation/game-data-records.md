@@ -131,7 +131,7 @@ engine capability: before the Campaign is created, the player may override indiv
 
 A value belongs to Campaign configuration if and only if the preset GDRs supply it. Whatever no preset can change is
 not Campaign configuration. It is either a GDR serving another purpose, e.g. the new-base-Agent-skill GDR, or game behavior,
-e.g. a starting turn that is the same for every Campaign.
+e.g. a starting Turn that is the same for every Campaign.
 
 Consider an illustrative Game build with two presets and two Campaign configuration values:
 
@@ -184,11 +184,11 @@ Consider an illustrative contracting income calculation for one Agent. Its compl
 
 | Element                        | Modeling role       | Meaning in this example                                                          |
 | ------------------------------ | ------------------- | -------------------------------------------------------------------------------- |
-| ContractingRate                | Type                | Describes a nonnegative integer amount of money per point of skill per turn.     |
-| Standard contracting           | GDR                 | Has Type ContractingRate and value 2 money per point of skill per turn.          |
+| ContractingRate                | Type                | Describes a nonnegative integer amount of money per point of skill per Turn.     |
+| Standard contracting           | GDR                 | Has Type ContractingRate and value 2 money per point of skill per Turn.          |
 | Agent skill                    | Authoritative value | Value in the Agent Campaign instance's State, currently 100.                     |
-| Contracting income calculation | Formula             | Contracting income for one turn equals the rate multiplied by the Agent's skill. |
-| Contracting income             | Derived value       | 2 × 100 = 200 money for this turn.                                               |
+| Contracting income calculation | Formula             | Contracting income for one Turn equals the rate multiplied by the Agent's skill. |
+| Contracting income             | Derived value       | 2 × 100 = 200 money for this Turn.                                               |
 | Contracting payment            | State change        | Add contracting income to Agency money.                                          |
 
 E.g., the Standard contracting GDR as YAML:
@@ -196,14 +196,14 @@ E.g., the Standard contracting GDR as YAML:
 ```yaml
 id: standard_contracting
 type: ContractingRate
-value: 2 # money per point of skill per turn
+value: 2 # money per point of skill per Turn
 ```
 
-During "advance turn" computation, the engine reads the rate of 2 from the Standard contracting GDR, which conforms to
+During "Advance turn" computation, the engine reads the rate of 2 from the Standard contracting GDR, which conforms to
 Type ContractingRate, and the Agent's skill of 100, an Authoritative value in Campaign state. The engine applies the
 contracting income formula to these inputs, producing contracting income of 200, a Derived value. Applying the
 contracting payment, the engine adds 200 to the campaign's current money; the updated money becomes part of the new
-Committed state, which is the result of turn advancement completion.
+Committed state, which is the result of Turn advancement completion.
 
 ```mermaid
 flowchart LR
@@ -214,7 +214,7 @@ flowchart LR
     Engine -->|calculates| Total["Derived value: contracting income 200"]
     Total -->|amount to add| Update["Engine updates campaign money"]
     State -->|current money| Update
-    Update -->|included when turn advancement completes| Committed["New Committed state"]
+    Update -->|included when Turn advancement completes| Committed["New Committed state"]
 ```
 
 # GDR purpose: archetype

@@ -346,7 +346,7 @@ example states a test GDR. The values they read are:
 | `foil_sabotage`             | `kind` response                                                                                                                           |
 
 In the examples, the three Leads are called by their identifiers, "member", "safehouse", and "hq" for
-`locate_red_dawn_member`, `locate_red_dawn_safehouse`, and `locate_red_dawn_hq`. "The Advance turn ending turn t" is the
+`locate_red_dawn_member`, `locate_red_dawn_safehouse`, and `locate_red_dawn_hq`. "The Advance turn ending Turn t" is the
 Advance turn committed during Turn t; the Campaign starts in Turn 1. When an Investigation completes, under
 [Completion](investigations.md#completion), and each Combat outcome are fixed inputs, named as Investigations and Combat
 name them. Instance IDs i1, i2, ... name Investigations, s1, s2, ... name Mission sites, and m1, m2, ... name
@@ -382,16 +382,16 @@ Initial state: the state above, in Turn 1. The player starts Investigation i1 of
   available with no Blocking condition; a second Investigation of member is nevertheless rejected while i1 is Active,
   under [One Active Investigation per Lead](investigations.md#one-active-investigation-per-lead) in Investigations.
   Safehouse and hq are blocked by 1.
-- **Advance turn ending turn 4:** Investigation i1 completes (input from Investigations). The effect `create_mission_site`
+- **Advance turn ending Turn 4:** Investigation i1 completes (input from Investigations). The effect `create_mission_site`
   supplies `apprehend_member`, i1, and Red Dawn to Missions, which creates exactly one Initiative Mission site s1, Active,
   with target Faction Red Dawn. Member is not available; its Blocking condition is 3, because s1 is Active. Lead
   progression is unchanged, and safehouse stays blocked by 1.
 - **Turn 5:** The player deploys a team to s1, so s1 is Attempted and its Mission m1 is Deployed. Member is still
   blocked by 3.
-- **Advance turn ending turn 5:** The Combat outcome is Prevailed (input from Combat), so m1 becomes Won. In the same step,
+- **Advance turn ending Turn 5:** The Combat outcome is Prevailed (input from Combat), so m1 becomes Won. In the same step,
   Lead progression records m1 in member's set, which is now {m1}. Safehouse's condition 1 now holds.
 
-| Lead      | Available after the Advance turn ending turn 5 | Blocking conditions | Why                                                              |
+| Lead      | Available after the Advance turn ending Turn 5 | Blocking conditions | Why                                                              |
 | --------- | ---------------------------------------------- | ------------------- | ---------------------------------------------------------------- |
 | member    | No                                             | 2                   | It has a Recorded win. Condition 3 holds, because m1 is Won.     |
 | safehouse | Yes                                            | None                | Its prerequisite holds: member has a Recorded win.               |
@@ -405,17 +405,17 @@ This example exercises [What changes availability](#what-changes-availability), 
 and [Recording a Won Mission](#recording-a-won-mission).
 
 Initial state: member's set is {m1}, in Turn 6, and safehouse is available (the state at the end of the previous example).
-Investigations i2, i3, and i4 of safehouse are started in turns 6, 11, and 25 respectively.
+Investigations i2, i3, and i4 of safehouse are started in Turns 6, 11, and 25 respectively.
 
-- **Advance turn ending turn 9:** i2 completes; a Mission site s2 from `raid_safehouse` is created, Active, with 8 Advance
+- **Advance turn ending Turn 9:** i2 completes; a Mission site s2 from `raid_safehouse` is created, Active, with 8 Advance
   Turns until expiration. Safehouse is blocked by 3. In Turn 10 a team is deployed, creating m2, and in the Advance turn ending
-  turn 10 the Combat outcome is Retreated, so m2 is Lost. Nothing is recorded: safehouse's set is empty. Safehouse is available
+  Turn 10 the Combat outcome is Retreated, so m2 is Lost. Nothing is recorded: safehouse's set is empty. Safehouse is available
   again, because conditions 1 to 4 all hold; hq stays blocked by 1.
-- **Advance turn ending turn 16:** i3 completes (started in Turn 11); a new Mission site s3 from `raid_safehouse` is
+- **Advance turn ending Turn 16:** i3 completes (started in Turn 11); a new Mission site s3 from `raid_safehouse` is
   created, Active. Safehouse is blocked by 3. No team is deployed to s3. s3 does not count down in the Advance turn that
-  created it, so it is Expired in the Advance turn ending turn 24. Safehouse is available again after that Advance turn.
-- **Advance turn ending turn 28:** i4 completes; Mission site s4 from `raid_safehouse` is created, Active. In Turn 29 a
-  team is deployed, creating m4, and in the Advance turn ending turn 29 the Combat outcome is Prevailed, so m4 is Won. Lead
+  created it, so it is Expired in the Advance turn ending Turn 24. Safehouse is available again after that Advance turn.
+- **Advance turn ending Turn 28:** i4 completes; Mission site s4 from `raid_safehouse` is created, Active. In Turn 29 a
+  team is deployed, creating m4, and in the Advance turn ending Turn 29 the Combat outcome is Prevailed, so m4 is Won. Lead
   progression records m4 in safehouse's set, which becomes {m4}. m2 is not recorded, and s3 never had a Mission. Safehouse is never available again; hq's
   condition 1 now holds, so hq is available.
 
@@ -425,11 +425,11 @@ This example exercises [Recording a Won Mission](#recording-a-won-mission),
 [Lead availability](#lead-availability), and [Prerequisites](#prerequisites).
 
 Initial state: safehouse's set is {m4}, member's set is {m1}, hq is available, in Turn 30. Investigation i5 of hq is
-started in Turn 30 and completes in the Advance turn ending turn 40; Mission site s5 from `raid_hq` is created, Active. In
-Turn 41 a team is deployed, creating m5, and in the Advance turn ending turn 41 the Combat outcome is Prevailed. m5 becomes
+started in Turn 30 and completes in the Advance turn ending Turn 40; Mission site s5 from `raid_hq` is created, Active. In
+Turn 41 a team is deployed, creating m5, and in the Advance turn ending Turn 41 the Combat outcome is Prevailed. m5 becomes
 Won, and Lead progression records m5 in hq's set; Missions applies the `on_win` of `raid_hq`, which eliminates Red Dawn.
 
-| Lead      | Available after the Advance turn ending turn 41 | Blocking conditions |
+| Lead      | Available after the Advance turn ending Turn 41 | Blocking conditions |
 | --------- | ----------------------------------------------- | ------------------- |
 | member    | No                                              | 2, 4                |
 | safehouse | No                                              | 2, 4                |
@@ -462,7 +462,7 @@ and [Edge cases and failure behavior](#edge-cases-and-failure-behavior). It uses
 alongside the Bootstrap GDRs.
 
 Initial state: Turn 60. A Mission site s6 from `raid_hq`, created by an Investigation i6 of hq that completed earlier, is
-Attempted, and its Mission m6 is Deployed; `test_lead` has an Active Investigation i7. The following happens in the Advance turn ending turn 60.
+Attempted, and its Mission m6 is Deployed; `test_lead` has an Active Investigation i7. The following happens in the Advance turn ending Turn 60.
 
 1. **Investigation progress:** i7 completes (input from Investigations). The effect creates Mission site s7 from
    `apprehend_member`, Active, with target Faction Red Dawn, which is not yet Eliminated.
@@ -513,7 +513,7 @@ a MissionSiteArchetype of kind initiative.
 
 This example exercises [Player-visible information](#player-visible-information).
 
-In the Committed state after the Advance turn ending turn 5 in
+In the Committed state after the Advance turn ending Turn 5 in
 [The first Mission Won](#the-first-mission-won), a Player API query of the Leads returns, for hq: its name,
 description, `faction` `red_dawn`, `difficulty` 10, `requires` as a list of one prerequisite, `mission_won_from_lead`
 `locate_red_dawn_safehouse`, with the state that it does not hold; `on_completion` `create_mission_site` `raid_hq`

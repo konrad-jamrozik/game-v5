@@ -95,7 +95,7 @@ that time.
 Borderline Work items concern content that belongs in a specification but is worded as a mechanism rather than as an
 observable or designer-authored outcome.
 
-### TODO-013: Snapshot and read wording for turn timing
+### TODO-013: Snapshot and read wording for Turn timing
 
 **Category and priority:** Borderline, low priority.
 

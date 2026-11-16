@@ -612,7 +612,7 @@ values they read are:
 | `agent_parameters` | `initial_roster_size` 4; `exhaustion_cap` 100; `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_attack` 1; `exhaustion_per_defense` 1; `training_skill_gain_per_turn` 1 |
 | `sidearm`          | `damage` 10                                                                                                                                                                                              |
 
-"The Advance turn ending turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. No
+"The Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. No
 Upgrade has been acquired in any example. Effects of other specifications' rules, e.g. income, appear only to show
 when they apply, without their amounts.
 
@@ -684,9 +684,9 @@ At assignment, during Turn 5.
 | Moment                                      | Current assignment | Task phase    | What happens to a1                                                                                            |
 | ------------------------------------------- | ------------------ | ------------- | ------------------------------------------------------------------------------------------------------------- |
 | `assignAgents([a1], Contracting)` in Turn 5 | Contracting        | In transit    | The action succeeds; a1 can no longer be ordered in Turn 5.                                                   |
-| Advance turn ending turn 5                  | Contracting        | At assignment | a1 arrives in the Transit step. It earns no contracting income in Agency income, and it is counted in Upkeep. |
+| Advance turn ending Turn 5                  | Contracting        | At assignment | a1 arrives in the Transit step. It earns no contracting income in Agency income, and it is counted in Upkeep. |
 | Turn 6                                      | Contracting        | At assignment | a1 can be ordered.                                                                                            |
-| Advance turn ending turn 6                  | Contracting        | At assignment | a1 was At assignment in the Turn-end state, so Agency income counts it: its first contracting income.         |
+| Advance turn ending Turn 6                  | Contracting        | At assignment | a1 was At assignment in the Turn-end state, so Agency income counts it: its first contracting income.         |
 
 A second `assignAgents([a1], Standby)` in Turn 5, after the first, is rejected, because a1 is In transit and cannot be
 ordered; a1 stays on Contracting, In transit.
@@ -697,7 +697,7 @@ This example exercises [Agent creation](#agent-creation) and [Transit rule](#tra
 hires one Agent through the `hireAgent` Player action of [Economy and Upgrades](economy-and-upgrades.md). The new Agent
 a5 has Turn hired 5, skill 100, current health 30 of 30, exhaustion 0, Weapon `sidearm`, weapon damage 10, and is on Standby,
 In transit. During the rest of Turn 5, `assignAgents([a5], Training)` is rejected because a5 cannot be ordered. In the
-Advance turn ending turn 5, a5 arrives in the Transit step and is counted in Upkeep; nothing else applies to it. In Turn
+Advance turn ending Turn 5, a5 arrives in the Transit step and is counted in Upkeep; nothing else applies to it. In Turn
 6, a5 is on Standby, At assignment, and can be ordered.
 
 ## Transit: returning survivors
@@ -710,32 +710,32 @@ current health 30 of 30, are deployed to Mission site s1 during Turn 5 through t
 | Moment                         | a1                                                                                   | a2                                                                                    |
 | ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
 | Right after deployment, Turn 5 | Deployed on m1, At assignment                                                        | Deployed on m1, At assignment                                                         |
-| Advance turn ending turn 5     | Fights in the Combat; ends with current health 30 of 30; becomes Standby, In transit | Fights in the Combat; ends with current health 18 of 30; becomes Recovery, In transit |
+| Advance turn ending Turn 5     | Fights in the Combat; ends with current health 30 of 30; becomes Standby, In transit | Fights in the Combat; ends with current health 18 of 30; becomes Recovery, In transit |
 | Turn 6                         | Standby, In transit; cannot be ordered                                               | Recovery, In transit; cannot be ordered                                               |
-| Advance turn ending turn 6     | Arrives in Transit; recovers no exhaustion                                           | Arrives in Transit; recovers no current health                                        |
+| Advance turn ending Turn 6     | Arrives in Transit; recovers no exhaustion                                           | Arrives in Transit; recovers no current health                                        |
 | Turn 7                         | Standby, At assignment; can be ordered                                               | Recovery, At assignment; cannot be ordered                                            |
-| Advance turn ending turn 7     | Recovers exhaustion, under [Agent Recovery](agent-recovery.md)                       | Recovers current health for the first time, under [Agent Recovery](agent-recovery.md) |
+| Advance turn ending Turn 7     | Recovers exhaustion, under [Agent Recovery](agent-recovery.md)                       | Recovers current health for the first time, under [Agent Recovery](agent-recovery.md) |
 
 During Turn 5, after deployment, `assignAgents([a1], Standby)` is rejected because a1 is Deployed and cannot be ordered.
-In the Advance turn ending turn 5, a1 and a2 became In transit during the Advance turn, so both are still In transit
-when it ends. Each has m1 in its Participation history from the Advance turn ending turn 5 on.
+In the Advance turn ending Turn 5, a1 and a2 became In transit during the Advance turn, so both are still In transit
+when it ends. Each has m1 in its Participation history from the Advance turn ending Turn 5 on.
 
 ## Transit: Deployed at once
 
 This example exercises the Deployed exception under [Transit rule](#transit-rule). An Agent is deployed during Turn 9,
 the last Turn before its Mission site would expire. It is Deployed, At assignment, immediately, so in the Turn-end state
-of the Advance turn ending turn 9 it is At assignment and fights in that Advance turn's Mission resolution. Had
+of the Advance turn ending Turn 9 it is At assignment and fights in that Advance turn's Mission resolution. Had
 deployment started In transit, it would only have arrived in that Advance turn and could not have fought.
 
 ## Transit: Investigation started and completed
 
 This example exercises [Transit rule](#transit-rule), including the destination-ends exception. During Turn 5 the
 player starts an Investigation i1 with Agent a1 through a Player action of [Investigations](investigations.md); a1 is
-on i1, In transit. In the Advance turn ending turn 5, a1 arrives and adds no progress; i1 gains its first progress in the
-Advance turn ending turn 6. Separately, Agent a3 is added to an Active Investigation i2 during Turn 8 and arrives in the
-Advance turn ending turn 8, in which the progress of the other members of i2 completes it. a3 added no progress, but
+on i1, In transit. In the Advance turn ending Turn 5, a1 arrives and adds no progress; i1 gains its first progress in the
+Advance turn ending Turn 6. Separately, Agent a3 is added to an Active Investigation i2 during Turn 8 and arrives in the
+Advance turn ending Turn 8, in which the progress of the other members of i2 completes it. a3 added no progress, but
 it leaves i2's Current team with the others, goes to Standby, In transit, and has i2 in its Participation history; it
-arrives in the Advance turn ending turn 9.
+arrives in the Advance turn ending Turn 9.
 
 ## Training growth
 
@@ -746,13 +746,13 @@ assignment, during Turn 5.
 | Moment                                   | Current assignment, Task phase | Skill | Effective skill |
 | ---------------------------------------- | ------------------------------ | ----- | --------------- |
 | `assignAgents([a1], Training)` in Turn 5 | Training, In transit           | 100   | 100             |
-| After the Advance turn ending turn 5     | Training, At assignment        | 100   | 100             |
-| After the Advance turn ending turn 6     | Training, At assignment        | 101   | 101             |
-| After the Advance turn ending turn 7     | Training, At assignment        | 102   | 102             |
+| After the Advance turn ending Turn 5     | Training, At assignment        | 100   | 100             |
+| After the Advance turn ending Turn 6     | Training, At assignment        | 101   | 101             |
+| After the Advance turn ending Turn 7     | Training, At assignment        | 102   | 102             |
 | `assignAgents([a1], Standby)` in Turn 8  | Standby, In transit            | 102   | 102             |
-| After the Advance turn ending turn 8     | Standby, At assignment         | 102   | 102             |
+| After the Advance turn ending Turn 8     | Standby, At assignment         | 102   | 102             |
 
-In the Advance turn ending turn 5, a1 arrives in Transit and gains nothing in Training. In each of the next two Advance
+In the Advance turn ending Turn 5, a1 arrives in Transit and gains nothing in Training. In each of the next two Advance
 turns it gains `training_skill_gain_per_turn` 1. After it is recalled it keeps its skill of 102 and gains no more. Its
 exhaustion stays 0 throughout, because Training raises no exhaustion. Two Agents on Training, At assignment, in the
 same Advance turn each gain 1, independently of each other.

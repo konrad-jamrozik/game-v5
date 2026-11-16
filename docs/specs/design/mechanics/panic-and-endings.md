@@ -5,7 +5,7 @@
 | Spec ID     | ENDING                                                                                                                                                                     |
 | Family      | Mechanics                                                                                                                                                                  |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                |
-| Owns        | Panic and how this turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending.           |
+| Owns        | Panic and how this Turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending.           |
 | Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -40,7 +40,7 @@ These terms are specific to Panic and Campaign endings. General terms are in the
 
 ## Panic
 
-How alarmed the public is, and how a turn's changes to it are collected.
+How alarmed the public is, and how a Turn's changes to it are collected.
 
 | Term                 | Definition                                                                                                                                                                                                  |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -375,7 +375,7 @@ states a test GDR. The values they read are:
 Where an example says a Panic increase or reduction is added, the rule of [Missions](missions.md) that adds it is
 assumed. In every example the Campaign has one Faction, Red Dawn, which is not
 Eliminated unless the example says otherwise, and the Agency's money is 500 unless the example says otherwise. "The
-Advance turn ending turn t" is the Advance turn committed during Turn t.
+Advance turn ending Turn t" is the Advance turn committed during Turn t.
 
 ## Panic is summed, clamped, and reaches Defeat
 
@@ -384,7 +384,7 @@ This example exercises [Pending panic change](#pending-panic-change), [Panic ste
 
 Initial state: Turn 12, Panic 97, money 40, funding 0, and exactly 4 Agents, all Deployed on one Mission at a `raid_safehouse`
 Mission site. A Response Mission site of Faction operation level 2 is Active and expires in this Advance turn. In the
-Advance turn ending turn 12:
+Advance turn ending Turn 12:
 
 - Agency income adds 0, because funding is 0 and no Agent is on Contracting.
 - Upkeep takes `10 × 4 = 40`, so money is 0.
@@ -399,7 +399,7 @@ The Pending panic change is `8 − 2 = 6`. The Panic step computes
 In the Ending check step, Victory does not hold, because Red Dawn is not Eliminated. Panic 100 is at least the Panic limit
 100, so Defeat holds; money 100 is not below zero.
 
-| Value           | After the Advance turn ending turn 12 |
+| Value           | After the Advance turn ending Turn 12 |
 | --------------- | ------------------------------------- |
 | Panic           | 100                                   |
 | Money           | 100                                   |
@@ -475,7 +475,7 @@ Initial state: Turn 150, Panic 95, money 30, funding 0, and Red Dawn, the only F
 exactly 4 Agents, which equals the Transport cap: Agents a1 and a2 are Deployed on a Mission at a `raid_hq` Mission site, and
 Agents a3 and a4 are Deployed on a Mission at a Response Mission site of `operation_level_2` of Red Dawn. No Agent is on Contracting.
 
-In the Advance turn ending turn 150:
+In the Advance turn ending Turn 150:
 
 - Agency income adds 0, because funding is 0 and no Agent is on Contracting.
 - Upkeep takes `10 × 4 = 40`, so money is -10.
@@ -488,7 +488,7 @@ In the Advance turn ending turn 150:
 In the Ending check step, the Campaign has one Faction and it is Eliminated, so Victory holds. The order of the predicates
 means Defeat is not tried.
 
-| Value           | After the Advance turn ending turn 150 |
+| Value           | After the Advance turn ending Turn 150 |
 | --------------- | -------------------------------------- |
 | Campaign ending | Victory                                |
 | Ending reasons  | { Every Faction Eliminated }           |
@@ -504,7 +504,7 @@ This example exercises [Victory](#victory). It uses a test Game build that suppl
 are the Bootstrap GDRs.
 
 The Game build passes [Faction GDR validation](factions.md#faction-gdr-validation), so a Campaign is created with no
-Faction. In the Advance turn ending turn 1, Panic is 0 and money is 500; "every Faction is Eliminated" is vacuously true,
+Faction. In the Advance turn ending Turn 1, Panic is 0 and money is 500; "every Faction is Eliminated" is vacuously true,
 but the Campaign has no Faction, so Victory does not hold. Defeat does not hold either, so the Campaign has no Campaign
 ending. The same Campaign ends in Defeat if Panic reaches 100 or money falls below zero, and never in Victory.
 
@@ -523,7 +523,7 @@ queries show the same absent Campaign ending.
 This example exercises [After a Campaign ending](#after-a-campaign-ending) and
 [Player-visible information](#player-visible-information).
 
-Initial state: the Committed state after the Advance turn ending turn 12 in
+Initial state: the Committed state after the Advance turn ending Turn 12 in
 [Panic is summed, clamped, and reaches Defeat](#panic-is-summed-clamped-and-reaches-defeat), i.e. Turn 13, Panic 100,
 money 100, the Campaign ending Defeat, and the 4 surviving Agents In transit.
 
@@ -544,7 +544,7 @@ This example exercises [After a Campaign ending](#after-a-campaign-ending). The 
 
 `session.timeline.undoToAutosave()` loads the Turn-end Autosave of Turn 12, which holds the Turn-end state in which
 the Advance turn began: Turn 12, Panic 97, money 40, funding 0, the 4 Agents Deployed, and no Campaign ending. In that Committed state every Player action
-is accepted again, subject to its own preconditions; the player may, e.g., reduce nothing and advance the turn again,
+is accepted again, subject to its own preconditions; the player may, e.g., reduce nothing and end the Turn again,
 and the Ending check step decides the Campaign ending anew from the values of that Advance turn.
 
 ## Player-visible information

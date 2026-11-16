@@ -135,8 +135,8 @@ design influence until batch 8. Each Mechanics specification states its own Play
 
 ## Incremental timing refinement
 
-Refine turn timing and shared contracts as mechanics are drafted. [Turn Advancement](../../design/mechanics/turn-advancement.md) is the canonical order
-of the rules applied during Advance turn. Each Mechanics specification places its turn rules in a step under
+Refine Turn timing and shared contracts as mechanics are drafted. [Turn Advancement](../../design/mechanics/turn-advancement.md) is the canonical order
+of the rules applied during Advance turn. Each Mechanics specification places its Turn rules in a step under
 [Turn advancement steps](../../design/mechanics/turn-advancement.md#turn-advancement-steps), and a draft that contradicts that order is corrected to
 match it.
 
@@ -214,5 +214,5 @@ These are workflow checks, not gameplay tests:
 - **Later conflict ([Earlier-specification gaps](#earlier-specification-gaps)):** A mission rule conflicts with an Accepted Timeline rule. The discrepancy is documented and
   a revision is proposed to the owner; neither implementation nor a second specification silently overrides the accepted rule.
 - **Milestone assessment ([Separate implementation authorization](#separate-implementation-authorization), [First implementation milestone assessment](#first-implementation-milestone-assessment)):** After batch 4 is reviewed, assess the accepted contracts for a headless
-  slice. If its required turn timing or API contract is unresolved, list the gap and propose the necessary specification
+  slice. If its required Turn timing or API contract is unresolved, list the gap and propose the necessary specification
   work; do not invent the missing rule in code or treat the assessment as implementation authorization.

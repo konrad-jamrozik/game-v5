@@ -50,7 +50,7 @@ The Campaign saves the engine writes itself.
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Autosave            | A Campaign save that the engine writes without a save request from the Session controller, under [Autosaves](#autosaves).                                         |
 | Current Autosave    | The Autosave holding the Committed state the Campaign is at now, kept up to date at all times so that play can resume after the Session ends for whatever reason. |
-| Turn-end Autosave   | The Autosave holding the Turn-end state of one Turn, written when the player advances the turn.                                                                   |
+| Turn-end Autosave   | The Autosave holding the Turn-end state of one Turn, written when the player ends the Turn.                                                                       |
 | Engagement Autosave | The Autosave holding the Committed state in which the most recent Autopilot engagement began.                                                                     |
 
 ## Limits
@@ -83,7 +83,7 @@ distinct Campaign IDs. Because the Campaign seed is Campaign state, under
 # Saving
 
 Saving captures the Current campaign at its current Committed state. It is available at every Committed state,
-including before the player advances the turn, and it is not a Player action.
+including before the player ends the Turn, and it is not a Player action.
 
 `session.saves.save()` writes the Current campaign to its Current save, replacing that Campaign save's contents.
 When the Current campaign has no Current save, it creates a new Campaign save and makes that the Current save.
@@ -144,7 +144,7 @@ The following rules are complete.
 - **One Turn-end Autosave for each Turn:** A Turn-end Autosave written for a Turn that already has one replaces it.
 - **Autopilot engagements:** No Turn-end Autosave is written during an Autopilot engagement, however many Advance turn
   actions the Autopilot AI commits. Engaging Autopilot replaces the Engagement Autosave. This holds for every
-  Autopilot engagement, including one that advances no turn and a second one in the same Turn. The Current Autosave
+  Autopilot engagement, including one that ends no Turn and a second one in the same Turn. The Current Autosave
   is replaced during an Autopilot engagement as at any other time.
 
 # Listing Campaign saves

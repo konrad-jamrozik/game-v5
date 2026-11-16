@@ -63,16 +63,16 @@ The second diagram starts where the first one ends, at the Turn-start state, and
 The diagrams read as follows:
 
 - **The horizontal line:** the line is one Turn. It begins at the Turn-start state and ends where the player advances
-  the turn.
+  the Turn.
 - **Circles:** each circle is one Timeline entry. An arrow ending at a circle means the Campaign state becomes the
   Committed state right after that Player action.
 - **The diamond on the left:** this is the Turn-start state, in which no Timeline entry has been committed. The
   Timeline itself holds it, so undo reaches it whether or not any Campaign save exists.
 - **The diamond on the right:** this is the Turn-end Autosave, under [Autosaves](saves.md#autosaves).
-  It holds the Turn-end state: the Committed state just before the player advances the turn, and the Committed state
+  It holds the Turn-end state: the Committed state just before the player ends the Turn, and the Committed state
   restored when that Campaign save is loaded.
 - **Dashed circles:** these are Undone actions.
-- **Advance turn:** the rectangle is the engine applying turn advancement. Advance turn is not a Timeline entry, and
+- **Advance turn:** the rectangle is the engine applying Turn advancement. Advance turn is not a Timeline entry, and
   no Committed state lies inside it.
 
 # World history, Timeline, and Campaign save
@@ -278,7 +278,7 @@ play are not targets. They stay in Game storage until a new action removes them.
   preceding Campaign configuration and World state; redo restores the changed Campaign configuration and World state
   ([Restored Committed states](#restored-committed-states)).
 - **Autopilot actions are separate Timeline entries:** An Autopilot AI commits three actions in one Autopilot
-  engagement without advancing the turn. After disengagement, three `undoAction()` calls are needed to reverse them
+  engagement without ending the Turn. After disengagement, three `undoAction()` calls are needed to reverse them
   ([Timeline entries](#timeline-entries)).
 - **Going back and forward across Turns:** With the Autosave limit 5, commit actions and Advance turn in Turn 1, Turn
   2, and Turn 3, then commit two actions in Turn 4. Three `undoToAutosave()` calls load the Turn-end Autosaves of Turn
