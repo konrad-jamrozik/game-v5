@@ -236,7 +236,7 @@ E.g., an illustrative creation of two Enemy Campaign instances whose Archetype i
 | EnemyArchetype                                                     | Type                                                                           | Describes the shared enemy characteristics and initial values.                                                                                                                                                                  |
 | Thug                                                               | GDR serving the Archetype purpose                                              | Has Type EnemyArchetype and [base health](../mechanics/agents-spec.md#combatant-attributes) 10.                                                                                                                                 |
 | Enemy creation                                                     | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty [Constants](core-concepts.md#campaign-instances), and current health in State equal to the Archetype's base health. |
-| enemy_1 and enemy_2                                                | Campaign instances                                                             | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                                                                        |
+| enemy-1 and enemy-2                                                | Campaign instances                                                             | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                                                                        |
 | [Current health](../mechanics/agents-spec.md#combatant-attributes) | Authoritative value                                                            | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                                                                           |
 
 E.g., the Thug GDR as YAML, with further illustrative properties that this example does not use:
@@ -251,15 +251,15 @@ is_officer: false
 ```
 
 Each newly created [Enemy](../mechanics/domain-model.md#combat) Campaign instance whose Archetype is Thug has [current health](../mechanics/agents-spec.md#combatant-attributes) 10 in State and its own fresh
-Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).
-Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes its current health without changing enemy_2 or Thug.
+Instance ID; here the two Instance IDs are enemy-1 and enemy-2. Each belongs to a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).
+Both Enemy Campaign instances refer to the same GDR; damaging enemy-1 changes its current health without changing enemy-2 or Thug.
 
 ```mermaid
 flowchart LR
     Creation["Enemy creation"] -->|specifies| Enemy1
     Creation -->|specifies| Enemy2
-    Thug["GDR: Thug · base health 10"] -->|Archetype and initial current health| Enemy1["Enemy Campaign instance enemy_1<br/>Archetype: Thug<br/>Instance ID: enemy_1<br/>Constants: empty<br/>State: current health 10"]
-    Thug -->|Archetype and initial current health| Enemy2["Enemy Campaign instance enemy_2<br/>Archetype: Thug<br/>Instance ID: enemy_2<br/>Constants: empty<br/>State: current health 10"]
+    Thug["GDR: Thug · base health 10"] -->|Archetype and initial current health| Enemy1["Enemy Campaign instance enemy-1<br/>Archetype: Thug<br/>Instance ID: enemy-1<br/>Constants: empty<br/>State: current health 10"]
+    Thug -->|Archetype and initial current health| Enemy2["Enemy Campaign instance enemy-2<br/>Archetype: Thug<br/>Instance ID: enemy-2<br/>Constants: empty<br/>State: current health 10"]
 ```
 
 # GDR purpose: referenced GDR
@@ -286,12 +286,12 @@ description: Investigate local criminal organizations to find cult connections.
 difficulty: 3
 ```
 
-Suppose Lead lead_1 is referenced by Investigation investigation_1, created with InvestigationArchetype investigation_archetype_1. Its Instance ID is investigation_1; its Constants contains the
+Suppose Lead lead_1 is referenced by Investigation investigation-1, created with InvestigationArchetype investigation_archetype_1. Its Instance ID is investigation-1; its Constants contains the
 immutable Lead reference, and its State contains lifecycle initialized to active and progress initialized to 0, as an illustrative specification of Investigation creation would state. The archetype remains the separate shared
 component. Adding the Lead reference does not create a fifth property or make lead_1 the Investigation's archetype.
 
-For this example, investigation_1 reaches progress 2 and is abandoned. A new Investigation investigation_2 at lead_1 starts at progress 0 with its own Instance ID.
-Use archetype investigation_archetype_2 for investigation_2 to show that the Investigation's Lead reference and Archetype are independent relationships. These
+For this example, investigation-1 reaches progress 2 and is abandoned. A new Investigation investigation-2 at lead_1 starts at progress 0 with its own Instance ID.
+Use archetype investigation_archetype_2 for investigation-2 to show that the Investigation's Lead reference and Archetype are independent relationships. These
 are symbolic GDRs without selected production properties or mechanics. The example assumes both combinations are
 permitted; it does not define action preconditions or invariants governing them.
 
@@ -300,15 +300,15 @@ flowchart LR
     lead_1["Lead GDR: lead_1"]
     investigation_archetype_1["InvestigationArchetype investigation_archetype_1"]
     investigation_archetype_2["InvestigationArchetype investigation_archetype_2"]
-    subgraph investigation_1["Investigation investigation_1"]
+    subgraph investigation_1["Investigation investigation-1"]
         investigation_1_archetype["Archetype: investigation_archetype_1"]
-        investigation_1_identity["Instance ID: investigation_1"]
+        investigation_1_identity["Instance ID: investigation-1"]
         investigation_1_constants["Constants: Lead lead_1"]
         investigation_1_state["State: abandoned, progress 2"]
     end
-    subgraph investigation_2["Investigation investigation_2"]
+    subgraph investigation_2["Investigation investigation-2"]
         investigation_2_archetype["Archetype: investigation_archetype_2"]
-        investigation_2_identity["Instance ID: investigation_2"]
+        investigation_2_identity["Instance ID: investigation-2"]
         investigation_2_constants["Constants: Lead lead_1"]
         investigation_2_state["State: active, progress 0"]
     end
@@ -318,7 +318,7 @@ flowchart LR
     investigation_2_constants -->|immutable reference| lead_1
 ```
 
-Both Investigations can share lead_1 without sharing progress. Retargeting investigation_1 to another Lead or replacing investigation_archetype_1 after creation
+Both Investigations can share lead_1 without sharing progress. Retargeting investigation-1 to another Lead or replacing investigation_archetype_1 after creation
 would violate its fixed facts. Using lead_1 as its archetype would fail the expected InvestigationArchetype reference,
 regardless of whether some properties match.
 
@@ -329,14 +329,14 @@ the GDR remains shared and immutable.
 
 ## Worked example: key for campaign facts
 
-E.g., continuing the illustrative Investigation example, suppose investigation_2 completes after investigation_1 was abandoned.
+E.g., continuing the illustrative Investigation example, suppose investigation-2 completes after investigation-1 was abandoned.
 Campaign state retains both Investigation Campaign instances, including the values of the Lead reference property
 within each Campaign instance’s Constants property and the lifecycle property within its State property.
 
 | Element                                                                        | Modeling role                                  | Meaning in this example                                                                                                                                   |
 | ------------------------------------------------------------------------------ | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | lead_1                                                                         | GDR serving the Key for campaign facts purpose | Its identity selects the Investigations concerning this Lead; the GDR remains unchanged.                                                                  |
-| Properties of completed investigations that denote to which leads they pertain | Authoritative values                           | The Lead reference property within the Constants property of the Completed Investigation Campaign instance investigation_2 identifies lead_1.             |
+| Properties of completed investigations that denote to which leads they pertain | Authoritative values                           | The Lead reference property within the Constants property of the Completed Investigation Campaign instance investigation-2 identifies lead_1.             |
 | Completion count for lead_1                                                    | Derived value                                  | Count Investigation Campaign instances whose Lead reference property identifies lead_1 and whose lifecycle property has value Completed. The result is 1. |
 
 E.g., lead_1 as YAML. The GDR holds no completion count:
@@ -355,7 +355,7 @@ How to determine the Derived value of the completion count for the Lead GDR lead
 1. **Collect Investigations:** Start with all Investigation Campaign instances in the Campaign state.
 2. **Filter by Lead reference:** For each Investigation Campaign instance, read the value of the Lead reference property within its Constants property. Keep only Campaign instances whose Lead reference identifies lead_1.
 3. **Filter by Completed lifecycle:** For each remaining Investigation Campaign instance, read the value of the lifecycle property within its State property. Keep only Campaign instances whose lifecycle property has the value Completed.
-4. **Count matching Investigations:** Count the remaining Investigation Campaign instances. The result is the Derived value of the completion count for lead_1. In this example, investigation_1 is excluded because its lifecycle property has the value Abandoned; investigation_2 is counted, so the result is 1.
+4. **Count matching Investigations:** Count the remaining Investigation Campaign instances. The result is the Derived value of the completion count for lead_1. In this example, investigation-1 is excluded because its lifecycle property has the value Abandoned; investigation-2 is counted, so the result is 1.
 
 The Lead reference and lifecycle property values read in steps 2 and 3 are Authoritative values.
 
@@ -363,13 +363,13 @@ The Lead reference and lifecycle property values read in steps 2 and 3 are Autho
 flowchart LR
     Lead["Lead GDR: lead_1<br/>Shared immutable data"]
     subgraph CampaignState["Campaign state: Authoritative property values"]
-        Investigation1["Investigation Campaign instance investigation_1<br/>Constants property: Lead reference property = lead_1<br/>State property: lifecycle property = Abandoned"]
-        Investigation2["Investigation Campaign instance investigation_2<br/>Constants property: Lead reference property = lead_1<br/>State property: lifecycle property = Completed"]
+        Investigation1["Investigation Campaign instance investigation-1<br/>Constants property: Lead reference property = lead_1<br/>State property: lifecycle property = Abandoned"]
+        Investigation2["Investigation Campaign instance investigation-2<br/>Constants property: Lead reference property = lead_1<br/>State property: lifecycle property = Completed"]
     end
     Lead -->|GDR identity to match| SelectLead["Engine filters by Lead reference<br/>Both Investigations match lead_1"]
     Investigation1 -->|Lead reference and lifecycle values| SelectLead
     Investigation2 -->|Lead reference and lifecycle values| SelectLead
-    SelectLead --> SelectCompleted["Engine filters by Completed lifecycle<br/>Only investigation_2 matches"]
+    SelectLead --> SelectCompleted["Engine filters by Completed lifecycle<br/>Only investigation-2 matches"]
     SelectCompleted --> Count["Engine counts matching Investigation Campaign instances"]
     Count --> Result["Derived value:<br/>Completion count for lead_1 = 1"]
 ```

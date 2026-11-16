@@ -24,10 +24,10 @@ instance in [World state](campaign-state.md#glossary).
 
 These terms are specific to Campaign Instances. [Campaign instance](core-concepts.md#campaign-instances), [Archetype](core-concepts.md#campaign-instances), [State](core-concepts.md#campaign-instances), [Constants](core-concepts.md#campaign-instances), and other general terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Campaign State glossary](campaign-state.md#glossary).
 
-| Term        | Definition                                                                                                                                                                                                                      | Prohibited synonyms                                                                   |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Instance ID | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary).                 | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names. |
-| Role Type   | A [Type](core-concepts.md#data-modeling) that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration. |                                                                                       |
+| Term        | Definition                                                                                                                                                                                                                                                                                                                                                                               | Prohibited synonyms                                                                   |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Instance ID | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime, formed from its Campaign instance [Type](core-concepts.md#data-modeling) and that Type's creation count under [Campaign instance identity](#campaign-instance-identity). It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary). | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names. |
+| Role Type   | A [Type](core-concepts.md#data-modeling) that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration.                                                                                                                                                          |                                                                                       |
 
 # Campaign instance structure
 
@@ -59,6 +59,14 @@ A Campaign instance must stay recognizable as the same thing for its whole life,
 redone. Instance IDs are unique within their explicitly declared scope and stable for the Campaign instance’s lifetime.
 Restoration, including undo/redo, preserves identity and immutable facts; uniqueness applies within the Campaign’s
 current timeline, excluding discarded futures.
+
+An Instance ID names its Campaign instance Type and counts within it, so that it reads well wherever it is shown. It is
+the Type's name in lowercase with each space replaced by a hyphen, then a hyphen, then a number. Each Campaign instance
+Type numbers its Campaign instances from 1 in the order they are created, and never reuses a number within the
+Campaign's current timeline, but an undone creation is a discarded future and frees its number. E.g., the first three
+Campaign instances of a Type named Field unit are field-unit-1 to field-unit-3, and the fourth is field-unit-4 even
+when field-unit-2 no longer takes part in play. When the creation of field-unit-4 is undone and another Field unit is
+created, it is again field-unit-4.
 
 # Role Types
 

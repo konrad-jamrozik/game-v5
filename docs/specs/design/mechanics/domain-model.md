@@ -221,7 +221,10 @@ Agency, Agent, Investigation, Mission site, Mission, Enemy, and Faction share on
 [Campaign instance identity](../foundation/campaign-instances.md#campaign-instance-identity) requires: Instance IDs must
 be unique across all seven Types within one Campaign. A repeated Investigation of one Lead, or a second Mission site
 with the same Archetype, is therefore a distinct Campaign instance with its own Instance ID. A Mission and its Mission
-site have different Instance IDs.
+site have different Instance IDs. Each of the seven Types numbers its own Instance IDs, e.g. when a new Campaign starts
+with four Agents, they are agent-1 to agent-4 and its first Mission site is mission-site-1. The next Agent hired is
+agent-5, even after agent-2 dies, and when that hire is undone and an Agent is hired again, the new Agent is again
+agent-5.
 
 # Current versus historical teams
 

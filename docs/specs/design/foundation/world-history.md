@@ -34,7 +34,7 @@ These terms are specific to World History. General terms are in the [Campaign St
 
 # Historical fact preservation
 
-A past value cannot always be recovered from its current replacement. E.g., a query that needs enemy_1's original
+A past value cannot always be recovered from its current replacement. E.g., a query that needs enemy-1's original
 current health must retain that value of 10 or the original inputs needed to reconstruct it, because its current health of 7 does not
 replace that historical fact. When a rule or query needs the historical basis, the original inputs or historical
 value must be preserved; required historical values must not be overwritten with current calculations. A past
@@ -45,8 +45,8 @@ across Turns needs are retained exactly where a specification declares a Turn se
 [Turn series](#turn-series).
 
 When a [Campaign instance](core-concepts.md#campaign-instances) no longer participates in current gameplay, data required by rules, queries, or retained
-references must remain in World history rather than being deleted. E.g., if enemy_1 no longer participates in a [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions),
-a retained reference to enemy_1 must still resolve. Retention does not introduce a separate lifecycle state or transition
+references must remain in World history rather than being deleted. E.g., if enemy-1 no longer participates in a [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions),
+a retained reference to enemy-1 must still resolve. Retention does not introduce a separate lifecycle state or transition
 name or require moving data into a separate storage location. Consuming specifications must declare which lifecycle
 changes require retention and which data must remain available. The [Instance ID](campaign-instances.md#glossary) and relationships needed to resolve
 retained references must be preserved under [Campaign instance identity](campaign-instances.md#campaign-instance-identity)
