@@ -1537,6 +1537,22 @@ describe('relationship evidence', () => {
     ).toEqual(['refines without handoff alpha.md -> beta.md'])
   })
 
+  test('ignores a table row that only names a term and points to where it is stated', () => {
+    const table = lines(['| Part | Stated in |', '| --- | --- |', '| Widget | [Rule](alpha.md#rule) in Alpha |'])
+    expect(evidence(widgetCorpus('', '', 'Counting is exact.\n\n' + table))).toEqual([])
+  })
+
+  test('scans a table row that states more than a Pointer', () => {
+    const table = lines([
+      '| Part | Stated in |',
+      '| --- | --- |',
+      '| Widget | [Rule](alpha.md#rule), counted each time |',
+    ])
+    expect(evidence(widgetCorpus('', '', 'Counting is exact.\n\n' + table))).toEqual([
+      'missing alpha.md -> beta.md widget x1',
+    ])
+  })
+
   test('reports a term applied against the recorded order as upward', () => {
     const files = widgetCorpus('- Uses [Beta](beta.md)', '- Used by [Alpha](alpha.md)', 'Each Widget is counted.')
     expect(evidence(files)).toContain('upward alpha.md -> beta.md widget x1')

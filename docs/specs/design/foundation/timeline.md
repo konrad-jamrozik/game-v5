@@ -79,7 +79,7 @@ The diagrams read as follows:
 
 Three things keep a Campaign's past, for different purposes. The following comparison is complete.
 
-| Kept past     | What it records                                                              | Consulted by game behavior | Effect of undo                                                            | Owner                                                                      |
+| Kept past     | What it records                                                              | Consulted by game behavior | Effect of undo                                                            | Stated in                                                                  |
 | ------------- | ---------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | World history | Past Campaign state or events that game behavior and Player API queries need | Yes                        | Restored as part of Campaign state, to what it was at the Committed state | [Campaign state composition](campaign-state.md#campaign-state-composition) |
 | Timeline      | The Turn-start state and the Timeline entries of the current Turn            | Never                      | Turns the last Timeline entry that is not an Undone action into one       | [Timeline structure](#timeline-structure)                                  |
