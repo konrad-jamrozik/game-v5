@@ -40,7 +40,8 @@ export function computeFamilyArchitecture(
   }))
 }
 
-const WIDTH = 1000
+/** The narrowest canvas; a row of more Families than fit widens it. */
+const MIN_WIDTH = 1000
 const MARGIN = 28
 const BOX_WIDTH = 230
 const BOX_HEIGHT = 66
@@ -128,6 +129,11 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
     return depth
   }
   const maxDepth = Math.max(0, ...others.map((row) => depthOf(row.family)))
+  const widestRow = Math.max(
+    0,
+    ...others.map((row) => others.filter((other) => depthOf(other.family) === depthOf(row.family)).length),
+  )
+  const width = Math.max(MIN_WIDTH, widestRow * BOX_WIDTH + Math.max(0, widestRow - 1) * BOX_GAP + 2 * MARGIN)
 
   const parts: string[] = []
   const boxes = new Map<string, Box>()
@@ -135,7 +141,7 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
   for (let depth = maxDepth; depth >= 1; depth -= 1) {
     const members = others.filter((row) => depthOf(row.family) === depth)
     const rowWidth = members.length * BOX_WIDTH + (members.length - 1) * BOX_GAP
-    let x = (WIDTH - rowWidth) / 2
+    let x = (width - rowWidth) / 2
     for (const member of members) {
       boxes.set(member.family, { x, y, width: BOX_WIDTH, height: BOX_HEIGHT })
       parts.push(
@@ -153,10 +159,10 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
     engineMembers.length * ENGINE_BAND_HEIGHT +
     Math.max(0, engineMembers.length - 1) * ENGINE_BAND_GAP +
     ENGINE_PADDING
-  const engine: Box = { x: (WIDTH - ENGINE_WIDTH) / 2, y, width: ENGINE_WIDTH, height: engineHeight }
+  const engine: Box = { x: (width - ENGINE_WIDTH) / 2, y, width: ENGINE_WIDTH, height: engineHeight }
   parts.push(
     `  <rect class="engine" x="${number(engine.x)}" y="${number(engine.y)}" width="${String(ENGINE_WIDTH)}" height="${number(engineHeight)}" rx="12"/>`,
-    `  <text class="engine-title" x="${number(WIDTH / 2)}" y="${number(engine.y + 27)}">Game engine</text>`,
+    `  <text class="engine-title" x="${number(width / 2)}" y="${number(engine.y + 27)}">Game engine</text>`,
   )
   // Mechanics is drawn above Foundation, as in the specification layer diagram.
   let bandY = engine.y + ENGINE_HEADER
@@ -164,11 +170,11 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
     const theme = family === 'Mechanics' ? 'mech' : 'found'
     const bandWidth =
       family === 'Mechanics' ? ENGINE_WIDTH - 2 * ENGINE_PADDING - 80 : ENGINE_WIDTH - 2 * ENGINE_PADDING
-    const bandX = (WIDTH - bandWidth) / 2
+    const bandX = (width - bandWidth) / 2
     parts.push(
       `  <rect class="band-${theme}" x="${number(bandX)}" y="${number(bandY)}" width="${number(bandWidth)}" height="${String(ENGINE_BAND_HEIGHT)}" rx="8"/>`,
-      `  <text class="band-name ink-${theme}" x="${number(WIDTH / 2)}" y="${number(bandY + 22)}">${escapeXml(family)}</text>`,
-      `  <text class="band-count ink-${theme}" x="${number(WIDTH / 2)}" y="${number(bandY + 40)}">${escapeXml(countText(counts.get(family) ?? 0))}</text>`,
+      `  <text class="band-name ink-${theme}" x="${number(width / 2)}" y="${number(bandY + 22)}">${escapeXml(family)}</text>`,
+      `  <text class="band-count ink-${theme}" x="${number(width / 2)}" y="${number(bandY + 40)}">${escapeXml(countText(counts.get(family) ?? 0))}</text>`,
     )
     bandY += ENGINE_BAND_HEIGHT + ENGINE_BAND_GAP
   }
@@ -210,7 +216,7 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
   }
   y += 22
   for (const caption of captions) {
-    parts.push(`  <text class="caption" x="${number(WIDTH / 2)}" y="${number(y + 12)}">${escapeXml(caption)}</text>`)
+    parts.push(`  <text class="caption" x="${number(width / 2)}" y="${number(y + 12)}">${escapeXml(caption)}</text>`)
     y += CAPTION_HEIGHT
   }
   const height = y + MARGIN
@@ -218,10 +224,10 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
     .map((row) => `${row.family} builds on ${row.buildsOn.join(' and ') || 'nothing'}`)
     .join('. ')}. Foundation and Mechanics form the game engine.`
   return [
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${String(WIDTH)}" height="${number(height)}" viewBox="0 0 ${String(WIDTH)} ${number(height)}" role="img" aria-label="${escapeXml(label)}">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${String(width)}" height="${number(height)}" viewBox="0 0 ${String(width)} ${number(height)}" role="img" aria-label="${escapeXml(label)}">`,
     `  <title>${escapeXml(label)}</title>`,
     `  <style>${STYLE_SHEET}</style>`,
-    `  <rect class="bg" x="0" y="0" width="${String(WIDTH)}" height="${number(height)}"/>`,
+    `  <rect class="bg" x="0" y="0" width="${String(width)}" height="${number(height)}"/>`,
     ...parts,
     '</svg>',
     '',

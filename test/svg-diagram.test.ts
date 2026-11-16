@@ -381,4 +381,22 @@ describe('family architecture diagram', () => {
     expect(svg).toContain('Every specification also follows the Governance specifications, which are not drawn.')
     expect(svg.match(/class="arrow"/g)).toHaveLength(3)
   })
+
+  test('widens the canvas so that a row of many Families fits', () => {
+    const wide = ['Foundation', 'Mechanics', 'Content', 'UI', 'Autopilot AIs', 'Mandatory', 'Guidance'] as const
+    const corpus: SpecificationCorpus = {
+      specifications: wide.map((family, index) => specification(`S${String(index)}`, family)),
+      glossary: [],
+      relationships: wide.slice(2).map((_family, index) => relationship('S0', `S${String(index + 2)}`)),
+    }
+    const svg = renderFamilyArchitecture(corpus, computeFamilyArchitecture(corpus, [...wide]))
+    const width = Number(/<svg [^>]*width="(\d+)"/.exec(svg)?.[1])
+    const boxes = [...svg.matchAll(/<rect class="box" x="([\d.]+)" y="[\d.]+" width="(\d+)"/g)].map((match) => ({
+      left: Number(match[1]),
+      right: Number(match[1]) + Number(match[2]),
+    }))
+    expect(boxes).toHaveLength(5)
+    expect(Math.max(...boxes.map((box) => box.right))).toBeLessThan(width)
+    expect(Math.min(...boxes.map((box) => box.left))).toBeGreaterThan(0)
+  })
 })
