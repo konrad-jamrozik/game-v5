@@ -238,7 +238,7 @@ The Victory path works through these rules:
   win, under [Recording a Won Mission](../mechanics/leads-and-progression.md#recording-a-won-mission); and the
   effect of completing a Lead, under [Completion effect](../mechanics/leads-and-progression.md#completion-effect), all in
   [Leads and Progression](../mechanics/leads-and-progression.md).
-- Mission site creation, expiration, and the consequences of a Mission's win or loss, under
+- Mission site creation, expiration, and the Consequences of a Mission's win or loss, under
   [Mission site creation](../mechanics/missions.md#mission-site-creation),
   [Mission site expiration](../mechanics/missions.md#mission-site-expiration), and
   [Consequences](../mechanics/missions.md#consequences) in [Missions](../mechanics/missions.md).

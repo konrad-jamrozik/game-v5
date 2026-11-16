@@ -143,7 +143,7 @@ empty Lead progression.
 **Proposed rule:** When a Mission becomes Won in the Turn advancement step Mission resolution, under
 [Mission resolution](missions.md#mission-resolution) in Missions, and it is an Initiative Mission, a reference to it is
 added to the set of Recorded wins of the Lead it is from. The record is made in the same step and the same Advance turn
-as the transition, as part of the consequences of the Won Mission, and every later step of that Advance turn sees it.
+as the transition, as part of the Consequences of the Won Mission, and every later step of that Advance turn sees it.
 This is the only way an entry is added. A Mission that becomes Lost is recorded nowhere, nor is a Mission site that
 becomes Expired or Cancelled, and a Response Mission is recorded nowhere. Recording does nothing else; e.g., it changes no
 Faction, no Investigation, no Mission site, and no Mission.

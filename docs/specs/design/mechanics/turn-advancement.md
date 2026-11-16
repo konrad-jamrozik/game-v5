@@ -213,7 +213,7 @@ which an implementation processes Campaign instances.
    - In step 5, for one Investigation: Investigation progress gain, then the completion probability from the new
      Investigation progress, then completion, under [Investigation progress](investigations.md#investigation-progress).
    - In step 6, for one Deployed Mission: its Combat, from the Step-start values of its Combatants, then its
-     lifecycle, its Killed Agents and survivors from the current health its Combat left, and its consequences, under
+     lifecycle, its Killed Agents and survivors from the current health its Combat left, and its Consequences, under
      [Resolving one Mission](missions.md#resolving-one-mission).
    - In step 7, for one Mission site: the countdown, then expiration when it reaches 0.
    - In step 8, for one Faction: escalation, then the operation part, which uses the Faction activity level the Faction
@@ -223,7 +223,7 @@ which an implementation processes Campaign instances.
      exhaustion recovery is still decided by the Current assignment when the step begins, under
      [Several changes in one Turn](agent-recovery.md#several-changes-in-one-turn).
 3. **Cancellation in step 6:** The cancellation part of Mission resolution reads Eliminated after every Deployed Mission
-   of the step has been resolved and its consequences applied, so a Faction made Eliminated by any Won Mission of the step
+   of the step has been resolved and its Consequences applied, so a Faction made Eliminated by any Won Mission of the step
    counts, under [Cancellation](missions.md#cancellation).
 
 ## Combined results
@@ -397,7 +397,7 @@ assignment, at once.
 | Advance turn ending Turn 18 | Unaffected                                                                                                                                                                                                             | Current health 30, its base health; becomes Standby, At assignment, at once, in step 9                                                                 |
 | Turn 19                     | Unaffected                                                                                                                                                                                                             | Standby, At assignment; can be ordered                                                                                                                 |
 
-In the Advance turn ending Turn 5, m1's consequences add 5 to money and a Panic reduction of 1 to the Pending panic
+In the Advance turn ending Turn 5, m1's Consequences add 5 to money and a Panic reduction of 1 to the Pending panic
 change, and s1 is not Active in step 7, so it does not count down. a2 regains 1 health in each of the 12 Advance turns
 ending Turns 7 to 18, which equals its Recovery turns remaining of round up((30 − 18) / 1) = 12. Each Agent was counted
 in Upkeep of every one of these Advance turns, because it stayed Serving.
@@ -436,7 +436,7 @@ In Turn 151 every Player action, including `advanceTurn()`, is rejected, and que
 gives the same Committed state, because cancellation reads Eliminated only after both resolutions.
 
 **Variant: the raid fails.** With the same initial state, m3's Combat outcome is Retreated instead. m3 is Lost and, as an
-Initiative Mission, has no consequence; Red Dawn is not Eliminated, so s5 is not Cancelled in step 6. In step 7 s5
+Initiative Mission, has no Consequence; Red Dawn is not Eliminated, so s5 is not Cancelled in step 6. In step 7 s5
 counts down to 0 and is Expired, adding a Panic increase of 3 and a funding change of 0: funding max(0, 24 + 0) = 24. In
 step 8 Red Dawn's Turns until the next operation reaches 0; with the injected Operation level outcome 2, Probability
 80 / 100 at `war`, the MissionSiteArchetype selection outcome `foil_sabotage`, and the Operation interval outcome 8, it
@@ -472,7 +472,7 @@ No team is deployed to either Mission site:
 | Advance turn ending Turn 32 | 3                            | 1                            |                                                                                                                      |
 | Advance turn ending Turn 33 | 2                            | 0: Expired                   | sB adds a Panic increase of 3 and a funding change of 0: Panic max(0, min(100, 10 + 3)) = 13 in step 10; funding 20. |
 | Advance turn ending Turn 34 | 1                            |                              |                                                                                                                      |
-| Advance turn ending Turn 35 | 0: Expired                   |                              | sA, an Initiative Mission site, has no consequence; `locate_red_dawn_member` is no longer blocked by it.             |
+| Advance turn ending Turn 35 | 0: Expired                   |                              | sA, an Initiative Mission site, has no Consequence; `locate_red_dawn_member` is no longer blocked by it.             |
 
 sB can be deployed to during Turns 31, 32, and 33. A team deployed during Turn 33, when its Turns until expiration is 1,
 fights in step 6 of the Advance turn ending Turn 33, before step 7, so sB is then Won or Lost instead of Expired.

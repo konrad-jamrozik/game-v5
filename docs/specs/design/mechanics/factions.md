@@ -42,7 +42,7 @@ These terms are specific to Factions. General terms are in the [Domain Model glo
 | Term                    | Definition                                                                                                                                                                 | Prohibited synonyms                                                                                                                |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | Faction activity level  | How aggressively a Faction currently acts: how often it carries out operations and how severe they are.                                                                    |                                                                                                                                    |
-| Faction operation level | How severe one Faction operation occurrence is; it decides the rewards and penalties of the Response Mission site the occurrence creates.                                  |                                                                                                                                    |
+| Faction operation level | How severe one Faction operation occurrence is; it decides the Consequences of the Response Mission site the occurrence creates.                                           |                                                                                                                                    |
 | Eliminated              | Permanently put out of action by a Won Mission: an Eliminated Faction no longer escalates or carries out operations, and it stays Eliminated for the rest of the Campaign. | Defeated; defeat, naming the end of a Faction. Defeat remains the Campaign ending under [Panic and Endings](panic-and-endings.md). |
 
 # Faction GDRs
@@ -492,7 +492,7 @@ injected Operation interval of 18, the upper bound, it would happen in the eight
 This example exercises [Elimination](#elimination) and [Faction activity](#faction-activity).
 
 Initial state: during Turn 120, Red Dawn is at `active` with Turns until the next level 1 and Turns until the next
-operation 1. In the Advance turn ending Turn 120, a Mission site consequence under
+operation 1. In the Advance turn ending Turn 120, a Mission site Consequence under
 [Consequences](missions.md#consequences) makes Red Dawn Eliminated in Mission resolution. Result after that Advance turn: Eliminated is yes; Eliminated turn is 120; Faction
 activity level is still `active`; Turns until the next level is still 1 and Turns until the next operation is still 1,
 because Faction activity did not apply to Red Dawn; no Faction operation occurrence happened and no Response Mission

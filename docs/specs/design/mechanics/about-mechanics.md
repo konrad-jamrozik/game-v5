@@ -63,7 +63,7 @@ reproducible results, independently of what those results mean for the Campaign.
 [Missions](missions.md) answers _what happens at a place where Enemies are present, and what follows from its result?_
 It owns the Mission site and the Mission: a Mission site's creation, including which MissionSiteArchetype a Faction
 operation occurrence creates its Response Mission site from, the lifecycles of both, deploying Agents to a Mission site,
-which creates its Mission, and turning Combat reports into Campaign consequences.
+which creates its Mission, and turning Combat reports into Consequences.
 
 ## Factions
 
@@ -123,7 +123,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 - **Agents versus the documents that change an Agent:** Agents is the complete list of what an Agent has and which
   values can be modified, so no Agent property is introduced by a higher document.
-- **Combat versus Missions:** a Combat's resolution is kept separate from its Campaign consequences, so Combat can be
+- **Combat versus Missions:** a Combat's resolution is kept separate from its Consequences, so Combat can be
   tested and tuned without the Campaign around it.
 - **Leads and Progression versus Investigations:** what is available is separated from how the player pursues it, so
   the progression graph can change without touching investigation mathematics.
