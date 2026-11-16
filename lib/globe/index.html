@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Globe</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #050506;
+        color: #b8b3a6;
+        font:
+          15px/1.45 system-ui,
+          sans-serif;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        cursor: grab;
+        touch-action: none;
+      }
+      canvas.dragging {
+        cursor: grabbing;
+      }
+      #status,
+      #credit {
+        position: fixed;
+        left: 0;
+        right: 0;
+        text-align: center;
+        pointer-events: none;
+      }
+      #status {
+        top: 50%;
+        padding: 0 24px;
+      }
+      #credit {
+        bottom: 12px;
+        font-size: 13px;
+        color: #9c978a;
+      }
+    </style>
+    <script type="importmap">
+      { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.module.js" } }
+    </script>
+  </head>
+  <body>
+    <canvas
+      id="globe"
+      role="img"
+      aria-label="Rotating globe of the Earth built from NASA satellite imagery, with clouds, an atmosphere glow, a day and night side, and city lights at night"
+    ></canvas>
+    <div id="status" role="status">Loading NASA imagery…</div>
+    <div id="credit">Drag to orbit · scroll to zoom · Imagery: NASA Blue Marble and Earth at Night</div>
+    <script type="module" src="./globe.js"></script>
+  </body>
+</html>
