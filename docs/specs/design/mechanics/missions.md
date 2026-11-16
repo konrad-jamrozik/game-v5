@@ -34,6 +34,7 @@ Agency can answer it.
 - Uses [Game Data Records](../foundation/game-data-records.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Uses [Panic and Endings](./panic-and-endings.md)
+- Uses [Player API](../foundation/player-api.md)
 - Refines [Domain Model](domain-model.md)
 - Refines [Factions](./factions.md)
 - Used by [Agent Recovery](./agent-recovery.md)
@@ -589,7 +590,7 @@ names both, and a Lost Mission yields no benefit from the damage dealt by its te
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, from the
+[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API, from the
 moment it exists, without a reveal condition, for every Mission site and every Mission whatever its lifecycle state.
 The table is exhaustive.
 

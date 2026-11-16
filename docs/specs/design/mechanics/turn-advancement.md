@@ -11,7 +11,7 @@
 # Overview
 
 Time in the game moves only when the player ends a Turn. Advance turn is the Player action that does so, under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, and
+[Player actions](../foundation/engine-contract.md#player-actions) in Engine Contract, and
 everything that takes time happens in it at once, e.g. income, training, and Combat.
 
 Advance turn is a fixed sequence of twelve Turn advancement steps, from Transit to Turn close, each applied exactly once

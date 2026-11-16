@@ -48,7 +48,7 @@
   <text class="band-count ink-mech" x="500" y="516">11 specifications</text>
   <rect class="band-found" x="194" y="536" width="612" height="52" rx="8"/>
   <text class="band-name ink-found" x="500" y="558">Foundation</text>
-  <text class="band-count ink-found" x="500" y="576">14 specifications</text>
+  <text class="band-count ink-found" x="500" y="576">15 specifications</text>
   <path class="arrow" d="M 222 366 L 222 428"/>
   <path class="head" d="M 216 426 L 228 426 L 222 436 Z"/>
   <path class="arrow" d="M 500 366 L 500 428"/>

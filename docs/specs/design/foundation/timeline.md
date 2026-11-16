@@ -92,7 +92,7 @@ as Advance turn does under [Timeline entries](#timeline-entries), never removes 
 # Timeline entries
 
 Each committed Player action other than Advance turn is exactly one Timeline entry, under
-[Player queries and actions](engine-contract.md#player-queries-and-actions), which counts a successful Player cheat
+[Player actions and Turns](engine-contract.md#player-actions-and-turns) in Engine Contract, which counts a successful Player cheat
 action as a Player action. No other operation is a
 Timeline entry, e.g. a query or `session.saves.save()`.
 

@@ -13,7 +13,7 @@ These informative views are derived from the registered Markdown specifications.
 | ------------------ | ------------- | -------------- |
 | Governance         | Conventions   | 8              |
 | Governance         | Process       | 3              |
-| Design             | Foundation    | 14             |
+| Design             | Foundation    | 15             |
 | Design             | Mechanics     | 11             |
 | Design             | Content       | 1              |
 | Design             | UI            | 1              |
@@ -54,10 +54,11 @@ These informative views are derived from the registered Markdown specifications.
 | CSTATE   | [Campaign State](../specs/design/foundation/campaign-state.md)                         | What Campaign state is made of, and how Campaign initialization produces it.                                                                 |
 | DETERM   | [Determinism and Randomness](../specs/design/foundation/determinism-and-randomness.md) | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay.                           |
 | DEV      | [Developer Access](../specs/design/foundation/developer-access.md)                     | Dev mode, full Campaign state inspection, Player cheat actions, and random outcome overrides.                                                |
-| ENG      | [Engine Contract](../specs/design/foundation/engine-contract.md)                       | API hierarchy, Principal authority, data ownership, the Engine subsystem inventory, and the guarantees shared by every engine subsystem.     |
+| ENG      | [Engine Contract](../specs/design/foundation/engine-contract.md)                       | The engine as a whole: how it divides, who may call what, and the guarantees every engine subsystem keeps.                                   |
 | GDR      | [Game Data Records](../specs/design/foundation/game-data-records.md)                   | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                    |
 | LIFE     | [Campaign Lifecycle](../specs/design/foundation/campaign-lifecycle.md)                 | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status.                                   |
 | NUMBERS  | [Numbers](../specs/design/foundation/numbers.md)                                       | That every stored quantity is a whole number, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
+| PAPI     | [Player API](../specs/design/foundation/player-api.md)                                 | What the player can see of a Campaign, and how gameplay actions change it.                                                                   |
 | SAVES    | [Saves](../specs/design/foundation/saves.md)                                           | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                       |
 | TIMELINE | [Timeline](../specs/design/foundation/timeline.md)                                     | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees.         |
 | WHIST    | [World History](../specs/design/foundation/world-history.md)                           | What a Campaign remembers about its past, and for how long.                                                                                  |

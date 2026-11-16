@@ -31,6 +31,7 @@ Agents, and Economy and Upgrades says how that money is earned and spent.
 - Uses [Developer Access](../foundation/developer-access.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Player API](../foundation/player-api.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](domain-model.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
@@ -575,7 +576,7 @@ recorded in the Turn series are unchanged. Money that was negative may become ze
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, from the
+[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API, from the
 moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value                                                                                    | Player-visible information |

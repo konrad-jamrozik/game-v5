@@ -28,6 +28,7 @@ is an ordinary Player action that undo and redo treat like any other.
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
+- Uses [Player API](./player-api.md)
 - Uses [Timeline](./timeline.md)
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
@@ -101,7 +102,7 @@ Invalid cheat inputs change nothing, under
   hides H. Engage Autopilot; its queries and errors hide H and its developer calls fail. Disable Dev mode after
   disengagement and verify Developer API access is revoked ([Dev mode](#dev-mode),
   [API hierarchy](engine-contract.md#api-hierarchy),
-  [Information boundary](engine-contract.md#information-boundary)).
+  [Information boundary](player-api.md#information-boundary)).
 
 # TODOs
 

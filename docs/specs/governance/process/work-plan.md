@@ -127,9 +127,9 @@ is scheduled work, not an unresolved decision about this work plan.
 
 ## Early information and API boundaries
 
-Batch 1 states the player-information boundary and the API capabilities needed to support it in Engine Contract:
+Batch 1 states the player-information boundary and the API capabilities needed to support it in Engine Contract and Player API:
 [API hierarchy](../../design/foundation/engine-contract.md#api-hierarchy) gives the required starter operation inventory, and
-[Information boundary](../../design/foundation/engine-contract.md#information-boundary) gives the boundary. Both are part of the
+[Information boundary](../../design/foundation/player-api.md#information-boundary) gives the boundary. Both are part of the
 batch 1 deliverable and are reviewed with it. Extend the operation inventory with each mechanic; do not postpone its
 design influence until batch 8. Each Mechanics specification states its own Player-visible information as it is drafted.
 

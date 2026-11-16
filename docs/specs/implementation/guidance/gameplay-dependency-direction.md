@@ -49,7 +49,7 @@ API: it never reads Campaign state directly and never calls a Gameplay function.
 the game only through Player API and Autopilot memory API, so it cannot see beyond Player-visible information.
 
 What Player API returns about earlier Turns is worked out once, inside the engine, behind the queries of
-[Current state, Turn report, and history](../../design/foundation/engine-contract.md#current-state-turn-report-and-history).
+[Current state, Turn report, and history](../../design/foundation/world-history.md#current-state-turn-report-and-history).
 User interface code and Autopilot AI code read those values from the queries and do not derive them again from other
 query results; e.g., none of them works out the Turn in which a Mission site was Expired by counting down from its
 creation. Every interface then shows the same answer, and a change to a rule changes that answer in one place.

@@ -29,6 +29,7 @@ assigned elsewhere becomes Abandoned, and a later Investigation of the same Lead
 - Uses [Leads and Progression](./leads-and-progression.md)
 - Uses [Missions](./missions.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Player API](../foundation/player-api.md)
 - Refines [Domain Model](domain-model.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Turn Advancement](./turn-advancement.md)
@@ -470,7 +471,7 @@ or Abandoned Investigation has no projected completion probability.
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, from the
+[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API, from the
 moment it exists, without a reveal condition, for every Investigation whatever its lifecycle state. The table is
 exhaustive.
 

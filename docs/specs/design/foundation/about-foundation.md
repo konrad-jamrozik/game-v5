@@ -23,10 +23,16 @@ definition.
 
 ## Engine Contract
 
-[Engine Contract](engine-contract.md) answers _what does the engine guarantee, whatever subsystem is involved?_ It owns
-the API hierarchy, the data the engine owns and what is persisted, player queries and actions, the information
-boundary, and Committed state integrity. It owns no engine subsystem: it names the one owner of each, without stating
-that subsystem's behavior.
+[Engine Contract](engine-contract.md) answers _what is true of the engine as a whole?_ It owns how the engine
+divides, into engine subsystems, API operations, and data, which callers may use which operations, and the guarantees
+every engine subsystem keeps, e.g. Committed state integrity. It owns no engine subsystem: it names the one owner of
+each, without stating that subsystem's behavior.
+
+## Player API
+
+[Player API](player-api.md) answers _what can the player see, and how do gameplay actions change a Campaign?_ It owns
+how a specification declares a value Player-visible, the contract every gameplay action follows, and the information
+boundary that keeps every channel of Player API from revealing what its queries hide.
 
 ## Campaign State
 
@@ -45,7 +51,8 @@ state.
 ## World History
 
 [World History](world-history.md) answers _what must a Campaign remember?_ It keeps the historical facts that rules and
-queries need, the Turn series that charts use, and the Turn report and History entries. It refines Campaign State's
+queries need, the Turn series that charts use, and the Turn report and History entries, and what Player API returns
+of them. It refines Campaign State's
 World history component.
 
 ## Game Data Records
@@ -102,7 +109,8 @@ Mechanics specification owns the distributions of its own random outcomes.
 
 # How they relate
 
-Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem. Campaign
+Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem, and Player
+API builds on it for what the player sees and does. Campaign
 State refines its Data ownership; Campaign Instances builds on Campaign State, and World History refines it. Numbers stands alone and is used by Mechanics. Campaign
 Lifecycle, Saves, Timeline, Configuration, Autopilot, Developer Access, Determinism and Randomness, and Numbers each
 own one engine subsystem outright, and all but Numbers use Engine Contract; Timeline also uses Saves. Game Data
@@ -140,6 +148,9 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 - **Engine Contract versus Campaign State:** engine behavior (e.g. sessions and access) and
   data shape (e.g. the components of Campaign state) change for different reasons. Keeping data rules in their own
   refinement lets Engine Contract stay about guarantees.
+- **Engine Contract versus Player API:** the shape of the engine changes when a part or a kind of caller is added;
+  what the player may see changes with every mechanic. Mechanics specifications rely mostly on the second, so it has
+  its own document.
 - **Campaign State, Campaign Instances, and World History:** what a Campaign's data is made of, how one thing in it is
   modeled, and what it remembers of its past change for different reasons, so each has its own document. E.g., a new
   Turn series changes only World History, and a change to how a Role Type is declared changes only Campaign Instances.
@@ -162,7 +173,8 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 # Reading order
 
 1. [Core Concepts](core-concepts.md) for the vocabulary.
-2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns.
+2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns, then
+   [Player API](player-api.md) for what the player sees and does.
 3. [Campaign State](campaign-state.md), [Campaign Instances](campaign-instances.md), [World History](world-history.md),
    and [Game Data Records](game-data-records.md) for how campaign data is shaped.
 4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md), [Developer Access](developer-access.md), and

@@ -27,6 +27,7 @@ once, e.g. the Thug GDR is the Archetype of an Enemy and also supplies its displ
 - Uses [Campaign State](./campaign-state.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
+- Uses [Player API](./player-api.md)
 - Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
 - Used by [Domain Model](../mechanics/domain-model.md)
 - Used by [Missions](../mechanics/missions.md)
@@ -397,7 +398,7 @@ Display content follows these requirements:
 - **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing
   something hidden from the player stays hidden until it becomes Player-visible.
   The value described states when it becomes Player-visible, under
-  [Player queries and actions](engine-contract.md#player-queries-and-actions).
+  [Player-visible information](player-api.md#player-visible-information) in Player API.
 - **No inference:** Relationships and gameplay facts are never inferred from Display content, extending the rule under
   [References](campaign-instances.md#references). The Thug article identifies its subject through its reference to the Thug GDR, not
   through its title.

@@ -25,6 +25,7 @@ is bounded by the Save size limit, and a Game build may reject a Campaign save w
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
+- Uses [Player API](./player-api.md)
 - Used by [Storage Schema](../../implementation/guidance/storage-schema.md)
 - Used by [Timeline](./timeline.md)
 
@@ -161,7 +162,7 @@ Main menu lists them for the player to choose from. For each Campaign save it re
 The Campaign save ID it reports is what `session.saves.load(save)` accepts. Listing changes nothing and is not a
 Player action. It does not verify that a Campaign save can be loaded: a listed Campaign save may still fail to
 load, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). The exact form of an entry is
-the Implementer's choice and follows the [Information boundary](engine-contract.md#information-boundary).
+the Implementer's choice and follows the [Information boundary](player-api.md#information-boundary).
 
 # Save size limit
 
@@ -196,7 +197,7 @@ names the Campaign save concerned. The following list of reasons is complete.
 A failed operation is not retried automatically, and it is not an engine defect. An interface shows the reason and
 message and takes no further action; e.g., a user interface shows an error message and stays on the screen
 the load or save was requested from. The message follows the
-[Information boundary](engine-contract.md#information-boundary).
+[Information boundary](player-api.md#information-boundary).
 
 An Autosave fails to be written for the same reasons as a save. The operation that causes a Current Autosave, a
 Turn-end Autosave, or an Engagement Autosave still completes, and its result reports the Save reason. That Autosave

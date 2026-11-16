@@ -28,6 +28,7 @@ zero. A Campaign ending is final: every Player action is then rejected, while ev
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Factions](factions.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Player API](../foundation/player-api.md)
 - Refines [Domain Model](domain-model.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Missions](./missions.md)
@@ -153,7 +154,7 @@ inside one Advance turn, and the following rules are complete:
 
 - **Not Campaign state:** The Pending panic change is 0 when an Advance turn begins and is a Derived value of that
   Advance turn's contributions. It is not part of Campaign state: no Committed state contains it, because no Committed
-  state lies inside an Advance turn, under [Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions)
+  state lies inside an Advance turn, under [Player actions](../foundation/engine-contract.md#player-actions)
   in Engine Contract. It is discarded when the [Panic step](#panic-step) has applied it, and it never carries over to
   another Advance turn.
 - **Contributions:** A rule that raises Panic adds a Panic increase to the Pending panic change, and a rule that lowers
@@ -308,7 +309,7 @@ ordinary play.
 # Player-visible information
 
 **Proposed rule:** Every value marked Yes below is Player-visible information under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract from
+[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API from
 campaign creation, without a reveal condition. The table is exhaustive.
 
 | Value                                                           | Player-visible information |
@@ -327,7 +328,7 @@ played at Panic 0 apart from a Campaign that has a Campaign ending.
 
 **The Pending panic change:** It is not part of any Committed state, so no query returns it. Whether a single Panic
 increase or Panic reduction is visible is stated with the rule that adds it, e.g. in [Missions](missions.md). Under
-[Information boundary](../foundation/engine-contract.md#information-boundary) in Engine Contract, the error for an action rejected because the Campaign has a Campaign ending reveals only values that this table
+[Information boundary](../foundation/player-api.md#information-boundary) in Player API, the error for an action rejected because the Campaign has a Campaign ending reveals only values that this table
 makes Player-visible.
 
 # Edge cases and failure behavior

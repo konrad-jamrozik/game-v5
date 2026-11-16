@@ -29,6 +29,7 @@ effective skill, and Agent Recovery says how they return over time.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Missions](./missions.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Player API](../foundation/player-api.md)
 - Refines [Agents](./agents-spec.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Turn Advancement](./turn-advancement.md)
@@ -220,7 +221,7 @@ order in which they are applied.
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, from the
+[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API, from the
 moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value                                                                                                   | Player-visible information |

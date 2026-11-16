@@ -28,6 +28,7 @@ Factions says when they do and how severe each operation is.
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Player API](../foundation/player-api.md)
 - Refines [Domain Model](domain-model.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
 - Used by [Missions](./missions.md)
@@ -326,7 +327,7 @@ whether every Faction being Eliminated ends the Campaign are stated by [Missions
 # Player-visible information
 
 **Proposed rule:** Each Faction value below is Player-visible information, or not, as the table states, under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract. The table
+[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API. The table
 is exhaustive. Each Player-visible value is visible from campaign creation, without a reveal condition,
 for every Faction, whether or not it is Eliminated.
 
@@ -347,7 +348,7 @@ next level from an absent one. The player tells a final Faction activity level, 
 absent, from the visible `next` of that level being `null`, never from the countdown. Eliminated turn is never hidden:
 when Player API reports it as absent, the Faction is not Eliminated.
 
-Under [Information boundary](../foundation/engine-contract.md#information-boundary) in Engine Contract, no channel of
+Under [Information boundary](../foundation/player-api.md#information-boundary) in Player API, no channel of
 Player API reveals either countdown, e.g. neither a validation error nor the Turn report nor a History entry states how many Advance turns remain
 before a Faction moves to its next level or carries out its next operation. That a Faction operation occurrence has
 happened is visible through its Response Mission site, and that a Faction has moved to a new level is visible through

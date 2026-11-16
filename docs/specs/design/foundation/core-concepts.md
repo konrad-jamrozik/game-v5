@@ -40,6 +40,7 @@ every value is either an Authoritative value, kept as a fact, or a Derived value
 - Used by [Leads and Progression](../mechanics/leads-and-progression.md)
 - Used by [Missions](../mechanics/missions.md)
 - Used by [Panic and Endings](../mechanics/panic-and-endings.md)
+- Used by [Player API](./player-api.md)
 - Used by [Saves](./saves.md)
 - Used by [Storage Schema](../../implementation/guidance/storage-schema.md)
 - Used by [Timeline](./timeline.md)

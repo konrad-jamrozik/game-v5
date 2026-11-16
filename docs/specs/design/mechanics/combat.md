@@ -31,6 +31,7 @@ spent against an opponent.
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
+- Uses [Player API](../foundation/player-api.md)
 - Refines [Agents](./agents-spec.md)
 - Refines [Domain Model](domain-model.md)
 - Used by [Agent Recovery](./agent-recovery.md)
@@ -591,7 +592,7 @@ them. All values are whole numbers, except that each hit Probability is the pair
 The Combat report is an Authoritative value. It is part of the [Turn report](../foundation/world-history.md#glossary) of
 the Advance turn in which its Combat was fought, and no Mission or other Campaign instance holds it.
 `player.queries.getTurnReport()` returns every fact above until the next Advance turn replaces that Turn report, under
-[Current state, Turn report, and history](../foundation/engine-contract.md#current-state-turn-report-and-history) in
+[Current state, Turn report, and history](../foundation/world-history.md#current-state-turn-report-and-history) in
 Engine Contract. How the Turn report organizes its Combat reports is left to the implementation. Once produced, a
 Combat report is never rewritten or recomputed, even when the values of its participants change later, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. Whatever
@@ -601,7 +602,7 @@ under [Turn report and history](../foundation/world-history.md#turn-report-and-h
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract from the
+[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API from the
 moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value                                                                                                                                            | Player-visible information |

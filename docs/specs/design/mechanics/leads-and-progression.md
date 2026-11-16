@@ -29,6 +29,7 @@ Eliminated.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Factions](./factions.md)
 - Uses [Missions](./missions.md)
+- Uses [Player API](../foundation/player-api.md)
 - Refines [Domain Model](domain-model.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Investigations](./investigations.md)
@@ -245,7 +246,7 @@ the effect again and creates another Mission site.
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
-[Player queries and actions](../foundation/engine-contract.md#player-queries-and-actions) in Engine Contract, from
+[Player-visible information](../foundation/player-api.md#player-visible-information) in Player API, from
 campaign creation, without a reveal condition, for every Lead the Game build supplies, whether or not the Lead is
 available. The table is exhaustive. No Lead is hidden.
 

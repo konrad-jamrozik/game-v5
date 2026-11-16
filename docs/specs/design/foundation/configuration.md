@@ -193,7 +193,7 @@ A Campaign configuration change follows these complete rules:
   Campaign state unchanged.
 - **One action:** An accepted change is committed atomically as one Timeline entry and does not end the Turn.
 - **No change:** A request that leaves Campaign configuration unchanged follows the rule for an action with no effect
-  under [Player queries and actions](engine-contract.md#player-queries-and-actions).
+  under [Player actions](engine-contract.md#player-actions) in Engine Contract.
 - **No rewriting:** Changing Campaign configuration alone never regenerates existing World state, rewrites past
   outcomes, or redraws random outcomes. Any such effect requires an explicit rule in the Mechanics specification
   that introduces the value.

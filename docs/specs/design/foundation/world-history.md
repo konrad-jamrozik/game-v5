@@ -16,7 +16,8 @@ must keep it.
 
 World history is the part of World state that does. It keeps the historical facts that rules and queries need, a Turn
 series for each value whose past is charted, and a record of every ended Turn, in full for the most recent one and
-reduced for the rest. World History refines [Campaign State](campaign-state.md), which places World history within
+reduced for the rest; Player API returns the present, the most recent Turn report, and earlier Turns through separate
+queries. World History refines [Campaign State](campaign-state.md), which places World history within
 World state. Unlike the Timeline, which records only the undo and redo of the current Turn, World history is consulted
 by game behavior.
 
@@ -25,6 +26,7 @@ by game behavior.
 - Uses [Campaign Instances](./campaign-instances.md)
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
+- Uses [Player API](./player-api.md)
 - Refines [Campaign State](./campaign-state.md)
 - Used by [Domain Model](../mechanics/domain-model.md)
 
@@ -111,8 +113,33 @@ committed Advance turn, and one reduced History entry for every ended Turn. They
 - **Declared by the owner of each value:** What the Turn report and each History entry hold of a value is stated by
   the specification owning that value.
 
-How Player API returns the Turn report and the History entries is stated under
-[Current state, Turn report, and history](engine-contract.md#current-state-turn-report-and-history) in Engine Contract.
+# Current state, Turn report, and history
+
+Player API returns what is true now and what happened earlier through three queries. The following table is complete
+for them.
+
+| Query                              | Returns                                                                                                                                                                         | Detail  |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `player.queries.getCurrentState()` | The Player-visible information of [Current world state](campaign-state.md#glossary) and of [Campaign configuration](campaign-state.md#glossary) at the current Committed state. | Full    |
+| `player.queries.getTurnReport()`   | The Player-visible information of the [Turn report](#glossary), or none before the first committed Advance turn of the Campaign.                                                | Full    |
+| `player.queries.getHistory()`      | The Player-visible information of every [History entry](#glossary), in Turn order, from Turn 1.                                                                                 | Reduced |
+
+`getCurrentState()` returns nothing that is retained only in [World history](campaign-state.md#glossary). E.g., a
+Mission whose Combat has been fought no longer participates in current gameplay, so the Combat report of its Combat is returned by
+`getTurnReport()` after the Advance turn that fought it, and in reduced form by `getHistory()`, but not by
+`getCurrentState()`.
+
+Only Advance turn changes the Turn report and the History entries, under
+[Turn report and history](#turn-report-and-history), so Player actions, undo, and
+redo within a Turn change only what `getCurrentState()` returns. Undo, redo, and load restore what all three queries
+return, and replay reproduces it, under [Derived value consistency](engine-contract.md#derived-value-consistency) in Engine Contract.
+
+Whether the engine stores each value these queries return, or computes it from other Campaign state when asked, is the
+Implementer's choice.
+
+![What each query returns during Turn 8, after its second Player action: a reduced History entry for Turns 6 and 7, the full Turn report of the Advance turn that ended Turn 7, and the current Committed state](../../../images/query-layers-during-turn.svg)
+
+![What advanceTurn() changes when it ends Turn 8: Turn 8 gets a History entry, the Turn report of Turn 7 remains only in reduced form, the new Turn report is returned in full, and the current state is the Turn-start state of Turn 9](../../../images/query-layers-after-advance.svg)
 
 # Acceptance examples
 
@@ -124,3 +151,9 @@ How Player API returns the Turn report and the History entries is stated under
   In one Turn the player purchases 7 upgrades, and the recorded value for that Turn is 7. The player undoes 2 of the
   purchases: the recorded value is 5, and the recorded values of earlier Turns are unchanged. Redoing both purchases
   makes it 7 again ([Turn series](#turn-series)).
+- **Turn report and history:** During Turn 8, after two Player actions, `getTurnReport()` returns the Turn report of
+  the Advance turn that ended Turn 7, and `getHistory()` returns the History entries of Turns 1 to 7. Undoing one of
+  the actions changes neither answer. Advance turn then makes `getTurnReport()` return the Turn report of the Advance
+  turn that ended Turn 8, and `getHistory()` return the History entries of Turns 1 to 8, whose last entry holds the
+  reduced form of that new Turn report. Saving and loading the Campaign changes neither answer
+  ([Current state, Turn report, and history](#current-state-turn-report-and-history)).
