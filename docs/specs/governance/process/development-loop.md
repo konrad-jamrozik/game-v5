@@ -42,16 +42,10 @@ exhaustive.
 | Implementation specifications | How an Implementer turns the specifications into an Implementation in the Game designer's environment                                        | An LLM at the Game designer's request, or the Game designer |
 | Implementation                | Code and tests that follow the specifications, together with its Implementer feedback and tracking files                                     | The Implementer only, as derived from the specifications    |
 
-The Implementation specifications come in three Families, distinguished by how binding they are and what they
-cover:
-
-- **Mandatory:** what every Implementation must do whatever its platform, e.g. reside in its
-  own directory beside the specifications under [Implementation Placement](../../implementation/mandatory/implementation-placement.md),
-  keep its Implementer feedback, and record which specifications it follows so it can be updated from their changes.
-- **Guidance:** suggestions on matters the Design specifications deliberately leave open, e.g. the
-  toolchain suggested by [Tech Stack Suggestion](../../implementation/guidance/tech-stack-suggestion.md).
-- **Recipes:** suggested steps for carrying out one task, e.g. publishing a browser Implementation to GitHub Pages under
-  [GitHub Pages Deployment](../../implementation/recipes/github-pages-deployment.md).
+The Implementation specifications divide into Families by how binding they are, as described in
+[About Implementation specifications](../../implementation/about-implementation.md#families). Only the Mandatory
+Family binds every Implementation, and it requires exactly what the Development loop needs from one: where it lives,
+its Implementer feedback, and a record of which specifications it follows.
 
 The specifications live in one repository and each Implementation in its own directory outside it. Every change to an
 Implementation must be derived from the specifications: neither the Game designer nor an LLM changes an Implementation
