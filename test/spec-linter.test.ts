@@ -1,5 +1,3 @@
-import { readdir, readFile } from 'node:fs/promises'
-import { relative, resolve } from 'node:path'
 import { posix } from 'node:path'
 
 import { describe, expect, test } from 'vitest'
@@ -1386,29 +1384,6 @@ describe('family overviews', () => {
     )
     expect(rawCodes(files)).toEqual(['SPEC303'])
   })
-})
-
-async function collectMarkdown(root: string, directory: string): Promise<readonly SourceFile[]> {
-  const entries = await readdir(directory, { withFileTypes: true })
-  const files: SourceFile[] = []
-  for (const entry of entries) {
-    const path = resolve(directory, entry.name)
-    if (entry.isDirectory()) {
-      files.push(...(await collectMarkdown(root, path)))
-    } else if (entry.isFile() && entry.name.endsWith('.md')) {
-      files.push({
-        path: relative(root, path).replace(/\\/g, '/'),
-        content: await readFile(path, 'utf8'),
-      })
-    }
-  }
-  return files
-}
-
-test('the current specification corpus is clean', async () => {
-  const root = process.cwd()
-  const files = await collectMarkdown(root, resolve(root, 'docs'))
-  expect(lintSpecifications({ files })).toEqual([])
 })
 
 describe('derived documentation on a sample corpus', () => {

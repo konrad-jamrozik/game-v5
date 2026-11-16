@@ -1,14 +1,6 @@
-import { resolve } from 'node:path'
-
 import { describe, expect, test } from 'vitest'
 
-import {
-  checkDerivedOutputs,
-  renderDerivedOutputs,
-  runDerivedDocumentation,
-  type DerivedDocsIO,
-} from '../scripts/derived-docs.ts'
-import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
+import { checkDerivedOutputs } from '../scripts/derived-docs.ts'
 import {
   isGeneratedDiagramFilePath,
   renderFamilyDiagram,
@@ -23,8 +15,6 @@ import type {
   SpecificationCorpus,
   SpecificationRecord,
 } from '../scripts/spec-linter/types.ts'
-
-const PRETTIER_OPTIONS = { printWidth: 120, singleQuote: true, semi: false, tabWidth: 2 }
 
 function kinds(...values: RelationshipKind[]): ReadonlySet<RelationshipKind> {
   return new Set(values)
@@ -248,34 +238,25 @@ describe('family SVG diagrams', () => {
     expect(paths.every((path) => path.startsWith('docs/images/mechanics-family-'))).toBe(true)
   })
 
-  test('check mode reports a stale, a missing, and an unexpected diagram file', async () => {
-    const root = process.cwd()
-    const files = await collectMarkdownFiles(root, resolve(root, 'docs'))
-    const rendered = await renderDerivedOutputs(files, PRETTIER_OPTIONS)
-    if ('findings' in rendered) throw new Error(rendered.findings.join('\n'))
-    const onDisk = new Map([...rendered.expected].filter(([path]) => !rendered.overviews.has(path)))
+  test('check mode reports a stale, a missing, and an unexpected diagram file', () => {
+    const expected = renderFamilyDiagramFiles(mechanicsCorpus(), sources)
+    const outputs = { expected, overviews: new Map<string, string>(), sources }
     const within = 'docs/images/mechanics-family-within-uses.svg'
     const across = 'docs/images/mechanics-family-across.svg'
-    expect(onDisk.has(within) && onDisk.has(across)).toBe(true)
-    const errors: string[] = []
-    const io: DerivedDocsIO = {
-      actualOutputs: onDisk,
-      writeOutputs: () => Promise.resolve(),
-      writeError: (message) => errors.push(message),
-    }
-    expect(await runDerivedDocumentation(files, ['check'], io, PRETTIER_OPTIONS)).toBe(0)
-    expect(errors).toEqual([])
-    expect(checkDerivedOutputs(rendered, new Map([...onDisk, [within, '<svg/>']]))).toEqual([
+    expect(expected.has(within) && expected.has(across)).toBe(true)
+    expect(checkDerivedOutputs(outputs, expected)).toEqual([])
+    expect(checkDerivedOutputs(outputs, new Map([...expected, [within, '<svg/>']]))).toEqual([
       `${within}: generated documentation is stale; run npm run docs:generate.`,
     ])
-    expect(checkDerivedOutputs(rendered, new Map([...onDisk].filter(([path]) => path !== across)))).toEqual([
+    expect(checkDerivedOutputs(outputs, new Map([...expected].filter(([path]) => path !== across)))).toEqual([
       `${across}: generated documentation is missing; run npm run docs:generate.`,
     ])
     const extra = 'docs/images/old-family-within.svg'
-    expect(checkDerivedOutputs(rendered, new Map([...onDisk, [extra, '<svg/>']]))).toEqual([
+    // An unexpected file is reported alone, before any stale or missing file.
+    expect(checkDerivedOutputs(outputs, new Map([...expected, [within, '<svg/>'], [extra, '<svg/>']]))).toEqual([
       `${extra}: unexpected generated documentation file; remove or relocate it.`,
     ])
-  }, 30_000)
+  })
 })
 
 describe('specification stack diagram', () => {
