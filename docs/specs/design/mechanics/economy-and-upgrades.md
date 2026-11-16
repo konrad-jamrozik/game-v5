@@ -25,7 +25,6 @@ Agents, and Economy and Upgrades says how that money is earned and spent.
 
 # Relationships
 
-- Uses [Agents](./agents-spec.md)
 - Uses [Configuration](../foundation/configuration.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Developer Access](../foundation/developer-access.md)

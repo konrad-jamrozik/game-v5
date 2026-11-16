@@ -16,6 +16,7 @@
     "lint:specs": "node scripts/lint-specs.ts",
     "docs:generate": "node scripts/derived-docs.ts generate",
     "docs:check": "node scripts/derived-docs.ts check",
+    "relationships:report": "node scripts/relationships-report.ts",
     "lint": "npm run lint:specs && npm run lint:code",
     "lint:fix": "npm run lint:specs && npm run lint:code -- --fix",
     "format": "prettier . --write",

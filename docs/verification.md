@@ -30,7 +30,10 @@ Run the targeted checks while iterating. They give faster, narrower feedback tha
 | Dependencies or tool configuration    | `npm ci`, then `npm run check`                                                                                                           |
 
 Run `npm run lint:specs` first when checking specifications or the relationships between them. The derived-view check
-(`npm run docs:check`) and the rest of the pipeline depend on specifications that parse and resolve.
+(`npm run docs:check`) and the rest of the pipeline depend on specifications that parse and resolve. When a change
+adds, removes, or moves a term or a relationship, also run `npm run relationships:report`: it lists where the recorded
+`uses` and `refines` relationships differ from what the specifications' text applies. It matches terms by spelling, so
+it reports for review and never fails.
 
 ## Before declaring a change complete
 

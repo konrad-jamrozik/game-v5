@@ -30,7 +30,6 @@ Agency can answer it.
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Economy and Upgrades](./economy-and-upgrades.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Factions](./factions.md)
 - Uses [Game Data Records](../foundation/game-data-records.md)
 - Uses [Numbers](../foundation/numbers.md)
 - Uses [Panic and Endings](./panic-and-endings.md)

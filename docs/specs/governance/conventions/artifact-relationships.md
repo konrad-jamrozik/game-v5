@@ -17,6 +17,11 @@ Relationship kind, e.g. `uses` or `refines`, which says what the Dependent takes
 relationships are recorded in mirrored lists, and the relationships of each kind form a graph that is checked for
 cycles.
 
+The two kinds between specifications are read off their text rather than judged: a specification uses another when it
+applies a term or rule the other owns, and refines another when the other hands off to it the detail of a term the
+other owns. Because terms have a single owner, a cycle among these relationships shows a term or a rule in the wrong
+specification, and the acyclic graph that remains places every specification in a layer.
+
 A relationship records a connection, not a judgment: it does not accept a proposed rule,
 and it proves nothing about an implementation or a test run.
 
@@ -49,6 +54,18 @@ Directional connections between artifacts and how they are recorded.
 | Implicit relationship | A relationship created by an applicability rule under Implicit relationships rather than repeated artifact entries |                                                                    |
 | Relationships section | An artifact's flat list of explicit directional relationships                                                      |                                                                    |
 
+## Reading relationships from text
+
+What in a specification's text creates a `uses` or `refines` relationship.
+
+| Term           | Definition                                                                                                                                                    | Prohibited synonyms |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Term owner     | The specification whose Glossary defines a term; every term has exactly one                                                                                   |                     |
+| Named rule     | A section of a specification, identified by its heading                                                                                                       |                     |
+| Normative text | Every part of a specification except its Overview, its Relationships section, its acceptance examples, and the examples its other text introduces with "e.g." |                     |
+| Pointer        | A sentence or table row of Normative text that names a term and links the specification that states it, and states no rule of its own                         | Owner link          |
+| Handoff        | A Pointer whose term the pointing specification owns; it hands the detail of that term to the linked specification                                            |                     |
+
 ## Graphs
 
 Structures formed by artifacts and their relationships.
@@ -75,90 +92,106 @@ artifact must not depend on itself.
 
 Each Relationship kind describes how the Dependent relates to the Dependency.
 
-| Relationship kind | Meaning                                                                                                                   | Permitted artifacts                                       | Illustrative example                                                                                                            |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules                                | Document → document governed by those rules               | Specification Conventions → Agents                                                                                              |
-| `refines`         | The Dependent adds detail to the same subject or behavior already specified by the Dependency, preserving its constraints | Specification or requirement → refining specification     | Domain Model → Agents                                                                                                           |
-| `uses`            | The Dependent applies the Dependency's concepts, constraints, data, or results to describe its own subject                | Any suitable artifacts                                    | Core Concepts → Engine Contract                                                                                                 |
-| `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency                                    | Specification or requirement → implementation             | Engine Contract → identified engine implementation                                                                              |
-| `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency                                             | Specification or requirement → acceptance example or test | [Committed state integrity](../../design/foundation/engine-contract.md#committed-state-integrity) → identified restoration test |
+| Relationship kind | Meaning                                                                                                                  | Permitted artifacts                                       | Illustrative example                                                                                                            |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `follows`         | The Dependent conforms to the Dependency's document structure, lifecycle, or writing rules                               | Document → document governed by those rules               | Specification Conventions → Agents                                                                                              |
+| `refines`         | The Dependency hands off to the Dependent the detail of a term the Dependency owns, and the Dependent states that detail | Specification → refining specification                    | Domain Model → Agents                                                                                                           |
+| `uses`            | The Dependent's Normative text applies a term the Dependency owns or a Named rule of the Dependency                      | Specification → specification                             | Core Concepts → Engine Contract                                                                                                 |
+| `implements`      | The Dependent executable artifact provides behavior intended to satisfy the Dependency                                   | Specification or requirement → implementation             | Engine Contract → identified engine implementation                                                                              |
+| `verifies`        | The Dependent test or scenario specifies or performs checks of the Dependency                                            | Specification or requirement → acceptance example or test | [Committed state integrity](../../design/foundation/engine-contract.md#committed-state-integrity) → identified restoration test |
 
-Merely consuming a result is `uses`, not `refines`. An implementation can `implement` a specification; a specification
-does not implement its implementation. A test can `verify` a requirement without asserting that the test currently
-passes.
+A refining specification is a part of the specification it refines: it states what that specification leaves to it.
+An implementation can `implement` a specification; a specification does not implement its implementation. A test can
+`verify` a requirement without asserting that the test currently passes.
 
 # Choosing uses or refines
 
-For each proposed refinement, identify the parent contract and the additional detail about that same subject or
-behavior. Record both in the contract prose, linking to the relevant sections by title. Obeying an invariant,
-using a vocabulary, consuming a result, or supplying Game Data Record (GDR) values is insufficient by itself: those are uses.
-Being more concrete or appearing later in an authoring sequence is also insufficient.
+Whether one specification uses or refines another is decided by its text, under the following rules, so that two
+readers of the same text record the same relationships.
 
-A contract that applies to whatever other specifications state, e.g. "every invariant that a specification states
-holds", is used, not refined, by each specification that states such a thing. Refinement needs the same subject on
-both sides: the child adds detail about what the parent is about. Otherwise every specification that states an
-invariant would refine that contract, and the relationship would carry no information.
+## Uses
 
-E.g., Domain Model uses Core Concepts vocabulary and Campaign State composition constraints to describe game concepts.
-Campaign State refines Engine Contract Data ownership: it adds detail about the Campaign state that Data ownership places among the data the engine keeps; vocabulary use alone is not refinement. Timeline uses the Campaign Instances identity convention and Engine Contract guarantees;
-obeying them while restoring Campaign state is not refinement. These classifications concern the particular contract
-meaning, not a prohibition on refinement between any document families.
+A specification uses another when its Normative text applies a term the other owns, or applies a Named rule of the
+other by linking that section in a clause that relies on it. E.g., "Each new Enemy gets its initial values under
+Campaign instance creation in Campaign Instances" applies a Named rule of Campaign Instances, and "An Enemy is a
+Campaign instance" applies a term Campaign Instances owns; either makes the specification use Campaign Instances.
 
-A refinement does not need an additional uses entry merely because it inherits the parent's constraints. Declare
-both Relationship kinds for a pair only when the prose identifies separate Relationship kinds. A document may refine multiple
-parents only when it identifies additional detail about each parent's subject.
+Only Normative text counts. A term that appears only in the Overview, in an acceptance example, or in an example
+introduced with "e.g." creates no relationship, because those parts illustrate or orient and state no rule.
+Acceptance examples check the rules the specification states elsewhere, so they add no reliance of their own.
 
-A specification may declare an intended refinement when its prose names the parent contract and the detail its TODOs
-will provide. This records a planned refinement, not completed detail. Preserve unresolved decisions and
-reassess the relationship when actual rules replace the TODOs. Merely referring to a future document is not enough.
+## Refines
+
+A specification refines another when the other hands off to it, through a Handoff, the detail of a term the other
+owns, and the refining specification states that detail. E.g., Engine Contract owns the term Timeline and its Engine
+subsystems table names the Timeline and links Timeline as the specification that states it, so Timeline refines Engine
+Contract; Agents owns current health and its table of changes to attributes links Combat as the specification that
+states how current health is lowered, so Combat refines Agents.
+
+A specification that applies a term without being handed its detail uses the term's owner and does not refine it,
+however much detail it adds. A specification may refine several specifications when each hands it detail. A Handoff
+may name a specification whose detail is still a `TODO:`; it then records an intended refinement, not completed
+detail, and the relationship is reassessed when the detail is written.
+
+## Pointers that create no relationship
+
+A Pointer whose term another specification owns creates no relationship. It only says where a term is
+stated, e.g. "The Autopilot limit is stated in What an Autopilot engagement holds in Autopilot" in a specification that
+leaves Autopilot limit to Autopilot, so it may point in either direction, including from a Dependency to one of its own Dependents.
+
+A sentence that both names a term and applies it is not a Pointer: it applies the term, and the specification uses the
+term's owner.
+
+## One kind per pair
+
+A pair of specifications has at most one of `uses` and `refines`. When a specification both refines another and
+applies its terms, it records only `refines`, because a refining specification applies its parent's terms by its nature.
 
 # Links that create no relationship
 
-A link to or mention of another artifact creates no relationship when the linking artifact can be interpreted without
-the linked content. The test: remove the link and the text it supports; if the meaning of the artifact's rules,
-definitions, and examples is unchanged, no relationship exists.
+A link or mention creates a `uses` or `refines` relationship only through a term or Named rule it carries in Normative
+text, under [Choosing uses or refines](#choosing-uses-or-refines). Every other link creates no relationship, needs no
+mirror, and forms no Cycle. The following links are of this kind:
 
-Such a link is not listed under Relationships, needs no mirror, and forms no Cycle. It may therefore point in either
-direction, including from a Dependency to one of its own Dependents. E.g., Core Concepts may point to Engine Contract
-for what a Session holds, although Engine Contract uses Core Concepts.
-
-The following kinds of link create no relationship when they pass the test:
-
-- **Owner links:** say which artifact owns something the linking artifact does not define.
+- **Pointers:** say which specification states a term another specification owns.
 - **Navigation links:** help a reader find related material.
 - **Migration records:** say where content moved.
 - **Citations and evidence acknowledgements:** credit material inspected while drafting.
 - **Examples:** name other artifacts to explain a rule; they do not declare relationships for the named artifacts.
 - **Process information:** review order, work-plan rows, and folder location.
 
-Calling a link an owner link, navigation link, or informative citation must not conceal substantive reliance.
-When the artifact's rules, definitions, or examples cannot be understood without the linked content, the link is a
-relationship and must be recorded under Relationships. Specification Conventions may restrict such links further for
-particular documents.
+Calling a link a Pointer, navigation link, or citation does not exempt the text around it: when that text applies a
+term or Named rule of the linked specification, the specification uses it. Specification Conventions may restrict such
+links further for particular documents.
 
 # Relationship graphs
 
-Validate each Relationship kind graph separately. The `follows` graph and the `refines` graph must each be a DAG.
-Writing rules must not govern each other through a cycle, and refinements must not form a cycle of increasingly
-detailed definitions.
+Validate each Relationship kind graph separately. The `follows` graph, the `refines` graph, and the `uses` graph must
+each be a DAG, and so must the combined graph of explicit `uses` and `refines` relationships. Writing rules must not
+govern each other through a cycle, refinements must not form a cycle of increasingly detailed definitions, and no
+specification may rely, directly or through others, on a term or rule of a specification that relies on it.
 
-The `uses` graph may contain cycles when the contracts identify distinct supplied meanings and no definition
-depends circularly on itself. The `implements` and `verifies` graphs are acyclic under their permitted-artifact rules.
-A graph combining different Relationship kinds need not be acyclic, and such a cycle is not by itself a defect.
+A cycle in the combined `uses` and `refines` graph shows a term or a rule in the wrong specification. It is resolved by
+moving the term to the specification that the others in the cycle build on, or by moving the rule that applies it to a
+specification that builds on the term's owner; it is never resolved by dropping a relationship the text creates.
 
-Every retained cycle must be documented in the informative [Specification relationship cycles](../../../spec-relationship-cycles.md)
-register. Review the combined explicit uses/refines graph, including cycles longer than two edges, and separately
-check mixed cycles involving implicit follows relationships. Each cyclic component must enumerate its internal edges,
-their independently supplied meanings, their supporting contract passages, and a future removal approach with an
-exit criterion. Justifications that rest on TODOs remain provisional. The register reports relationships; it does not create
-them or authorize future contract changes. Links that create no relationship are not part of any graph.
+The combined DAG places each specification in a layer: a specification's layer is one after the latest layer among the
+specifications it uses or refines, and a specification depending on none is in the first layer.
+
+The `implements` and `verifies` graphs are acyclic under their permitted-artifact rules. A graph combining `follows`
+with other Relationship kinds need not be acyclic, and such a cycle is not by itself a defect. Every such mixed cycle
+must be documented in the informative [Specification relationship cycles](../../../spec-relationship-cycles.md)
+register, with its internal edges, their independently supplied meanings, their supporting contract passages, and a
+future removal approach with an exit criterion. The register reports relationships; it does not create them or
+authorize future contract changes. Links that create no relationship are not part of any graph.
 
 # Recording relationships
 
 Every relationship must use the canonical terms Artifact, Relationship, Dependency, Dependent, and Relationship kind
 as defined by the Glossary. Every explicit relationship identifies one Dependency, one Dependent, and exactly one of the
 five Relationship kinds, and satisfies that kind's permitted-artifact rules. Exact duplicates are invalid. A document
-pair may have multiple Relationship kinds when each expresses distinct reliance.
+pair may have several Relationship kinds when each expresses distinct reliance, except that it has at most one of
+`uses` and `refines`, under [One kind per pair](#one-kind-per-pair).
 
 Each explicit relationship is recorded twice: once in the Dependent's Relationships section and once, as its mirror
 with the reverse-facing phrase, in the Dependency's. Both entries must resolve to the same Dependency, Dependent, and
@@ -166,12 +199,16 @@ Relationship kind. Implicit relationships are defined centrally under [Implicit 
 and are not listed. The layout of a specification's Relationships section, including its phrases, order, and links, is
 given under [Relationship inventories](#relationship-inventories).
 
+Because `uses` and `refines` follow from the text, the recorded entries of those kinds must be exactly the
+relationships the text creates: an entry the text does not create, and a relationship the text creates that has no
+entry, are both documentation defects.
+
 Relationship entries have no Scope field. Substantive constraints and requirement references belong in the
 contract prose; a link to an artifact does not imply reliance on every rule in that artifact.
 
 Adding, changing, or removing an explicit relationship must update both entries. A missing or disagreeing entry is a
 documentation defect. Changes must preserve rule ownership and requirement traceability. Update the cycle register
-whenever a change introduces, alters, or removes a cycle.
+whenever a change introduces, alters, or removes a mixed cycle.
 
 # Implicit relationships
 
@@ -224,36 +261,31 @@ Relationship kinds, not additional Relationship kinds or glossary synonyms.
 
 List explicit relationships only. When there are none, omit the Relationships section. Do not repeat implicit
 relationships. Every explicit relationship
-must have its mirror with the same Dependency, Dependent, and Relationship kind. A document pair may have multiple
-Relationship kinds, but duplicate entries of the same Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
+must have its mirror with the same Dependency, Dependent, and Relationship kind. Duplicate entries of the same
+Relationship kind and direction are invalid. Inventory lists are exhaustive, not example lists.
 
 Relationship entries have no Scope field. Keep substantive constraints and requirement references in the owning
 contract prose; a document link does not imply reliance on every rule in that document.
 [Links that create no relationship](#links-that-create-no-relationship) defines which
-links, e.g. citations and owner links, are not relationships.
+links, e.g. citations and Pointers, are not relationships.
 
 Relationships is the only inventory of explicit relationships. Overview must not repeat it as
 directional-phrase bullets; where a reliance matters, the owning contract prose states it.
 
 Classify relationships using [Choosing uses or refines](#choosing-uses-or-refines).
-Each refinement is visible in the prose where the added detail is stated: the topic section that adds the detail links
-the parent section in a clause about the subject; e.g., "Every Order total is a Price, under Prices; for an Order it is
-computed as follows." Overview may also name the parent, under
-[Specification Overview](overview-conventions.md#specification-overview). No section or paragraph has the
-refinement itself as its subject; e.g., not "This document refines Store Model by specifying placement, payment, and
-shipping constraints." A specification may declare intended detail that its TODOs have not settled yet. Applying vocabulary,
-obeying invariants, or supplying GDR values alone establishes uses. Do not hide substantive reliance behind
-an informative citation or duplicate a refinement as uses for the same reliance.
-
-Maintain [Specification relationship cycles](../../../spec-relationship-cycles.md) when changing relationships.
-The register must cover retained combined uses/refines cycles and mixed governance cycles, with supporting meanings
-and future removal criteria. It is an informative report outside the registered specification corpus.
+Each refinement is visible in the prose on both sides: the Handoff in the refined specification, and the section of the
+refining specification that states the handed-off detail, which links the refined section in a clause about the
+subject; e.g., "Every Order total is a Price, under Prices; for an Order it is computed as follows." Overview may also
+name the parent, under [Specification Overview](overview-conventions.md#specification-overview). No section or
+paragraph has the refinement itself as its subject; e.g., not "This document refines Store Model by specifying
+placement, payment, and shipping constraints."
 
 # Evidence
 
-A refinement must identify the parent subject or behavior, the additional detail, and preservation of the Dependency's constraints.
-An intended refinement must explicitly identify the detail still to be specified. An `implements` or `verifies` relationship must not be presented as evidence
-that implementation is complete or tests pass.
+A `uses` relationship is evidenced by the term or Named rule the Dependent's Normative text applies. A `refines`
+relationship is evidenced by the Handoff in the Dependency and the detail the Dependent states; an intended refinement
+is evidenced by the Handoff alone and must explicitly identify the detail still to be specified. An `implements` or
+`verifies` relationship must not be presented as evidence that implementation is complete or tests pass.
 
 # Adoption
 
@@ -263,38 +295,41 @@ check links, and validate the graphs. Do not invent implementation or test relat
 
 # Edge cases and failure behavior
 
-| Case                                                           | Required result                                                                                                         |
-| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| A depends on B                                                 | Record `B → A`; B is the Dependency and A is the Dependent                                                              |
-| Two Relationship kinds connect the same artifacts              | Keep both when they express distinct Relationship kinds                                                                 |
-| Only implicit relationships apply                              | Omit the Relationships section                                                                                          |
-| Explicit relationships exist                                   | List all explicit relationships; omit implicit ones                                                                     |
-| No explicit relationships exist                                | Omit the Relationships section                                                                                          |
-| One mirrored entry is missing or disagrees                     | Treat the inventory as defective and update both entries                                                                |
-| No implementation or test has been identified                  | Do not invent an `implements` or `verifies` relationship                                                                |
-| A requirement moves                                            | Update both entries, links, and requirement references in contract prose                                                |
-| A referenced specification still has `TODO:` items             | Record concrete unresolved contract work without inferring missing rules                                                |
-| A Dependency links to a Dependent only to say who owns a topic | Record nothing; it is an owner link under [Links that create no relationship](#links-that-create-no-relationship)       |
-| A work-plan row orders reviews                                 | Record nothing; it is process information under [Links that create no relationship](#links-that-create-no-relationship) |
+| Case                                                                     | Required result                                                                                                         |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| A depends on B                                                           | Record `B → A`; B is the Dependency and A is the Dependent                                                              |
+| `follows` and another Relationship kind connect the same artifacts       | Keep both when they express distinct reliance                                                                           |
+| A both refines B and applies B's terms                                   | Record only `refines`                                                                                                   |
+| Only implicit relationships apply                                        | Omit the Relationships section                                                                                          |
+| Explicit relationships exist                                             | List all explicit relationships; omit implicit ones                                                                     |
+| No explicit relationships exist                                          | Omit the Relationships section                                                                                          |
+| One mirrored entry is missing or disagrees                               | Treat the inventory as defective and update both entries                                                                |
+| No implementation or test has been identified                            | Do not invent an `implements` or `verifies` relationship                                                                |
+| A requirement moves                                                      | Update both entries, links, and requirement references in contract prose                                                |
+| A referenced specification still has `TODO:` items                       | Record concrete unresolved contract work without inferring missing rules                                                |
+| A specification points to the owner of a term another specification owns | Record nothing; it is a Pointer under [Pointers that create no relationship](#pointers-that-create-no-relationship)     |
+| A specification applies a term owned by a specification that uses it     | Treat the Cycle as a misplaced term or rule and move it, under [Relationship graphs](#relationship-graphs)              |
+| A work-plan row orders reviews                                           | Record nothing; it is process information under [Links that create no relationship](#links-that-create-no-relationship) |
 
 # Acceptance examples
 
 ## Classification cases
 
-These cases exercise [Recording relationships](#recording-relationships), [Direction](#direction), and
-[Evidence](#evidence); they add no relationships to the named documents. The table is exhaustive.
+These cases exercise [Choosing uses or refines](#choosing-uses-or-refines), [Recording relationships](#recording-relationships),
+[Direction](#direction), and [Evidence](#evidence); they add no relationships to the named documents. The table is exhaustive.
 
-| Case                                                                                                                                        | Expected classification and reason                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Domain Model describes agents using Campaign instance and GDR                                                                               | Uses Campaign Instances; it applies the Campaign instance structure without elaborating its meaning |
-| Agents supplies the lifecycle of the Agent described by [Agent](../../design/mechanics/domain-model.md#glossary)                            | Refines Domain Model; it adds detail to the same concept                                            |
-| Combat rounds a value with a rounding operation that Numbers defines                                                                        | Uses Numbers; applying a rounding operation does not elaborate its meaning                          |
-| Timeline preserves references under [References](../../design/foundation/campaign-instances.md#references) while restoring Campaign state   | Uses Campaign Instances; satisfying the reference invariant alone is not refinement                 |
-| Saves persists the Timeline whose navigation Timeline defines                                                                               | Uses Timeline; persisting it does not elaborate navigation behavior                                 |
-| Saves lists Campaign saves through an operation that [API hierarchy](../../design/foundation/engine-contract.md#api-hierarchy) names        | Uses Engine Contract; applying an existing operation does not elaborate it                          |
-| A specification names [Information boundary](../../design/foundation/player-api.md#information-boundary) and TODOs for exact exposed fields | Intended refinement is permitted; the fields remain unspecified                                     |
-| A document merely says it must obey [Campaign Instances](../../design/foundation/campaign-instances.md)                                     | Uses, not Refines; no added detail about the identity convention is identified                      |
-| A refinement duplicates the same reliance as a Uses entry                                                                                   | Keep only Refines; two Relationship kinds require distinct reliance                                 |
+| Case                                                                                                                                        | Expected classification and reason                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Domain Model describes agents using Campaign instance and GDR                                                                               | Uses Campaign Instances; it applies the term Campaign instance, which Campaign Instances owns |
+| Domain Model owns Agent and points to Agents as the specification that states what an Agent has; Agents states it                           | Refines Domain Model; Domain Model hands off the detail of a term it owns                     |
+| Combat rounds a value with a rounding operation that Numbers defines                                                                        | Uses Numbers; it applies a Named rule of Numbers                                              |
+| Timeline preserves references under [References](../../design/foundation/campaign-instances.md#references) while restoring Campaign state   | Uses Campaign Instances; it applies a Named rule of Campaign Instances                        |
+| Engine Contract owns Timeline and its Engine subsystems table points to Timeline as its owner                                               | Timeline refines Engine Contract; the table row is a Handoff                                  |
+| A specification names [Information boundary](../../design/foundation/player-api.md#information-boundary) and TODOs for exact exposed fields | Uses Player API; the TODO leaves the fields unspecified but the Named rule is applied         |
+| A specification uses a term of another only in an example introduced with "e.g."                                                            | No relationship; the example is not Normative text                                            |
+| A specification names a term another specification owns and links that owner, stating no rule                                               | No relationship; the sentence is a Pointer                                                    |
+| A specification adds much detail about a term it applies, but the term's owner has no Handoff to it                                         | Uses, not Refines; detail without a Handoff is not refinement                                 |
+| A refinement is also recorded as a Uses entry for the same pair                                                                             | Keep only Refines; a pair has at most one of `uses` and `refines`                             |
 
 ## Complete coverage of Relationship kinds
 
@@ -328,7 +363,7 @@ relationships still apply. It must not list implicit entries.
 
 - Specification Conventions → A and A → Specification Conventions, both `follows`: reject the cycle.
 - Domain Model → Agents and Agents → Domain Model, both `refines`: reject the cycle.
-- Two `uses` relationships in opposite directions are permitted only when their meanings are independently
-  defined.
+- A applies a term B owns while B applies a term A owns, so each uses the other: reject the cycle, and move one of the
+  terms, or the rule applying it, so that both terms are owned at or below the specification that applies them.
 - Specification Conventions → Artifact Relationships through implicit `follows`, combined with Artifact Relationships →
   Specification Conventions through `uses`, is a permitted cycle combining Relationship kinds.

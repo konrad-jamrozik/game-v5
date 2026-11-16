@@ -92,9 +92,10 @@ states when it happens and by how much. A document may link to those later detai
 E.g., Agents states what current health and base health are and that current health can go down and up. The Combat
 specification states how a Combat lowers current health, and Agent Recovery states how it goes back up.
 
-A document refines an earlier one when it adds detail to the same subject, e.g. the Combat specification refines Agents with
-how current health goes down. It uses an earlier one when it reads that subject to describe its own, e.g. the Combat specification uses Agent base skill
-to resolve a Combat.
+A document refines an earlier one when the earlier one hands it the detail of a term the earlier one owns, e.g. Agents
+owns current health and hands to the Combat specification how current health goes down. It uses an earlier one when it
+applies a term or rule the earlier one owns to describe its own subject, e.g. the Combat specification uses Agent base
+skill to resolve a Combat. A document therefore applies only the terms it owns and terms owned in earlier layers.
 
 E.g., Panic and Endings uses Economy and Upgrades, which is in layer 3, so Panic and Endings is in layer 4, and Missions,
 which uses Panic and Endings, is in layer 5.

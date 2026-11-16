@@ -8,6 +8,7 @@ import {
   analyzeSpecifications as analyzeSpecificationsRaw,
   lintSectionReferences,
   lintSpecifications as lintSpecificationsRaw,
+  relationshipEvidence as relationshipEvidenceRaw,
 } from '../scripts/spec-linter/linter.ts'
 import {
   FAMILY_DIAGRAM_END,
@@ -205,19 +206,26 @@ function diagnosticCodes(files: readonly SourceFile[]): readonly string[] {
 }
 
 function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
+  const active = { follows: 'Follows', refines: 'Refines', uses: 'Uses' }[kind]
+  const passive = { follows: 'Followed by', refines: 'Refined by', uses: 'Used by' }[kind]
+  return pairCorpus(
+    '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)',
+    '- ' + active + ' [Alpha](alpha.md)\n- ' + passive + ' [Alpha](alpha.md)',
+  )
+}
+
+/** The valid corpus plus a Beta copy of Alpha, with the given Relationships inventories for Alpha and Beta. */
+function pairCorpus(alphaInventory: string, betaInventory: string): SourceFile[] {
   const files = validCorpus()
   const alpha = files[2]
   if (!alpha) return files
-  const active = { follows: 'Follows', refines: 'Refines', uses: 'Uses' }[kind]
-  const passive = { follows: 'Followed by', refines: 'Refined by', uses: 'Used by' }[kind]
   const betaContent = insertSection(
     alpha.content.replaceAll('Alpha', 'Beta').replaceAll('AAA', 'BBB').replaceAll('aaa', 'bbb'),
     ['Overview'],
-    '# Relationships\n\n- ' + active + ' [Alpha](alpha.md)\n- ' + passive + ' [Alpha](alpha.md)',
+    '# Relationships\n\n' + betaInventory,
   )
-  const withBeta = files
   return [
-    ...withRelationships(withBeta, alpha.path, '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)'),
+    ...withRelationships(files, alpha.path, alphaInventory),
     { path: 'docs/specs/design/foundation/beta.md', content: betaContent },
   ]
 }
@@ -976,12 +984,30 @@ describe('specification linter', () => {
     )
   })
 
-  test.each(['follows', 'refines'] as const)('rejects %s cycles', (kind) => {
+  test.each(['follows', 'refines', 'uses'] as const)('rejects %s cycles', (kind) => {
     expect(diagnosticCodes(cycleCorpus(kind))).toContain('SPEC414')
   })
 
-  test('permits uses cycles', () => {
-    expect(lintSpecifications({ files: cycleCorpus('uses') })).toEqual([])
+  test('rejects cycles that mix uses and refines', () => {
+    expect(
+      diagnosticCodes(
+        pairCorpus(
+          '- Uses [Beta](beta.md)\n- Refined by [Beta](beta.md)',
+          '- Refines [Alpha](alpha.md)\n- Used by [Alpha](alpha.md)',
+        ),
+      ),
+    ).toEqual(['SPEC414', 'SPEC414'])
+  })
+
+  test('rejects a pair related by both uses and refines', () => {
+    expect(
+      diagnosticCodes(
+        pairCorpus(
+          '- Uses [Beta](beta.md)\n- Refines [Beta](beta.md)',
+          '- Used by [Alpha](alpha.md)\n- Refined by [Alpha](alpha.md)',
+        ),
+      ),
+    ).toEqual(['SPEC418', 'SPEC418'])
   })
 
   test('rejects duplicate glossary ownership and aliases', () => {
@@ -1453,5 +1479,66 @@ describe('derived documentation on a sample corpus', () => {
     expect(await runDerivedDocumentation([], ['generate'], io, prettierOptions)).toBe(1)
     expect(writes).toBe(0)
     expect(errors.length).toBeGreaterThan(0)
+  })
+})
+
+describe('relationship evidence', () => {
+  function evidence(files: readonly SourceFile[]): readonly string[] {
+    return relationshipEvidenceRaw({ files: withOverviews(files) }).map(
+      (finding) =>
+        `${finding.category} ${posix.basename(finding.dependencyPath)} -> ${posix.basename(finding.dependentPath)}` +
+        (finding.terms.length > 0 ? ` ${finding.terms.join(', ')}` : ''),
+    )
+  }
+
+  /** Alpha owns the term Widget; Beta's Rule section says the given text. */
+  function widgetCorpus(alphaInventory: string, betaInventory: string, betaRule: string): SourceFile[] {
+    return pairCorpus(alphaInventory, betaInventory).map((file) => {
+      if (file.path.endsWith('/alpha.md')) {
+        return {
+          ...file,
+          content: insertSection(
+            file.content,
+            ['Overview', 'Relationships'],
+            '# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Widget | A thing Alpha has. |',
+          ),
+        }
+      }
+      if (file.path.endsWith('/beta.md')) {
+        return { ...file, content: file.content.replace('Beta must be deterministic.', betaRule) }
+      }
+      return file
+    })
+  }
+
+  test('reports a term applied without a recorded relationship', () => {
+    expect(evidence(widgetCorpus('', '', 'Each Widget is counted.'))).toEqual(['missing alpha.md -> beta.md widget x1'])
+  })
+
+  test('ignores a term applied only in an example introduced with "e.g."', () => {
+    expect(evidence(widgetCorpus('', '', 'Things are counted, e.g. a Widget. Counting is exact.'))).toEqual([])
+  })
+
+  test('reports a recorded uses that the Normative text does not show', () => {
+    expect(
+      evidence(widgetCorpus('- Used by [Beta](beta.md)', '- Uses [Alpha](alpha.md)', 'Counting is exact.')),
+    ).toEqual(['unsupported uses alpha.md -> beta.md'])
+  })
+
+  test('accepts a recorded uses that the Normative text shows', () => {
+    expect(
+      evidence(widgetCorpus('- Used by [Beta](beta.md)', '- Uses [Alpha](alpha.md)', 'Each Widget is counted.')),
+    ).toEqual([])
+  })
+
+  test('reports a recorded refines whose Dependency has no Handoff', () => {
+    expect(
+      evidence(widgetCorpus('- Refined by [Beta](beta.md)', '- Refines [Alpha](alpha.md)', 'Each Widget is counted.')),
+    ).toEqual(['refines without handoff alpha.md -> beta.md'])
+  })
+
+  test('reports a term applied against the recorded order as upward', () => {
+    const files = widgetCorpus('- Uses [Beta](beta.md)', '- Used by [Alpha](alpha.md)', 'Each Widget is counted.')
+    expect(evidence(files)).toContain('upward alpha.md -> beta.md widget x1')
   })
 })

@@ -32,8 +32,6 @@ Agents says what one Agent is and how it works.
 - Uses [Player API](../foundation/player-api.md)
 - Refines [Domain Model](domain-model.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Combat](./combat.md)
-- Used by [Economy and Upgrades](./economy-and-upgrades.md)
 - Used by [Investigations](./investigations.md)
 - Used by [Missions](./missions.md)
 - Used by [Turn Advancement](./turn-advancement.md)

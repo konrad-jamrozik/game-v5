@@ -31,7 +31,6 @@ Factions says when they do and how severe each operation is.
 - Uses [Player API](../foundation/player-api.md)
 - Refines [Domain Model](domain-model.md)
 - Used by [Leads and Progression](./leads-and-progression.md)
-- Used by [Missions](./missions.md)
 - Used by [Panic and Endings](./panic-and-endings.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 - Refined by [Missions](./missions.md)

@@ -59,6 +59,10 @@ Applies to every specification.
 - [Direction](../specs/governance/conventions/artifact-relationships.md#direction)
 - [Relationship kinds](../specs/governance/conventions/artifact-relationships.md#relationship-kinds)
 - [Choosing uses or refines](../specs/governance/conventions/artifact-relationships.md#choosing-uses-or-refines)
+  - [Uses](../specs/governance/conventions/artifact-relationships.md#uses)
+  - [Refines](../specs/governance/conventions/artifact-relationships.md#refines)
+  - [Pointers that create no relationship](../specs/governance/conventions/artifact-relationships.md#pointers-that-create-no-relationship)
+  - [One kind per pair](../specs/governance/conventions/artifact-relationships.md#one-kind-per-pair)
 - [Links that create no relationship](../specs/governance/conventions/artifact-relationships.md#links-that-create-no-relationship)
 - [Relationship graphs](../specs/governance/conventions/artifact-relationships.md#relationship-graphs) — **linted**
 - [Recording relationships](../specs/governance/conventions/artifact-relationships.md#recording-relationships)

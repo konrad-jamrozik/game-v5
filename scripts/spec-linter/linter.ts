@@ -40,6 +40,7 @@ import {
   kindOverviewTitle,
 } from './overviews.ts'
 import { decodeUrlPart, directoryOf, isExternalUrl, normalizePath, resolvePath, splitUrl } from './paths.ts'
+import { type EvidenceFinding, findRelationshipEvidence } from './relationship-evidence.ts'
 import type {
   Diagnostic,
   GlossaryRecord,
@@ -1064,36 +1065,90 @@ function relationshipKey(row: RelationshipRow): string {
   return [pair.dependency.path, pair.dependent.path, row.kind].join('\u0000')
 }
 
-function validateGraph(rows: readonly RelationshipRow[], kind: string, diagnostics: Diagnostic[]): void {
+/**
+ * Returns, for each node on a cycle, the index of its strongly connected component (Tarjan's algorithm: each node and
+ * edge is visited once). Nodes on no cycle are absent.
+ */
+function cyclicComponents(adjacency: ReadonlyMap<string, ReadonlySet<string>>): ReadonlyMap<string, number> {
+  const index = new Map<string, number>()
+  const low = new Map<string, number>()
+  const onStack = new Set<string>()
+  const stack: string[] = []
+  const component = new Map<string, number>()
+  let components = 0
+  const strongConnect = (node: string): void => {
+    index.set(node, index.size)
+    low.set(node, index.size - 1)
+    stack.push(node)
+    onStack.add(node)
+    for (const next of adjacency.get(node) ?? []) {
+      if (!index.has(next)) {
+        strongConnect(next)
+        low.set(node, Math.min(low.get(node) ?? 0, low.get(next) ?? 0))
+      } else if (onStack.has(next)) {
+        low.set(node, Math.min(low.get(node) ?? 0, index.get(next) ?? 0))
+      }
+    }
+    if (low.get(node) !== index.get(node)) return
+    const members: string[] = []
+    let member: string | undefined
+    do {
+      member = stack.pop()
+      if (member === undefined) break
+      onStack.delete(member)
+      members.push(member)
+    } while (member !== node)
+    const selfLoop = adjacency.get(node)?.has(node) ?? false
+    if (members.length > 1 || selfLoop) {
+      for (const each of members) component.set(each, components)
+      components += 1
+    }
+  }
+  for (const node of adjacency.keys()) if (!index.has(node)) strongConnect(node)
+  return component
+}
+
+/** Reports every Dependencies row whose edge lies on a cycle of the graph formed by the given kinds together. */
+function validateGraph(
+  rows: readonly RelationshipRow[],
+  kinds: readonly RelationshipRow['kind'][],
+  diagnostics: Diagnostic[],
+): void {
+  const included = rows.filter((row) => row.inventory === 'Dependencies' && kinds.includes(row.kind))
   const adjacency = new Map<string, Set<string>>()
-  for (const row of rows) {
-    if (row.inventory !== 'Dependencies' || row.kind !== kind) continue
+  for (const row of included) {
     const pair = relationshipPair(row)
     const next = adjacency.get(pair.dependency.path) ?? new Set<string>()
     next.add(pair.dependent.path)
     adjacency.set(pair.dependency.path, next)
   }
-  const state = new Map<string, 'visiting' | 'visited'>()
-  const cyclic = new Set<string>()
-  const stack: string[] = []
-  const walk = (path: string): void => {
-    if (state.get(path) === 'visiting') {
-      const start = stack.indexOf(path)
-      for (const member of stack.slice(start)) cyclic.add(member)
-      return
+  const component = cyclicComponents(adjacency)
+  const name = kinds.join(' and ')
+  for (const row of included) {
+    const pair = relationshipPair(row)
+    const from = component.get(pair.dependency.path)
+    if (from !== undefined && from === component.get(pair.dependent.path)) {
+      addDiagnostic(diagnostics, row.owner.path, row.node, 'SPEC414', `The ${name} relationship graph must be acyclic.`)
     }
-    if (state.get(path) === 'visited') return
-    state.set(path, 'visiting')
-    stack.push(path)
-    for (const next of adjacency.get(path) ?? []) walk(next)
-    stack.pop()
-    state.set(path, 'visited')
   }
-  for (const path of adjacency.keys()) walk(path)
+}
+
+/** Reports a pair of specifications related by both uses and refines; refines wins, so the uses row is reported. */
+function validateOneKindPerPair(rows: readonly RelationshipRow[], diagnostics: Diagnostic[]): void {
+  const pairKey = (row: RelationshipRow): string => {
+    const pair = relationshipPair(row)
+    return pair.dependency.path + '\u0000' + pair.dependent.path
+  }
+  const refined = new Set(rows.filter((row) => row.kind === 'refines').map(pairKey))
   for (const row of rows) {
-    if (row.inventory === 'Dependencies' && row.kind === kind && cyclic.has(row.owner.path)) {
-      addDiagnostic(diagnostics, row.owner.path, row.node, 'SPEC414', `The ${kind} relationship graph must be acyclic.`)
-    }
+    if (row.kind !== 'uses' || !refined.has(pairKey(row))) continue
+    addDiagnostic(
+      diagnostics,
+      row.owner.path,
+      row.node,
+      'SPEC418',
+      'A pair of specifications related by refines must not also be related by uses.',
+    )
   }
 }
 
@@ -1142,8 +1197,9 @@ function validateRelationships(
       )
     }
   }
-  validateGraph(rows, 'follows', diagnostics)
-  validateGraph(rows, 'refines', diagnostics)
+  validateOneKindPerPair(rows, diagnostics)
+  validateGraph(rows, ['follows'], diagnostics)
+  validateGraph(rows, ['uses', 'refines'], diagnostics)
   return rows
 }
 
@@ -1643,6 +1699,26 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
     diagnostics: diagnostics.toSorted(compareDiagnostics),
     corpus: buildCorpus(parsed, entries, glossary, relationships),
   }
+}
+
+/**
+ * Compares recorded uses and refines relationships with the specifications' Normative text. It parses the input once
+ * and reports findings without diagnostics; run lintSpecifications for those.
+ */
+export function relationshipEvidence(input: LintInput): readonly EvidenceFinding[] {
+  const diagnostics: Diagnostic[] = []
+  const parsed = parseInput(input, diagnostics)
+  const index = parsed.specifications.find((specification) => specification.path === parsed.indexPath)
+  const entries = registryEntries(parsed, index, diagnostics)
+  const rows = validateRelationships(parsed.specifications, diagnostics)
+  const corpus = buildCorpus(parsed, entries, validateTerminology(parsed.specifications, diagnostics), rows)
+  const recordedPaths = new Set(corpus.specifications.map((specification) => specification.path))
+  const specifications = parsed.specifications.flatMap((specification) =>
+    recordedPaths.has(specification.path) && isSpecificationFamily(specification.family)
+      ? [{ ...specification, family: specification.family }]
+      : [],
+  )
+  return findRelationshipEvidence({ specifications, glossary: corpus.glossary, relationships: corpus.relationships })
 }
 
 export function lintSpecifications(input: LintInput): readonly Diagnostic[] {

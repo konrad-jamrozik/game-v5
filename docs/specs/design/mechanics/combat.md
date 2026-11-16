@@ -27,7 +27,6 @@ spent against an opponent.
 
 # Relationships
 
-- Uses [Agents](./agents-spec.md)
 - Uses [Core Concepts](../foundation/core-concepts.md)
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Uses [Numbers](../foundation/numbers.md)
