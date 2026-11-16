@@ -480,21 +480,20 @@ the Player cheat action under [Adding Agents](#adding-agents). Each new Agent ha
 initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in
 Campaign Instances. This table is exhaustive.
 
-| Value               | Initial value                        | Source                                                                           |
-| ------------------- | ------------------------------------ | -------------------------------------------------------------------------------- |
-| Archetype reference | The AgentArchetype.                  | The one AgentArchetype GDR, under [Agent GDR validation](#agent-gdr-validation). |
-| Agency              | The Campaign's Agency.               | Campaign state.                                                                  |
-| Turn hired          | The turn number of the current Turn. | Campaign state.                                                                  |
-
-| Base skill | The AgentArchetype's `base_skill`. | `base_skill` of the AgentArchetype. |
-| Base health | The AgentArchetype's `base_health`. | `base_health` of the AgentArchetype. |
-| Current health | The AgentArchetype's `base_health`. | `base_health` of the AgentArchetype. |
-| Exhaustion | 0. | This rule. |
-| Weapon | The Weapon GDR that the AgentArchetype's `weapon` references. | `weapon` of the AgentArchetype. |
-| Base weapon damage | The `base_weapon_damage` of that Weapon GDR. | `base_weapon_damage` of the Weapon GDR. |
-| Assignment | Standby. | This rule. |
-| Agent status | At assignment for an Agent of the initial roster; In transit for every Agent created during play. | This rule, under [Transit rule](#transit-rule). |
-| Participation history | Empty. | This rule. |
+| Value                 | Initial value                                                                                     | Source                                                                           |
+| --------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Archetype reference   | The AgentArchetype.                                                                               | The one AgentArchetype GDR, under [Agent GDR validation](#agent-gdr-validation). |
+| Agency                | The Campaign's Agency.                                                                            | Campaign state.                                                                  |
+| Turn hired            | The turn number of the current Turn.                                                              | Campaign state.                                                                  |
+| Base skill            | The AgentArchetype's `base_skill`.                                                                | `base_skill` of the AgentArchetype.                                              |
+| Base health           | The AgentArchetype's `base_health`.                                                               | `base_health` of the AgentArchetype.                                             |
+| Current health        | The AgentArchetype's `base_health`.                                                               | `base_health` of the AgentArchetype.                                             |
+| Exhaustion            | 0.                                                                                                | This rule.                                                                       |
+| Weapon                | The Weapon GDR that the AgentArchetype's `weapon` references.                                     | `weapon` of the AgentArchetype.                                                  |
+| Base weapon damage    | The `base_weapon_damage` of that Weapon GDR.                                                      | `base_weapon_damage` of the Weapon GDR.                                          |
+| Assignment            | Standby.                                                                                          | This rule.                                                                       |
+| Agent status          | At assignment for an Agent of the initial roster; In transit for every Agent created during play. | This rule, under [Transit rule](#transit-rule).                                  |
+| Participation history | Empty.                                                                                            | This rule.                                                                       |
 
 The table above states the initial base weapon damage before any Upgrade has been acquired; for an Agent created after an
 Upgrade has been acquired, the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) refines it. The new Agent joins the Agency's roster of Agents. No Campaign configuration value changes any initial value above.
@@ -590,13 +589,12 @@ moment it exists, without a reveal condition, for every Agent whatever its Agent
 | Value                                                                                                            | Player-visible information |
 | ---------------------------------------------------------------------------------------------------------------- | -------------------------- |
 | An Agent's Instance ID, its AgentArchetype including the AgentArchetype's `name`, its Agency, and its Turn hired | Yes                        |
-
-| An Agent's base skill, current health, base health, exhaustion, Weapon, and base weapon damage | Yes |
-| An Agent's effective skill | Yes |
-| An Agent's Agent status, and its Assignment, including the Investigation or Mission it references | Yes |
-| Whether an Agent can be assigned | Yes |
-| An Agent's Participation history | Yes |
-| Every property of the AgentArchetype and of AgentParameters | Yes |
+| An Agent's base skill, current health, base health, exhaustion, Weapon, and base weapon damage                   | Yes                        |
+| An Agent's effective skill                                                                                       | Yes                        |
+| An Agent's Agent status, and its Assignment, including the Investigation or Mission it references                | Yes                        |
+| Whether an Agent can be assigned                                                                                 | Yes                        |
+| An Agent's Participation history                                                                                 | Yes                        |
+| Every property of the AgentArchetype and of AgentParameters                                                      | Yes                        |
 
 **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. A Terminated
 Agent has no Assignment; Player API reports it as absent, and the visible Agent status explains why. An empty Participation history is reported as empty, not as absent.
@@ -697,23 +695,22 @@ This example exercises [Initial roster](#initial-roster), [Agent creation](#agen
 [Agents that can be assigned](#agents-that-can-be-assigned). A new Campaign starts in Turn 1. Its initial Campaign state
 contains exactly 4 Agents, each with a distinct fresh Instance ID and these values:
 
-| Value      | Each of the 4 Agents  |
-| ---------- | --------------------- |
-| Archetype  | `field_agent`         |
-| Agency     | The Campaign's Agency |
-| Turn hired | 1                     |
-
-| Base skill | 100 |
-| Current health | 30 |
-| Base health | 30 |
-| Exhaustion | 0 |
-| Weapon | `sidearm` |
-| Base weapon damage | 10 |
-| Assignment | Standby |
-| Agent status | At assignment |
-| Participation history | Empty |
-| Effective skill | 100 |
-| Can be assigned | Yes |
+| Value                 | Each of the 4 Agents  |
+| --------------------- | --------------------- |
+| Archetype             | `field_agent`         |
+| Agency                | The Campaign's Agency |
+| Turn hired            | 1                     |
+| Base skill            | 100                   |
+| Current health        | 30                    |
+| Base health           | 30                    |
+| Exhaustion            | 0                     |
+| Weapon                | `sidearm`             |
+| Base weapon damage    | 10                    |
+| Assignment            | Standby               |
+| Agent status          | At assignment         |
+| Participation history | Empty                 |
+| Effective skill       | 100                   |
+| Can be assigned       | Yes                   |
 
 Each of them can be assigned in Turn 1, and all of these values are Player-visible information
 ([Player-visible information](#player-visible-information)).
