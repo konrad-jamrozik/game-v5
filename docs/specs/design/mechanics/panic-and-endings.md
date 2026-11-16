@@ -36,27 +36,14 @@ zero. A Campaign ending is final: every Player action is then rejected, while ev
 
 # Glossary
 
-These terms are specific to Panic and Campaign endings. General terms are in the
+These terms are specific to Panic and Campaign endings. Panic, Campaign ending, and other general terms are in the
 [Domain Model glossary](domain-model.md#glossary).
-
-## Panic
-
-How alarmed the public is, and how a Turn's changes to it are collected.
 
 | Term                 | Definition                                                                                                                                                                                                  |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Panic                | How alarmed the public is, from 0% to 100%; the Campaign is lost when it reaches the Panic limit.                                                                                                           |
 | Panic limit          | The Panic at which the Campaign is lost: the value of `defeat_at_panic_pct` in the EndingParameters Game Data Record (GDR).                                                                                 |
 | Pending panic change | The sum of every Panic increase minus every Panic reduction that the rules of the earlier Turn advancement steps of one Advance turn have added so far, which the Turn advancement step Panic then applies. |
-
-## Campaign endings
-
-How a Campaign finishes, and why.
-
-| Term            | Definition                                                                                                                                                                                           |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign ending | How a Campaign finished: Victory or Defeat. A Campaign without one is still being played.                                                                                                            |
-| Ending reason   | A condition that held when a Campaign ending was recorded and caused it: Every Faction Eliminated, Panic at the limit, or Money below zero. Each is defined under [Ending reasons](#ending-reasons). |
+| Ending reason        | A condition that held when a Campaign ending was recorded and caused it: Every Faction Eliminated, Panic at the limit, or Money below zero. Each is defined under [Ending reasons](#ending-reasons).        |
 
 # Panic and Campaign ending state
 

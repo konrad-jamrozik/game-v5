@@ -38,15 +38,15 @@ boundary that keeps every channel of Player API from revealing what its queries 
 
 [Campaign State](campaign-state.md) answers _what is a Campaign's data made of?_ It divides Campaign state into World
 state, with its Current world state and World history, and Campaign configuration, and says how Campaign initialization
-produces the first Campaign state. It refines Engine Contract's Data ownership, which places Campaign state among the
-data the engine keeps. It stays generic: the rules would hold for any game built on this engine.
+produces the first Campaign state. It refines Core Concepts, which names Campaign state and leaves its components to
+Campaign State. It stays generic: the rules would hold for any game built on this engine.
 
 ## Campaign Instances
 
 [Campaign Instances](campaign-instances.md) answers _how is one thing in a Campaign's world modeled?_ Every such thing
 is a Campaign instance with the same four properties, created with a fresh Instance ID, referenced only through valid
-references, and able to adopt Role Types. It builds on Campaign State, which places every Campaign instance in World
-state.
+references, and able to adopt Role Types. It refines Core Concepts, which names the Campaign instance, and builds on
+Campaign State, which places every Campaign instance in World state.
 
 ## World History
 
@@ -110,10 +110,10 @@ Mechanics specification owns the distributions of its own random outcomes.
 # How they relate
 
 Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem, and Player
-API builds on it for what the player sees and does. Campaign
-State refines its Data ownership; Campaign Instances builds on Campaign State, and World History refines it. Numbers stands alone and is used by Mechanics. Campaign
+API builds on it for what the player sees and does. Campaign State and Campaign Instances refine Core Concepts;
+Campaign Instances builds on Campaign State, and World History refines it. Numbers stands alone and is used by Mechanics. Campaign
 Lifecycle, Saves, Timeline, Configuration, Autopilot, Developer Access, Determinism and Randomness, and Numbers each
-own one engine subsystem outright, and all but Numbers use Engine Contract; Timeline also uses Saves. Game Data
+own one engine subsystem outright, and all but Numbers use Engine Contract; Timeline also refines Saves, which leaves one further Autosave to it. Game Data
 Records builds on Campaign State and Campaign Instances. No Foundation specification depends on a Mechanics specification; the
 [Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base and Turn
 Advancement, the owner of the Turn advancement engine subsystem, as its tip.

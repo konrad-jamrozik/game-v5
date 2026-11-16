@@ -26,7 +26,7 @@ Committed state as the Campaign first reached it, so play continued from there u
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
-- Uses [Saves](./saves.md)
+- Refines [Saves](./saves.md)
 - Used by [Autopilot](./autopilot.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Developer Access](./developer-access.md)

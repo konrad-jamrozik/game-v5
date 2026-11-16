@@ -23,8 +23,8 @@ with, of which play may adjust only a few. Every thing in the world, e.g. an Age
 
 # Relationships
 
-- Uses [Core Concepts](./core-concepts.md)
-- Refines [Engine Contract](./engine-contract.md)
+- Uses [Engine Contract](./engine-contract.md)
+- Refines [Core Concepts](./core-concepts.md)
 - Used by [Campaign Instances](./campaign-instances.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
@@ -38,7 +38,7 @@ with, of which play may adjust only a few. Every thing in the world, e.g. an Age
 # Glossary
 
 These terms are specific to Campaign State. General terms are in the [Core Concepts glossary](core-concepts.md#glossary);
-terms about Campaign instances are in the [Campaign Instances glossary](campaign-instances.md#glossary), and terms about
+terms about Campaign instances are in the Core Concepts and [Campaign Instances](campaign-instances.md#glossary) glossaries, and terms about
 the retained past in the [World History glossary](world-history.md#glossary).
 
 | Term                   | Definition                                                                                                                                                                                                                                                 | Prohibited synonyms                                                                                                                                                                                                                                                                  |

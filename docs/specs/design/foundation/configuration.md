@@ -40,7 +40,6 @@ These terms are specific to Configuration. General terms are in the
 
 | Term                          | Definition                                                                                                                                                                                                        |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Game build default            | The value the Game build supplies for a Global configuration setting when nothing overrides it.                                                                                                                   |
 | Campaign configuration preset | A GDR supplying a value for every Campaign configuration value, from which campaign creation obtains the initial Campaign configuration, under [Campaign configuration presets](#campaign-configuration-presets). |
 | Game build default preset     | The one Campaign configuration preset that the Game build designates as selected when the player has selected no other.                                                                                           |
 | Preset edit                   | A value the player sets before creating a Campaign to override one Campaign configuration value of one Campaign configuration preset. The Session holds it.                                                       |

@@ -105,9 +105,7 @@ complete:
   [Determinism](#determinism).
 - **Fixed:** The Campaign seed never changes after creation. No action, Timeline navigation, save, or load changes it.
 - **Kept:** The Campaign seed is Campaign state; [Campaign state composition](campaign-state.md#campaign-state-composition)
-  in Campaign State places it in Current world state. It is not Campaign configuration, because no Campaign
-  configuration preset supplies it, and it is not part of the new-Campaign setup. Every Campaign save therefore holds
-  it.
+  in Campaign State places it in Current world state. Every Campaign save therefore holds it.
 - **Readable:** `session.getStatus()` reports the Campaign seed of the Current campaign to the Session controller,
   in every Dev mode setting and whether it was supplied or chosen, in a form `create(options)` accepts; e.g., the
   Session controller can share it or create another Campaign with it.

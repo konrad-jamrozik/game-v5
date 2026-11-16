@@ -23,9 +23,9 @@ instance in World state.
 # Relationships
 
 - Uses [Campaign State](./campaign-state.md)
-- Uses [Core Concepts](./core-concepts.md)
 - Uses [Determinism and Randomness](./determinism-and-randomness.md)
 - Uses [Engine Contract](./engine-contract.md)
+- Refines [Core Concepts](./core-concepts.md)
 - Used by [Developer Access](./developer-access.md)
 - Used by [Domain Model](../mechanics/domain-model.md)
 - Used by [Game Data Records](./game-data-records.md)
@@ -34,17 +34,13 @@ instance in World state.
 
 # Glossary
 
-These terms are specific to Campaign Instances. General terms are in the [Core Concepts glossary](core-concepts.md#glossary)
+These terms are specific to Campaign Instances. Campaign instance, Archetype, State, Constants, and other general terms are in the [Core Concepts glossary](core-concepts.md#glossary)
 and the [Campaign State glossary](campaign-state.md#glossary).
 
-| Term              | Definition                                                                                                                                                                                                                                                 | Prohibited synonyms                                                                                                                                    |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Campaign instance | A particular occurrence within a Campaign of a declared Type, with Instance ID, an Archetype reference, Constants, and State.                                                                                                                              | Instance; occurrence; Campaign instance kind, for which say Campaign instance Type. Explaining what an occurrence means in a definition remains valid. |
-| Instance ID       | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary).                                            | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names.                                                                  |
-| Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. | Template; EnemyType; EnemyKind, for which say EnemyArchetype                                                                                           |
-| State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       | MutableState; Instance state that does not separate State from Constants; Changeable reference, for which say Mutable reference                        |
-| Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     | ImmutableState; Fixed reference, for which say Immutable reference                                                                                     |
-| Role Type         | A Type that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration.                                                              |                                                                                                                                                        |
+| Term        | Definition                                                                                                                                                                                                      | Prohibited synonyms                                                                   |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Instance ID | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime. It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary). | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names. |
+| Role Type   | A Type that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration.                   |                                                                                       |
 
 # Campaign instance structure
 

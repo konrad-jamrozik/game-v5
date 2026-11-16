@@ -65,6 +65,7 @@ Applies to every specification.
   - [One kind per pair](../specs/governance/conventions/artifact-relationships.md#one-kind-per-pair)
 - [Links that create no relationship](../specs/governance/conventions/artifact-relationships.md#links-that-create-no-relationship)
 - [Relationship graphs](../specs/governance/conventions/artifact-relationships.md#relationship-graphs) — **linted**
+  - [Real and apparent dependencies](../specs/governance/conventions/artifact-relationships.md#real-and-apparent-dependencies)
 - [Recording relationships](../specs/governance/conventions/artifact-relationships.md#recording-relationships)
 - [Implicit relationships](../specs/governance/conventions/artifact-relationships.md#implicit-relationships)
 - [Relationship inventories](../specs/governance/conventions/artifact-relationships.md#relationship-inventories) — **linted**

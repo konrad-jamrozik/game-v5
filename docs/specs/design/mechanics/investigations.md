@@ -36,11 +36,7 @@ assigned elsewhere becomes Abandoned, and a later Investigation of the same Lead
 
 # Glossary
 
-These terms are specific to Investigations. General terms are in the [Domain Model glossary](domain-model.md#glossary).
-
-| Term                   | Definition                                                                    |
-| ---------------------- | ----------------------------------------------------------------------------- |
-| Investigation progress | The work a team has done on an Investigation so far, counted in skill points. |
+Investigation progress and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
 
 The Investigation states Active, Completed, and Abandoned are defined by the state table under
 [Investigation lifecycle](#investigation-lifecycle).

@@ -65,7 +65,8 @@ The player-controlled organization, its Agents, what each Agent is doing, and wh
 
 ## Leads, Investigations, Mission sites, and Missions
 
-The work the Agency discovers and undertakes.
+The work the Agency discovers and undertakes. [Investigations](investigations.md) states how Investigation progress
+grows, and [Leads and Progression](leads-and-progression.md) states when a Lead is available.
 
 | Term                    | Definition                                                                                                                                                                          | Prohibited synonyms                                                                                                                                                                                           |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -79,6 +80,8 @@ The work the Agency discovers and undertakes.
 | Response Mission        | A Mission at a Response Mission site.                                                                                                                                               |                                                                                                                                                                                                               |
 | Consequences            | What a Mission site and its Mission change in the Campaign once they reach a final state, e.g. the money a Won Mission brings or the Panic an ignored Response Mission site raises. | Rewards and penalties                                                                                                                                                                                         |
 | Current team            | The Agents currently assigned to a given Investigation or Mission.                                                                                                                  |                                                                                                                                                                                                               |
+| Investigation progress  | The work a team has done on an Investigation so far, counted in skill points.                                                                                                       |                                                                                                                                                                                                               |
+| Lead availability       | Whether a Lead may be investigated, as far as its prerequisites, its own earlier results, and its Faction allow.                                                                    |                                                                                                                                                                                                               |
 
 ## Combat
 
@@ -100,6 +103,16 @@ The opposing organizations and their operations.
 | ---------------------------- | -------------------------------------------------------------------------------- | ------------------- |
 | Faction                      | An organization that opposes the Agency and carries out operations in the world. |                     |
 | Faction operation occurrence | One operation carried out by a Faction, which creates one Response Mission site. |                     |
+
+## Campaign standing
+
+How the Campaign as a whole stands, which no single concept owns. [Panic and Endings](panic-and-endings.md) states how
+each changes.
+
+| Term            | Definition                                                                                 | Prohibited synonyms |
+| --------------- | ------------------------------------------------------------------------------------------ | ------------------- |
+| Panic           | How alarmed the public is, from 0% to 100%; the Campaign is lost when it gets high enough. |                     |
+| Campaign ending | How a Campaign finished: Victory or Defeat. A Campaign without one is still being played.  |                     |
 
 # Game concepts
 
@@ -176,8 +189,7 @@ operation occurrence that spans several Mission sites, or that has no Response M
 
 # Campaign and Agency
 
-A Campaign contains one Agency, the current Turn, [Panic](panic-and-endings.md#glossary) and the
-[Campaign ending](panic-and-endings.md#glossary), Agents, Factions,
+A Campaign contains one Agency, the current Turn, Panic and the Campaign ending, Agents, Factions,
 Investigations, Mission sites, and Missions. Campaign-wide properties, e.g. the current Turn and Panic, belong directly to Campaign state, not to the
 Agency.
 

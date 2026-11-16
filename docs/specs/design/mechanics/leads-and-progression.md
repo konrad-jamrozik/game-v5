@@ -37,13 +37,12 @@ Eliminated.
 
 # Glossary
 
-These terms are specific to Leads. General terms are in the [Domain Model glossary](domain-model.md#glossary).
+These terms are specific to Leads. Lead availability and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
 
-| Term               | Definition                                                                                                       |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| Lead difficulty    | How hard a Lead is to investigate.                                                                               |
-| Lead availability  | Whether a Lead may be investigated, as far as its prerequisites, its own earlier results, and its Faction allow. |
-| Blocking condition | A condition of Lead availability that does not hold for a Lead and so makes the Lead not available.              |
+| Term               | Definition                                                                                          |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| Lead difficulty    | How hard a Lead is to investigate.                                                                  |
+| Blocking condition | A condition of Lead availability that does not hold for a Lead and so makes the Lead not available. |
 
 # Lead GDRs
 

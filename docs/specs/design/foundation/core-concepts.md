@@ -23,9 +23,7 @@ every value is either an Authoritative value, kept as a fact, or a Derived value
 
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Autopilot](./autopilot.md)
-- Used by [Campaign Instances](./campaign-instances.md)
 - Used by [Campaign Lifecycle](./campaign-lifecycle.md)
-- Used by [Campaign State](./campaign-state.md)
 - Used by [Combat](../mechanics/combat.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
@@ -46,6 +44,8 @@ every value is either an Authoritative value, kept as a fact, or a Derived value
 - Used by [Timeline](./timeline.md)
 - Used by [Turn Advancement](../mechanics/turn-advancement.md)
 - Used by [World History](./world-history.md)
+- Refined by [Campaign Instances](./campaign-instances.md)
+- Refined by [Campaign State](./campaign-state.md)
 
 # Glossary
 
@@ -58,6 +58,18 @@ Language-independent vocabulary for describing model data.
 | Type     | A named description of the structure and permitted values of data. A Type may be composed of other Types through properties, collections, unions, or references. Similar to a type declaration in a programming language. | Schema; programming-language type; Definition, as a modeling category. API and serialization schemas, actual programming-language declarations, explanatory language analogies, and the definition of a term remain valid. |
 | Property | A named component of a structured Type, with an associated Type. Similar to a property of an object type in a programming language.                                                                                       | Field; member; key. Unrelated uses, e.g. a lookup key, remain valid.                                                                                                                                                       |
 
+## Campaign instances
+
+The occurrences within a Campaign that make up most of its Campaign state. [Campaign Instances](campaign-instances.md)
+states their structure, creation, identity, and references.
+
+| Term              | Definition                                                                                                                                                                                                                                                 | Prohibited synonyms                                                                                                                                    |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Campaign instance | A particular occurrence within a Campaign of a declared Type, with an identifier, an Archetype reference, Constants, and State.                                                                                                                            | Instance; occurrence; Campaign instance kind, for which say Campaign instance Type. Explaining what an occurrence means in a definition remains valid. |
+| Archetype         | A GDR referenced by a Campaign instance, supplying shared characteristics and initial values. It is shared immutable data, never instantiated; the Campaign instance’s Archetype reference is set when the Campaign instance is created and never changes. | Template; EnemyType; EnemyKind, for which say EnemyArchetype                                                                                           |
+| State             | Values owned by this Campaign instance that may change under gameplay rules. State is specific to this Campaign instance and is distinct from Campaign state, which describes the whole playthrough.                                                       | MutableState; Instance state that does not separate State from Constants; Changeable reference, for which say Mutable reference                        |
+| Constants         | Values owned by this Campaign instance that remain fixed for its lifetime. A reference stored in Constants has a fixed target; it does not require the target’s State to remain fixed.                                                                     | ImmutableState; Fixed reference, for which say Immutable reference                                                                                     |
+
 ## Game build and content
 
 What a version of the game supplies: shared by every Campaign and unchanged during play.
@@ -69,7 +81,7 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 
 ## Campaign and Session
 
-A playthrough, its data, and the runtime context that selects it. Campaign State owns how Campaign state
+A playthrough, its data, and the runtime context that selects it. [Campaign State](campaign-state.md) states how Campaign state
 divides into components.
 
 | Term           | Definition                                                                                                                          | Prohibited synonyms                                                                          |
@@ -111,8 +123,8 @@ or a value of Campaign state defined by its initial value and the changes game b
 is defined by a formula over the Authoritative values of one Campaign state and of GDRs.
 
 The formula of a Derived value uses only one Campaign state, as it is at one moment. It never uses an earlier
-Campaign state or the Player actions that led to the current one. The game is deterministic, so replaying a Campaign's
-Player actions from its start would reproduce every value; that does not make a value a Derived value. E.g., an Agent's
+Campaign state or the changes that led to the current one. The game is deterministic, so replaying a Campaign from
+its start would reproduce every value; that does not make a value a Derived value. E.g., an Agent's
 base skill is an Authoritative value although replaying the Campaign would reproduce it, because no formula over the
 current Campaign state defines it.
 

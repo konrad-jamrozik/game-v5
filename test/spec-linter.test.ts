@@ -1519,6 +1519,11 @@ describe('relationship evidence', () => {
     expect(evidence(widgetCorpus('', '', 'Things are counted, e.g. a Widget. Counting is exact.'))).toEqual([])
   })
 
+  test('ignores every sentence of a paragraph that opens with "E.g."', () => {
+    const rule = 'Counting is exact.\n\nE.g., two things are counted. The second is a Widget.'
+    expect(evidence(widgetCorpus('', '', rule))).toEqual([])
+  })
+
   test('reports a recorded uses that the Normative text does not show', () => {
     expect(
       evidence(widgetCorpus('- Used by [Beta](beta.md)', '- Uses [Alpha](alpha.md)', 'Counting is exact.')),

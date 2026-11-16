@@ -48,8 +48,7 @@ Current campaign and Dev mode disabled.
 
 ![Campaign lifecycle: a Session starts with no Current campaign, create or load selects one, close removes it, and the Session ends when the game exits](../../../images/diagrams/campaign-lifecycle.svg)
 
-`session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status. It also
-reports the Campaign seed, under [Campaign seed](determinism-and-randomness.md#campaign-seed).
+`session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status.
 
 # Campaign selection
 

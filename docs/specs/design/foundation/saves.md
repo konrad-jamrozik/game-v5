@@ -29,7 +29,7 @@ that a different Game build wrote and that can no longer be loaded.
 - Uses [Engine Contract](./engine-contract.md)
 - Uses [Player API](./player-api.md)
 - Used by [Storage Schema](../../implementation/guidance/storage-schema.md)
-- Used by [Timeline](./timeline.md)
+- Refined by [Timeline](./timeline.md)
 
 # Glossary
 
@@ -129,8 +129,7 @@ The following list of Autosaves is complete.
 | Turn-end Autosave   | When an Advance turn commits outside an Autopilot engagement                                                   | The Turn-end state of the Turn that Advance turn ends        | One for each of the most recent Turns, up to the Autosave limit |
 | Engagement Autosave | When Autopilot is engaged                                                                                      | The Committed state in which the Autopilot engagement begins | One for each Campaign                                           |
 
-The Return Autosave is one further Autosave, and Autosaves of play the player has abandoned are removed, under
-[Autosave navigation](timeline.md#autosave-navigation).
+[Timeline](timeline.md) states one further Autosave, and when Autosaves of abandoned play are removed.
 
 The following rules are complete.
 

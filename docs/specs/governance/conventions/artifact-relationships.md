@@ -175,6 +175,24 @@ A cycle in the combined `uses` and `refines` graph shows a term or a rule in the
 moving the term to the specification that the others in the cycle build on, or by moving the rule that applies it to a
 specification that builds on the term's owner; it is never resolved by dropping a relationship the text creates.
 
+## Real and apparent dependencies
+
+Before moving anything, decide whether the sentence that applies the term creates a real dependency. Remove the
+sentence in thought and ask what the specifications then no longer state:
+
+1. **A rule is lost or becomes vaguer:** the dependency is real. Keep the sentence and resolve the cycle by moving the
+   term or the rule. Rewording the sentence so that it avoids the term while it still needs what the term means is
+   not a resolution; it hides the dependency.
+2. **Nothing is lost, because another specification states the same rule:** the sentence is a duplicate. Remove it
+   from the specification the rule does not belong to and keep the statement in the one whose subject the rule is
+   about, e.g. a rule about what a preset supplies belongs to the specification that owns presets, not to one that
+   only mentions a value no preset supplies.
+3. **Nothing is lost, because the sentence only illustrates a general rule:** the sentence is an example that lacks
+   its "e.g.". Mark it, under [Marking examples](spec-conventions.md#marking-examples); an example is not Normative
+   text, so it creates no relationship.
+
+Only the second and third outcomes remove a relationship, and only because the text never created one.
+
 The combined DAG places each specification in a layer: a specification's layer is one after the latest layer among the
 specifications it uses or refines, and a specification depending on none is in the first layer.
 
@@ -295,21 +313,24 @@ check links, and validate the graphs. Do not invent implementation or test relat
 
 # Edge cases and failure behavior
 
-| Case                                                                     | Required result                                                                                                         |
-| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| A depends on B                                                           | Record `B → A`; B is the Dependency and A is the Dependent                                                              |
-| `follows` and another Relationship kind connect the same artifacts       | Keep both when they express distinct reliance                                                                           |
-| A both refines B and applies B's terms                                   | Record only `refines`                                                                                                   |
-| Only implicit relationships apply                                        | Omit the Relationships section                                                                                          |
-| Explicit relationships exist                                             | List all explicit relationships; omit implicit ones                                                                     |
-| No explicit relationships exist                                          | Omit the Relationships section                                                                                          |
-| One mirrored entry is missing or disagrees                               | Treat the inventory as defective and update both entries                                                                |
-| No implementation or test has been identified                            | Do not invent an `implements` or `verifies` relationship                                                                |
-| A requirement moves                                                      | Update both entries, links, and requirement references in contract prose                                                |
-| A referenced specification still has `TODO:` items                       | Record concrete unresolved contract work without inferring missing rules                                                |
-| A specification points to the owner of a term another specification owns | Record nothing; it is a Pointer under [Pointers that create no relationship](#pointers-that-create-no-relationship)     |
-| A specification applies a term owned by a specification that uses it     | Treat the Cycle as a misplaced term or rule and move it, under [Relationship graphs](#relationship-graphs)              |
-| A work-plan row orders reviews                                           | Record nothing; it is process information under [Links that create no relationship](#links-that-create-no-relationship) |
+| Case                                                                          | Required result                                                                                                         |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| A depends on B                                                                | Record `B → A`; B is the Dependency and A is the Dependent                                                              |
+| `follows` and another Relationship kind connect the same artifacts            | Keep both when they express distinct reliance                                                                           |
+| A both refines B and applies B's terms                                        | Record only `refines`                                                                                                   |
+| Only implicit relationships apply                                             | Omit the Relationships section                                                                                          |
+| Explicit relationships exist                                                  | List all explicit relationships; omit implicit ones                                                                     |
+| No explicit relationships exist                                               | Omit the Relationships section                                                                                          |
+| One mirrored entry is missing or disagrees                                    | Treat the inventory as defective and update both entries                                                                |
+| No implementation or test has been identified                                 | Do not invent an `implements` or `verifies` relationship                                                                |
+| A requirement moves                                                           | Update both entries, links, and requirement references in contract prose                                                |
+| A referenced specification still has `TODO:` items                            | Record concrete unresolved contract work without inferring missing rules                                                |
+| A specification points to the owner of a term another specification owns      | Record nothing; it is a Pointer under [Pointers that create no relationship](#pointers-that-create-no-relationship)     |
+| A specification applies a term owned by a specification that uses it          | Treat the Cycle as a misplaced term or rule and move it, under [Relationship graphs](#relationship-graphs)              |
+| The sentence that closes a Cycle restates a rule another specification states | Remove the restatement, under [Real and apparent dependencies](#real-and-apparent-dependencies)                         |
+| The sentence that closes a Cycle only illustrates a general rule              | Mark it as an example, under [Real and apparent dependencies](#real-and-apparent-dependencies)                          |
+| The sentence that closes a Cycle needs the term to state its rule             | Keep it and move the term or rule; never reword it to avoid the term                                                    |
+| A work-plan row orders reviews                                                | Record nothing; it is process information under [Links that create no relationship](#links-that-create-no-relationship) |
 
 # Acceptance examples
 

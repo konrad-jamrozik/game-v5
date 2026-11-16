@@ -87,6 +87,11 @@ interface Container {
 interface PointerContext {
   /** Specification titles, longest first, as one alternation; "in Saves" names where a linked section is. */
   readonly titles: RegExp
+  /**
+   * Titles spelled differently from every term, e.g. "Campaign State" beside the term "Campaign state". Such a title
+   * names a specification, so the words in it are not scanned as terms.
+   */
+  readonly titlesThatAreNotTerms: RegExp
   readonly terms: ReadonlySet<string>
 }
 
@@ -188,10 +193,14 @@ function normativeText(
       const parts: string[] = []
       flattenInline(container.node, spans, parts, { value: 0 })
       const text = parts.join('')
-      const examples = [...text.matchAll(EXAMPLE_CLAUSE)].map((match) => ({
-        start: match.index,
-        end: match.index + match[0].length,
-      }))
+      // A paragraph that opens with "E.g." is one example, however many sentences it runs to.
+      const wholeExample = container.node.type === 'paragraph' && /^\s*e\.g\./i.test(text)
+      const examples = wholeExample
+        ? [{ start: 0, end: text.length }]
+        : [...text.matchAll(EXAMPLE_CLAUSE)].map((match) => ({
+            start: match.index,
+            end: match.index + match[0].length,
+          }))
       for (const span of spans) {
         if (examples.some((example) => span.start >= example.start && span.start < example.end)) continue
         if (isExternalUrl(span.url)) continue
@@ -200,7 +209,9 @@ function normativeText(
         const resolved = resolvePath(specification.path, path)
         if (resolved !== specification.path && specificationPaths.has(resolved)) linkedPaths.add(resolved)
       }
-      if (container.scan) texts.push(text.replace(EXAMPLE_CLAUSE, ' '))
+      if (container.scan && !wholeExample) {
+        texts.push(text.replace(EXAMPLE_CLAUSE, ' ').replace(context.titlesThatAreNotTerms, ' '))
+      }
     }
   }
   return { text: texts.join('\n'), linkedPaths }
@@ -235,11 +246,22 @@ export function findRelationshipEvidence(input: EvidenceInput): readonly Evidenc
   const familyByPath = new Map(input.specifications.map((specification) => [specification.path, specification.family]))
   const ownerByTerm = new Map(input.glossary.map((entry) => [normalizeTerm(entry.term), entry.ownerPath]))
   const pattern = termPattern(input.glossary.map((entry) => entry.term))
-  const titles = input.specifications
-    .map((specification) => escapeRegExp(specification.title))
-    .toSorted((left, right) => right.length - left.length)
+  // An empty alternation would match everywhere, so no values match nothing.
+  const wordsOf = (values: readonly string[]): RegExp =>
+    values.length === 0
+      ? /(?!)/gu
+      : new RegExp(
+          `(?<![\\p{L}\\p{N}])(?:${values
+            .toSorted((left, right) => right.length - left.length)
+            .map(escapeRegExp)
+            .join('|')})(?![\\p{L}\\p{N}])`,
+          'gu',
+        )
+  const titles = input.specifications.map((specification) => specification.title)
+  const spelledTerms = new Set(input.glossary.map((entry) => entry.term))
   const context: PointerContext = {
-    titles: new RegExp(`(?<![\\p{L}\\p{N}])(?:${titles.join('|')})(?![\\p{L}\\p{N}])`, 'gu'),
+    titles: wordsOf(titles),
+    titlesThatAreNotTerms: wordsOf(titles.filter((title) => !spelledTerms.has(title))),
     terms: new Set(ownerByTerm.keys()),
   }
 
