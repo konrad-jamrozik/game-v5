@@ -14,7 +14,7 @@ follow it, and let it win when this skill disagrees.
 
 ## Workflow
 
-Every change to the Spec repo follows [Spec repo changes in a worktree](../../../AGENTS.md#spec-repo-changes-in-a-worktree) in the repository's `AGENTS.md`: its worktree, its Gate 1 plan Artifact,
+Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its Gate 1 plan Artifact,
 its Gate 2 local diff, and its handling of push conflicts.
 
 0. Create the Spec repo worktree, under step 1 of Spec repo changes in a worktree, before reading any specification.
