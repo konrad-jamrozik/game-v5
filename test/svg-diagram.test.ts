@@ -2,20 +2,21 @@ import { resolve } from 'node:path'
 
 import { describe, expect, test } from 'vitest'
 
-import { runDerivedDocumentation, type DerivedDocsIO } from '../scripts/derived-docs.ts'
+import {
+  checkDerivedOutputs,
+  renderDerivedOutputs,
+  runDerivedDocumentation,
+  type DerivedDocsIO,
+} from '../scripts/derived-docs.ts'
 import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
 import {
   isGeneratedDiagramFilePath,
-  renderDerivedDiagramFiles,
-  renderDerivedDocumentation,
   renderFamilyDiagram,
   renderFamilyDiagramFiles,
 } from '../scripts/spec-docs/generator.ts'
 import { computeFamilyArchitecture, renderFamilyArchitecture } from '../scripts/spec-docs/family-architecture.ts'
-import { renderReviewChecklist } from '../scripts/spec-docs/review-checklist.ts'
 import { computeStackLayout, renderStackDiagram } from '../scripts/spec-docs/stack-diagram.ts'
 import { computeLayers, renderSvgDiagram, type DiagramInput } from '../scripts/spec-docs/svg-diagram.ts'
-import { analyzeSpecifications } from '../scripts/spec-linter/linter.ts'
 import type {
   RelationshipKind,
   RelationshipRecord,
@@ -250,42 +251,31 @@ describe('family SVG diagrams', () => {
   test('check mode reports a stale, a missing, and an unexpected diagram file', async () => {
     const root = process.cwd()
     const files = await collectMarkdownFiles(root, resolve(root, 'docs'))
-    const analysis = analyzeSpecifications({ files })
-    const derived = new Map([
-      ...(await renderDerivedDocumentation(analysis.corpus, PRETTIER_OPTIONS)),
-      ...renderDerivedDiagramFiles(analysis.corpus),
-    ])
-    const fileSources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
-    for (const [path, content] of await renderReviewChecklist(analysis.corpus, fileSources, PRETTIER_OPTIONS)) {
-      derived.set(path, content)
-    }
-    const diagrams = renderFamilyDiagramFiles(analysis.corpus, fileSources)
+    const rendered = await renderDerivedOutputs(files, PRETTIER_OPTIONS)
+    if ('findings' in rendered) throw new Error(rendered.findings.join('\n'))
+    const onDisk = new Map([...rendered.expected].filter(([path]) => !rendered.overviews.has(path)))
     const within = 'docs/images/mechanics-family-within-uses.svg'
     const across = 'docs/images/mechanics-family-across.svg'
-    expect(diagrams.has(within) && diagrams.has(across)).toBe(true)
-    const run = async (actualOutputs: ReadonlyMap<string, string>): Promise<readonly string[]> => {
-      const errors: string[] = []
-      const io: DerivedDocsIO = {
-        actualOutputs,
-        writeOutputs: () => Promise.resolve(),
-        writeError: (message) => errors.push(message),
-      }
-      await runDerivedDocumentation(files, ['check'], io, PRETTIER_OPTIONS)
-      return errors
+    expect(onDisk.has(within) && onDisk.has(across)).toBe(true)
+    const errors: string[] = []
+    const io: DerivedDocsIO = {
+      actualOutputs: onDisk,
+      writeOutputs: () => Promise.resolve(),
+      writeError: (message) => errors.push(message),
     }
-    expect(await run(new Map([...derived, ...diagrams]))).toEqual([])
-    expect(await run(new Map([...derived, ...diagrams, [within, '<svg/>']]))).toEqual([
+    expect(await runDerivedDocumentation(files, ['check'], io, PRETTIER_OPTIONS)).toBe(0)
+    expect(errors).toEqual([])
+    expect(checkDerivedOutputs(rendered, new Map([...onDisk, [within, '<svg/>']]))).toEqual([
       `${within}: generated documentation is stale; run npm run docs:generate.`,
     ])
-    const withoutAcross = [...diagrams].filter(([path]) => path !== across)
-    expect(await run(new Map([...derived, ...withoutAcross]))).toEqual([
+    expect(checkDerivedOutputs(rendered, new Map([...onDisk].filter(([path]) => path !== across)))).toEqual([
       `${across}: generated documentation is missing; run npm run docs:generate.`,
     ])
     const extra = 'docs/images/old-family-within.svg'
-    expect(await run(new Map([...derived, ...diagrams, [extra, '<svg/>']]))).toEqual([
+    expect(checkDerivedOutputs(rendered, new Map([...onDisk, [extra, '<svg/>']]))).toEqual([
       `${extra}: unexpected generated documentation file; remove or relocate it.`,
     ])
-  }, 60_000)
+  }, 30_000)
 })
 
 describe('specification stack diagram', () => {

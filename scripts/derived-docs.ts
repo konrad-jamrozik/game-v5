@@ -107,6 +107,73 @@ export function derivedLinkFindings(
   return findings.toSorted()
 }
 
+export interface DerivedOutputs {
+  readonly expected: ReadonlyMap<string, string>
+  readonly overviews: ReadonlyMap<string, string>
+  readonly sources: ReadonlyMap<string, string>
+}
+
+/** Renders every derived output, or returns the findings that prevent rendering a consistent set. */
+export async function renderDerivedOutputs(
+  files: readonly SourceFile[],
+  prettierOptions: Options = {},
+): Promise<DerivedOutputs | { readonly findings: readonly string[] }> {
+  const analysis = analyzeSpecifications({ files })
+  if (analysis.diagnostics.length > 0) return { findings: analysis.diagnostics.map(formatDiagnostic) }
+  const sources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
+  const overviews = await renderFamilyOverviews(analysis.corpus, sources, prettierOptions)
+  const checklist = await renderReviewChecklist(analysis.corpus, sources, prettierOptions)
+  const expectedMarkdown = new Map([
+    ...(await renderDerivedDocumentation(analysis.corpus, prettierOptions)),
+    ...overviews,
+    ...checklist,
+  ])
+  const expected = new Map([
+    ...expectedMarkdown,
+    ...renderDerivedDiagramFiles(analysis.corpus),
+    ...renderFamilyDiagramFiles(analysis.corpus, sources),
+  ])
+  const linkFindings = derivedLinkFindings(files, expectedMarkdown)
+  if (linkFindings.length > 0) return { findings: linkFindings }
+  const sectionDiagnostics = lintSectionReferences(
+    {
+      files: [
+        ...files.filter(
+          (file) => !file.path.startsWith('docs/derived/') && !overviews.has(file.path.replace(/\\/g, '/')),
+        ),
+        ...[...expectedMarkdown].map(([path, content]) => ({ path, content })),
+      ],
+    },
+    true,
+  )
+  if (sectionDiagnostics.length > 0) return { findings: sectionDiagnostics.map(formatDiagnostic) }
+  return { expected, overviews, sources }
+}
+
+function unexpectedOutputFindings(
+  expected: ReadonlyMap<string, string>,
+  actualOutputs: ReadonlyMap<string, string>,
+): readonly string[] {
+  return [...actualOutputs.keys()]
+    .filter((path) => !expected.has(path))
+    .toSorted()
+    .map((path) => `${path}: unexpected generated documentation file; remove or relocate it.`)
+}
+
+/** Compares rendered outputs with the files on disk; unexpected files are reported before stale or missing ones. */
+export function checkDerivedOutputs(
+  outputs: DerivedOutputs,
+  actualOutputs: ReadonlyMap<string, string>,
+): readonly string[] {
+  const unexpected = unexpectedOutputFindings(outputs.expected, actualOutputs)
+  if (unexpected.length > 0) return unexpected
+  const actual = new Map([
+    ...actualOutputs,
+    ...[...outputs.overviews.keys()].map((path) => [path, outputs.sources.get(path) ?? ''] as const),
+  ])
+  return derivedOutputFindings(outputs.expected, actual)
+}
+
 export async function runDerivedDocumentation(
   files: readonly SourceFile[],
   arguments_: readonly string[],
@@ -119,60 +186,21 @@ export async function runDerivedDocumentation(
     return 2
   }
   try {
-    const analysis = analyzeSpecifications({ files })
-    if (analysis.diagnostics.length > 0) {
-      for (const diagnostic of analysis.diagnostics) io.writeError(formatDiagnostic(diagnostic))
-      return 1
-    }
-    const sources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
-    const overviews = await renderFamilyOverviews(analysis.corpus, sources, prettierOptions)
-    const checklist = await renderReviewChecklist(analysis.corpus, sources, prettierOptions)
-    const expectedMarkdown = new Map([
-      ...(await renderDerivedDocumentation(analysis.corpus, prettierOptions)),
-      ...overviews,
-      ...checklist,
-    ])
-    const expected = new Map([
-      ...expectedMarkdown,
-      ...renderDerivedDiagramFiles(analysis.corpus),
-      ...renderFamilyDiagramFiles(analysis.corpus, sources),
-    ])
-    const linkFindings = derivedLinkFindings(files, expectedMarkdown)
-    if (linkFindings.length > 0) {
-      for (const finding of linkFindings) io.writeError(finding)
-      return 1
-    }
-    const sectionDiagnostics = lintSectionReferences(
-      {
-        files: [
-          ...files.filter(
-            (file) => !file.path.startsWith('docs/derived/') && !overviews.has(file.path.replace(/\\/g, '/')),
-          ),
-          ...[...expectedMarkdown].map(([path, content]) => ({ path, content })),
-        ],
-      },
-      true,
-    )
-    if (sectionDiagnostics.length > 0) {
-      for (const diagnostic of sectionDiagnostics) io.writeError(formatDiagnostic(diagnostic))
-      return 1
-    }
-    const unexpected = [...io.actualOutputs.keys()].filter((path) => !expected.has(path)).toSorted()
-    if (unexpected.length > 0) {
-      for (const path of unexpected) {
-        io.writeError(`${path}: unexpected generated documentation file; remove or relocate it.`)
-      }
+    const rendered = await renderDerivedOutputs(files, prettierOptions)
+    if ('findings' in rendered) {
+      for (const finding of rendered.findings) io.writeError(finding)
       return 1
     }
     if (mode === 'generate') {
-      await io.writeOutputs(expected)
+      const unexpected = unexpectedOutputFindings(rendered.expected, io.actualOutputs)
+      if (unexpected.length > 0) {
+        for (const finding of unexpected) io.writeError(finding)
+        return 1
+      }
+      await io.writeOutputs(rendered.expected)
       return 0
     }
-    const actual = new Map([
-      ...io.actualOutputs,
-      ...[...overviews.keys()].map((path) => [path, sources.get(path) ?? ''] as const),
-    ])
-    const findings = derivedOutputFindings(expected, actual)
+    const findings = checkDerivedOutputs(rendered, io.actualOutputs)
     for (const finding of findings) io.writeError(finding)
     return findings.length === 0 ? 0 : 1
   } catch (error: unknown) {
