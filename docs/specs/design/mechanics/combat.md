@@ -47,14 +47,17 @@ about skill, current health, exhaustion, and weapon damage are in the [Agents gl
 
 How a Combat is divided, and how it ends.
 
-| Term           | Definition                                                                                                                                                | Prohibited synonyms                        |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                 | Round, naming a pass of a Combat           |
-| Agents' phase  | The first part of a Combat round, in which each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.                          |                                            |
-| Enemies' phase | The second part of a Combat round, in which each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.                        |                                            |
-| Combat turn    | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing.                                                      | Turn, naming a Combatant's part in a phase |
-| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                     |                                            |
-| Combat outcome | How a Combat ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome                             |
+| Term           | Definition                                                                                                                                                                    | Prohibited synonyms                        |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                                     | Round, naming a pass of a Combat           |
+| Agents' phase  | The first part of a Combat round, in which each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.                                              |                                            |
+| Enemies' phase | The second part of a Combat round, in which each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.                                            |                                            |
+| Combat turn    | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing.                                                                          | Turn, naming a Combatant's part in a phase |
+| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                                         |                                            |
+| Health removed | The current health one attack takes from its defender: the smaller of the damage outcome and the defender's current health before the attack, or 0 on a miss.                 | Damage, as a noun on its own               |
+| Damage dealt   | The sum of the health removed by every attack one participant made in one Combat.                                                                                             |                                            |
+| Damage taken   | The sum of the health removed by every attack on one participant in one Combat. It is equivalent to the participant's health lost: the current health it lost in that Combat. |                                            |
+| Combat outcome | How a Combat ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew.                     | Battle outcome                             |
 
 ## Combatant condition in a Combat
 
@@ -89,15 +92,15 @@ MissionSiteArchetype, under [Missions](missions.md).
 
 ## Weapon
 
-A Weapon GDR describes damage configuration. The table below is exhaustive apart from `id` and `type`.
+A Weapon GDR describes the weapon damage of the Combatants equipped with it. The table below is exhaustive apart from `id` and `type`.
 
-| Property | Meaning                                                                                     | Read by                                                                                                  |
-| -------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `name`   | The display name of the Weapon.                                                             | [Player-visible information](#player-visible-information)                                                |
-| `damage` | The weapon damage of a newly created Combatant equipped with this Weapon, in health points. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation) in Agents, for Agents |
+| Property             | Meaning                                                                                     | Read by                                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `name`               | The display name of the Weapon.                                                             | [Player-visible information](#player-visible-information)                                                |
+| `base_weapon_damage` | The weapon damage of a newly created Combatant equipped with this Weapon, in health points. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation) in Agents, for Agents |
 
-A Combatant's weapon damage is a value of the Combatant, set from `damage` at creation; a Combat reads the
-Combatant's weapon damage, never the Weapon's `damage`. An Agent's weapon damage can differ from its Weapon's `damage`
+A Combatant's weapon damage is a value of the Combatant, set from `base_weapon_damage` at creation; a Combat reads the
+Combatant's weapon damage, never the Weapon's `base_weapon_damage`. An Agent's weapon damage can differ from its Weapon's `base_weapon_damage`
 under [Modifiable values](agents-spec.md#modifiable-values) in Agents. Individual inventory items are out of scope.
 
 ## CombatParameters
@@ -137,7 +140,7 @@ different gameplay, under
 1. **One CombatParameters:** The Game build supplies exactly one CombatParameters GDR.
 2. **EnemyArchetype values are valid:** Each EnemyArchetype's `skill` is a whole number of at least 0, its `base_health` is a
    whole number of at least 1, and its `weapon` references a Weapon GDR the Game build supplies.
-3. **Weapon values are valid:** Each Weapon's `damage` is a whole number of at least 1.
+3. **Weapon values are valid:** Each Weapon's `base_weapon_damage` is a whole number of at least 1.
 4. **Damage range is valid:** `weapon_damage_range` is a decimal number from 0 to 1, both included. This guarantees
    that both bounds of every damage outcome are whole numbers of at least 0 with the lower bound at most the upper
    bound, under [Damage outcome](#damage-outcome).
@@ -207,16 +210,16 @@ and the following initial values, under
 [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is
 exhaustive.
 
-| Value               | Initial value                                                 | Source                               |
-| ------------------- | ------------------------------------------------------------- | ------------------------------------ |
-| Archetype reference | The EnemyArchetype the Enemy is created from.                 | The creating rule of Missions.       |
-| Mission site        | The Mission site being created.                               | The creating rule of Missions.       |
-| Skill               | The EnemyArchetype's `skill`.                                 | `skill` of the EnemyArchetype.       |
-| Base health         | The EnemyArchetype's `base_health`.                           | `base_health` of the EnemyArchetype. |
-| Current health      | The EnemyArchetype's `base_health`.                           | `base_health` of the EnemyArchetype. |
-| Exhaustion          | 0.                                                            | This rule.                           |
-| Weapon              | The Weapon GDR that the EnemyArchetype's `weapon` references. | `weapon` of the EnemyArchetype.      |
-| Weapon damage       | The `damage` of that Weapon GDR.                              | `damage` of the Weapon GDR.          |
+| Value               | Initial value                                                 | Source                                  |
+| ------------------- | ------------------------------------------------------------- | --------------------------------------- |
+| Archetype reference | The EnemyArchetype the Enemy is created from.                 | The creating rule of Missions.          |
+| Mission site        | The Mission site being created.                               | The creating rule of Missions.          |
+| Skill               | The EnemyArchetype's `skill`.                                 | `skill` of the EnemyArchetype.          |
+| Base health         | The EnemyArchetype's `base_health`.                           | `base_health` of the EnemyArchetype.    |
+| Current health      | The EnemyArchetype's `base_health`.                           | `base_health` of the EnemyArchetype.    |
+| Exhaustion          | 0.                                                            | This rule.                              |
+| Weapon              | The Weapon GDR that the EnemyArchetype's `weapon` references. | `weapon` of the EnemyArchetype.         |
+| Weapon damage       | The `base_weapon_damage` of that Weapon GDR.                  | `base_weapon_damage` of the Weapon GDR. |
 
 No Upgrade and no Campaign configuration value changes any initial value above. Two Enemies created from the same
 EnemyArchetype are distinct Campaign instances that share neither Instance ID nor current health.
@@ -447,7 +450,7 @@ attacks.
 
 1. **Read:** A and D are read, and the hit Probability is formed, under [Hit outcome](#hit-outcome).
 2. **Hit outcome:** The attack has its hit outcome. The damage outcome exists only when the hit outcome is a hit.
-3. **Damage:** On a hit, the defender's current health falls by the damage outcome, under [Damage outcome](#damage-outcome), but
+3. **Health removed:** On a hit, the defender's current health falls by the damage outcome, under [Damage outcome](#damage-outcome), but
    not below 0. The health removed is the smaller of the damage outcome and the
    defender's current health before this step. On a miss, current health does not change and the health removed is 0.
 4. **Exhaustion:** The attacker gains `exhaustion_per_attack` exhaustion and the defender gains `exhaustion_per_defense`
@@ -572,8 +575,8 @@ is exhaustive:
    skill, and Incapacitated value when the Combat began, after [Combat start](#combat-start) step 1.
 5. **Final values:** for each participant, its current health, exhaustion, and effective skill when the Combat ended, and its
    final condition: able to fight, Incapacitated, or dead. A dead Agent is Killed.
-6. **Health removed:** for each participant, the damage it dealt, i.e. the sum of the health removed by its attacks, and
-   the damage it took, i.e. the sum of the health removed by attacks on it.
+6. **Damage dealt and damage taken:** for each participant, its damage dealt, i.e. the sum of the health removed by its
+   attacks, and its damage taken, i.e. the sum of the health removed by attacks on it.
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
 8. **Combat log:** every attack, in the order in which it was made, each with its Combat round number, its attacker and defender
    by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the
@@ -636,9 +639,9 @@ Mission whose Combat has not been fought has no Combat report anywhere.
   gains no exhaustion ([Combat rounds](#combat-rounds)).
 - **Zero divisor:** The hit Probability's divisor is at least 2, because both effective skills are at least 1
   ([Hit outcome](#hit-outcome)).
-- **Damage above remaining current health:** Current health falls to 0, not below; the health removed is the defender's remaining
+- **Damage outcome above remaining current health:** Current health falls to 0, not below; the health removed is the defender's remaining
   current health ([Effects of an attack](#effects-of-an-attack)).
-- **Damage of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no current health but still
+- **Damage outcome of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no current health but still
   raises exhaustion ([Damage outcome](#damage-outcome)).
 - **Exhaustion at the cap:** Exhaustion that would exceed `exhaustion_cap` is `exhaustion_cap`, and under rule 8 of
   [Combat GDR validation](#combat-gdr-validation) such a Combatant is Incapacitated ([Termination](#termination)).
@@ -650,7 +653,7 @@ Mission whose Combat has not been fought has no Combat report anywhere.
   ([Termination](#termination)).
 - **Invalid inputs:** An empty Agents' side, a duplicate Combatant, or an Agent that is not Serving is an internal
   invariant violation ([Combat inputs and outputs](#combat-inputs-and-outputs)).
-- **Invalid GDRs:** A Game build that fails [Combat GDR validation](#combat-gdr-validation), e.g. with a Weapon `damage`
+- **Invalid GDRs:** A Game build that fails [Combat GDR validation](#combat-gdr-validation), e.g. with a Weapon `base_weapon_damage`
   of 0, a `weapon_damage_range` of 1.5, or `exhaustion_per_attack` and `exhaustion_per_defense` both 0, is defective and
   no Campaign is created from it.
 
@@ -665,9 +668,9 @@ All examples use the Bootstrap GDR values from `content/combat/enemy_archetypes.
 | `initiate`          | `name` Initiate; `skill` 40; `base_health` 20; `weapon` `sidearm`                                                                                 |
 | `soldier`           | `name` Soldier; `skill` 120; `base_health` 30; `weapon` `rifle`                                                                                   |
 | `cult_leader`       | `name` Cult leader; `skill` 300; `base_health` 40; `weapon` `heavy_rifle`                                                                         |
-| `sidearm`           | `damage` 10                                                                                                                                       |
-| `rifle`             | `damage` 14                                                                                                                                       |
-| `heavy_rifle`       | `damage` 22                                                                                                                                       |
+| `sidearm`           | `base_weapon_damage` 10                                                                                                                           |
+| `rifle`             | `base_weapon_damage` 14                                                                                                                           |
+| `heavy_rifle`       | `base_weapon_damage` 22                                                                                                                           |
 | `combat_parameters` | `weapon_damage_range` 0.5; `retreat_below_agent_rating_fraction` 0.5; `retreat_at_enemy_to_agent_rating` 0.8; `incapacitation_skill_fraction` 0.1 |
 | `field_agent`       | `skill` 100; `base_health` 30; `weapon` `sidearm`                                                                                                 |
 | `agent_parameters`  | `exhaustion_cap` 100; `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_attack` 1; `exhaustion_per_defense` 1     |
@@ -695,7 +698,7 @@ of each EnemyArchetype. Each has a distinct fresh Instance ID, Mission site s1, 
 If s1 expires and its Combat is never fought, these values never change. All of them are Player-visible information
 ([Player-visible information](#player-visible-information)).
 
-## Damage bounds for each Weapon
+## Damage outcome bounds for each Weapon
 
 This example exercises [Damage outcome](#damage-outcome), with `weapon_damage_range` 0.5. The last row is the weapon
 damage of an Agent after one acquisition of the `weapon_damage` Upgrade, whose `increment` is 1, under
@@ -747,16 +750,16 @@ This example exercises [Combat start](#combat-start), [Combat rounds](#combat-ro
 At Combat start nobody meets the incapacitation condition. The starting Combat rating of the Agents' side is 200, and of
 the Enemies' side 80. The Retreated check therefore needs a Combat rating of the Agents' side below 0.5 × 200 = 100.
 
-| Combat round | Attacker → target         | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after       | Target after         |
-| ------------ | ------------------------- | --- | --- | --------------- | ----------------- | -------------- | -------------------- | -------------------- |
-| 1            | a1 → e1 (tie, e1 earlier) | 100 | 40  | 10000 / 11600   | hit; damage 12    | 12             | a1: h30, x1, eff 100 | e1: h8, x1, eff 16   |
-| 1            | a2 → e2 (40 beats 16)     | 100 | 40  | 10000 / 11600   | hit; damage 15    | 15             | a2: h30, x1, eff 100 | e2: h5, x1, eff 10   |
-| 1            | e1 → a1 (tie, a1 earlier) | 16  | 100 | 256 / 10256     | miss              | 0              | e1: h8, x2, eff 16   | a1: h30, x2, eff 100 |
-| 1            | e2 → a1 (tie, a1 earlier) | 10  | 100 | 100 / 10100     | hit; damage 7     | 7              | e2: h5, x2, eff 10   | a1: h23, x3, eff 76  |
-| 2            | a1 → e1 (16 beats 10)     | 76  | 16  | 5776 / 6032     | hit; damage 9     | 8              | a1: h23, x4, eff 76  | e1: h0, x3, dead     |
-| 2            | a2 → e2 (only target)     | 100 | 10  | 10000 / 10100   | miss              | 0              | a2: h30, x2, eff 100 | e2: h5, x3, eff 10   |
-| 2            | e2 → a2 (100 beats 76)    | 10  | 100 | 100 / 10100     | miss              | 0              | e2: h5, x4, eff 10   | a2: h30, x3, eff 100 |
-| 3            | a1 → e2 (only target)     | 76  | 10  | 5776 / 5876     | hit; damage 5     | 5              | a1: h23, x5, eff 76  | e2: h0, x5, dead     |
+| Combat round | Attacker → target         | A   | D   | Hit Probability | Injected outcomes      | Health removed | Attacker after       | Target after         |
+| ------------ | ------------------------- | --- | --- | --------------- | ---------------------- | -------------- | -------------------- | -------------------- |
+| 1            | a1 → e1 (tie, e1 earlier) | 100 | 40  | 10000 / 11600   | hit; damage outcome 12 | 12             | a1: h30, x1, eff 100 | e1: h8, x1, eff 16   |
+| 1            | a2 → e2 (40 beats 16)     | 100 | 40  | 10000 / 11600   | hit; damage outcome 15 | 15             | a2: h30, x1, eff 100 | e2: h5, x1, eff 10   |
+| 1            | e1 → a1 (tie, a1 earlier) | 16  | 100 | 256 / 10256     | miss                   | 0              | e1: h8, x2, eff 16   | a1: h30, x2, eff 100 |
+| 1            | e2 → a1 (tie, a1 earlier) | 10  | 100 | 100 / 10100     | hit; damage outcome 7  | 7              | e2: h5, x2, eff 10   | a1: h23, x3, eff 76  |
+| 2            | a1 → e1 (16 beats 10)     | 76  | 16  | 5776 / 6032     | hit; damage outcome 9  | 8              | a1: h23, x4, eff 76  | e1: h0, x3, dead     |
+| 2            | a2 → e2 (only target)     | 100 | 10  | 10000 / 10100   | miss                   | 0              | a2: h30, x2, eff 100 | e2: h5, x3, eff 10   |
+| 2            | e2 → a2 (100 beats 76)    | 10  | 100 | 100 / 10100     | miss                   | 0              | e2: h5, x4, eff 10   | a2: h30, x3, eff 100 |
+| 3            | a1 → e2 (only target)     | 76  | 10  | 5776 / 5876     | hit; damage outcome 5  | 5              | a1: h23, x5, eff 76  | e2: h0, x5, dead     |
 
 End-of-Combat-round checks:
 
@@ -781,10 +784,10 @@ their outcomes. a1 and a2 are both still Serving.
 This example exercises [End-of-Combat-round checks](#end-of-combat-round-checks) and [Combat outcomes](#combat-outcomes). The Agents'
 side is a1; the Enemies' side is e1, a `soldier`. The starting Combat rating of the Agents' side is 100.
 
-| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Attacker after       | Target after         |
-| ------------ | ----------------- | --- | --- | --------------- | ----------------- | -------------------- | -------------------- |
-| 1            | a1 → e1           | 100 | 120 | 10000 / 24400   | miss              | a1: h30, x1, eff 100 | e1: h30, x1, eff 120 |
-| 1            | e1 → a1           | 120 | 100 | 14400 / 24400   | hit; damage 21    | e1: h30, x2, eff 120 | a1: h9, x2, eff 30   |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes      | Attacker after       | Target after         |
+| ------------ | ----------------- | --- | --- | --------------- | ---------------------- | -------------------- | -------------------- |
+| 1            | a1 → e1           | 100 | 120 | 10000 / 24400   | miss                   | a1: h30, x1, eff 100 | e1: h30, x1, eff 120 |
+| 1            | e1 → a1           | 120 | 100 | 14400 / 24400   | hit; damage outcome 21 | e1: h30, x2, eff 120 | a1: h9, x2, eff 30   |
 
 a1's effective skill is `round down(100 × 9 × 100 / 3000) = 30`, above its threshold 10, so it is able to fight. After
 Combat round 1, an Enemy and an Agent are able to fight, so neither Prevailed nor Wiped holds. The Retreated check holds:
@@ -798,10 +801,10 @@ and an Agent whose current health is already below its base health at Combat sta
 `round down(100 × 6 × 100 / 3000) = 20`; the Enemies' side is e1, a `cult_leader`. The starting Combat rating of the
 Agents' side is 20.
 
-| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after       | Target after             |
-| ------------ | ----------------- | --- | --- | --------------- | ----------------- | -------------- | -------------------- | ------------------------ |
-| 1            | a1 → e1           | 20  | 300 | 400 / 90400     | miss              | 0              | a1: h6, x1, eff 20   | e1: h40, x1, eff 300     |
-| 1            | e1 → a1           | 300 | 20  | 90000 / 90400   | hit; damage 11    | 6              | e1: h40, x2, eff 300 | a1: h0, x2, dead, Killed |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes      | Health removed | Attacker after       | Target after             |
+| ------------ | ----------------- | --- | --- | --------------- | ---------------------- | -------------- | -------------------- | ------------------------ |
+| 1            | a1 → e1           | 20  | 300 | 400 / 90400     | miss                   | 0              | a1: h6, x1, eff 20   | e1: h40, x1, eff 300     |
+| 1            | e1 → a1           | 300 | 20  | 90000 / 90400   | hit; damage outcome 11 | 6              | e1: h40, x2, eff 300 | a1: h0, x2, dead, Killed |
 
 a1 becomes Killed when its current health reaches 0. After Combat round 1, e1 is able to fight and no Agent is, so the outcome is Wiped
 after 1 Combat round. The Retreated check would also hold, since 0 < 0.5 × 20 and 300 ≥ 0.8 × 0, but Wiped is checked first.
@@ -814,12 +817,12 @@ exhaustion 94, so penalty factor `100 − 1 × 89 = 11` and effective skill 11, 
 `initiate`. At Combat start a1's 11 is above its threshold 10, so nobody is Incapacitated, and the starting Combat
 rating of the Agents' side is 111.
 
-| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after                      | Target after         |
-| ------------ | ----------------- | --- | --- | --------------- | ----------------- | -------------- | ----------------------------------- | -------------------- |
-| 1            | a1 → e1           | 11  | 40  | 121 / 1721      | miss              | 0              | a1: h30, x95, eff 10, Incapacitated | e1: h20, x1, eff 40  |
-| 1            | a2 → e1           | 100 | 40  | 10000 / 11600   | hit; damage 10    | 10             | a2: h30, x1, eff 100                | e1: h10, x2, eff 20  |
-| 1            | e1 → a2           | 20  | 100 | 400 / 10400     | miss              | 0              | e1: h10, x3, eff 20                 | a2: h30, x2, eff 100 |
-| 2            | a2 → e1           | 100 | 20  | 10000 / 10400   | hit; damage 13    | 10             | a2: h30, x3, eff 100                | e1: h0, x4, dead     |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes      | Health removed | Attacker after                      | Target after         |
+| ------------ | ----------------- | --- | --- | --------------- | ---------------------- | -------------- | ----------------------------------- | -------------------- |
+| 1            | a1 → e1           | 11  | 40  | 121 / 1721      | miss                   | 0              | a1: h30, x95, eff 10, Incapacitated | e1: h20, x1, eff 40  |
+| 1            | a2 → e1           | 100 | 40  | 10000 / 11600   | hit; damage outcome 10 | 10             | a2: h30, x1, eff 100                | e1: h10, x2, eff 20  |
+| 1            | e1 → a2           | 20  | 100 | 400 / 10400     | miss                   | 0              | e1: h10, x3, eff 20                 | a2: h30, x2, eff 100 |
+| 2            | a2 → e1           | 100 | 20  | 10000 / 10400   | hit; damage outcome 13 | 10             | a2: h30, x3, eff 100                | e1: h0, x4, dead     |
 
 At exhaustion 95, a1's penalty factor is 10 and its effective skill 10 ≤ 0.1 × 100, so its own attack made it
 Incapacitated. In the Enemies' phase of Combat round 1, e1 targets a2, not a1. After Combat round 1 the Combat rating of the Agents'
@@ -834,11 +837,11 @@ This example exercises [End-of-Combat-round checks](#end-of-combat-round-checks)
 Agents' side is a1 with exhaustion 92, so penalty factor 13 and effective skill 13; the Enemies' side is e1, an
 `initiate`. The starting Combat rating of the Agents' side is 13.
 
-| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes | Health removed | Attacker after                      | Target after         |
-| ------------ | ----------------- | --- | --- | --------------- | ----------------- | -------------- | ----------------------------------- | -------------------- |
-| 1            | a1 → e1           | 13  | 40  | 169 / 1769      | hit; damage 15    | 15             | a1: h30, x93, eff 12                | e1: h5, x1, eff 10   |
-| 1            | e1 → a1           | 10  | 12  | 100 / 244       | miss              | 0              | e1: h5, x2, eff 10                  | a1: h30, x94, eff 11 |
-| 2            | a1 → e1           | 11  | 10  | 121 / 221       | hit; damage 5     | 5              | a1: h30, x95, eff 10, Incapacitated | e1: h0, x3, dead     |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes      | Health removed | Attacker after                      | Target after         |
+| ------------ | ----------------- | --- | --- | --------------- | ---------------------- | -------------- | ----------------------------------- | -------------------- |
+| 1            | a1 → e1           | 13  | 40  | 169 / 1769      | hit; damage outcome 15 | 15             | a1: h30, x93, eff 12                | e1: h5, x1, eff 10   |
+| 1            | e1 → a1           | 10  | 12  | 100 / 244       | miss                   | 0              | e1: h5, x2, eff 10                  | a1: h30, x94, eff 11 |
+| 2            | a1 → e1           | 11  | 10  | 121 / 221       | hit; damage outcome 5  | 5              | a1: h30, x95, eff 10, Incapacitated | e1: h0, x3, dead     |
 
 After Combat round 1 the Retreated check fails, because 11 is not below 0.5 × 13 = 6.5. After Combat round 2 no Enemy and no Agent is
 able to fight; Prevailed is checked first, so the outcome is Prevailed after 2 Combat rounds. a1 survives.
@@ -893,7 +896,7 @@ have 300, because that Agent meets the incapacitation condition and does not cou
 
 This example exercises [Combat GDR validation](#combat-gdr-validation). The Bootstrap GDRs pass every rule: there is one
 CombatParameters GDR; every EnemyArchetype has a whole `skill` of at least 0, a whole `base_health` of at least 1, and a
-`weapon` the Game build supplies; every Weapon `damage` is at least 1; 0.5 lies from 0 to 1; 0.5 and 0.8 are at least 0;
+`weapon` the Game build supplies; every Weapon `base_weapon_damage` is at least 1; 0.5 lies from 0 to 1; 0.5 and 0.8 are at least 0;
 0.1 is at least 0 and below 1; `exhaustion_per_attack + exhaustion_per_defense = 2 ≥ 1`; and the penalty factor at the
 cap is `max(0, 100 − 1 × max(0, 100 − 5)) = 5`, which is at most `100 × 0.1 = 10`.
 
@@ -905,7 +908,7 @@ Each of the following test changes independently makes the Game build defective,
 | `exhaustion_free_points` 95                                   | Exhaustion at the cap incapacitates: the penalty factor at the cap is `100 − 5 = 95 > 10` |
 | `incapacitation_skill_fraction` 0.04                          | Exhaustion at the cap incapacitates: 5 > `100 × 0.04 = 4`                                 |
 | `exhaustion_per_attack` 0 and `exhaustion_per_defense` 0      | Every attack tires someone                                                                |
-| `sidearm` `damage` 0                                          | Weapon values are valid                                                                   |
+| `sidearm` `base_weapon_damage` 0                              | Weapon values are valid                                                                   |
 | `weapon_damage_range` 1.5                                     | Damage range is valid                                                                     |
 | `sidearm` has an added property `range`                       | Exact properties                                                                          |
 | `cult_leader` `weapon` set to an identifier no Weapon GDR has | EnemyArchetype values are valid                                                           |

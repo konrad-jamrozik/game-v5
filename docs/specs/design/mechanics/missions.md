@@ -578,13 +578,13 @@ How each kind of change applies:
 Every amount a Consequence applies is read from GDRs when the transition happens; a missing `on_win` property of a
 MissionSiteArchetype of kind initiative contributes 0, or no elimination. The Consequences of a Mission site and its Mission
 depend only on the Mission site's kind, the final state of the Mission site or its Mission, and the GDRs they read. A
-Lost Mission yields no benefit from the damage its team inflicted, and no Consequence of a Mission or a Mission site
+Lost Mission yields no benefit from the damage dealt by its team, and no Consequence of a Mission or a Mission site
 slows a Faction's escalation or its operations.
 
 **Informative rationale:** game-ts paid the reward for stopping a Faction operation twice; here a Won Response Mission
 applies the operation level's `on_win` once, and no rule of [Factions](factions.md) pays it again. A Lost Response
 Mission has the same Consequences as an Expired Response Mission site because the GDR property `on_ignored_or_lost`
-names both, and a Lost Mission yields no benefit from the damage its team inflicted.
+names both, and a Lost Mission yields no benefit from the damage dealt by its team.
 
 # Player-visible information
 
@@ -643,7 +643,7 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   ([Consequences](#consequences)).
 - **Lost versus Expired:** A Lost Response Mission and an Expired Response Mission site have identical Consequences, and
   a Lost Initiative Mission and an Expired Initiative Mission site have none; a Lost Mission yields no benefit from the
-  damage its team inflicted ([Consequences](#consequences)).
+  damage dealt by its team ([Consequences](#consequences)).
 - **Deploying to a Mission site that is not Active:** Rejected, e.g. to an Attempted Mission site that already has its
   Mission, or to an Expired one ([Deploying Agents](#deploying-agents)).
 - **Mixed valid and invalid Agents:** One invalid Agent rejects the whole action; no Agent and no Mission site changes, and no Mission is created
@@ -743,16 +743,16 @@ Upgrades, money rises by funding 20 plus 30 × 0 for no Agent on Contracting, to
 [Upkeep](economy-and-upgrades.md#upkeep), money falls by 10 × 4 for the four Serving Agents, all Deployed, to 380. No
 Investigation is Active, so Investigation progress changes nothing. In Mission resolution, the Combat of m1 has the Agents' side [a1, a2, a3, a4] and the Enemies' side [e1, e2, e3]:
 
-| Combat round | Attacker → target              | Injected outcomes | Result                         |
-| ------------ | ------------------------------ | ----------------- | ------------------------------ |
-| 1            | a1 → e1 (tie at 40, earliest)  | hit; damage 15    | e1: h5, x1, effective skill 10 |
-| 1            | a2 → e2 (40 beats 10)          | hit; damage 15    | e2: h5, x1, effective skill 10 |
-| 1            | a3 → e3 (40 beats 10)          | hit; damage 15    | e3: h5, x1, effective skill 10 |
-| 1            | a4 → e1 (tie at 10, earliest)  | hit; damage 5     | e1: h0, dead                   |
-| 1            | e2 → a1 (tie at 100, earliest) | miss              | a1: x2 after this attack       |
-| 1            | e3 → a1 (tie at 100, earliest) | miss              | a1: x3 after this attack       |
-| 2            | a1 → e2 (tie at 10, earliest)  | hit; damage 5     | e2: h0, dead                   |
-| 2            | a2 → e3 (only target)          | hit; damage 5     | e3: h0, dead                   |
+| Combat round | Attacker → target              | Injected outcomes      | Result                         |
+| ------------ | ------------------------------ | ---------------------- | ------------------------------ |
+| 1            | a1 → e1 (tie at 40, earliest)  | hit; damage outcome 15 | e1: h5, x1, effective skill 10 |
+| 1            | a2 → e2 (40 beats 10)          | hit; damage outcome 15 | e2: h5, x1, effective skill 10 |
+| 1            | a3 → e3 (40 beats 10)          | hit; damage outcome 15 | e3: h5, x1, effective skill 10 |
+| 1            | a4 → e1 (tie at 10, earliest)  | hit; damage outcome 5  | e1: h0, dead                   |
+| 1            | e2 → a1 (tie at 100, earliest) | miss                   | a1: x2 after this attack       |
+| 1            | e3 → a1 (tie at 100, earliest) | miss                   | a1: x3 after this attack       |
+| 2            | a1 → e2 (tie at 10, earliest)  | hit; damage outcome 5  | e2: h0, dead                   |
+| 2            | a2 → e3 (only target)          | hit; damage outcome 5  | e3: h0, dead                   |
 
 a3 and a4 have no target in Combat round 2, and no Enemy attacks in its Enemies' phase. After Combat round 1 the Agents' Combat rating
 is 400, so the Combat continues; after Combat round 2 no Enemy is able to fight, and the Combat outcome is Prevailed after 2
@@ -800,15 +800,15 @@ of the Advance turn ending Turn 45 uses 19. s2 never has a Mission, and its Enem
 Mission m2 is created with the Current team [a1]. In Mission resolution of
 the Advance turn ending Turn 42:
 
-| Combat round | Attacker → target              | Injected outcomes | Result                                                             |
-| ------------ | ------------------------------ | ----------------- | ------------------------------------------------------------------ |
-| 1            | a1 → e5 (tie at 120, earliest) | miss              | a1: x1; e5: x1                                                     |
-| 1            | e1 → a1                        | miss              | a1: x2                                                             |
-| 1            | e2 → a1                        | miss              | a1: x3                                                             |
-| 1            | e3 → a1                        | miss              | a1: x4                                                             |
-| 1            | e4 → a1                        | miss              | a1: x5                                                             |
-| 1            | e5 → a1                        | hit; damage 21    | a1: h9, x6, effective skill `round down(100 × 9 × 99 / 3000) = 29` |
-| 1            | e6 → a1                        | miss              | a1: h9, x7, effective skill `round down(100 × 9 × 98 / 3000) = 29` |
+| Combat round | Attacker → target              | Injected outcomes      | Result                                                             |
+| ------------ | ------------------------------ | ---------------------- | ------------------------------------------------------------------ |
+| 1            | a1 → e5 (tie at 120, earliest) | miss                   | a1: x1; e5: x1                                                     |
+| 1            | e1 → a1                        | miss                   | a1: x2                                                             |
+| 1            | e2 → a1                        | miss                   | a1: x3                                                             |
+| 1            | e3 → a1                        | miss                   | a1: x4                                                             |
+| 1            | e4 → a1                        | miss                   | a1: x5                                                             |
+| 1            | e5 → a1                        | hit; damage outcome 21 | a1: h9, x6, effective skill `round down(100 × 9 × 99 / 3000) = 29` |
+| 1            | e6 → a1                        | miss                   | a1: h9, x7, effective skill `round down(100 × 9 × 98 / 3000) = 29` |
 
 After Combat round 1, an Enemy and an Agent are able to fight, and the Retreated check holds: 29 < 0.5 × 100 = 50, and the
 Enemies' Combat rating 400 ≥ 0.8 × 29. The Combat outcome is Retreated, so m2 is Lost. a1 survives with current health 9 of 30,
@@ -820,19 +820,19 @@ not count down in Mission site expiration, because it is Attempted, not Active.
 Attempted and Mission m2 is created with the Current team [a1, a2, a3, a4]. In Mission
 resolution of the Advance turn ending Turn 41:
 
-| Combat round | Attacker → target                  | Injected outcomes   | Result                                                                                                                                                                   |
-| ------------ | ---------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1            | a1 → e5 (tie at 120, earliest)     | hit; damage 15      | e5: h15, effective skill 60                                                                                                                                              |
-| 1            | a2 → e6 (120 beats 60)             | hit; damage 15      | e6: h15, effective skill 60                                                                                                                                              |
-| 1            | a3 → e5 (tie at 60, earliest)      | hit; damage 15      | e5: h0, dead                                                                                                                                                             |
-| 1            | a4 → e6 (60 beats 40)              | hit; damage 15      | e6: h0, dead                                                                                                                                                             |
-| 1            | e1, e2, e3, e4 → a1, each          | miss, each          | a1: x5                                                                                                                                                                   |
-| 2            | a1 → e1 (tie at 40, earliest)      | hit; damage 15      | e1: h5, effective skill 10                                                                                                                                               |
-| 2            | a2 → e2 (40 beats 10)              | hit; damage 15      | e2: h5, effective skill 10                                                                                                                                               |
-| 2            | a3 → e3 (40 beats 10)              | hit; damage 15      | e3: h5, effective skill 10                                                                                                                                               |
-| 2            | a4 → e4 (40 beats 10)              | hit; damage 15      | e4: h5, effective skill 10                                                                                                                                               |
-| 2            | e1, e2, e3, e4 → a2, each          | miss, each          | a2: x6. a1, at x6, has effective skill 99, so each initiate targets a2, whose exhaustion is at most 5, and so whose effective skill is 100, before each of these attacks |
-| 3            | a1 → e1, a2 → e2, a3 → e3, a4 → e4 | hit; damage 5, each | e1, e2, e3, e4: h0, dead                                                                                                                                                 |
+| Combat round | Attacker → target                  | Injected outcomes           | Result                                                                                                                                                                   |
+| ------------ | ---------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1            | a1 → e5 (tie at 120, earliest)     | hit; damage outcome 15      | e5: h15, effective skill 60                                                                                                                                              |
+| 1            | a2 → e6 (120 beats 60)             | hit; damage outcome 15      | e6: h15, effective skill 60                                                                                                                                              |
+| 1            | a3 → e5 (tie at 60, earliest)      | hit; damage outcome 15      | e5: h0, dead                                                                                                                                                             |
+| 1            | a4 → e6 (60 beats 40)              | hit; damage outcome 15      | e6: h0, dead                                                                                                                                                             |
+| 1            | e1, e2, e3, e4 → a1, each          | miss, each                  | a1: x5                                                                                                                                                                   |
+| 2            | a1 → e1 (tie at 40, earliest)      | hit; damage outcome 15      | e1: h5, effective skill 10                                                                                                                                               |
+| 2            | a2 → e2 (40 beats 10)              | hit; damage outcome 15      | e2: h5, effective skill 10                                                                                                                                               |
+| 2            | a3 → e3 (40 beats 10)              | hit; damage outcome 15      | e3: h5, effective skill 10                                                                                                                                               |
+| 2            | a4 → e4 (40 beats 10)              | hit; damage outcome 15      | e4: h5, effective skill 10                                                                                                                                               |
+| 2            | e1, e2, e3, e4 → a2, each          | miss, each                  | a2: x6. a1, at x6, has effective skill 99, so each initiate targets a2, whose exhaustion is at most 5, and so whose effective skill is 100, before each of these attacks |
+| 3            | a1 → e1, a2 → e2, a3 → e3, a4 → e4 | hit; damage outcome 5, each | e1, e2, e3, e4: h0, dead                                                                                                                                                 |
 
 After Combat round 3 no Enemy is able to fight, so the Combat outcome is Prevailed and m2 is Won. Every Agent ends with current health
 30 of 30 and becomes Standby, In transit. Money becomes 300 + 30 = 330 and funding becomes max(0, 20 + 5) = 25; no Panic

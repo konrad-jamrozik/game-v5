@@ -212,8 +212,8 @@ order in which they are applied.
    earlier step, so it reads current health and exhaustion as they are after those steps, under
    [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn Advancement. No step after the Agent recovery
    step changes an Agent's current health or exhaustion.
-5. **No dependence on how damage was taken:** Health recovery reads only the Agent's base health and current health, and
-   exhaustion recovery reads only its exhaustion. Neither depends on which Combat, which attacker, or how much damage
+5. **No dependence on how current health was lost:** Health recovery reads only the Agent's base health and current health, and
+   exhaustion recovery reads only its exhaustion. Neither depends on which Combat, which attacker, or how many attacks
    produced the current health lost, or on how many attacks produced the exhaustion.
 
 # Player-visible information
@@ -430,7 +430,7 @@ reads the other Agent.
 
 # TODOs
 
-- TODO (later): Recovery that depends on the kind of damage an Agent took, under
+- TODO (later): Recovery that depends on the kind of attack that took an Agent's current health, under
   [Several changes in one Turn](#several-changes-in-one-turn).
 - TODO (later): Faster recovery from an Upgrade, under [Recovery parameters](#recovery-parameters).
 - TODO (later): Exhaustion that an Agent gains from its work, under [Exhaustion recovery](#exhaustion-recovery).

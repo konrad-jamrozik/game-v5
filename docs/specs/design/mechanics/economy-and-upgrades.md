@@ -5,7 +5,7 @@
 | Spec ID     | ECON                                                                                                                                                                                                                       |
 | Family      | Mechanics                                                                                                                                                                                                                  |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                                |
-| Owns        | The Agency's money, funding, and Upgrade acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, and the hireAgent, dismissAgents, purchaseUpgrade, and addMoney actions. |
+| Owns        | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, and the hireAgent, dismissAgents, purchaseUpgrade, and addMoney actions. |
 | Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                                 |
 
 # Overview
@@ -44,12 +44,17 @@ These terms are specific to the Agency's economy. General terms are in the
 [Domain Model glossary](domain-model.md#glossary); terms about Agents are in the
 [Agents glossary](agents-spec.md#glossary).
 
-| Term          | Definition                                                                 |
-| ------------- | -------------------------------------------------------------------------- |
-| Upgrade       | A permanent improvement the Agency buys with money, any number of times.   |
-| Agent cap     | The most Agents the Agency can employ when it hires another one.           |
-| Transport cap | The most Agents the Agency can have Deployed at the same time.             |
-| Training cap  | The most Agents the Agency can have assigned to Training at the same time. |
+| Term                  | Definition                                                                                                                                                                        | Prohibited synonyms                      |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Upgrade               | A permanent improvement the Agency buys with money, any number of times.                                                                                                          |                                          |
+| Acquisitions          | For one Upgrade, the number of times the Agency has purchased it.                                                                                                                 |                                          |
+| Increment             | How much one acquisition of an Upgrade raises the value it improves: the Upgrade's `increment`.                                                                                   |                                          |
+| Upgrade bonus         | For one effect identifier, what every Upgrade with that effect adds to the starting value of the value they improve: the sum of each such Upgrade's Increment × its Acquisitions. |                                          |
+| Cap Upgrade           | An Upgrade that raises the Agent cap, the Transport cap, or the Training cap.                                                                                                     | Cap effect                               |
+| Weapon damage Upgrade | An Upgrade that raises the weapon damage of Agents.                                                                                                                               | Weapon damage effect; Agent value effect |
+| Agent cap             | The most Agents the Agency can employ when it hires another one.                                                                                                                  |                                          |
+| Transport cap         | The most Agents the Agency can have Deployed at the same time.                                                                                                                    |                                          |
+| Training cap          | The most Agents the Agency can have assigned to Training at the same time.                                                                                                        |                                          |
 
 # Economy GDRs
 
@@ -113,8 +118,7 @@ no Campaign is created from it, and the violation is reported as a data defect, 
 6. **Names are present:** The `name` of the AgencyArchetype and of each Upgrade is non-empty text.
 
 The Game build may supply any number of Upgrades, including none, and several Upgrades may share one `effect`; the rules
-under [Agency caps](#agency-caps) and [Weapon damage effect](#weapon-damage-effect) add up the contributions of every
-Upgrade with the same `effect`.
+under [Upgrade bonus](#upgrade-bonus) add up the contributions of every Upgrade with the same `effect`.
 
 # Campaign configuration values
 
@@ -158,7 +162,7 @@ The Agency also has these Derived values, which are never stored: its Agent cap,
 [Agency caps](#agency-caps); its projected income and projected upkeep, under
 [Projected income and upkeep](#projected-income-and-upkeep); and its roster, i.e. every Agent whose Agency reference
 identifies it, whatever that Agent's lifecycle state, under [Agent properties](agents-spec.md#agent-properties) in
-Agents. Its money has the two Turn series under [Turn series of money](#turn-series-of-money); funding and acquisitions
+Agents. Its money has the two Turn series under [Turn series of money](#turn-series-of-money); funding and Acquisitions
 have none.
 
 The following table is the exhaustive list of rules that change the Agency's State:
@@ -220,10 +224,11 @@ the next Advance turn.
 # Agency caps
 
 **Proposed rule:** The Agent cap, Transport cap, and Training cap are Derived values of the Agency, each computed by the
-same formula from a base value of EconomyParameters and the Agency's acquisitions:
+same formula from a base value of EconomyParameters and the Upgrade bonus of the cap's effect identifier, under
+[Upgrade bonus](#upgrade-bonus):
 
 ```text
-cap = base + sum over every Upgrade U whose effect is the cap's effect identifier of ( increment of U × acquisitions of U )
+cap = base + Upgrade bonus of the cap's effect identifier
 ```
 
 | Cap           | base                 | Effect identifier | What it limits                                                                                                             | Applied by                                                                              |
@@ -232,9 +237,8 @@ cap = base + sum over every Upgrade U whose effect is the cap's effect identifie
 | Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Current assignment is Deployed, over every Mission together.      | The `deployAgents` Player action under [Deploying Agents](missions.md#deploying-agents) |
 | Training cap  | `base_training_cap`  | `training_cap`    | The number of Serving Agents whose Current assignment is Training, counting both those At assignment and those In transit. | [Training cap on assigning Agents](#training-cap-on-assigning-agents)                   |
 
-Inputs: base is a whole number of Agents of at least 0; each increment is a whole number of Agents of at least 0; each
-acquisitions is a whole number of at least 0. A cap with no Upgrade of its effect identifier equals its base. No
-rounding occurs, because every term is a whole number. Each cap is a whole number of at least its base, with no upper
+Inputs: base is a whole number of Agents of at least 0, and the Upgrade bonus is a whole number of Agents of at least 0.
+A cap with no Upgrade of its effect identifier equals its base. No rounding occurs, because every term is a whole number. Each cap is a whole number of at least its base, with no upper
 bound.
 
 **Counting Training:** An Agent ordered to Training occupies a place under the Training cap from the moment of the
@@ -244,13 +248,13 @@ travelling away from Training, e.g. one ordered from Training to Standby, no lon
 **Counting Deployed Agents:** A Deployed Agent occupies a place under the Transport cap from the moment it is deployed
 until its Current assignment stops being Deployed in the Mission resolution step, whether it returns or is Killed.
 
-Each cap is computed from the current acquisitions whenever a rule reads it, so a purchase raises it at once, under
+Each cap is computed from the current Acquisitions whenever a rule reads it, so a purchase raises it at once, under
 [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract.
 
 ## Counts above a cap
 
 A cap limits only the actions that add to the count it limits: hiring for the Agent cap, ordering to Training for the
-Training cap, and deployment for the Transport cap. No rule lowers a cap, because acquisitions only rise, but a
+Training cap, and deployment for the Transport cap. No rule lowers a cap, because Acquisitions only rise, but a
 count can exceed its cap through a Player cheat action, e.g. `addAgents` under [Adding Agents](agents-spec.md#adding-agents)
 in Agents, which ignores the Agent cap. When a count exceeds its cap, nothing is removed and no Agent's Current
 assignment changes; only further additions are rejected until the count is below the cap again. A count above a cap is
@@ -359,7 +363,7 @@ Turn:
 - The Agency's money falls by `hire_cost`. Because money was at least `hire_cost`, money afterwards is at least 0.
 - One Agent is created under [Agent creation](agents-spec.md#agent-creation) in Agents: Serving, on Standby, In transit,
   with Turn hired equal to the current turn number, and with the initial weapon damage under
-  [Weapon damage effect](#weapon-damage-effect).
+  [Weapon damage Upgrade](#weapon-damage-upgrade).
 
 Nothing else changes. The new Agent counts toward the Agent cap and in projected upkeep at once. It arrives in the next
 Advance turn, under [Transit rule](agents-spec.md#transit-rule), and is counted in that Advance turn's Upkeep step.
@@ -451,53 +455,69 @@ State changes: when both preconditions hold, the action is one Player action tha
 Turn:
 
 - The Agency's money falls by the Upgrade's `price`. Because money was at least the price, money afterwards is at least 0.
-- The Agency's acquisitions of that Upgrade rise by 1.
+- The Agency's Acquisitions of that Upgrade rise by 1.
 - The Upgrade's effect applies, under [Upgrade effects](#upgrade-effects).
 
-Nothing else changes. The price is the GDR's `price` for every acquisition; it does not rise with acquisitions.
+Nothing else changes. The price is the GDR's `price` for every acquisition; it does not rise with Acquisitions.
 
 ## Upgrade effects
 
 **Proposed rule:** Every Upgrade has exactly one effect, named by its `effect` property. The four effect identifiers
-below are exhaustive, and they form two kinds.
+below are exhaustive, and they make an Upgrade one of two kinds.
 
-| Effect identifier     | Kind               | What one acquisition does                                                                                             |
-| --------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `agent_cap`           | Cap effect         | Raises the Agent cap by the Upgrade's `increment`, under [Cap effects](#cap-effects).                                 |
-| `transport_cap`       | Cap effect         | Raises the Transport cap by the Upgrade's `increment`, under [Cap effects](#cap-effects).                             |
-| `training_cap`        | Cap effect         | Raises the Training cap by the Upgrade's `increment`, under [Cap effects](#cap-effects).                              |
-| `agent_weapon_damage` | Agent value effect | Raises the weapon damage of Agents by the Upgrade's `increment`, under [Weapon damage effect](#weapon-damage-effect). |
+| Effect identifier     | Kind                  | What one acquisition does                                                                                             |
+| --------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `agent_cap`           | Cap Upgrade           | Raises the Agent cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                 |
+| `transport_cap`       | Cap Upgrade           | Raises the Transport cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                             |
+| `training_cap`        | Cap Upgrade           | Raises the Training cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                              |
+| `agent_weapon_damage` | Weapon damage Upgrade | Raises the weapon damage of Agents by the Upgrade's Increment, under [Weapon damage Upgrade](#weapon-damage-upgrade). |
 
 Acquisitions of every Upgrade stack by addition, without limit, and no effect depends on the order of purchases.
 
-### Cap effects
+### Upgrade bonus
 
-A cap effect changes no stored value beyond the acquisitions: the cap it raises is a Derived value under
-[Agency caps](#agency-caps), so it rises by `increment` at once, within the same Turn, and every Player action after the
-purchase sees the raised cap. A cap effect changes no Agent's Current assignment.
+**Proposed rule:** Every value an Upgrade improves is computed by one formula, from the starting value that the value
+would have without any Upgrade and the Upgrade bonus of the effect identifier that improves it:
 
-### Weapon damage effect
+```text
+upgraded value = starting value + Upgrade bonus
+Upgrade bonus  = sum over every Upgrade U whose effect is the effect identifier of ( Increment of U × Acquisitions of U )
+```
+
+Inputs: each Increment and each Acquisitions is a whole number of at least 0, and the Acquisitions are those of the
+Committed state in which the value is read or set. The Upgrade bonus of an effect identifier that no Upgrade has is 0.
+No rounding occurs. The starting value and where the upgraded value applies are stated for each kind:
+[Agency caps](#agency-caps) for a Cap Upgrade and [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage
+Upgrade.
+
+### Cap Upgrades
+
+A Cap Upgrade changes no stored value beyond the Acquisitions: the cap it raises is a Derived value under
+[Agency caps](#agency-caps), so it rises by the Increment at once, within the same Turn, and every Player action after the
+purchase sees the raised cap. A Cap Upgrade changes no Agent's Current assignment.
+
+### Weapon damage Upgrade
 
 Weapon damage is the only Agent value an Upgrade may change, under
 [Modifiable values](agents-spec.md#modifiable-values) in Agents. An acquisition of an Upgrade whose `effect` is
-`agent_weapon_damage` has two consequences:
+`agent_weapon_damage`, i.e. of a Weapon damage Upgrade, has two results:
 
 1. **Serving Agents:** When the purchase is committed, the weapon damage of every Serving Agent rises by that Upgrade's
-   `increment`, whatever the Agent's Current assignment and Task phase; e.g., a Deployed Agent, an Agent In transit, and
+   Increment, whatever the Agent's Current assignment and Task phase; e.g., a Deployed Agent, an Agent In transit, and
    an Agent on Recovery are all raised. Killed and Dismissed Agents keep their weapon damage, which is retained in World
    history, under [Agent properties](agents-spec.md#agent-properties) in Agents.
 2. **Agents created later:** Every Agent created after the purchase, under
    [Agent creation](agents-spec.md#agent-creation) in Agents, starts with the initial weapon damage below.
 
 ```text
-initial weapon damage = damage + sum over every Upgrade U whose effect is agent_weapon_damage of ( increment of U × acquisitions of U )
+initial weapon damage = base_weapon_damage + Upgrade bonus of agent_weapon_damage
 ```
 
-Inputs: damage is the `damage` of the Weapon GDR that the AgentArchetype's `weapon` references, a whole number of at
-least 1; each increment and each acquisitions is a whole number of at least 0, and the acquisitions are those of the
-Committed state in which the Agent is created. No rounding occurs. The result is a whole number of at least damage, so of at least 1.
-This formula applies to every Agent creation: hiring, `addAgents`, and the initial roster, whose Agents start with
-damage because acquisitions are 0 at campaign creation.
+Inputs: `base_weapon_damage` is that of the Weapon GDR that the AgentArchetype's `weapon` references, a whole number
+of at least 1, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the
+Committed state in which the Agent is created. The result is a whole number of at least `base_weapon_damage`, so of at
+least 1. This formula applies to every Agent creation: hiring, `addAgents`, and the initial roster, whose Agents start
+with `base_weapon_damage` because the Upgrade bonus is 0 at campaign creation.
 
 Consequently, every Serving Agent's weapon damage equals the formula above, whichever Turn the Agent was created in,
 because no other rule changes weapon damage, under [Changes to attributes](agents-spec.md#changes-to-attributes) in
@@ -527,7 +547,7 @@ The values are recorded as follows:
 
 The current Turn has a recorded value of Money at the start of turn but none of Money at the end of turn, because its
 Turn-end state is not reached until its Advance turn is committed. Player actions during a Turn never change a value
-already recorded. Both Turn series are Player-visible information. Funding, acquisitions, and the caps have no Turn
+already recorded. Both Turn series are Player-visible information. Funding, Acquisitions, and the caps have no Turn
 series.
 
 # Player cheat actions
@@ -549,7 +569,7 @@ recorded as one Timeline entry.
 Validation: the operation is rejected, and changes nothing, when `amount` is not a whole number or is less than 1. No
 upper limit applies.
 
-Effect: the Agency's money rises by `amount`. Nothing else changes; e.g., funding, acquisitions, and the values already
+Effect: the Agency's money rises by `amount`. Nothing else changes; e.g., funding, Acquisitions, and the values already
 recorded in the Turn series are unchanged. Money that was negative may become zero or positive.
 
 # Player-visible information
@@ -563,7 +583,7 @@ moment it exists, without a reveal condition. The table is exhaustive.
 | The Agency's Instance ID and its AgencyArchetype, including the AgencyArchetype's `name` | Yes                        |
 | The Agency's money, including a negative amount                                          | Yes                        |
 | The Agency's funding                                                                     | Yes                        |
-| The Agency's acquisitions of each Upgrade                                                | Yes                        |
+| The Agency's Acquisitions of each Upgrade                                                | Yes                        |
 | The Agent cap, Transport cap, and Training cap, each with its current value              | Yes                        |
 | The projected income and projected upkeep of the coming Advance turn                     | Yes                        |
 | Money at the start of turn and Money at the end of turn, in full                         | Yes                        |
@@ -571,7 +591,7 @@ moment it exists, without a reveal condition. The table is exhaustive.
 | The Campaign configuration values Starting money and Starting funding                    | Yes                        |
 
 **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. An
-Upgrade never purchased is reported with acquisitions 0, not as absent. Money at the end of turn has no recorded value
+Upgrade never purchased is reported with Acquisitions 0, not as absent. Money at the end of turn has no recorded value
 for the current Turn, which Player API reports as absent for that Turn. Because every value in the table above is
 Player-visible information, no rejection error of `hireAgent`, `dismissAgents`, `purchaseUpgrade`, or `addMoney`
 reveals anything hidden.
@@ -607,10 +627,10 @@ reveals anything hidden.
 - **Unknown Upgrade:** `purchaseUpgrade` with an identifier that names no Upgrade GDR, including one naming a GDR of
   another Type, is rejected ([Purchasing Upgrades](#purchasing-upgrades)).
 - **Weapon damage of Agents who are not Serving:** A Killed or Dismissed Agent keeps its weapon damage when a weapon
-  damage Upgrade is purchased ([Weapon damage effect](#weapon-damage-effect)).
-- **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises acquisitions but no cap or weapon
+  damage Upgrade is purchased ([Weapon damage Upgrade](#weapon-damage-upgrade)).
+- **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises Acquisitions but no cap or weapon
   damage, and a purchase of the second costs no money ([Economy GDR validation](#economy-gdr-validation)).
-- **Large values:** Money, acquisitions, caps, and weapon damage have no upper bound, and every computation is exact,
+- **Large values:** Money, Acquisitions, caps, and weapon damage have no upper bound, and every computation is exact,
   under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
 - **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a
   second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is
@@ -640,7 +660,7 @@ value. The values they read are:
 | `training_cap`      | `price` 200; `effect` `training_cap`; `increment` 4                                                                                          |
 | `weapon_damage`     | `price` 500; `effect` `agent_weapon_damage`; `increment` 1                                                                                   |
 | `agent_parameters`  | `initial_roster_size` 4                                                                                                                      |
-| `sidearm`           | `damage` 10                                                                                                                                  |
+| `sidearm`           | `base_weapon_damage` 10                                                                                                                      |
 | `operation_level_2` | `on_win` money 30 and funding 5; `on_ignored_or_lost` funding −1                                                                             |
 
 "The Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. Unless an
@@ -756,14 +776,14 @@ This example exercises [Funding changes](#funding-changes) and [Agency income](#
 
 ## Hiring at the Agent cap
 
-This example exercises [Hiring Agents](#hiring-agents), [Agency caps](#agency-caps), [Cap effects](#cap-effects), and
+This example exercises [Hiring Agents](#hiring-agents), [Agency caps](#agency-caps), [Cap Upgrades](#cap-upgrades), and
 [Counts above a cap](#counts-above-a-cap). During Turn 12 the Agency has money 500 and exactly 20 Serving Agents, of
 which one is In transit, two are Deployed, and one is on Recovery, plus one Killed Agent.
 
 | Call                         | Result                                                                                                           | Money | Serving Agents | Agent cap       |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----- | -------------- | --------------- |
 | `hireAgent()`                | Rejected: 20 Serving Agents are not fewer than the Agent cap 20; the Killed Agent does not count, the others do. | 500   | 20             | 20              |
-| `purchaseUpgrade(agent_cap)` | Succeeds: acquisitions of `agent_cap` become 1.                                                                  | 300   | 20             | 20 + 4 × 1 = 24 |
+| `purchaseUpgrade(agent_cap)` | Succeeds: Acquisitions of `agent_cap` become 1.                                                                  | 300   | 20             | 20 + 4 × 1 = 24 |
 | `hireAgent()`, four times    | Each succeeds.                                                                                                   | 100   | 24             | 24              |
 | `hireAgent()`                | Rejected: 24 Serving Agents are not fewer than the Agent cap 24.                                                 | 100   | 24             | 24              |
 
@@ -793,19 +813,19 @@ nothing:
 
 ## Transport cap
 
-This example exercises [Agency caps](#agency-caps) and [Cap effects](#cap-effects); the rejection itself is made by the
+This example exercises [Agency caps](#agency-caps) and [Cap Upgrades](#cap-upgrades); the rejection itself is made by the
 `deployAgents` Player action under [Deploying Agents](missions.md#deploying-agents). During Turn 15 the Agency has
 money 1000, three Agents Deployed on a Mission at Mission site s1, and six Agents that can be ordered. The Transport cap is 4 and the number of Deployed
 Agents is 3, so deploying two Agents to Mission site s2 would make 5, more than 4, and Missions rejects it; deploying
 one would make 4 and is within the Transport cap. Instead the player calls `purchaseUpgrade(transport_cap)`: money
-becomes 0, acquisitions of `transport_cap` become 1, and the Transport cap becomes 4 + 2 × 1 = 6 at once, so deploying
+becomes 0, Acquisitions of `transport_cap` become 1, and the Transport cap becomes 4 + 2 × 1 = 6 at once, so deploying
 three Agents to s2 now makes 6 and is within the Transport cap. After the Combat at s1 in the next Advance turn, its
 survivors are no longer Deployed and stop counting.
 
 ## Training cap
 
 This example exercises [Training cap on assigning Agents](#training-cap-on-assigning-agents),
-[Agency caps](#agency-caps), and [Cap effects](#cap-effects). During Turn 20 the Agency has money 250. Agents t1, t2,
+[Agency caps](#agency-caps), and [Cap Upgrades](#cap-upgrades). During Turn 20 the Agency has money 250. Agents t1, t2,
 and t3 are on Training, At assignment; a1 to a6 are on Standby, At assignment. The Training cap is 4 and T is 3. The
 calls are made in this order:
 
@@ -823,7 +843,7 @@ A second `purchaseUpgrade(training_cap)` in the same Turn is rejected, because m
 
 ## Weapon damage Upgrade
 
-This example exercises [Weapon damage effect](#weapon-damage-effect), [Purchasing Upgrades](#purchasing-upgrades), and
+This example exercises [Weapon damage Upgrade](#weapon-damage-upgrade), [Purchasing Upgrades](#purchasing-upgrades), and
 [Hiring Agents](#hiring-agents). During Turn 30 the Agency has money 600 and four Serving Agents, each with weapon
 damage 10: a1 on Contracting, At assignment; a2 Deployed; a3 on Recovery, In transit; and a4 on Standby, In transit.
 Agent a5 is Killed and a6 is Dismissed, each with weapon damage 10. The actions are taken in this order:
@@ -838,7 +858,7 @@ Agent a5 is Killed and a6 is Dismissed, each with weapon damage 10. The actions 
 | `developer.actions.addAgents(1)`  | Succeeds                       | 450   | 2                               | 12                        | 10                         | a8, with weapon damage 12              |
 
 Each purchase cost the same 500. A third purchase later raises a1 to a4, a7, and a8 to 13 together, and leaves a5 and
-a6 at 10. The weapon damage of every Enemy and the `damage` of `sidearm` are unchanged throughout.
+a6 at 10. The weapon damage of every Enemy and the `base_weapon_damage` of `sidearm` are unchanged throughout.
 
 ## Purchase rejections and exact affordability
 
@@ -847,7 +867,7 @@ the Agency has money 199. Each call is made on its own from this state:
 
 | Call                            | Result                                                                |
 | ------------------------------- | --------------------------------------------------------------------- |
-| `purchaseUpgrade(training_cap)` | Rejected: 199 is less than 200. Money and acquisitions are unchanged. |
+| `purchaseUpgrade(training_cap)` | Rejected: 199 is less than 200. Money and Acquisitions are unchanged. |
 | `purchaseUpgrade(agent_health)` | Rejected: no Upgrade GDR has the identifier `agent_health`.           |
 | `purchaseUpgrade(sidearm)`      | Rejected: `sidearm` is a Weapon GDR, not an Upgrade GDR.              |
 
@@ -875,7 +895,7 @@ build defective, so no Campaign is created from it: setting `weapon_damage`'s `e
 - TODO (later): An Upgrade that raises base health, under [Upgrade effects](#upgrade-effects).
 - TODO (later): Contracting income that depends on an Agent's skill, under [Agency income](#agency-income).
 - TODO (later): Upgrade prices that rise with each acquisition, under [Purchasing Upgrades](#purchasing-upgrades).
-- TODO (later): A limit on the acquisitions of an Upgrade, under [Purchasing Upgrades](#purchasing-upgrades).
+- TODO (later): A limit on the Acquisitions of an Upgrade, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): Selling an Upgrade, under [Upgrades](#upgrades).
 - TODO (later): Lowering a cap, under [Agency caps](#agency-caps).
 - TODO (later): A refund on dismissal, under [Dismissing Agents](#dismissing-agents).

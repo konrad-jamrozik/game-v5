@@ -146,15 +146,15 @@ own Leads.
 
 Type owner: [Combat](../mechanics/combat.md).
 
-| GDR                 | Type             | GDR purpose           | What it supplies                                                                                              |
-| ------------------- | ---------------- | --------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `initiate`          | EnemyArchetype   | Archetype             | The weakest Enemy: skill, base health, and Weapon.                                                            |
-| `soldier`           | EnemyArchetype   | Archetype             | An Enemy roughly matching a newly hired Agent: skill, base health, and Weapon.                                |
-| `cult_leader`       | EnemyArchetype   | Archetype             | The strongest Enemy, met only in `raid_hq`: skill, base health, and Weapon.                                   |
-| `sidearm`           | Weapon           | Referenced GDR        | Base damage of the Weapon of every Agent and of `initiate`.                                                   |
-| `rifle`             | Weapon           | Referenced GDR        | Base damage of the Weapon of `soldier`.                                                                       |
-| `heavy_rifle`       | Weapon           | Referenced GDR        | Base damage of the Weapon of `cult_leader`.                                                                   |
-| `combat_parameters` | CombatParameters | Calculation parameter | The spread of a damage roll around base damage, the two retreat thresholds, and the incapacitation threshold. |
+| GDR                 | Type             | GDR purpose           | What it supplies                                                                                                     |
+| ------------------- | ---------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `initiate`          | EnemyArchetype   | Archetype             | The weakest Enemy: skill, base health, and Weapon.                                                                   |
+| `soldier`           | EnemyArchetype   | Archetype             | An Enemy roughly matching a newly hired Agent: skill, base health, and Weapon.                                       |
+| `cult_leader`       | EnemyArchetype   | Archetype             | The strongest Enemy, met only in `raid_hq`: skill, base health, and Weapon.                                          |
+| `sidearm`           | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of every Agent and of `initiate`.                                                   |
+| `rifle`             | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of `soldier`.                                                                       |
+| `heavy_rifle`       | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of `cult_leader`.                                                                   |
+| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around weapon damage, the two retreat thresholds, and the incapacitation threshold. |
 
 ## Agent Recovery GDRs
 
@@ -303,7 +303,7 @@ value that deliberately differs from its game-ts counterpart, and why.
 | ----------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | EnemyArchetypes                                             | 9 enemy kinds                                        | 3                                         | `initiate` merges initiate and operative; `soldier` merges soldier, handler, and lieutenant; `cult_leader` replaces commander and above. |
 | `cult_leader` skill and base health                         | Cult leader: skill 800, base health 80               | game-ts commander values                  | An 800-skill Enemy cannot be beaten after a three-step Victory path.                                                                     |
-| `initiate` Weapon                                           | Damage 8                                             | `sidearm`                                 | Sharing the Agents' Weapon saves one Weapon GDR.                                                                                         |
+| `initiate` Weapon                                           | Base weapon damage 8                                 | `sidearm`                                 | Sharing the Agents' Weapon saves one Weapon GDR.                                                                                         |
 | `locate_red_dawn_hq` difficulty                             | 25                                                   | Lower                                     | The HQ is the third step of three, not the eighth of eight.                                                                              |
 | `raid_hq` expiration and Enemies                            | Expires in 40 Turns; 111 Enemies                     | Shorter; ten Enemies                      | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |
 | Starting transport cap                                      | 6                                                    | Lower, raised by `transport_cap`          | Transport capacity becomes something the Agency invests in.                                                                              |

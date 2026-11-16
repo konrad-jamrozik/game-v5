@@ -105,7 +105,7 @@ The table below is exhaustive apart from `id` and `type`.
 
 ## Weapon properties this document reads
 
-A [Weapon](combat.md#weapon) GDR describes damage configuration. The Agent rules read only its `damage`
+A [Weapon](combat.md#weapon) GDR describes the weapon damage of the Combatants equipped with it. The Agent rules read only its `base_weapon_damage`
 property: the weapon damage of a newly created Agent equipped with that Weapon, under [Agent creation](#agent-creation).
 
 ## Agent GDR validation
@@ -126,7 +126,7 @@ and the violation is reported as a data defect, never repaired into different ga
    `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, and
    `training_skill_gain_per_turn` is a whole number of at least 0.
 
-[Combat GDR validation](combat.md#combat-gdr-validation) adds further rules, e.g. that the Weapon `damage` is a whole
+[Combat GDR validation](combat.md#combat-gdr-validation) adds further rules, e.g. that the Weapon `base_weapon_damage` is a whole
 number of at least 1. These rules guarantee that every newly created Agent satisfies
 [Attribute ranges](#attribute-ranges) and that the effective skill formula never divides by zero.
 
@@ -289,13 +289,13 @@ An Agent's attributes change only through a few named rules, so the cause of eve
 **Proposed rule:** The following table is the exhaustive list of rules that change an Agent's attributes after its
 creation. A rule not listed here changes none of them.
 
-| Value          | Raised by                                                                                                               | Lowered by                          |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| Skill          | [Training growth](#training-growth)                                                                                     | No rule                             |
-| Current health | [Agent Recovery](agent-recovery.md)                                                                                     | [Combat](combat.md), in a Combat    |
-| Base health    | No rule                                                                                                                 | No rule                             |
-| Exhaustion     | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`                               | [Agent Recovery](agent-recovery.md) |
-| Weapon damage  | The [Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect), under [Modifiable values](#modifiable-values) | No rule                             |
+| Value          | Raised by                                                                                                                 | Lowered by                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Skill          | [Training growth](#training-growth)                                                                                       | No rule                             |
+| Current health | [Agent Recovery](agent-recovery.md)                                                                                       | [Combat](combat.md), in a Combat    |
+| Base health    | No rule                                                                                                                   | No rule                             |
+| Exhaustion     | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`                                 | [Agent Recovery](agent-recovery.md) |
+| Weapon damage  | The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade), under [Modifiable values](#modifiable-values) | No rule                             |
 
 No Current assignment raises exhaustion: Standby, Contracting, Training, Recovery, and Investigations leave it
 unchanged. Each specification named in the table applies the clamps under [Attribute ranges](#attribute-ranges).
@@ -303,7 +303,7 @@ unchanged. Each specification named in the table applies the clamps under [Attri
 # Modifiable values
 
 **Proposed rule:** Weapon damage is the only Agent value that an Upgrade may change. It is an individual value of each
-Agent, not an Agency value. The [Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect) raises the
+Agent, not an Agency value. The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises the
 weapon damage of Serving Agents and of Agents created later, under [Agent creation](#agent-creation). No Upgrade changes skill, current health, base health, exhaustion, or Weapon.
 
 # Current assignments and transit
@@ -448,13 +448,13 @@ Campaign Instances. This table is exhaustive.
 | Current health        | The AgentArchetype's `base_health`.                                                               | `base_health` of the AgentArchetype.                                             |
 | Exhaustion            | 0.                                                                                                | This rule.                                                                       |
 | Weapon                | The Weapon GDR that the AgentArchetype's `weapon` references.                                     | `weapon` of the AgentArchetype.                                                  |
-| Weapon damage         | The `damage` of that Weapon GDR.                                                                  | `damage` of the Weapon GDR.                                                      |
+| Weapon damage         | The `base_weapon_damage` of that Weapon GDR.                                                      | `base_weapon_damage` of the Weapon GDR.                                          |
 | Current assignment    | Standby.                                                                                          | This rule.                                                                       |
 | Task phase            | At assignment for an Agent of the initial roster; In transit for every Agent created during play. | This rule, under [Transit rule](#transit-rule).                                  |
 | Participation history | Empty.                                                                                            | This rule.                                                                       |
 
 The table above states the initial weapon damage before any Upgrade has been acquired; for an Agent created after an
-Upgrade has been acquired, the [Weapon damage effect](economy-and-upgrades.md#weapon-damage-effect) refines it. The new Agent joins the Agency's roster of Agents. No Campaign configuration value changes any initial value above.
+Upgrade has been acquired, the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) refines it. The new Agent joins the Agency's roster of Agents. No Campaign configuration value changes any initial value above.
 Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
 ## Initial roster
@@ -463,7 +463,7 @@ Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](econ
 AgentParameters, and no other Agent, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model
 requires. Each is created under [Agent creation](#agent-creation) with Task phase At assignment and Turn hired equal to
 the turn number of the Campaign's first Turn. Because no Upgrade has been acquired at campaign creation, each has the
-Weapon `damage` as its weapon damage. Every Agent of the initial roster can be ordered in the first Turn. An
+Weapon `base_weapon_damage` as its weapon damage. Every Agent of the initial roster can be ordered in the first Turn. An
 `initial_roster_size` of 0 is valid and gives an empty roster.
 
 # Assigning Agents
@@ -610,7 +610,7 @@ values they read are:
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `field_agent`      | `name` Field agent; `skill` 100; `base_health` 30; `weapon` `sidearm`                                                                                                                                    |
 | `agent_parameters` | `initial_roster_size` 4; `exhaustion_cap` 100; `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_attack` 1; `exhaustion_per_defense` 1; `training_skill_gain_per_turn` 1 |
-| `sidearm`          | `damage` 10                                                                                                                                                                                              |
+| `sidearm`          | `base_weapon_damage` 10                                                                                                                                                                                  |
 
 "The Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. No
 Upgrade has been acquired in any example. Effects of other specifications' rules, e.g. income, appear only to show

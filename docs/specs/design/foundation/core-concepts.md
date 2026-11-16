@@ -146,7 +146,7 @@ though it never changes during gameplay. It is also independent of player visibi
 the player.
 
 E.g., each enemy's current health is an Authoritative value and the enemies' total current health is a Derived
-value. With two enemies at current health 10, the total is 20; after enemy_1 takes 3 damage, it is 17. Hiding either the
+value. With two enemies at current health 10, the total is 20; after an attack removes 3 of enemy_1's current health, it is 17. Hiding either the
 individual current health or the total from the player does not change either classification.
 
 E.g., each Investigation Campaign instance has a Lead reference property within its Constants property and a lifecycle
