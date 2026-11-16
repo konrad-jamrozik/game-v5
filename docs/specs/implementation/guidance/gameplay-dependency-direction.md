@@ -32,9 +32,9 @@ execution has no hidden inputs; an implementation may also meet that guarantee b
 
 # Glossary
 
-| Term              | Definition                                                                                                                                                         |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Gameplay function | Implementation code that carries out game behavior while executing a committed Player API or Developer API action, including code that creates Campaign instances. |
+| Term              | Definition                                                                                                                                    |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Gameplay function | Implementation code that carries out game behavior while executing a committed Player action, including code that creates Campaign instances. |
 
 # Dependency direction
 

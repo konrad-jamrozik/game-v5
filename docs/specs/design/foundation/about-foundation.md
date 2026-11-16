@@ -62,7 +62,7 @@ owns when a Session starts and ends, creating, loading, selecting, and closing t
 ## Developer Access
 
 [Developer Access](developer-access.md) answers _how can the Session controller inspect and change a Campaign beyond
-ordinary play?_ It owns Dev mode, full Campaign state inspection, cheat operations, and random outcome overrides.
+ordinary play?_ It owns Dev mode, full Campaign state inspection, Player cheat actions, and random outcome overrides.
 
 ## Determinism and Randomness
 

@@ -281,7 +281,7 @@ shows.
 the same Timeline, and the list is complete:
 
 - **Every Player action is rejected:** Every state-changing action of Player API and of Developer API, including
-  `advanceTurn()` and including a cheat action, is rejected. The Campaign having no Campaign ending is a precondition
+  `advanceTurn()` and including a Player cheat action, is rejected. The Campaign having no Campaign ending is a precondition
   of each of them, in addition to the other preconditions of that action, e.g. those in [Agents](agents-spec.md). A
   rejected action changes nothing, under
   [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract, and the
@@ -531,7 +531,7 @@ money 100, the Campaign ending Defeat, and the 4 surviving Agents In transit.
   although that Agent also fails the precondition that it can be ordered. The Agent's Current assignment is unchanged.
 - `advanceTurn()` is rejected. The turn number is still 13, Panic is still 100, and no Timeline entry or other Committed
   state is produced.
-- A Developer API cheat action, e.g. `addMoney(100)` with Dev mode enabled, is rejected, and money is still 100.
+- A Player cheat action, e.g. `addMoney(100)` with Dev mode enabled, is rejected, and money is still 100.
 - `getCurrentState()` of Player API returns Panic 100, the Panic limit 100, the Campaign ending Defeat, the Ending
   reasons { Panic at the limit }, and the Ending turn 12. The result is the same for the Session controller and an
   Autopilot AI, and `getTurnReport()` and `getHistory()` keep answering.

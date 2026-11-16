@@ -91,8 +91,8 @@ as Advance turn does under [Timeline entries](#timeline-entries), never removes 
 
 # Timeline entries
 
-Each committed Player API or Developer API action other than Advance turn is exactly one Timeline entry, under
-[Player queries and actions](engine-contract.md#player-queries-and-actions), which counts a successful Developer API
+Each committed Player action other than Advance turn is exactly one Timeline entry, under
+[Player queries and actions](engine-contract.md#player-queries-and-actions), which counts a successful Player cheat
 action as a Player action. No other operation is a
 Timeline entry, e.g. a query or `session.saves.save()`.
 
@@ -126,7 +126,7 @@ The following list of navigation operations is complete.
 `undoAllActions()` has the same result as calling `undoAction()` until it is unavailable, and `redoAllActions()` the
 same result as calling `redoAction()` until it is unavailable.
 
-Committing a new Player API or Developer API action discards every Undone action. The discarded Undone actions cannot
+Committing a new Player action discards every Undone action. The discarded Undone actions cannot
 be redone.
 
 Action navigation never leaves the current Turn: undo stops at the Turn-start state, and redo stops after the last
@@ -160,7 +160,7 @@ The following rules are complete.
   Timeline, before going back, unless the Campaign has a Return Autosave holding a later Committed state than the
   current one. A Campaign has at most one Return Autosave. Loading the Return Autosave through `redoToAutosave()`
   removes it.
-- **A new action removes Autosaves of abandoned play:** When a Player API or Developer API action commits, every
+- **A new action removes Autosaves of abandoned play:** When a Player action commits, every
   Autosave of the Campaign is removed unless it holds the Committed state in which that action began or an earlier
   Committed state. The removal happens before any Autosave that the action itself causes is written.
 - **Loading a target:** Loading a target restores the Campaign state, Timeline, and Autopilot memory it holds, as
@@ -215,7 +215,7 @@ Play continued from a restored Committed state produces the outcomes of uninterr
 [Determinism](determinism-and-randomness.md#determinism). Redo reproduces the Player action exactly:
 
 - Redoing an action that an Autopilot AI chose does not ask any Autopilot AI to choose again.
-- A Developer API action is undone and redone whether or not Dev mode is enabled, and doing so grants no Developer
+- A Player cheat action is undone and redone whether or not Dev mode is enabled, and doing so grants no Developer
   API access.
 
 Navigation leaves Dev mode unchanged. Restoration preserves

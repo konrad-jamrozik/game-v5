@@ -432,7 +432,7 @@ Training, not how much skill each gains.
 
 **Proposed rule:** Every Agent is created by this rule, whichever rule causes the creation: the
 [Initial roster](#initial-roster), the `hireAgent` Player action of [Economy and Upgrades](economy-and-upgrades.md), or
-the cheat operation under [Adding Agents](#adding-agents). Each new Agent has a fresh Instance ID under
+the Player cheat action under [Adding Agents](#adding-agents). Each new Agent has a fresh Instance ID under
 [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following
 initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in
 Campaign Instances. This table is exhaustive.
@@ -514,15 +514,15 @@ Turn, to every Agent in `agents`:
 Nothing else changes; e.g., no money is spent, and skill, current health, and exhaustion are unchanged. The Agents arrive in
 the next Advance turn and start working in the Advance turn after it, under [Transit rule](#transit-rule).
 
-# Cheat operations
+# Player cheat actions
 
-A cheat operation changes Campaign state in a way ordinary play does not allow. The cheat operation for Agents adds them
+A Player cheat action changes Campaign state in a way ordinary play does not allow. The Player cheat action for Agents adds them
 without the cost and the Agent cap that hiring has.
 
 ## Adding Agents
 
-**Proposed rule:** The cheat operation `developer.actions.addAgents(count)` adds Agents to the Agency. It follows every
-rule under [Cheat operations](../foundation/developer-access.md#cheat-operations) in Developer Access, including that
+**Proposed rule:** The Player cheat action `developer.actions.addAgents(count)` adds Agents to the Agency. It follows every
+rule under [Player cheat actions](../foundation/developer-access.md#player-cheat-actions) in Developer Access, including that
 only the Session controller can call it, only with Dev mode enabled, and that each successful call is one Player action
 recorded as one Timeline entry.
 

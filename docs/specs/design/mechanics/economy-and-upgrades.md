@@ -251,7 +251,7 @@ Each cap is computed from the current acquisitions whenever a rule reads it, so 
 
 A cap limits only the actions that add to the count it limits: hiring for the Agent cap, ordering to Training for the
 Training cap, and deployment for the Transport cap. No rule lowers a cap, because acquisitions only rise, but a
-count can exceed its cap through a cheat operation, e.g. `addAgents` under [Adding Agents](agents-spec.md#adding-agents)
+count can exceed its cap through a Player cheat action, e.g. `addAgents` under [Adding Agents](agents-spec.md#adding-agents)
 in Agents, which ignores the Agent cap. When a count exceeds its cap, nothing is removed and no Agent's Current
 assignment changes; only further additions are rejected until the count is below the cap again. A count above a cap is
 not an invariant violation.
@@ -530,15 +530,15 @@ Turn-end state is not reached until its Advance turn is committed. Player action
 already recorded. Both Turn series are Player-visible information. Funding, acquisitions, and the caps have no Turn
 series.
 
-# Cheat operations
+# Player cheat actions
 
-A cheat operation changes Campaign state in a way ordinary play does not allow. The cheat operation for money gives the
+A Player cheat action changes Campaign state in a way ordinary play does not allow. The Player cheat action for money gives the
 Agency money that nothing in play earned.
 
 ## Adding money
 
-**Proposed rule:** The cheat operation `developer.actions.addMoney(amount)` adds money to the Agency. It follows every
-rule under [Cheat operations](../foundation/developer-access.md#cheat-operations) in Developer Access, including that
+**Proposed rule:** The Player cheat action `developer.actions.addMoney(amount)` adds money to the Agency. It follows every
+rule under [Player cheat actions](../foundation/developer-access.md#player-cheat-actions) in Developer Access, including that
 only the Session controller can call it, only with Dev mode enabled, and that each successful call is one Player action
 recorded as one Timeline entry.
 
@@ -588,7 +588,7 @@ reveals anything hidden.
 - **Training cap reached:** An Agent In transit to Training occupies a place, so an order to Training that would exceed
   the cap is rejected even while some Agents on Training have not yet arrived
   ([Training cap on assigning Agents](#training-cap-on-assigning-agents)).
-- **Count above a cap:** After a cheat operation, e.g. `addAgents`, a count may exceed its cap; nothing is removed and
+- **Count above a cap:** After a Player cheat action, e.g. `addAgents`, a count may exceed its cap; nothing is removed and
   only further additions are rejected ([Counts above a cap](#counts-above-a-cap)).
 - **Zero funding:** With funding 0 and no Agent working on Contracting, income is 0 and the Agency income step leaves
   money unchanged. A funding change that would take funding below 0 leaves it at 0 ([Agency income](#agency-income),
@@ -768,7 +768,7 @@ which one is In transit, two are Deployed, and one is on Recovery, plus one Kill
 | `hireAgent()`                | Rejected: 24 Serving Agents are not fewer than the Agent cap 24.                                                 | 100   | 24             | 24              |
 
 Separately, an Agency with money 50 and 4 Serving Agents hires successfully and has money 0; with money 49,
-`hireAgent()` is rejected and changes nothing. An Agency with 20 Serving Agents to which the cheat operation
+`hireAgent()` is rejected and changes nothing. An Agency with 20 Serving Agents to which the Player cheat action
 `developer.actions.addAgents(3)` adds 3 Agents has 23 Serving Agents and an Agent cap of 20: nothing is removed, and
 `hireAgent()` is rejected until the number of Serving Agents falls below the Agent cap or the Agent cap rises above it.
 
