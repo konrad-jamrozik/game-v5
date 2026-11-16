@@ -16,7 +16,7 @@ fight automatically, and the whole Combat is resolved within one Advance turn.
 
 Everything about a Combat follows from one rule: fighting only wears [Combatants](domain-model.md#combat) down. Every attack, hit or miss, raises
 exhaustion, and a hit removes current health, so effective skill can only fall while a Combat lasts. A Combatant whose
-current health reaches zero is [Killed](agents-spec.md#agent-statuses), and one whose effective skill falls too far is Incapacitated and stops fighting.
+current health reaches zero is [Killed](agents-spec.md#agent-statuses), and one whose effective skill falls too far or whose exhaustion grows too high is Incapacitated and stops fighting.
 The Combat is fought in Combat rounds until no [Enemy](domain-model.md#combat) can fight on, no [Agent](domain-model.md#agency-and-agents) can, or the Agents retreat, and because
 exhaustion keeps rising, every Combat ends. Its [Combat report](domain-model.md#combat) records every attack.
 
@@ -58,7 +58,7 @@ Whether a Combatant still takes part in a Combat, and how strong it and its side
 
 # Combat GDRs
 
-Enemies and Combats are configured by the three [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) below and by five AgentParameters values.
+Enemies and Combats are configured by the three [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) below and by three AgentParameters values.
 The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the
 YAML files it names.
 
@@ -105,15 +105,14 @@ written as, under [Whole-number quantities](../foundation/numbers.md#whole-numbe
 
 ## AgentParameters values this document reads
 
-Combats read five values of [AgentParameters](agents-spec.md#agentparameters):
+Combats read three values of [AgentParameters](agents-spec.md#agentparameters), and read exhaustion's effect on
+effective skill only through [Effective skill](agents-spec.md#effective-skill):
 
-| Property                           | Meaning and use                                                                      | Read by                                                                                        |
-| ---------------------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| `exhaustion_per_attack`            | The exhaustion an attacking Combatant gains from each of its attacks, hit or miss.   | [Effects of an attack](#effects-of-an-attack)                                                  |
-| `exhaustion_per_defense`           | The exhaustion a defending Combatant gains from each attack made on it, hit or miss. | [Effects of an attack](#effects-of-an-attack)                                                  |
-| `exhaustion_cap`                   | The clamp of exhaustion under [Attribute ranges](agents-spec.md#attribute-ranges).   | [Effects of an attack](#effects-of-an-attack); [Combat GDR validation](#combat-gdr-validation) |
-| `exhaustion_free_points`           | An input of [Effective skill](agents-spec.md#effective-skill).                       | [Combat GDR validation](#combat-gdr-validation)                                                |
-| `skill_penalty_pct_per_exhaustion` | An input of [Effective skill](agents-spec.md#effective-skill).                       | [Combat GDR validation](#combat-gdr-validation)                                                |
+| Property                    | Meaning and use                                                                      | Read by                                                                            |
+| --------------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `exhaustion_per_attack`     | The exhaustion an attacking Combatant gains from each of its attacks, hit or miss.   | [Effects of an attack](#effects-of-an-attack)                                      |
+| `exhaustion_per_defense`    | The exhaustion a defending Combatant gains from each attack made on it, hit or miss. | [Effects of an attack](#effects-of-an-attack)                                      |
+| `exhaustion_incapacitation` | The exhaustion at or above which a Combatant meets the incapacitation condition.     | [Incapacitation condition](#incapacitation-condition); [Termination](#termination) |
 
 ## Combat GDR validation
 
@@ -136,24 +135,12 @@ different gameplay, under
 6. **Incapacitation threshold is valid:** `incapacitation_skill_fraction` is a decimal number of at least 0 and less
    than 1.
 7. **Every attack tires someone:** `exhaustion_per_attack + exhaustion_per_defense` is at least 1.
-8. **Exhaustion at the cap incapacitates:** With `p` the `skill_penalty_pct_per_exhaustion`, `f` the
-   `exhaustion_free_points`, and `X` the `exhaustion_cap` of AgentParameters, the penalty factor of
-   [Effective skill](agents-spec.md#effective-skill) at an exhaustion of `X` is at most
-   `100 × incapacitation_skill_fraction`:
-
-   ```text
-   max(0, 100 − p × max(0, X − f))  ≤  100 × incapacitation_skill_fraction
-   ```
-
-   The comparison is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
-
-9. **Exact properties:** Each EnemyArchetype, Weapon, and CombatParameters GDR has exactly the properties its table above
+8. **Exact properties:** Each EnemyArchetype, Weapon, and CombatParameters GDR has exactly the properties its table above
    lists, apart from `id` and `type`: no listed property is missing and no other property is present.
 
-Rules 7 and 8 together guarantee that every Combat ends, under [Termination](#termination). Rule 8 is also necessary for
-that guarantee: base skill has no upper bound, and when the penalty factor at `X` exceeds `100 ×
-incapacitation_skill_fraction`, a Combatant with a large enough base skill and current health equal to its base health is still able to fight at
-exhaustion `X`, so two such Combatants that keep missing would never stop.
+Rule 7, together with the exhaustion clause of the [Incapacitation condition](#incapacitation-condition), guarantees
+that every Combat ends, under [Termination](#termination). [Agent GDR validation](agents-spec.md#agent-gdr-validation) in
+Agents makes `exhaustion_incapacitation` a whole number of at least 1.
 
 # Enemies
 
@@ -238,7 +225,7 @@ makes no choice during the Combat. A Combat is a function of the following input
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
 3. **Current values:** the base skill, current health, base health, exhaustion, and base weapon damage of every Combatant in the two
    lists, as they are when the Combat begins.
-4. **GDR values:** the four values of CombatParameters, and `exhaustion_cap`, `exhaustion_free_points`,
+4. **GDR values:** the four values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`,
    `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, and `exhaustion_per_defense` of AgentParameters.
 5. **Random outcomes:** the named random outcomes of its attacks, under [Hit outcome](#hit-outcome) and
    [Damage outcome](#damage-outcome).
@@ -275,17 +262,22 @@ Being able to fight is a Derived value.
 
 ## Incapacitation condition
 
-**Inherited behavior:** A Combatant meets the incapacitation condition exactly when its current health is greater than 0 and
+**Inherited behavior** for the skill clause; **Proposed rule** for the exhaustion clause. A Combatant meets the
+incapacitation condition exactly when its current health is greater than 0 and at least one of the following holds:
 
 ```text
-effective skill  ≤  incapacitation_skill_fraction × base skill
+effective skill  ≤  incapacitation_skill_fraction × base skill        (skill clause)
+exhaustion       ≥  exhaustion_incapacitation                         (exhaustion clause)
 ```
 
 where effective skill is computed under [Effective skill](agents-spec.md#effective-skill) in Agents from the
-Combatant's values at that moment, base skill is its base skill, and `incapacitation_skill_fraction` is the CombatParameters value.
-The comparison is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers; the right-hand
-side is never rounded. E.g., with a fraction of 0.1 a Combatant of base skill 40 meets it at an effective skill of 4 or less,
-and one of base skill 125 at 12 or less, since 12 ≤ 12.5 < 13.
+Combatant's values at that moment, base skill and exhaustion are its own values at that moment, `incapacitation_skill_fraction` is the CombatParameters value,
+and `exhaustion_incapacitation` is the AgentParameters value.
+Each comparison is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers; the right-hand
+side of the skill clause is never rounded. E.g., with a fraction of 0.1 a Combatant of base skill 40 meets it at an effective skill of 4 or less,
+and one of base skill 125 at 12 or less, since 12 ≤ 12.5 < 13. E.g., with the Bootstrap values, a Combatant at full
+current health with exhaustion 100 has effective skill 30% of its base skill, above the skill clause, and meets the
+condition through the exhaustion clause alone.
 
 A Combatant of base skill 0 meets the condition whenever it is alive, because its effective skill is 0. A Combatant that does
 not meet it has an effective skill of at least 1, because its effective skill is greater than a value of at least 0.
@@ -441,8 +433,7 @@ attacks.
    not below 0. The health removed is the smaller of the damage outcome and the
    defender's current health before this step. On a miss, current health does not change and the health removed is 0.
 4. **Exhaustion:** The attacker gains `exhaustion_per_attack` exhaustion and the defender gains `exhaustion_per_defense`
-   exhaustion, hit or miss. Each is clamped at `exhaustion_cap` under [Attribute ranges](agents-spec.md#attribute-ranges)
-   in Agents.
+   exhaustion, hit or miss. No upper clamp applies, under [Attribute ranges](agents-spec.md#attribute-ranges) in Agents.
 5. **Evaluation:** The defender and then the attacker are evaluated under
    [Killed and Incapacitated](#killed-and-incapacitated), with their values after steps 3 and 4.
 
@@ -524,23 +515,22 @@ each surviving Agent, follows from the Combat outcome under [Missions](missions.
 ## Termination
 
 **Proposed rule:** Every Combat ends, after at most `N × X` Combat rounds, where `N` is the number of Combatants of both sides
-and `X` is `exhaustion_cap`. This holds for every Game build that passes [Combat GDR validation](#combat-gdr-validation),
+and `X` is `exhaustion_incapacitation`. This holds for every Game build that passes [Combat GDR validation](#combat-gdr-validation)
+and [Agent GDR validation](agents-spec.md#agent-gdr-validation),
 whatever the random outcomes, including when every hit outcome is a miss, and including Combatants that never attack or
-are never attacked. The argument is:
+are never attacked. The argument counts the capped total exhaustion `T`, the sum over every Combatant of the Combat of
+`min(exhaustion, X)`:
 
-1. **Exhaustion at the cap ends fighting.** For a Combatant alive with exhaustion `X`, its penalty factor is at most
-   `100 × incapacitation_skill_fraction` by rule 8 of [Combat GDR validation](#combat-gdr-validation). Since current health
-   divided by base health is at most 1 and Round down never raises a value, its effective skill is at most
-   `skill × penalty factor / 100 ≤ incapacitation_skill_fraction × skill`. It meets the
-   [Incapacitation condition](#incapacitation-condition), so it is Incapacitated: at Combat start, or after the attack
-   that raised its exhaustion to `X`. Every Combatant able to fight therefore has an exhaustion below `X`.
-2. **Every attack raises total exhaustion.** Attacker and defender are both able to fight before the attack, so each has
-   an exhaustion below `X`, and the attack raises the attacker's by at least `min(1, exhaustion_per_attack)` and the
-   defender's by at least `min(1, exhaustion_per_defense)`. By rule 7 one of these is at least 1. The sum of the
-   exhaustion of all Combatants of the Combat thus rises by at least 1 with every attack.
-3. **Total exhaustion is bounded.** No rule lowers exhaustion during a Combat, and each Combatant's exhaustion is at most
-   `X`, so the sum starts at 0 or more and never exceeds `N × X`. At most `N × X` attacks can therefore happen in one
-   Combat.
+1. **Exhaustion of `X` or more ends fighting.** A Combatant alive with exhaustion of at least `X` meets the exhaustion
+   clause of the [Incapacitation condition](#incapacitation-condition), so it is Incapacitated: at Combat start, or after
+   the attack that raised its exhaustion to `X` or more. Every Combatant able to fight therefore has an exhaustion below
+   `X`.
+2. **Every attack raises `T`.** Attacker and defender are both able to fight before the attack, so each has
+   an exhaustion below `X`, and the attack raises the attacker's `min(exhaustion, X)` by at least
+   `min(1, exhaustion_per_attack)` and the defender's by at least `min(1, exhaustion_per_defense)`. By rule 7 of
+   [Combat GDR validation](#combat-gdr-validation) one of these is at least 1, so `T` rises by at least 1 with every attack.
+3. **`T` is bounded.** No rule lowers exhaustion during a Combat, and each Combatant adds at most `X` to `T`, so `T`
+   starts at 0 or more and never exceeds `N × X`. At most `N × X` attacks can therefore happen in one Combat.
 4. **Every Combat round that is fought has an attack.** A Combat round begins only when an Agent and an Enemy are both able to fight,
    under [Combat start](#combat-start) and [End-of-Combat-round checks](#end-of-combat-round-checks). Let `a` be the first Agent in
    the fixed order of its side that is able to fight when the Combat round begins. Before `a`'s Combat turn only Agents that are not
@@ -630,13 +620,14 @@ Mission whose Combat has not been fought has no Combat report anywhere.
   current health ([Effects of an attack](#effects-of-an-attack)).
 - **Damage outcome of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no current health but still
   raises exhaustion ([Damage outcome](#damage-outcome)).
-- **Exhaustion at the cap:** Exhaustion that would exceed `exhaustion_cap` is `exhaustion_cap`, and under rule 8 of
-  [Combat GDR validation](#combat-gdr-validation) such a Combatant is Incapacitated ([Termination](#termination)).
+- **Exhaustion of `exhaustion_incapacitation` or more:** A Combatant reaching it is Incapacitated whatever its
+  effective skill, and its exhaustion is not clamped; an Agent may start a Combat with exhaustion above it and is then
+  Incapacitated from the start ([Incapacitation condition](#incapacitation-condition), [Termination](#termination)).
 - **Simultaneous end conditions:** When no Combatant of either side is able to fight, the outcome is Prevailed. When no
   Agent is able to fight and the Retreated check would also hold, the outcome is Wiped
   ([End-of-Combat-round checks](#end-of-combat-round-checks)).
 - **Ties in target selection:** The earliest opponent in the fixed order wins the tie ([Target selection](#target-selection)).
-- **Every attack misses:** The Combat still ends, through Incapacitated or Retreated, within `N × exhaustion_cap` Combat rounds
+- **Every attack misses:** The Combat still ends, through Incapacitated or Retreated, within `N × exhaustion_incapacitation` Combat rounds
   ([Termination](#termination)).
 - **Invalid inputs:** An empty Agents' side, a duplicate Combatant, or an Agent that is not Serving is an internal
   invariant violation ([Combat inputs and outputs](#combat-inputs-and-outputs)).
@@ -650,24 +641,25 @@ All examples use the Bootstrap GDR values from `content/combat/enemy_archetypes.
 `content/combat/combat_parameters.yaml`, `content/agents/agent_archetypes.yaml`, and
 `content/agents/agent_parameters.yaml`, unless an example states a test value. The values they read are:
 
-| GDR                 | Values read                                                                                                                                       |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `initiate`          | `name` Initiate; `base_skill` 40; `base_health` 20; `weapon` `sidearm`                                                                            |
-| `soldier`           | `name` Soldier; `base_skill` 120; `base_health` 30; `weapon` `rifle`                                                                              |
-| `cult_leader`       | `name` Cult leader; `base_skill` 300; `base_health` 40; `weapon` `heavy_rifle`                                                                    |
-| `sidearm`           | `base_weapon_damage` 10                                                                                                                           |
-| `rifle`             | `base_weapon_damage` 14                                                                                                                           |
-| `heavy_rifle`       | `base_weapon_damage` 22                                                                                                                           |
-| `combat_parameters` | `weapon_damage_range` 0.5; `retreat_below_agent_rating_fraction` 0.5; `retreat_at_enemy_to_agent_rating` 0.8; `incapacitation_skill_fraction` 0.1 |
-| `field_agent`       | `base_skill` 100; `base_health` 30; `weapon` `sidearm`                                                                                            |
-| `agent_parameters`  | `exhaustion_cap` 100; `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_attack` 1; `exhaustion_per_defense` 1     |
+| GDR                 | Values read                                                                                                                                               |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `initiate`          | `name` Initiate; `base_skill` 40; `base_health` 20; `weapon` `sidearm`                                                                                    |
+| `soldier`           | `name` Soldier; `base_skill` 120; `base_health` 30; `weapon` `rifle`                                                                                      |
+| `cult_leader`       | `name` Cult leader; `base_skill` 300; `base_health` 40; `weapon` `heavy_rifle`                                                                            |
+| `sidearm`           | `base_weapon_damage` 10                                                                                                                                   |
+| `rifle`             | `base_weapon_damage` 14                                                                                                                                   |
+| `heavy_rifle`       | `base_weapon_damage` 22                                                                                                                                   |
+| `combat_parameters` | `weapon_damage_range` 0.5; `retreat_below_agent_rating_fraction` 0.5; `retreat_at_enemy_to_agent_rating` 0.8; `incapacitation_skill_fraction` 0.1         |
+| `field_agent`       | `base_skill` 100; `base_health` 30; `weapon` `sidearm`                                                                                                    |
+| `agent_parameters`  | `exhaustion_incapacitation` 100; `exhaustion_free_points` 30; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_attack` 1; `exhaustion_per_defense` 1 |
 
 Unless stated otherwise, an Agent is a `field_agent` with base skill 100, current health 30 of 30, exhaustion 0, and base weapon damage 10,
 so its effective skill is 100; and an Enemy is newly created, with current health equal to its base health and exhaustion 0. Agents are named a1, a2,
 and so on, and Enemies e1, e2, and so on; the order in which an example lists each side is its fixed order. The
 incapacitation thresholds are 0.1 × base skill: 10 for an Agent of base skill 100, 4 for `initiate`, 12 for `soldier`, and 30 for
-`cult_leader`. Effective skill is computed under [Effective skill](agents-spec.md#effective-skill) in Agents; e.g., an
-Agent with current health 23 of 30 and exhaustion 3 has effective skill `round down(100 × 23 × 100 / (30 × 100)) = 76`. In the
+`cult_leader`; independently, every Combatant with exhaustion of at least 100 meets the incapacitation condition. Effective skill is computed under [Effective skill](agents-spec.md#effective-skill) in Agents; e.g., an
+Agent with current health 23 of 30 and exhaustion 3 has effective skill `round down(100 × 23 × 100 / (30 × 100)) = 76`,
+because exhaustion up to 30 lowers nothing. In the
 trace tables, "h" is current health, "x" is exhaustion, and "eff" is effective skill.
 
 ## Enemy creation
@@ -717,7 +709,8 @@ This example exercises [Hit outcome](#hit-outcome). Each hit Probability is repo
 
 This example exercises [Target selection](#target-selection) and [Combat rounds](#combat-rounds). Mid-Combat, the Agents' side is a1
 with current health 29 of 30 (effective skill `round down(96.67…) = 96`), a2, a3, and a4, a test Agent of base skill 130 with current health
-equal to its base health and exhaustion 100 (effective skill `round down(130 × 5 / 100) = 6`, Incapacitated since 6 ≤ 13). The Enemies'
+equal to its base health and exhaustion 100 (effective skill `round down(130 × 30 / 100) = 39`, Incapacitated through the
+exhaustion clause, since its exhaustion is at least 100, although 39 is above 13). The Enemies'
 side is e1 `initiate` (40), e2 `soldier` (120), and e3 `soldier` (120), all able to fight.
 
 - In the Agents' phase, a1 targets e2: e2 and e3 share the highest effective skill, 120, and e2 is earlier. a1 hits for
@@ -800,37 +793,38 @@ after 1 Combat round. The Retreated check would also hold, since 0 < 0.5 × 20 a
 
 This example exercises [Killed and Incapacitated](#killed-and-incapacitated), [Target selection](#target-selection),
 [Combat rating](#combat-rating), and [Combat-only properties](#combat-only-properties). The Agents' side is a1 with
-exhaustion 94, so penalty factor `100 − 1 × 89 = 11` and effective skill 11, and a2; the Enemies' side is e1, an
-`initiate`. At Combat start a1's 11 is above its threshold 10, so nobody is Incapacitated, and the starting Combat
-rating of the Agents' side is 111.
+exhaustion 99, so penalty factor `100 − 1 × 69 = 31` and effective skill 31, and a2; the Enemies' side is e1, an
+`initiate`. At Combat start a1's 31 is above its threshold 10 and its exhaustion is below 100, so nobody is
+Incapacitated, and the starting Combat rating of the Agents' side is 131.
 
-| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes      | Health removed | Attacker after                      | Target after         |
-| ------------ | ----------------- | --- | --- | --------------- | ---------------------- | -------------- | ----------------------------------- | -------------------- |
-| 1            | a1 → e1           | 11  | 40  | 121 / 1721      | miss                   | 0              | a1: h30, x95, eff 10, Incapacitated | e1: h20, x1, eff 40  |
-| 1            | a2 → e1           | 100 | 40  | 10000 / 11600   | hit; damage outcome 10 | 10             | a2: h30, x1, eff 100                | e1: h10, x2, eff 20  |
-| 1            | e1 → a2           | 20  | 100 | 400 / 10400     | miss                   | 0              | e1: h10, x3, eff 20                 | a2: h30, x2, eff 100 |
-| 2            | a2 → e1           | 100 | 20  | 10000 / 10400   | hit; damage outcome 13 | 10             | a2: h30, x3, eff 100                | e1: h0, x4, dead     |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes      | Health removed | Attacker after                       | Target after         |
+| ------------ | ----------------- | --- | --- | --------------- | ---------------------- | -------------- | ------------------------------------ | -------------------- |
+| 1            | a1 → e1           | 31  | 40  | 961 / 2561      | miss                   | 0              | a1: h30, x100, eff 30, Incapacitated | e1: h20, x1, eff 40  |
+| 1            | a2 → e1           | 100 | 40  | 10000 / 11600   | hit; damage outcome 10 | 10             | a2: h30, x1, eff 100                 | e1: h10, x2, eff 20  |
+| 1            | e1 → a2           | 20  | 100 | 400 / 10400     | miss                   | 0              | e1: h10, x3, eff 20                  | a2: h30, x2, eff 100 |
+| 2            | a2 → e1           | 100 | 20  | 10000 / 10400   | hit; damage outcome 13 | 10             | a2: h30, x3, eff 100                 | e1: h0, x4, dead     |
 
-At exhaustion 95, a1's penalty factor is 10 and its effective skill 10 ≤ 0.1 × 100, so its own attack made it
-Incapacitated. In the Enemies' phase of Combat round 1, e1 targets a2, not a1. After Combat round 1 the Combat rating of the Agents'
-side is 100, because a1 no longer counts; 100 is not below 0.5 × 111 = 55.5, so the Combat continues. In Combat round 2, a1
-does nothing. After Combat round 2 the outcome is Prevailed. The Combat report records a1's final condition as Incapacitated
-with current health 30 and exhaustion 95. After the Combat, a1 has no Incapacitated property; it is a Serving Agent with current health
-30 and exhaustion 95.
+At exhaustion 100, a1 meets the exhaustion clause of the incapacitation condition, although its effective skill 30 is
+above 0.1 × 100, so its own attack made it Incapacitated. In the Enemies' phase of Combat round 1, e1 targets a2, not a1.
+After Combat round 1 the Combat rating of the Agents' side is 100, because a1 no longer counts; 100 is not below
+0.5 × 131 = 65.5, so the Combat continues. In Combat round 2, a1 does nothing. After Combat round 2 the outcome is
+Prevailed. The Combat report records a1's final condition as Incapacitated with current health 30 and exhaustion 100.
+After the Combat, a1 has no Incapacitated property; it is a Serving Agent with current health 30 and exhaustion 100, to
+which [Mission exhaustion](missions.md#mission-exhaustion) in Missions then adds.
 
 ## Prevailed when neither side can fight on
 
 This example exercises [End-of-Combat-round checks](#end-of-combat-round-checks) and [Combat outcomes](#combat-outcomes). The
-Agents' side is a1 with exhaustion 92, so penalty factor 13 and effective skill 13; the Enemies' side is e1, an
-`initiate`. The starting Combat rating of the Agents' side is 13.
+Agents' side is a1 with exhaustion 97, so penalty factor 33 and effective skill 33; the Enemies' side is e1, an
+`initiate`. The starting Combat rating of the Agents' side is 33.
 
-| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes      | Health removed | Attacker after                      | Target after         |
-| ------------ | ----------------- | --- | --- | --------------- | ---------------------- | -------------- | ----------------------------------- | -------------------- |
-| 1            | a1 → e1           | 13  | 40  | 169 / 1769      | hit; damage outcome 15 | 15             | a1: h30, x93, eff 12                | e1: h5, x1, eff 10   |
-| 1            | e1 → a1           | 10  | 12  | 100 / 244       | miss                   | 0              | e1: h5, x2, eff 10                  | a1: h30, x94, eff 11 |
-| 2            | a1 → e1           | 11  | 10  | 121 / 221       | hit; damage outcome 5  | 5              | a1: h30, x95, eff 10, Incapacitated | e1: h0, x3, dead     |
+| Combat round | Attacker → target | A   | D   | Hit Probability | Injected outcomes      | Health removed | Attacker after                       | Target after         |
+| ------------ | ----------------- | --- | --- | --------------- | ---------------------- | -------------- | ------------------------------------ | -------------------- |
+| 1            | a1 → e1           | 33  | 40  | 1089 / 2689     | hit; damage outcome 15 | 15             | a1: h30, x98, eff 32                 | e1: h5, x1, eff 10   |
+| 1            | e1 → a1           | 10  | 32  | 100 / 1124      | miss                   | 0              | e1: h5, x2, eff 10                   | a1: h30, x99, eff 31 |
+| 2            | a1 → e1           | 31  | 10  | 961 / 1061      | hit; damage outcome 5  | 5              | a1: h30, x100, eff 30, Incapacitated | e1: h0, x3, dead     |
 
-After Combat round 1 the Retreated check fails, because 11 is not below 0.5 × 13 = 6.5. After Combat round 2 no Enemy and no Agent is
+After Combat round 1 the Retreated check fails, because 31 is not below 0.5 × 33 = 16.5. After Combat round 2 no Enemy and no Agent is
 able to fight; Prevailed is checked first, so the outcome is Prevailed after 2 Combat rounds. a1 survives.
 
 ## Combats that end at their start
@@ -839,29 +833,32 @@ This example exercises [Combat start](#combat-start) and the edge cases of
 [Edge cases and failure behavior](#edge-cases-and-failure-behavior). Each row is a separate Combat; none makes an attack
 or changes a value.
 
-| Agents' side                                                  | Enemies' side                                                                            | Combat outcome and Combat rounds                                                                                      |
-| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| a1                                                            | Empty                                                                                    | Prevailed, 0 Combat rounds                                                                                            |
-| a1                                                            | e1, from a test EnemyArchetype with `base_skill` 0: effective skill 0 ≤ 0, Incapacitated | Prevailed, 0 Combat rounds                                                                                            |
-| a1 with exhaustion 100: effective skill 5 ≤ 10, Incapacitated | e1, an `initiate`                                                                        | Wiped, 0 Combat rounds; a1 survives with current health 30 and exhaustion 100                                         |
-| a1 with exhaustion 95, Incapacitated, and a2                  | e1, an `initiate`                                                                        | No end at start: a2 is able to fight, so Combat round 1 begins; the starting Combat rating of the Agents' side is 100 |
+| Agents' side                                                                            | Enemies' side                                                                            | Combat outcome and Combat rounds                                                                                      |
+| --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| a1                                                                                      | Empty                                                                                    | Prevailed, 0 Combat rounds                                                                                            |
+| a1                                                                                      | e1, from a test EnemyArchetype with `base_skill` 0: effective skill 0 ≤ 0, Incapacitated | Prevailed, 0 Combat rounds                                                                                            |
+| a1 with exhaustion 100: effective skill 30, Incapacitated through the exhaustion clause | e1, an `initiate`                                                                        | Wiped, 0 Combat rounds; a1 survives with current health 30 and exhaustion 100                                         |
+| a1 with exhaustion 130: effective skill 0, Incapacitated through both clauses           | e1, an `initiate`                                                                        | Wiped, 0 Combat rounds; a1 survives with current health 30 and exhaustion 130                                         |
+| a1 with exhaustion 105, Incapacitated, and a2                                           | e1, an `initiate`                                                                        | No end at start: a2 is able to fight, so Combat round 1 begins; the starting Combat rating of the Agents' side is 100 |
 
 ## Every attack misses
 
 This example exercises [Termination](#termination). It injects a miss for every hit outcome, so no damage outcome exists
 and no current health changes; only exhaustion rises, by 2 per Combat round for each Combatant, from attacking and defending.
 
-**Against an initiate:** The Agents' side is a1; the Enemies' side is e1, an `initiate`. After Combat round r with r ≥ 3, both
-have exhaustion 2r, a1 has effective skill `105 − 2r`, and e1 has `round down(40 × (105 − 2r) / 100)`. The Retreated
-check never holds, because the Enemies' Combat rating stays below 0.8 times the Agents'; e.g., after Combat round 28 the Agents'
-side has 49 < 50, but the Enemies' side has `round down(19.6) = 19`, which is less than 0.8 × 49 = 39.2. In Combat round 47,
-a1's attack raises e1's exhaustion to 93: penalty factor 12 and effective skill `round down(4.8) = 4 ≤ 4`, so e1 is
-Incapacitated and does not attack in the Enemies' phase. a1 has exhaustion 93 and effective skill 12, above 10. The
-Combat ends as Prevailed after 47 Combat rounds and 93 attacks, within the bound `N × X = 2 × 100 = 200`.
+**Against an initiate:** The Agents' side is a1; the Enemies' side is e1, an `initiate`. After Combat round r with r ≥ 15, both
+have exhaustion 2r, a1 has effective skill `130 − 2r`, and e1 has `round down(40 × (130 − 2r) / 100)`. The Retreated
+check never holds, because the Enemies' Combat rating stays below 0.8 times the Agents'; e.g., after Combat round 41 the Agents'
+side has 48 < 50, but the Enemies' side has `round down(19.2) = 19`, which is less than 0.8 × 48 = 38.4. The skill clause
+never holds either: e1's effective skill stays above 4 while both exhaustions are below 100. In Combat round 50, a1's
+attack raises both exhaustions to 99, and e1's attack then raises both to 100, so e1 and a1 both meet the exhaustion
+clause and are Incapacitated, although a1 has effective skill 30 and e1 has 12. After Combat round 50 no Combatant is
+able to fight, so the Combat ends as Prevailed, checked first, after 50 Combat rounds and 100 attacks, within the bound
+`N × X = 2 × 100 = 200`.
 
-**Against a soldier:** The Agents' side is a1; the Enemies' side is e1, a `soldier`. After Combat round 27 both have exhaustion
-54 and a1 has effective skill 51, which is not below 50. After Combat round 28 both have exhaustion 56: a1 has 49 < 50, and e1
-has `round down(120 × 49 / 100) = 58 ≥ 0.8 × 49 = 39.2`. The Combat ends as Retreated after 28 Combat rounds.
+**Against a soldier:** The Agents' side is a1; the Enemies' side is e1, a `soldier`. After Combat round 40 both have exhaustion
+80 and a1 has effective skill 50, which is not below 50. After Combat round 41 both have exhaustion 82: a1 has 48 < 50, and e1
+has `round down(120 × 48 / 100) = 57 ≥ 0.8 × 48 = 38.4`. The Combat ends as Retreated after 41 Combat rounds.
 
 ## Combat ratings of Mission sites
 
@@ -884,25 +881,20 @@ have 300, because that Agent meets the incapacitation condition and does not cou
 This example exercises [Combat GDR validation](#combat-gdr-validation). The Bootstrap GDRs pass every rule: there is one
 CombatParameters GDR; every EnemyArchetype has a whole `base_skill` of at least 0, a whole `base_health` of at least 1, and a
 `weapon` the Game build supplies; every Weapon `base_weapon_damage` is at least 1; 0.5 lies from 0 to 1; 0.5 and 0.8 are at least 0;
-0.1 is at least 0 and below 1; `exhaustion_per_attack + exhaustion_per_defense = 2 ≥ 1`; and the penalty factor at the
-cap is `max(0, 100 − 1 × max(0, 100 − 5)) = 5`, which is at most `100 × 0.1 = 10`.
+0.1 is at least 0 and below 1; and `exhaustion_per_attack + exhaustion_per_defense = 2 ≥ 1`. No rule ties the penalty
+factor to the incapacitation threshold, so e.g. the test value `skill_penalty_pct_per_exhaustion` 0 gives a valid Game build
+in which exhaustion never lowers effective skill and still incapacitates at 100.
 
 Each of the following test changes independently makes the Game build defective, so no Campaign is created from it:
 
-| Test change                                                   | Rule violated                                                                             |
-| ------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `skill_penalty_pct_per_exhaustion` 0                          | Exhaustion at the cap incapacitates: the penalty factor at the cap is 100 > 10            |
-| `exhaustion_free_points` 95                                   | Exhaustion at the cap incapacitates: the penalty factor at the cap is `100 − 5 = 95 > 10` |
-| `incapacitation_skill_fraction` 0.04                          | Exhaustion at the cap incapacitates: 5 > `100 × 0.04 = 4`                                 |
-| `exhaustion_per_attack` 0 and `exhaustion_per_defense` 0      | Every attack tires someone                                                                |
-| `sidearm` `base_weapon_damage` 0                              | Weapon values are valid                                                                   |
-| `weapon_damage_range` 1.5                                     | Damage range is valid                                                                     |
-| `sidearm` has an added property `range`                       | Exact properties                                                                          |
-| `cult_leader` `weapon` set to an identifier no Weapon GDR has | EnemyArchetype values are valid                                                           |
-| A second CombatParameters GDR                                 | One CombatParameters                                                                      |
-
-With `incapacitation_skill_fraction` 0.05 the Game build is valid, because 5 ≤ 5: a Combatant at exhaustion 100 with full
-current health has an effective skill of at most 0.05 × base skill.
+| Test change                                                   | Rule violated                   |
+| ------------------------------------------------------------- | ------------------------------- |
+| `exhaustion_per_attack` 0 and `exhaustion_per_defense` 0      | Every attack tires someone      |
+| `sidearm` `base_weapon_damage` 0                              | Weapon values are valid         |
+| `weapon_damage_range` 1.5                                     | Damage range is valid           |
+| `sidearm` has an added property `range`                       | Exact properties                |
+| `cult_leader` `weapon` set to an identifier no Weapon GDR has | EnemyArchetype values are valid |
+| A second CombatParameters GDR                                 | One CombatParameters            |
 
 # TODOs
 

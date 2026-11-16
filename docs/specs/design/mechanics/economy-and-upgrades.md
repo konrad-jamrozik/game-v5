@@ -49,14 +49,14 @@ apart from the `id` and `type` that every GDR has.
 
 EconomyParameters bundles the scalar values that hiring, upkeep, Agency income, and the caps read.
 
-| Property                       | Meaning                                                                                                                       | Read by                         |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| `hire_cost`                    | The money one hire costs.                                                                                                     | [Hiring Agents](#hiring-agents) |
-| `upkeep_per_agent`             | The money each [Serving](agents-spec.md#agent-statuses) [Agent](domain-model.md#agency-and-agents) costs in one Advance turn. | [Upkeep](#upkeep)               |
-| `contracting_income_per_agent` | The money each Agent working on [Contracting](agents-spec.md#assignments) earns in one Advance turn.                          | [Agency income](#agency-income) |
-| `base_agent_cap`               | The Agent cap before any Upgrade is acquired.                                                                                 | [Agency caps](#agency-caps)     |
-| `base_transport_cap`           | The Transport cap before any Upgrade is acquired.                                                                             | [Agency caps](#agency-caps)     |
-| `base_training_cap`            | The Training cap before any Upgrade is acquired.                                                                              | [Agency caps](#agency-caps)     |
+| Property                       | Meaning                                                                                                                                                              | Read by                         |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `hire_cost`                    | The money one hire costs.                                                                                                                                            | [Hiring Agents](#hiring-agents) |
+| `upkeep_per_agent`             | The money each [Serving](agents-spec.md#agent-statuses) [Agent](domain-model.md#agency-and-agents) costs in one Advance turn.                                        | [Upkeep](#upkeep)               |
+| `contracting_income_per_agent` | The money each Agent working on [Contracting](agents-spec.md#assignments) with [effective skill](agents-spec.md#combatant-attributes) 100 earns in one Advance turn. | [Agency income](#agency-income) |
+| `base_agent_cap`               | The Agent cap before any Upgrade is acquired.                                                                                                                        | [Agency caps](#agency-caps)     |
+| `base_transport_cap`           | The Transport cap before any Upgrade is acquired.                                                                                                                    | [Agency caps](#agency-caps)     |
+| `base_training_cap`            | The Training cap before any Upgrade is acquired.                                                                                                                     | [Agency caps](#agency-caps)     |
 
 ## Upgrade
 
@@ -254,23 +254,38 @@ to grow. These rules fix how much it earns, how much it pays, and how the player
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps), the Agency's money rises by its income:
 
 ```text
-income      = funding + contracting_income_per_agent × C
-money after = money before + income
+contribution of one Agent = contracting_income_per_agent × (1 + (effective skill − 100) / 500)
+income                    = funding + round down( sum of the contributions of the Agents in C )
+money after               = money before + income
 ```
 
 Inputs:
 
-| Symbol                         | Meaning                                                                                                                                                                                                                                                                                   | Unit and domain                                |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| funding                        | The Agency's funding, as the [Step-start value](domain-model.md#turn-advancement-steps) of the Agency income step.                                                                                                                                                                        | Money; a whole number of at least 0.           |
-| `contracting_income_per_agent` | The value of EconomyParameters.                                                                                                                                                                                                                                                           | Money per Agent; a whole number of at least 0. |
-| C                              | The number of Agents that are Serving, whose Assignment is Contracting, and that were [At assignment](domain-model.md#agency-and-agents) in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), under [Transit rule](agents-spec.md#transit-rule) in Agents. | Agents; a whole number of at least 0.          |
-| money before                   | The Agency's money as the Step-start value of the Agency income step.                                                                                                                                                                                                                     | Money; any whole number.                       |
+| Symbol                         | Meaning                                                                                                                                                                                                                                                                         | Unit and domain                                |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| funding                        | The Agency's funding, as the [Step-start value](domain-model.md#turn-advancement-steps) of the Agency income step.                                                                                                                                                              | Money; a whole number of at least 0.           |
+| `contracting_income_per_agent` | The value of EconomyParameters.                                                                                                                                                                                                                                                 | Money per Agent; a whole number of at least 0. |
+| C                              | The Agents that are Serving, whose Assignment is Contracting, and that were [At assignment](domain-model.md#agency-and-agents) in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), under [Transit rule](agents-spec.md#transit-rule) in Agents. | A set of Agents, possibly empty.               |
+| effective skill                | The Agent's [Effective skill](agents-spec.md#effective-skill), from its Step-start values of the Agency income step.                                                                                                                                                            | Skill points; a whole number of at least 0.    |
+| 100 and 500                    | Constants of this rule, not GDR values: effective skill 100 earns exactly `contracting_income_per_agent`, and each 100 points of effective skill above or below it change the contribution by one fifth of it.                                                                  | Skill points.                                  |
+| money before                   | The Agency's money as the Step-start value of the Agency income step.                                                                                                                                                                                                           | Money; any whole number.                       |
 
-An Agent that arrives at Contracting in the Transit step of the same Advance turn is not counted in C. No rounding
-occurs, because every term is a whole number. Income is a whole number of at least 0, so money never falls in this step.
-The Transit step changes neither funding nor any Agent's Assignment, so funding and C equal
-their values in the Turn-end state.
+Evaluation: each contribution is evaluated exactly, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in
+Numbers, the contributions are summed exactly, and the sum is rounded once, with
+[Round down](../foundation/numbers.md#glossary); no contribution is rounded on its own. Because effective skill is at
+least 0, each contribution is at least `0.8 × contracting_income_per_agent`, so income is a whole number of at least 0 and
+money never falls in this step. E.g., an Agent with effective skill 100 contributes exactly 30 with the Bootstrap value
+30; one with effective skill 83 contributes `30 × (1 − 17 / 500) = 28.98`; and one trained to effective skill 150
+contributes `30 × (1 + 50 / 500) = 33`, so the three together give `round down(91.98) = 91`.
+
+An Agent that arrives at Contracting in the Transit step of the same Advance turn is not in C. The Transit step changes
+neither funding nor any Agent's Assignment or effective skill, so funding, C, and each effective skill equal their values in the Turn-end
+state. After the income is added, every Agent in C gains [exhaustion](agents-spec.md#combatant-attributes) and may have a [Forced return](agents-spec.md#assignments), under
+[Work exhaustion](agents-spec.md#work-exhaustion) and [Forced return](agents-spec.md#forced-return) in Agents; the income
+already added is kept.
+
+**Inherited behavior:** The contribution formula is the game-ts contracting income: work pays more for a skilled Agent
+and less for a worn-down one, but only gently, so that Contracting stays a dependable source of money.
 
 ## Upkeep
 
@@ -307,21 +322,22 @@ that spend money, are rejected, because each precondition requires money of at l
 committed from the current [Committed state](../foundation/engine-contract.md#player-actions-and-turns):
 
 ```text
-projected income = funding + contracting_income_per_agent × C'
+projected income = funding + round down( sum of the contributions of the Agents in C' )
 projected upkeep = upkeep_per_agent × S'
 ```
 
-where funding is the Agency's funding in the current Committed state; C' is the number of Agents that are Serving,
-whose Assignment is Contracting, and whose Agent status is At assignment in the current Committed state; and S'
-is the number of Serving Agents in the current Committed state. Each is a whole number of money of at least 0, with no
-rounding.
+where funding is the Agency's funding in the current Committed state; C' is the Agents that are Serving,
+whose Assignment is Contracting, and whose Agent status is At assignment in the current Committed state; the contribution
+of each is computed as under [Agency income](#agency-income), from its effective skill in the current Committed state; and S'
+is the number of Serving Agents in the current Committed state. Each is a whole number of money of at least 0, evaluated
+and rounded as under [Agency income](#agency-income).
 
 When Advance turn is committed from the current Committed state, that state becomes the Turn-end state, so the Agency
 income step adds exactly the projected income and the Upkeep step charges exactly the projected upkeep. The Agency's
 money after the Upkeep step is therefore money + projected income − projected upkeep. Later steps of the same Advance
 turn, e.g. the consequences of a Mission site, may change money further; the projections do not include them. Both
 values follow every Player action at once; e.g., hiring raises projected upkeep by `upkeep_per_agent`, and assigning an
-Agent from Contracting to Standby lowers projected income by `contracting_income_per_agent`.
+Agent with effective skill 100 from Contracting to Standby lowers projected income by `contracting_income_per_agent`.
 
 # Hiring Agents
 
@@ -603,6 +619,9 @@ reveals anything hidden.
   step before it, and is not counted in any later Advance turn ([Upkeep](#upkeep)).
 - **Arriving Agents:** An Agent arriving at Contracting in the Transit step earns nothing in that Advance turn but is
   counted in Upkeep ([Agency income](#agency-income), [Upkeep](#upkeep)).
+- **Tired or untrained Agents on Contracting:** An Agent with effective skill 0 still contributes four fifths of
+  `contracting_income_per_agent`, and an Agent whose work brings it to `exhaustion_work_limit` keeps the income of that
+  Advance turn ([Agency income](#agency-income)).
 - **Dismissing an Agent that is not on Standby, At assignment:** Rejected as a whole; e.g., an Agent on Standby but In
   transit, an Agent on Contracting, and a Deployed Agent cannot be dismissed ([Dismissing Agents](#dismissing-agents)).
 - **Dismissing every Agent:** Valid; an Agency with no Serving Agent pays no upkeep. Whether the Campaign ends is
@@ -633,22 +652,24 @@ All examples use the Bootstrap GDR values from `content/configuration/campaign_c
 `content/combat/weapons.yaml`, and `content/factions/faction_operation_levels.yaml`, unless an example states a test
 value. The values they read are:
 
-| GDR                 | Values read                                                                                                                                  |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `standard`          | `starting_money` 500; `starting_funding` 20                                                                                                  |
-| `agency`            | `name` The Agency                                                                                                                            |
-| `economy`           | `hire_cost` 50; `upkeep_per_agent` 10; `contracting_income_per_agent` 30; `base_agent_cap` 20; `base_transport_cap` 4; `base_training_cap` 4 |
-| `agent_cap`         | `price` 200; `effect` `agent_cap`; `increment` 4                                                                                             |
-| `transport_cap`     | `price` 1000; `effect` `transport_cap`; `increment` 2                                                                                        |
-| `training_cap`      | `price` 200; `effect` `training_cap`; `increment` 4                                                                                          |
-| `weapon_damage`     | `price` 500; `effect` `agent_weapon_damage`; `increment` 1                                                                                   |
-| `agent_parameters`  | `initial_roster_size` 4                                                                                                                      |
-| `sidearm`           | `base_weapon_damage` 10                                                                                                                      |
-| `operation_level_2` | `on_win` money 30 and funding 5; `on_ignored_or_lost` funding −1                                                                             |
+| GDR                 | Values read                                                                                                                                                 |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `standard`          | `starting_money` 500; `starting_funding` 20                                                                                                                 |
+| `agency`            | `name` The Agency                                                                                                                                           |
+| `economy`           | `hire_cost` 50; `upkeep_per_agent` 10; `contracting_income_per_agent` 30; `base_agent_cap` 20; `base_transport_cap` 4; `base_training_cap` 4                |
+| `agent_cap`         | `price` 200; `effect` `agent_cap`; `increment` 4                                                                                                            |
+| `transport_cap`     | `price` 1000; `effect` `transport_cap`; `increment` 2                                                                                                       |
+| `training_cap`      | `price` 200; `effect` `training_cap`; `increment` 4                                                                                                         |
+| `weapon_damage`     | `price` 500; `effect` `agent_weapon_damage`; `increment` 1                                                                                                  |
+| `agent_parameters`  | `initial_roster_size` 4; `exhaustion_free_points` 30; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_contracting_turn` 1; `exhaustion_work_limit` 70 |
+| `sidearm`           | `base_weapon_damage` 10                                                                                                                                     |
+| `operation_level_2` | `on_win` money 30 and funding 5; `on_ignored_or_lost` funding −1                                                                                            |
 
 "The Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. Unless an
 example states otherwise, no rule of [Missions](missions.md) changes money or funding in the Advance turns it describes,
-i.e. no Mission is Won or Lost and no Mission site is Expired in them.
+i.e. no Mission is Won or Lost and no Mission site is Expired in them. Unless an example states otherwise, every Agent
+on Contracting has effective skill 100, so it contributes exactly 30, and an income is written as funding plus 30 times
+the number of Agents in C.
 
 ## Campaign creation
 
@@ -718,6 +739,27 @@ In Turn 4, Money at the start of turn holds 500, 480, 460, and 460 for Turns 1 t
 500, 430, and 460 for Turns 1 to 3. Projected income in Turn 4 is 20 + 30 × 2 = 80, from a2 and a5. In every Advance
 turn above, the Agency income and Upkeep steps applied exactly the projected income and projected upkeep of the
 Turn-end state.
+
+## Contracting income and effective skill
+
+This example exercises [Agency income](#agency-income) and [Projected income and upkeep](#projected-income-and-upkeep),
+with [Work exhaustion](agents-spec.md#work-exhaustion) and [Forced return](agents-spec.md#forced-return) in Agents.
+The Turn-end state has funding 20 and three Agents on Contracting, At assignment, each with current health 30 of 30:
+c1 with base skill 100 and exhaustion 10; c2 with base skill 100 and exhaustion 47; and c3 with base skill 150 and
+exhaustion 69.
+
+| Agent | Effective skill                 | Contribution                |
+| ----- | ------------------------------- | --------------------------- |
+| c1    | 100                             | 30 × (1 + 0 / 500) = 30     |
+| c2    | 100 × 83 / 100 = 83             | 30 × (1 − 17 / 500) = 28.98 |
+| c3    | round down(150 × 61 / 100) = 91 | 30 × (1 − 9 / 500) = 29.46  |
+
+Projected income is `20 + round down(30 + 28.98 + 29.46) = 20 + round down(88.44) = 108`, and the Agency income step of
+the next Advance turn adds exactly 108. After the income is added, c1, c2, and c3 gain 1 exhaustion each, to 11, 48, and
+70; c3 reaches `exhaustion_work_limit` 70, so it has a Forced return and is on Standby, In transit, while the 29.46 it
+earned stays in the sum. Projected income in the next Turn is `20 + round down(30 × (1 − 0 / 500) + 30 × (1 − 18 / 500))
+= 20 + round down(58.92) = 78`. Rounding each contribution down on its own would have given 107 instead of 108 in the
+first Advance turn, which this rule forbids.
 
 ## Upkeep counts every Serving Agent
 
@@ -876,7 +918,6 @@ build defective, so no Campaign is created from it: setting `weapon_damage`'s `e
 - TODO (later): An Upgrade that raises [exhaustion](agents-spec.md#combatant-attributes) recovery, under [Upgrade effects](#upgrade-effects).
 - TODO (later): An Upgrade that raises health recovery, under [Upgrade effects](#upgrade-effects).
 - TODO (later): An Upgrade that raises [base health](agents-spec.md#combatant-attributes), under [Upgrade effects](#upgrade-effects).
-- TODO (later): Contracting income that depends on an Agent's [base skill](agents-spec.md#combatant-attributes), under [Agency income](#agency-income).
 - TODO (later): Upgrade prices that rise with each acquisition, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): A limit on the Acquisitions of an Upgrade, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): Selling an Upgrade, under [Upgrades](#upgrades).

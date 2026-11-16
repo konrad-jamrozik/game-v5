@@ -139,14 +139,15 @@ earlier Investigations of that Lead.
 is exhaustive. Every Investigation is Active when it is created. It stays Active until it becomes Completed or
 Abandoned. The transition table is:
 
-| Source state | Target state | Trigger                                                                                                                                                                           | Condition                                                                           | Effects                            |
-| ------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
-| Active       | Completed    | Advance turn, in the [Turn advancement step](domain-model.md#turn-advancement-steps) Investigation progress.                                                                      | The Investigation completion outcome of the Investigation is "completes".           | Under [Completion](#completion).   |
-| Active       | Abandoned    | A Player action changes the Assignment of a member of the Investigation's Current team to something else: `assignAgents`, `startInvestigation`, or `assignAgentsToInvestigation`. | The Investigation's Current team is empty after every change of that Player action. | Under [Abandonment](#abandonment). |
+| Source state | Target state | Trigger                                                                                                                                                                           | Condition                                                                                                       | Effects                            |
+| ------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| Active       | Completed    | Advance turn, in the [Turn advancement step](domain-model.md#turn-advancement-steps) Investigation progress.                                                                      | The Investigation completion outcome of the Investigation is "completes".                                       | Under [Completion](#completion).   |
+| Active       | Abandoned    | A Player action changes the Assignment of a member of the Investigation's Current team to something else: `assignAgents`, `startInvestigation`, or `assignAgentsToInvestigation`. | The Investigation's Current team is empty after every change of that Player action.                             | Under [Abandonment](#abandonment). |
+| Active       | Abandoned    | Advance turn, in the Turn advancement step Investigation progress: a member has a [Forced return](agents-spec.md#forced-return).                                                  | The Investigation's Current team is empty after every [Forced return](agents-spec.md#assignments) of that step. | Under [Abandonment](#abandonment). |
 
 Every transition not listed is impossible; e.g., an Abandoned Investigation never becomes Active again, a Completed
-Investigation is never Abandoned, and no Turn advancement step makes an Investigation Abandoned. Completed and Abandoned
-are final.
+Investigation is never Abandoned, and no Turn advancement step other than Investigation progress makes an Investigation
+Abandoned. Completed and Abandoned are final.
 
 # Starting an Investigation
 
@@ -173,6 +174,8 @@ its changes. The action is rejected, as a whole, when any of the following holds
 6. An Instance ID in `agents` identifies no Agent of the Campaign.
 7. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned)
    in Agents.
+8. An Agent in `agents` is not [Fit for work](agents-spec.md#assignments), under
+   [Start-work gate](agents-spec.md#start-work-gate) in Agents.
 
 Other preconditions apply to every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), under
 [Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md).
@@ -236,6 +239,7 @@ its changes. The action is rejected, as a whole, when any of the following holds
 6. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned)
    in Agents.
 7. An Agent in `agents` already belongs to the Investigation's Current team.
+8. An Agent in `agents` is not Fit for work, under [Start-work gate](agents-spec.md#start-work-gate) in Agents.
 
 The Lead's availability is not a precondition: an Active Investigation accepts Agents whatever its Lead's availability,
 under [Lead no longer available](#lead-no-longer-available). Other preconditions on every Player action apply as
@@ -270,26 +274,31 @@ list is exhaustive:
    [Base Assignment](agents-spec.md#assignments) can be deployed, under [Deploying Agents](missions.md#deploying-agents)
    in Missions.
 2. **Completion:** The Investigation becomes Completed, under [Completion](#completion).
+3. **Forced return:** The Agent's work on the Investigation raises its [exhaustion](agents-spec.md#combatant-attributes) to `exhaustion_work_limit` or more in
+   the Investigation progress step, under [Forced return](agents-spec.md#forced-return) in Agents.
 
 No other rule removes an Agent from an Investigation's Current team: an Agent on an Investigation cannot be dismissed,
 because `dismissAgents` requires [Standby](agents-spec.md#assignments), and it cannot be [Killed](agents-spec.md#agent-statuses), because only a [Deployed](agents-spec.md#assignments) Agent can be Killed, under
 [Agent status](agents-spec.md#agent-status) in Agents. Whenever an Agent leaves, the Investigation is added to its
 Participation history under [Participation history records](agents-spec.md#participation-history-records) in Agents.
 
-**Progress is kept:** When a member is assigned elsewhere, the Investigation keeps its whole Investigation progress,
-whichever member leaves and however much it contributed. The remaining members continue from that progress.
+**Progress is kept:** When a member is assigned elsewhere or has a Forced return, the Investigation keeps its whole
+Investigation progress, whichever member leaves and however much it contributed. The remaining members continue from
+that progress.
 
 ## Abandonment
 
-**Proposed rule:** When a Player action leaves an Active Investigation with an empty Current team, the Investigation
-becomes Abandoned in that same Player action, after all of the action's other changes. No Committed state therefore
-contains an Active Investigation with an empty Current team.
+**Proposed rule:** When a Player action, or the Forced returns of one Investigation progress step, leave an Active
+Investigation with an empty Current team, the Investigation becomes Abandoned in that same Player action or step,
+after all of its other changes. No Committed state therefore contains an Active Investigation with an empty Current
+team.
 
 Every member of the Current team counts, whatever its Agent status. A member In transit toward the Investigation belongs to
 its Current team, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain
-Model, and cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents, so
-it cannot leave. An Investigation with at least one member In transit is therefore never Abandoned. An Investigation
-becomes Abandoned exactly when the Player action assigns elsewhere every member that remains in its Current team.
+Model, cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents, and
+does not work, so it has no Forced return; it cannot leave. An Investigation with at least one member In transit is
+therefore never Abandoned. An Investigation becomes Abandoned exactly when a Player action assigns elsewhere, or Forced
+returns send back, every member that remains in its Current team.
 
 When an Investigation becomes Abandoned:
 
@@ -310,8 +319,12 @@ Investigations Abandoned, e.g. an `assignAgents` action that assigns the last me
 **Proposed rule:** In the Turn advancement step Investigation progress, under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Investigation that is
 Active when the step begins applies [Progress gain](#progress-gain) and then [Completion probability](#completion-probability),
-and, when its Investigation completion outcome is "completes", [Completion](#completion). When no Investigation is
-Active, the step does nothing. No Investigation is created during Advance turn, so the step applies to exactly the
+and, when its Investigation completion outcome is "completes", [Completion](#completion). Then every working member of
+the Investigation gains exhaustion under [Work exhaustion](agents-spec.md#work-exhaustion) in Agents, and each that is
+still a member has a [Forced return](agents-spec.md#forced-return) when that exhaustion reaches `exhaustion_work_limit`,
+which makes the Investigation Abandoned under [Abandonment](#abandonment) when no member remains. A completion is
+therefore decided before any member's exhaustion rises, and the last progress of a team never goes to waste because of
+a Forced return in the same step. When no Investigation is Active, the step does nothing. No Investigation is created during Advance turn, so the step applies to exactly the
 Investigations that are Active in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) of the Advance turn.
 
 ## Progress gain
@@ -334,9 +347,10 @@ Inputs:
 
 No rounding occurs, because every term is a whole number. The result is a whole number of at least Investigation
 progress before; Investigation progress has no upper bound. Investigation progress is added even when S is 0, in which
-case it is unchanged. Investigating changes no value of a member; in particular it raises no [exhaustion](agents-spec.md#combatant-attributes) and lowers no
-[current health](agents-spec.md#combatant-attributes). An Investigation's progress after the step therefore depends only on its progress before the step and the effective
-skill of its working members. Progress grows linearly with the team's effective skill, so a larger team gains
+case it is unchanged. Investigating lowers no [current health](agents-spec.md#combatant-attributes), and it raises a working member's
+[exhaustion](agents-spec.md#combatant-attributes) only after the progress and the completion of this step, under
+[Investigation progress](#investigation-progress). An Investigation's progress after the step therefore depends only on its progress before the step and the effective
+skill of its working members at the start of the step. Progress grows linearly with the team's effective skill, so a larger team gains
 progress in proportion to its effective skill, with no diminishing returns.
 
 ## Completion probability
@@ -532,9 +546,16 @@ completion probability, reported as absent; the visible lifecycle state explains
   ([Assigning Agents to an Investigation](#assigning-agents-to-an-investigation), [Abandonment](#abandonment)).
 - **Mixed valid and invalid Agents:** One invalid Agent rejects the whole action; no Agent and no Investigation changes
   ([Starting an Investigation](#starting-an-investigation)).
-- **Completion and exhaustion:** Investigating raises no exhaustion, so completion never coincides with an exhaustion
-  change; members returning to Standby, In transit, recover no exhaustion in the same Advance turn under
-  [Agent Recovery](agent-recovery.md) ([Progress gain](#progress-gain), [Completion](#completion)).
+- **Completion and exhaustion:** The working members of an Investigation that completes still gain their work
+  exhaustion in the same step, after the completion, and have no Forced return, because they are already on Standby; they
+  recover no exhaustion in the same Advance turn under [Agent Recovery](agent-recovery.md)
+  ([Investigation progress](#investigation-progress), [Completion](#completion)).
+- **Forced return of the last member:** When the only working member's exhaustion reaches `exhaustion_work_limit` and
+  the Investigation does not complete in that step, the Investigation becomes Abandoned and its progress, including this
+  step's, is lost; a member In transit to it prevents this ([Abandonment](#abandonment)).
+- **Tired Agents:** `startInvestigation` and `assignAgentsToInvestigation` reject, as a whole, a list with an Agent that is
+  not Fit for work ([Starting an Investigation](#starting-an-investigation),
+  [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation)).
 - **Lead no longer available:** An Active Investigation continues; its Mission site, when its Faction is [Eliminated](domain-model.md#factions), is
   Cancelled in the same Advance turn ([Lead no longer available](#lead-no-longer-available)).
 - **Mission site created in the same Advance turn:** The Mission site a completion creates does not count down in Mission
@@ -553,14 +574,14 @@ All examples use the Bootstrap GDR values from `content/investigations/investiga
 `content/leads-and-progression/leads.yaml`, `content/agents/agent_archetypes.yaml`, and
 `content/agents/agent_parameters.yaml`, unless an example states a test GDR. The values they read are:
 
-| GDR                         | Values read                                                      |
-| --------------------------- | ---------------------------------------------------------------- |
-| `standard_investigation`    | `name` Investigation                                             |
-| `locate_red_dawn_member`    | `difficulty` 3; `create_mission_site` `apprehend_member`         |
-| `locate_red_dawn_safehouse` | `difficulty` 6; `create_mission_site` `raid_safehouse`           |
-| `locate_red_dawn_hq`        | `difficulty` 10; `create_mission_site` `raid_hq`                 |
-| `field_agent`               | `base_skill` 100; `base_health` 30                               |
-| `agent_parameters`          | `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1 |
+| GDR                         | Values read                                                                                                                                                          |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `standard_investigation`    | `name` Investigation                                                                                                                                                 |
+| `locate_red_dawn_member`    | `difficulty` 3; `create_mission_site` `apprehend_member`                                                                                                             |
+| `locate_red_dawn_safehouse` | `difficulty` 6; `create_mission_site` `raid_safehouse`                                                                                                               |
+| `locate_red_dawn_hq`        | `difficulty` 10; `create_mission_site` `raid_hq`                                                                                                                     |
+| `field_agent`               | `base_skill` 100; `base_health` 30                                                                                                                                   |
+| `agent_parameters`          | `exhaustion_free_points` 30; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_investigation_turn` 1; `exhaustion_work_start_max` 30; `exhaustion_work_limit` 70 |
 
 "The Advance turn ending Turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
 `field_agent` with base skill 100, current health 30 of 30, exhaustion 0, and effective skill 100, on Standby, At assignment, and the
@@ -592,8 +613,9 @@ After the Advance turn ending Turn 4, i1 has an empty Current team and Investiga
 Participation history, and a1 cannot be assigned during Turn 5; it arrives in the Advance turn ending Turn 5. Had the
 injected outcome of the Advance turn ending Turn 2 been "completes", i1 would have been Completed then, with
 Investigation progress 100. The cumulative Probability that i1 completes by the Advance turn ending Turn 3 is
-1/3 + (2/3 × 2/3) = 7/9, and by the Advance turn ending Turn 4 it is 1; no rule reads it. a1's exhaustion stays 0
-throughout.
+1/3 + (2/3 × 2/3) = 7/9, and by the Advance turn ending Turn 4 it is 1; no rule reads it. a1's exhaustion rises by 1 in
+each of the three Advance turns in which it works, ending Turns 2 to 4, including the one in which i1 completes, so it
+returns with exhaustion 3; it stays below 30, so its effective skill stays 100.
 
 ## Four Agents on a difficulty 10 Lead
 
@@ -615,23 +637,37 @@ The final Investigation progress 1200 exceeds `difficulty` × 100 = 1000, which 
 This example exercises [Progress gain](#progress-gain) with [Effective skill](agents-spec.md#effective-skill) and
 [Completion probability](#completion-probability). Investigation i2 of `locate_red_dawn_safehouse`, difficulty 6, has
 Investigation progress 0 and Current team {a5, a6}, both At assignment and both working members in every Advance turn
-below. a5 has base skill 100, current health 30 of 30, and exhaustion 65: its effective skill is
-round down(100 × 30 × max(0, 100 − 1 × (65 − 5)) / (30 × 100)) = round down(100 × 30 × 40 / 3000) = 40. a6 is a fresh
-Agent with effective skill 100. S is 140.
+below. a5 has base skill 100, current health 30 of 30, and exhaustion 65, having started work Fit for work and grown
+tired on i2: its effective skill is round down(100 × 30 × max(0, 100 − 1 × (65 − 30)) / (30 × 100)) =
+round down(100 × 30 × 65 / 3000) = 65. a6 has exhaustion 0 and effective skill 100.
 
-| Advance turn | Investigation progress | Completion probability | Injected outcome  |
-| ------------ | ---------------------- | ---------------------- | ----------------- |
-| First        | 140                    | 140 / 600 = 7/30       | Does not complete |
-| Second       | 280                    | 280 / 600 = 7/15       | Does not complete |
-| Third        | 420                    | 420 / 600 = 7/10       | Does not complete |
-| Fourth       | 560                    | 560 / 600 = 14/15      | Does not complete |
-| Fifth        | 700                    | min(1, 700 / 600) = 1  | None needed       |
+| Advance turn | a5's exhaustion at the start of the step | a5's effective skill | S   | Investigation progress | Completion probability | Injected outcome  | a5's exhaustion after the step |
+| ------------ | ---------------------------------------- | -------------------- | --- | ---------------------- | ---------------------- | ----------------- | ------------------------------ |
+| First        | 65                                       | 65                   | 165 | 165                    | 165 / 600 = 11/40      | Does not complete | 66                             |
+| Second       | 66                                       | 64                   | 164 | 329                    | 329 / 600              | Does not complete | 67                             |
+| Third        | 67                                       | 63                   | 163 | 492                    | 492 / 600 = 41/50      | Does not complete | 68                             |
+| Fourth       | 68                                       | 62                   | 162 | 654                    | min(1, 654 / 600) = 1  | None needed       | 69                             |
 
-a5's exhaustion stays 65 throughout, because investigating neither raises nor lowers exhaustion, so its effective skill
-stays 40. An Agent whose current health is below its base health cannot be a member at all, because such an Agent is on [Recovery](agents-spec.md#assignments) and cannot
+Each step reads a5's effective skill before raising its exhaustion by `exhaustion_per_investigation_turn` 1, so each
+Advance turn's progress uses the exhaustion a5 had when the step began. i2 completes in the fourth Advance turn, and a5
+and a6 go to Standby, In transit, with exhaustion 69 and 4. Had i2 needed a fifth working Advance turn, a5 would have
+reached 70 in it and had a [Forced return](agents-spec.md#forced-return), while a6 kept i2 Active. An Agent whose current health is below its base health cannot be a member at all, because such an Agent is on [Recovery](agents-spec.md#assignments) and cannot
 be assigned. Separately, one Agent with base skill 130 after [Training](agents-spec.md#assignments), current health 30 of 30, and exhaustion 0, alone on a
 difficulty 3 Lead, adds 130 per Advance turn of work, giving the completion probabilities 130 / 300 = 13/30, then
 260 / 300 = 13/15, then min(1, 390 / 300) = 1.
+
+## A Forced return abandons an Investigation
+
+This example exercises [Leaving an Investigation](#leaving-an-investigation), [Abandonment](#abandonment), and
+[Investigation progress](#investigation-progress), with [Forced return](agents-spec.md#forced-return) in Agents.
+Investigation i13 of `locate_red_dawn_hq`, difficulty 10, has Investigation progress 300 and Current team {a1}, a1 At
+assignment with base skill 100, current health 30 of 30, and exhaustion 69, when an Advance turn begins. In the
+Investigation progress step, a1 adds its effective skill `100 − (69 − 30) = 61`, so i13 reaches 361 with completion
+probability 361 / 1000; the injected outcome is "does not complete". a1 then gains 1 exhaustion, to 70, which is
+`exhaustion_work_limit`, so it has a Forced return: it is on Standby, In transit, and has i13 in its Participation
+history. i13's Current team is empty, so i13 becomes Abandoned in the same step, with Investigation progress 361 retained
+and never resumed. Had a2 been added to i13 in the Turn before, it would have been In transit to i13 in the Turn-end
+state, so i13 would have kept a2 and stayed Active with progress 361.
 
 ## A member leaves and another joins
 
@@ -727,8 +763,9 @@ turn ending Turn 50 begins.
 This example exercises [Starting an Investigation](#starting-an-investigation) and
 [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation). During Turn 15: Investigation i11 is Active
 with Current team {a7}, a7 At assignment; Investigation i12 is Completed; a1 is on Contracting, At assignment; a2 is on
-Standby, In transit; a3 is on Recovery, [Recovering](agents-spec.md#agent-statuses); a4 is Deployed; `locate_red_dawn_safehouse` is available; and no Mission at a `raid_safehouse` Mission site is Won. Each
-call is made on its own from this state, and each rejected call changes nothing.
+Standby, In transit; a3 is on Recovery, [Recovering](agents-spec.md#agent-statuses); a4 is Deployed; a5 is on Standby, At
+assignment, with exhaustion 31; `locate_red_dawn_safehouse` is available; and no Mission at a `raid_safehouse` Mission site is Won. Every
+other Agent has exhaustion at most 30. Each call is made on its own from this state, and each rejected call changes nothing.
 
 | Call                                                      | Result                                                                                                                                                                              |
 | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -739,6 +776,8 @@ call is made on its own from this state, and each rejected call changes nothing.
 | `startInvestigation(locate_red_dawn_safehouse, [a1, a2])` | Rejected as a whole: a2 is In transit. a1 stays on Contracting, At assignment.                                                                                                      |
 | `startInvestigation(locate_red_dawn_safehouse, [a3])`     | Rejected: a3 is on Recovery.                                                                                                                                                        |
 | `startInvestigation(locate_red_dawn_safehouse, [a4])`     | Rejected: a4 is Deployed.                                                                                                                                                           |
+| `startInvestigation(locate_red_dawn_safehouse, [a5])`     | Rejected: a5 is not Fit for work, because its exhaustion 31 is above 30.                                                                                                            |
+| `assignAgentsToInvestigation(i11, [a5])`                  | Rejected: a5 is not Fit for work.                                                                                                                                                   |
 | `assignAgentsToInvestigation(i12, [a1])`                  | Rejected: i12 is not Active.                                                                                                                                                        |
 | `assignAgentsToInvestigation(i11, [a7])`                  | Rejected: a7 already belongs to i11's Current team.                                                                                                                                 |
 | `assignAgentsToInvestigation(i11, [a1])`                  | Succeeds: a1 is on i11, In transit; i11 has Current team {a7, a1} and unchanged progress.                                                                                           |
@@ -761,6 +800,5 @@ InvestigationArchetype; removing `standard_investigation`; setting its `name` to
 - TODO (later): Diminishing returns for large teams, under [Progress gain](#progress-gain).
 - TODO (later): Investigation progress lost when a member leaves, under
   [Leaving an Investigation](#leaving-an-investigation).
-- TODO (later): Exhaustion gained from investigating, under [Progress gain](#progress-gain).
 - TODO (later): Selection among several InvestigationArchetypes, under
   [InvestigationArchetype validation](#investigationarchetype-validation).

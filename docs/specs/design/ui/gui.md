@@ -5,7 +5,7 @@
 | Spec ID     | GUI                                                                                                                                                                        |
 | Family      | UI                                                                                                                                                                         |
 | Audience    | UI designer, Implementer                                                                                                                                                   |
-| Owns        | Guidance on the screens of the graphical user interface, what each shows the Player by default, and the confirmations it asks for.                                         |
+| Owns        | Guidance on the screens of the graphical user interface, what each shows the Player by default, and the confirmations and warnings it gives.                               |
 | Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -38,6 +38,16 @@ Investigation, whatever the new Assignment, the GUI asks the Player to confirm, 
 transit doing nothing. For an Investigation, it also names each Investigation that loses members and each that becomes
 Abandoned and loses its progress, under [Abandonment](../mechanics/investigations.md#abandonment) in Investigations. An order that interrupts no
 such Agent, e.g. moving an Agent between Standby and Training, needs no confirmation.
+
+# Warning on deploying tired Agents
+
+The engine lets an Agent of any [exhaustion](../mechanics/agents-spec.md#combatant-attributes) be deployed, under [Deploying Agents](../mechanics/missions.md#deploying-agents) in Missions,
+because a tired team may be the only answer to a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). A tired Agent fights worse and drops out of a
+[Combat](../mechanics/domain-model.md#combat) sooner, under [Incapacitation condition](../mechanics/combat.md#incapacitation-condition) in Combat, so the GUI makes sure the Player
+deploys one knowingly. Before it makes a `deployAgents` [Player action](../foundation/engine-contract.md#player-actions-and-turns) whose team includes an Agent with exhaustion of
+20 or more, the GUI warns the Player and asks to confirm. The warning names each such Agent with its exhaustion and
+[effective skill](../mechanics/agents-spec.md#combatant-attributes). It is a warning, not a block: the Player may confirm and deploy. The threshold 20 is a constant of the
+GUI, not a [GDR](../foundation/core-concepts.md#game-build-and-content) value, because no game rule reads it.
 
 # TODOs
 

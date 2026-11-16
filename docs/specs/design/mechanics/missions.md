@@ -380,7 +380,10 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
    the Transport cap. No rounding occurs; every term is a whole number of Agents.
 
 The preconditions on every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), also apply, under
-[Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md).
+[Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md). No precondition reads
+an Agent's [exhaustion](agents-spec.md#combatant-attributes): an Agent that is not [Fit for work](agents-spec.md#assignments) can still be deployed, under
+[Start-work gate](agents-spec.md#start-work-gate) in Agents, because sending a tired team may be the only way to answer a
+Mission site.
 
 Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at
 least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation
@@ -447,13 +450,51 @@ For each Deployed Mission M, at Mission site S:
    is recorded in its Participation history under [Participation history records](agents-spec.md#participation-history-records).
    Under [Transit rule](agents-spec.md#transit-rule), it is still [In transit](domain-model.md#agency-and-agents) when this Advance turn ends. It then
    regains current health and [exhaustion](agents-spec.md#combatant-attributes) under [Agent Recovery](agent-recovery.md).
-6. **Current team:** M's Current team is now empty.
-7. **Consequences:** The Consequences of M's new lifecycle state apply, under [Consequences](#consequences).
+6. **Mission exhaustion:** Every survivor gains exhaustion under [Mission exhaustion](#mission-exhaustion).
+7. **Current team:** M's Current team is now empty.
+8. **Consequences:** The Consequences of M's new lifecycle state apply, under [Consequences](#consequences).
 
 S stays Attempted. A Won Mission can also change Lead prerequisites and [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions), under
 [Leads and Progression](leads-and-progression.md). A Mission raises an Agent's exhaustion only through its Combat,
-under [Combat](combat.md), and changes an Agent's [base skill](agents-spec.md#combatant-attributes) in no way, under
+under [Combat](combat.md), and through Mission exhaustion, and changes an Agent's [base skill](agents-spec.md#combatant-attributes) in no way, under
 [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents.
+
+## Mission exhaustion
+
+A Mission wears out its survivors beyond the attacks of its Combat, and a Mission that costs lives wears them out much
+more, so that a bloody Mission takes its survivors out of action for a long rest.
+
+**Proposed rule:** Under step 6 of [Resolving one Mission](#resolving-one-mission), every survivor of Mission M
+gains exhaustion, whatever M's Combat outcome:
+
+```text
+exhaustion gained = exhaustion_per_mission + round up( exhaustion_per_pct_killed × 100 × K / D )
+exhaustion after  = exhaustion before + exhaustion gained
+```
+
+Inputs:
+
+| Symbol                      | Meaning                                                                                                   | Unit and domain                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `exhaustion_per_mission`    | The value of [AgentParameters](agents-spec.md#agentparameters).                                           | Exhaustion points; a whole number of at least 0.              |
+| `exhaustion_per_pct_killed` | The value of AgentParameters.                                                                             | Exhaustion points per percent; a whole number of at least 0.  |
+| K                           | The number of Agents of M's Current team that were [Killed](agents-spec.md#agent-statuses) in M's Combat. | Agents; a whole number from 0 to D − 1 when M has a survivor. |
+| D                           | The number of Agents of M's Current team when its Combat began, i.e. of its Team sent.                    | Agents; a whole number of at least 1.                         |
+| exhaustion before           | The survivor's exhaustion after M's Combat.                                                               | Exhaustion points; a whole number of at least 0.              |
+
+Evaluation: the expression is evaluated exactly, under [Exact evaluation](../foundation/numbers.md#exact-evaluation)
+in Numbers, and [Round up](../foundation/numbers.md#glossary) is applied once, to the share of the team Killed; the
+divisor D is never zero. Every survivor of M gains the same amount, and no upper clamp applies, under
+[Attribute ranges](agents-spec.md#attribute-ranges) in Agents, so the result may exceed `exhaustion_incapacitation`. A
+Killed Agent gains nothing. The Combat outcome does not matter: a Retreated or Wiped team's survivors gain as much as a
+Prevailed team's, so retreating is never a way to spare exhaustion. E.g., with the Bootstrap values, a team of four with no
+Agent Killed gains 5 each; a team of four with one Agent Killed gains `5 + round up(100 × 1 / 4) = 30` each; a team of three
+with one Agent Killed gains `5 + round up(33.33…) = 39` each; and a survivor that leaves the Combat with exhaustion 80
+after 73% of its team was Killed ends with `80 + 5 + 73 = 158`.
+
+**Informative rationale:** game-ts gave every survivor 5 exhaustion and 5 more for each 5% of the team lost, rounded up;
+this rule keeps the 5 and counts the losses per percent, which gives the same amount at every multiple of 5% and reads
+more plainly.
 
 ## Cancellation
 
@@ -615,6 +656,9 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   Transport cap ([Resolving one Mission](#resolving-one-mission)).
 - **Incapacitated survivors:** An Agent that ends the Combat Incapacitated is alive and returns like any survivor:
   Recovery if its current health is below its base health, Standby if its current health equals its base health ([Resolving one Mission](#resolving-one-mission)).
+- **Exhaustion after a costly Mission:** Every survivor gains Mission exhaustion whatever the Combat outcome, and its
+  exhaustion may exceed 100; e.g., the lone survivor of a team of two with one Agent Killed gains `5 + 50 = 55`
+  ([Mission exhaustion](#mission-exhaustion)).
 - **Transport cap exactly reached:** Deploying Agents so that the number of Deployed Agents equals the Transport cap is
   accepted; one more is rejected ([Deploying Agents](#deploying-agents)).
 - **Response reward not doubled:** A Won Response Mission applies the operation level's `on_win` once
@@ -665,6 +709,7 @@ All examples use the Bootstrap GDR values from `content/missions/mission_site_ar
 | `locate_red_dawn_hq`     | `faction` `red_dawn`; `create_mission_site` `raid_hq`                                                                                    |
 | `initiate`, `soldier`    | `base_skill` 40 and 120; `base_health` 20 and 30; base weapon damage 10 and 14                                                           |
 | `field_agent`            | `base_skill` 100; `base_health` 30; base weapon damage 10                                                                                |
+| `agent_parameters`       | `exhaustion_free_points` 30; `exhaustion_per_mission` 5; `exhaustion_per_pct_killed` 1                                                   |
 | `economy`                | `base_transport_cap` 4                                                                                                                   |
 | `standard_mission`       | The MissionArchetype; no rule reads its properties                                                                                       |
 
@@ -735,7 +780,8 @@ Investigation is Active, so Investigation progress changes nothing. In Mission r
 
 a3 and a4 have no target in [Combat round](combat.md#combat-rounds-and-results) 2, and no Enemy attacks in its [Enemies' phase](combat.md#combat-rounds-and-results). After Combat round 1 the Agents' Combat rating
 is 400, so the Combat continues; after Combat round 2 no Enemy is able to fight, and the Combat outcome is Prevailed after 2
-Combat rounds. Every Agent ends with current health 30 of 30; a1 has exhaustion 4, a2 2, a3 1, and a4 1.
+Combat rounds. Every Agent ends the Combat with current health 30 of 30; a1 has exhaustion 4, a2 2, a3 1, and a4 1. No
+Agent was Killed, so [Mission exhaustion](#mission-exhaustion) adds 5 to each: a1 has exhaustion 9, a2 7, a3 6, and a4 6.
 
 | Value after the Advance turn ending Turn 6 | Result                                                                                                                    |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
@@ -779,19 +825,20 @@ of the Advance turn ending Turn 45 uses 19. s2 never has a Mission, and its Enem
 Mission m2 is created with the Current team [a1]. In Mission resolution of
 the Advance turn ending Turn 42:
 
-| Combat round | Attacker → target              | Injected outcomes      | Result                                                             |
-| ------------ | ------------------------------ | ---------------------- | ------------------------------------------------------------------ |
-| 1            | a1 → e5 (tie at 120, earliest) | miss                   | a1: x1; e5: x1                                                     |
-| 1            | e1 → a1                        | miss                   | a1: x2                                                             |
-| 1            | e2 → a1                        | miss                   | a1: x3                                                             |
-| 1            | e3 → a1                        | miss                   | a1: x4                                                             |
-| 1            | e4 → a1                        | miss                   | a1: x5                                                             |
-| 1            | e5 → a1                        | hit; damage outcome 21 | a1: h9, x6, effective skill `round down(100 × 9 × 99 / 3000) = 29` |
-| 1            | e6 → a1                        | miss                   | a1: h9, x7, effective skill `round down(100 × 9 × 98 / 3000) = 29` |
+| Combat round | Attacker → target              | Injected outcomes      | Result                                                              |
+| ------------ | ------------------------------ | ---------------------- | ------------------------------------------------------------------- |
+| 1            | a1 → e5 (tie at 120, earliest) | miss                   | a1: x1; e5: x1                                                      |
+| 1            | e1 → a1                        | miss                   | a1: x2                                                              |
+| 1            | e2 → a1                        | miss                   | a1: x3                                                              |
+| 1            | e3 → a1                        | miss                   | a1: x4                                                              |
+| 1            | e4 → a1                        | miss                   | a1: x5                                                              |
+| 1            | e5 → a1                        | hit; damage outcome 21 | a1: h9, x6, effective skill `round down(100 × 9 × 100 / 3000) = 30` |
+| 1            | e6 → a1                        | miss                   | a1: h9, x7, effective skill 30                                      |
 
-After Combat round 1, an Enemy and an Agent are able to fight, and the Retreated check holds: 29 < 0.5 × 100 = 50, and the
-Enemies' Combat rating 400 ≥ 0.8 × 29. The Combat outcome is Retreated, so m2 is Lost. a1 survives with current health 9 of 30,
-so its Assignment becomes Recovery, In transit. A Panic increase of 8 is added and funding becomes
+After Combat round 1, an Enemy and an Agent are able to fight, and the Retreated check holds: 30 < 0.5 × 100 = 50, and the
+Enemies' Combat rating 400 ≥ 0.8 × 30. The Combat outcome is Retreated, so m2 is Lost. a1 survives with current health 9 of 30,
+so its Assignment becomes Recovery, In transit, and Mission exhaustion raises its exhaustion from 7 to 12, as it would after
+a win. A Panic increase of 8 is added and funding becomes
 max(0, 20 − 1) = 19, the same Consequences as the Ignored variant, two Advance turns earlier; money is unchanged. s2 does
 not count down in Mission site expiration, because it is Attempted, not Active.
 
@@ -799,22 +846,23 @@ not count down in Mission site expiration, because it is Attempted, not Active.
 Attempted and Mission m2 is created with the Current team [a1, a2, a3, a4]. In Mission
 resolution of the Advance turn ending Turn 41:
 
-| Combat round | Attacker → target                  | Injected outcomes           | Result                                                                                                                                                                   |
-| ------------ | ---------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1            | a1 → e5 (tie at 120, earliest)     | hit; damage outcome 15      | e5: h15, effective skill 60                                                                                                                                              |
-| 1            | a2 → e6 (120 beats 60)             | hit; damage outcome 15      | e6: h15, effective skill 60                                                                                                                                              |
-| 1            | a3 → e5 (tie at 60, earliest)      | hit; damage outcome 15      | e5: h0, dead                                                                                                                                                             |
-| 1            | a4 → e6 (60 beats 40)              | hit; damage outcome 15      | e6: h0, dead                                                                                                                                                             |
-| 1            | e1, e2, e3, e4 → a1, each          | miss, each                  | a1: x5                                                                                                                                                                   |
-| 2            | a1 → e1 (tie at 40, earliest)      | hit; damage outcome 15      | e1: h5, effective skill 10                                                                                                                                               |
-| 2            | a2 → e2 (40 beats 10)              | hit; damage outcome 15      | e2: h5, effective skill 10                                                                                                                                               |
-| 2            | a3 → e3 (40 beats 10)              | hit; damage outcome 15      | e3: h5, effective skill 10                                                                                                                                               |
-| 2            | a4 → e4 (40 beats 10)              | hit; damage outcome 15      | e4: h5, effective skill 10                                                                                                                                               |
-| 2            | e1, e2, e3, e4 → a2, each          | miss, each                  | a2: x6. a1, at x6, has effective skill 99, so each initiate targets a2, whose exhaustion is at most 5, and so whose effective skill is 100, before each of these attacks |
-| 3            | a1 → e1, a2 → e2, a3 → e3, a4 → e4 | hit; damage outcome 5, each | e1, e2, e3, e4: h0, dead                                                                                                                                                 |
+| Combat round | Attacker → target                  | Injected outcomes           | Result                                                                                                                              |
+| ------------ | ---------------------------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 1            | a1 → e5 (tie at 120, earliest)     | hit; damage outcome 15      | e5: h15, effective skill 60                                                                                                         |
+| 1            | a2 → e6 (120 beats 60)             | hit; damage outcome 15      | e6: h15, effective skill 60                                                                                                         |
+| 1            | a3 → e5 (tie at 60, earliest)      | hit; damage outcome 15      | e5: h0, dead                                                                                                                        |
+| 1            | a4 → e6 (60 beats 40)              | hit; damage outcome 15      | e6: h0, dead                                                                                                                        |
+| 1            | e1, e2, e3, e4 → a1, each          | miss, each                  | a1: x5                                                                                                                              |
+| 2            | a1 → e1 (tie at 40, earliest)      | hit; damage outcome 15      | e1: h5, effective skill 10                                                                                                          |
+| 2            | a2 → e2 (40 beats 10)              | hit; damage outcome 15      | e2: h5, effective skill 10                                                                                                          |
+| 2            | a3 → e3 (40 beats 10)              | hit; damage outcome 15      | e3: h5, effective skill 10                                                                                                          |
+| 2            | a4 → e4 (40 beats 10)              | hit; damage outcome 15      | e4: h5, effective skill 10                                                                                                          |
+| 2            | e1, e2, e3, e4 → a1, each          | miss, each                  | a1: x10. Every Agent's exhaustion is at most 30, so every Agent has effective skill 100, and each initiate targets a1, the earliest |
+| 3            | a1 → e1, a2 → e2, a3 → e3, a4 → e4 | hit; damage outcome 5, each | e1, e2, e3, e4: h0, dead                                                                                                            |
 
 After Combat round 3 no Enemy is able to fight, so the Combat outcome is Prevailed and m2 is Won. Every Agent ends with current health
-30 of 30 and becomes Standby, In transit. Money becomes 300 + 30 = 330 and funding becomes max(0, 20 + 5) = 25; no Panic
+30 of 30 and becomes Standby, In transit. a1 ends the Combat with exhaustion 11 and a2, a3, and a4 with 3 each; Mission
+exhaustion adds 5 to each, to 16 and 8. Money becomes 300 + 30 = 330 and funding becomes max(0, 20 + 5) = 25; no Panic
 change is added. The Agency income step of the Advance turn ending Turn 42 uses funding 25. The operation level's
 `on_win` is applied once: money rises by 30, not 60, and no rule of Factions adds a second reward.
 
@@ -973,6 +1021,5 @@ following test changes independently makes the Game build defective, so no Campa
   [F. Mission commitment: force concentration, casualties, and partial success](../../../game-design-brief.md#f-mission-commitment-force-concentration-casualties-and-partial-success)
   in the game design brief requires; under [Consequences](#consequences).
 - TODO (later): Faction suppression by a Consequence of a Mission or a Mission site, under [Consequences](#consequences).
-- TODO (later): Exhaustion gained after a Mission beyond its Combat, under [Resolving one Mission](#resolving-one-mission).
 - TODO (later): [Base skill](agents-spec.md#combatant-attributes) gained by surviving a Mission, under [Resolving one Mission](#resolving-one-mission).
 - TODO (later): A second attempt at a Mission site, under [Mission site lifecycle](#mission-site-lifecycle).
