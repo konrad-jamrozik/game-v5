@@ -1,33 +1,43 @@
 # Game v5: Game Design Brief
 
-## 1. Purpose and core concepts
+# 1. Purpose and core concepts
 
 This document defines the intended gameplay, strategic trade-offs, and foundational constraints for Game v5. It guides the detailed specifications, which define exact rules, formulas, Game Data Records (GDRs), and interfaces. Adapt the strategic ideas from [game-ts](https://github.com/konrad-jamrozik/game-ts/); exact formulas, balance, GDRs, and framework choices remain open.
 
-The game is a **turn-based agency-management strategy game with a graphical user interface (GUI)**, with presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
+The game is a **turn-based agency-management strategy game**, with primary inspiration coming from the OG X-COM and
+presentation inspiration from [A Dark Room](https://adarkroom.doublespeakgames.com/) and [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
 
 **Core loop:** allocate agents → investigate Leads → uncover Leads and Missions → deploy teams → resolve the turn → manage consequences and reinvest.
 
 The main domain concepts are:
 
-- **Agency and campaign:** resources, capabilities, roster, progression, and current turn.
-- **Agents:** persistent individuals with skill, health, exhaustion, equipment, Current assignments, and career history. Orders and physical availability are distinct.
-- **Leads:** discoverable Leads connected by prerequisites. They can be repeatable, one-time, blocked, or completed.
-- **Investigations:** Investigations of given Leads, with assigned agents, accumulated progress, and uncertain completion.
-- **Initiative missions:** agency efforts to advance objectives, typically uncovered through investigations.
-- **Faction operations and Response missions:** enemy activity and the agency’s opportunities to intervene.
-- **Combat:** automatic combat with targeting, skill contests, damage, exhaustion, incapacitation, retreat, casualties, and experience.
-- **Factions:** opponents that escalate, launch operations, can be suppressed, and can eventually be eliminated.
-- **Economy and panic:** money, recurring funding, upkeep, upgrades, and global pressure.
-- **Turn reports and history:** what the latest Advance turn did in full, and every earlier Turn in reduced form.
+- **Campaign** - One full playthrough where the player wages a secret war against numerous enemies of humanity, organized into factions.
+- **Agency** - The entity the player manages, including its agents, finances, bases, equipment, etc.
+- **Agents:** - The centerpiece of the game. Player hires and sends agents on assignments and missions to combat enemy factions and protect humanity.
+- **Leads:** - That can be investigated to advance the game: discover new information about enemy factions, research new technologies, uncover plots, and ultimately eliminate enemy factions.
+- **Investigations:** - Agents can be assigned to investigate leads.
+- **Initiative missions:** - Missions the player can send agents to, to gain resources, counter enemy factions and otherwise gain advantage.
+- **Faction operations and Response missions:** - Enemy activity and the agency’s opportunities to intervene.
+- **Combat:** automatic combat happening during missions.
+- **Factions:** - Powerful enemy organizations that escalate, launch operations, can be suppressed, and can eventually be eliminated.
+- **Economy and panic:** - money, recurring funding, upkeep, upgrades, and global pressure.
+- **Turn reports and history:** - what the latest Advance turn did in full, and every earlier Turn in reduced form.
 
-Initiative and Response describe agency purpose, independently of combat tactics. Avoid offensive/defensive as mission categories.
+# 2. Key engine features
 
-## 2. Strategic tension: what makes the game interesting
+The game shall have few key engine features:
+
+- Turn-based: player makes a set of actions during turn, then advances the turn.
+- Full determinism - same inputs produce some output. As such, if player relaunches the same campaign and does exactly the same actions, they will reach exactly the same result.
+- Undo & redo: the player can undo and redo their action, even beyond turns.
+- Headless CLI allowing to play the game directly through its engine API, without any GUI on top.
+- Autopilot AIs: player can delegate multiple player actions, also across turns, to an AI player, to simulate the playthrough.
+
+# 3. Strategic tension: what makes the game interesting
 
 The player manages competing needs under uncertainty. Good play is about choosing commitments, maintaining readiness, and accepting some losses—not maximizing every activity simultaneously.
 
-### A. Agent allocation: productivity versus readiness
+## A. Agent allocation: productivity versus readiness
 
 Each agent can primarily:
 
@@ -43,7 +53,7 @@ Changing tasks often incurs **transit downtime**. Frequent reshuffling can leave
 
 A further choice is **working everyone versus holding a ready reserve**. Idle readiness has an opportunity cost, but it allows the agency to respond to unexpected missions without abandoning investigations or waiting for agents to return.
 
-### B. Spending: expansion, quality, or financial resilience
+## B. Spending: expansion, quality, or financial resilience
 
 Money can hire agents or improve the agency. The complete upgrade categories inherited from `game-ts` are:
 
@@ -62,7 +72,7 @@ Hiring increases flexibility but also recurring upkeep. Improving existing agent
 
 Spending immediately competes with keeping cash available for upkeep and emergencies. Mission rewards also create a distinction between **immediate cash and recurring funding**: one solves today’s shortage; the other improves long-term sustainability.
 
-### C. Strategic direction: which Leads to pursue
+## C. Strategic direction: which Leads to pursue
 
 Lead selection determines where the agency invests its future.
 
@@ -78,7 +88,7 @@ The player must choose:
 
 Completing one faction’s elimination can remove a continuing source of pressure, but concentrating on it gives other factions time to strengthen.
 
-### D. Investigations: focus, uncertainty, and commitment
+## D. Investigations: focus, uncertainty, and commitment
 
 **Focus versus breadth.** Additional investigators accelerate a lead sublinearly. Spreading agents across comparable leads improves aggregate progress, while concentrating them produces an important completion sooner. Progress spread across many unfinished leads delivers few immediate benefits.
 
@@ -90,7 +100,7 @@ This matters because completing a lead can create a time-limited mission. The pl
 
 **Fatigue versus continuity.** Long investigations exhaust their teams. Rotating agents preserves readiness but sacrifices progress and incurs travel delays. Keeping the team together preserves momentum but risks declining effectiveness or forced withdrawal.
 
-### E. Operational tempo: progress versus overextension
+## E. Operational tempo: progress versus overextension
 
 Initiative and Response missions create a shared demand on the same agents and transport capacity.
 
@@ -100,7 +110,7 @@ Several difficult Response missions can arrive together. The player must triage 
 
 Suppression provides another choice: **buy time now or pursue permanent elimination**. In `game-ts`, suppression delays operations without stopping faction escalation. Temporary relief therefore creates a preparation window rather than solving the underlying threat.
 
-### F. Mission commitment: force concentration, casualties, and partial success
+## F. Mission commitment: force concentration, casualties, and partial success
 
 Deployment size trades confidence in one mission against coverage elsewhere. Transport capacity makes this a constraint even when enough agents exist.
 
@@ -110,7 +120,7 @@ Experienced agents are both powerful and valuable. Deploying them improves immed
 
 This is a v5 requirement rather than an inherited reward rule: existing mission rewards are conditioned on victory. Later specifications will define how inflicted damage translates into reduced consequences or other benefits. The principle is that useful resistance matters; merely showing up should not automatically neutralize an operation.
 
-### G. Preparation matters more than tactical retries
+## G. Preparation matters more than tactical retries
 
 Missions are resolved by automatic combat. The player chooses whether to commit and which agents to send, then accepts automatic resolution without controlling individual attacks.
 
@@ -118,67 +128,9 @@ Seeded determinism prevents replaying an identical attempt to obtain fresh rolls
 
 This reduces the value of retrying combat, but does not eliminate foreknowledge from undo. Undo remains supported; no additional rewind penalty is introduced by this brief.
 
-## 3. Shared API and progressive interfaces
+# 4. References
 
-The foundation is a **well-defined engine API consisting of exposed operations and types**, not necessarily an HTTP service.
+This game brief was originally based on what was implemented by `game-ts`. See:
 
-Humans and AI players must be able to play completely through it. It provides Player-visible information, decision-relevant information expressed as Derived values, action discovery, constraints, commands, structured outcomes, and undo/redo.
-
-Player API always exposes **all information needed to play and only information the player is entitled to know**. Visibility restrictions apply equally to queries, action descriptions, and errors. Session API allows the Session controller to enable Dev mode, granting separate Developer API inspection and cheat operations. Autopilot AI always receives only Player-visible information, regardless of Dev mode. Engine Contract owns the API hierarchy and access rules.
-
-Supported interfaces develop progressively:
-
-1. **Engine API:** a complete headless gameplay interface.
-2. **Command-line interface (CLI):** readable human output and structured machine output over the same API.
-3. **Functional GUI:** feature-rich grids, trees, charts, buttons, and detail views. Prioritize filtering, sorting, selection, relationships, readability, and useful colors.
-4. **Visual enrichment:** static graphics and selected animations.
-5. **Possible 3D presentation:** a future presentation layer over the same gameplay foundation.
-
-Earlier interfaces remain supported. Graphics must not become necessary to access gameplay information or actions.
-
-The engine owns rules, validation, visibility, and consequences. Clients own presentation or player strategy. GDRs remain separate from Campaign instances. GUI and CLI dependencies stay outside the engine.
-
-Only these interfaces are in scope. Choose the GUI technology later, with grid and tree capabilities as major criteria.
-
-## 4. Turns, determinism, and the Timeline
-
-Management commands take immediate effect. **Advance turn** atomically resolves time-dependent activity and produces a Turn report. Combat rounds remain internal to that resolution.
-
-- Under the same game revision, identical initial state and commands reproduce identical outcomes.
-- Random-generator state and deterministic Instance ID counters belong to Authoritative values in Campaign state.
-- Processing order and rounding are explicit. Queries, rendering, and wall-clock time do not influence gameplay.
-- Every accepted command other than Advance turn is one Timeline entry. The Timeline covers the current turn only, and Advance turn starts a new one.
-- Undo and redo within a turn step through that turn's Timeline entries, back to the start of the turn at most.
-- Undo and redo across turns are a separate, explicit operation that loads an Autosave. The engine writes an Autosave at the end of every turn, keeping the latest 5 turns by default, and just before every Autopilot engagement.
-- The engine also keeps one Autosave of the current state at all times, which cannot be turned off, so the player can resume after quitting or a crash.
-- Undo restores state, including randomness and the Turn report. Redo restores the recorded result without rerolling.
-- A new command after undo discards the undone commands and the Autosaves of the play it abandons.
-- Rejected commands change neither state nor the Timeline.
-- UI preferences belong to Global configuration and remain outside the Timeline. Autopilot memory follows undo, redo, and load, so an Autopilot AI that is engaged again reads the memory it wrote at or before the restored state.
-- World history, the past that game behavior and Player API queries consult, is part of Campaign state and is separate from the Timeline.
-
-Begin with snapshots; optimize Timeline and Autosave storage later.
-
-## 5. Delivery and acceptance
-
-The immediate deliverable is the Markdown brief, not implementation. Exact formulas, GDRs, balance, and partial-success calculations belong in subsequent specifications.
-
-Future validation should establish that:
-
-- A campaign is playable through the API and CLI without dev access.
-- Equivalent API, CLI, and GUI commands produce identical results.
-- Player information is complete within its visibility boundary.
-- Seeded replay and undo/redo reproduce outcomes, Turn reports, and generated IDs.
-- Invalid commands cannot partially spend resources or assign agents.
-- Transit, fatigue, recovery, investigation commitments, and capacity create consistent trade-offs.
-- Failed missions can provide damage-related benefits distinct from expiration.
-- UI and AI clients use engine-provided rules and information.
-- Playtesting rewards preparedness and prioritization while allowing viable alternatives to a single dominant allocation strategy.
-
-Ultimately, the game has to be fun. Exact checks can show that the implementation does what the specifications say,
-but not that the game is interesting, balanced, or worth playing; e.g., every rule can be implemented exactly while one
-allocation strategy still dominates every Campaign. Playtesting is therefore the ultimate judge of whether the design
-and its implementation succeeded, and its findings feed back into the specifications rather than being settled by
-tests.
-
-Use `game-ts` models, rules, turn resolution, APIs, history, and documentation as references. Mark inherited behavior, v5 requirements, and future design questions distinctly; do not preserve bugs or incidental implementation quirks as requirements.
+- https://github.com/konrad-jamrozik/game-ts/
+- https://konrad-jamrozik.github.io/game-ts/
