@@ -1,5 +1,13 @@
 # Repository agent instructions
 
+## Repository locations
+
+- Spec repo (this repository): local clone at `~\repos\game-v5`; GitHub
+  <https://github.com/konrad-jamrozik/game-v5>; GitHub Pages <https://konrad-jamrozik.github.io/game-v5/>.
+- Current Implementation repo: local clone at `C:\Users\spawa\repos\game-v5-impl-web`; GitHub
+  <https://github.com/konrad-jamrozik/game-v5-impl-web>; GitHub Pages
+  <https://konrad-jamrozik.github.io/game-v5-impl-web/>.
+
 Before running an npm script, verify that `node` and `npm` are available with `Get-Command` on Windows or `command -v`
 on POSIX systems. Do not discover a missing package manager by attempting the script. Follow the Agent environment setup
 in `README.md` when the toolchain is unavailable.
