@@ -15,7 +15,7 @@ description: The captured member revealed a Red Dawn safehouse.
 faction: red_dawn
 difficulty: 6
 requires:
-  - mission_won_from_lead: locate_red_dawn_member
+  - mission_won: apprehend_member
 on_completion:
   create_mission_site: raid_safehouse
 ---
@@ -26,6 +26,6 @@ description: Intelligence from the safehouse points to the Red Dawn headquarters
 faction: red_dawn
 difficulty: 10 # game-ts: 25
 requires:
-  - mission_won_from_lead: locate_red_dawn_safehouse
+  - mission_won: raid_safehouse
 on_completion:
   create_mission_site: raid_hq

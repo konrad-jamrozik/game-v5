@@ -649,7 +649,7 @@ difficulty 3 Lead, adds 130 per Advance turn of work, giving the completion prob
 This example exercises [Leaving an Investigation](#leaving-an-investigation),
 [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation), [Progress gain](#progress-gain),
 [Completion](#completion), and [Projected completion probability](#projected-completion-probability). Initial state:
-Lead progression records a Won Mission at a Mission site created by `locate_red_dawn_member`, the prerequisite of
+a Mission at an `apprehend_member` Mission site targeting Red Dawn is Won, the prerequisite of
 `locate_red_dawn_safehouse`, so `locate_red_dawn_safehouse` is available under
 [Lead availability](leads-and-progression.md#lead-availability), and it has no Active Investigation. During Turn 10 the
 player calls `startInvestigation(locate_red_dawn_safehouse, [a1, a2])`, creating Investigation i4 (difficulty 6).

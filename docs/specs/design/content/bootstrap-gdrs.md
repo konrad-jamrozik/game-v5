@@ -234,8 +234,8 @@ therefore remains available until a Mission at a Mission site it created is Won.
 
 The Victory path works through these rules:
 
-- Lead availability, under [Lead availability](../mechanics/leads-and-progression.md#lead-availability); recording a
-  win, under [Recording a Won Mission](../mechanics/leads-and-progression.md#recording-a-won-mission); and the
+- Lead availability, under [Lead availability](../mechanics/leads-and-progression.md#lead-availability); Lead
+  prerequisites, under [Prerequisites](../mechanics/leads-and-progression.md#prerequisites); and the
   effect of completing a Lead, under [Completion effect](../mechanics/leads-and-progression.md#completion-effect), all in
   [Leads and Progression](../mechanics/leads-and-progression.md).
 - Mission site creation, expiration, and the Consequences of a Mission's win or loss, under
@@ -264,10 +264,9 @@ exist with the Bootstrap GDRs and the source of each initial value, as
 | Mission                | [Initial Mission sites](../mechanics/missions.md#initial-mission-sites) in Missions, which states that no Mission exists initially                  |
 | Enemy                  | [Enemy creation](../mechanics/combat.md#enemy-creation) in Combat, applied by [Enemy creation](../mechanics/missions.md#enemy-creation) in Missions |
 
-The Turn, Panic, and Lead progression start from values that no GDR supplies: the Turn under
-[Turn number](../mechanics/turn-advancement.md#turn-number), Panic under
-[Initial values](../mechanics/panic-and-endings.md#initial-values), and Lead progression under
-[Lead progression](../mechanics/leads-and-progression.md#lead-progression).
+The Turn and Panic start from values that no GDR supplies: the Turn under
+[Turn number](../mechanics/turn-advancement.md#turn-number), and Panic under
+[Initial values](../mechanics/panic-and-endings.md#initial-values).
 
 # TODOs
 

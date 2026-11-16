@@ -45,7 +45,7 @@ Agency's money and funding, Agency income and upkeep, hiring and dismissing Agen
 ## Leads and Progression
 
 [Leads and Progression](leads-and-progression.md) answers _what becomes available, and when?_ It owns what a Lead
-describes, Lead progression, Lead availability, and the effect of completing a Lead, separately from the Investigations
+describes, Lead prerequisites, Lead availability, and the effect of completing a Lead, separately from the Investigations
 that pursue it.
 
 ## Investigations

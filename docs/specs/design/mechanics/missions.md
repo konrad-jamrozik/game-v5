@@ -318,7 +318,8 @@ one is an internal invariant violation, reported under
    Lost.
 
 **Retention:** A Mission keeps every property above for the whole Campaign, whatever its lifecycle state, so that every
-reference to it resolves, e.g. from a Participation history or Lead progression. A Won or Lost Mission no longer
+reference to it resolves, e.g. from a Participation history, and so that Lead prerequisites and Lead availability can read
+which Missions are Won, under [Leads and Progression](leads-and-progression.md). A Won or Lost Mission no longer
 participates in current gameplay and is retained in World history with its final values, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Mission is ever removed.
@@ -337,7 +338,7 @@ site always resolves.
 
 A Mission is its own Campaign instance, not a part of its Mission site's State, because it carries facts the Mission
 site does not have, e.g. the Turn it was deployed in, the team sent, its own lifecycle from deployment to its outcome;
-and because Current assignments, Participation history, and Lead progression reference it
+and because Current assignments and Participation history reference it
 directly. The Combat report of its Combat, by contrast, is not part of the Mission: it is part of the Turn report of the
 Advance turn that fought the Combat, under [Combat report](combat.md#combat-report) in Combat.
 
@@ -471,8 +472,8 @@ For each Deployed Mission M, at Mission site S:
 6. **Current team:** M's Current team is now empty.
 7. **Consequences:** The Consequences of M's new lifecycle state apply, under [Consequences](#consequences).
 
-S stays Attempted. A Won Mission is also recorded in Lead progression against the Lead that created its Mission site,
-under [Leads and Progression](leads-and-progression.md). A Mission raises an Agent's exhaustion only through its Combat,
+S stays Attempted. A Won Mission can also change Lead prerequisites and Lead availability, under
+[Leads and Progression](leads-and-progression.md). A Mission raises an Agent's exhaustion only through its Combat,
 under [Combat](combat.md), and changes an Agent's skill in no way, under
 [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents.
 
@@ -545,7 +546,7 @@ money a Won Mission brings or the Panic an ignored Response Mission site raises.
 
 **Proposed rule:** The following table states the complete Consequences for the Campaign of each final state of a
 Mission and of a Mission site, by the kind of the Mission site. It is exhaustive: no other rule of any specification adds
-a Consequence of these final states, apart from the Lead progression record and Lead availability under
+a Consequence of these final states, apart from Lead prerequisites and Lead availability under
 [Leads and Progression](leads-and-progression.md) and the changes to Agents under
 [Resolving one Mission](#resolving-one-mission). The final state Attempted of a Mission site has no Consequence of its
 own. "The operation level" is the FactionOperationLevel in the Response Mission site's origin.
@@ -765,7 +766,6 @@ Combat rounds. Every Agent ends with current health 30 of 30; a1 has exhaustion 
 | Money                                      | 380 + 5 = 385 after Mission resolution; no later step of this Advance turn changes money, so the Turn ends with money 385 |
 | Funding                                    | max(0, 20 + 0) = 20                                                                                                       |
 | Pending panic change                       | −1 from m1, the only contribution, so the Panic step gives Panic max(0, min(100, 10 − 1)) = 9                             |
-| Lead progression                           | A win of m1 against `locate_red_dawn_member`, recorded by [Leads and Progression](leads-and-progression.md)               |
 
 s1 is not Active in Mission site expiration, so it does not count down. The four Agents arrive in the Advance turn ending
 Turn 7 and can be ordered in Turn 8. No later Player action can deploy Agents to s1.
