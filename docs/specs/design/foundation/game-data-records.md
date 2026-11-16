@@ -41,7 +41,7 @@ implementation interfaces. Each GDR purpose section below is a worked example of
 
 | Purpose                          | How the engine uses the GDR                                                                                                                                                                                  | Example                                                                                                                    |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| Campaign instance initialization | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance. The player cannot override the value.      | A newly hired Agent has skill 100, the value of the new-base-Agent-skill GDR.                                              |
+| Campaign instance initialization | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance. The player cannot override the value.      | A newly hired Agent has base skill 100, the value of the new-base-Agent-skill GDR.                                         |
 | Campaign configuration preset    | Campaign creation takes the GDR’s values as the complete initial Campaign configuration. Before creation, the engine lets the player override individual values of the selected preset.                      | A Campaign created from the Hard preset with one override has starting money 80 and investigation difficulty multiplier 2. |
 | Calculation parameter            | The engine reads a GDR when computing a Derived value.                                                                                                                                                       | The engine reads the rate from the Standard contracting GDR to calculate contracting income.                               |
 | Archetype                        | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-instances.md#campaign-instance-creation). | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh Instance ID.                               |
@@ -84,14 +84,14 @@ A GDR added later goes into the file of its Type, and a file is added only for a
 
 Consider an illustrative creation of an Agent hired during play:
 
-| Element              | Modeling role                                                                  | Meaning in this example                                                                                                             |
-| -------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Skill                | Type                                                                           | Describes a nonnegative integer skill.                                                                                              |
-| New base Agent skill | GDR                                                                            | Has Type Skill and value 100.                                                                                                       |
-| Agent hiring         | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) | Hiring creates one Agent Campaign instance with a fresh Instance ID and skill in State equal to the new-base-Agent-skill GDR value. |
-| Agent                | Campaign instance                                                              | The newly created Agent Campaign instance, with skill 100 in State.                                                                 |
-| Agent skill          | Authoritative value                                                            | Initially 100 in the Agent Campaign instance’s State.                                                                               |
-| New Committed state  | Committed state                                                                | Contains the Agent Campaign instance when the hiring action completes.                                                              |
+| Element              | Modeling role                                                                  | Meaning in this example                                                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Skill                | Type                                                                           | Describes a nonnegative integer base skill.                                                                                              |
+| New base Agent skill | GDR                                                                            | Has Type Skill and value 100.                                                                                                            |
+| Agent hiring         | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) | Hiring creates one Agent Campaign instance with a fresh Instance ID and base skill in State equal to the new-base-Agent-skill GDR value. |
+| Agent                | Campaign instance                                                              | The newly created Agent Campaign instance, with base skill 100 in State.                                                                 |
+| Agent base skill     | Authoritative value                                                            | Initially 100 in the Agent Campaign instance’s State.                                                                                    |
+| New Committed state  | Committed state                                                                | Contains the Agent Campaign instance when the hiring action completes.                                                                   |
 
 E.g., the new-base-Agent-skill GDR as YAML:
 
@@ -104,19 +104,19 @@ value: 100
 New base Agent skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies
 to newly hired Agents of every Archetype without being repeated in each Archetype.
 
-The example shows only the skill initial value; Agent hiring also sets the Agent's other initial values. When the hiring action completes, the new Committed state contains an Agent Campaign instance
-with a fresh Instance ID and skill 100 in State, the value of the new-base-Agent-skill GDR.
+The example shows only the base skill initial value; Agent hiring also sets the Agent's other initial values. When the hiring action completes, the new Committed state contains an Agent Campaign instance
+with a fresh Instance ID and base skill 100 in State, the value of the new-base-Agent-skill GDR.
 
 ```mermaid
 flowchart LR
     Type["Type: Skill"] -.->|describes| GDR["GDR: New base Agent skill · value 100"]
-    Creation["Agent hiring<br/>skill starts at the new-base-Agent-skill value"] -->|specifies| Agent["Agent Campaign instance<br/>fresh Instance ID"]
-    GDR -->|initial skill 100| Agent
-    Agent -->|State contains| Skill["Authoritative value:<br/>skill 100"]
+    Creation["Agent hiring<br/>base skill starts at the new-base-Agent-skill value"] -->|specifies| Agent["Agent Campaign instance<br/>fresh Instance ID"]
+    GDR -->|initial base skill 100| Agent
+    Agent -->|State contains| Skill["Authoritative value:<br/>base skill 100"]
     Agent -->|included in| State["New Committed state"]
 ```
 
-If training later raises the Agent's skill to 110, the engine reads 110 from the Agent Campaign instance’s State.
+If training later raises the Agent's base skill to 110, the engine reads 110 from the Agent Campaign instance’s State.
 The new-base-Agent-skill GDR still contains the initial value of 100.
 
 The engine exposes no way for the player to change a value this purpose supplies. That distinguishes it from the
@@ -182,25 +182,25 @@ State.
 
 Consider an illustrative contracting income calculation for one Agent. Its complete local setup is:
 
-| Element                        | Modeling role       | Meaning in this example                                                          |
-| ------------------------------ | ------------------- | -------------------------------------------------------------------------------- |
-| ContractingRate                | Type                | Describes a nonnegative integer amount of money per point of skill per Turn.     |
-| Standard contracting           | GDR                 | Has Type ContractingRate and value 2 money per point of skill per Turn.          |
-| Agent skill                    | Authoritative value | Value in the Agent Campaign instance's State, currently 100.                     |
-| Contracting income calculation | Formula             | Contracting income for one Turn equals the rate multiplied by the Agent's skill. |
-| Contracting income             | Derived value       | 2 × 100 = 200 money for this Turn.                                               |
-| Contracting payment            | State change        | Add contracting income to Agency money.                                          |
+| Element                        | Modeling role       | Meaning in this example                                                               |
+| ------------------------------ | ------------------- | ------------------------------------------------------------------------------------- |
+| ContractingRate                | Type                | Describes a nonnegative integer amount of money per point of base skill per Turn.     |
+| Standard contracting           | GDR                 | Has Type ContractingRate and value 2 money per point of base skill per Turn.          |
+| Agent base skill               | Authoritative value | Value in the Agent Campaign instance's State, currently 100.                          |
+| Contracting income calculation | Formula             | Contracting income for one Turn equals the rate multiplied by the Agent's base skill. |
+| Contracting income             | Derived value       | 2 × 100 = 200 money for this Turn.                                                    |
+| Contracting payment            | State change        | Add contracting income to Agency money.                                               |
 
 E.g., the Standard contracting GDR as YAML:
 
 ```yaml
 id: standard_contracting
 type: ContractingRate
-value: 2 # money per point of skill per Turn
+value: 2 # money per point of base skill per Turn
 ```
 
 During "Advance turn" computation, the engine reads the rate of 2 from the Standard contracting GDR, which conforms to
-Type ContractingRate, and the Agent's skill of 100, an Authoritative value in Campaign state. The engine applies the
+Type ContractingRate, and the Agent's base skill of 100, an Authoritative value in Campaign state. The engine applies the
 contracting income formula to these inputs, producing contracting income of 200, a Derived value. Applying the
 contracting payment, the engine adds 200 to the campaign's current money; the updated money becomes part of the new
 Committed state, which is the result of Turn advancement completion.
@@ -209,8 +209,8 @@ Committed state, which is the result of Turn advancement completion.
 flowchart LR
     Type["Type: ContractingRate"] -.->|describes| GDR["GDR: Standard contracting · rate 2"]
     GDR -->|rate 2| Engine["Engine applies contracting income formula"]
-    State["Campaign state"] -->|Authoritative value: Agent skill 100| Engine
-    Formula["Formula: rate × Agent skill"] -->|specifies calculation| Engine
+    State["Campaign state"] -->|Authoritative value: Agent base skill 100| Engine
+    Formula["Formula: rate × Agent base skill"] -->|specifies calculation| Engine
     Engine -->|calculates| Total["Derived value: contracting income 200"]
     Total -->|amount to add| Update["Engine updates campaign money"]
     State -->|current money| Update
@@ -236,8 +236,8 @@ E.g., the Thug GDR as YAML, with further illustrative properties that this examp
 id: thug
 type: EnemyArchetype
 base_health: 10
-skill: 40
-weapon_damage: 8
+base_skill: 40
+base_weapon_damage: 8
 is_officer: false
 ```
 

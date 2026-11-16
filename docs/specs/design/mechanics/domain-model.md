@@ -84,13 +84,13 @@ The work the Agency discovers and undertakes.
 
 A Combat, its participants, and its retained results.
 
-| Term                | Definition                                                                                                                                                 | Prohibited synonyms                                                                            |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Combat              | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn.                             | Battle; skirmish; fight, as a noun. Ordinary verbs, e.g. "Agents fight Enemies", remain valid. |
-| Combatant           | An Agent or an Enemy as a participant in a Combat. Both can fight because both have skill, current health, base health, exhaustion, and weapon capability. |                                                                                                |
-| Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Combat lasts.                                                    |                                                                                                |
-| Enemy               | An opponent present at one Mission site, whom the Agency's Agents fight in a Combat.                                                                       |                                                                                                |
-| Combat report       | The record of how a Combat went, kept as part of the Turn report of the Advance turn that fought it and used to determine its Mission's Consequences.      | Battle result                                                                                  |
+| Term                | Definition                                                                                                                                                      | Prohibited synonyms                                                                            |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Combat              | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn.                                  | Battle; skirmish; fight, as a noun. Ordinary verbs, e.g. "Agents fight Enemies", remain valid. |
+| Combatant           | An Agent or an Enemy as a participant in a Combat. Both can fight because both have base skill, current health, base health, exhaustion, and weapon capability. |                                                                                                |
+| Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Combat lasts.                                                         |                                                                                                |
+| Enemy               | An opponent present at one Mission site, whom the Agency's Agents fight in a Combat.                                                                            |                                                                                                |
+| Combat report       | The record of how a Combat went, kept as part of the Turn report of the Advance turn that fought it and used to determine its Mission's Consequences.           | Battle result                                                                                  |
 
 ## Factions
 
@@ -265,7 +265,7 @@ Given Turn 3 and:
 - Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Attempted.
 - Mission m1 with Archetype M1 at Mission site s1, deployed in Turn 3, Deployed, with Current team {a2}.
 - Enemy e1 owned by s1, with Archetype E1.
-- Each Agent and Enemy has skill 100, current health 10 of base health 10, exhaustion 0, and equipped values referring to W1.
+- Each Agent and Enemy has base skill 100, current health 10 of base health 10, exhaustion 0, and equipped values referring to W1.
 - Other collections empty.
 
 Each Campaign instance has the following allocation of the properties named in the sections above; the properties

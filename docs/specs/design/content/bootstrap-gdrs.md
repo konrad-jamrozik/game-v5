@@ -78,10 +78,10 @@ Type owner: [Configuration](../foundation/configuration.md).
 
 Type owner: [Agents](../mechanics/agents-spec.md).
 
-| GDR                | Type            | GDR purpose                                             | What it supplies                                                                                                                                                                                   |
-| ------------------ | --------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `field_agent`      | AgentArchetype  | Archetype                                               | Every Agent's skill, Weapon, and `base_health` when created. An Agent starts with both its base health and its current health equal to `base_health`.                                              |
-| `agent_parameters` | AgentParameters | Campaign instance initialization, Calculation parameter | The size of the initial roster; the exhaustion cap, the exhaustion without effect, and the skill lost per further point; exhaustion per attack and per defense; skill gained per Turn of Training. |
+| GDR                | Type            | GDR purpose                                             | What it supplies                                                                                                                                                                                             |
+| ------------------ | --------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `field_agent`      | AgentArchetype  | Archetype                                               | Every Agent's base skill, Weapon, and `base_health` when created. An Agent starts with both its base health and its current health equal to `base_health`.                                                   |
+| `agent_parameters` | AgentParameters | Campaign instance initialization, Calculation parameter | The size of the initial roster; the exhaustion cap, the exhaustion without effect, and the base skill lost per further point; exhaustion per attack and per defense; base skill gained per Turn of Training. |
 
 ## Economy and Upgrades GDRs
 
@@ -94,7 +94,7 @@ Type owner: [Economy and Upgrades](../mechanics/economy-and-upgrades.md).
 | `agent_cap`     | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the Agent cap.                                                               |
 | `transport_cap` | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the Transport cap.                                                           |
 | `training_cap`  | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the Training cap.                                                            |
-| `weapon_damage` | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the weapon damage of every Agent.                                            |
+| `weapon_damage` | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the base weapon damage of every Agent.                                       |
 
 Three Upgrades raise an Agency-wide cap and one changes a value of every Agent, so Economy and Upgrades must specify
 both kinds of Upgrade effect.
@@ -146,15 +146,15 @@ own Leads.
 
 Type owner: [Combat](../mechanics/combat.md).
 
-| GDR                 | Type             | GDR purpose           | What it supplies                                                                                                     |
-| ------------------- | ---------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `initiate`          | EnemyArchetype   | Archetype             | The weakest Enemy: skill, base health, and Weapon.                                                                   |
-| `soldier`           | EnemyArchetype   | Archetype             | An Enemy roughly matching a newly hired Agent: skill, base health, and Weapon.                                       |
-| `cult_leader`       | EnemyArchetype   | Archetype             | The strongest Enemy, met only in `raid_hq`: skill, base health, and Weapon.                                          |
-| `sidearm`           | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of every Agent and of `initiate`.                                                   |
-| `rifle`             | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of `soldier`.                                                                       |
-| `heavy_rifle`       | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of `cult_leader`.                                                                   |
-| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around weapon damage, the two retreat thresholds, and the incapacitation threshold. |
+| GDR                 | Type             | GDR purpose           | What it supplies                                                                                                          |
+| ------------------- | ---------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `initiate`          | EnemyArchetype   | Archetype             | The weakest Enemy: base skill, base health, and Weapon.                                                                   |
+| `soldier`           | EnemyArchetype   | Archetype             | An Enemy roughly matching a newly hired Agent: base skill, base health, and Weapon.                                       |
+| `cult_leader`       | EnemyArchetype   | Archetype             | The strongest Enemy, met only in `raid_hq`: base skill, base health, and Weapon.                                          |
+| `sidearm`           | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of every Agent and of `initiate`.                                                        |
+| `rifle`             | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of `soldier`.                                                                            |
+| `heavy_rifle`       | Weapon           | Referenced GDR        | Base weapon damage of the Weapon of `cult_leader`.                                                                        |
+| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, and the incapacitation threshold. |
 
 ## Agent Recovery GDRs
 
@@ -273,7 +273,7 @@ The Turn and Panic start from values that no GDR supplies: the Turn under
 - TODO (later): The Factions Exalt and Black Lotus, each with its own Leads reusing the existing MissionSiteArchetypes,
   under [Factions GDRs](#factions-gdrs).
 - TODO (later): Faction suppression after a Won Mission, under [Factions GDRs](#factions-gdrs).
-- TODO (later): Skill gained by surviving a Mission and by attacking and defending in a Combat, under
+- TODO (later): Base skill gained by surviving a Mission and by attacking and defending in a Combat, under
   [Agents GDRs](#agents-gdrs).
 - TODO (later): The Upgrades raising training skill gain, exhaustion recovery, health recovery, and Agent base health, under
   [Economy and Upgrades GDRs](#economy-and-upgrades-gdrs).
@@ -302,7 +302,7 @@ value that deliberately differs from its game-ts counterpart, and why.
 | Bootstrap GDR value                                         | game-ts                                              | Bootstrap                                 | Informative rationale                                                                                                                    |
 | ----------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | EnemyArchetypes                                             | 9 enemy kinds                                        | 3                                         | `initiate` merges initiate and operative; `soldier` merges soldier, handler, and lieutenant; `cult_leader` replaces commander and above. |
-| `cult_leader` skill and base health                         | Cult leader: skill 800, base health 80               | game-ts commander values                  | An 800-skill Enemy cannot be beaten after a three-step Victory path.                                                                     |
+| `cult_leader` base skill and base health                    | Cult leader: base skill 800, base health 80          | game-ts commander values                  | An 800-skill Enemy cannot be beaten after a three-step Victory path.                                                                     |
 | `initiate` Weapon                                           | Base weapon damage 8                                 | `sidearm`                                 | Sharing the Agents' Weapon saves one Weapon GDR.                                                                                         |
 | `locate_red_dawn_hq` difficulty                             | 25                                                   | Lower                                     | The HQ is the third step of three, not the eighth of eight.                                                                              |
 | `raid_hq` expiration and Enemies                            | Expires in 40 Turns; 111 Enemies                     | Shorter; ten Enemies                      | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |

@@ -93,7 +93,7 @@ E.g., Agents states what current health and base health are and that current hea
 specification states how a Combat lowers current health, and Agent Recovery states how it goes back up.
 
 A document refines an earlier one when it adds detail to the same subject, e.g. the Combat specification refines Agents with
-how current health goes down. It uses an earlier one when it reads that subject to describe its own, e.g. the Combat specification uses Agent skill
+how current health goes down. It uses an earlier one when it reads that subject to describe its own, e.g. the Combat specification uses Agent base skill
 to resolve a Combat.
 
 E.g., Panic and Endings uses Economy and Upgrades, which is in layer 3, so Panic and Endings is in layer 4, and Missions,

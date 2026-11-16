@@ -17,7 +17,7 @@ negative, but funding, the recurring part of income, never falls below zero.
 
 The player spends money in two ways: hiring grows the roster of Agents, and Upgrades improve the Agency permanently.
 Three caps limit what the Agency can do at once: the Agent cap on the Agents it employs, the Transport cap on the Agents
-it has Deployed, and the Training cap on the Agents on Training. Each Upgrade either raises one cap or raises the weapon
+it has Deployed, and the Training cap on the Agents on Training. Each Upgrade either raises one cap or raises the base weapon
 damage of Agents, and it can be bought again at the same price.
 
 Economy and Upgrades refines [Domain Model](domain-model.md): Domain Model says that the Agency holds money and employs
@@ -44,17 +44,17 @@ These terms are specific to the Agency's economy. General terms are in the
 [Domain Model glossary](domain-model.md#glossary); terms about Agents are in the
 [Agents glossary](agents-spec.md#glossary).
 
-| Term                  | Definition                                                                                                                                                                        | Prohibited synonyms                      |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| Upgrade               | A permanent improvement the Agency buys with money, any number of times.                                                                                                          |                                          |
-| Acquisitions          | For one Upgrade, the number of times the Agency has purchased it.                                                                                                                 |                                          |
-| Increment             | How much one acquisition of an Upgrade raises the value it improves: the Upgrade's `increment`.                                                                                   |                                          |
-| Upgrade bonus         | For one effect identifier, what every Upgrade with that effect adds to the starting value of the value they improve: the sum of each such Upgrade's Increment × its Acquisitions. |                                          |
-| Cap Upgrade           | An Upgrade that raises the Agent cap, the Transport cap, or the Training cap.                                                                                                     | Cap effect                               |
-| Weapon damage Upgrade | An Upgrade that raises the weapon damage of Agents.                                                                                                                               | Weapon damage effect; Agent value effect |
-| Agent cap             | The most Agents the Agency can employ when it hires another one.                                                                                                                  |                                          |
-| Transport cap         | The most Agents the Agency can have Deployed at the same time.                                                                                                                    |                                          |
-| Training cap          | The most Agents the Agency can have assigned to Training at the same time.                                                                                                        |                                          |
+| Term                  | Definition                                                                                                                                                                        | Prohibited synonyms                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Upgrade               | A permanent improvement the Agency buys with money, any number of times.                                                                                                          |                                               |
+| Acquisitions          | For one Upgrade, the number of times the Agency has purchased it.                                                                                                                 |                                               |
+| Increment             | How much one acquisition of an Upgrade raises the value it improves: the Upgrade's `increment`.                                                                                   |                                               |
+| Upgrade bonus         | For one effect identifier, what every Upgrade with that effect adds to the starting value of the value they improve: the sum of each such Upgrade's Increment × its Acquisitions. |                                               |
+| Cap Upgrade           | An Upgrade that raises the Agent cap, the Transport cap, or the Training cap.                                                                                                     | Cap effect                                    |
+| Weapon damage Upgrade | An Upgrade that raises the base weapon damage of Agents.                                                                                                                          | Base weapon damage effect; Agent value effect |
+| Agent cap             | The most Agents the Agency can employ when it hires another one.                                                                                                                  |                                               |
+| Transport cap         | The most Agents the Agency can have Deployed at the same time.                                                                                                                    |                                               |
+| Training cap          | The most Agents the Agency can have assigned to Training at the same time.                                                                                                        |                                               |
 
 # Economy GDRs
 
@@ -362,7 +362,7 @@ Turn:
 
 - The Agency's money falls by `hire_cost`. Because money was at least `hire_cost`, money afterwards is at least 0.
 - One Agent is created under [Agent creation](agents-spec.md#agent-creation) in Agents: Serving, on Standby, In transit,
-  with Turn hired equal to the current turn number, and with the initial weapon damage under
+  with Turn hired equal to the current turn number, and with the initial base weapon damage under
   [Weapon damage Upgrade](#weapon-damage-upgrade).
 
 Nothing else changes. The new Agent counts toward the Agent cap and in projected upkeep at once. It arrives in the next
@@ -465,12 +465,12 @@ Nothing else changes. The price is the GDR's `price` for every acquisition; it d
 **Proposed rule:** Every Upgrade has exactly one effect, named by its `effect` property. The four effect identifiers
 below are exhaustive, and they make an Upgrade one of two kinds.
 
-| Effect identifier     | Kind                  | What one acquisition does                                                                                             |
-| --------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `agent_cap`           | Cap Upgrade           | Raises the Agent cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                 |
-| `transport_cap`       | Cap Upgrade           | Raises the Transport cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                             |
-| `training_cap`        | Cap Upgrade           | Raises the Training cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                              |
-| `agent_weapon_damage` | Weapon damage Upgrade | Raises the weapon damage of Agents by the Upgrade's Increment, under [Weapon damage Upgrade](#weapon-damage-upgrade). |
+| Effect identifier     | Kind                  | What one acquisition does                                                                                                  |
+| --------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `agent_cap`           | Cap Upgrade           | Raises the Agent cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                      |
+| `transport_cap`       | Cap Upgrade           | Raises the Transport cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                  |
+| `training_cap`        | Cap Upgrade           | Raises the Training cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                   |
+| `agent_weapon_damage` | Weapon damage Upgrade | Raises the base weapon damage of Agents by the Upgrade's Increment, under [Weapon damage Upgrade](#weapon-damage-upgrade). |
 
 Acquisitions of every Upgrade stack by addition, without limit, and no effect depends on the order of purchases.
 
@@ -498,19 +498,19 @@ purchase sees the raised cap. A Cap Upgrade changes no Agent's Current assignmen
 
 ### Weapon damage Upgrade
 
-Weapon damage is the only Agent value an Upgrade may change, under
+Base weapon damage is the only Agent value an Upgrade may change, under
 [Modifiable values](agents-spec.md#modifiable-values) in Agents. An acquisition of an Upgrade whose `effect` is
 `agent_weapon_damage`, i.e. of a Weapon damage Upgrade, has two results:
 
-1. **Serving Agents:** When the purchase is committed, the weapon damage of every Serving Agent rises by that Upgrade's
+1. **Serving Agents:** When the purchase is committed, the base weapon damage of every Serving Agent rises by that Upgrade's
    Increment, whatever the Agent's Current assignment and Task phase; e.g., a Deployed Agent, an Agent In transit, and
-   an Agent on Recovery are all raised. Killed and Dismissed Agents keep their weapon damage, which is retained in World
+   an Agent on Recovery are all raised. Killed and Dismissed Agents keep their base weapon damage, which is retained in World
    history, under [Agent properties](agents-spec.md#agent-properties) in Agents.
 2. **Agents created later:** Every Agent created after the purchase, under
-   [Agent creation](agents-spec.md#agent-creation) in Agents, starts with the initial weapon damage below.
+   [Agent creation](agents-spec.md#agent-creation) in Agents, starts with the initial base weapon damage below.
 
 ```text
-initial weapon damage = base_weapon_damage + Upgrade bonus of agent_weapon_damage
+initial base weapon damage = base_weapon_damage + Upgrade bonus of agent_weapon_damage
 ```
 
 Inputs: `base_weapon_damage` is that of the Weapon GDR that the AgentArchetype's `weapon` references, a whole number
@@ -519,8 +519,8 @@ Committed state in which the Agent is created. The result is a whole number of a
 least 1. This formula applies to every Agent creation: hiring, `addAgents`, and the initial roster, whose Agents start
 with `base_weapon_damage` because the Upgrade bonus is 0 at campaign creation.
 
-Consequently, every Serving Agent's weapon damage equals the formula above, whichever Turn the Agent was created in,
-because no other rule changes weapon damage, under [Changes to attributes](agents-spec.md#changes-to-attributes) in
+Consequently, every Serving Agent's base weapon damage equals the formula above, whichever Turn the Agent was created in,
+because no other rule changes base weapon damage, under [Changes to attributes](agents-spec.md#changes-to-attributes) in
 Agents. The effect changes no other Agent value, no Weapon GDR, and no Enemy.
 
 # Turn series of money
@@ -626,11 +626,11 @@ reveals anything hidden.
   decided under [Defeat](panic-and-endings.md#defeat) ([Dismissing Agents](#dismissing-agents)).
 - **Unknown Upgrade:** `purchaseUpgrade` with an identifier that names no Upgrade GDR, including one naming a GDR of
   another Type, is rejected ([Purchasing Upgrades](#purchasing-upgrades)).
-- **Weapon damage of Agents who are not Serving:** A Killed or Dismissed Agent keeps its weapon damage when a weapon
+- **Base weapon damage of Agents who are not Serving:** A Killed or Dismissed Agent keeps its base weapon damage when a base weapon
   damage Upgrade is purchased ([Weapon damage Upgrade](#weapon-damage-upgrade)).
-- **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises Acquisitions but no cap or weapon
+- **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises Acquisitions but no cap or base weapon
   damage, and a purchase of the second costs no money ([Economy GDR validation](#economy-gdr-validation)).
-- **Large values:** Money, Acquisitions, caps, and weapon damage have no upper bound, and every computation is exact,
+- **Large values:** Money, Acquisitions, caps, and base weapon damage have no upper bound, and every computation is exact,
   under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
 - **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a
   second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is
@@ -674,7 +674,7 @@ This example exercises [Agency creation](#agency-creation),
 [Projected income and upkeep](#projected-income-and-upkeep), and [Turn series of money](#turn-series-of-money). A new
 Campaign is created from the preset `standard` without Preset edits. Its initial Campaign state contains exactly one
 Agency, with the values below, and the 4 Agents of the initial roster, each Serving, on Standby, At assignment, with
-weapon damage 10.
+base weapon damage 10.
 
 | Value                                  | Value in Turn 1                                                                 |
 | -------------------------------------- | ------------------------------------------------------------------------------- |
@@ -713,13 +713,13 @@ Standby. a1, a2, and a3 are In transit, so projected income stays 20 + 30 × 0 =
 20, so money becomes 430 and Agent a5 is created on Standby, In transit. Projected income is 20 + 30 × 2 = 80, from a1
 and a2, and projected upkeep is 10 × 5 = 50.
 
-| Step of the Advance turn ending Turn 2 | What happens                                                                                  | Money |
-| -------------------------------------- | --------------------------------------------------------------------------------------------- | ----- |
-| Transit                                | a5 arrives.                                                                                   | 430   |
-| Agency income                          | C = 2: 20 + 30 × 2 = 80.                                                                      | 510   |
-| Upkeep                                 | S = 5, including a5, which arrived in this Advance turn: 10 × 5 = 50.                         | 460   |
-| Training                               | a3 gains skill, under [Training growth](agents-spec.md#training-growth); money is unaffected. | 460   |
-| Turn close                             | Money at the end of turn for Turn 2 is 430; Money at the start of turn for Turn 3 is 460.     | 460   |
+| Step of the Advance turn ending Turn 2 | What happens                                                                                       | Money |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------- | ----- |
+| Transit                                | a5 arrives.                                                                                        | 430   |
+| Agency income                          | C = 2: 20 + 30 × 2 = 80.                                                                           | 510   |
+| Upkeep                                 | S = 5, including a5, which arrived in this Advance turn: 10 × 5 = 50.                              | 460   |
+| Training                               | a3 gains base skill, under [Training growth](agents-spec.md#training-growth); money is unaffected. | 460   |
+| Turn close                             | Money at the end of turn for Turn 2 is 430; Money at the start of turn for Turn 3 is 460.          | 460   |
 
 **Turn 3:** The player calls `assignAgents([a5], Contracting)` and `assignAgents([a1], Standby)`. Only a2 is on
 Contracting, At assignment, so projected income is 20 + 30 × 1 = 50; projected upkeep is 10 × 5 = 50.
@@ -844,21 +844,21 @@ A second `purchaseUpgrade(training_cap)` in the same Turn is rejected, because m
 ## Weapon damage Upgrade
 
 This example exercises [Weapon damage Upgrade](#weapon-damage-upgrade), [Purchasing Upgrades](#purchasing-upgrades), and
-[Hiring Agents](#hiring-agents). During Turn 30 the Agency has money 600 and four Serving Agents, each with weapon
+[Hiring Agents](#hiring-agents). During Turn 30 the Agency has money 600 and four Serving Agents, each with base weapon
 damage 10: a1 on Contracting, At assignment; a2 Deployed; a3 on Recovery, In transit; and a4 on Standby, In transit.
-Agent a5 is Killed and a6 is Dismissed, each with weapon damage 10. The actions are taken in this order:
+Agent a5 is Killed and a6 is Dismissed, each with base weapon damage 10. The actions are taken in this order:
 
-| Action                            | Result                         | Money | Acquisitions of `weapon_damage` | Weapon damage of a1 to a4 | Weapon damage of a5 and a6 | Agent created by the action            |
-| --------------------------------- | ------------------------------ | ----- | ------------------------------- | ------------------------- | -------------------------- | -------------------------------------- |
-| `purchaseUpgrade(weapon_damage)`  | Succeeds                       | 100   | 1                               | 11                        | 10                         | None                                   |
-| `purchaseUpgrade(weapon_damage)`  | Rejected: 100 is less than 500 | 100   | 1                               | 11                        | 10                         | None                                   |
-| `developer.actions.addMoney(900)` | Succeeds                       | 1000  | 1                               | 11                        | 10                         | None                                   |
-| `purchaseUpgrade(weapon_damage)`  | Succeeds                       | 500   | 2                               | 12                        | 10                         | None                                   |
-| `hireAgent()`                     | Succeeds                       | 450   | 2                               | 12                        | 10                         | a7, with weapon damage 10 + 1 × 2 = 12 |
-| `developer.actions.addAgents(1)`  | Succeeds                       | 450   | 2                               | 12                        | 10                         | a8, with weapon damage 12              |
+| Action                            | Result                         | Money | Acquisitions of `weapon_damage` | Base weapon damage of a1 to a4 | Base weapon damage of a5 and a6 | Agent created by the action                 |
+| --------------------------------- | ------------------------------ | ----- | ------------------------------- | ------------------------------ | ------------------------------- | ------------------------------------------- |
+| `purchaseUpgrade(weapon_damage)`  | Succeeds                       | 100   | 1                               | 11                             | 10                              | None                                        |
+| `purchaseUpgrade(weapon_damage)`  | Rejected: 100 is less than 500 | 100   | 1                               | 11                             | 10                              | None                                        |
+| `developer.actions.addMoney(900)` | Succeeds                       | 1000  | 1                               | 11                             | 10                              | None                                        |
+| `purchaseUpgrade(weapon_damage)`  | Succeeds                       | 500   | 2                               | 12                             | 10                              | None                                        |
+| `hireAgent()`                     | Succeeds                       | 450   | 2                               | 12                             | 10                              | a7, with base weapon damage 10 + 1 × 2 = 12 |
+| `developer.actions.addAgents(1)`  | Succeeds                       | 450   | 2                               | 12                             | 10                              | a8, with base weapon damage 12              |
 
 Each purchase cost the same 500. A third purchase later raises a1 to a4, a7, and a8 to 13 together, and leaves a5 and
-a6 at 10. The weapon damage of every Enemy and the `base_weapon_damage` of `sidearm` are unchanged throughout.
+a6 at 10. The base weapon damage of every Enemy and the `base_weapon_damage` of `sidearm` are unchanged throughout.
 
 ## Purchase rejections and exact affordability
 
@@ -893,7 +893,7 @@ build defective, so no Campaign is created from it: setting `weapon_damage`'s `e
 - TODO (later): An Upgrade that raises exhaustion recovery, under [Upgrade effects](#upgrade-effects).
 - TODO (later): An Upgrade that raises health recovery, under [Upgrade effects](#upgrade-effects).
 - TODO (later): An Upgrade that raises base health, under [Upgrade effects](#upgrade-effects).
-- TODO (later): Contracting income that depends on an Agent's skill, under [Agency income](#agency-income).
+- TODO (later): Contracting income that depends on an Agent's base skill, under [Agency income](#agency-income).
 - TODO (later): Upgrade prices that rise with each acquisition, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): A limit on the Acquisitions of an Upgrade, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): Selling an Upgrade, under [Upgrades](#upgrades).

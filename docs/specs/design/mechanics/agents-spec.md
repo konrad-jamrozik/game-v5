@@ -12,11 +12,11 @@
 
 Agents are the player's main resource: an [Agent](domain-model.md#glossary) is an operative of the Agency who can do
 only one thing at a time, and changing what it does costs time. That one thing is its Current assignment, e.g.
-Contracting to earn money or Training to gain skill. A newly ordered Agent spends one Advance turn In transit before it
+Contracting to earn money or Training to gain base skill. A newly ordered Agent spends one Advance turn In transit before it
 starts working, and only deployment to a Mission site is immediate, so reshuffling Agents often leaves them idle.
 
-How well an Agent works and fights is its effective skill: its skill, lowered by lost current health and by exhaustion
-above a free amount. Training raises skill, and Combats wear an Agent down, so choosing a Current assignment often
+How well an Agent works and fights is its effective skill: its base skill, lowered by lost current health and by exhaustion
+above a free amount. Training raises base skill, and Combats wear an Agent down, so choosing a Current assignment often
 trades present output against future strength. An Agent is Serving until it is Killed in a Combat or Dismissed, and it is never
 removed, so its record outlasts its service.
 
@@ -48,16 +48,22 @@ about regaining health, Combats, and the Agency's caps are in the [Agent Recover
 
 ## Combatant attributes
 
-What makes an Agent or an Enemy able to work and to fight, and how worn down it is.
+What makes an Agent or an Enemy able to work and to fight, and how worn down it is. The names follow one rule:
 
-| Term            | Definition                                                                                                                                                                                                   | Prohibited synonyms                                                                                                                   |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Skill           | How capable a Combatant is at its work and in a Combat, as a whole number.                                                                                                                                   |                                                                                                                                       |
-| Effective skill | A Combatant's skill as reduced by its lost current health and its exhaustion; the value every rule uses when a Combatant works or fights.                                                                    |                                                                                                                                       |
-| Base health     | The highest current health a Combatant can have.                                                                                                                                                             | Maximum health; max health; full health                                                                                               |
-| Current health  | How much more harm a Combatant can take now, from zero up to its base health under [Attribute ranges](#attribute-ranges); an Agent whose current health reaches zero is dead.                                | Hit points; hit-point; health, naming a Combatant value. Unqualified health remains valid in its general sense, e.g. Health recovery. |
-| Exhaustion      | How worn down a Combatant is, as a whole number from zero up to the exhaustion cap; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. | Fatigue                                                                                                                               |
-| Weapon damage   | The typical current health a Combatant's hit removes, before the random spread.                                                                                                                              |                                                                                                                                       |
+- **Base:** Base X is a lasting stored value, e.g. base skill, which only named rules change.
+- **Effective:** Effective X is base X adjusted for the situation and is never stored, e.g. effective skill.
+- **Current:** Current X is a value that is used up and restored, e.g. current health, and has no effective form.
+- **GDR property:** A GDR property `base_x` gives the starting value of base X, e.g. `base_health`.
+
+| Term                    | Definition                                                                                                                                                                                                   | Prohibited synonyms                                                                                                                   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Base skill              | How capable a Combatant is at its work and in a Combat, as a whole number, before its lost current health and its exhaustion reduce it.                                                                      | Skill, naming the stored value                                                                                                        |
+| Effective skill         | A Combatant's base skill as reduced by its lost current health and its exhaustion; the value every rule uses when a Combatant works or fights.                                                               |                                                                                                                                       |
+| Base health             | The highest current health a Combatant can have.                                                                                                                                                             | Maximum health; max health; full health                                                                                               |
+| Current health          | How much more harm a Combatant can take now, from zero up to its base health under [Attribute ranges](#attribute-ranges); an Agent whose current health reaches zero is dead.                                | Hit points; hit-point; health, naming a Combatant value. Unqualified health remains valid in its general sense, e.g. Health recovery. |
+| Exhaustion              | How worn down a Combatant is, as a whole number from zero up to the exhaustion cap; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. | Fatigue                                                                                                                               |
+| Base weapon damage      | The typical current health a Combatant's hit removes, as a stored whole number, before any adjustment for the situation and before the random spread.                                                        | Weapon damage, naming the stored value                                                                                                |
+| Effective weapon damage | A Combatant's base weapon damage as adjusted for the situation; the value around which a Combat rolls the damage outcome. It equals base weapon damage, because no rule adjusts it yet.                      |                                                                                                                                       |
 
 ## Agent Current assignments
 
@@ -67,7 +73,7 @@ The Current assignments that are neither an Investigation nor a Mission, and the
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
 | Standby     | The Current assignment of an Agent waiting for orders.                                                                                                                                         |                     |
 | Contracting | The Current assignment of an Agent earning money for the Agency.                                                                                                                               |                     |
-| Training    | The Current assignment of an Agent gaining skill.                                                                                                                                              |                     |
+| Training    | The Current assignment of an Agent gaining base skill.                                                                                                                                         |                     |
 | Recovery    | The Current assignment of an Agent regaining current health.                                                                                                                                   |                     |
 | Deployed    | Sent on a Mission at a Mission site as a member of its Current team, and fighting there in the next Advance turn. An Agent becomes Deployed the moment the player deploys it, without transit. |                     |
 
@@ -84,7 +90,7 @@ every GDR has.
 | Property      | Meaning                                                                        | Read by                                                   |
 | ------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------- |
 | `name`        | The display name of the kind of Agent.                                         | [Player-visible information](#player-visible-information) |
-| `skill`       | The skill of a newly created Agent.                                            | [Agent creation](#agent-creation)                         |
+| `base_skill`  | The base skill of a newly created Agent.                                       | [Agent creation](#agent-creation)                         |
 | `base_health` | The base health of a newly created Agent, and also its initial current health. | [Agent creation](#agent-creation)                         |
 | `weapon`      | A reference to the Weapon GDR a newly created Agent is equipped with.          | [Agent creation](#agent-creation)                         |
 
@@ -93,20 +99,20 @@ every GDR has.
 AgentParameters bundles the scalar values that the Agent rules read, and two values that [Combat](combat.md) reads.
 The table below is exhaustive apart from `id` and `type`.
 
-| Property                           | Meaning                                                                                                 | Read by                                     |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `initial_roster_size`              | How many Agents the initial Campaign state contains.                                                    | [Initial roster](#initial-roster)           |
-| `exhaustion_cap`                   | The greatest exhaustion any Combatant can have.                                                         | [Attribute ranges](#attribute-ranges)       |
-| `exhaustion_free_points`           | The exhaustion up to which effective skill is not reduced.                                              | [Effective skill](#effective-skill)         |
-| `skill_penalty_pct_per_exhaustion` | A Percent value: the percent of skill lost for each point of exhaustion above `exhaustion_free_points`. | [Effective skill](#effective-skill)         |
-| `exhaustion_per_attack`            | The exhaustion an attacking Combatant gains.                                                            | [Combat](combat.md), which owns its meaning |
-| `exhaustion_per_defense`           | The exhaustion a defending Combatant gains.                                                             | [Combat](combat.md), which owns its meaning |
-| `training_skill_gain_per_turn`     | The skill an Agent on Training gains in one Advance turn.                                               | [Training growth](#training-growth)         |
+| Property                           | Meaning                                                                                                      | Read by                                     |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------- |
+| `initial_roster_size`              | How many Agents the initial Campaign state contains.                                                         | [Initial roster](#initial-roster)           |
+| `exhaustion_cap`                   | The greatest exhaustion any Combatant can have.                                                              | [Attribute ranges](#attribute-ranges)       |
+| `exhaustion_free_points`           | The exhaustion up to which effective skill is not reduced.                                                   | [Effective skill](#effective-skill)         |
+| `skill_penalty_pct_per_exhaustion` | A Percent value: the percent of base skill lost for each point of exhaustion above `exhaustion_free_points`. | [Effective skill](#effective-skill)         |
+| `exhaustion_per_attack`            | The exhaustion an attacking Combatant gains.                                                                 | [Combat](combat.md), which owns its meaning |
+| `exhaustion_per_defense`           | The exhaustion a defending Combatant gains.                                                                  | [Combat](combat.md), which owns its meaning |
+| `training_skill_gain_per_turn`     | The base skill an Agent on Training gains in one Advance turn.                                               | [Training growth](#training-growth)         |
 
 ## Weapon properties this document reads
 
-A [Weapon](combat.md#weapon) GDR describes the weapon damage of the Combatants equipped with it. The Agent rules read only its `base_weapon_damage`
-property: the weapon damage of a newly created Agent equipped with that Weapon, under [Agent creation](#agent-creation).
+A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combatants equipped with it. The Agent rules read only its `base_weapon_damage`
+property: the base weapon damage of a newly created Agent equipped with that Weapon, under [Agent creation](#agent-creation).
 
 ## Agent GDR validation
 
@@ -120,7 +126,7 @@ and the violation is reported as a data defect, never repaired into different ga
 2. **One AgentParameters:** The Game build supplies exactly one AgentParameters GDR.
 3. **Exact properties:** The AgentArchetype and the AgentParameters GDR each have exactly the properties their table
    above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
-4. **Archetype values are valid:** The AgentArchetype's `skill` is a whole number of at least 0, its `base_health` is a
+4. **Archetype values are valid:** The AgentArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a
    whole number of at least 1, and its `weapon` references a Weapon GDR the Game build supplies.
 5. **Parameters are valid:** Each of `initial_roster_size`, `exhaustion_cap`, `exhaustion_free_points`,
    `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, and
@@ -141,18 +147,18 @@ exhaustive.
 | Agency                | Constants | An Immutable reference to the Agency that employs the Agent.                                                                                                                                      | Authoritative value. Always the Campaign's one Agency.                                                                                                     |
 | Turn hired            | Constants | The turn number of the Turn in which the Agent was created.                                                                                                                                       | Authoritative value. A whole number of at least 1.                                                                                                         |
 | Lifecycle             | State     | Serving, Killed, or Dismissed, under [Agent lifecycle](#agent-lifecycle).                                                                                                                         | Authoritative value.                                                                                                                                       |
-| Skill                 | State     | The Agent's skill.                                                                                                                                                                                | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). |
+| Base skill            | State     | The Agent's base skill.                                                                                                                                                                           | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). |
 | Current health        | State     | The Agent's current health.                                                                                                                                                                       | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
 | Base health           | State     | The Agent's base health.                                                                                                                                                                          | Authoritative value. A whole number of at least 1. No rule in scope changes it after creation.                                                             |
 | Exhaustion            | State     | The Agent's exhaustion.                                                                                                                                                                           | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
 | Weapon                | State     | A reference to the Weapon GDR the Agent is equipped with.                                                                                                                                         | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule in scope changes it after creation.                                  |
-| Weapon damage         | State     | The Agent's weapon damage.                                                                                                                                                                        | Authoritative value. A whole number of at least 1. Only the rules under [Modifiable values](#modifiable-values) change it.                                 |
+| Base weapon damage    | State     | The Agent's base weapon damage.                                                                                                                                                                   | Authoritative value. A whole number of at least 1. Only the rules under [Modifiable values](#modifiable-values) change it.                                 |
 | Current assignment    | State     | Present exactly when the Agent is Serving: one of Standby, Contracting, Training, Recovery, an Investigation with a Mutable reference to it, or Deployed with a Mutable reference to the Mission. | Authoritative value, under [Orders and Task phase](#orders-and-task-phase).                                                                                |
 | Task phase            | State     | Present exactly when the Agent is Serving: At assignment or In transit.                                                                                                                           | Authoritative value, under [Orders and Task phase](#orders-and-task-phase).                                                                                |
 | Participation history | State     | The Investigations and Missions the Agent took part in and has left.                                                                                                                              | Authoritative value, under [Participation history records](#participation-history-records).                                                                |
 
-Skill, current health, base health, exhaustion, Weapon, and weapon damage are the properties the
-[Combatant Role Type](#combatant-role-type) requires; Weapon and weapon damage together are the equipped
+Base skill, current health, base health, exhaustion, Weapon, and base weapon damage are the properties the
+[Combatant Role Type](#combatant-role-type) requires; Weapon and base weapon damage together are the equipped
 weapon values. An Agent also has two Derived values, which are never stored: its effective skill, under
 [Effective skill](#effective-skill), and whether it can be ordered, under
 [Agents that can be ordered](#agents-that-can-be-ordered). An Agent has no Turn series.
@@ -208,7 +214,7 @@ Instances. It states what a Campaign instance Type must have for its Campaign in
 Combatant gains while a Combat lasts.
 
 - **Adoption condition:** a Campaign instance Type can adopt the Combatant Role Type if the State of its Campaign
-  instances has all of the following properties: skill, current health, base health, exhaustion, and equipped weapon
+  instances has all of the following properties: base skill, current health, base health, exhaustion, and equipped weapon
   values. This set is exhaustive.
 - **Adopters:** Agent and Enemy adopt the Combatant Role Type. This set is exhaustive.
 - **Gained properties:** every Combatant taking part in a Combat gains properties that mean something only while
@@ -229,7 +235,7 @@ instances themselves: the Agent changed by a Combat is the same Agent that retur
 
 **Proposed rule:** In every Committed state, every Combatant, i.e. every Agent and every Enemy, satisfies these ranges:
 
-- Skill is a whole number of at least 0.
+- Base skill is a whole number of at least 0.
 - Base health is a whole number of at least 1.
 - Exhaustion is a whole number from 0 to the `exhaustion_cap` of AgentParameters, both included.
 - Current health is a whole number from 0 to base health, both included.
@@ -245,18 +251,18 @@ base health instead. The rule that changes the value applies these clamps as par
 **Inherited behavior:** A Combatant's effective skill is a Derived value computed by this formula. It is shared by
 Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and every rule that uses a
 Combatant's capability, e.g. Investigation progress or a Combat's hit probability, reads effective skill rather than
-skill.
+base skill.
 
 ```text
 penalty factor  = max(0, 100 − p × max(0, exhaustion − f))
-effective skill = round down( skill × current health × penalty factor / (base health × 100) )
+effective skill = round down( base skill × current health × penalty factor / (base health × 100) )
 ```
 
 Inputs:
 
 | Symbol         | Meaning                                                | Unit and domain                                                   |
 | -------------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
-| skill          | The Combatant's skill.                                 | Skill points; a whole number of at least 0.                       |
+| base skill     | The Combatant's base skill.                            | Skill points; a whole number of at least 0.                       |
 | current health | The Combatant's current health.                        | Health points; a whole number from 0 to base health.              |
 | base health    | The Combatant's base health.                           | Health points; a whole number of at least 1.                      |
 | exhaustion     | The Combatant's exhaustion.                            | Exhaustion points; a whole number from 0 to `exhaustion_cap`.     |
@@ -272,15 +278,24 @@ because base health is at least 1.
 Penalty clamp: when `p × max(0, exhaustion − f)` exceeds 100, the penalty factor is 0, not negative, and the effective
 skill is 0. With an exhaustion at most `f`, the penalty factor is exactly 100 and exhaustion has no effect.
 
-Range: the result is a whole number from 0 to skill, both included, because current health divided by base health and the
+Range: the result is a whole number from 0 to base skill, both included, because current health divided by base health and the
 penalty factor divided by 100 each lie from 0 to 1. A Combatant whose current health equals its base health and whose exhaustion is at most `f` has an
-effective skill equal to its skill. A Combatant with zero current health, e.g. a Killed Agent, has an effective skill of 0.
+effective skill equal to its base skill. A Combatant with zero current health, e.g. a Killed Agent, has an effective skill of 0.
 
 Effective skill is never stored. Whenever a rule reads it, it is computed from the Combatant's values at that moment, so
-it follows every change of skill, current health, or exhaustion at once, under
+it follows every change of base skill, current health, or exhaustion at once, under
 [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. Which
 moment's values a Turn advancement step reads is stated under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
+
+## Effective weapon damage
+
+**Proposed rule:** A Combatant's effective weapon damage is a Derived value equal to its base weapon damage. It is
+shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and it is the value around which a
+Combat rolls the damage outcome, under [Damage outcome](combat.md#damage-outcome) in Combat. No rule adjusts it yet;
+it is kept apart from base weapon damage so that a later rule can adjust weapon damage for the situation without
+changing the stored value, as effective skill does for base skill. Effective weapon damage is never stored, and it
+follows every change of base weapon damage at once.
 
 ## Changes to attributes
 
@@ -289,22 +304,22 @@ An Agent's attributes change only through a few named rules, so the cause of eve
 **Proposed rule:** The following table is the exhaustive list of rules that change an Agent's attributes after its
 creation. A rule not listed here changes none of them.
 
-| Value          | Raised by                                                                                                                 | Lowered by                          |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| Skill          | [Training growth](#training-growth)                                                                                       | No rule                             |
-| Current health | [Agent Recovery](agent-recovery.md)                                                                                       | [Combat](combat.md), in a Combat    |
-| Base health    | No rule                                                                                                                   | No rule                             |
-| Exhaustion     | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`                                 | [Agent Recovery](agent-recovery.md) |
-| Weapon damage  | The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade), under [Modifiable values](#modifiable-values) | No rule                             |
+| Value              | Raised by                                                                                                                 | Lowered by                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Base skill         | [Training growth](#training-growth)                                                                                       | No rule                             |
+| Current health     | [Agent Recovery](agent-recovery.md)                                                                                       | [Combat](combat.md), in a Combat    |
+| Base health        | No rule                                                                                                                   | No rule                             |
+| Exhaustion         | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`                                 | [Agent Recovery](agent-recovery.md) |
+| Base weapon damage | The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade), under [Modifiable values](#modifiable-values) | No rule                             |
 
 No Current assignment raises exhaustion: Standby, Contracting, Training, Recovery, and Investigations leave it
 unchanged. Each specification named in the table applies the clamps under [Attribute ranges](#attribute-ranges).
 
 # Modifiable values
 
-**Proposed rule:** Weapon damage is the only Agent value that an Upgrade may change. It is an individual value of each
+**Proposed rule:** Base weapon damage is the only Agent value that an Upgrade may change. It is an individual value of each
 Agent, not an Agency value. The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises the
-weapon damage of Serving Agents and of Agents created later, under [Agent creation](#agent-creation). No Upgrade changes skill, current health, base health, exhaustion, or Weapon.
+base weapon damage of Serving Agents and of Agents created later, under [Agent creation](#agent-creation). No Upgrade changes base skill, current health, base health, exhaustion, or Weapon.
 
 # Current assignments and transit
 
@@ -412,21 +427,21 @@ one Turn during which the Agent can do nothing.
 # Training growth
 
 **Proposed rule:** In the Training step of every Advance turn, each Agent that is Serving, whose Current assignment is
-Training, and that was At assignment in the Turn-end state, gains skill:
+Training, and that was At assignment in the Turn-end state, gains base skill:
 
 ```text
-skill after = skill before + training_skill_gain_per_turn
+base skill after = base skill before + training_skill_gain_per_turn
 ```
 
-Inputs: skill before is the Agent's skill at the start of the Training step, a whole number of at least 0;
+Inputs: base skill before is the Agent's base skill at the start of the Training step, a whole number of at least 0;
 `training_skill_gain_per_turn` is the value of AgentParameters, a whole number of at least 0. No rounding occurs,
-because every term is a whole number. The result is a whole number of at least skill before; skill has no upper bound.
+because every term is a whole number. The result is a whole number of at least base skill before; base skill has no upper bound.
 An Agent that arrived at Training in the Transit step of the same Advance turn gains nothing, under
 [Transit rule](#transit-rule). Training changes no other value of the Agent; in particular it raises no exhaustion.
 
 The gain of one Agent does not depend on any other Agent, so the result is the same whatever order an implementation
 processes the Agents in. The [Training cap](economy-and-upgrades.md#glossary) limits how many Agents can be on
-Training, not how much skill each gains.
+Training, not how much base skill each gains.
 
 # Agent creation
 
@@ -443,17 +458,17 @@ Campaign Instances. This table is exhaustive.
 | Agency                | The Campaign's Agency.                                                                            | Campaign state.                                                                  |
 | Turn hired            | The turn number of the current Turn.                                                              | Campaign state.                                                                  |
 | Lifecycle             | Serving.                                                                                          | This rule.                                                                       |
-| Skill                 | The AgentArchetype's `skill`.                                                                     | `skill` of the AgentArchetype.                                                   |
+| Base skill            | The AgentArchetype's `base_skill`.                                                                | `base_skill` of the AgentArchetype.                                              |
 | Base health           | The AgentArchetype's `base_health`.                                                               | `base_health` of the AgentArchetype.                                             |
 | Current health        | The AgentArchetype's `base_health`.                                                               | `base_health` of the AgentArchetype.                                             |
 | Exhaustion            | 0.                                                                                                | This rule.                                                                       |
 | Weapon                | The Weapon GDR that the AgentArchetype's `weapon` references.                                     | `weapon` of the AgentArchetype.                                                  |
-| Weapon damage         | The `base_weapon_damage` of that Weapon GDR.                                                      | `base_weapon_damage` of the Weapon GDR.                                          |
+| Base weapon damage    | The `base_weapon_damage` of that Weapon GDR.                                                      | `base_weapon_damage` of the Weapon GDR.                                          |
 | Current assignment    | Standby.                                                                                          | This rule.                                                                       |
 | Task phase            | At assignment for an Agent of the initial roster; In transit for every Agent created during play. | This rule, under [Transit rule](#transit-rule).                                  |
 | Participation history | Empty.                                                                                            | This rule.                                                                       |
 
-The table above states the initial weapon damage before any Upgrade has been acquired; for an Agent created after an
+The table above states the initial base weapon damage before any Upgrade has been acquired; for an Agent created after an
 Upgrade has been acquired, the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) refines it. The new Agent joins the Agency's roster of Agents. No Campaign configuration value changes any initial value above.
 Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
@@ -463,7 +478,7 @@ Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](econ
 AgentParameters, and no other Agent, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model
 requires. Each is created under [Agent creation](#agent-creation) with Task phase At assignment and Turn hired equal to
 the turn number of the Campaign's first Turn. Because no Upgrade has been acquired at campaign creation, each has the
-Weapon `base_weapon_damage` as its weapon damage. Every Agent of the initial roster can be ordered in the first Turn. An
+Weapon `base_weapon_damage` as its base weapon damage. Every Agent of the initial roster can be ordered in the first Turn. An
 `initial_roster_size` of 0 is valid and gives an empty roster.
 
 # Assigning Agents
@@ -511,7 +526,7 @@ Turn, to every Agent in `agents`:
   Investigation under [Leaving an Investigation](investigations.md#leaving-an-investigation), e.g. it is Abandoned
   when its last member leaves.
 
-Nothing else changes; e.g., no money is spent, and skill, current health, and exhaustion are unchanged. The Agents arrive in
+Nothing else changes; e.g., no money is spent, and base skill, current health, and exhaustion are unchanged. The Agents arrive in
 the next Advance turn and start working in the Advance turn after it, under [Transit rule](#transit-rule).
 
 # Player cheat actions
@@ -548,7 +563,7 @@ moment it exists, without a reveal condition, for every Agent whatever its lifec
 | ---------------------------------------------------------------------------------------------------------------- | -------------------------- |
 | An Agent's Instance ID, its AgentArchetype including the AgentArchetype's `name`, its Agency, and its Turn hired | Yes                        |
 | An Agent's lifecycle state                                                                                       | Yes                        |
-| An Agent's skill, current health, base health, exhaustion, Weapon, and weapon damage                             | Yes                        |
+| An Agent's base skill, current health, base health, exhaustion, Weapon, and base weapon damage                   | Yes                        |
 | An Agent's effective skill                                                                                       | Yes                        |
 | An Agent's Current assignment, including the Investigation or Mission it references, and its Task phase          | Yes                        |
 | Whether an Agent can be ordered                                                                                  | Yes                        |
@@ -565,7 +580,7 @@ lifecycle state explains why. An empty Participation history is reported as empt
   100; the first point above it lowers the penalty factor by `skill_penalty_pct_per_exhaustion`
   ([Effective skill](#effective-skill)).
 - **Penalty below zero:** When `skill_penalty_pct_per_exhaustion × (exhaustion − exhaustion_free_points)` exceeds 100,
-  the penalty factor is 0 and effective skill is 0; the Combatant is still alive and keeps its skill
+  the penalty factor is 0 and effective skill is 0; the Combatant is still alive and keeps its base skill
   ([Effective skill](#effective-skill)).
 - **Exhaustion at the cap:** A rule that would raise exhaustion above `exhaustion_cap` leaves it at `exhaustion_cap`
   ([Attribute ranges](#attribute-ranges)).
@@ -608,7 +623,7 @@ values they read are:
 
 | GDR                | Values read                                                                                                                                                                                              |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `field_agent`      | `name` Field agent; `skill` 100; `base_health` 30; `weapon` `sidearm`                                                                                                                                    |
+| `field_agent`      | `name` Field agent; `base_skill` 100; `base_health` 30; `weapon` `sidearm`                                                                                                                               |
 | `agent_parameters` | `initial_roster_size` 4; `exhaustion_cap` 100; `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_attack` 1; `exhaustion_per_defense` 1; `training_skill_gain_per_turn` 1 |
 | `sidearm`          | `base_weapon_damage` 10                                                                                                                                                                                  |
 
@@ -622,24 +637,24 @@ This example exercises [Effective skill](#effective-skill) and [Attribute ranges
 Combatant with `exhaustion_free_points` 5 and `skill_penalty_pct_per_exhaustion` 1, except the last row, which uses
 the test value `skill_penalty_pct_per_exhaustion` 2.
 
-| Skill | Current health of base health | Exhaustion | Penalty factor                         | Computation                                            | Effective skill |
-| ----- | ----------------------------- | ---------- | -------------------------------------- | ------------------------------------------------------ | --------------- |
-| 100   | 30 of 30                      | 0          | max(0, 100 − 1 × 0) = 100              | round down(100 × 30 × 100 / 3000) = round down(100)    | 100             |
-| 100   | 15 of 30                      | 25         | max(0, 100 − 1 × 20) = 80              | round down(100 × 15 × 80 / 3000) = round down(40)      | 40              |
-| 100   | 30 of 30                      | 5          | max(0, 100 − 1 × 0) = 100              | round down(100 × 30 × 100 / 3000) = round down(100)    | 100             |
-| 100   | 30 of 30                      | 6          | max(0, 100 − 1 × 1) = 99               | round down(100 × 30 × 99 / 3000) = round down(99)      | 99              |
-| 100   | 29 of 30                      | 0          | 100                                    | round down(100 × 29 × 100 / 3000) = round down(96.67…) | 96              |
-| 130   | 22 of 30                      | 40         | max(0, 100 − 1 × 35) = 65              | round down(130 × 22 × 65 / 3000) = round down(61.97…)  | 61              |
-| 100   | 30 of 30                      | 100        | max(0, 100 − 1 × 95) = 5               | round down(100 × 30 × 5 / 3000) = round down(5)        | 5               |
-| 100   | 1 of 30                       | 100        | 5                                      | round down(100 × 1 × 5 / 3000) = round down(0.17…)     | 0               |
-| 100   | 0 of 30                       | 0          | 100                                    | round down(0)                                          | 0               |
-| 100   | 30 of 30                      | 60         | max(0, 100 − 2 × 55) = max(0, −10) = 0 | round down(0)                                          | 0               |
+| Base skill | Current health of base health | Exhaustion | Penalty factor                         | Computation                                            | Effective skill |
+| ---------- | ----------------------------- | ---------- | -------------------------------------- | ------------------------------------------------------ | --------------- |
+| 100        | 30 of 30                      | 0          | max(0, 100 − 1 × 0) = 100              | round down(100 × 30 × 100 / 3000) = round down(100)    | 100             |
+| 100        | 15 of 30                      | 25         | max(0, 100 − 1 × 20) = 80              | round down(100 × 15 × 80 / 3000) = round down(40)      | 40              |
+| 100        | 30 of 30                      | 5          | max(0, 100 − 1 × 0) = 100              | round down(100 × 30 × 100 / 3000) = round down(100)    | 100             |
+| 100        | 30 of 30                      | 6          | max(0, 100 − 1 × 1) = 99               | round down(100 × 30 × 99 / 3000) = round down(99)      | 99              |
+| 100        | 29 of 30                      | 0          | 100                                    | round down(100 × 29 × 100 / 3000) = round down(96.67…) | 96              |
+| 130        | 22 of 30                      | 40         | max(0, 100 − 1 × 35) = 65              | round down(130 × 22 × 65 / 3000) = round down(61.97…)  | 61              |
+| 100        | 30 of 30                      | 100        | max(0, 100 − 1 × 95) = 5               | round down(100 × 30 × 5 / 3000) = round down(5)        | 5               |
+| 100        | 1 of 30                       | 100        | 5                                      | round down(100 × 1 × 5 / 3000) = round down(0.17…)     | 0               |
+| 100        | 0 of 30                       | 0          | 100                                    | round down(0)                                          | 0               |
+| 100        | 30 of 30                      | 60         | max(0, 100 − 2 × 55) = max(0, −10) = 0 | round down(0)                                          | 0               |
 
 The second row is the rounding-once rule at work: the exact value 100 × 15/30 × 80/100 is 40. In the fifth and sixth
 rows, rounding happens only at the end; rounding 29/30 or 65/100 first would be a violation of
 [Exact evaluation](../foundation/numbers.md#exact-evaluation). The third and fourth rows are the boundary at
 `exhaustion_free_points`. The last row shows the penalty clamp: the penalty factor is 0, never negative. Every result
-lies from 0 to the Combatant's skill.
+lies from 0 to the Combatant's base skill.
 
 ## Exhaustion and current health clamps
 
@@ -661,12 +676,12 @@ contains exactly 4 Agents, each with a distinct fresh Instance ID and these valu
 | Agency                | The Campaign's Agency |
 | Turn hired            | 1                     |
 | Lifecycle             | Serving               |
-| Skill                 | 100                   |
+| Base skill            | 100                   |
 | Current health        | 30                    |
 | Base health           | 30                    |
 | Exhaustion            | 0                     |
 | Weapon                | `sidearm`             |
-| Weapon damage         | 10                    |
+| Base weapon damage    | 10                    |
 | Current assignment    | Standby               |
 | Task phase            | At assignment         |
 | Participation history | Empty                 |
@@ -695,7 +710,7 @@ ordered; a1 stays on Contracting, In transit.
 
 This example exercises [Agent creation](#agent-creation) and [Transit rule](#transit-rule). During Turn 5 the player
 hires one Agent through the `hireAgent` Player action of [Economy and Upgrades](economy-and-upgrades.md). The new Agent
-a5 has Turn hired 5, skill 100, current health 30 of 30, exhaustion 0, Weapon `sidearm`, weapon damage 10, and is on Standby,
+a5 has Turn hired 5, base skill 100, current health 30 of 30, exhaustion 0, Weapon `sidearm`, base weapon damage 10, and is on Standby,
 In transit. During the rest of Turn 5, `assignAgents([a5], Training)` is rejected because a5 cannot be ordered. In the
 Advance turn ending Turn 5, a5 arrives in the Transit step and is counted in Upkeep; nothing else applies to it. In Turn
 6, a5 is on Standby, At assignment, and can be ordered.
@@ -740,20 +755,20 @@ arrives in the Advance turn ending Turn 9.
 ## Training growth
 
 This example exercises [Training growth](#training-growth), [Transit rule](#transit-rule), and
-[Effective skill](#effective-skill). Agent a1 has skill 100, current health 30 of 30, and exhaustion 0, on Standby, At
+[Effective skill](#effective-skill). Agent a1 has base skill 100, current health 30 of 30, and exhaustion 0, on Standby, At
 assignment, during Turn 5.
 
-| Moment                                   | Current assignment, Task phase | Skill | Effective skill |
-| ---------------------------------------- | ------------------------------ | ----- | --------------- |
-| `assignAgents([a1], Training)` in Turn 5 | Training, In transit           | 100   | 100             |
-| After the Advance turn ending Turn 5     | Training, At assignment        | 100   | 100             |
-| After the Advance turn ending Turn 6     | Training, At assignment        | 101   | 101             |
-| After the Advance turn ending Turn 7     | Training, At assignment        | 102   | 102             |
-| `assignAgents([a1], Standby)` in Turn 8  | Standby, In transit            | 102   | 102             |
-| After the Advance turn ending Turn 8     | Standby, At assignment         | 102   | 102             |
+| Moment                                   | Current assignment, Task phase | Base skill | Effective skill |
+| ---------------------------------------- | ------------------------------ | ---------- | --------------- |
+| `assignAgents([a1], Training)` in Turn 5 | Training, In transit           | 100        | 100             |
+| After the Advance turn ending Turn 5     | Training, At assignment        | 100        | 100             |
+| After the Advance turn ending Turn 6     | Training, At assignment        | 101        | 101             |
+| After the Advance turn ending Turn 7     | Training, At assignment        | 102        | 102             |
+| `assignAgents([a1], Standby)` in Turn 8  | Standby, In transit            | 102        | 102             |
+| After the Advance turn ending Turn 8     | Standby, At assignment         | 102        | 102             |
 
 In the Advance turn ending Turn 5, a1 arrives in Transit and gains nothing in Training. In each of the next two Advance
-turns it gains `training_skill_gain_per_turn` 1. After it is recalled it keeps its skill of 102 and gains no more. Its
+turns it gains `training_skill_gain_per_turn` 1. After it is recalled it keeps its base skill of 102 and gains no more. Its
 exhaustion stays 0 throughout, because Training raises no exhaustion. Two Agents on Training, At assignment, in the
 same Advance turn each gain 1, independently of each other.
 
@@ -780,7 +795,7 @@ assignment, together with a8. Each call is made on its own from this state, and 
 
 This example exercises [Adding Agents](#adding-agents). During Turn 3, with Dev mode enabled and no Autopilot
 engagement, the Session controller calls `developer.actions.addAgents(2)`. Two Agents are created, each with a fresh
-Instance ID, Turn hired 3, skill 100, current health 30 of 30, exhaustion 0, Weapon `sidearm`, weapon damage 10, Serving, on
+Instance ID, Turn hired 3, base skill 100, current health 30 of 30, exhaustion 0, Weapon `sidearm`, base weapon damage 10, Serving, on
 Standby, In transit. The Agency's money is unchanged, and the call succeeds even when the Agency already employs as
 many Agents as the Agent cap allows. It is one Player action and one Timeline entry. `addAgents(0)` and `addAgents(-1)`
 are rejected and change nothing.
@@ -809,7 +824,7 @@ satisfies [Agent lifecycle](#agent-lifecycle).
 ## GDR validation
 
 This example exercises [Agent GDR validation](#agent-gdr-validation). The Bootstrap GDRs pass every rule: there is
-exactly one AgentArchetype, `field_agent`, with `skill` 100, `base_health` 30, and `weapon` `sidearm`, which the Game build
+exactly one AgentArchetype, `field_agent`, with `base_skill` 100, `base_health` 30, and `weapon` `sidearm`, which the Game build
 supplies, and exactly one AgentParameters GDR, whose seven values are whole numbers of at least 0. Each of the
 following test changes independently makes the Game build defective, so no Campaign is created from it: adding a
 second AgentArchetype; setting `field_agent`'s `base_health` to 0; setting its `weapon` to an identifier that no Weapon GDR

@@ -425,7 +425,7 @@ Turn:
   Investigation under [Investigations](investigations.md), e.g. the Investigation is Abandoned when its last member
   leaves.
 
-Nothing else changes; e.g., no money is spent, the Mission site's Turns until expiration is unchanged, and the Agents' skill,
+Nothing else changes; e.g., no money is spent, the Mission site's Turns until expiration is unchanged, and the Agents' base skill,
 current health, and exhaustion are unchanged. The Agents count toward the Transport cap at once and until the Mission resolution
 step of the next Advance turn, under [Agency caps](economy-and-upgrades.md#agency-caps). The Combat is fought in that
 step.
@@ -474,7 +474,7 @@ For each Deployed Mission M, at Mission site S:
 
 S stays Attempted. A Won Mission can also change Lead prerequisites and Lead availability, under
 [Leads and Progression](leads-and-progression.md). A Mission raises an Agent's exhaustion only through its Combat,
-under [Combat](combat.md), and changes an Agent's skill in no way, under
+under [Combat](combat.md), and changes an Agent's base skill in no way, under
 [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents.
 
 ## Cancellation
@@ -684,14 +684,14 @@ All examples use the Bootstrap GDR values from `content/missions/mission_site_ar
 | `operation_level_2`      | `level` 2; `on_win` `money` 30, `funding` 5; `on_ignored_or_lost` `panic_increase_pct` 8, `funding` −1                                   |
 | `locate_red_dawn_member` | `faction` `red_dawn`; `create_mission_site` `apprehend_member`                                                                           |
 | `locate_red_dawn_hq`     | `faction` `red_dawn`; `create_mission_site` `raid_hq`                                                                                    |
-| `initiate`, `soldier`    | `skill` 40 and 120; `base_health` 20 and 30; Weapon damage 10 and 14                                                                     |
-| `field_agent`            | `skill` 100; `base_health` 30; Weapon damage 10                                                                                          |
+| `initiate`, `soldier`    | `base_skill` 40 and 120; `base_health` 20 and 30; base weapon damage 10 and 14                                                           |
+| `field_agent`            | `base_skill` 100; `base_health` 30; base weapon damage 10                                                                                |
 | `economy`                | `base_transport_cap` 4                                                                                                                   |
 | `standard_mission`       | The MissionArchetype; no rule reads its properties                                                                                       |
 
 The Campaign has one Faction, Red Dawn, from `red_dawn`, which is not Eliminated unless an example says otherwise. "The
 Advance turn ending Turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
-`field_agent` with skill 100, current health 30 of 30, exhaustion 0, weapon damage 10, and effective skill 100, and no Upgrade
+`field_agent` with base skill 100, current health 30 of 30, exhaustion 0, base weapon damage 10, and effective skill 100, and no Upgrade
 has been acquired, so the Transport cap is 4. In the Combat traces, Combat's rules decide every target and every value;
 the injected named random outcomes are each attack's hit outcome and, for a hit, its damage outcome, under
 [Hit outcome](combat.md#hit-outcome) and [Damage outcome](combat.md#damage-outcome) in Combat; "h" is current health and "x" is
@@ -714,16 +714,16 @@ This example exercises [Mission site creation](#mission-site-creation), [Enemy c
 origin Investigation i1, and the target Faction Red Dawn; e.g., the creating rule is the completion effect of
 `locate_red_dawn_member` under [Leads and Progression](leads-and-progression.md). Mission site s1 is created:
 
-| Value                  | s1 after the Advance turn ending Turn 4                                          |
-| ---------------------- | -------------------------------------------------------------------------------- |
-| Archetype              | `apprehend_member`, as supplied                                                  |
-| Kind                   | Initiative                                                                       |
-| Origin                 | Investigation i1, as supplied                                                    |
-| Target Faction         | Red Dawn, as supplied                                                            |
-| Turn created           | 4                                                                                |
-| Lifecycle              | Active                                                                           |
-| Turns until expiration | 5: s1 did not exist in the Turn-end state, so Mission site expiration skipped it |
-| Enemies                | e1, e2, e3, each of `initiate`: skill 40, current health 20 of 20, exhaustion 0  |
+| Value                  | s1 after the Advance turn ending Turn 4                                              |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| Archetype              | `apprehend_member`, as supplied                                                      |
+| Kind                   | Initiative                                                                           |
+| Origin                 | Investigation i1, as supplied                                                        |
+| Target Faction         | Red Dawn, as supplied                                                                |
+| Turn created           | 4                                                                                    |
+| Lifecycle              | Active                                                                               |
+| Turns until expiration | 5: s1 did not exist in the Turn-end state, so Mission site expiration skipped it     |
+| Enemies                | e1, e2, e3, each of `initiate`: base skill 40, current health 20 of 20, exhaustion 0 |
 
 The Combat rating of s1's Enemies is 3 × 40 = 120, and its rewards are money 5, funding change 0, and Panic reduction 1.
 
@@ -995,5 +995,5 @@ following test changes independently makes the Game build defective, so no Campa
   in the game design brief requires; under [Consequences](#consequences).
 - TODO (later): Faction suppression by a Consequence of a Mission or a Mission site, under [Consequences](#consequences).
 - TODO (later): Exhaustion gained after a Mission beyond its Combat, under [Resolving one Mission](#resolving-one-mission).
-- TODO (later): Skill gained by surviving a Mission, under [Resolving one Mission](#resolving-one-mission).
+- TODO (later): Base skill gained by surviving a Mission, under [Resolving one Mission](#resolving-one-mission).
 - TODO (later): A second attempt at a Mission site, under [Mission site lifecycle](#mission-site-lifecycle).

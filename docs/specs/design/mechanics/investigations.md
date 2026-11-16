@@ -210,7 +210,7 @@ Turn:
   team under [Leaving an Investigation](#leaving-an-investigation), which may make that Investigation Abandoned in this
   same Player action.
 
-Nothing else changes; e.g., no money is spent, and the Agents' skill, current health, and exhaustion are unchanged. The Agents
+Nothing else changes; e.g., no money is spent, and the Agents' base skill, current health, and exhaustion are unchanged. The Agents
 arrive in the next Advance turn and add their first Investigation progress in the Advance turn after it, under
 [Transit rule](agents-spec.md#transit-rule).
 
@@ -385,7 +385,7 @@ not report it. No input of the outcome is hidden.
 
 **Informative rationale:** Lead difficulty counts the Advance turns one working Agent of effective skill 100 needs at
 most: with such an Agent, Investigation progress reaches difficulty × 100 after difficulty Advance turns of work. The
-completion probability rises linearly to 1 at that point. The 100 equals the `skill` of the Bootstrap AgentArchetype only
+completion probability rises linearly to 1 at that point. The 100 equals the `base_skill` of the Bootstrap AgentArchetype only
 because of the current values; nothing links them, and changing either changes how long Investigations take.
 
 ## Completion
@@ -462,7 +462,7 @@ When no Player action changes the Investigation or its members before the next A
 probability equals the Probability of that Advance turn's Investigation completion outcome exactly. The members At
 assignment in this Committed state are exactly the working members of that Advance turn, because this Committed state is
 then its Turn-end state, and their effective skill does not change in the Turn advancement steps before Investigation
-progress, because none of those steps changes the skill, current health, or exhaustion of an Agent on an Investigation. The
+progress, because none of those steps changes the base skill, current health, or exhaustion of an Agent on an Investigation. The
 projected completion probability changes at once whenever a Player action changes its inputs, under
 [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. A Completed
 or Abandoned Investigation has no projected completion probability.
@@ -570,11 +570,11 @@ All examples use the Bootstrap GDR values from `content/investigations/investiga
 | `locate_red_dawn_member`    | `difficulty` 3; `create_mission_site` `apprehend_member`         |
 | `locate_red_dawn_safehouse` | `difficulty` 6; `create_mission_site` `raid_safehouse`           |
 | `locate_red_dawn_hq`        | `difficulty` 10; `create_mission_site` `raid_hq`                 |
-| `field_agent`               | `skill` 100; `base_health` 30                                    |
+| `field_agent`               | `base_skill` 100; `base_health` 30                               |
 | `agent_parameters`          | `exhaustion_free_points` 5; `skill_penalty_pct_per_exhaustion` 1 |
 
 "The Advance turn ending Turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a
-`field_agent` with skill 100, current health 30 of 30, exhaustion 0, and effective skill 100, on Standby, At assignment, and the
+`field_agent` with base skill 100, current health 30 of 30, exhaustion 0, and effective skill 100, on Standby, At assignment, and the
 Lead named is available under [Leads and Progression](leads-and-progression.md). The injected named random outcome is
 each Investigation's Investigation completion outcome, under [Completion probability](#completion-probability); a row
 with a completion probability of 0 or 1 needs no injection, because its outcome is certain. Effects that other
@@ -626,7 +626,7 @@ The final Investigation progress 1200 exceeds `difficulty` × 100 = 1000, which 
 This example exercises [Progress gain](#progress-gain) with [Effective skill](agents-spec.md#effective-skill) and
 [Completion probability](#completion-probability). Investigation i2 of `locate_red_dawn_safehouse`, difficulty 6, has
 Investigation progress 0 and Current team {a5, a6}, both At assignment and both working members in every Advance turn
-below. a5 has skill 100, current health 30 of 30, and exhaustion 65: its effective skill is
+below. a5 has base skill 100, current health 30 of 30, and exhaustion 65: its effective skill is
 round down(100 × 30 × max(0, 100 − 1 × (65 − 5)) / (30 × 100)) = round down(100 × 30 × 40 / 3000) = 40. a6 is a fresh
 Agent with effective skill 100. S is 140.
 
@@ -640,7 +640,7 @@ Agent with effective skill 100. S is 140.
 
 a5's exhaustion stays 65 throughout, because investigating neither raises nor lowers exhaustion, so its effective skill
 stays 40. An Agent whose current health is below its base health cannot be a member at all, because such an Agent is on Recovery and cannot
-be ordered. Separately, one Agent with skill 130 after Training, current health 30 of 30, and exhaustion 0, alone on a
+be ordered. Separately, one Agent with base skill 130 after Training, current health 30 of 30, and exhaustion 0, alone on a
 difficulty 3 Lead, adds 130 per Advance turn of work, giving the completion probabilities 130 / 300 = 13/30, then
 260 / 300 = 13/15, then min(1, 390 / 300) = 1.
 

@@ -95,7 +95,7 @@ Game build default preset.
 A value is a Campaign configuration value if and only if the presets supply it. E.g., starting money, enemy
 difficulty, and a multiplier of how often Mission sites appear can be Campaign configuration values. Whatever no preset can
 change about a new Campaign is not Campaign configuration. It is either a GDR serving another purpose, e.g. a new base
-Agent skill value, or game behavior, e.g. a starting Turn that is the same for every Campaign, and the rule determining
+Agent base skill value, or game behavior, e.g. a starting Turn that is the same for every Campaign, and the rule determining
 which Campaign instances the initial Campaign state contains, under
 [Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state). The Campaign seed is the one exception: no preset
 supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor
