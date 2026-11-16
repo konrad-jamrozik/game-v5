@@ -35,15 +35,15 @@ its Gate 2 local diff, and its handling of push conflicts.
    - **Specification change**, for a design change, a newly specified open matter, or a clarification of ambiguous
      wording: publish the Gate 1 plan Artifact and wait for approval, edit the specifications in the worktree under
      [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), show the Gate 2
-     local diff and wait for approval, then commit, push, update the main local clone, and remove the worktree, under
+     local diff and wait for approval, then commit, push, remove the worktree, and update the main local clone, under
      steps 3 to 7 of Spec repo changes in a worktree. Then run the `update-implementation` skill when the user asked
      for the change to reach the Implementation.
-   - **Conformance fix:** change the Implementation, in its Implementation repo, to match the specifications at its
-     Specification baseline, add a test that would have caught the defect, keep the Specification
-     map current, and commit there without adding a Git remote. Leave the Specification baseline unchanged. No plan
+   - **Conformance fix:** first remove the unchanged worktree with `ExitWorktree` and `action: "remove"`, because
+     the session must leave it before changing the Implementation repo. Then change the Implementation to match the
+     specifications at its Specification baseline, add a test that would have caught the defect, keep the
+     Specification map current, and commit there without adding a Git remote. Leave the Specification baseline unchanged. No plan
      Artifact or local diff gate applies, because the user approved the fix in step 4 after seeing the governing
-     wording and what the Implementation does. Remove the unchanged worktree with `ExitWorktree` and
-     `action: "remove"`.
+     wording and what the Implementation does.
 
 ## Report
 

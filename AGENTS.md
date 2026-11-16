@@ -95,12 +95,18 @@ clone is the Spec repo's root directory, e.g. `repos/game-v5/`.
    After pushing, give the user the commit diff link, as under
    [Committing and publishing changes](#committing-and-publishing-changes).
 
-6. **Update the main local clone** with `git -C <main-local-clone> pull --ff-only origin main`, and tell the user
-   whether it succeeded. When it fails, e.g. because uncommitted changes there would be overwritten, the main local
-   clone is not on `main`, or its `main` has commits missing from `origin/main`, tell the user why and leave the main
-   local clone as it is: never stash, merge, or reset it.
-7. **Remove the worktree** with `ExitWorktree` and `action: "remove"` once the push succeeded. When the main local
-   clone could not be updated, `ExitWorktree` reports the pushed commits as unmerged; confirm with
-   `git merge-base --is-ancestor HEAD origin/main` that `origin/main` holds them, and only then pass
-   `discard_changes: true`. When the user abandons the change, or approval is still pending at the end of the session,
-   use `action: "keep"` and give the user the worktree's absolute path.
+6. **Remove the worktree** once the push succeeded: run `git fetch origin`, confirm with
+   `git merge-base --is-ancestor HEAD origin/main` that `origin/main` holds the pushed commits, and only then call
+   `ExitWorktree` with `action: "remove"` and `discard_changes: true`. The flag is needed because `ExitWorktree`
+   compares against the main local clone's `main`, which does not hold the pushed commits yet. When the user abandons
+   the change, or approval is still pending at the end of the session, use `action: "keep"` and give the user the
+   worktree's absolute path.
+7. **Update the main local clone**, from it, with `git fetch origin` and `git merge --ff-only origin/main`, and tell
+   the user whether it succeeded. Do not use `git pull`: with `pull.rebase` set, it refuses whenever the main local
+   clone has any uncommitted change. When the merge fails, e.g. because uncommitted changes there would be
+   overwritten, the main local clone is not on `main`, or its `main` has commits missing from `origin/main`, tell the
+   user why and leave the main local clone as it is: never stash, merge otherwise, or reset it.
+
+While the session is in the worktree, run Git only in the worktree: the harness refuses Git commands aimed at the main
+local clone, e.g. through `git -C`, and may refuse those aimed at an Implementation repo. Make every Git change in those repositories, e.g. a
+commit in an Implementation repo, only after the worktree is removed in step 6.
