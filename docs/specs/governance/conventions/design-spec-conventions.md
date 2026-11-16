@@ -61,7 +61,7 @@ Some Design specifications describe how the engine API is used rather than how t
 interface or an Autopilot AI can be designed without changing any rule.
 
 UI specifications are non-behavioural. They guide how a user interface presents the engine API to the
-Player, e.g. which screens exist and what each shows by default, but they add no gameplay information, engine API
+Player, e.g. which screens exist, what each shows by default, and how the graphical user interface looks, but they add no gameplay information, engine API
 operation, or GDR. What a user interface may show and call remains owned by the Foundation specifications that define
 the engine API and by the specification that owns each value.
 

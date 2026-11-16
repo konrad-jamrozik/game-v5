@@ -10,8 +10,8 @@ the engine API already offers. It adds no gameplay information and no engine API
 which operations it may call stay owned by [Engine Contract](../foundation/engine-contract.md) and the specification
 that owns each value.
 
-The guidance states what the Player is expected to be able to do comfortably, not exact layouts, widgets, or styling,
-which remain the Implementer's choice. E.g. the family is expected to say that deploying Agents on a mission has a
+The guidance states what the Player is expected to be able to do comfortably and how the graphical user interface
+looks, so that every Implementation of it has the same visual direction. E.g. the family is expected to say that deploying Agents on a mission has a
 dedicated screen for choosing which Agents exactly to deploy. By default, that screen lists only the Agents most relevant
 for deployment, i.e. those ready to go on that mission. The Player can ask the screen to also show the other Agents,
 e.g. to open the detailed view of an Agent that is recovering.
@@ -20,20 +20,26 @@ e.g. to open the detailed view of an Agent that is recovering.
 
 ## Command-Line Interface
 
-[Command-Line Interface](command-line-interface.md) answers _how is the whole game played from a terminal, without
+[Command-Line Interface](cli.md) answers _how is the whole game played from a terminal, without
 graphics?_ It owns the guidance for the game's headless interface to the engine API, with readable and structured
 output.
 
 ## Graphical User Interface
 
-[Graphical User Interface](graphical-user-interface.md) answers _which screens does the graphical user interface need,
+[Graphical User Interface](gui.md) answers _which screens does the graphical user interface need,
 and what does each show by default?_ It owns that guidance for the game's graphical user interface.
+
+## Visual Design
+
+[Visual Design](visual-design.md) answers _what does the graphical user interface look like?_ It owns the visual
+direction, the Design tokens, and the styling of components and charts, illustrated by Artboards.
 
 # How they relate
 
 Both interfaces present the same engine API and neither depends on the other. Each uses Engine Contract and Campaign
 Lifecycle from the Foundation family; the Command-Line Interface also uses Player API, and the Graphical User Interface
-uses Domain Model from the Mechanics family. Headless First in the Guidance family uses both, and Gameplay Dependency
+uses Domain Model from the Mechanics family. Visual Design uses the Graphical User Interface: it styles the screens that
+the Graphical User Interface lists. Headless First in the Guidance family uses both, and Gameplay Dependency
 Direction uses the Graphical User Interface.
 
 <!-- generated:family-diagram:start -->
@@ -44,7 +50,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ### Uses
 
-No uses relationships are declared within this family.
+![UI family: uses relationships within the family](../../../images/diagrams/ui-family-within-uses.svg)
 
 ### Refines
 
@@ -52,7 +58,7 @@ No refines relationships are declared within this family.
 
 ## Across families
 
-![UI family: relationships with other families](../../../images/ui-family-across.svg)
+![UI family: relationships with other families](../../../images/diagrams/ui-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

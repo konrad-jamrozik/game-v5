@@ -2,7 +2,7 @@ import { FAMILY_KIND } from '../spec-linter/overviews.ts'
 import type { SpecificationCorpus, SpecificationFamily, SpecificationRecord } from '../spec-linter/types.ts'
 
 /** The generated layer diagram of the Foundation and Mechanics specifications, linked from the specification index. */
-export const STACK_DIAGRAM_PATH = 'docs/images/specification-stack.svg'
+export const STACK_DIAGRAM_PATH = 'docs/images/diagrams/specification-stack.svg'
 
 /** The Families drawn as layers, from the bottom of the stack to its top. */
 const STACK_FAMILIES: readonly SpecificationFamily[] = ['Foundation', 'Mechanics']

@@ -2,7 +2,7 @@ import { FAMILY_KIND, isSpecificationFamily } from '../spec-linter/overviews.ts'
 import type { SpecificationCorpus } from '../spec-linter/types.ts'
 
 /** The generated diagram of how the Families build on one another, linked from the specification index. */
-export const FAMILY_ARCHITECTURE_PATH = 'docs/images/family-architecture.svg'
+export const FAMILY_ARCHITECTURE_PATH = 'docs/images/diagrams/family-architecture.svg'
 
 /** The Families drawn together as the game engine. */
 const ENGINE_FAMILIES: readonly string[] = ['Foundation', 'Mechanics']

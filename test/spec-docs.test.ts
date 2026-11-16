@@ -158,18 +158,18 @@ describe('derived specification renderer', () => {
     expect(outputs.has('docs/derived/relationships/follows.md')).toBe(false)
     const diagrams = renderDerivedDiagramFiles(sampleCorpus())
     expect([...diagrams.keys()]).toEqual([
-      'docs/images/specification-stack.svg',
-      'docs/images/refines-all.svg',
-      'docs/images/uses-all.svg',
+      'docs/images/diagrams/specification-stack.svg',
+      'docs/images/diagrams/refines-all.svg',
+      'docs/images/diagrams/uses-all.svg',
     ])
-    const refinesDiagram = diagrams.get('docs/images/refines-all.svg') ?? ''
-    const usesDiagram = diagrams.get('docs/images/uses-all.svg') ?? ''
+    const refinesDiagram = diagrams.get('docs/images/diagrams/refines-all.svg') ?? ''
+    const usesDiagram = diagrams.get('docs/images/diagrams/uses-all.svg') ?? ''
     expect(refines).toContain('A → B means A is refined by B.')
-    expect(refines).toContain('![Refines relationships](../../images/refines-all.svg)')
+    expect(refines).toContain('![Refines relationships](../../images/diagrams/refines-all.svg)')
     expect(refinesDiagram).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More')
     expect(arrows(refinesDiagram, 'refines')).toBe(1)
     expect(uses).toContain('A → B means A is used by B.')
-    expect(uses).toContain('![Uses relationships](../../images/uses-all.svg)')
+    expect(uses).toContain('![Uses relationships](../../images/diagrams/uses-all.svg)')
     // AAA and ZZZ use each other, so they share a layer and both arrows are drawn.
     expect(arrows(usesDiagram, 'uses')).toBe(2)
     expect(usesDiagram).not.toContain('LAYER 2')
@@ -220,12 +220,12 @@ describe('derived specification renderer', () => {
     const refines = outputs.get('docs/derived/relationships/refines.md') ?? ''
     expect(refines).not.toContain('## ')
     expect(refines.match(/!\[Refines relationships/g)).toHaveLength(1)
-    expect(refines).toContain('(../../images/refines-all.svg)')
-    const all = diagrams.get('docs/images/refines-all.svg') ?? ''
+    expect(refines).toContain('(../../images/diagrams/refines-all.svg)')
+    const all = diagrams.get('docs/images/diagrams/refines-all.svg') ?? ''
     expect(all).toContain('ZZZ — Zulu')
     expect(all).toContain('ENG — Engine Contract')
     expect(all).toContain('CONV — Conventions')
-    expect(diagrams.has('docs/images/refines-engine-contract.svg')).toBe(false)
+    expect(diagrams.has('docs/images/diagrams/refines-engine-contract.svg')).toBe(false)
   })
 
   test('isolates relationship governance from the main uses graph', async () => {
@@ -278,10 +278,10 @@ describe('derived specification renderer', () => {
     const diagrams = renderDerivedDiagramFiles(governanceCorpus)
     const uses = outputs.get('docs/derived/relationships/uses.md') ?? ''
     const governanceStart = uses.indexOf('## Governance specifications')
-    expect(uses.indexOf('(../../images/uses-game.svg)')).toBeLessThan(governanceStart)
-    expect(uses.indexOf('(../../images/uses-governance.svg)')).toBeGreaterThan(governanceStart)
-    const game = diagrams.get('docs/images/uses-game.svg') ?? ''
-    const governance = diagrams.get('docs/images/uses-governance.svg') ?? ''
+    expect(uses.indexOf('(../../images/diagrams/uses-game.svg)')).toBeLessThan(governanceStart)
+    expect(uses.indexOf('(../../images/diagrams/uses-governance.svg)')).toBeGreaterThan(governanceStart)
+    const game = diagrams.get('docs/images/diagrams/uses-game.svg') ?? ''
+    const governance = diagrams.get('docs/images/diagrams/uses-governance.svg') ?? ''
     expect(game).toContain('DOM — Domain Model')
     expect(game).not.toContain('REL — ')
     expect(governance).toContain('REL — Artifact Relationships')
@@ -315,13 +315,13 @@ describe('family overview diagrams', () => {
   ].join('\n')
 
   const foundationOverview = 'docs/specs/design/foundation/about-foundation.md'
-  const acrossPath = 'docs/images/foundation-family-across.svg'
+  const acrossPath = 'docs/images/diagrams/foundation-family-across.svg'
 
   test('collapses other Families, combines kinds, and omits implicit follows', () => {
     const diagram = renderFamilyDiagram(sampleCorpus(), 'Foundation')
     expect(diagram).toContain('This family has a single specification')
     expect(diagram).toContain(
-      '![Foundation family: relationships with other families](../../../images/foundation-family-across.svg)',
+      '![Foundation family: relationships with other families](../../../images/diagrams/foundation-family-across.svg)',
     )
     expect(diagram).not.toContain('```mermaid')
     const files = renderFamilyDiagramFiles(sampleCorpus(), new Map([[foundationOverview, overview]]))
@@ -366,7 +366,7 @@ describe('family overview diagrams', () => {
       },
       new Map([[foundationOverview, overview]]),
     )
-    const within = files.get('docs/images/foundation-family-within-uses.svg') ?? ''
+    const within = files.get('docs/images/diagrams/foundation-family-within-uses.svg') ?? ''
     expect(within).toContain('AAA — ')
     expect(within).toContain('BBB — Beta')
     expect(within).toContain('LAYER 2')
@@ -383,7 +383,7 @@ describe('family overview diagrams', () => {
     expect(output).not.toContain('stale content')
     expect(output).toContain('Prose.')
     expect(output).toContain('Reasons.')
-    expect(output).toContain('(../../../images/foundation-family-across.svg)')
+    expect(output).toContain('(../../../images/diagrams/foundation-family-across.svg)')
     expect(output).not.toContain('```mermaid')
     expect(first.has('docs/specs/design/mechanics/about-mechanics.md')).toBe(false)
     const second = await renderFamilyOverviews(

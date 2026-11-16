@@ -33,7 +33,7 @@ the concepts connect, which every concept must agree on; how each one behaves is
 - Uses [World History](../foundation/world-history.md)
 - Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
 - Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
-- Used by [Graphical User Interface](../ui/graphical-user-interface.md)
+- Used by [Graphical User Interface](../ui/gui.md)
 - Used by [Turn Advancement](./turn-advancement.md)
 - Refined by [Agents](agents-spec.md)
 - Refined by [Combat](combat.md)

@@ -54,11 +54,11 @@ the [Glossary](#glossary) and the rules of the sections below, and they add no r
 
 The first diagram starts after the fourth Player action and shows undo.
 
-![Undo within one Turn: four undoAction() calls, or one undoAllActions() call](../../../images/timeline-undo-actions.svg)
+![Undo within one Turn: four undoAction() calls, or one undoAllActions() call](../../../images/diagrams/timeline-undo-actions.svg)
 
 The second diagram starts where the first one ends, at the Turn-start state, and shows redo.
 
-![Redo within one Turn: four redoAction() calls, or one redoAllActions() call](../../../images/timeline-redo-actions.svg)
+![Redo within one Turn: four redoAction() calls, or one redoAllActions() call](../../../images/diagrams/timeline-redo-actions.svg)
 
 The diagrams read as follows:
 
@@ -185,11 +185,11 @@ Autopilot in Turn 5, took over again in Turn 9, and has committed three actions 
 
 The first diagram shows `undoToAutosave()` called four times.
 
-![Autosave navigation going back: four undoToAutosave() calls from Turn 10](../../../images/autosave-navigation-undo.svg)
+![Autosave navigation going back: four undoToAutosave() calls from Turn 10](../../../images/diagrams/autosave-navigation-undo.svg)
 
 The second diagram starts where the first one ends and shows `redoToAutosave()` called four times.
 
-![Autosave navigation going forward: four redoToAutosave() calls back to Turn 10](../../../images/autosave-navigation-redo.svg)
+![Autosave navigation going forward: four redoToAutosave() calls back to Turn 10](../../../images/diagrams/autosave-navigation-redo.svg)
 
 The diagrams read as follows:
 

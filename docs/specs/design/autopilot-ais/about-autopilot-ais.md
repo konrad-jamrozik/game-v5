@@ -42,7 +42,7 @@ This family has a single specification, so there are no relationships within it.
 
 ## Across families
 
-![Autopilot AIs family: relationships with other families](../../../images/autopilot-ais-family-across.svg)
+![Autopilot AIs family: relationships with other families](../../../images/diagrams/autopilot-ais-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

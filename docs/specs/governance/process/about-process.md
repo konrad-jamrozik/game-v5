@@ -40,7 +40,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ### Uses
 
-![Process family: uses relationships within the family](../../../images/process-family-within-uses.svg)
+![Process family: uses relationships within the family](../../../images/diagrams/process-family-within-uses.svg)
 
 ### Refines
 

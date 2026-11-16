@@ -293,8 +293,8 @@ function relationshipSections(corpus: SpecificationCorpus, kind: RelationshipKin
   return [{ heading: undefined, slug: 'all', relationships: kindRelationships }]
 }
 
-/** The directory that holds every image of the documentation, generated or hand-made. */
-export const IMAGES_DIRECTORY = 'docs/images'
+/** The directory that holds every diagram of the documentation, generated or hand-made; UI artboards live beside it in `docs/images/artboards`. */
+export const IMAGES_DIRECTORY = 'docs/images/diagrams'
 
 function relationshipSvgFileName(kind: RelationshipKind, section: RelationshipSection): string {
   return `${kind}-${section.slug}.svg`

@@ -43,7 +43,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ### Uses
 
-![Mandatory family: uses relationships within the family](../../../images/mandatory-family-within-uses.svg)
+![Mandatory family: uses relationships within the family](../../../images/diagrams/mandatory-family-within-uses.svg)
 
 ### Refines
 
@@ -51,7 +51,7 @@ No refines relationships are declared within this family.
 
 ## Across families
 
-![Mandatory family: relationships with other families](../../../images/mandatory-family-across.svg)
+![Mandatory family: relationships with other families](../../../images/diagrams/mandatory-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

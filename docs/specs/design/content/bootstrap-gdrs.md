@@ -226,7 +226,7 @@ Lead available, and winning `raid_hq` eliminates Red Dawn. With Red Dawn elimina
 the Campaign. Throughout the Campaign, Red Dawn's activity creates Faction operation occurrences, each with one Response
 Mission site; a Response Mission site that is Expired, or whose Mission is Lost, raises Panic, and enough Panic loses the Campaign.
 
-![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq eliminates Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiration or loss raises Panic until the Campaign is lost](../../../images/bootstrap-victory-path.svg)
+![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq eliminates Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiration or loss raises Panic until the Campaign is lost](../../../images/diagrams/bootstrap-victory-path.svg)
 
 An Initiative Mission site that is Expired, or whose Mission is Lost, records no win, so its Lead becomes available again and the Agency
 can obtain a new Mission site from it. A Mission site cannot be attempted twice. Every Lead of the Victory path

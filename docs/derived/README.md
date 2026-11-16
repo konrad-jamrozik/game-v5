@@ -16,7 +16,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Foundation    | 15             |
 | Design             | Mechanics     | 11             |
 | Design             | Content       | 1              |
-| Design             | UI            | 2              |
+| Design             | UI            | 3              |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 3              |
 | Implementation     | Guidance      | 4              |
@@ -87,10 +87,11 @@ These informative views are derived from the registered Markdown specifications.
 
 ## UI
 
-| ID  | Document                                                                   | Owns                                                                                                                     |
-| --- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| CLI | [Command-Line Interface](../specs/design/ui/command-line-interface.md)     | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal. |
-| GUI | [Graphical User Interface](../specs/design/ui/graphical-user-interface.md) | Guidance on the screens of the graphical user interface and what each shows the Player by default.                       |
+| ID  | Document                                              | Owns                                                                                                                       |
+| --- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| CLI | [Command-Line Interface](../specs/design/ui/cli.md)   | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.   |
+| GUI | [Graphical User Interface](../specs/design/ui/gui.md) | Guidance on the screens of the graphical user interface and what each shows the Player by default.                         |
+| VIS | [Visual Design](../specs/design/ui/visual-design.md)  | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts. |
 
 ## Autopilot AIs
 

@@ -62,7 +62,7 @@ specification also follows the Governance specifications, which the diagram does
 relationships the specifications declare: an arrow from one Family to another means a specification of the first uses
 or refines a specification of the second. Do not edit it by hand.
 
-![Family architecture](../images/family-architecture.svg)
+![Family architecture](../images/diagrams/family-architecture.svg)
 
 # Specification layers
 
@@ -72,7 +72,7 @@ hand. Every specification is in its Family's rectangle, in the row of its layer:
 specification depending on none of them is in the bottom row. A specification that neither depends on nor is depended
 on by anything in its rectangle is drawn in the top row, nearest the specifications above that use it.
 
-![Specification layers](../images/specification-stack.svg)
+![Specification layers](../images/diagrams/specification-stack.svg)
 
 # Specification catalog
 

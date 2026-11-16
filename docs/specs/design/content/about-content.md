@@ -34,7 +34,7 @@ This family has a single specification, so there are no relationships within it.
 
 ## Across families
 
-![Content family: relationships with other families](../../../images/content-family-across.svg)
+![Content family: relationships with other families](../../../images/diagrams/content-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

@@ -137,9 +137,9 @@ return, and replay reproduces it, under [Derived value consistency](engine-contr
 Whether the engine stores each value these queries return, or computes it from other Campaign state when asked, is the
 Implementer's choice.
 
-![What each query returns during Turn 8, after its second Player action: a reduced History entry for Turns 6 and 7, the full Turn report of the Advance turn that ended Turn 7, and the current Committed state](../../../images/query-layers-during-turn.svg)
+![What each query returns during Turn 8, after its second Player action: a reduced History entry for Turns 6 and 7, the full Turn report of the Advance turn that ended Turn 7, and the current Committed state](../../../images/diagrams/query-layers-during-turn.svg)
 
-![What advanceTurn() changes when it ends Turn 8: Turn 8 gets a History entry, the Turn report of Turn 7 remains only in reduced form, the new Turn report is returned in full, and the current state is the Turn-start state of Turn 9](../../../images/query-layers-after-advance.svg)
+![What advanceTurn() changes when it ends Turn 8: Turn 8 gets a History entry, the Turn report of Turn 7 remains only in reduced form, the new Turn report is returned in full, and the current state is the Turn-start state of Turn 9](../../../images/diagrams/query-layers-after-advance.svg)
 
 # Acceptance examples
 

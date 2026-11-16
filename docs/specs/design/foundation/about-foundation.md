@@ -126,15 +126,15 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ### Uses
 
-![Foundation family: uses relationships within the family](../../../images/foundation-family-within-uses.svg)
+![Foundation family: uses relationships within the family](../../../images/diagrams/foundation-family-within-uses.svg)
 
 ### Refines
 
-![Foundation family: refines relationships within the family](../../../images/foundation-family-within-refines.svg)
+![Foundation family: refines relationships within the family](../../../images/diagrams/foundation-family-within-refines.svg)
 
 ## Across families
 
-![Foundation family: relationships with other families](../../../images/foundation-family-across.svg)
+![Foundation family: relationships with other families](../../../images/diagrams/foundation-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

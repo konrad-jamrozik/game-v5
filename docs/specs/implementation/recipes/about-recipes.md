@@ -44,7 +44,7 @@ No refines relationships are declared within this family.
 
 ## Across families
 
-![Recipes family: relationships with other families](../../../images/recipes-family-across.svg)
+![Recipes family: relationships with other families](../../../images/diagrams/recipes-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

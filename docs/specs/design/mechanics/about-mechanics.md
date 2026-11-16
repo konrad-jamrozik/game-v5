@@ -108,15 +108,15 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ### Uses
 
-![Mechanics family: uses relationships within the family](../../../images/mechanics-family-within-uses.svg)
+![Mechanics family: uses relationships within the family](../../../images/diagrams/mechanics-family-within-uses.svg)
 
 ### Refines
 
-![Mechanics family: refines relationships within the family](../../../images/mechanics-family-within-refines.svg)
+![Mechanics family: refines relationships within the family](../../../images/diagrams/mechanics-family-within-refines.svg)
 
 ## Across families
 
-![Mechanics family: relationships with other families](../../../images/mechanics-family-across.svg)
+![Mechanics family: relationships with other families](../../../images/diagrams/mechanics-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

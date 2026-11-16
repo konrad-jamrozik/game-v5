@@ -16,7 +16,7 @@ and acts on the Player's choices by calling the engine API of the [Engine Contra
 Its screens follow the life of a Session under [Campaign Lifecycle](../foundation/campaign-lifecycle.md): it opens at
 the Main menu, where no Campaign is current yet, and once a Campaign is created or loaded it shows the screens for
 playing it. For every screen, the guiding question is what the Player needs to see by default and what can stay one
-step away.
+step away. How each screen looks is owned by [Visual Design](visual-design.md).
 
 # Relationships
 
@@ -25,6 +25,7 @@ step away.
 - Uses [Engine Contract](../foundation/engine-contract.md)
 - Used by [Gameplay Dependency Direction](../../implementation/guidance/gameplay-dependency-direction.md)
 - Used by [Headless First](../../implementation/guidance/headless-first.md)
+- Used by [Visual Design](visual-design.md)
 
 # Main menu
 

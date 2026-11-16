@@ -242,7 +242,7 @@ async function main(): Promise<void> {
   const [files, derivedOutputs, diagramOutputs, prettierOptions] = await Promise.all([
     collectMarkdownFiles(root, docsDirectory),
     collectOutputFiles(root, outputDirectory),
-    collectOutputFiles(root, resolve(docsDirectory, 'images'), isGeneratedDiagramFilePath),
+    collectOutputFiles(root, resolve(docsDirectory, 'images', 'diagrams'), isGeneratedDiagramFilePath),
     resolveConfig(root),
   ])
   const actualOutputs = new Map([...derivedOutputs, ...diagramOutputs])

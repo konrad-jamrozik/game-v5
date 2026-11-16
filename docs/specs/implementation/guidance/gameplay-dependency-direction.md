@@ -28,7 +28,7 @@ execution has no hidden inputs; an implementation may also meet that guarantee b
 - Uses [Campaign State](../../design/foundation/campaign-state.md)
 - Uses [Core Concepts](../../design/foundation/core-concepts.md)
 - Uses [Engine Contract](../../design/foundation/engine-contract.md)
-- Uses [Graphical User Interface](../../design/ui/graphical-user-interface.md)
+- Uses [Graphical User Interface](../../design/ui/gui.md)
 
 # Glossary
 
@@ -43,7 +43,7 @@ Campaign state, directly or indirectly. This includes the code that creates Camp
 Campaign instances should not hold references to the Campaign state that contains them. This guidance excludes
 Session API and Developer API operations, which may access complete Campaign state.
 
-User interface code, e.g. the code of the [Graphical User Interface](../../design/ui/graphical-user-interface.md), depends on game behavior only through the engine
+User interface code, e.g. the code of the [Graphical User Interface](../../design/ui/gui.md), depends on game behavior only through the engine
 API: it never reads Campaign state directly and never calls a Gameplay function. Autopilot AI code, e.g. the code of the
 [Basic Autopilot AI](../../design/autopilot-ais/basic-autopilot-ai.md), is held to the same restriction more narrowly: it reaches
 the game only through Player API and Autopilot memory API, so it cannot see beyond Player-visible information.

@@ -194,13 +194,13 @@ describe('family SVG diagrams', () => {
   test('links the SVG files from the overview of a family that uses them', () => {
     const diagram = renderFamilyDiagram(mechanicsCorpus(), 'Mechanics')
     expect(diagram).toContain(
-      '![Mechanics family: uses relationships within the family](../../images/mechanics-family-within-uses.svg)',
+      '![Mechanics family: uses relationships within the family](../../images/diagrams/mechanics-family-within-uses.svg)',
     )
     expect(diagram).toContain(
-      '![Mechanics family: refines relationships within the family](../../images/mechanics-family-within-refines.svg)',
+      '![Mechanics family: refines relationships within the family](../../images/diagrams/mechanics-family-within-refines.svg)',
     )
     expect(diagram).toContain(
-      '![Mechanics family: relationships with other families](../../images/mechanics-family-across.svg)',
+      '![Mechanics family: relationships with other families](../../images/diagrams/mechanics-family-across.svg)',
     )
     expect(diagram).not.toContain('```mermaid')
   })
@@ -208,22 +208,22 @@ describe('family SVG diagrams', () => {
   test('renders the uses, refines, and across files with shared layers, grouped members, and other families', () => {
     const files = renderFamilyDiagramFiles(mechanicsCorpus(), sources)
     expect([...files.keys()]).toEqual([
-      'docs/images/mechanics-family-within-uses.svg',
-      'docs/images/mechanics-family-within-refines.svg',
-      'docs/images/mechanics-family-across.svg',
+      'docs/images/diagrams/mechanics-family-within-uses.svg',
+      'docs/images/diagrams/mechanics-family-within-refines.svg',
+      'docs/images/diagrams/mechanics-family-across.svg',
     ])
     for (const path of files.keys()) expect(isGeneratedDiagramFilePath(path)).toBe(true)
-    const uses = files.get('docs/images/mechanics-family-within-uses.svg') ?? ''
+    const uses = files.get('docs/images/diagrams/mechanics-family-within-uses.svg') ?? ''
     expect(uses).toContain('LAYER 3')
     expect(uses).toContain('TOP — Title TOP')
     expect(uses).not.toContain(' family<')
     expect(uses).not.toContain('class="edge edge-refines"')
-    const refines = files.get('docs/images/mechanics-family-within-refines.svg') ?? ''
+    const refines = files.get('docs/images/diagrams/mechanics-family-within-refines.svg') ?? ''
     expect(refines).toContain('class="edge edge-refines"')
     expect(refines).not.toContain('class="edge edge-uses"')
     // MID is in layer 2 because of its uses relationship, so the refines diagram keeps it there.
     expect(refines).toContain('LAYER 2')
-    const across = files.get('docs/images/mechanics-family-across.svg') ?? ''
+    const across = files.get('docs/images/diagrams/mechanics-family-across.svg') ?? ''
     expect(across).toContain('>Foundation family<')
     expect(across).toContain('>Guidance family<')
     expect(across).toContain('>another family<')
@@ -235,14 +235,14 @@ describe('family SVG diagrams', () => {
   test('renders files only for a family whose overview exists', () => {
     expect(renderFamilyDiagramFiles(mechanicsCorpus(), new Map()).size).toBe(0)
     const paths = [...renderFamilyDiagramFiles(mechanicsCorpus(), sources).keys()]
-    expect(paths.every((path) => path.startsWith('docs/images/mechanics-family-'))).toBe(true)
+    expect(paths.every((path) => path.startsWith('docs/images/diagrams/mechanics-family-'))).toBe(true)
   })
 
   test('check mode reports a stale, a missing, and an unexpected diagram file', () => {
     const expected = renderFamilyDiagramFiles(mechanicsCorpus(), sources)
     const outputs = { expected, overviews: new Map<string, string>(), sources }
-    const within = 'docs/images/mechanics-family-within-uses.svg'
-    const across = 'docs/images/mechanics-family-across.svg'
+    const within = 'docs/images/diagrams/mechanics-family-within-uses.svg'
+    const across = 'docs/images/diagrams/mechanics-family-across.svg'
     expect(expected.has(within) && expected.has(across)).toBe(true)
     expect(checkDerivedOutputs(outputs, expected)).toEqual([])
     expect(checkDerivedOutputs(outputs, new Map([...expected, [within, '<svg/>']]))).toEqual([
@@ -251,7 +251,7 @@ describe('family SVG diagrams', () => {
     expect(checkDerivedOutputs(outputs, new Map([...expected].filter(([path]) => path !== across)))).toEqual([
       `${across}: generated documentation is missing; run npm run docs:generate.`,
     ])
-    const extra = 'docs/images/old-family-within.svg'
+    const extra = 'docs/images/diagrams/old-family-within.svg'
     // An unexpected file is reported alone, before any stale or missing file.
     expect(checkDerivedOutputs(outputs, new Map([...expected, [within, '<svg/>'], [extra, '<svg/>']]))).toEqual([
       `${extra}: unexpected generated documentation file; remove or relocate it.`,

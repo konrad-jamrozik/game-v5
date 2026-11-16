@@ -14,16 +14,16 @@ A graphical interface is the most expensive part of an Implementation to build a
 it can hide a defect of the engine behind its presentation. The engine, by contrast, is what every specification checks.
 
 So an Implementation is suggested to be built headless first: the engine and its
-[Command-Line Interface](../../design/ui/command-line-interface.md) come first, and work on the
-[Graphical User Interface](../../design/ui/graphical-user-interface.md) begins only once the whole game can be played
+[Command-Line Interface](../../design/ui/cli.md) come first, and work on the
+[Graphical User Interface](../../design/ui/gui.md) begins only once the whole game can be played
 through the Command-Line Interface. The Graphical User Interface then adds presentation only, over an engine API that is
 already known to work.
 
 # Relationships
 
-- Uses [Command-Line Interface](../../design/ui/command-line-interface.md)
+- Uses [Command-Line Interface](../../design/ui/cli.md)
 - Uses [Engine Contract](../../design/foundation/engine-contract.md)
-- Uses [Graphical User Interface](../../design/ui/graphical-user-interface.md)
+- Uses [Graphical User Interface](../../design/ui/gui.md)
 
 # Headless milestone
 

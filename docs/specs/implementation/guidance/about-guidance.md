@@ -54,7 +54,7 @@ No refines relationships are declared within this family.
 
 ## Across families
 
-![Guidance family: relationships with other families](../../../images/guidance-family-across.svg)
+![Guidance family: relationships with other families](../../../images/diagrams/guidance-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 

@@ -68,11 +68,11 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 
 ### Uses
 
-![Conventions family: uses relationships within the family](../../../images/conventions-family-within-uses.svg)
+![Conventions family: uses relationships within the family](../../../images/diagrams/conventions-family-within-uses.svg)
 
 ### Refines
 
-![Conventions family: refines relationships within the family](../../../images/conventions-family-within-refines.svg)
+![Conventions family: refines relationships within the family](../../../images/diagrams/conventions-family-within-refines.svg)
 
 ## Across families
 

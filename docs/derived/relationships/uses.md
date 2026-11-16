@@ -10,8 +10,8 @@ A → B means A is used by B. The game specifications are layered by their uses 
 
 ## Game specifications
 
-![Uses relationships: Game specifications](../../images/uses-game.svg)
+![Uses relationships: Game specifications](../../images/diagrams/uses-game.svg)
 
 ## Governance specifications
 
-![Uses relationships: Governance specifications](../../images/uses-governance.svg)
+![Uses relationships: Governance specifications](../../images/diagrams/uses-governance.svg)

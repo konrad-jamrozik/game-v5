@@ -26,7 +26,7 @@ identifier reveals what the queries hide. The specification owning each value or
 - Used by [Agent Recovery](../mechanics/agent-recovery.md)
 - Used by [Agents](../mechanics/agents-spec.md)
 - Used by [Combat](../mechanics/combat.md)
-- Used by [Command-Line Interface](../ui/command-line-interface.md)
+- Used by [Command-Line Interface](../ui/cli.md)
 - Used by [Developer Access](./developer-access.md)
 - Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
 - Used by [Factions](../mechanics/factions.md)

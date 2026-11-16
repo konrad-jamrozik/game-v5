@@ -23,7 +23,7 @@ exhaustion keeps rising, every Combat ends. Its Combat report records every atta
 Combat refines [Agents](agents-spec.md): Agents says what makes a Combatant strong, and Combat says how that strength is
 spent against an opponent.
 
-![How a Combat fits between a Mission and the Turn report: deploying Agents to a Mission site creates a Deployed Mission; in the Mission resolution step its Combat is fought from Combat start through Combat rounds, each attack appended to the Combat log, until it ends with one Combat outcome; the Combat produces exactly one Combat report, which is part of the Turn report returned by getTurnReport() and reduced in a History entry, and the Combat outcome decides whether the Mission is Won or Lost](../../../images/combat-terms.svg)
+![How a Combat fits between a Mission and the Turn report: deploying Agents to a Mission site creates a Deployed Mission; in the Mission resolution step its Combat is fought from Combat start through Combat rounds, each attack appended to the Combat log, until it ends with one Combat outcome; the Combat produces exactly one Combat report, which is part of the Turn report returned by getTurnReport() and reduced in a History entry, and the Combat outcome decides whether the Mission is Won or Lost](../../../images/diagrams/combat-terms.svg)
 
 # Relationships
 

@@ -65,7 +65,7 @@ takes these steps, in this order:
    forms Designer feedback by playing or reviewing the result.
 4. **Turn feedback into specification changes**, and start the next round at step 2.
 
-![The Development loop: the Game designer changes the specifications; the Implementer builds or updates the Implementation from them; Implementer feedback flows back into the specifications until none is open; the Game designer plays the Implementation and Turns Designer feedback into specification changes](../../../images/development-loop.svg)
+![The Development loop: the Game designer changes the specifications; the Implementer builds or updates the Implementation from them; Implementer feedback flows back into the specifications until none is open; the Game designer plays the Implementation and Turns Designer feedback into specification changes](../../../images/diagrams/development-loop.svg)
 
 The loop reaches a fixed point when an update produces no new Implementer feedback and every earlier item of it is
 settled, either by a specification change or by the Game designer declining it. Designer feedback can restart the loop

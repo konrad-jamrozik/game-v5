@@ -24,11 +24,11 @@ closing the Current campaign never writes a Campaign save, and every new Session
 
 - Uses [Core Concepts](./core-concepts.md)
 - Uses [Engine Contract](./engine-contract.md)
-- Used by [Command-Line Interface](../ui/command-line-interface.md)
+- Used by [Command-Line Interface](../ui/cli.md)
 - Used by [Configuration](./configuration.md)
 - Used by [Determinism and Randomness](./determinism-and-randomness.md)
 - Used by [Developer Access](./developer-access.md)
-- Used by [Graphical User Interface](../ui/graphical-user-interface.md)
+- Used by [Graphical User Interface](../ui/gui.md)
 - Used by [Saves](./saves.md)
 
 # Glossary
@@ -46,7 +46,7 @@ These terms are specific to Campaign Lifecycle. General terms are in the
 A Session starts when the game starts and ends when the game exits. A newly opened Session is at the Main menu, with no
 Current campaign and Dev mode disabled.
 
-![Campaign lifecycle: a Session starts with no Current campaign, create or load selects one, close removes it, and the Session ends when the game exits](../../../images/campaign-lifecycle.svg)
+![Campaign lifecycle: a Session starts with no Current campaign, create or load selects one, close removes it, and the Session ends when the game exits](../../../images/diagrams/campaign-lifecycle.svg)
 
 `session.getStatus()` reports whether a Current campaign exists and the Session's access and Autopilot status. It also
 reports the Campaign seed, under [Campaign seed](determinism-and-randomness.md#campaign-seed).
