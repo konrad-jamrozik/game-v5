@@ -86,6 +86,24 @@ specifications already say about it. The following cases are complete:
 - **The specifications leave it open,** as an Implementer's choice or through a gap: the Game designer either
   specifies it, and an update follows, or accepts the Implementer's choice.
 
+One observation usually involves several Families of the Design specifications at once, e.g. a missing Mission site
+involves the rule that creates it, the GDR that supplies it, and the screen that shows it. The case is therefore decided
+for each Family involved, and a specification change goes to the Family that falls short, not to the first one found.
+The Implementation is a conformance defect only when every Family involved already specifies what the Game designer
+expects, e.g. the rule and its GDR are both present and the Implementation still leaves the feature out. Otherwise the
+following table, which is exhaustive, decides what changes:
+
+| Where the specifications fall short                                                                      | What changes                                                                |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| The feature is not specified, so no GDR can supply it                                                    | Foundation or Mechanics first, then Content for the GDRs the new rule reads |
+| The feature is specified, but its GDR is missing or has the wrong values                                 | Content only                                                                |
+| What a user interface shows, how it arranges it, or how it looks, while the engine API already allows it | UI, including its visual design                                             |
+| How an Autopilot AI chooses its Player actions                                                           | Autopilot AIs                                                               |
+
+Whether a value is Player-visible at all is a rule of Foundation or Mechanics, not of UI: a user interface presents
+the Player-visible information and cannot reveal what the rules hide, though it can choose how prominently to show it.
+Implementer feedback is placed by the same table.
+
 # LLM skills and workflows
 
 Several tasks of the Development loop recur, and each needs the same few specifications and the same order of steps.

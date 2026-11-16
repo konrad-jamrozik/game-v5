@@ -29,8 +29,11 @@ its Gate 2 local diff, and its handling of push conflicts. Steps 0, 6, and 7 bel
 3. Read `tracking/specification-baseline.md`. When the worktree's `HEAD`, which is the latest `origin/main`, is ahead of it, check with
    `git diff <baseline>..HEAD` on each problem's affected specifications whether a later commit already removed the
    problem, and set those aside as already fixed.
-4. For each remaining problem, read only the affected specification sections the entry names, and propose one outcome
-   with a recommendation:
+4. For each remaining problem, read only the affected specification sections the entry names, and name the Family of
+   the Design specifications that falls short, under the table in
+   [Designer feedback](../../../docs/specs/governance/process/development-loop.md#designer-feedback), e.g. a problem
+   met in a Mechanics rule may be fixed by a missing or wrong GDR in Content, or by a UI or visual design gap, with
+   the rule left as it is. Then propose one outcome with a recommendation:
    - **Fix the specifications:** remove a Conflict or Duplicate, or answer an Implicit gap or Needed TODO.
    - **Adopt the Implementation decision:** write the option the Implementation chose into the specifications, so a
      rebuilt Implementation chooses it too.
