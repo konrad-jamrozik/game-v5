@@ -215,7 +215,8 @@ Campaign Instances. This table is exhaustive.
 | Turns until expiration | The MissionSiteArchetype's `expires_in_turns`.                                                                                                                                                    | `expires_in_turns` of the MissionSiteArchetype.                                                                                                                                    |
 | Enemies                | Newly created Enemies, under [Enemy creation](#enemy-creation).                                                                                                                                   | `enemies` of the MissionSiteArchetype.                                                                                                                                             |
 
-Creating a Mission site changes nothing else; e.g., it creates no Mission, spends no money, changes no Panic, and
+Each Mission site created by an Advance turn is listed in its [Turn report](../foundation/world-history.md#glossary), under [Turn report](#turn-report). Creating a
+Mission site changes nothing else; e.g., it creates no Mission, spends no money, changes no Panic, and
 changes no [Agent](domain-model.md#agency-and-agents). A Mission
 site created during an Advance turn does not count down in that same Advance turn, under
 [Mission site expiration](#mission-site-expiration), whichever of the two occasions creates it. Several Mission sites
@@ -502,7 +503,8 @@ After every Deployed Mission of the step has been resolved and its Consequences 
 Active and whose target Faction is Eliminated becomes Cancelled. Eliminated is read at that moment, so a Faction made Eliminated
 by any Won Mission of this step counts, whichever Mission an implementation resolved first. This is the one
 rule of this step that does not read [Step-start values](domain-model.md#turn-advancement-steps): it reads Eliminated after the step's own Consequences. A Cancelled
-Mission site has no Consequences, and its Enemies keep their values.
+Mission site has no Consequences, and its Enemies keep their values. Each Mission site that becomes Cancelled is listed
+in the Turn report, under [Turn report](#turn-report).
 
 Only Active Mission sites are cancelled. An Attempted Mission site whose target Faction becomes Eliminated in the same
 step is not cancelled: its Mission is resolved like every other Deployed Mission, and its Consequences apply in full.
@@ -538,8 +540,9 @@ Turns until expiration after = Turns until expiration before − 1
 
 Turns until expiration before is a whole number of at least 1, by the invariants under
 [Mission site properties](#mission-site-properties), so the result is a whole number of at least 0 and no rounding
-occurs. When the result is 0, the Mission site becomes Expired and the Expired Consequences apply, under
-[Consequences](#consequences). When no Mission site qualifies, the step does nothing.
+occurs. When the result is 0, the Mission site becomes Expired, the Expired Consequences apply, under
+[Consequences](#consequences), and the Mission site is listed in the Turn report, under [Turn report](#turn-report).
+When no Mission site qualifies, the step does nothing.
 
 The following Mission sites do not count down in this step, and the list is exhaustive:
 
@@ -605,6 +608,18 @@ applies the operation level's `on_win` once, and no rule of [Factions](factions.
 Mission has the same Consequences as an Expired Response Mission site because the GDR property `on_ignored_or_lost`
 names both, and a Lost Mission yields no benefit from the damage dealt by its team.
 
+# Turn report
+
+**Proposed rule:** Besides the [Combat report](domain-model.md#combat) of each Mission it resolves, under
+[Resolving one Mission](#resolving-one-mission), the [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds three lists of Mission sites, each
+by Instance ID: the Mission sites created in it, under [Mission site creation](#mission-site-creation); the Mission
+sites that became Expired in it, under [Mission site expiration](#mission-site-expiration); and the Mission sites that
+became Cancelled in it, under [Cancellation](#cancellation). The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends
+holds the same three lists, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under
+[Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History. A list with no
+Mission site is empty. The [Initial Mission sites](#initial-mission-sites) are created with the Campaign, not by an
+Advance turn, so no Turn report lists them.
+
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
@@ -623,6 +638,7 @@ The table is exhaustive.
 | A Mission's Instance ID, its MissionArchetype, its Mission site, its Turn deployed, and its Team sent, in its order                                                                       | Yes                        |
 | A Mission's lifecycle state                                                                                                                                                               | Yes                        |
 | A Mission's Current team, in its order                                                                                                                                                    | Yes                        |
+| The Mission sites created, Expired, and Cancelled in an Advance turn, under [Turn report](#turn-report)                                                                                   | Yes                        |
 
 A Response Mission site's MissionSiteArchetype is the value of its
 [MissionSiteArchetype selection](#missionsitearchetype-selection) outcome, so that value is Player-visible through the
@@ -819,7 +835,8 @@ change.
 Mission site expiration of the Advance turn ending Turn 44 it reaches 0 and is Expired: a Panic increase of 8 is added to
 the Pending panic change, so Panic becomes 18 when nothing else contributes, and funding becomes max(0, 20 − 1) = 19.
 Money is not changed by s2. The Agency income step of the Advance turn ending Turn 44 had already used funding 20; that
-of the Advance turn ending Turn 45 uses 19. s2 never has a Mission, and its Enemies keep their initial values.
+of the Advance turn ending Turn 45 uses 19. s2 never has a Mission, and its Enemies keep their initial values. The Turn
+report of the Advance turn ending Turn 44 lists s2 among the Mission sites Expired, under [Turn report](#turn-report).
 
 **Lost.** During Turn 42, with Turns until expiration 3, the player calls `deployAgents(s2, [a1])`, so s2 is Attempted and
 Mission m2 is created with the Current team [a1]. In Mission resolution of

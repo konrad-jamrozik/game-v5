@@ -52,6 +52,8 @@ requires must not be implemented. E.g., the following appear only on Artboards:
 - The sample values, e.g. Turn 16, Money 625, and the [Agent](../mechanics/domain-model.md#agency-and-agents) IDs.
 - The labels, order, and grouping of the controls in the Campaign status bar, e.g. "Menu" instead of "Main menu", and
   the missing keyboard-shortcut hints.
+- The layout inside each [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) card of the [Turn summary](gui.md#glossary), and the labels of its buttons, e.g. "Continue" and "Open
+  Turn report".
 
 ## Main menu Artboard
 
@@ -66,6 +68,19 @@ The Campaign screen shows the status bar across the top, the Agents panel on the
 right, here with the History tab selected.
 
 ![Campaign screen Artboard in the Field HUD direction with the History tab selected: a status bar with Turn, Money, Funding, Agents, a segmented Panic meter and the Faction; the Agents panel on the left; a full-width Panic chart with its loss limit above three smaller charts and the Turn by Turn table](../../../images/artboards/gui-campaign-history.png)
+
+## Situation panel Artboard
+
+The [Situation panel](gui.md#situation-panel) heads the left column of the Campaign screen, above the Agents panel, with
+every one of its groups shown.
+
+![Campaign screen Artboard in the Field HUD direction with the Situation panel above the Agents panel: groups for two Active Investigations with progress bars, one with its required progress range marked and a preview of the next Turn's gain, one not yet assessed, a Lead to investigate with its required progress range, Active Mission sites with their Turns until expiration, free Training places, and Agents on Standby](../../../images/artboards/gui-situation-panel.png)
+
+## Turn summary Artboard
+
+The [Turn summary](gui.md#turn-summary) sits as a dialog over the dimmed Campaign screen after an Advance turn.
+
+![Turn summary Artboard in the Field HUD direction: a dialog over the dimmed Campaign screen listing a Won Mission with its Killed Agents, Agents sent to Recovery, and Consequences; a completed Investigation with a progress bar marking the progress before the last Advance turn, the gain that completed it, and a check where it completed; new Mission sites; an Expired Mission site; and a discovered Lead, with Open Turn report and Continue buttons](../../../images/artboards/gui-turn-summary.png)
 
 # Design tokens
 
@@ -96,6 +111,7 @@ exhaustive.
 | Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                             |
 | Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                          |
 | Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                               |
+| Scrim          | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog.                                                                                                                              |
 
 ## Typography
 
@@ -157,6 +173,20 @@ A panel groups what belongs together on a Surface fill with no outline. A card i
 one Campaign on the Main menu; it has a 2 px top edge in Border, or in Accent when it is the item the Player most likely
 wants, e.g. the Campaign of the most recent Campaign save.
 
+A panel that lists groups, e.g. the Situation panel, heads each group with a Label and its
+count in the Figure style and Accent text, and separates groups with Divider rules. A [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that expires within two [Turns](../foundation/engine-contract.md#player-actions-and-turns) shows its Turns until expiration
+in Accent text. The [Situation panel](gui.md#glossary) heads the left column of the Campaign screen, above the Agents panel, and is
+as wide as it.
+
+## Dialogs
+
+A dialog interrupts the screen only for what the Player must see before going on, e.g. the
+[Turn summary](gui.md#turn-summary). It sits centred over a Scrim on a Surface fill with a 2 px Accent top edge, at most
+640 px wide, with its title in the Section heading style and its buttons in one row at the bottom right under
+[Buttons](#buttons); the action that dismisses it is primary. A dialog taller than the window scrolls inside, keeping
+its title and buttons in view. In the Turn summary, each Mission is a card, with its outcome in Positive for Won or
+Danger for Lost, its [Killed](../mechanics/agents-spec.md#agent-statuses) Agents in Danger, and its Agents sent to [Recovery](../mechanics/agents-spec.md#assignments) in Accent text.
+
 ## Tables
 
 Tables carry most of the game's data, so they are dense but aligned. A header row uses the Label style over a Border
@@ -183,6 +213,27 @@ A meter shows a value against its limit, e.g. Panic against the Panic limit. It 
 tall with 3 px gaps. Each full tenth of the limit fills one segment in Accent, a remaining part of a tenth fills the next
 segment in Accent dim, and the other segments are Divider. The value and the limit are written above the meter's right
 end in Accent text, e.g. "24 / 100%".
+
+## Progress bars
+
+A [Progress bar](gui.md#glossary) lets the Player read at a glance how close an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is to completing, so its colour warms as
+completion nears instead of switching hue. It is 8 px tall in a panel row and 10 px in a dialog, on a Divider track.
+
+- **Fill:** its colour runs linearly from Accent dim at 0 to Accent at the [Required progress](../mechanics/leads-and-progression.md#glossary), by the share of the
+  Required progress reached, and stays Accent beyond it.
+- **Zone and tick:** the zone from the Required progress to the end of the bar is hatched with diagonal stripes of
+  Raised and Border. The tick at the Required progress is a 2 px Text line that overhangs the bar by 3 px above and
+  below. The Required progress and the greatest value of the range are written under the tick and under the bar's end
+  in the Axis style.
+- **Preview:** the preview segment of the projected progress gain is Positive at 30% opacity.
+- **Caption:** a caption under the bar is in 12 px Body and Text muted, or in Accent text when it says that the
+  Investigation may complete next turn or any turn, with the projected progress gain on its right in the Figure style and
+  Positive, e.g. "+1.74 / turn".
+- **Unscaled bar:** the bar of a [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that is not an [Assessed Lead](../mechanics/investigations.md#glossary) has a dashed track of Divider dashes 6 px long with
+  4 px gaps, and an Accent dim stub 12% of its width.
+- **Completed Investigation:** in the Turn summary, the gain of the last Advance turn is a Positive segment labelled
+  with that gain above it in Positive, and the point where the Investigation completed carries a check in a Positive
+  circle 20 px wide, with the check in Background and the final [Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) under it in Positive.
 
 # Charts
 

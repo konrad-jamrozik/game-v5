@@ -38,7 +38,8 @@ direction, the Design tokens, and the styling of components and charts, illustra
 
 Both interfaces present the same engine API and neither depends on the other. Each uses Engine Contract and Campaign
 Lifecycle from the Foundation family; the Command-Line Interface also uses Player API, and the Graphical User Interface
-uses Domain Model from the Mechanics family. Visual Design uses the Graphical User Interface: it styles the screens that
+uses Domain Model and the Mechanics specifications that detail the concepts its Campaign screen shows, and World History
+for the Turn report. Visual Design uses the Graphical User Interface: it styles the screens that
 the Graphical User Interface lists. Headless First in the Guidance family uses both, and Gameplay Dependency
 Direction uses the Graphical User Interface.
 
@@ -48,7 +49,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 
 ## Within the family
 
-No specification of this family links another specification of it.
+![UI family: references within the family](../../../images/diagrams/ui-family-within.svg)
 
 ## Across families
 

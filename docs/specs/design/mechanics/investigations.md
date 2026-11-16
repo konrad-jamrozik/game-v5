@@ -520,6 +520,8 @@ exhaustive:
    [Transit rule](agents-spec.md#transit-rule), each member is still In transit when this Advance turn ends. No
    [Progress loss](#progress-loss) applies.
 4. **Current team:** The Current team is now empty.
+5. **[Turn report](../foundation/world-history.md#glossary):** The Investigation joins the Investigations completed that the Turn report lists, with the
+   gain of this step's [Progress gain](#progress-gain), under [Turn report](#turn-report).
 
 ## Independence within the step
 
@@ -571,6 +573,18 @@ or Abandoned Investigation has no projected progress gain.
 No Derived value states whether the next Advance turn completes an Investigation, because that depends on the hidden
 Actual required progress.
 
+# Turn report
+
+**Proposed rule:** The Turn report of an Advance turn holds the Investigations completed in it: every Investigation
+whose [Completion check](#completion-check) is met in that Advance turn, each by its Instance ID together with the gain
+its [Progress gain](#progress-gain) added in that Advance turn, in hundredths of a progress point. The Investigation's
+Investigation progress before that Advance turn is therefore its retained final Investigation progress minus that gain.
+The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds the same list, unreduced. Both are
+[Player-visible information](../foundation/engine-contract.md#api-surfaces), under
+[Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History. An Advance turn that
+completes no Investigation holds an empty list. Neither reveals the Actual required progress: the player already knows
+from the Completed lifecycle state that the final Investigation progress has reached it.
+
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
@@ -587,6 +601,7 @@ table states, for every Investigation whatever its lifecycle state. The table is
 | An Investigation's Actual required progress                                                                                                                                                                                                                                     | No                                            |
 | An Investigation's Current team, with each member's Agent status, which [Player-visible information](agents-spec.md#player-visible-information) in Agents makes visible                                                                                                         | Yes                                           |
 | An Active Investigation's projected progress gain                                                                                                                                                                                                                               | Yes                                           |
+| The Investigations completed in an Advance turn, each with the gain of its last Progress gain, under [Turn report](#turn-report)                                                                                                                                                | Yes                                           |
 | Every property of InvestigationParameters                                                                                                                                                                                                                                       | Yes                                           |
 | For each discovered Lead, whether it is an Assessed Lead                                                                                                                                                                                                                        | Yes                                           |
 | For each discovered Lead, its Required progress and its Required progress range                                                                                                                                                                                                 | Yes when it is an Assessed Lead; otherwise no |
@@ -729,7 +744,9 @@ Turn started 1, Actual required progress 4, lifecycle Active, Investigation prog
 | Advance turn ending Turn 5 | a1              | 100  | 400                    | Yes      | 3, range 3 to 4                | 400 ≥ 400: i1 is Completed. Mission site from `apprehend_member` created; a1 on Standby, In transit. |
 
 After the Advance turn ending Turn 5, i1 has an empty Current team and Investigation progress 400, a1 has i1 in its
-Participation history, and `locate_red_dawn_member` is a [Completed Lead](leads-and-progression.md#glossary). Had the injected outcome been 3, i1
+Participation history, and `locate_red_dawn_member` is a [Completed Lead](leads-and-progression.md#glossary). The Turn report of the Advance turn ending Turn 5
+lists i1 with the gain 100, under [Turn report](#turn-report), so the progress before that Advance turn was 300; the Turn
+reports of the Advance turns ending Turns 1 to 4 list no Investigation. Had the injected outcome been 3, i1
 would have been Completed in the Advance turn ending Turn 4. The player never sees the Actual required progress 4. If
 the Mission site later becomes Expired and the player starts Investigation i2 of the same Lead, i2 has Assessed no and
 its own Required progress outcome, but the range 3 to 4 is shown from the moment i2 is created, because i1 is Assessed.
