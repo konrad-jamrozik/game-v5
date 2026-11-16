@@ -28,8 +28,8 @@ The main domain concepts are:
 The game shall have few key engine features:
 
 - Turn-based: player makes a set of actions during turn, then advances the turn.
-- Full determinism - same inputs produce some output. As such, if player relaunches the same campaign and does exactly the same actions, they will reach exactly the same result.
-- Undo & redo: the player can undo and redo their action, even beyond turns.
+- Full determinism - same inputs produce the same output. As such, if the player starts a campaign again with the same campaign seed, on the same version of the game, and does exactly the same actions, they will reach exactly the same result.
+- Undo & redo: the player can undo and redo their actions, even beyond turns, back to a limited number of earlier turns.
 - Headless CLI allowing to play the game directly through its engine API, without any GUI on top.
 - Autopilot AIs: player can delegate multiple player actions, also across turns, to an AI player, to simulate the playthrough.
 
