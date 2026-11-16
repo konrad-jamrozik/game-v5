@@ -161,7 +161,9 @@ Lead with a team of Agents.
 Preconditions: every precondition is evaluated in the Committed state in which the action is requested, before any of
 its changes. The action is rejected, as a whole, when any of the following holds:
 
-1. `lead` identifies no Lead GDR the Game build supplies.
+1. `lead` identifies no discovered Lead, under [Lead discovery](leads-and-progression.md#lead-discovery) in Leads and
+   Progression, i.e. it identifies no Lead GDR the Game build supplies, or a Lead that is not discovered. Both are
+   rejected with the same error, so the rejection does not reveal whether an undiscovered Lead exists.
 2. The Lead is not available, under [Lead availability](leads-and-progression.md#lead-availability) in Leads and
    Progression.
 3. The Lead already has an Active Investigation, under
@@ -458,15 +460,15 @@ or Abandoned Investigation has no projected completion probability.
 moment it exists, without a reveal condition, for every Investigation whatever its lifecycle state. The table is
 exhaustive.
 
-| Value                                                                                                                                                                                                                                                                | Player-visible information |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| An Investigation's Instance ID and its InvestigationArchetype, including the InvestigationArchetype's `name`                                                                                                                                                         | Yes                        |
-| An Investigation's Lead and Turn started                                                                                                                                                                                                                             | Yes                        |
-| An Investigation's lifecycle state                                                                                                                                                                                                                                   | Yes                        |
-| An Investigation's Investigation progress                                                                                                                                                                                                                            | Yes                        |
-| An Investigation's Current team, with each member's Agent status, which [Player-visible information](agents-spec.md#player-visible-information) in Agents makes visible                                                                                              | Yes                        |
-| An Active Investigation's projected completion probability                                                                                                                                                                                                           | Yes                        |
-| For each Lead, whether it can be investigated now under [One Active Investigation per Lead](#one-active-investigation-per-lead), with each condition that does not hold, including the Instance ID of the Lead's Active Investigation when condition 2 does not hold | Yes                        |
+| Value                                                                                                                                                                                                                                                                           | Player-visible information |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| An Investigation's Instance ID and its InvestigationArchetype, including the InvestigationArchetype's `name`                                                                                                                                                                    | Yes                        |
+| An Investigation's Lead and Turn started                                                                                                                                                                                                                                        | Yes                        |
+| An Investigation's lifecycle state                                                                                                                                                                                                                                              | Yes                        |
+| An Investigation's Investigation progress                                                                                                                                                                                                                                       | Yes                        |
+| An Investigation's Current team, with each member's Agent status, which [Player-visible information](agents-spec.md#player-visible-information) in Agents makes visible                                                                                                         | Yes                        |
+| An Active Investigation's projected completion probability                                                                                                                                                                                                                      | Yes                        |
+| For each discovered Lead, whether it can be investigated now under [One Active Investigation per Lead](#one-active-investigation-per-lead), with each condition that does not hold, including the Instance ID of the Lead's Active Investigation when condition 2 does not hold | Yes                        |
 
 The player can therefore see whether a Lead can be investigated now and why not: whether the Lead is available, with
 its [Blocking conditions](leads-and-progression.md#glossary), which
@@ -481,7 +483,8 @@ of a past Investigation completion outcome is retained, so Player API reports no
 
 The Lead's `difficulty`, which the completion probability reads, is a property of the Lead GDR, which
 [Player-visible information](leads-and-progression.md#player-visible-information) in Leads and Progression makes
-Player-visible. No input of the completion probability is hidden, so the player
+Player-visible for a discovered Lead. An Investigation exists only for a Lead that was available, and so discovered,
+when the Investigation started, and a discovered Lead stays discovered. No input of the completion probability is hidden, so the player
 sees the true Probability; no estimate of it is defined. Player API reports a Probability as its pair of whole numbers,
 under [Probabilities](../foundation/numbers.md#probabilities) in Numbers.
 
@@ -722,21 +725,22 @@ turn ending Turn 50 begins.
 This example exercises [Starting an Investigation](#starting-an-investigation) and
 [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation). During Turn 15: Investigation i11 is Active
 with Current team {a7}, a7 At assignment; Investigation i12 is Completed; a1 is on Contracting, At assignment; a2 is on
-Standby, In transit; a3 is on Recovery, [Recovering](agents-spec.md#agent-statuses); a4 is Deployed; and `locate_red_dawn_safehouse` is available. Each
+Standby, In transit; a3 is on Recovery, [Recovering](agents-spec.md#agent-statuses); a4 is Deployed; `locate_red_dawn_safehouse` is available; and no Mission at a `raid_safehouse` Mission site is Won. Each
 call is made on its own from this state, and each rejected call changes nothing.
 
-| Call                                                      | Result                                                                                                                                  |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `startInvestigation(no_such_lead, [a1])`                  | Rejected: no Lead GDR has that identifier.                                                                                              |
-| `startInvestigation(locate_red_dawn_safehouse, [])`       | Rejected: `agents` is empty.                                                                                                            |
-| `startInvestigation(locate_red_dawn_safehouse, [a1, a1])` | Rejected: a1 is listed twice.                                                                                                           |
-| `startInvestigation(locate_red_dawn_safehouse, [a1, a2])` | Rejected as a whole: a2 is In transit. a1 stays on Contracting, At assignment.                                                          |
-| `startInvestigation(locate_red_dawn_safehouse, [a3])`     | Rejected: a3 is on Recovery.                                                                                                            |
-| `startInvestigation(locate_red_dawn_safehouse, [a4])`     | Rejected: a4 is Deployed.                                                                                                               |
-| `assignAgentsToInvestigation(i12, [a1])`                  | Rejected: i12 is not Active.                                                                                                            |
-| `assignAgentsToInvestigation(i11, [a7])`                  | Rejected: a7 already belongs to i11's Current team.                                                                                     |
-| `assignAgentsToInvestigation(i11, [a1])`                  | Succeeds: a1 is on i11, In transit; i11 has Current team {a7, a1} and unchanged progress.                                               |
-| `startInvestigation(locate_red_dawn_safehouse, [a1, a7])` | Succeeds: a new Investigation with Current team {a1, a7}; i11 loses its only member a7 and becomes Abandoned in the same Player action. |
+| Call                                                      | Result                                                                                                                                                                              |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `startInvestigation(no_such_lead, [a1])`                  | Rejected: no Lead GDR has that identifier.                                                                                                                                          |
+| `startInvestigation(locate_red_dawn_hq, [a1])`            | Rejected with the same error as the row above: hq is not discovered, because no Mission at a `raid_safehouse` Mission site is Won, so the rejection does not reveal that hq exists. |
+| `startInvestigation(locate_red_dawn_safehouse, [])`       | Rejected: `agents` is empty.                                                                                                                                                        |
+| `startInvestigation(locate_red_dawn_safehouse, [a1, a1])` | Rejected: a1 is listed twice.                                                                                                                                                       |
+| `startInvestigation(locate_red_dawn_safehouse, [a1, a2])` | Rejected as a whole: a2 is In transit. a1 stays on Contracting, At assignment.                                                                                                      |
+| `startInvestigation(locate_red_dawn_safehouse, [a3])`     | Rejected: a3 is on Recovery.                                                                                                                                                        |
+| `startInvestigation(locate_red_dawn_safehouse, [a4])`     | Rejected: a4 is Deployed.                                                                                                                                                           |
+| `assignAgentsToInvestigation(i12, [a1])`                  | Rejected: i12 is not Active.                                                                                                                                                        |
+| `assignAgentsToInvestigation(i11, [a7])`                  | Rejected: a7 already belongs to i11's Current team.                                                                                                                                 |
+| `assignAgentsToInvestigation(i11, [a1])`                  | Succeeds: a1 is on i11, In transit; i11 has Current team {a7, a1} and unchanged progress.                                                                                           |
+| `startInvestigation(locate_red_dawn_safehouse, [a1, a7])` | Succeeds: a new Investigation with Current team {a1, a7}; i11 loses its only member a7 and becomes Abandoned in the same Player action.                                             |
 
 ## GDR validation
 

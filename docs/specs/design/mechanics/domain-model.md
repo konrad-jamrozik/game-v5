@@ -50,7 +50,8 @@ The player-controlled organization, its Agents, what each Agent is doing, and wh
 ## Leads, Investigations, Mission sites, and Missions
 
 The work the Agency discovers and undertakes. [Investigations](investigations.md) states how Investigation progress
-grows, and [Leads and Progression](leads-and-progression.md) states when a Lead is available.
+grows, and [Leads and Progression](leads-and-progression.md) states when a Lead is discovered and when it is
+available.
 
 | Term                    | Definition                                                                                                                                                                          | Prohibited synonyms                                                                                                                                                                                           |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
