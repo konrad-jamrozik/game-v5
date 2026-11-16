@@ -47,11 +47,14 @@ about skill, current health, exhaustion, and weapon damage are in the [Agents gl
 
 How a Combat is divided, and how it ends.
 
-| Term           | Definition                                                                                                                                                | Prohibited synonyms              |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                 | Round, naming a pass of a Combat |
-| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                     |                                  |
-| Combat outcome | How a Combat ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome                   |
+| Term           | Definition                                                                                                                                                | Prohibited synonyms                        |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                 | Round, naming a pass of a Combat           |
+| Agents' phase  | The first part of a Combat round, in which each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.                          |                                            |
+| Enemies' phase | The second part of a Combat round, in which each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.                        |                                            |
+| Combat turn    | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing.                                                      | Turn, naming a Combatant's part in a phase |
+| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                     |                                            |
+| Combat outcome | How a Combat ended for the Agency's team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome                             |
 
 ## Combatant condition in a Combat
 
@@ -364,13 +367,13 @@ A Combat that ends at its start makes no attack and changes no value of any Comb
 
 **Proposed rule:** Combat rounds are numbered from 1. Each Combat round consists of two phases, in this order:
 
-1. **Agents' phase:** each Agent of the Agents' side takes one turn, in the fixed order of its side.
-2. **Enemies' phase:** each Enemy of the Enemies' side takes one turn, in the fixed order of its side.
+1. **Agents' phase:** each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.
+2. **Enemies' phase:** each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.
 
-On its turn, a Combatant that is not able to fight at that moment does nothing. A Combatant that is able to fight
+On its Combat turn, a Combatant that is not able to fight at that moment does nothing. A Combatant that is able to fight
 selects a target under [Target selection](#target-selection); if no opponent is able to fight it does nothing, and
 otherwise it makes exactly one attack on the target, under [Attacks](#attacks). Every effect of an attack applies
-immediately, before the next turn, so every later turn, target selection, and attack in the same Combat round reads the
+immediately, before the next Combat turn, so every later Combat turn, target selection, and attack in the same Combat round reads the
 changed values. E.g., an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same Combat round.
 
 After the Enemies' phase, the [End-of-Combat-round checks](#end-of-combat-round-checks) decide whether the Combat ends or another
@@ -379,7 +382,7 @@ Combat round begins.
 ## Target selection
 
 **Proposed rule:** An attacker's target is the opponent, i.e. the Combatant of the other side, that is able to fight at
-the moment of the attacker's turn and has the highest effective skill at that moment. When several such opponents share
+the moment of the attacker's Combat turn and has the highest effective skill at that moment. When several such opponents share
 the highest effective skill, the target is the one that comes earliest in the fixed order of its side. An opponent that
 is not able to fight is never a target, whatever its effective skill. When no opponent is able to fight, there is no
 target.
@@ -440,7 +443,7 @@ attacks.
 
 ## Effects of an attack
 
-**Proposed rule:** One attack applies these effects, in this order, before the next turn begins:
+**Proposed rule:** One attack applies these effects, in this order, before the next Combat turn begins:
 
 1. **Read:** A and D are read, and the hit Probability is formed, under [Hit outcome](#hit-outcome).
 2. **Hit outcome:** The attack has its hit outcome. The damage outcome exists only when the hit outcome is a hit.
@@ -550,8 +553,8 @@ are never attacked. The argument is:
    Combat.
 4. **Every Combat round that is fought has an attack.** A Combat round begins only when an Agent and an Enemy are both able to fight,
    under [Combat start](#combat-start) and [End-of-Combat-round checks](#end-of-combat-round-checks). Let `a` be the first Agent in
-   the fixed order of its side that is able to fight when the Combat round begins. Before `a`'s turn only Agents that are not
-   able to fight have had a turn, so no attack has happened, `a` is still able to fight, and an Enemy is still able to
+   the fixed order of its side that is able to fight when the Combat round begins. Before `a`'s Combat turn only Agents that are not
+   able to fight have had a Combat turn, so no attack has happened, `a` is still able to fight, and an Enemy is still able to
    fight; so `a` attacks.
 
 By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is never attacked and never attacks plays no part in
@@ -629,7 +632,7 @@ Mission whose Combat has not been fought has no Combat report anywhere.
   ([Incapacitation condition](#incapacitation-condition)).
 - **Enemy already dead at Combat start:** An Enemy with current health 0 is dead, not able to fight, and not Incapacitated
   ([Combat start](#combat-start)).
-- **Attacker with no target:** An attacker able to fight with no opponent able to fight does nothing on its turn and
+- **Attacker with no target:** An attacker able to fight with no opponent able to fight does nothing on its Combat turn and
   gains no exhaustion ([Combat rounds](#combat-rounds)).
 - **Zero divisor:** The hit Probability's divisor is at least 2, because both effective skills are at least 1
   ([Hit outcome](#hit-outcome)).
@@ -730,7 +733,7 @@ side is e1 `initiate` (40), e2 `soldier` (120), and e3 `soldier` (120), all able
 - In the Agents' phase, a1 targets e2: e2 and e3 share the highest effective skill, 120, and e2 is earlier. a1 hits for
   a damage outcome of 15, so e2 has current health 15 of 30 and exhaustion 1, and effective skill
   `round down(120 × 15 × 100 / 3000) = 60`.
-- a2 then targets e3, whose 120 is now the highest. a4 does nothing on its turn, because it is Incapacitated.
+- a2 then targets e3, whose 120 is now the highest. a4 does nothing on its Combat turn, because it is Incapacitated.
 - In the Enemies' phase, while a2 and a3 both still have effective skill 100, an attacking Enemy targets a2, because a2
   is earlier. a4, whose skill is the highest, is never a target, because it is not able to fight.
 
@@ -764,7 +767,7 @@ End-of-Combat-round checks:
 | 3                  | 176                         | 0                            | Prevailed                                                                 |
 
 In Combat round 2, e1 is dead before the Enemies' phase, so it does not attack. In Combat round 2 the damage outcome 9 exceeds e1's
-remaining current health 8, so e1's current health is 0 and the health removed is 8. In Combat round 3, a2's turn comes after e2 is dead; with
+remaining current health 8, so e1's current health is 0 and the health removed is 8. In Combat round 3, a2's Combat turn comes after e2 is dead; with
 no opponent able to fight, a2 does nothing and gains no exhaustion, and the Enemies' phase has no attack.
 
 The Combat report holds: Combat outcome Prevailed; 3 Combat rounds; participants [a1, a2] and [e1, e2]; the starting values
