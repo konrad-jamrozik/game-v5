@@ -23,45 +23,29 @@ Every concept is modeled with the vocabulary of [Campaign State](../foundation/c
 the concepts connect, which every concept must agree on; how each one behaves is refined separately, e.g. by
 [Agents](agents-spec.md), so that one concept's rules can change without touching the others.
 
-# Relationships
-
-- Uses [Campaign Instances](../foundation/campaign-instances.md)
-- Uses [Campaign State](../foundation/campaign-state.md)
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Game Data Records](../foundation/game-data-records.md)
-- Uses [World History](../foundation/world-history.md)
-- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
-- Used by [Graphical User Interface](../ui/gui.md)
-- Used by [Turn Advancement](./turn-advancement.md)
-- Refined by [Agents](agents-spec.md)
-- Refined by [Combat](combat.md)
-- Refined by [Economy and Upgrades](economy-and-upgrades.md)
-- Refined by [Factions](factions.md)
-- Refined by [Investigations](investigations.md)
-- Refined by [Leads and Progression](leads-and-progression.md)
-- Refined by [Missions](missions.md)
-- Refined by [Panic and Endings](panic-and-endings.md)
-
 # Glossary
 
 These terms name the concepts of the game. Modeling terms are in the
 [Core Concepts](../foundation/core-concepts.md#glossary), [Campaign State](../foundation/campaign-state.md#glossary),
-and [Campaign Instances](../foundation/campaign-instances.md#glossary) glossaries; terms about a single concept are in the Glossary of the Mechanics specification that refines it, e.g. the
+and [Campaign Instances](../foundation/campaign-instances.md#glossary) glossaries; terms about a single concept are in the Glossary of the Mechanics specification that details it, e.g. the
 [Agents](agents-spec.md#glossary) and [Combat](combat.md#glossary) glossaries.
 
 ## Agency and Agents
 
 The player-controlled organization, its Agents, what each Agent is doing, and what each has taken part in.
+[Economy and Upgrades](economy-and-upgrades.md) states what each Upgrade does and how the Agent cap is set.
 
-| Term                  | Definition                                                                                                                                                                                                                                                                                                                                                                                                 | Prohibited synonyms                              |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Agency                | The organization the player controls in a Campaign. It holds the money, funding, and upgrades, and employs the Agents.                                                                                                                                                                                                                                                                                     |                                                  |
-| Agent                 | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                                                                                                                                                                                                                                                                                                               |                                                  |
-| Assignment            | What an Agent is currently assigned to do, e.g. take part in a particular Investigation or Mission.                                                                                                                                                                                                                                                                                                        | Current assignment                               |
-| Agent status          | Where an Agent stands: carrying out its Assignment ([At assignment](agents-spec.md#agent-statuses)), still travelling to it ([In transit](agents-spec.md#agent-statuses)), regaining current health at [Recovery](agents-spec.md#assignments) ([Recovering](agents-spec.md#agent-statuses)), or no longer serving ([Killed](agents-spec.md#agent-statuses) or [Dismissed](agents-spec.md#agent-statuses)). | Task phase; Agent lifecycle state                |
-| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                                                                                                                                                                                                                                                                                                                  | Participation; agent history; past participation |
+| Term                  | Definition                                                                                                                                                                                       | Prohibited synonyms                              |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
+| Agency                | The organization the player controls in a [Campaign](../foundation/core-concepts.md#campaign-and-session). It holds the money, funding, and upgrades, and employs the Agents.                    |                                                  |
+| Agent                 | An operative employed by the Agency, whom the player assigns to Investigations and Missions.                                                                                                     |                                                  |
+| Assignment            | What an Agent is currently assigned to do, e.g. take part in a particular Investigation or Mission.                                                                                              | Current assignment                               |
+| Agent status          | Where an Agent stands with respect to its Assignment and its employment, e.g. still travelling to its Assignment or no longer serving. [Agents](agents-spec.md) states the other Agent statuses. | Task phase; Agent lifecycle state                |
+| At assignment         | The Agent status of an Agent carrying out its Assignment.                                                                                                                                        |                                                  |
+| In transit            | The Agent status of an Agent still travelling to its Assignment.                                                                                                                                 |                                                  |
+| Participation history | The permanent record of which Agents took part in which past Investigations and Missions.                                                                                                        | Participation; agent history; past participation |
+| Upgrade               | A permanent improvement the Agency buys with money, any number of times.                                                                                                                         |                                                  |
+| Agent cap             | The most Agents the Agency can employ when it hires another one.                                                                                                                                 |                                                  |
 
 ## Leads, Investigations, Mission sites, and Missions
 
@@ -85,24 +69,25 @@ grows, and [Leads and Progression](leads-and-progression.md) states when a Lead 
 
 ## Combat
 
-A Combat, its participants, and its retained results.
+A Combat, its participants, and its [retained](../foundation/world-history.md#glossary) results.
 
 | Term                | Definition                                                                                                                                                                                       | Prohibited synonyms                                                                            |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
 | Combat              | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn.                                                                   | Battle; skirmish; fight, as a noun. Ordinary verbs, e.g. "Agents fight Enemies", remain valid. |
-| Combatant           | An Agent or an Enemy as a participant in a Combat. Both can fight because both have base skill, current health, base health, exhaustion, and weapon capability.                                  |                                                                                                |
+| Combatant           | An Agent or an Enemy as a participant in a Combat.                                                                                                                                               |                                                                                                |
 | Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Combat lasts.                                                                                          |                                                                                                |
 | Enemy               | An opponent present at one Mission site, whom the Agency's Agents fight in a Combat.                                                                                                             |                                                                                                |
 | Combat report       | The record of how a Combat went, kept as part of the [Turn report](../foundation/world-history.md#glossary) of the Advance turn that fought it and used to determine its Mission's Consequences. | Battle result                                                                                  |
 
 ## Factions
 
-The opposing organizations and their operations.
+The opposing organizations and their operations. [Factions](factions.md) states when a Faction becomes Eliminated.
 
-| Term                         | Definition                                                                       | Prohibited synonyms |
-| ---------------------------- | -------------------------------------------------------------------------------- | ------------------- |
-| Faction                      | An organization that opposes the Agency and carries out operations in the world. |                     |
-| Faction operation occurrence | One operation carried out by a Faction, which creates one Response Mission site. |                     |
+| Term                         | Definition                                                                                                                                                                                                                                                                                           | Prohibited synonyms                                                                                                                |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Faction                      | An organization that opposes the Agency and carries out operations in the world.                                                                                                                                                                                                                     |                                                                                                                                    |
+| Faction operation occurrence | One operation carried out by a Faction, which creates one Response Mission site.                                                                                                                                                                                                                     |                                                                                                                                    |
+| Eliminated                   | Permanently put out of action by a Won [Mission](domain-model.md#leads-investigations-mission-sites-and-missions): an Eliminated Faction no longer escalates or carries out operations, and it stays Eliminated for the rest of the [Campaign](../foundation/core-concepts.md#campaign-and-session). | Defeated; defeat, naming the end of a Faction. Defeat remains the Campaign ending under [Panic and Endings](panic-and-endings.md). |
 
 ## Campaign standing
 
@@ -113,6 +98,15 @@ each changes.
 | --------------- | ------------------------------------------------------------------------------------------ | ------------------- |
 | Panic           | How alarmed the public is, from 0% to 100%; the Campaign is lost when it gets high enough. |                     |
 | Campaign ending | How a Campaign finished: Victory or Defeat. A Campaign without one is still being played.  |                     |
+
+## Turn advancement steps
+
+The stages of Advance turn. [Turn Advancement](turn-advancement.md) states every step and their order.
+
+| Term                  | Definition                                                                                                                                    | Prohibited synonyms |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Turn advancement step | One stage of Advance turn, in which the rules of one subject are applied, e.g. paying upkeep. Advance turn applies every step once, in order. |                     |
+| Step-start value      | A value as it is when a Turn advancement step begins: after every earlier step of the same Advance turn, and before any rule of that step.    |                     |
 
 # Game concepts
 
@@ -132,7 +126,7 @@ Each game concept has the following modeling role and multiplicity. This table i
 | Combat report                                   | Part of the Turn report of the Advance turn in which its Combat was fought; not a Campaign instance and not part of any Mission                                                                                                | Exactly one per fought Combat, so at most one per Mission                                                                                                                                                                                                                             | [Combat report](combat.md#combat-report) in Combat                                                         |
 | Faction operation occurrence                    | Values in the [Constants](../foundation/core-concepts.md#campaign-instances) of the Response Mission site it creates, whose [Instance ID](../foundation/campaign-instances.md#glossary) identifies it; not a Campaign instance | Exactly one per Response Mission site                                                                                                                                                                                                                                                 | [Faction operation occurrence generation](factions.md#faction-operation-occurrence-generation) in Factions |
 | Weapon GDRs                                     | GDRs                                                                                                                                                                                                                           | Not Campaign instances                                                                                                                                                                                                                                                                | [Weapon](combat.md#weapon) in Combat                                                                       |
-| Upgrade GDRs                                    | GDRs                                                                                                                                                                                                                           | Not Campaign instances                                                                                                                                                                                                                                                                | [Upgrades](economy-and-upgrades.md#glossary) in Economy and Upgrades                                       |
+| Upgrade GDRs                                    | GDRs                                                                                                                                                                                                                           | Not Campaign instances                                                                                                                                                                                                                                                                | [Upgrades](economy-and-upgrades.md#upgrades) in Economy and Upgrades                                       |
 | Archetypes of the seven Campaign instance Types | GDRs serving the [Archetype](../foundation/core-concepts.md#campaign-instances) purpose                                                                                                                                        | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist                                                                                                                                                                                         | The specification that details each Campaign instance Type                                                 |
 
 GDR purposes are defined under [Purposes of GDRs](../foundation/game-data-records.md#purposes-of-gdrs). Every Campaign instance of
@@ -175,7 +169,7 @@ references, listed with its properties.
 | From                          | To                                                                                                    | How many                                                                                 | Reference           |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------- |
 | Agent                         | The Agency                                                                                            | Exactly one                                                                              | Immutable reference |
-| Agent, through its Assignment | An Investigation, or the Mission the Agent is [Deployed](agents-spec.md#assignments) on               | At most one                                                                              | Mutable reference   |
+| Agent, through its Assignment | An Investigation, or a Mission                                                                        | At most one                                                                              | Mutable reference   |
 | Investigation                 | The Lead GDR it investigates                                                                          | Exactly one                                                                              | Immutable reference |
 | Mission site                  | The Faction it targets                                                                                | Exactly one                                                                              | Immutable reference |
 | Initiative Mission site       | Its origin: the Investigation whose completion created it                                             | Exactly one                                                                              | Immutable reference |
@@ -205,7 +199,7 @@ Everything a new Campaign starts with is either game data, supplied as GDRs by t
 stated as rules in specifications. Among GDRs, only those serving the [Campaign configuration preset](../foundation/configuration.md#glossary) purpose can be
 overridden by the player before creation; every other GDR is fixed, e.g. a Faction's Archetype.
 
-Which Campaign instances the initial Campaign state contains is the same for every new Campaign. No GDR serving the Campaign configuration preset purpose, under
+Which Campaign instances the initial Campaign state contains is the same for every new Campaign. No GDR serving the [Campaign configuration preset](../foundation/game-data-records.md#glossary) purpose, under
 [GDR purpose: campaign configuration preset](../foundation/game-data-records.md#gdr-purpose-campaign-configuration-preset), adds,
 removes, or selects an initial Campaign instance; e.g., no preset changes the initial roster of Agents, the initial
 Factions, or the absence of initial Mission sites. A [Campaign configuration](../foundation/campaign-state.md#glossary) value can still supply an initial value of
@@ -217,7 +211,7 @@ Faction for each FactionArchetype the Game build supplies, and no Mission sites,
 Enemies. For each Campaign instance Type, the rule determining the initial Campaign instances of that Type and the
 source of each of their initial values, under
 [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation), is in the Mechanics
-specification that refines it; e.g., [Initial Factions](factions.md#initial-factions) gives which values each initial
+specification that details it; e.g., [Initial Factions](factions.md#initial-factions) gives which values each initial
 Faction takes from its FactionArchetype. The rule is game behavior; the content it reads is supplied by GDRs that serve
 no Campaign configuration preset purpose, e.g. the FactionArchetypes and their values.
 
@@ -232,11 +226,10 @@ site have different Instance IDs.
 # Current versus historical teams
 
 The Current team of an Investigation or Mission must agree with Assignments: an Agent whose Assignment
-references Investigation I belongs to the Current team of I, including while In transit, and an Agent whose
-Assignment references Mission M belongs to the Current team of M. Whether an Agent In transit contributes is decided
-under [Transit rule](agents-spec.md#transit-rule) and [Progress gain](investigations.md#progress-gain). An Agent cannot belong to more
+references Investigation I belongs to the Current team of I, and an Agent whose
+Assignment references Mission M belongs to the Current team of M. An Agent cannot belong to more
 than one Current team. In Committed state, the Agent-side and team-side views of Current team membership agree, and
-no Assignment references an Investigation that is no longer Active or a Mission that is no longer Deployed.
+no Assignment references an Investigation that is no longer Active or a Mission that is Won or Lost.
 
 Participation history describes the same relationship for the past: an Agent's Participation history and the past
 participants of an Investigation or Mission are one relationship seen from opposite sides. Agents recorded in
@@ -245,15 +238,15 @@ Agent; e.g., a Won Mission retains an Agent's Participation history after that A
 
 # Edge cases and failure behavior
 
-| Case                                                                                                                | Result and owner                                                                                                                                                                                                                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| An Agent is In transit to an Investigation                                                                          | The Agent belongs to its Current team; arrival and progress timing belong to Agents and Investigations                                                                                                                                                                                                                   |
-| An Investigation concludes while members of its Current team are In transit                                         | In the next Committed state no Assignment references it; the replacement Assignments belong to Agents and Investigations                                                                                                                                                                                                 |
-| The player deploys Agents to a Mission site                                                                         | A new Mission at that Mission site comes into existence, whose Current team is those Agents, and each of them is Deployed with an Assignment that references the Mission, under [Current versus historical teams](#current-versus-historical-teams); preconditions, rejection, and transit belong to Missions and Agents |
-| A team is to be deployed to a Mission site that already has a Mission                                               | Never valid: a Mission site has at most one Mission, under [How concepts relate](#how-concepts-relate); Missions owns the rejection                                                                                                                                                                                      |
-| A Mission retains an Agent in its Participation history after it is Won or Lost                                     | The Agent's Assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams)                                                                                                                                                                                                        |
-| The roster is empty, or no Mission sites or Investigations exist                                                    | Valid; [Panic and Endings](panic-and-endings.md) owns Defeat conditions                                                                                                                                                                                                                                                  |
-| A Faction is [Eliminated](factions.md#glossary) while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-instances.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes                                                                                                                               |
+| Case                                                                                                                | Result and owner                                                                                                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| An Agent is In transit to an Investigation                                                                          | The Agent belongs to its Current team; arrival and progress timing belong to Agents and Investigations                                                                                                                                                                                                      |
+| An Investigation concludes while members of its Current team are In transit                                         | In the next Committed state no Assignment references it; the replacement Assignments belong to Agents and Investigations                                                                                                                                                                                    |
+| The player deploys Agents to a Mission site                                                                         | A new Mission at that Mission site comes into existence, whose Current team is those Agents, and each of them has an Assignment that references the Mission, under [Current versus historical teams](#current-versus-historical-teams); preconditions, rejection, and transit belong to Missions and Agents |
+| A team is to be deployed to a Mission site that already has a Mission                                               | Never valid: a Mission site has at most one Mission, under [How concepts relate](#how-concepts-relate); Missions owns the rejection                                                                                                                                                                         |
+| A Mission retains an Agent in its Participation history after it is Won or Lost                                     | The Agent's Assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams)                                                                                                                                                                                           |
+| The roster is empty, or no Mission sites or Investigations exist                                                    | Valid; [Panic and Endings](panic-and-endings.md) owns Defeat conditions                                                                                                                                                                                                                                     |
+| A Faction is [Eliminated](factions.md#glossary) while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-instances.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes                                                                                                                  |
 
 # Acceptance examples
 
@@ -304,7 +297,7 @@ These relationships satisfy [Agency per Campaign](#agency-per-campaign),
 [Campaign instance identity scope](#campaign-instance-identity-scope),
 [Current versus historical teams](#current-versus-historical-teams), and [How concepts relate](#how-concepts-relate).
 Current team membership does not assert that a1 makes progress while In transit. The rules of a single concept are
-checked against this fixture by the Mechanics specification that refines it; e.g.,
+checked against this fixture by the Mechanics specification that details it; e.g.,
 [Acceptance examples](agents-spec.md#acceptance-examples) in Agents checks Agent status.
 
 ## B. Invalid variants

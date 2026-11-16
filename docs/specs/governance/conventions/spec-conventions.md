@@ -19,29 +19,30 @@ layout, one owner for every rule, exact wording, and visible marks for what is n
 contain differs by Specification kind, and further conventions add detail on terminology, Glossaries, Overviews, and
 each Specification kind.
 
-# Relationships
-
-- Uses [Artifact Relationships](artifact-relationships.md)
-- Refined by [Design Specification Conventions](design-spec-conventions.md)
-- Refined by [Glossary Conventions](glossary-conventions.md)
-- Refined by [Implementation Specification Conventions](implementation-spec-conventions.md)
-- Refined by [Overview Conventions](overview-conventions.md)
-- Refined by [Terminology Conventions](terminology-conventions.md)
-
 # Glossary
 
 ## Specifications
 
 What a specification is and how it is identified and classified.
 
-| Term                 | Definition                                                                                                                                                                                                                         | Prohibited synonyms |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| Specification        | A registered [artifact](artifact-relationships.md#glossary) that defines rules, contracts, Game Data Records ([GDRs](../../design/foundation/core-concepts.md#game-build-and-content)), governance, or planned specification work. |                     |
-| Registered           | Declared by its own metadata table, with a stable Spec ID, in a Markdown file under `docs/specs` that is not an overview of a Specification kind or a Family.                                                                      |                     |
-| Specification kind   | One of the three broad divisions of the specifications, Governance, Design, and [Implementation](artifact-relationships.md#artifacts), which differ in what their specifications govern.                                           |                     |
-| Family               | A subdivision of a Specification kind that is a specification's single ownership category, declared in metadata and mapped to its directory.                                                                                       |                     |
-| Design specification | A specification of the Design Specification kind, which describes the game itself.                                                                                                                                                 |                     |
-| Requirement          | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                                                                                |                     |
+| Term                 | Definition                                                                                                                                                                                   | Prohibited synonyms |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Specification        | A registered artifact that defines rules, contracts, Game Data Records ([GDRs](../../design/foundation/core-concepts.md#game-build-and-content)), governance, or planned specification work. |                     |
+| Registered           | Declared by its own metadata table, with a stable Spec ID, in a Markdown file under `docs/specs` that is not an overview of a Specification kind or a Family.                                |                     |
+| Specification kind   | One of the three broad divisions of the specifications, Governance, Design, and Implementation, which differ in what their specifications govern.                                            |                     |
+| Family               | A subdivision of a Specification kind that is a specification's single ownership category, declared in metadata and mapped to its directory.                                                 |                     |
+| Design specification | A specification of the Design Specification kind, which describes the game itself.                                                                                                           |                     |
+| Requirement          | A normative statement with a stable identifier that defines implementable behavior or a constraint.                                                                                          |                     |
+
+## Artifacts
+
+What specifications describe and what is built and checked from them.
+
+| Term               | Definition                                                                                        | Prohibited synonyms |
+| ------------------ | ------------------------------------------------------------------------------------------------- | ------------------- |
+| Artifact           | An identified specification, requirement, implementation, test, or other item                     |                     |
+| Implementation     | An executable artifact intended to satisfy a specification or requirement                         |                     |
+| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results. |                     |
 
 ## Participants
 
@@ -64,7 +65,7 @@ The specifications differ first in what they govern, and that difference decides
 obey it. Governance specifications govern how specifications are written and how work on them proceeds; Design
 specifications describe the game itself; Implementation specifications steer how an Implementation is built from the
 Design specifications. Each Specification kind is divided into Families, and each Family is a single ownership
-category. Neither is tied to graph depth or authoring order, and a folder location does not create a relationship.
+category. Neither is tied to authoring order.
 
 Every registered specification declares exactly one of these Families in metadata, and its Specification kind follows
 from that Family. With the exception of the root index, its file must be a direct child of the directory the following
@@ -84,12 +85,12 @@ table names for its Family. The following table is exhaustive.
 | Implementation     | Recipes                                                                           | `implementation/recipes/`   | Suggested steps for carrying out one recurring implementation task, e.g. publishing an Implementation                                | Foundation, Mechanics, Content, UI, Autopilot AIs, Mandatory |
 
 The Builds on column states which Families a Family builds on. A specification depends only on specifications of its
-own Family, of the Families its Family builds on, and of the Families those build on in [Turn](../../design/foundation/engine-contract.md#player-actions-and-turns); every specification also
-follows Specification Conventions implicitly, under [Implicit relationships](artifact-relationships.md#relationship-structure). Foundation and
+own Family, of the Families its Family builds on, and of the Families those build on in turn; every specification also
+follows Specification Conventions, as its Conventions metadata row shows. Foundation and
 Mechanics together form the game engine, which Content, UI, and Autopilot AIs build on; every Implementation Family
 builds on all the Design Families, and Recipes also builds on Mandatory.
 [Family architecture](../../README.md#family-architecture) in the specification index shows a diagram generated from
-the relationships the specifications actually declare, so it can be compared with this table.
+the links between the specifications, so it can be compared with this table.
 
 The Game Specification Index has Family Conventions and remains at `docs/specs/README.md` as the navigation entry
 point. Family describes ownership; the Builds on column limits which Families a specification may depend on. Moving a
@@ -109,7 +110,7 @@ them proceeds.
 ## Following the conventions
 
 Some conventions hold for every specification and some only for one Specification kind, and every specification shows
-which ones it follows. Following Specification Conventions includes following every specification that refines it,
+which ones it follows. Following Specification Conventions includes following every other Conventions specification,
 except [Design Specification Conventions](design-spec-conventions.md) and [Implementation Specification Conventions](implementation-spec-conventions.md), which apply
 only to their own Specification kind.
 
@@ -160,9 +161,7 @@ Each specification has a stable Spec ID, Family, title, Audience, Owns summary, 
 metadata row lists the [Personas](#personas) who mainly read or act on the document, separated by commas, in the order
 of the Personas table; at least one Persona is required. Overview describes the
 subject of the specification under [Specification Overview](overview-conventions.md#specification-overview); do not add a Scope row to metadata. The Owns metadata
-row is a one-sentence summary of what the specification owns; the generated catalog lists it for navigation. No
-specification has a [Binding](implementation-spec-conventions.md#glossary) metadata row: the Binding of an Implementation specification follows from its Family, as
-described in [Implementation binding](implementation-spec-conventions.md#implementation-binding).
+row is a one-sentence summary of what the specification owns; the generated catalog lists it for navigation.
 
 ## One owner per rule
 
@@ -181,8 +180,7 @@ Readers find their way through many specifications by knowing where everything s
 
 1. Framing sections:
    1. `# Overview`, describing the subject of the specification
-   2. `# Relationships`, containing the flat directional inventory
-   3. `# Glossary`
+   2. `# Glossary`
 2. Topic sections: one or more H1 sections, each named after a subject the specification owns; e.g.,
    `# Agent recovery`. Topic sections state the specification's definitions, game behavior, requirements, and
    constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
@@ -201,7 +199,7 @@ nest from H2 through H6 when the hierarchy requires it, without skipping a headi
 Name a topic section after its subject, never after its role in the document. Generic topic headings, e.g.
 "Concepts and contract", "Requirements", "Details", or "Specification", are prohibited. State a requirement in the topic
 it constrains rather than in a separate collection. An example may sit beside the concept it illustrates instead of
-under [Acceptance examples](design-spec-conventions.md#glossary). Do not state a contract twice merely to populate a section. Whether a section applies, and
+under Acceptance examples. Do not state a contract twice merely to populate a section. Whether a section applies, and
 whether embedded examples explain the contracts adequately, are semantic review concerns; the linter checks the order
 and content of framing and closing sections, not applicability.
 
@@ -229,7 +227,7 @@ then lists the rules; it does not open with "Refunds follow these complete rules
 ## Handling sections that do not apply
 
 Omit a section that does not apply. Do not keep its heading with a placeholder, e.g. "Not applicable", "N/A",
-"None.", or "No explicit relationships."; a present section is never empty.
+or "None."; a present section is never empty.
 
 A missing decision is not "not applicable": record the missing content as a TODO in the TODOs section, naming the
 section to be written, under [Kinds of unspecified content](#kinds-of-unspecified-content). E.g., a
@@ -255,8 +253,7 @@ section title and whose destination is that section's heading anchor. E.g., use
 [Derived value consistency](../../design/foundation/engine-contract.md#derived-value-consistency). Link each relevant section
 individually rather than using numbered labels, ranges, or a document-only link when a specific contract is meant.
 When a title changes or a section moves, update every reference and anchor together. When removing a section, remove
-or revise its references; Git history retains the historical record. Glossary-term links may use the canonical term
-as their visible text when linking to its owning Glossary.
+or revise its references; Git history retains the historical record.
 
 Content not yet written stays as descriptive TODOs in the TODOs section until concrete requirements can be written; do not reserve numbered labels for them.
 
@@ -292,9 +289,9 @@ and whatever it has not settled yet must be visible rather than hidden.
 
 ## Deterministic validation
 
-Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, Family directories under [Specification kinds and Families](#specification-kinds-and-families), the absence of a Binding row under [Implementation binding](implementation-spec-conventions.md#implementation-binding), required layout, local links and anchors, relationship inventories and mirrors under [Relationship inventories](artifact-relationships.md#relationship-structure), the Conventions row under [Following the conventions](#following-the-conventions), Specification kind and Family overview presence, structure, and coverage under [Family overviews](overview-conventions.md#family-overviews), acyclic `follows` and `refines` graphs under [Relationship graphs](artifact-relationships.md#relationship-graphs), objectively prohibited terminology, the shape of the [Prohibited synonyms column](glossary-conventions.md#prohibited-synonyms-column), prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document), [Specification Overview](overview-conventions.md#specification-overview), and [Glossary groups](glossary-conventions.md#glossary-groups), topic sections and their subsections that open with a list, table, or subsection instead of a lead under [Orientation before detail](#orientation-before-detail), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
+Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, Family directories under [Specification kinds and Families](#specification-kinds-and-families), required layout, local links and anchors, linked first mentions of terms and the absence of cycles among the specifications under [Deterministic validation](artifact-relationships.md#deterministic-validation), the Conventions row under [Following the conventions](#following-the-conventions), Specification kind and Family overview presence, structure, and coverage under [Family overviews](overview-conventions.md#family-overviews), objectively prohibited terminology, the shape of the [Prohibited synonyms column](glossary-conventions.md#prohibited-synonyms-column), prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document), [Specification Overview](overview-conventions.md#specification-overview), and [Glossary groups](glossary-conventions.md#glossary-groups), topic sections and their subsections that open with a list, table, or subsection instead of a lead under [Orientation before detail](#orientation-before-detail), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
 
-A successful deterministic lint means only that every machine-checkable convention passed. It does not establish relationship truth, refinement compatibility, the meaning of a `uses` cycle, conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. A review checks every rule of the conventions that a specification follows, under [Following the conventions](#following-the-conventions), including those the linter cannot check.
+A successful deterministic lint means only that every machine-checkable convention passed. It does not establish conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. A review checks every rule of the conventions that a specification follows, under [Following the conventions](#following-the-conventions), including those the linter cannot check.
 
 ## Kinds of unspecified content
 
@@ -313,7 +310,7 @@ game as it is now.
 
 A TODO states what is missing and what a complete answer must include. E.g., prefer:
 
-> TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful Turns, progress-removal behavior, rounding, and a numerical example.
+> TODO: Define the per-turn completion probability, including its conditioning on previous unsuccessful [Turns](../../design/foundation/engine-contract.md#player-actions-and-turns), progress-removal behavior, rounding, and a numerical example.
 
 Avoid vague placeholders; e.g., "TODO: implement investigations." Documentation TODOs request decisions or contract content, not implementation. A `TODO (later):` item names the feature in one line, e.g. "TODO (later): Skill gained from a [Combat](../../design/mechanics/domain-model.md#combat)."
 

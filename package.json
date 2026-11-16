@@ -16,7 +16,6 @@
     "lint:specs": "node scripts/lint-specs.ts",
     "docs:generate": "node scripts/derived-docs.ts generate",
     "docs:check": "node scripts/derived-docs.ts check",
-    "relationships:report": "node scripts/relationships-report.ts",
     "terms:report": "node scripts/terms-report.ts",
     "docs:link-terms": "node scripts/link-terms.ts",
     "lint": "npm run lint:specs && npm run lint:code",

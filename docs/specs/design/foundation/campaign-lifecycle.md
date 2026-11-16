@@ -20,26 +20,15 @@ selects it, and closing it returns the Session to the Main menu; this Campaign s
 Nothing a Session holds is persisted, under [Data ownership](engine-contract.md#data-ownership), so replacing or
 closing the Current campaign never writes a Campaign save, and every new Session starts at the Main menu again.
 
-# Relationships
-
-- Uses [Core Concepts](./core-concepts.md)
-- Uses [Engine Contract](./engine-contract.md)
-- Used by [Command-Line Interface](../ui/cli.md)
-- Used by [Configuration](./configuration.md)
-- Used by [Determinism and Randomness](./determinism-and-randomness.md)
-- Used by [Developer Access](./developer-access.md)
-- Used by [Graphical User Interface](../ui/gui.md)
-- Used by [Saves](./saves.md)
-
 # Glossary
 
 These terms are specific to Campaign Lifecycle. General terms are in the
 [Core Concepts glossary](core-concepts.md#glossary) and the [Engine Contract glossary](engine-contract.md#glossary).
 
-| Term               | Definition                                                                                                                             |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign selection | The Session's choice of Current campaign, made by a successful campaign creation or load and ended by closure or by another selection. |
-| Main menu          | The state of a Session that has no Current campaign; e.g., a newly opened Session is at the Main menu.                                 |
+| Term               | Definition                                                                                                                                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Campaign selection | The [Session](core-concepts.md#campaign-and-session)'s choice of [Current campaign](engine-contract.md#session-data), made by a successful campaign creation or load and ended by closure or by another selection. |
+| Main menu          | The state of a Session that has no Current campaign; e.g., a newly opened Session is at the Main menu.                                                                                                             |
 
 # Session lifecycle
 
@@ -52,13 +41,13 @@ Current campaign and [Dev mode](engine-contract.md#principals-and-access) disabl
 
 # Campaign selection
 
-The Campaign selection decides which Campaign, if any, the Session is playing.
+The Campaign selection decides which [Campaign](core-concepts.md#campaign-and-session), if any, the Session is playing.
 
 The following operations are the complete set that change the Campaign selection:
 
 - **Create:** `session.campaign.create(options)` creates a Campaign using the current [Game build](core-concepts.md#game-build-and-content) and the
   Session's new-Campaign setup, and selects it as the Current campaign. A newly created Campaign has a [Timeline](engine-contract.md#persisted-data) with no
-  [Player actions](engine-contract.md#player-actions-and-turns), no [Autopilot memory](engine-contract.md#persisted-data), and no Campaign save, so the Session has no [Current save](engine-contract.md#session-data).
+  [Player actions](engine-contract.md#player-actions-and-turns), no [Autopilot memory](engine-contract.md#persisted-data), and no [Campaign save](engine-contract.md#persisted-data), so the Session has no [Current save](engine-contract.md#session-data).
 - **Load:** `session.saves.load(save)` restores a Campaign save and selects its Campaign as the Current campaign.
   What loading restores is stated under [Loading](saves.md#loading).
 - **Close:** `session.campaign.close()` removes the Current campaign and returns the Session to the Main menu.
@@ -77,12 +66,12 @@ A failed create or load leaves the Session exactly as it was, including its Curr
 At the Main menu the Session still has to be managed before any Campaign is current, e.g. to load a Campaign save or
 create a Campaign.
 
-The following Session API operations need no Current campaign, and this list is complete: `session.getStatus()`,
+The following [Session API](engine-contract.md#api-surfaces) operations need no Current campaign, and this list is complete: `session.getStatus()`,
 every `session.globalConfiguration` operation, `session.saves.list()`, `session.saves.load(save)`, `session.saves.delete(save)`,
 `session.saves.deleteCampaign(campaign)`, `session.campaign.create(options)`, every
 `session.newCampaignSetup` operation, and `session.autopilot.listAutopilotAis()`. Every other operation that depends on a
 Campaign fails when no Current campaign exists, and the failure changes nothing, under
-[Committed state integrity](engine-contract.md#player-actions-and-turns).
+[Committed state integrity](engine-contract.md#committed-state-integrity).
 
 # Acceptance examples
 

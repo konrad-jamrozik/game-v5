@@ -20,35 +20,20 @@ the clock. The same test sorts unique identifiers into those replay must reprodu
 need not, e.g. a [Campaign save ID](saves.md#identifiers). The promise holds across machines, but not across different implementations or [Game
 builds](core-concepts.md#game-build-and-content).
 
-# Relationships
-
-- Uses [Campaign Lifecycle](./campaign-lifecycle.md)
-- Uses [Campaign State](./campaign-state.md)
-- Uses [Core Concepts](./core-concepts.md)
-- Uses [Engine Contract](./engine-contract.md)
-- Used by [Autopilot](./autopilot.md)
-- Used by [Campaign Instances](./campaign-instances.md)
-- Used by [Configuration](./configuration.md)
-- Used by [Developer Access](./developer-access.md)
-- Used by [Numbers](./numbers.md)
-- Used by [Saves](./saves.md)
-- Used by [Storage Schema](../../implementation/guidance/storage-schema.md)
-- Used by [Timeline](./timeline.md)
-
 # Glossary
 
 These terms are specific to Determinism and Randomness. General terms are in the
 [Core Concepts glossary](core-concepts.md#glossary) and the [Engine Contract glossary](engine-contract.md#glossary).
 
-| Term                       | Definition                                                                                                                                                                                                                                                                                                                                     |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Campaign seed              | The value from which every random outcome of one Campaign derives. It is set when the Campaign is created, supplied by the [Session controller](engine-contract.md#principals-and-access) or otherwise chosen by the engine, and never changes. It is Campaign state and is not [Player-visible information](engine-contract.md#api-surfaces). |
-| Campaign-scoped identifier | A unique identifier that replaying the same Player actions from the same Campaign state must reproduce exactly.                                                                                                                                                                                                                                |
-| Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, e.g. one identifying a stored record or a runtime operation.                                                                                                                                                                                                   |
+| Term                       | Definition                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign seed              | The value from which every random outcome of one [Campaign](core-concepts.md#campaign-and-session) derives. It is set when the Campaign is created, supplied by the [Session controller](engine-contract.md#principals-and-access) or otherwise chosen by the engine, and never changes. It is [Campaign state](core-concepts.md#campaign-and-session) and is not [Player-visible information](engine-contract.md#api-surfaces). |
+| Campaign-scoped identifier | A unique identifier that replaying the same [Player actions](engine-contract.md#player-actions-and-turns) from the same Campaign state must reproduce exactly.                                                                                                                                                                                                                                                                   |
+| Independent identifier     | A unique identifier that deterministic replay of a Campaign need not reproduce, e.g. one identifying a stored record or a runtime operation.                                                                                                                                                                                                                                                                                     |
 
 # Determinism
 
-Given the same Game build, the same initial [Campaign configuration](campaign-state.md#glossary), the same Campaign seed, and the same ordered
+Given the same [Game build](core-concepts.md#game-build-and-content), the same initial [Campaign configuration](campaign-state.md#glossary), the same Campaign seed, and the same ordered
 Player actions, exactly the same things must happen: Campaign state is equal after every
 Player action. This holds whenever, in whichever [Session](core-concepts.md#campaign-and-session), and on whichever machine each Campaign is created and
 played; e.g., a Campaign save made on one machine and loaded on another continues exactly as it would have on the
@@ -94,7 +79,7 @@ complete:
 
 - **Supplied:** The Session controller may supply the Campaign seed in `session.campaign.create(options)`. A
   supplied value that is not a permitted Campaign seed fails creation, under
-  [Campaign selection](campaign-lifecycle.md#glossary).
+  [Campaign selection](campaign-lifecycle.md#campaign-selection).
 - **Permitted values:** A permitted Campaign seed is text of 1 to 64 characters, each a printable ASCII character,
   i.e. one with a code from 32, the space, to 126, the tilde, inclusive. Two Campaign seeds are the same exactly
   when their texts are equal character for character; e.g., `abc` and `ABC` are different Campaign seeds, and so
@@ -105,7 +90,7 @@ complete:
   [Determinism](#determinism).
 - **Fixed:** The Campaign seed never changes after creation. No action, [Timeline](engine-contract.md#persisted-data) navigation, save, or load changes it.
 - **Kept:** The Campaign seed is Campaign state; [Campaign state composition](campaign-state.md#campaign-state-composition)
-  in Campaign State places it in [Current world state](campaign-state.md#glossary). Every Campaign save therefore holds it.
+  in Campaign State places it in [Current world state](campaign-state.md#glossary). Every [Campaign save](engine-contract.md#persisted-data) therefore holds it.
 - **Readable:** `session.getStatus()` reports the Campaign seed of the [Current campaign](engine-contract.md#session-data) to the Session controller,
   in every [Dev mode](engine-contract.md#principals-and-access) setting and whether it was supplied or chosen, in a form `create(options)` accepts; e.g., the
   Session controller can share it or create another Campaign with it.

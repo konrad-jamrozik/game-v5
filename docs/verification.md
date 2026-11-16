@@ -29,11 +29,10 @@ Run the targeted checks while iterating. They give faster, narrower feedback tha
 | Tooling in `scripts/`                 | `npm test`, `npm run lint:code`, `npm run typecheck`; rerun any affected script                                                          |
 | Dependencies or tool configuration    | `npm ci`, then `npm run check`                                                                                                           |
 
-Run `npm run lint:specs` first when checking specifications or the relationships between them. The derived-view check
+Run `npm run lint:specs` first when checking specifications or the references between them. The derived-view check
 (`npm run docs:check`) and the rest of the pipeline depend on specifications that parse and resolve. When a change
-adds, removes, or moves a term or a relationship, also run `npm run relationships:report`: it lists where the recorded
-`uses` and `refines` relationships differ from what the specifications' text applies. It matches terms by spelling, so
-it reports for review and never fails.
+adds, removes, or moves a term, run `npm run docs:link-terms` to add and retarget the links from first mentions
+to their definitions; `npm run lint:specs` then rejects an unlinked first mention or a cycle among the specifications.
 
 ## Before declaring a change complete
 

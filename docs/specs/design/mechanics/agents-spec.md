@@ -20,34 +20,18 @@ above a free amount. Training raises base skill, and [Combats](domain-model.md#c
 trades present output against future strength. An Agent is Serving until it is Killed in a Combat or Dismissed, and it is never
 removed, so its record outlasts its service.
 
-Agents refines [Domain Model](domain-model.md): Domain Model says how an Agent connects to the Agency and its work, and
+Agents builds on [Domain Model](domain-model.md): Domain Model says how an Agent connects to the Agency and its work, and
 Agents says what one Agent is and how it works.
-
-# Relationships
-
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Developer Access](../foundation/developer-access.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Numbers](../foundation/numbers.md)
-- Uses [Player API](../foundation/player-api.md)
-- Refines [Domain Model](domain-model.md)
-- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Investigations](./investigations.md)
-- Used by [Missions](./missions.md)
-- Used by [Turn Advancement](./turn-advancement.md)
-- Refined by [Agent Recovery](./agent-recovery.md)
-- Refined by [Combat](./combat.md)
-- Refined by [Economy and Upgrades](./economy-and-upgrades.md)
 
 # Glossary
 
 These terms are specific to Agents. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
-about regaining health, Combats, and the Agency's caps are in the [Agent Recovery](agent-recovery.md#glossary),
+about regaining health, [Combats](domain-model.md#combat), and the [Agency](domain-model.md#agency-and-agents)'s caps are in the [Agent Recovery](agent-recovery.md#glossary),
 [Combat](combat.md#glossary), and [Economy and Upgrades](economy-and-upgrades.md#glossary) glossaries.
 
 ## Combatant attributes
 
-What makes an Agent or an [Enemy](domain-model.md#combat) able to work and to fight, and how worn down it is. The names follow one rule:
+What makes an [Agent](domain-model.md#agency-and-agents) or an [Enemy](domain-model.md#combat) able to work and to fight, and how worn down it is. The names follow one rule:
 
 - **Base:** Base X is a lasting stored value, e.g. base skill, which only named rules change.
 - **Effective:** Effective X is base X adjusted for the situation and is never stored, e.g. effective skill.
@@ -66,29 +50,27 @@ What makes an Agent or an [Enemy](domain-model.md#combat) able to work and to fi
 
 ## Assignments
 
-The Assignments that are neither an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) nor a [Mission](domain-model.md#leads-investigations-mission-sites-and-missions), and the one that places an Agent in a Mission.
+The [Assignments](domain-model.md#agency-and-agents) that are neither an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) nor a [Mission](domain-model.md#leads-investigations-mission-sites-and-missions), and the one that places an Agent in a Mission.
 
-| Term        | Definition                                                                                                                                                                                                                                                        | Prohibited synonyms |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| Standby     | The Assignment of an Agent with no work.                                                                                                                                                                                                                          |                     |
-| Contracting | The Assignment of an Agent earning money for the Agency.                                                                                                                                                                                                          |                     |
-| Training    | The Assignment of an Agent gaining base skill.                                                                                                                                                                                                                    |                     |
-| Recovery    | The Assignment of an Agent regaining current health. The player can neither assign an Agent to it nor assign a Recovering Agent elsewhere.                                                                                                                        |                     |
-| Deployed    | Sent on a Mission at a Mission site as a member of its [Current team](domain-model.md#leads-investigations-mission-sites-and-missions), and fighting there in the next Advance turn. An Agent becomes Deployed the moment the player deploys it, without transit. |                     |
+| Term        | Definition                                                                                                                                                                                                                                                                                                                           | Prohibited synonyms |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
+| Standby     | The Assignment of an Agent with no work.                                                                                                                                                                                                                                                                                             |                     |
+| Contracting | The Assignment of an Agent earning money for the Agency.                                                                                                                                                                                                                                                                             |                     |
+| Training    | The Assignment of an Agent gaining base skill.                                                                                                                                                                                                                                                                                       |                     |
+| Recovery    | The Assignment of an Agent regaining current health. The player can neither assign an Agent to it nor assign a Recovering Agent elsewhere.                                                                                                                                                                                           |                     |
+| Deployed    | Sent on a Mission at a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) as a member of its [Current team](domain-model.md#leads-investigations-mission-sites-and-missions), and fighting there in the next Advance turn. An Agent becomes Deployed the moment the player deploys it, without transit. |                     |
 
 ## Agent statuses
 
 Where an Agent stands toward its Assignment, and whether it still serves the Agency.
 
-| Term          | Definition                                                                                           | Prohibited synonyms |
-| ------------- | ---------------------------------------------------------------------------------------------------- | ------------------- |
-| At assignment | The [Agent status](domain-model.md#agency-and-agents) of an Agent carrying out its Assignment.       |                     |
-| In transit    | The Agent status of an Agent still travelling to its Assignment.                                     |                     |
-| Recovering    | The Agent status of an Agent whose Assignment is Recovery and that has arrived there.                |                     |
-| Killed        | The Agent status of an Agent whose current health reached zero in a Combat. It is final.             |                     |
-| Dismissed     | The Agent status of an Agent the player dismissed. It is final.                                      |                     |
-| Serving       | Having the Agent status At assignment, In transit, or Recovering, i.e. still employed by the Agency. |                     |
-| Terminated    | Having the Agent status Killed or Dismissed, i.e. no longer employed by the Agency.                  |                     |
+| Term       | Definition                                                                                                                                                                     | Prohibited synonyms |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
+| Recovering | The [Agent status](domain-model.md#agency-and-agents) of an Agent whose Assignment is Recovery and that has arrived there.                                                     |                     |
+| Killed     | The Agent status of an Agent whose current health reached zero in a Combat. It is final.                                                                                       |                     |
+| Dismissed  | The Agent status of an Agent the player dismissed. It is final.                                                                                                                |                     |
+| Serving    | Having the Agent status [At assignment](domain-model.md#agency-and-agents), [In transit](domain-model.md#agency-and-agents), or Recovering, i.e. still employed by the Agency. |                     |
+| Terminated | Having the Agent status Killed or Dismissed, i.e. no longer employed by the Agency.                                                                                            |                     |
 
 # Agent GDRs
 
@@ -132,7 +114,7 @@ property: the base weapon damage of a newly created Agent equipped with that Wea
 **Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for
 AgentArchetype and AgentParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it,
 and the violation is reported as a data defect, never repaired into different gameplay, under
-[Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in Engine Contract.
+[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **One AgentArchetype:** The Game build supplies exactly one AgentArchetype. Every Agent has it as its Archetype, so
    no rule selects among AgentArchetypes.
@@ -177,7 +159,7 @@ weapon values. An Agent also has two [Derived values](../foundation/core-concept
 
 **Retention:** An Agent keeps every property above for the whole Campaign, whatever its Agent status, so that every
 reference to it resolves, e.g. from a [Combat report](domain-model.md#combat) or a Participation history. A Terminated Agent no longer
-participates in current gameplay and is retained in [World history](../foundation/campaign-state.md#glossary) with its final values, under
+participates in current gameplay and is [retained](../foundation/world-history.md#glossary) in [World history](../foundation/campaign-state.md#glossary) with its final values, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Agent is ever removed.
 
@@ -201,15 +183,15 @@ While an Agent is Serving, its Agent status moves between At assignment, In tran
 Assignment changes and as it arrives, under [Assignment changes](#assignment-changes) and
 [Transit rule](#transit-rule). It becomes Terminated only by the following transitions:
 
-| Source state | Target state | Trigger                                                                                                                           | Condition                                                                                                  |
-| ------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Serving      | Killed       | The Agent's current health reaches zero in a Combat, under [Killed and Incapacitated](combat.md#combatant-condition-in-a-combat). | The Agent is Deployed.                                                                                     |
-| Serving      | Dismissed    | The `dismissAgents` [Player action](../foundation/engine-contract.md#player-actions-and-turns) dismisses the Agent.               | The preconditions under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents) hold for the Agent. |
+| Source state | Target state | Trigger                                                                                                                    | Condition                                                                                                  |
+| ------------ | ------------ | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Serving      | Killed       | The Agent's current health reaches zero in a Combat, under [Killed and Incapacitated](combat.md#killed-and-incapacitated). | The Agent is Deployed.                                                                                     |
+| Serving      | Dismissed    | The `dismissAgents` [Player action](../foundation/engine-contract.md#player-actions-and-turns) dismisses the Agent.        | The preconditions under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents) hold for the Agent. |
 
 Every transition not listed is impossible; e.g., a Killed Agent never becomes Serving again, and a Dismissed Agent
 cannot be Killed. Killed and Dismissed are final.
 
-The following invariants hold in every Committed state:
+The following invariants hold in every [Committed state](../foundation/engine-contract.md#player-actions-and-turns):
 
 - A Serving Agent has exactly one Assignment. A Terminated Agent has none and belongs to no Current team. Killed
   and Dismissed are Agent statuses, not Assignments.
@@ -243,7 +225,7 @@ Combatant gains while a Combat lasts.
   [Combat-only properties](combat.md#combat-only-properties) in Combat.
 
 The properties named by the adoption condition persist outside a Combat; e.g., an Agent has current health and
-exhaustion between Combats. What outlasts a Combat is its Combat report and every change the Combat made to those properties,
+exhaustion between Combats. What outlasts a Combat is its [Combat report](domain-model.md#combat) and every change the Combat made to those properties,
 e.g. lost current health.
 
 The Combatant Role Type is not a Campaign instance Type, so a Combatant is never a Campaign instance separate from
@@ -324,13 +306,13 @@ An Agent's attributes change only through a few named rules, so the cause of eve
 **Proposed rule:** The following table is the exhaustive list of rules that change an Agent's attributes after its
 creation. A rule not listed here changes none of them.
 
-| Value              | Raised by                                                                                                    | Lowered by                          |
-| ------------------ | ------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
-| Base skill         | [Training growth](#training-growth)                                                                          | No rule                             |
-| Current health     | [Agent Recovery](agent-recovery.md)                                                                          | [Combat](combat.md), in a Combat    |
-| Base health        | No rule                                                                                                      | No rule                             |
-| Exhaustion         | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`                    | [Agent Recovery](agent-recovery.md) |
-| Base weapon damage | The [Weapon damage Upgrade](economy-and-upgrades.md#glossary), under [Modifiable values](#modifiable-values) | No rule                             |
+| Value              | Raised by                                                                                                                 | Lowered by                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Base skill         | [Training growth](#training-growth)                                                                                       | No rule                             |
+| Current health     | [Agent Recovery](agent-recovery.md)                                                                                       | [Combat](combat.md), in a Combat    |
+| Base health        | No rule                                                                                                                   | No rule                             |
+| Exhaustion         | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`                                 | [Agent Recovery](agent-recovery.md) |
+| Base weapon damage | The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade), under [Modifiable values](#modifiable-values) | No rule                             |
 
 No Assignment raises exhaustion: Standby, Contracting, Training, Recovery, and Investigations leave it
 unchanged. Each specification named in the table applies the clamps under [Attribute ranges](#attribute-ranges).
@@ -339,7 +321,7 @@ unchanged. Each specification named in the table applies the clamps under [Attri
 
 **Proposed rule:** Base weapon damage is the only Agent value that an [Upgrade](economy-and-upgrades.md#glossary) may change. It is an individual value of each
 Agent, not an Agency value. The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises the
-base weapon damage of Serving Agents and of Agents created later, under [Agent creation](#agent-creation). No Upgrade changes base skill, current health, base health, exhaustion, or Weapon.
+base weapon damage of Serving Agents and of Agents created later, under [Agent creation](#agent-creation). No [Upgrade](domain-model.md#agency-and-agents) changes base skill, current health, base health, exhaustion, or Weapon.
 
 # Assignments and transit
 
@@ -391,17 +373,17 @@ without a stated cause.
 status, with its trigger and the owner of the trigger. An Assignment of "Investigation" in the
 table means an Investigation with its reference.
 
-| From                                                               | To                                                                        | Trigger and who triggers it                                                                                              | Owner of the trigger and its conditions                    |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| Standby, Contracting, Training, or an Investigation; At assignment | Standby, Contracting, or Training, other than the current one; In transit | The player assigns it, through the `assignAgents` Player action.                                                         | This document, under [Assigning Agents](#assigning-agents) |
-| Standby, Contracting, Training, or an Investigation; At assignment | An Investigation; In transit                                              | The player starts an Investigation with it or adds it to one, through a Player action of Investigations.                 | [Investigations](investigations.md)                        |
-| Standby, Contracting, Training, or an Investigation; At assignment | Deployed on a Mission; At assignment                                      | The player deploys it, through the `deployAgents` Player action.                                                         | [Missions](missions.md)                                    |
-| Any Assignment other than Recovery; In transit                     | The same Assignment; At assignment                                        | Advance turn, in the Transit step.                                                                                       | This document, under [Transit rule](#transit-rule)         |
-| Recovery; In transit                                               | Recovery; Recovering                                                      | Advance turn, in the Transit step.                                                                                       | This document, under [Transit rule](#transit-rule)         |
-| An Investigation; At assignment                                    | Standby; In transit                                                       | Advance turn: the Investigation completes in the Investigation progress step.                                            | [Investigations](investigations.md)                        |
-| Deployed; At assignment                                            | Recovery; In transit                                                      | Advance turn: the Agent survives the Combat in the Mission resolution step with current health below its base health.    | [Missions](missions.md)                                    |
-| Deployed; At assignment                                            | Standby; In transit                                                       | Advance turn: the Agent survives the Combat in the Mission resolution step with current health equal to its base health. | [Missions](missions.md)                                    |
-| Recovery; Recovering                                               | Standby; At assignment                                                    | Advance turn: the Agent's current health reaches its base health in the Agent recovery step.                             | [Agent Recovery](agent-recovery.md)                        |
+| From                                                               | To                                                                        | Trigger and who triggers it                                                                                                                      | Owner of the trigger and its conditions                    |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| Standby, Contracting, Training, or an Investigation; At assignment | Standby, Contracting, or Training, other than the current one; In transit | The player assigns it, through the `assignAgents` Player action.                                                                                 | This document, under [Assigning Agents](#assigning-agents) |
+| Standby, Contracting, Training, or an Investigation; At assignment | An Investigation; In transit                                              | The player starts an Investigation with it or adds it to one, through a Player action of Investigations.                                         | [Investigations](investigations.md)                        |
+| Standby, Contracting, Training, or an Investigation; At assignment | Deployed on a Mission; At assignment                                      | The player deploys it, through the `deployAgents` Player action.                                                                                 | [Missions](missions.md)                                    |
+| Any Assignment other than Recovery; In transit                     | The same Assignment; At assignment                                        | Advance turn, in the Transit step.                                                                                                               | This document, under [Transit rule](#transit-rule)         |
+| Recovery; In transit                                               | Recovery; Recovering                                                      | Advance turn, in the Transit step.                                                                                                               | This document, under [Transit rule](#transit-rule)         |
+| An Investigation; At assignment                                    | Standby; In transit                                                       | Advance turn: the Investigation completes in the [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) step. | [Investigations](investigations.md)                        |
+| Deployed; At assignment                                            | Recovery; In transit                                                      | Advance turn: the Agent survives the Combat in the Mission resolution step with current health below its base health.                            | [Missions](missions.md)                                    |
+| Deployed; At assignment                                            | Standby; In transit                                                       | Advance turn: the Agent survives the Combat in the Mission resolution step with current health equal to its base health.                         | [Missions](missions.md)                                    |
+| Recovery; Recovering                                               | Standby; At assignment                                                    | Advance turn: the Agent's current health reaches its base health in the Agent recovery step.                                                     | [Agent Recovery](agent-recovery.md)                        |
 
 Every change not listed is impossible; e.g., an Agent on Recovery cannot be assigned to Contracting, a Deployed Agent
 cannot be recalled, and an Agent In transit cannot be assigned anywhere. Recalling an Agent from Contracting, Training,
@@ -414,8 +396,8 @@ that is dismissed under [Dismissing Agents](economy-and-upgrades.md#dismissing-a
 
 ## Transit rule
 
-**Proposed rule:** This rule decides when an Agent with a new Assignment starts working. Every Turn advancement
-step under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) applies it. The following statements
+**Proposed rule:** This rule decides when an Agent with a new Assignment starts working. Every [Turn advancement
+step](domain-model.md#turn-advancement-steps) under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) applies it. The following statements
 are complete:
 
 1. **Starting In transit:** Every new Assignment starts In transit, with three exceptions: an Agent becomes
@@ -468,8 +450,7 @@ An Agent that arrived at Training in the Transit step of the same Advance turn g
 [Transit rule](#transit-rule). Training changes no other value of the Agent; in particular it raises no exhaustion.
 
 The gain of one Agent does not depend on any other Agent, so the result is the same whatever order an implementation
-processes the Agents in. The [Training cap](economy-and-upgrades.md#glossary) limits how many Agents can be on
-Training, not how much base skill each gains.
+processes the Agents in.
 
 # Agent creation
 
@@ -496,7 +477,7 @@ Campaign Instances. This table is exhaustive.
 | Participation history | Empty.                                                                                            | This rule.                                                                       |
 
 The table above states the initial base weapon damage before any Upgrade has been acquired; for an Agent created after an
-Upgrade has been acquired, the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) refines it. The new Agent joins the Agency's roster of Agents. No [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above.
+Upgrade has been acquired, the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises it. The new Agent joins the Agency's roster of Agents. No [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above.
 Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
 ## Initial roster
@@ -529,10 +510,8 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 5. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](#agents-that-can-be-assigned).
 6. An Agent in `agents` already has `assignment` as its Assignment.
 
-**Training cap:** One further precondition applies, under
-[Training cap on assigning Agents](economy-and-upgrades.md#training-cap-on-assigning-agents): assigning the Agents to
-Training does not raise the number of Agents whose Assignment is Training above the
-[Training cap](economy-and-upgrades.md#glossary). Other preconditions apply to every Player action, e.g. that the
+One further precondition, on assigning Agents to Training, is stated under
+[Training cap on assigning Agents](economy-and-upgrades.md#training-cap-on-assigning-agents). Other preconditions apply to every Player action, e.g. that the
 Campaign has no [Campaign ending](domain-model.md#campaign-standing), under [Panic and Endings](panic-and-endings.md) and
 [Engine Contract](../foundation/engine-contract.md).
 
@@ -559,7 +538,7 @@ the next Advance turn and start working in the Advance turn after it, under [Tra
 # Player cheat actions
 
 A Player cheat action changes Campaign state in a way ordinary play does not allow. The Player cheat action for Agents adds them
-without the cost and the Agent cap that hiring has.
+without the cost and the [Agent cap](economy-and-upgrades.md#glossary) that hiring has.
 
 ## Adding Agents
 
@@ -578,7 +557,7 @@ upper limit applies.
 Effect: the operation creates `count` Agents, each under [Agent creation](#agent-creation) exactly as hiring creates
 one, so each is Serving, on Standby, and In transit, with Turn hired equal to the current turn number. Unlike hiring,
 it spends no money and ignores the [Agent cap](economy-and-upgrades.md#glossary): it succeeds even when the Agency's money is below the hiring cost or the
-Agency already employs as many Agents as the Agent cap allows. Nothing else changes.
+Agency already employs as many Agents as the [Agent cap](domain-model.md#agency-and-agents) allows. Nothing else changes.
 
 # Player-visible information
 
@@ -637,7 +616,7 @@ Agent has no Assignment; Player API reports it as absent, and the visible Agent 
   Committed state violating an Agent invariant, e.g. a Serving Agent with no Assignment, is an
   internal invariant violation, reported under
   [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
-- **Campaign ended:** Once the Campaign has a Campaign ending, `assignAgents`, `addAgents`, and Advance turn are
+- **Campaign ended:** Once the Campaign has a [Campaign ending](domain-model.md#campaign-standing), `assignAgents`, `addAgents`, and Advance turn are
   rejected, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
 
 # Acceptance examples

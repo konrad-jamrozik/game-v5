@@ -21,34 +21,21 @@ changes the result. Right after it, the Ending check step decides whether the Ca
 when every Faction is [Eliminated](factions.md#glossary), and otherwise Defeat when Panic reaches the Panic limit or the Agency's money is below
 zero. A Campaign ending is final: every [Player action](../foundation/engine-contract.md#player-actions-and-turns) is then rejected, while every query keeps answering.
 
-# Relationships
-
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Economy and Upgrades](economy-and-upgrades.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Factions](factions.md)
-- Uses [Numbers](../foundation/numbers.md)
-- Uses [Player API](../foundation/player-api.md)
-- Refines [Domain Model](domain-model.md)
-- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Missions](./missions.md)
-- Used by [Turn Advancement](./turn-advancement.md)
-
 # Glossary
 
-These terms are specific to Panic and Campaign endings. Panic, Campaign ending, and other general terms are in the
+These terms are specific to [Panic](domain-model.md#campaign-standing) and [Campaign endings](domain-model.md#campaign-standing). Panic, Campaign ending, and other general terms are in the
 [Domain Model glossary](domain-model.md#glossary).
 
-| Term                 | Definition                                                                                                                                                                                                                                  |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Panic limit          | The Panic at which the Campaign is lost: the value of `defeat_at_panic_pct` in the EndingParameters [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR).                                                        |
-| Pending panic change | The sum of every Panic increase minus every Panic reduction that the rules of the earlier [Turn advancement steps](turn-advancement.md#glossary) of one Advance turn have added so far, which the Turn advancement step Panic then applies. |
-| Ending reason        | A condition that held when a Campaign ending was recorded and caused it: Every Faction Eliminated, Panic at the limit, or Money below zero. Each is defined under [Ending reasons](#ending-reasons).                                        |
+| Term                 | Definition                                                                                                                                                                                                                                                                                          |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Panic limit          | The Panic at which the [Campaign](../foundation/core-concepts.md#campaign-and-session) is lost: the value of `defeat_at_panic_pct` in the EndingParameters [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR).                                                         |
+| Pending panic change | The sum of every Panic increase minus every Panic reduction that the rules of the earlier [Turn advancement steps](turn-advancement.md#turn-advancement-steps) of one Advance turn have added so far, which the [Turn advancement step](domain-model.md#turn-advancement-steps) Panic then applies. |
+| Ending reason        | A condition that held when a Campaign ending was recorded and caused it: Every [Faction](domain-model.md#factions) [Eliminated](factions.md#glossary), Panic at the limit, or Money below zero. Each is defined under [Ending reasons](#ending-reasons).                                            |
 
 # Panic and Campaign ending state
 
-**Proposed rule:** Panic and the Campaign ending are Campaign-wide values. They are not the [State](../foundation/core-concepts.md#campaign-instances) of the Agency, of a
-Faction, or of any other [Campaign instance](../foundation/core-concepts.md#campaign-instances), and they are not [Constants](../foundation/core-concepts.md#campaign-instances): they belong directly to Campaign state, in
+**Proposed rule:** Panic and the Campaign ending are Campaign-wide values. They are not the [State](../foundation/core-concepts.md#campaign-instances) of the [Agency](domain-model.md#agency-and-agents), of a
+Faction, or of any other [Campaign instance](../foundation/core-concepts.md#campaign-instances), and they are not [Constants](../foundation/core-concepts.md#campaign-instances): they belong directly to [Campaign state](../foundation/core-concepts.md#campaign-and-session), in
 [Current world state](../foundation/campaign-state.md#glossary), under [Campaign and Agency](domain-model.md#campaign-and-agency) in Domain Model. They are not
 Campaign instances, so they have no [Instance ID](../foundation/campaign-instances.md#glossary), [Archetype](../foundation/core-concepts.md#campaign-instances), or Constants. Panic is not a value of the Agency because
 the public's alarm is a property of the world the Agency acts in, not of the organization. The following table is the
@@ -63,7 +50,7 @@ absent value, under [Whole-number quantities](../foundation/numbers.md#whole-num
 | Ending turn     | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) whose Advance turn recorded the Campaign ending. | A whole number of at least 1. Absent exactly when the Campaign ending is absent.                               |
 
 A Campaign has exactly one Panic, one Campaign ending value, one set of Ending reasons, and one Ending turn. Panic has no
-[Turn series](../foundation/world-history.md#glossary), under [Turn series](../foundation/world-history.md#turn-series) in World History.
+[Turn series](../foundation/world-history.md#turn-series), under [Turn series](../foundation/world-history.md#turn-series) in World History.
 
 ## Initial values
 
@@ -86,14 +73,14 @@ Engine Contract. The list is exhaustive.
 
 1. Panic is a whole number from 0 to 100.
 2. The Campaign ending, the Ending reasons, and the Ending turn are all absent or empty, or all present.
-3. A Campaign ending of Victory has exactly one Ending reason, Every Faction Eliminated.
+3. A Campaign ending of Victory has exactly one Ending reason, Every Faction [Eliminated](domain-model.md#factions).
 4. A Campaign ending of Defeat has one or two Ending reasons, each of them Panic at the limit or Money below zero.
 
 ## Campaign ending lifecycle
 
 The Campaign ending is in exactly one of the states No Campaign ending, Victory, and Defeat. The following table lists
 every transition; every transition not listed, e.g. from Victory to Defeat or from Defeat to No Campaign ending, is
-impossible. Victory and Defeat are final within a [Timeline](../foundation/engine-contract.md#persisted-data): no rule, Player action, or query clears or changes either,
+impossible. Victory and Defeat are final within a [Timeline](../foundation/engine-contract.md#persisted-data): no rule, [Player action](../foundation/engine-contract.md#player-actions-and-turns), or query clears or changes either,
 and the Campaign ending is never recorded a second time. Only restoring a Committed state from before the ending,
 under [Timeline](../foundation/timeline.md) and [Saves](../foundation/saves.md), makes the Campaign again a Campaign
 without a Campaign ending.

@@ -49,44 +49,39 @@ Overview of a specification and the overviews of Specification kinds and Familie
 
 ## Artifact Relationships
 
-[Artifact Relationships](artifact-relationships.md) answers _how do artifacts declare their dependencies?_ It owns the
-five Relationship kinds, their direction, implicit relationships, inventories, and graph validation.
+[Artifact Relationships](artifact-relationships.md) answers _how does one specification come to rely on another?_ It owns
+the links from a term to its definition, the references those links make, and the layers the references form.
 
 # How they relate
 
-Specification Conventions is the baseline, and five specifications refine it, each adding detail on one part of it.
-Terminology Conventions, Glossary Conventions, and Overview Conventions apply to every specification, while Design Specification
-Conventions and Implementation Specification Conventions each apply to one Specification kind. Glossary Conventions uses Terminology Conventions, whose Prohibited synonyms it records in each Glossary. Specification Conventions uses Artifact
-Relationships for the relationship model it requires every specification to declare. The index is tied to the rest of
-the specifications by links rather than declared relationships.
+Specification Conventions is the baseline, and five specifications build on it, each adding detail on one part of it.
+Terminology Conventions, Glossary Conventions, and Overview Conventions apply to every specification, while Design
+Specification Conventions and Implementation Specification Conventions each apply to one Specification kind. Glossary
+Conventions uses Terminology Conventions, whose Prohibited synonyms it records in each Glossary. Artifact
+Relationships builds on Specification Conventions and states how the links between specifications become
+references. The index is tied to the rest of the specifications by navigation links only.
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
+_Generated from the links between the specifications by `npm run docs:generate`; do not edit between the markers. An arrow runs from a specification to each specification that references it, i.e. links to it; layer 1 holds the specifications that reference no other specification of the Family, specifications that reference each other in a cycle share a layer, and dashed boxes stand for whole other Families._
 
 ## Within the family
 
-### Uses
-
-![Conventions family: uses relationships within the family](../../../images/diagrams/conventions-family-within-uses.svg)
-
-### Refines
-
-![Conventions family: refines relationships within the family](../../../images/diagrams/conventions-family-within-refines.svg)
+![Conventions family: references within the family](../../../images/diagrams/conventions-family-within.svg)
 
 ## Across families
 
-No relationships are declared with specifications in other families.
+![Conventions family: relationships with other families](../../../images/diagrams/conventions-family-across.svg)
 
 <!-- generated:family-diagram:end -->
 
 # Why these boundaries
 
-- **Baseline versus refinements:** what holds for every specification changes rarely, while the rules for one
+- **Baseline versus the specifications that build on it:** what holds for every specification changes rarely, while the rules for one
   Specification kind or one section change with the work on it; e.g., a new rule for formulas touches only Design
   Specification Conventions.
 - **Terminology Conventions versus Glossary Conventions:** Terminology Conventions decides which words a specification may use anywhere in
   it; Glossary Conventions decides how one section, the Glossary, is laid out.
-- **Conventions versus Artifact Relationships:** the relationship model also covers implementations and tests, not
-  only specifications, so it is owned separately from specification layout.
+- **Conventions versus Artifact Relationships:** how the specifications reference each other changes with tooling,
+  e.g. how a mention is recognized, while specification layout rarely does, so they are owned separately.
 - **Index versus everything else:** the index only navigates; ownership stays with each registered document.

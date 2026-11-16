@@ -20,28 +20,15 @@ current health reaches zero is [Killed](agents-spec.md#agent-statuses), and one 
 The Combat is fought in Combat rounds until no [Enemy](domain-model.md#combat) can fight on, no [Agent](domain-model.md#agency-and-agents) can, or the Agents retreat, and because
 exhaustion keeps rising, every Combat ends. Its [Combat report](domain-model.md#combat) records every attack.
 
-Combat refines [Agents](agents-spec.md): Agents says what makes a Combatant strong, and Combat says how that strength is
+Combat builds on [Agents](agents-spec.md): Agents says what makes a Combatant strong, and Combat says how that strength is
 spent against an opponent.
 
 ![How a Combat fits between a Mission and the Turn report: deploying Agents to a Mission site creates a Deployed Mission; in the Mission resolution step its Combat is fought from Combat start through Combat rounds, each attack appended to the Combat log, until it ends with one Combat outcome; the Combat produces exactly one Combat report, which is part of the Turn report returned by getTurnReport() and reduced in a History entry, and the Combat outcome decides whether the Mission is Won or Lost](../../../images/diagrams/combat-terms.svg)
 
-# Relationships
-
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Numbers](../foundation/numbers.md)
-- Uses [Player API](../foundation/player-api.md)
-- Refines [Agents](./agents-spec.md)
-- Refines [Domain Model](domain-model.md)
-- Used by [Agent Recovery](./agent-recovery.md)
-- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Missions](./missions.md)
-- Used by [Turn Advancement](./turn-advancement.md)
-
 # Glossary
 
-These terms are specific to Combat. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
-about base skill, current health, exhaustion, and base weapon damage are in the [Agents glossary](agents-spec.md#glossary).
+These terms are specific to [Combat](domain-model.md#combat). General terms are in the [Domain Model glossary](domain-model.md#glossary); terms
+about [base skill](agents-spec.md#combatant-attributes), [current health](agents-spec.md#combatant-attributes), [exhaustion](agents-spec.md#combatant-attributes), and [base weapon damage](agents-spec.md#combatant-attributes) are in the [Agents glossary](agents-spec.md#glossary).
 
 ## Combat rounds and results
 
@@ -49,11 +36,11 @@ How a Combat is divided, and how it ends.
 
 | Term           | Definition                                                                                                                                                                                     | Prohibited synonyms                        |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| Combat round   | One pass of a Combat in which every Combatant able to fight attacks once.                                                                                                                      | Round, naming a pass of a Combat           |
-| Agents' phase  | The first part of a Combat round, in which each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.                                                               |                                            |
-| Enemies' phase | The second part of a Combat round, in which each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.                                                             |                                            |
+| Combat round   | One pass of a Combat in which every [Combatant](domain-model.md#combat) able to fight attacks once.                                                                                            | Round, naming a pass of a Combat           |
+| Agents' phase  | The first part of a Combat round, in which each [Agent](domain-model.md#agency-and-agents) of the Agents' side takes one Combat turn, in the fixed order of its side.                          |                                            |
+| Enemies' phase | The second part of a Combat round, in which each [Enemy](domain-model.md#combat) of the Enemies' side takes one Combat turn, in the fixed order of its side.                                   |                                            |
 | Combat turn    | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing.                                                                                           | Turn, naming a Combatant's part in a phase |
-| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its Combat report.                                                                                          |                                            |
+| Combat log     | The list of every attack of one Combat, in the order in which it was made, kept in its [Combat report](domain-model.md#combat).                                                                |                                            |
 | Health removed | The current health one attack takes from its defender: the smaller of the damage outcome and the defender's current health before the attack, or 0 on a miss.                                  | Damage, as a noun on its own               |
 | Damage dealt   | The sum of the health removed by every attack one participant made in one Combat.                                                                                                              |                                            |
 | Damage taken   | The sum of the health removed by every attack on one participant in one Combat. It is equivalent to the participant's health lost: the current health it lost in that Combat.                  |                                            |
@@ -63,11 +50,11 @@ How a Combat is divided, and how it ends.
 
 Whether a Combatant still takes part in a Combat, and how strong it and its side are.
 
-| Term          | Definition                                                                                                                                                     | Prohibited synonyms           |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| Incapacitated | Alive but too weakened to take further part in the current Combat.                                                                                             |                               |
-| Able to fight | Alive and not Incapacitated, so still attacking and still liable to be attacked.                                                                               |                               |
-| Combat rating | How strong a Combatant or a side is in a Combat: the effective skill of one Combatant, or the sum of the effective skill of a side's Combatants able to fight. | Combat strength; combat power |
+| Term          | Definition                                                                                                                                                                                            | Prohibited synonyms           |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| Incapacitated | Alive but too weakened to take further part in the current Combat.                                                                                                                                    |                               |
+| Able to fight | Alive and not Incapacitated, so still attacking and still liable to be attacked.                                                                                                                      |                               |
+| Combat rating | How strong a Combatant or a side is in a Combat: the [effective skill](agents-spec.md#combatant-attributes) of one Combatant, or the sum of the effective skill of a side's Combatants able to fight. | Combat strength; combat power |
 
 # Combat GDRs
 
@@ -80,14 +67,14 @@ YAML files it names.
 An EnemyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-instances) of an Enemy. The table below is exhaustive apart from the `id` and `type` that every
 GDR has.
 
-| Property      | Meaning                                                                | Read by                                                   |
-| ------------- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
-| `name`        | The display name of the kind of Enemy.                                 | [Player-visible information](#player-visible-information) |
-| `base_skill`  | The base skill of a newly created Enemy.                               | [Enemy creation](#enemy-creation)                         |
-| `base_health` | The base health of a newly created Enemy, and also its current health. | [Enemy creation](#enemy-creation)                         |
-| `weapon`      | A reference to the Weapon GDR a newly created Enemy is equipped with.  | [Enemy creation](#enemy-creation)                         |
+| Property      | Meaning                                                                                                       | Read by                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `name`        | The display name of the kind of Enemy.                                                                        | [Player-visible information](#player-visible-information) |
+| `base_skill`  | The base skill of a newly created Enemy.                                                                      | [Enemy creation](#enemy-creation)                         |
+| `base_health` | The [base health](agents-spec.md#combatant-attributes) of a newly created Enemy, and also its current health. | [Enemy creation](#enemy-creation)                         |
+| `weapon`      | A reference to the Weapon GDR a newly created Enemy is equipped with.                                         | [Enemy creation](#enemy-creation)                         |
 
-Which EnemyArchetypes a Mission site's Enemies have, and how many of each, is supplied by the Mission site's
+Which EnemyArchetypes a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions)'s Enemies have, and how many of each, is supplied by the Mission site's
 MissionSiteArchetype, under [Missions](missions.md).
 
 ## Weapon
@@ -125,7 +112,7 @@ Combats read five values of [AgentParameters](agents-spec.md#agentparameters):
 | `exhaustion_per_attack`            | The exhaustion an attacking Combatant gains from each of its attacks, hit or miss.   | [Effects of an attack](#effects-of-an-attack)                                                  |
 | `exhaustion_per_defense`           | The exhaustion a defending Combatant gains from each attack made on it, hit or miss. | [Effects of an attack](#effects-of-an-attack)                                                  |
 | `exhaustion_cap`                   | The clamp of exhaustion under [Attribute ranges](agents-spec.md#attribute-ranges).   | [Effects of an attack](#effects-of-an-attack); [Combat GDR validation](#combat-gdr-validation) |
-| `exhaustion_free_points`           | An input of [Effective skill](agents-spec.md#combatant-attributes).                  | [Combat GDR validation](#combat-gdr-validation)                                                |
+| `exhaustion_free_points`           | An input of [Effective skill](agents-spec.md#effective-skill).                       | [Combat GDR validation](#combat-gdr-validation)                                                |
 | `skill_penalty_pct_per_exhaustion` | An input of [Effective skill](agents-spec.md#effective-skill).                       | [Combat GDR validation](#combat-gdr-validation)                                                |
 
 ## Combat GDR validation
@@ -135,7 +122,7 @@ EnemyArchetype, Weapon, CombatParameters, `exhaustion_per_attack`, and `exhausti
 [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these
 rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into
 different gameplay, under
-[Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in Engine Contract.
+[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **One CombatParameters:** The Game build supplies exactly one CombatParameters GDR.
 2. **EnemyArchetype values are valid:** Each EnemyArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a
@@ -196,7 +183,7 @@ effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agen
 current health is 0 is dead; being dead is a Derived value of its current health, not a stored state.
 
 **Retention:** An Enemy keeps every property above for the whole Campaign, so that every reference to it resolves, e.g.
-from a Combat report. Once its Mission site no longer participates in current gameplay, the Enemy is retained in [World
+from a Combat report. Once its Mission site no longer participates in current gameplay, the Enemy is [retained](../foundation/world-history.md#glossary) in [World
 history](../foundation/campaign-state.md#glossary) with its final values, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Enemy is ever removed.
@@ -261,7 +248,7 @@ Nothing else influences a Combat; e.g., the turn number, the Mission site's kind
 effect. Its outputs are exhaustive too:
 
 1. The Combat report, under [Combat report](#combat-report).
-2. The changed current health and exhaustion of the Combatants of both lists, and the [Agent status](domain-model.md#agency-and-agents) Killed of every Agent whose
+2. The changed current health and exhaustion of the Combatants of both lists, and the [Agent status](domain-model.md#agency-and-agents) [Killed](agents-spec.md#agent-statuses) of every Agent whose
    current health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
 
 An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side
@@ -311,7 +298,7 @@ site's Enemies before any team is deployed. Within a Combat the two definitions 
 ## Combat timing
 
 **Proposed rule:** A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which
-[Missions](missions.md) has it fought; nothing else happens between its first and its last attack. No Committed state
+[Missions](missions.md) has it fought; nothing else happens between its first and its last attack. No [Committed state](../foundation/engine-contract.md#player-actions-and-turns)
 therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part
 of Committed state.
 

@@ -68,40 +68,26 @@ function sampleCorpus(): SpecificationCorpus {
     ],
     relationships: [
       {
-        dependencyId: 'CONV',
-        dependencyPath: 'docs/specs/governance/conventions/spec-conventions.md',
-        dependentId: 'AAA',
-        dependentPath: 'docs/specs/design/foundation/alpha.md',
-        kind: 'follows',
-        origin: 'implicit',
-        sourcePaths: ['docs/specs/governance/conventions/spec-conventions.md'],
+        dependencyId: 'AAA',
+        dependencyPath: 'docs/specs/design/foundation/alpha.md',
+        dependentId: 'ZZZ',
+        dependentPath: 'docs/specs/design/mechanics/zulu.md',
+        kind: 'references',
       },
+      // A duplicate of the reference above; every diagram draws it once.
       {
         dependencyId: 'AAA',
         dependencyPath: 'docs/specs/design/foundation/alpha.md',
         dependentId: 'ZZZ',
         dependentPath: 'docs/specs/design/mechanics/zulu.md',
-        kind: 'uses',
-        origin: 'explicit',
-        sourcePaths: ['docs/specs/design/foundation/alpha.md', 'docs/specs/design/mechanics/zulu.md'],
-      },
-      {
-        dependencyId: 'AAA',
-        dependencyPath: 'docs/specs/design/foundation/alpha.md',
-        dependentId: 'ZZZ',
-        dependentPath: 'docs/specs/design/mechanics/zulu.md',
-        kind: 'refines',
-        origin: 'explicit',
-        sourcePaths: ['docs/specs/design/foundation/alpha.md', 'docs/specs/design/mechanics/zulu.md'],
+        kind: 'references',
       },
       {
         dependencyId: 'ZZZ',
         dependencyPath: 'docs/specs/design/mechanics/zulu.md',
         dependentId: 'AAA',
         dependentPath: 'docs/specs/design/foundation/alpha.md',
-        kind: 'uses',
-        origin: 'explicit',
-        sourcePaths: ['docs/specs/design/mechanics/zulu.md', 'docs/specs/design/foundation/alpha.md'],
+        kind: 'references',
       },
     ],
   }
@@ -148,44 +134,47 @@ describe('derived specification renderer', () => {
     expect(section).not.toContain('Zulu term')
   })
 
-  test('renders each explicit relationship-kind diagram in its own file and omits implicit follows', async () => {
+  test('renders the references diagram in its own file and draws each duplicate reference once', async () => {
     const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
+    expect([...outputs.keys()]).toEqual([
+      'docs/derived/README.md',
+      'docs/derived/glossary.md',
+      'docs/derived/relationships.md',
+      'docs/derived/relationships/references.md',
+    ])
     const index = outputs.get('docs/derived/relationships.md') ?? ''
-    const refines = outputs.get('docs/derived/relationships/refines.md') ?? ''
-    const uses = outputs.get('docs/derived/relationships/uses.md') ?? ''
-    expect(index).toContain('[Refines relationships](relationships/refines.md)')
-    expect(index).toContain('implicit `follows` relationship')
-    expect(outputs.has('docs/derived/relationships/follows.md')).toBe(false)
+    const references = outputs.get('docs/derived/relationships/references.md') ?? ''
+    expect(index).toContain('- [References relationships](relationships/references.md)')
+    expect(index).not.toContain('No specification links another.')
     const diagrams = renderDerivedDiagramFiles(sampleCorpus())
     expect([...diagrams.keys()]).toEqual([
       'docs/images/diagrams/specification-stack.svg',
-      'docs/images/diagrams/refines-all.svg',
-      'docs/images/diagrams/uses-all.svg',
+      'docs/images/diagrams/references-all.svg',
     ])
-    const refinesDiagram = diagrams.get('docs/images/diagrams/refines-all.svg') ?? ''
-    const usesDiagram = diagrams.get('docs/images/diagrams/uses-all.svg') ?? ''
-    expect(refines).toContain('A → B means A is refined by B.')
-    expect(refines).toContain('![Refines relationships](../../images/diagrams/refines-all.svg)')
-    expect(refinesDiagram).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More')
-    expect(arrows(refinesDiagram, 'refines')).toBe(1)
-    expect(uses).toContain('A → B means A is used by B.')
-    expect(uses).toContain('![Uses relationships](../../images/diagrams/uses-all.svg)')
-    // AAA and ZZZ use each other, so they share a layer and both arrows are drawn.
-    expect(arrows(usesDiagram, 'uses')).toBe(2)
-    expect(usesDiagram).not.toContain('LAYER 2')
+    const referencesDiagram = diagrams.get('docs/images/diagrams/references-all.svg') ?? ''
+    expect(references).toContain('A → B means A is referenced by B: the text of B links to A.')
+    expect(references).toContain('![References relationships](../../images/diagrams/references-all.svg)')
+    expect(referencesDiagram).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More')
+    expect(referencesDiagram).toContain('>referenced by<')
+    // AAA and ZZZ reference each other, so they share a layer; the duplicate AAA → ZZZ reference is drawn once.
+    expect(arrows(referencesDiagram, 'references')).toBe(2)
+    expect(referencesDiagram).not.toContain('LAYER 2')
     expect([...diagrams.values()].join('\n')).not.toContain('CONV')
     expect([...outputs.values()].join('\n')).not.toContain('```mermaid')
-    expect(refines).not.toContain('REL-')
-    expect(refines).not.toMatch(/^\|/m)
-    expect(refines).not.toContain('Explicit relationship overview')
-    expect(refines).not.toContain('Shared state')
-    expect(index).toContain('Implements: No explicit implements relationships are declared.')
-    expect(index).toContain('Verifies: No explicit verifies relationships are declared.')
-    expect(outputs.has('docs/derived/relationships/implements.md')).toBe(false)
-    expect(outputs.has('docs/derived/relationships/verifies.md')).toBe(false)
+    expect(references).not.toContain('## ')
+    expect(references).not.toMatch(/^\|/m)
   })
 
-  test('renders all refines relationships of the game in one diagram', async () => {
+  test('notes in the index that no specification links another when there are no references', async () => {
+    const corpus: SpecificationCorpus = { ...sampleCorpus(), relationships: [] }
+    const outputs = await renderDerivedDocumentation(corpus, PRETTIER_OPTIONS)
+    const index = outputs.get('docs/derived/relationships.md') ?? ''
+    expect(index).toContain('- References: No specification links another.')
+    expect(outputs.has('docs/derived/relationships/references.md')).toBe(false)
+    expect([...renderDerivedDiagramFiles(corpus).keys()]).toEqual(['docs/images/diagrams/specification-stack.svg'])
+  })
+
+  test('renders every reference in one diagram when none stays within the governance specifications', async () => {
     const corpus = sampleCorpus()
     const engineCorpus: SpecificationCorpus = {
       ...corpus,
@@ -206,29 +195,25 @@ describe('derived specification renderer', () => {
           dependencyPath: 'docs/specs/design/foundation/engine-contract.md',
           dependentId: 'CONV',
           dependentPath: 'docs/specs/governance/conventions/spec-conventions.md',
-          kind: 'refines',
-          origin: 'explicit',
-          sourcePaths: [
-            'docs/specs/design/foundation/engine-contract.md',
-            'docs/specs/governance/conventions/spec-conventions.md',
-          ],
+          kind: 'references',
         },
       ],
     }
     const outputs = await renderDerivedDocumentation(engineCorpus, PRETTIER_OPTIONS)
     const diagrams = renderDerivedDiagramFiles(engineCorpus)
-    const refines = outputs.get('docs/derived/relationships/refines.md') ?? ''
-    expect(refines).not.toContain('## ')
-    expect(refines.match(/!\[Refines relationships/g)).toHaveLength(1)
-    expect(refines).toContain('(../../images/diagrams/refines-all.svg)')
-    const all = diagrams.get('docs/images/diagrams/refines-all.svg') ?? ''
+    const references = outputs.get('docs/derived/relationships/references.md') ?? ''
+    expect(references).not.toContain('## ')
+    expect(references.match(/!\[References relationships/g)).toHaveLength(1)
+    expect(references).toContain('(../../images/diagrams/references-all.svg)')
+    const all = diagrams.get('docs/images/diagrams/references-all.svg') ?? ''
     expect(all).toContain('ZZZ — Zulu')
     expect(all).toContain('ENG — Engine Contract')
     expect(all).toContain('CONV — Conventions')
-    expect(diagrams.has('docs/images/diagrams/refines-engine-contract.svg')).toBe(false)
+    expect(diagrams.has('docs/images/diagrams/references-game.svg')).toBe(false)
+    expect(diagrams.has('docs/images/diagrams/references-governance.svg')).toBe(false)
   })
 
-  test('isolates relationship governance from the main uses graph', async () => {
+  test('isolates references among governance specifications from the game references', async () => {
     const corpus = sampleCorpus()
     const governanceCorpus: SpecificationCorpus = {
       ...corpus,
@@ -256,34 +241,43 @@ describe('derived specification renderer', () => {
           dependencyPath: 'docs/specs/design/foundation/domain-model.md',
           dependentId: 'AAA',
           dependentPath: 'docs/specs/design/foundation/alpha.md',
-          kind: 'uses',
-          origin: 'explicit',
-          sourcePaths: ['docs/specs/design/foundation/domain-model.md', 'docs/specs/design/foundation/alpha.md'],
+          kind: 'references',
         },
         {
           dependencyId: 'REL',
           dependencyPath: 'docs/specs/governance/conventions/artifact-relationships.md',
           dependentId: 'CONV',
           dependentPath: 'docs/specs/governance/conventions/spec-conventions.md',
-          kind: 'uses',
-          origin: 'explicit',
-          sourcePaths: [
-            'docs/specs/governance/conventions/artifact-relationships.md',
-            'docs/specs/governance/conventions/spec-conventions.md',
-          ],
+          kind: 'references',
         },
       ],
     }
     const outputs = await renderDerivedDocumentation(governanceCorpus, PRETTIER_OPTIONS)
     const diagrams = renderDerivedDiagramFiles(governanceCorpus)
-    const uses = outputs.get('docs/derived/relationships/uses.md') ?? ''
-    const governanceStart = uses.indexOf('## Governance specifications')
-    expect(uses.indexOf('(../../images/diagrams/uses-game.svg)')).toBeLessThan(governanceStart)
-    expect(uses.indexOf('(../../images/diagrams/uses-governance.svg)')).toBeGreaterThan(governanceStart)
-    const game = diagrams.get('docs/images/diagrams/uses-game.svg') ?? ''
-    const governance = diagrams.get('docs/images/diagrams/uses-governance.svg') ?? ''
+    expect([...diagrams.keys()]).toEqual([
+      'docs/images/diagrams/specification-stack.svg',
+      'docs/images/diagrams/references-game.svg',
+      'docs/images/diagrams/references-governance.svg',
+    ])
+    const references = outputs.get('docs/derived/relationships/references.md') ?? ''
+    const gameStart = references.indexOf('## Game specifications')
+    const governanceStart = references.indexOf('## Governance specifications')
+    expect(gameStart).toBeGreaterThan(-1)
+    expect(gameStart).toBeLessThan(governanceStart)
+    expect(
+      references.indexOf('![References relationships: Game specifications](../../images/diagrams/references-game.svg)'),
+    ).toBeGreaterThan(gameStart)
+    expect(references.indexOf('(../../images/diagrams/references-game.svg)')).toBeLessThan(governanceStart)
+    expect(
+      references.indexOf(
+        '![References relationships: Governance specifications](../../images/diagrams/references-governance.svg)',
+      ),
+    ).toBeGreaterThan(governanceStart)
+    const game = diagrams.get('docs/images/diagrams/references-game.svg') ?? ''
+    const governance = diagrams.get('docs/images/diagrams/references-governance.svg') ?? ''
     expect(game).toContain('DOM — Domain Model')
     expect(game).not.toContain('REL — ')
+    expect(game).not.toContain('CONV — ')
     expect(governance).toContain('REL — Artifact Relationships')
     expect(governance).toContain('CONV — Conventions')
     expect(governance).not.toContain('DOM — ')
@@ -315,65 +309,95 @@ describe('family overview diagrams', () => {
   ].join('\n')
 
   const foundationOverview = 'docs/specs/design/foundation/about-foundation.md'
+  const withinPath = 'docs/images/diagrams/foundation-family-within.svg'
   const acrossPath = 'docs/images/diagrams/foundation-family-across.svg'
 
-  test('collapses other Families, combines kinds, and omits implicit follows', () => {
+  function withBeta(reference: boolean): SpecificationCorpus {
+    const corpus = sampleCorpus()
+    return {
+      ...corpus,
+      specifications: [
+        ...corpus.specifications,
+        {
+          id: 'BBB',
+          family: 'Foundation',
+          title: 'Beta',
+          owns: 'Beta rules.',
+          path: 'docs/specs/design/foundation/beta.md',
+        },
+      ],
+      relationships: reference
+        ? [
+            ...corpus.relationships,
+            {
+              dependencyId: 'AAA',
+              dependencyPath: 'docs/specs/design/foundation/alpha.md',
+              dependentId: 'BBB',
+              dependentPath: 'docs/specs/design/foundation/beta.md',
+              kind: 'references',
+            },
+          ]
+        : corpus.relationships,
+    }
+  }
+
+  test('collapses other Families into one box per side and draws each duplicate reference once', () => {
     const diagram = renderFamilyDiagram(sampleCorpus(), 'Foundation')
-    expect(diagram).toContain('This family has a single specification')
-    expect(diagram).toContain(
-      '![Foundation family: relationships with other families](../../../images/diagrams/foundation-family-across.svg)',
+    expect(diagram).toBe(
+      [
+        '## Within the family',
+        '',
+        'This family has a single specification, so there are no references within it.',
+        '',
+        '## Across families',
+        '',
+        '![Foundation family: relationships with other families](../../../images/diagrams/foundation-family-across.svg)',
+      ].join('\n'),
     )
-    expect(diagram).not.toContain('```mermaid')
     const files = renderFamilyDiagramFiles(sampleCorpus(), new Map([[foundationOverview, overview]]))
     expect([...files.keys()]).toEqual([acrossPath])
     const across = files.get(acrossPath) ?? ''
-    // The Mechanics family both supplies and depends on AAA, so it is drawn on both sides.
+    // The Mechanics family both references and is referenced by AAA, so it is drawn on both sides.
     expect(across.match(/>Mechanics family</g)).toHaveLength(2)
-    expect(across).toContain('class="edge edge-both"')
-    expect(across).toContain('class="edge edge-uses"')
+    // One arrow to the Mechanics family and one from it, although AAA → ZZZ is listed twice.
+    expect(arrows(across, 'references')).toBe(2)
     expect(across).toContain('AAA — Alpha &quot;Quoted&quot; &amp; More')
     expect(across).not.toContain('CONV')
     expect(across).not.toContain('Conventions family')
   })
 
-  test('renders relationships within a Family separately from those across Families', () => {
-    const corpus = sampleCorpus()
-    const files = renderFamilyDiagramFiles(
-      {
-        ...corpus,
-        specifications: [
-          ...corpus.specifications,
-          {
-            id: 'BBB',
-            family: 'Foundation',
-            title: 'Beta',
-            owns: 'Beta rules.',
-            path: 'docs/specs/design/foundation/beta.md',
-          },
-        ],
-        relationships: [
-          ...corpus.relationships,
-          {
-            dependencyId: 'AAA',
-            dependencyPath: 'docs/specs/design/foundation/alpha.md',
-            dependentId: 'BBB',
-            dependentPath: 'docs/specs/design/foundation/beta.md',
-            kind: 'uses',
-            origin: 'explicit',
-            sourcePaths: ['docs/specs/design/foundation/alpha.md', 'docs/specs/design/foundation/beta.md'],
-          },
-        ],
-      },
-      new Map([[foundationOverview, overview]]),
+  test('renders the references within a Family in one diagram, separately from those across Families', () => {
+    const corpus = withBeta(true)
+    expect(renderFamilyDiagram(corpus, 'Foundation')).toContain(
+      [
+        '## Within the family',
+        '',
+        '![Foundation family: references within the family](../../../images/diagrams/foundation-family-within.svg)',
+        '',
+        '## Across families',
+      ].join('\n'),
     )
-    const within = files.get('docs/images/diagrams/foundation-family-within-uses.svg') ?? ''
+    const files = renderFamilyDiagramFiles(corpus, new Map([[foundationOverview, overview]]))
+    expect([...files.keys()]).toEqual([withinPath, acrossPath])
+    const within = files.get(withinPath) ?? ''
+    expect(within).toContain('aria-label="Foundation family: references within the family"')
     expect(within).toContain('AAA — ')
     expect(within).toContain('BBB — Beta')
     expect(within).toContain('LAYER 2')
+    expect(arrows(within, 'references')).toBe(1)
     expect(within).not.toContain('Mechanics family')
     const across = files.get(acrossPath) ?? ''
     expect(across).toContain('>Mechanics family<')
     expect(across).not.toContain('BBB')
+  })
+
+  test('renders no within diagram for a Family whose specifications do not reference each other', () => {
+    const corpus = withBeta(false)
+    expect(renderFamilyDiagram(corpus, 'Foundation')).toContain(
+      ['## Within the family', '', 'No specification of this family links another specification of it.'].join('\n'),
+    )
+    const files = renderFamilyDiagramFiles(corpus, new Map([[foundationOverview, overview]]))
+    expect([...files.keys()]).toEqual([acrossPath])
   })
 
   test('replaces only the marked block and is idempotent', async () => {
@@ -396,38 +420,32 @@ describe('family overview diagrams', () => {
 })
 
 describe('shared specification analysis', () => {
-  test('deduplicates mirrored relationships and materializes implicit follows relationships', async () => {
+  test('derives one sorted references relationship per linking pair and none from game to governance', async () => {
     const analysis = analyzeSpecifications({ files: await currentFiles() })
     expect(analysis.diagnostics).toEqual([])
-    const explicit = analysis.corpus.relationships.filter((relationship) => relationship.origin === 'explicit')
-    const keys = explicit.map((relationship) =>
-      [relationship.dependencyId, relationship.dependentId, relationship.kind].join('\0'),
-    )
-    expect(new Set(keys).size).toBe(explicit.length)
-    expect(
-      explicit.filter(
-        (relationship) =>
-          relationship.dependencyId === 'REL' && relationship.dependentId === 'CONV' && relationship.kind === 'uses',
-      ),
-    ).toHaveLength(1)
-    const implicit = analysis.corpus.relationships.filter((relationship) => relationship.origin === 'implicit')
-    const fromConventions = implicit.filter((relationship) => relationship.dependencyId === 'CONV')
-    expect(fromConventions).toHaveLength(analysis.corpus.specifications.length - 1)
-    expect(implicit.every((relationship) => ['CONV', 'DCONV', 'ICONV'].includes(relationship.dependencyId))).toBe(true)
-    expect(implicit.some((relationship) => relationship.dependentId === 'CONV')).toBe(false)
-    const kindOf = new Map(
-      analysis.corpus.specifications.map((specification) => [specification.id, FAMILY_KIND[specification.family]]),
-    )
-    for (const [convention, kind] of [
-      ['DCONV', 'Design'],
-      ['ICONV', 'Implementation'],
-    ] as const) {
-      const dependents = implicit
-        .filter((relationship) => relationship.dependencyId === convention)
-        .map((relationship) => relationship.dependentId)
-      expect(dependents.length).toBeGreaterThan(0)
-      expect(dependents.every((id) => kindOf.get(id) === kind)).toBe(true)
+    const { relationships, specifications } = analysis.corpus
+    expect(relationships.length).toBeGreaterThan(0)
+    expect(relationships.every((relationship) => relationship.kind === 'references')).toBe(true)
+    expect(relationships.every((relationship) => relationship.dependencyId !== relationship.dependentId)).toBe(true)
+    const keys = relationships.map((relationship) => [relationship.dependencyId, relationship.dependentId].join('\0'))
+    expect(new Set(keys).size).toBe(relationships.length)
+    expect(keys).toEqual(keys.toSorted((left, right) => (left < right ? -1 : left > right ? 1 : 0)))
+    const byId = new Map(specifications.map((specification) => [specification.id, specification]))
+    for (const relationship of relationships) {
+      expect(byId.get(relationship.dependencyId)?.path).toBe(relationship.dependencyPath)
+      expect(byId.get(relationship.dependentId)?.path).toBe(relationship.dependentPath)
     }
+    // Specifications outside Governance follow the Governance conventions without linking their terms.
+    const kindOf = (id: string): string | undefined => {
+      const specification = byId.get(id)
+      return specification ? FAMILY_KIND[specification.family] : undefined
+    }
+    expect(
+      relationships.filter(
+        (relationship) =>
+          kindOf(relationship.dependencyId) === 'Governance' && kindOf(relationship.dependentId) !== 'Governance',
+      ),
+    ).toEqual([])
   })
 })
 
@@ -437,7 +455,7 @@ describe('derived documentation checking', () => {
       ['docs/derived/README.md', 'docs/derived/README.md\n'],
       ['docs/derived/glossary.md', 'docs/derived/glossary.md\n'],
       ['docs/derived/relationships.md', 'docs/derived/relationships.md\n'],
-      ['docs/derived/relationships/uses.md', 'docs/derived/relationships/uses.md\n'],
+      ['docs/derived/relationships/references.md', 'docs/derived/relationships/references.md\n'],
     ])
     const actual = new Map<string, string>([
       ['docs/derived/README.md', 'docs/derived/README.md\r\n'],
@@ -448,7 +466,7 @@ describe('derived documentation checking', () => {
       'docs/derived/extra.md: unexpected generated documentation file; remove or relocate it.',
       'docs/derived/glossary.md: generated documentation is stale; run npm run docs:generate.',
       'docs/derived/relationships.md: generated documentation is missing; run npm run docs:generate.',
-      'docs/derived/relationships/uses.md: generated documentation is missing; run npm run docs:generate.',
+      'docs/derived/relationships/references.md: generated documentation is missing; run npm run docs:generate.',
     ])
   })
 

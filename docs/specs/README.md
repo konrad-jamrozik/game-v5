@@ -26,10 +26,8 @@ written and related, and how the work on them proceeds.
 
 - [Game Design Brief](../game-design-brief.md): strategic intent and architectural constraints.
 - [Specification conventions](governance/conventions/spec-conventions.md): layout, precision requirements, ownership, and how specifications change.
-- [Artifact Relationships](governance/conventions/artifact-relationships.md): definitions of `follows`, `refines`, `uses`,
-  `implements`, and `verifies`, with direction, inventory rules, and examples for all artifacts.
-- [Specification relationship cycles](../spec-relationship-cycles.md): informative register of retained cycles,
-  their contract meanings, and future removal criteria.
+- [Artifact Relationships](governance/conventions/artifact-relationships.md): how linking a term to its definition
+  makes one specification reference another, and how the references form layers.
 - [Specification work plan and backlog](governance/process/work-plan.md): review batches, parallel tracks, checkpoints, and current work state.
 - [Outstanding work items](governance/process/work-todos.md): known issues in the specifications awaiting scheduling, each with its affected batches.
 
@@ -59,15 +57,15 @@ Foundation and Mechanics together form the game engine. Content, UI, and Autopil
 the Implementation Families build on all the Design Families, as the Builds on column of the Families table in
 [Specification kinds and Families](governance/conventions/spec-conventions.md#specification-kinds-and-families) states. Every
 specification also follows the Governance specifications, which the diagram does not draw. `npm run docs:generate` draws the following diagram from the
-relationships the specifications declare: an arrow from one Family to another means a specification of the first uses
-or refines a specification of the second. Do not edit it by hand.
+references between the specifications: an arrow from one Family to another means a specification of the first
+references a specification of the second. Do not edit it by hand.
 
 ![Family architecture](../images/diagrams/family-architecture.svg)
 
 # Specification layers
 
 The Foundation and Mechanics specifications form layers, each depending only on the layers below it.
-`npm run docs:generate` draws the following diagram from the specifications' Relationships sections; do not edit it by
+`npm run docs:generate` draws the following diagram from the references between the specifications; do not edit it by
 hand. Every specification is in its Family's rectangle, in the row of its layer: one above the highest layer of the specifications of the same rectangle it depends on, so that a
 specification depending on none of them is in the bottom row. A specification that neither depends on nor is depended
 on by anything in its rectangle is drawn in the top row, nearest the specifications above that use it.

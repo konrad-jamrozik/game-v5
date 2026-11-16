@@ -21,18 +21,6 @@ A Probability is kept exact instead: it is a ratio of two whole numbers, never s
 random outcome takes a stated value is decided identically on every machine. How random outcomes are drawn is stated in
 [Determinism and Randomness](determinism-and-randomness.md).
 
-# Relationships
-
-- Uses [Determinism and Randomness](determinism-and-randomness.md)
-- Used by [Agent Recovery](../mechanics/agent-recovery.md)
-- Used by [Agents](../mechanics/agents-spec.md)
-- Used by [Combat](../mechanics/combat.md)
-- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
-- Used by [Factions](../mechanics/factions.md)
-- Used by [Investigations](../mechanics/investigations.md)
-- Used by [Missions](../mechanics/missions.md)
-- Used by [Panic and Endings](../mechanics/panic-and-endings.md)
-
 # Glossary
 
 These terms are specific to numbers. General terms are in the [Core Concepts glossary](core-concepts.md#glossary);

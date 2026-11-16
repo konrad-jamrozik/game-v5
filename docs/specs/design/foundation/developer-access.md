@@ -21,34 +21,22 @@ way ordinary play does not allow, e.g. a random outcome override, which fixes a 
 still exposes only [Player-visible information](engine-contract.md#api-surfaces), an [Autopilot AI](engine-contract.md#principals-and-access) never reaches Developer API, and every Player cheat action
 is an ordinary [Player action](engine-contract.md#player-actions-and-turns) that undo and redo treat like any other.
 
-# Relationships
-
-- Uses [Campaign Instances](./campaign-instances.md)
-- Uses [Campaign Lifecycle](./campaign-lifecycle.md)
-- Uses [Core Concepts](./core-concepts.md)
-- Uses [Determinism and Randomness](./determinism-and-randomness.md)
-- Uses [Engine Contract](./engine-contract.md)
-- Uses [Player API](./player-api.md)
-- Uses [Timeline](./timeline.md)
-- Used by [Agents](../mechanics/agents-spec.md)
-- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
-
 # Dev mode
 
-Only the Session controller can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
+Only the [Session controller](engine-contract.md#principals-and-access) can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
 a [Current campaign](engine-contract.md#session-data) and no active [Autopilot engagement](engine-contract.md#autopilot). Inspection returns detached, read-only full
-Campaign state. It never reveals hidden facts through ordinary game behavior.
-Every Player cheat action belongs in `developer.actions` and follows [Player cheat actions](#player-cheat-actions).
+[Campaign state](core-concepts.md#campaign-and-session). It never reveals hidden facts through ordinary game behavior.
+Every [Player cheat action](engine-contract.md#player-actions-and-turns) belongs in `developer.actions` and follows [Player cheat actions](#player-cheat-actions).
 
-Dev mode starts disabled and is disabled on successful creation, load, or closure, under
-[Campaign selection](campaign-lifecycle.md#glossary) in Campaign Lifecycle. Timeline
+[Dev mode](engine-contract.md#principals-and-access) starts disabled and is disabled on successful creation, load, or closure, under
+[Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle. Timeline
 navigation and [Autosave navigation](timeline.md#autosave-navigation) leave the current Dev mode setting
 unchanged. Dev mode is not Campaign state and is never restored from a [Campaign save](engine-contract.md#persisted-data) or the [Timeline](engine-contract.md#persisted-data). Disabling Dev
-mode revokes subsequent Developer API access. Previously returned information cannot be erased from the Session
+mode revokes subsequent [Developer API](engine-contract.md#api-surfaces) access. Previously returned information cannot be erased from the Session
 controller's knowledge.
 
 Autopilot may be engaged while Dev mode is enabled, but Developer API operations remain unavailable while [Autopilot](engine-contract.md#autopilot)
-is engaged and the Autopilot AI never receives them. Dev mode transitions are unavailable while Autopilot is engaged.
+is engaged and the [Autopilot AI](engine-contract.md#principals-and-access) never receives them. Dev mode transitions are unavailable while Autopilot is engaged.
 To inspect or cheat, the Session controller disengages Autopilot and waits for disengagement to complete.
 
 # Inspection contract
@@ -67,8 +55,8 @@ rules of every Player cheat action are complete:
 - **Who and when:** Only the Session controller can call a Player cheat action, only with Dev mode enabled, under
   [Dev mode](#dev-mode). An Autopilot AI never can.
 - **Validated:** A Player cheat action rejects invalid inputs and then changes nothing, under
-  [Committed state integrity](engine-contract.md#player-actions-and-turns) in Engine Contract.
-- **Recorded:** Each successful Player cheat action is one atomic Player action, recorded as one [Timeline entry](timeline.md#glossary).
+  [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract.
+- **Recorded:** Each successful Player cheat action is one atomic [Player action](engine-contract.md#player-actions-and-turns), recorded as one [Timeline entry](timeline.md#glossary).
 - **Invariants kept:** A Player cheat action preserves every invariant that a specification states.
 
 # Random outcome overrides
@@ -108,7 +96,7 @@ Invalid cheat inputs change nothing, under
 
 - TODO: Specify, under [Inspection contract](#inspection-contract), the complete detached, read-only Campaign state query
   schema through `developer.queries.getCampaignState()`. Include complete Campaign state and distinguish full-state
-  inspection from gameplay reveal conditions. Inspection must not expose mutable Campaign references or change any later
+  inspection from gameplay reveal conditions. Inspection must not expose mutable [Campaign](core-concepts.md#campaign-and-session) references or change any later
   outcome, under [Derived value consistency](engine-contract.md#derived-value-consistency).
 - TODO: Define inspection-specific terms without duplicating shared definitions, and add them to the Glossary.
 - TODO: State which further Player cheat actions are needed beyond the required starter operations that Engine Contract's
@@ -120,7 +108,7 @@ Invalid cheat inputs change nothing, under
 - TODO: Specify authorization failures and access revocation under [Dev mode](#dev-mode).
 - TODO: Specify inspection and cheat errors with Dev mode disabled, during an Autopilot engagement, or with stale access,
   under [Edge cases and failure behavior](#edge-cases-and-failure-behavior).
-- TODO: Provide scenarios proving separate Developer API access, unchanged Player API visibility, Autopilot AI
+- TODO: Provide scenarios proving separate Developer API access, unchanged [Player API](engine-contract.md#api-surfaces) visibility, Autopilot AI
   exclusion, and Player cheat action undo/redo and save/load round trips, under
   [Acceptance examples](#acceptance-examples). Identify the requirement sections each scenario verifies.
 - TODO: Choose full-state result [Types](core-concepts.md#data-modeling).

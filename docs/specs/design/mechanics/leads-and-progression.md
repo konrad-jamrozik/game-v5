@@ -23,21 +23,9 @@ Mission site therefore sends the player back to investigate the same Lead again,
 require it. A Lead is also not available while a Mission site it created is in progress, or once its Faction is
 [Eliminated](factions.md#glossary).
 
-# Relationships
-
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Factions](./factions.md)
-- Uses [Missions](./missions.md)
-- Uses [Player API](../foundation/player-api.md)
-- Refines [Domain Model](domain-model.md)
-- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Investigations](./investigations.md)
-- Used by [Turn Advancement](./turn-advancement.md)
-
 # Glossary
 
-These terms are specific to Leads. [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions) and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
+These terms are specific to [Leads](domain-model.md#leads-investigations-mission-sites-and-missions). [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions) and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
 
 | Term               | Definition                                                                                          |
 | ------------------ | --------------------------------------------------------------------------------------------------- |
@@ -46,34 +34,34 @@ These terms are specific to Leads. [Lead availability](domain-model.md#leads-inv
 
 # Lead GDRs
 
-The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the
+The [GDRs](../foundation/core-concepts.md#game-build-and-content) a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the
 YAML files it names.
 
 ## Lead
 
 A Lead describes one line of inquiry. A Lead is a GDR serving the Referenced GDR and Key for campaign facts purposes
 under [Game concepts](domain-model.md#game-concepts) in Domain Model; it is not a [Campaign instance](../foundation/core-concepts.md#campaign-instances), and a Lead's GDR
-never changes during a Campaign. A Lead has no lifecycle states. The table below is exhaustive apart from the `id` and
+never changes during a [Campaign](../foundation/core-concepts.md#campaign-and-session). A Lead has no lifecycle states. The table below is exhaustive apart from the `id` and
 `type` that every GDR has.
 
-| Property        | Shape                                                                                                                                       | Meaning                                                                                                                                                                                                                                                            | Read by                                                                          |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| `name`          | Non-empty text.                                                                                                                             | The display name of the Lead.                                                                                                                                                                                                                                      | [Player-visible information](#player-visible-information)                        |
-| `description`   | Non-empty text.                                                                                                                             | The display description of the Lead.                                                                                                                                                                                                                               | [Player-visible information](#player-visible-information)                        |
-| `faction`       | The identifier of a FactionArchetype.                                                                                                       | The Faction the Lead concerns: the Faction whose [Archetype](../foundation/core-concepts.md#campaign-instances) is this FactionArchetype. It decides the target Faction of the Mission site the Lead creates, and blocks the Lead once that Faction is Eliminated. | [Lead availability](#lead-availability); [Completion effect](#completion-effect) |
-| `difficulty`    | A whole number of at least 1.                                                                                                               | The Lead difficulty of the Lead.                                                                                                                                                                                                                                   | [Investigations](investigations.md)                                              |
-| `requires`      | A list, possibly empty, of prerequisites. Each prerequisite is a map with exactly one key, the prerequisite kind, and a value for that key. | The prerequisites that must all hold before the Lead is available, under [Prerequisites](#prerequisites).                                                                                                                                                          | [Prerequisites](#prerequisites)                                                  |
-| `on_completion` | A map with exactly one key, the effect kind, and a value for that key.                                                                      | What happens when an Investigation of the Lead completes, under [Completion effect](#completion-effect).                                                                                                                                                           | [Completion effect](#completion-effect)                                          |
+| Property        | Shape                                                                                                                                       | Meaning                                                                                                                                                                                                                                                                                                                                                                                   | Read by                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `name`          | Non-empty text.                                                                                                                             | The display name of the Lead.                                                                                                                                                                                                                                                                                                                                                             | [Player-visible information](#player-visible-information)                        |
+| `description`   | Non-empty text.                                                                                                                             | The display description of the Lead.                                                                                                                                                                                                                                                                                                                                                      | [Player-visible information](#player-visible-information)                        |
+| `faction`       | The identifier of a FactionArchetype.                                                                                                       | The [Faction](domain-model.md#factions) the Lead concerns: the Faction whose [Archetype](../foundation/core-concepts.md#campaign-instances) is this FactionArchetype. It decides the target Faction of the [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) the Lead creates, and blocks the Lead once that Faction is [Eliminated](factions.md#glossary). | [Lead availability](#lead-availability); [Completion effect](#completion-effect) |
+| `difficulty`    | A whole number of at least 1.                                                                                                               | The Lead difficulty of the Lead.                                                                                                                                                                                                                                                                                                                                                          | [Investigations](investigations.md)                                              |
+| `requires`      | A list, possibly empty, of prerequisites. Each prerequisite is a map with exactly one key, the prerequisite kind, and a value for that key. | The prerequisites that must all hold before the Lead is available, under [Prerequisites](#prerequisites).                                                                                                                                                                                                                                                                                 | [Prerequisites](#prerequisites)                                                  |
+| `on_completion` | A map with exactly one key, the effect kind, and a value for that key.                                                                      | What happens when an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of the Lead completes, under [Completion effect](#completion-effect).                                                                                                                                                                                                               | [Completion effect](#completion-effect)                                          |
 
 Exactly one prerequisite kind and exactly one effect kind exist, and these two tables are exhaustive:
 
-| Prerequisite kind | Value                                     | Meaning                                                                                                                                          |
-| ----------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `mission_won`     | The identifier of a MissionSiteArchetype. | Holds under [Prerequisites](#prerequisites) once a Mission at a Mission site of that MissionSiteArchetype, targeting the Lead's Faction, is Won. |
+| Prerequisite kind | Value                                     | Meaning                                                                                                                                                                                                             |
+| ----------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mission_won`     | The identifier of a MissionSiteArchetype. | Holds under [Prerequisites](#prerequisites) once a [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) at a Mission site of that MissionSiteArchetype, targeting the Lead's Faction, is Won. |
 
-| Effect kind           | Value                                     | Meaning                                                                            |
-| --------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------- |
-| `create_mission_site` | The identifier of a MissionSiteArchetype. | Creates one Initiative Mission site under [Completion effect](#completion-effect). |
+| Effect kind           | Value                                     | Meaning                                                                                                                                               |
+| --------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create_mission_site` | The identifier of a MissionSiteArchetype. | Creates one [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) under [Completion effect](#completion-effect). |
 
 A Lead names the MissionSiteArchetypes of its prerequisites, its Faction, and the MissionSiteArchetype it creates by GDR identifier, never by
 inference from identifier text, under [References](../foundation/campaign-instances.md#references) in Campaign Instances.
@@ -84,7 +72,7 @@ inference from identifier text, under [References](../foundation/campaign-instan
 and it adds to [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions and
 [Faction GDR validation](factions.md#faction-gdr-validation) in Factions. A Game build whose GDRs violate one of these
 rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into
-different gameplay, under [Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in
+different gameplay, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in
 Engine Contract.
 
 1. **Known properties:** Each Lead has `name`, `description`, `faction`, `difficulty`, `requires`, and `on_completion`,
@@ -120,13 +108,13 @@ reference to L under [How concepts relate](domain-model.md#how-concepts-relate) 
 Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) is created by no Lead. A Mission is from Lead L exactly when its Mission site was created by L.
 
 Leads add nothing to [Campaign state](../foundation/core-concepts.md#campaign-and-session). [Prerequisites](#prerequisites) and [Lead availability](#lead-availability) read
-the Missions and their Mission sites, which are retained for the whole Campaign
+the Missions and their Mission sites, which are [retained](../foundation/world-history.md#glossary) for the whole Campaign
 with their final lifecycle states, under [Mission properties](missions.md#mission-properties) in Missions. A Won Mission stays Won for the rest of the Campaign, even if the Faction of the Lead
-later becomes Eliminated, so whatever these rules derive from it holds for the rest of the Campaign too, under
-[Authoritative and Derived values](../foundation/core-concepts.md#value-classification) in Core Concepts.
+later becomes [Eliminated](domain-model.md#factions), so whatever these rules derive from it holds for the rest of the Campaign too, under
+[Authoritative and Derived values](../foundation/core-concepts.md#authoritative-and-derived-values) in Core Concepts.
 
 No rule counts completions either. A Lead's completion count, i.e. the number of Completed Investigations of
-the Lead, is a [Derived value](../foundation/core-concepts.md#glossary) calculated from Investigation Campaign
+the Lead, is a [Derived value](../foundation/core-concepts.md#value-classification) calculated from Investigation Campaign
 instances, and no rule of a Mechanics specification reads it.
 
 A Mission becomes Won in the [Turn advancement step](turn-advancement.md#glossary) Mission resolution, under
@@ -152,7 +140,7 @@ to the MissionSiteArchetype GDR itself, never to text parsed from an identifier.
 
 # Lead availability
 
-**Proposed rule:** Whether a Lead is available is a Derived value, calculated from the Committed state in which it is
+**Proposed rule:** Whether a Lead is available is a Derived value, calculated from the [Committed state](../foundation/engine-contract.md#player-actions-and-turns) in which it is
 read; it is never stored, and it is not a state. A Lead L is available exactly when all of the following four
 conditions hold. The list is exhaustive.
 
@@ -202,7 +190,7 @@ Mission site changes no condition of L.
 
 **Consequences.** Together the rules make the following hold:
 
-- A Lost Mission or an Expired Mission site never blocks its Lead for ever: the Lead is available again and the Agency obtains
+- A Lost Mission or an Expired Mission site never blocks its Lead for ever: the Lead is available again and the [Agency](domain-model.md#agency-and-agents) obtains
   a new Mission site from it by a new Investigation. A Mission site cannot be attempted twice, under
   [Mission site lifecycle](missions.md#mission-site-lifecycle).
 - A Lead whose prerequisites hold and whose Faction is not Eliminated stays available until a Mission from it is Won,
@@ -218,7 +206,7 @@ Mission from the Lead is Won, condition 2 never holds again.
 
 **Proposed rule:** When an Investigation of a Lead L completes, the effect named by the `on_completion` of L applies. The
 completion itself, i.e. in which Advance turn an Investigation becomes Completed, is decided under
-[Completion](investigations.md#completion); it happens in the Turn advancement step [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions). The effect
+[Completion](investigations.md#completion); it happens in the [Turn advancement step](domain-model.md#turn-advancement-steps) [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions). The effect
 kind `create_mission_site` has the following complete effect, applied once for that completion, in the same step:
 
 1. It is the creating rule of an Initiative Mission site under

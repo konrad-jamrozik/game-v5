@@ -56,21 +56,13 @@ Applies to every specification and every overview.
 
 Applies to every specification.
 
-- [Direction](../specs/governance/conventions/artifact-relationships.md#direction)
-- [Relationship kinds](../specs/governance/conventions/artifact-relationships.md#relationship-kinds)
-- [Choosing uses or refines](../specs/governance/conventions/artifact-relationships.md#choosing-uses-or-refines)
-  - [Uses](../specs/governance/conventions/artifact-relationships.md#uses)
-  - [Refines](../specs/governance/conventions/artifact-relationships.md#refines)
-  - [Pointers that create no relationship](../specs/governance/conventions/artifact-relationships.md#pointers-that-create-no-relationship)
-  - [One kind per pair](../specs/governance/conventions/artifact-relationships.md#one-kind-per-pair)
-- [Links that create no relationship](../specs/governance/conventions/artifact-relationships.md#links-that-create-no-relationship)
-- [Relationship graphs](../specs/governance/conventions/artifact-relationships.md#relationship-graphs) — **linted**
+- [Term links](../specs/governance/conventions/artifact-relationships.md#term-links)
+- [Rule text](../specs/governance/conventions/artifact-relationships.md#rule-text)
+- [Mentions](../specs/governance/conventions/artifact-relationships.md#mentions)
+- [References](../specs/governance/conventions/artifact-relationships.md#references-1)
+- [Reference graph](../specs/governance/conventions/artifact-relationships.md#reference-graph)
   - [Real and apparent dependencies](../specs/governance/conventions/artifact-relationships.md#real-and-apparent-dependencies)
-- [Recording relationships](../specs/governance/conventions/artifact-relationships.md#recording-relationships)
-- [Implicit relationships](../specs/governance/conventions/artifact-relationships.md#implicit-relationships)
-- [Relationship inventories](../specs/governance/conventions/artifact-relationships.md#relationship-inventories)
-- [Evidence](../specs/governance/conventions/artifact-relationships.md#evidence)
-- [Adoption](../specs/governance/conventions/artifact-relationships.md#adoption)
+- [Deterministic validation](../specs/governance/conventions/artifact-relationships.md#deterministic-validation) — **linted**
 
 ## Design Specification Conventions
 
@@ -93,4 +85,4 @@ Applies to Design specifications.
 Applies to Implementation specifications.
 
 - [What belongs in an Implementation specification](../specs/governance/conventions/implementation-spec-conventions.md#what-belongs-in-an-implementation-specification)
-- [Implementation binding](../specs/governance/conventions/implementation-spec-conventions.md#implementation-binding) — **linted**
+- [Implementation binding](../specs/governance/conventions/implementation-spec-conventions.md#implementation-binding)

@@ -20,7 +20,7 @@ clone is the Spec repo's root directory, e.g. `repos/game-v5/`.
 3. **Gate 1: plan.** After every follow-up question is answered and every outcome is decided, and before editing any
    file, publish the plan as a private Artifact. For each specification file that will change, it names the file and
    its Spec ID, the affected sections, the change from current to proposed wording, or a precise description when the
-   change is large, why the change is made, and its knock-on effects, e.g. Glossary rows, Relationships sections,
+   change is large, why the change is made, and its knock-on effects, e.g. Glossary rows, term links,
    derived views, and Implementation feedback entries. It also lists what will not change, e.g. declined problems.
    Stop and wait for the user to approve it; republish the same Artifact after each requested change.
 4. **Gate 2: local diff.** Make the approved changes in the worktree, run `npm run docs:generate` and

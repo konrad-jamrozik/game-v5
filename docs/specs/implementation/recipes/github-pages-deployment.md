@@ -21,10 +21,6 @@ check leaves the previous Game build online.
 Implementation Placement forbids publishing an Implementation until the Engine designer decides where it is hosted;
 this guidance describes one such destination, for the case in which the Engine designer has chosen it.
 
-# Relationships
-
-- Uses [Implementation Placement](../mandatory/implementation-placement.md)
-
 # Deployment prerequisites
 
 Publishing is outward-facing and hard to reverse, so the implementer should start it only when both of the following
@@ -32,10 +28,10 @@ hold. The list is exhaustive.
 
 - **The Engine designer requested it.** The Engine designer has asked for the Implementation to be published to a
   public GitHub repository under the Engine designer's personal GitHub account. Until then the Implementation stays
-  local, under [Creating the Implementation repo](../mandatory/implementation-placement.md#glossary).
+  local, under [Creating the Implementation repo](../mandatory/implementation-placement.md#creating-the-implementation-repo).
   A request for a private repository, for an organization account, or for another host is a different request, and this
   guidance does not apply to it.
-- **GitHub Pages can host the Implementation.** The Implementation's web Game build is a set of static files that a
+- **GitHub Pages can host the Implementation.** The Implementation's web [Game build](../../design/foundation/core-concepts.md#game-build-and-content) is a set of static files that a
   browser runs without a server of the Implementation's own; e.g., a single-page application built with Vite qualifies,
   while an Implementation that needs its own server process, a database server, or a desktop executable does not.
 
@@ -46,7 +42,7 @@ implementer should ask the Engine designer to run `gh auth login` rather than as
 # Local repository
 
 The remote repository is created from the
-[Implementation repo](../mandatory/implementation-placement.md#glossary). Before creating it, the implementer should
+[Implementation repo](../mandatory/implementation-placement.md#implementation-repo). Before creating it, the implementer should
 commit the whole Implementation on its `main` branch:
 
 ```sh
@@ -92,7 +88,7 @@ should use hash-based routing instead, because GitHub Pages answers a request fo
 # Continuous integration workflow
 
 The CI workflow is what turns a push into a deployment: it repeats the Implementation's checks on a clean machine and
-deploys only their result. It should reside in the Implementation repo, at `.github/workflows/deploy-pages.yml`,
+deploys only their result. It should reside in the [Implementation repo](../mandatory/implementation-placement.md#glossary), at `.github/workflows/deploy-pages.yml`,
 like every other file needed to build the Implementation under
 [Implementation repo](../mandatory/implementation-placement.md#implementation-repo).
 

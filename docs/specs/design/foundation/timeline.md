@@ -16,37 +16,24 @@ Game behavior never consults the Timeline, as the [Engine Contract](engine-contr
 
 The Turn divides undo and redo into two forms. [Action navigation](#action-navigation) steps through the Timeline
 entries of the current Turn and never leaves it. [Autosave navigation](#autosave-navigation) goes back and forward
-across Turns by loading the [Autosaves](saves.md#autosave-kinds) of [Saves](saves.md). Either way, the [Campaign state](core-concepts.md#campaign-and-session) becomes exactly the
+across Turns by loading the [Autosaves](saves.md#autosaves) of [Saves](saves.md). Either way, the [Campaign state](core-concepts.md#campaign-and-session) becomes exactly the
 [Committed state](engine-contract.md#player-actions-and-turns) as the Campaign first reached it, so play continued from there unfolds as if nothing had been undone.
-
-# Relationships
-
-- Uses [Campaign Instances](./campaign-instances.md)
-- Uses [Campaign State](./campaign-state.md)
-- Uses [Core Concepts](./core-concepts.md)
-- Uses [Determinism and Randomness](./determinism-and-randomness.md)
-- Uses [Engine Contract](./engine-contract.md)
-- Refines [Saves](./saves.md)
-- Used by [Autopilot](./autopilot.md)
-- Used by [Configuration](./configuration.md)
-- Used by [Developer Access](./developer-access.md)
-- Used by [Storage Schema](../../implementation/guidance/storage-schema.md)
 
 # Glossary
 
 General terms are in the [Engine Contract glossary](engine-contract.md#glossary), [World history](campaign-state.md#glossary) is in the
-[Campaign State glossary](campaign-state.md#glossary), and Autosave terms are in the [Saves glossary](saves.md#glossary).
+[Campaign State glossary](campaign-state.md#glossary), and [Autosave](saves.md#autosave-kinds) terms are in the [Saves glossary](saves.md#glossary).
 
-| Term            | Definition                                                                                                                                                                                              |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Timeline entry  | One Player action of the current Turn, other than Advance turn, recorded in the Timeline.                                                                                                               |
-| Undone action   | A Timeline entry that undo has reversed and that redo can restore. The Undone actions are always the last Timeline entries of the Timeline, and committing a new action discards all of them.           |
-| Return Autosave | The Autosave holding the Committed state the [Session controller](engine-contract.md#principals-and-access) left by going back through [Autosave navigation](#autosave-navigation), so redo can return. |
+| Term            | Definition                                                                                                                                                                                                                                             |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Timeline entry  | One [Player action](engine-contract.md#player-actions-and-turns) of the current [Turn](engine-contract.md#player-actions-and-turns), other than Advance turn, recorded in the [Timeline](engine-contract.md#persisted-data).                           |
+| Undone action   | A Timeline entry that undo has reversed and that redo can restore. The Undone actions are always the last Timeline entries of the Timeline, and committing a new action discards all of them.                                                          |
+| Return Autosave | The Autosave holding the [Committed state](engine-contract.md#player-actions-and-turns) the [Session controller](engine-contract.md#principals-and-access) left by going back through [Autosave navigation](#autosave-navigation), so redo can return. |
 
 # Timeline structure
 
 The Timeline holds the [Turn-start state](engine-contract.md#player-actions-and-turns) of the current Turn and that Turn's Timeline entries in the order they were
-committed. The Campaign state is always a Committed state of the current Turn: the Committed state right after the
+committed. The [Campaign state](core-concepts.md#campaign-and-session) is always a Committed state of the current Turn: the Committed state right after the
 last Timeline entry that is not an Undone action, or the Turn-start state when there is none.
 
 The following two hand-kept diagrams show one example Turn with four Timeline entries. They illustrate the terms of
@@ -77,7 +64,7 @@ The diagrams read as follows:
 
 # World history, Timeline, and Campaign save
 
-Three things keep a Campaign's past, for different purposes. The following comparison is complete.
+Three things keep a [Campaign](core-concepts.md#campaign-and-session)'s past, for different purposes. The following comparison is complete.
 
 | Kept past     | What it records                                                                                                 | Consulted by game behavior | Effect of undo                                                                         | Stated in                                                                  |
 | ------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |

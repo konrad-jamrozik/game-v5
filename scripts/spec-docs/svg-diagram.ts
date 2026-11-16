@@ -22,14 +22,11 @@ export interface DiagramInput {
   readonly showLayerLabels: boolean
 }
 
-type EdgeStyle = 'uses' | 'refines' | 'both' | 'other'
+type EdgeStyle = RelationshipKind
 
-const STYLE_ORDER: readonly EdgeStyle[] = ['uses', 'refines', 'both', 'other']
+const STYLE_ORDER: readonly EdgeStyle[] = ['references']
 const STYLE_LABELS: Readonly<Record<EdgeStyle, string>> = {
-  uses: 'used by',
-  refines: 'refined by',
-  both: 'refined by and used by',
-  other: 'other relationship kinds',
+  references: 'referenced by',
 }
 
 const FONT_SIZE = 13
@@ -50,9 +47,9 @@ const LEGEND_HEIGHT = 44
 const ARROW_LENGTH = 3
 
 const STYLE_SHEET = `
-    :root { --bg: #ffffff; --surface: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --uses: #5c9db3; --refines: #4f2fe0; --both: #4f2fe0; }
+    :root { --bg: #ffffff; --surface: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --references: #4f6fc0; }
     @media (prefers-color-scheme: dark) {
-      :root { --bg: #12161d; --surface: #1a2029; --fg: #e6eaf0; --muted: #9aa5b5; --line: #323b49; --uses: #5f9fb3; --refines: #a595ff; --both: #a595ff; }
+      :root { --bg: #12161d; --surface: #1a2029; --fg: #e6eaf0; --muted: #9aa5b5; --line: #323b49; --references: #8fa8ec; }
     }
     text { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
     .bg { fill: var(--bg); }
@@ -63,14 +60,8 @@ const STYLE_SHEET = `
     .rule { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 6; }
     .legend { fill: var(--muted); font-size: 12.5px; }
     .edge { fill: none; }
-    .edge-uses { stroke: var(--uses); stroke-width: 1.6; }
-    .edge-refines { stroke: var(--refines); stroke-width: 1.8; }
-    .edge-both { stroke: var(--both); stroke-width: 3.4; }
-    .edge-other { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
-    .head-uses { fill: var(--uses); }
-    .head-other { fill: var(--muted); }
-    .head-refines { fill: var(--refines); }
-    .head-both { fill: var(--both); }
+    .edge-references { stroke: var(--references); stroke-width: 1.6; }
+    .head-references { fill: var(--references); }
   `
 
 /** The width of a box holding these lines, estimated from their length because the generator cannot measure text. */
@@ -95,13 +86,8 @@ function number(value: number): string {
   return String(Math.round(value * 10) / 10)
 }
 
-function edgeStyle(kinds: ReadonlySet<RelationshipKind>): EdgeStyle {
-  const uses = kinds.has('uses')
-  const refines = kinds.has('refines')
-  if (kinds.size === 1 && uses) return 'uses'
-  if (kinds.size === 1 && refines) return 'refines'
-  if (kinds.size === 2 && uses && refines) return 'both'
-  return 'other'
+function edgeStyle(_kinds: ReadonlySet<RelationshipKind>): EdgeStyle {
+  return 'references'
 }
 
 /**

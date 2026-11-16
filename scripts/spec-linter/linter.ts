@@ -40,13 +40,11 @@ import {
   kindOverviewTitle,
 } from './overviews.ts'
 import { decodeUrlPart, directoryOf, isExternalUrl, normalizePath, resolvePath, splitUrl } from './paths.ts'
-import { type EvidenceFinding, findRelationshipEvidence } from './relationship-evidence.ts'
 import { findFirstMentions, type TermMention } from './term-mentions.ts'
 import type {
   Diagnostic,
   GlossaryRecord,
   LintInput,
-  RelationshipKind,
   RelationshipRecord,
   SpecificationAnalysis,
   SpecificationCorpus,
@@ -57,7 +55,6 @@ import type {
 
 const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
-const CONVENTIONS_PATH = 'docs/specs/governance/conventions/spec-conventions.md'
 const INDEX_FAMILY: SpecificationFamily = 'Conventions'
 /** The Spec IDs of the conventions that the Conventions metadata row of a specification of each Specification kind links. */
 const CONVENTIONS_BY_KIND: Readonly<Record<SpecificationKind, readonly string[]>> = {
@@ -125,16 +122,6 @@ interface RegistryEntry {
   readonly title: string
   readonly path: string
   readonly owns: string
-}
-
-type Inventory = 'Dependencies' | 'Dependents'
-
-interface RelationshipRow {
-  readonly inventory: Inventory
-  readonly owner: Specification
-  readonly destination: Specification
-  readonly kind: RelationshipKind
-  readonly node: Node
 }
 
 interface GlossaryTerm {
@@ -921,289 +908,19 @@ function validateFamilyOverview(
   }
 }
 
-const RELATIONSHIP_PHRASES: readonly { phrase: string; kind: RelationshipKind; inventory: Inventory }[] = [
-  { phrase: 'Uses', kind: 'uses', inventory: 'Dependencies' },
-  { phrase: 'Refines', kind: 'refines', inventory: 'Dependencies' },
-  { phrase: 'Follows', kind: 'follows', inventory: 'Dependencies' },
-  { phrase: 'Implements', kind: 'implements', inventory: 'Dependencies' },
-  { phrase: 'Verifies', kind: 'verifies', inventory: 'Dependencies' },
-  { phrase: 'Used by', kind: 'uses', inventory: 'Dependents' },
-  { phrase: 'Refined by', kind: 'refines', inventory: 'Dependents' },
-  { phrase: 'Followed by', kind: 'follows', inventory: 'Dependents' },
-  { phrase: 'Implemented by', kind: 'implements', inventory: 'Dependents' },
-  { phrase: 'Verified by', kind: 'verifies', inventory: 'Dependents' },
-]
-
-function parseInventory(
-  specification: Specification,
-  specificationsByPath: ReadonlyMap<string, Specification>,
-  diagnostics: Diagnostic[],
-): readonly RelationshipRow[] {
-  const heading = findHeading(specification.document, 1, 'Relationships')
-  if (!heading) return []
-  const nodes = sectionNodes(specification.document, heading)
-  const only = nodes[0]
-  if (nodes.length !== 1 || !only || only.type !== 'list' || only.ordered) {
+/** Rejects a Relationships section: references between specifications are derived from their links instead. */
+function validateNoRelationshipsSection(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
+  for (const specification of specifications) {
+    const heading = findHeading(specification.document, 1, 'Relationships')
+    if (!heading) continue
     addDiagnostic(
       diagnostics,
       specification.path,
       heading,
       'SPEC401',
-      'Relationships must contain one unordered flat list; omit the section when there are no explicit relationships.',
-    )
-    return []
-  }
-  const relationships: RelationshipRow[] = []
-  let previousRank = -1
-  let previousTitle = ''
-  for (const item of only.children) {
-    const paragraph = item.children[0]
-    if (
-      item.children.length !== 1 ||
-      !paragraph ||
-      paragraph.type !== 'paragraph' ||
-      paragraph.children.length !== 2 ||
-      paragraph.children[0]?.type !== 'text' ||
-      paragraph.children[1]?.type !== 'link' ||
-      item.checked != null
-    ) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        item,
-        'SPEC407',
-        'Each relationship must contain a directional phrase and one document hyperlink, without annotations.',
-      )
-      continue
-    }
-    const phrase = paragraph.children[0].value
-    const link = paragraph.children[1]
-    const rank = RELATIONSHIP_PHRASES.findIndex((entry) => phrase === entry.phrase + ' ')
-    const entry = RELATIONSHIP_PHRASES[rank]
-    if (!entry) {
-      addDiagnostic(diagnostics, specification.path, item, 'SPEC409', 'Unknown relationship phrase or spelling.')
-      continue
-    }
-    const parts = splitUrl(link.url)
-    const linkPath = decodeUrlPart(parts.path)
-    const destination =
-      linkPath && !isExternalUrl(link.url) && !parts.fragment
-        ? specificationsByPath.get(resolvePath(specification.path, linkPath))
-        : undefined
-    if (!destination) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        link,
-        'SPEC408',
-        'Relationship destination must link to a registered specification document without an anchor.',
-      )
-      continue
-    }
-    if (
-      textOf(link) !== destination.title ||
-      link.title != null ||
-      link.children.some((child) => child.type !== 'text')
-    ) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        link,
-        'SPEC410',
-        'Relationship link text must be the document title.',
-      )
-    }
-    if (rank < previousRank || (rank === previousRank && previousTitle.localeCompare(destination.title, 'en') > 0)) {
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        item,
-        'SPEC415',
-        'Relationships must follow directional phrase order and alphabetical document-title order within each group.',
-      )
-    }
-    previousRank = rank
-    previousTitle = destination.title
-    relationships.push({ inventory: entry.inventory, owner: specification, destination, kind: entry.kind, node: item })
-  }
-  return relationships
-}
-
-function relationshipPair(row: RelationshipRow): {
-  readonly dependency: Specification
-  readonly dependent: Specification
-} {
-  return row.inventory === 'Dependencies'
-    ? { dependency: row.destination, dependent: row.owner }
-    : { dependency: row.owner, dependent: row.destination }
-}
-
-function validateOverviewHasNoInventory(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
-  for (const specification of specifications) {
-    const overview = findHeading(specification.document, 1, 'Overview')
-    if (!overview) continue // The layout validator reports the missing section.
-    const bullets = sectionNodes(specification.document, overview).flatMap((node) =>
-      node.type === 'list' && !node.ordered ? node.children : [],
-    )
-    for (const item of bullets) {
-      const paragraph = item.children[0]
-      if (paragraph?.type !== 'paragraph') continue
-      const prefix = paragraph.children[0]
-      const link = paragraph.children[1]
-      if (prefix?.type !== 'text' || link?.type !== 'link') continue
-      if (!RELATIONSHIP_PHRASES.some((entry) => prefix.value === entry.phrase + ' ')) continue
-      addDiagnostic(
-        diagnostics,
-        specification.path,
-        item,
-        'SPEC417',
-        'Overview must not repeat the Relationships inventory as directional-phrase bullets.',
-      )
-    }
-  }
-}
-
-function relationshipKey(row: RelationshipRow): string {
-  const pair = relationshipPair(row)
-  return [pair.dependency.path, pair.dependent.path, row.kind].join('\u0000')
-}
-
-/**
- * Returns, for each node on a cycle, the index of its strongly connected component (Tarjan's algorithm: each node and
- * edge is visited once). Nodes on no cycle are absent.
- */
-function cyclicComponents(adjacency: ReadonlyMap<string, ReadonlySet<string>>): ReadonlyMap<string, number> {
-  const index = new Map<string, number>()
-  const low = new Map<string, number>()
-  const onStack = new Set<string>()
-  const stack: string[] = []
-  const component = new Map<string, number>()
-  let components = 0
-  const strongConnect = (node: string): void => {
-    index.set(node, index.size)
-    low.set(node, index.size - 1)
-    stack.push(node)
-    onStack.add(node)
-    for (const next of adjacency.get(node) ?? []) {
-      if (!index.has(next)) {
-        strongConnect(next)
-        low.set(node, Math.min(low.get(node) ?? 0, low.get(next) ?? 0))
-      } else if (onStack.has(next)) {
-        low.set(node, Math.min(low.get(node) ?? 0, index.get(next) ?? 0))
-      }
-    }
-    if (low.get(node) !== index.get(node)) return
-    const members: string[] = []
-    let member: string | undefined
-    do {
-      member = stack.pop()
-      if (member === undefined) break
-      onStack.delete(member)
-      members.push(member)
-    } while (member !== node)
-    const selfLoop = adjacency.get(node)?.has(node) ?? false
-    if (members.length > 1 || selfLoop) {
-      for (const each of members) component.set(each, components)
-      components += 1
-    }
-  }
-  for (const node of adjacency.keys()) if (!index.has(node)) strongConnect(node)
-  return component
-}
-
-/** Reports every Dependencies row whose edge lies on a cycle of the graph formed by the given kinds together. */
-function validateGraph(
-  rows: readonly RelationshipRow[],
-  kinds: readonly RelationshipRow['kind'][],
-  diagnostics: Diagnostic[],
-): void {
-  const included = rows.filter((row) => row.inventory === 'Dependencies' && kinds.includes(row.kind))
-  const adjacency = new Map<string, Set<string>>()
-  for (const row of included) {
-    const pair = relationshipPair(row)
-    const next = adjacency.get(pair.dependency.path) ?? new Set<string>()
-    next.add(pair.dependent.path)
-    adjacency.set(pair.dependency.path, next)
-  }
-  const component = cyclicComponents(adjacency)
-  const name = kinds.join(' and ')
-  for (const row of included) {
-    const pair = relationshipPair(row)
-    const from = component.get(pair.dependency.path)
-    if (from !== undefined && from === component.get(pair.dependent.path)) {
-      addDiagnostic(diagnostics, row.owner.path, row.node, 'SPEC414', `The ${name} relationship graph must be acyclic.`)
-    }
-  }
-}
-
-/** Reports a pair of specifications related by both uses and refines; refines wins, so the uses row is reported. */
-function validateOneKindPerPair(rows: readonly RelationshipRow[], diagnostics: Diagnostic[]): void {
-  const pairKey = (row: RelationshipRow): string => {
-    const pair = relationshipPair(row)
-    return pair.dependency.path + '\u0000' + pair.dependent.path
-  }
-  const refined = new Set(rows.filter((row) => row.kind === 'refines').map(pairKey))
-  for (const row of rows) {
-    if (row.kind !== 'uses' || !refined.has(pairKey(row))) continue
-    addDiagnostic(
-      diagnostics,
-      row.owner.path,
-      row.node,
-      'SPEC418',
-      'A pair of specifications related by refines must not also be related by uses.',
+      'A specification has no Relationships section; its references are derived from the links in its text.',
     )
   }
-}
-
-function validateRelationships(
-  specifications: readonly Specification[],
-  diagnostics: Diagnostic[],
-): readonly RelationshipRow[] {
-  const byPath = new Map(specifications.map((specification) => [specification.path, specification]))
-  const rows = specifications.flatMap((specification) => parseInventory(specification, byPath, diagnostics))
-  validateOverviewHasNoInventory(specifications, diagnostics)
-  const seen = new Set<string>()
-  for (const row of rows) {
-    const pair = relationshipPair(row)
-    if (pair.dependency.path === pair.dependent.path) {
-      addDiagnostic(
-        diagnostics,
-        row.owner.path,
-        row.node,
-        'SPEC411',
-        'A specification cannot have a relationship with itself.',
-      )
-    }
-    const key = `${row.inventory}\u0000${relationshipKey(row)}`
-    if (seen.has(key)) {
-      addDiagnostic(
-        diagnostics,
-        row.owner.path,
-        row.node,
-        'SPEC412',
-        'The relationship inventory contains a duplicate row.',
-      )
-    }
-    seen.add(key)
-  }
-  const dependencies = new Set(rows.filter((row) => row.inventory === 'Dependencies').map(relationshipKey))
-  const dependents = new Set(rows.filter((row) => row.inventory === 'Dependents').map(relationshipKey))
-  for (const row of rows) {
-    const opposite = row.inventory === 'Dependencies' ? dependents : dependencies
-    if (!opposite.has(relationshipKey(row))) {
-      addDiagnostic(
-        diagnostics,
-        row.owner.path,
-        row.node,
-        'SPEC413',
-        `Explicit ${row.inventory} row has no mirrored entry with the same relationship kind.`,
-      )
-    }
-  }
-  validateOneKindPerPair(rows, diagnostics)
-  validateGraph(rows, ['follows'], diagnostics)
-  validateGraph(rows, ['uses', 'refines'], diagnostics)
-  return rows
 }
 
 const PROHIBITED_SYNONYMS_HEADING = 'Prohibited synonyms'
@@ -1628,7 +1345,7 @@ function buildCorpus(
   parsed: ParsedInput,
   entries: readonly RegistryEntry[],
   terms: readonly GlossaryTerm[],
-  relationshipRows: readonly RelationshipRow[],
+  mentions: readonly TermMention[],
 ): SpecificationCorpus {
   const entriesByPath = new Map(entries.map((entry) => [entry.path, entry]))
   const specifications: SpecificationRecord[] = []
@@ -1669,41 +1386,26 @@ function buildCorpus(
   )
 
   const relationships: RelationshipRecord[] = []
-  for (const row of relationshipRows) {
-    if (row.inventory !== 'Dependencies') continue
-    const pair = relationshipPair(row)
-    const dependency = specificationByPath.get(pair.dependency.path)
-    const dependent = specificationByPath.get(pair.dependent.path)
+  // A specification references the owner of every term its rule text mentions; the first mention links the owner.
+  const seen = new Set<string>()
+  for (const mention of mentions) {
+    const dependency = specificationByPath.get(mention.ownerPath)
+    const dependent = specificationByPath.get(mention.specificationPath)
     if (!dependency || !dependent) continue
+    const key = dependency.path + ' ' + dependent.path
+    if (seen.has(key)) continue
+    seen.add(key)
     relationships.push({
       dependencyId: dependency.id,
       dependencyPath: dependency.path,
       dependentId: dependent.id,
       dependentPath: dependent.path,
-      kind: row.kind,
-      origin: 'explicit',
-      sourcePaths: [dependency.path, dependent.path],
+      kind: 'references',
     })
-  }
-  for (const dependent of specifications) {
-    for (const convention of conventionsFollowedBy(dependent, specifications)) {
-      relationships.push({
-        dependencyId: convention.id,
-        dependencyPath: convention.path,
-        dependentId: dependent.id,
-        dependentPath: dependent.path,
-        kind: 'follows',
-        origin: 'implicit',
-        sourcePaths: [convention.id === 'CONV' ? CONVENTIONS_PATH : convention.path],
-      })
-    }
   }
   relationships.sort(
     (left, right) =>
-      compareText(left.dependencyId, right.dependencyId) ||
-      compareText(left.dependentId, right.dependentId) ||
-      compareText(left.kind, right.kind) ||
-      compareText(left.origin, right.origin),
+      compareText(left.dependencyId, right.dependencyId) || compareText(left.dependentId, right.dependentId),
   )
 
   return { specifications, glossary, relationships }
@@ -1718,34 +1420,16 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   validateLayout(parsed.specifications, diagnostics)
   validateLinks(parsed, diagnostics)
   validateFamilyOverviews(parsed, diagnostics)
-  const relationships = validateRelationships(parsed.specifications, diagnostics)
+  validateNoRelationshipsSection(parsed.specifications, diagnostics)
   const glossary = validateTerminology(parsed.specifications, diagnostics)
-  validateTermLinks(firstMentions(parsed, glossary), diagnostics)
+  const mentions = firstMentions(parsed, glossary)
+  validateTermLinks(mentions, diagnostics)
+  validateReferenceCycles(mentions, diagnostics)
   validateTodosAndSections(parsed, diagnostics)
   return {
     diagnostics: diagnostics.toSorted(compareDiagnostics),
-    corpus: buildCorpus(parsed, entries, glossary, relationships),
+    corpus: buildCorpus(parsed, entries, glossary, mentions),
   }
-}
-
-/**
- * Compares recorded uses and refines relationships with the specifications' Normative text. It parses the input once
- * and reports findings without diagnostics; run lintSpecifications for those.
- */
-export function relationshipEvidence(input: LintInput): readonly EvidenceFinding[] {
-  const diagnostics: Diagnostic[] = []
-  const parsed = parseInput(input, diagnostics)
-  const index = parsed.specifications.find((specification) => specification.path === parsed.indexPath)
-  const entries = registryEntries(parsed, index, diagnostics)
-  const rows = validateRelationships(parsed.specifications, diagnostics)
-  const corpus = buildCorpus(parsed, entries, validateTerminology(parsed.specifications, diagnostics), rows)
-  const recordedPaths = new Set(corpus.specifications.map((specification) => specification.path))
-  const specifications = parsed.specifications.flatMap((specification) =>
-    recordedPaths.has(specification.path) && isSpecificationFamily(specification.family)
-      ? [{ ...specification, family: specification.family }]
-      : [],
-  )
-  return findRelationshipEvidence({ specifications, glossary: corpus.glossary, relationships: corpus.relationships })
 }
 
 function firstMentions(parsed: ParsedInput, glossary: readonly GlossaryTerm[]): readonly TermMention[] {
@@ -1777,6 +1461,62 @@ function validateTermLinks(mentions: readonly TermMention[], diagnostics: Diagno
           ? `The first mention of "${mention.term}" must link to its Glossary group: `
           : `The first mention of "${mention.term}" links to the wrong anchor; link to its Glossary group: `) +
         `${mention.ownerPath}#${mention.anchor}. Run npm run docs:link-terms to fix it.`,
+    })
+  }
+}
+
+/**
+ * Rejects a cycle among References: each first mention whose specification and Term owner reference each other,
+ * directly or through others, is reported. Tarjan's algorithm visits each specification and Reference once.
+ */
+function validateReferenceCycles(mentions: readonly TermMention[], diagnostics: Diagnostic[]): void {
+  const adjacency = new Map<string, Set<string>>()
+  for (const mention of mentions) {
+    const next = adjacency.get(mention.ownerPath) ?? new Set<string>()
+    next.add(mention.specificationPath)
+    adjacency.set(mention.ownerPath, next)
+  }
+  const index = new Map<string, number>()
+  const low = new Map<string, number>()
+  const onStack = new Set<string>()
+  const stack: string[] = []
+  const component = new Map<string, number>()
+  let components = 0
+  const strongConnect = (node: string): void => {
+    index.set(node, index.size)
+    low.set(node, index.size - 1)
+    stack.push(node)
+    onStack.add(node)
+    for (const next of adjacency.get(node) ?? []) {
+      if (!index.has(next)) {
+        strongConnect(next)
+        low.set(node, Math.min(low.get(node) ?? 0, low.get(next) ?? 0))
+      } else if (onStack.has(next)) {
+        low.set(node, Math.min(low.get(node) ?? 0, index.get(next) ?? 0))
+      }
+    }
+    if (low.get(node) !== index.get(node)) return
+    const members: string[] = []
+    for (let member = stack.pop(); member !== undefined; member = stack.pop()) {
+      onStack.delete(member)
+      members.push(member)
+      if (member === node) break
+    }
+    if (members.length > 1) {
+      for (const member of members) component.set(member, components)
+      components += 1
+    }
+  }
+  for (const node of adjacency.keys()) if (!index.has(node)) strongConnect(node)
+  for (const mention of mentions) {
+    const cycle = component.get(mention.ownerPath)
+    if (cycle === undefined || cycle !== component.get(mention.specificationPath)) continue
+    diagnostics.push({
+      code: 'SPEC414',
+      path: mention.specificationPath,
+      line: mention.line,
+      column: mention.column,
+      message: `"${mention.term}" makes this specification reference ${mention.ownerPath}, which references it back, directly or through others; move the term or the rule that uses it.`,
     })
   }
 }

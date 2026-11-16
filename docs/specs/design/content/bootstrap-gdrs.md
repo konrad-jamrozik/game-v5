@@ -20,20 +20,12 @@ creating one [Initiative Mission site](../mechanics/domain-model.md#leads-invest
 Dawn and wins the Campaign. Meanwhile, Red Dawn's activity creates [Response Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). One that is Expired, or whose
 [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is Lost, raises [Panic](../mechanics/domain-model.md#campaign-standing), and enough Panic loses the Campaign.
 
-# Relationships
-
-- Uses [Configuration](../foundation/configuration.md)
-- Uses [Domain Model](../mechanics/domain-model.md)
-- Uses [Game Data Records](../foundation/game-data-records.md)
-- Used by [Implementation Placement](../../implementation/mandatory/implementation-placement.md)
-- Used by [Storage Schema](../../implementation/guidance/storage-schema.md)
-
 # Glossary
 
-| Term           | Definition                                                                                                                                                                                            |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Bootstrap GDRs | The GDRs a Game build must supply so that a first playable Campaign can be created and played to an ending.                                                                                           |
-| Victory path   | The sequence of Leads and Initiative Mission sites by which the [Agency](../mechanics/domain-model.md#agency-and-agents) can eliminate every Faction and so win the Campaign with the Bootstrap GDRs. |
+| Term           | Definition                                                                                                                                                                                                                                                                                                                                                                                                     |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bootstrap GDRs | The [GDRs](../foundation/core-concepts.md#game-build-and-content) a [Game build](../foundation/core-concepts.md#game-build-and-content) must supply so that a first playable [Campaign](../foundation/core-concepts.md#campaign-and-session) can be created and played to an ending.                                                                                                                           |
+| Victory path   | The sequence of [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and [Initiative Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) by which the [Agency](../mechanics/domain-model.md#agency-and-agents) can eliminate every [Faction](../mechanics/domain-model.md#factions) and so win the Campaign with the Bootstrap GDRs. |
 
 # Bootstrap scope
 
@@ -69,19 +61,19 @@ has a `name` property also serves the Display content purpose, which the tables 
 
 Type owner: [Configuration](../foundation/configuration.md).
 
-| GDR                        | Type                    | GDR purpose                   | What it supplies                                                                                                                                                                                                                            |
-| -------------------------- | ----------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `standard`                 | CampaignConfiguration   | Campaign configuration preset | The [Game build default preset](../foundation/configuration.md#glossary) under [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets): the Agency's starting money and starting recurring funding. |
-| `configuration_parameters` | ConfigurationParameters | None of the listed purposes   | Which preset is the Game build default preset, under [Game build default preset](../foundation/configuration.md#game-build-default-preset).                                                                                                 |
+| GDR                        | Type                    | GDR purpose                                                                  | What it supplies                                                                                                                                                                                                                                             |
+| -------------------------- | ----------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `standard`                 | CampaignConfiguration   | [Campaign configuration preset](../foundation/game-data-records.md#glossary) | The [Game build default preset](../foundation/configuration.md#game-build-default-preset) under [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets): the Agency's starting money and starting recurring funding. |
+| `configuration_parameters` | ConfigurationParameters | None of the listed purposes                                                  | Which preset is the [Game build default preset](../foundation/configuration.md#glossary), under [Game build default preset](../foundation/configuration.md#game-build-default-preset).                                                                       |
 
 ## Agents GDRs
 
 Type owner: [Agents](../mechanics/agents-spec.md).
 
-| GDR                | Type            | GDR purpose                                                                                                  | What it supplies                                                                                                                                                                                                                                                                                                     |
-| ------------------ | --------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `field_agent`      | AgentArchetype  | Archetype                                                                                                    | Every [Agent](../mechanics/domain-model.md#agency-and-agents)'s base skill, Weapon, and `base_health` when created. An Agent starts with both its base health and its current health equal to `base_health`.                                                                                                         |
-| `agent_parameters` | AgentParameters | [Campaign instance](../foundation/core-concepts.md#campaign-instances) initialization, Calculation parameter | The size of the initial roster; the exhaustion cap, the exhaustion without effect, and the base skill lost per further point; exhaustion per attack and per defense; base skill gained per [Turn](../foundation/engine-contract.md#player-actions-and-turns) of [Training](../mechanics/agents-spec.md#assignments). |
+| GDR                | Type            | GDR purpose                                                                                                  | What it supplies                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------ | --------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `field_agent`      | AgentArchetype  | Archetype                                                                                                    | Every [Agent](../mechanics/domain-model.md#agency-and-agents)'s [base skill](../mechanics/agents-spec.md#combatant-attributes), Weapon, and `base_health` when created. An Agent starts with both its [base health](../mechanics/agents-spec.md#combatant-attributes) and its [current health](../mechanics/agents-spec.md#combatant-attributes) equal to `base_health`. |
+| `agent_parameters` | AgentParameters | [Campaign instance](../foundation/core-concepts.md#campaign-instances) initialization, Calculation parameter | The size of the initial roster; the [exhaustion](../mechanics/agents-spec.md#combatant-attributes) cap, the exhaustion without effect, and the base skill lost per further point; exhaustion per attack and per defense; base skill gained per [Turn](../foundation/engine-contract.md#player-actions-and-turns) of [Training](../mechanics/agents-spec.md#assignments). |
 
 ## Economy and Upgrades GDRs
 
@@ -91,10 +83,10 @@ Type owner: [Economy and Upgrades](../mechanics/economy-and-upgrades.md).
 | --------------- | ----------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `agency`        | AgencyArchetype   | Archetype             | The Agency's display name.                                                                                                                                                                                                                                                 |
 | `economy`       | EconomyParameters | Calculation parameter | Hire cost, upkeep per Agent, contracting income per Agent, and the starting [Agent cap](../mechanics/economy-and-upgrades.md#glossary), [Transport cap](../mechanics/economy-and-upgrades.md#glossary), and [Training cap](../mechanics/economy-and-upgrades.md#glossary). |
-| `agent_cap`     | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the Agent cap.                                                                                                                                                                                                                  |
+| `agent_cap`     | Upgrade           | Calculation parameter | Price and increment of the [Upgrade](../mechanics/domain-model.md#agency-and-agents) raising the [Agent cap](../mechanics/domain-model.md#agency-and-agents).                                                                                                              |
 | `transport_cap` | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the Transport cap.                                                                                                                                                                                                              |
 | `training_cap`  | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the Training cap.                                                                                                                                                                                                               |
-| `weapon_damage` | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the base weapon damage of every Agent.                                                                                                                                                                                          |
+| `weapon_damage` | Upgrade           | Calculation parameter | Price and increment of the Upgrade raising the [base weapon damage](../mechanics/agents-spec.md#combatant-attributes) of every Agent.                                                                                                                                      |
 
 Three Upgrades raise an Agency-wide cap and one changes a value of every Agent, so Economy and Upgrades must specify
 both kinds of Upgrade effect.
@@ -103,11 +95,11 @@ both kinds of Upgrade effect.
 
 Type owner: [Leads and Progression](../mechanics/leads-and-progression.md).
 
-| GDR                         | Type | GDR purpose                            | What it supplies                                                                            |
-| --------------------------- | ---- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `locate_red_dawn_member`    | Lead | Referenced GDR, Key for campaign facts | The first Lead of the Victory path; it has no prerequisites and creates `apprehend_member`. |
-| `locate_red_dawn_safehouse` | Lead | Referenced GDR, Key for campaign facts | Requires a Won Mission from `locate_red_dawn_member`; creates `raid_safehouse`.             |
-| `locate_red_dawn_hq`        | Lead | Referenced GDR, Key for campaign facts | Requires a Won Mission from `locate_red_dawn_safehouse`; creates `raid_hq`.                 |
+| GDR                         | Type | GDR purpose                            | What it supplies                                                                                                                                                |
+| --------------------------- | ---- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `locate_red_dawn_member`    | Lead | Referenced GDR, Key for campaign facts | The first Lead of the Victory path; it has no prerequisites and creates `apprehend_member`.                                                                     |
+| `locate_red_dawn_safehouse` | Lead | Referenced GDR, Key for campaign facts | Requires a Won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) from `locate_red_dawn_member`; creates `raid_safehouse`. |
+| `locate_red_dawn_hq`        | Lead | Referenced GDR, Key for campaign facts | Requires a Won Mission from `locate_red_dawn_safehouse`; creates `raid_hq`.                                                                                     |
 
 Each Lead references its Faction, `red_dawn`, explicitly through its `faction` property, and names its prerequisite
 Leads and the MissionSiteArchetype it creates by GDR identifier, so no relationship is inferred from identifier text under
@@ -128,14 +120,14 @@ An Investigation reads the `difficulty` of its Lead, under
 
 Type owner: [Missions](../mechanics/missions.md).
 
-| GDR                     | Type                 | GDR purpose | What it supplies                                                                                                                     |
-| ----------------------- | -------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `apprehend_member`      | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns`, its Enemies by EnemyArchetype and count, and its rewards for a win.              |
-| `raid_safehouse`        | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns`, its Enemies by EnemyArchetype and count, and its rewards for a win.              |
-| `raid_hq`               | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns` and its Enemies by EnemyArchetype and count; a win eliminates its target Faction. |
-| `foil_recruitment_push` | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 1: its `expires_in_turns` and its Enemies by EnemyArchetype and count.            |
-| `foil_sabotage`         | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 2: its `expires_in_turns` and its Enemies by EnemyArchetype and count.            |
-| `standard_mission`      | MissionArchetype     | Archetype   | The Archetype of every Mission.                                                                                                      |
+| GDR                     | Type                 | GDR purpose | What it supplies                                                                                                                                                                                          |
+| ----------------------- | -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apprehend_member`      | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns`, its Enemies by EnemyArchetype and count, and its rewards for a win.                                                                                   |
+| `raid_safehouse`        | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns`, its Enemies by EnemyArchetype and count, and its rewards for a win.                                                                                   |
+| `raid_hq`               | MissionSiteArchetype | Archetype   | An Initiative Mission site: its `expires_in_turns` and its Enemies by EnemyArchetype and count; a win eliminates its target Faction.                                                                      |
+| `foil_recruitment_push` | MissionSiteArchetype | Archetype   | A [Response Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) of Faction operation level 1: its `expires_in_turns` and its Enemies by EnemyArchetype and count. |
+| `foil_sabotage`         | MissionSiteArchetype | Archetype   | A Response Mission site of Faction operation level 2: its `expires_in_turns` and its Enemies by EnemyArchetype and count.                                                                                 |
+| `standard_mission`      | MissionArchetype     | Archetype   | The Archetype of every Mission.                                                                                                                                                                           |
 
 No MissionSiteArchetype references a Faction. A Mission site's target Faction is a value in its [Constants](../foundation/core-concepts.md#campaign-instances): for an
 Initiative Mission site it is the Faction whose Archetype is the creating Lead's `faction`, and for a Response Mission
@@ -168,14 +160,14 @@ Type owner: [Agent Recovery](../mechanics/agent-recovery.md).
 
 Type owner: [Factions](../mechanics/factions.md).
 
-| GDR                 | Type                  | GDR purpose           | What it supplies                                                                                                                                                           |
-| ------------------- | --------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `red_dawn`          | FactionArchetype      | Archetype             | The only Faction: its name and its initial Faction activity level, `faint`.                                                                                                |
-| `faint`             | FactionActivityLevel  | Calculation parameter | How long the level lasts, how often an operation occurs, the weight of each Faction operation level, and the next level, `active`.                                         |
-| `active`            | FactionActivityLevel  | Calculation parameter | As `faint`; the next level is `war`.                                                                                                                                       |
-| `war`               | FactionActivityLevel  | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level.                                                                                                       |
-| `operation_level_1` | FactionOperationLevel | Calculation parameter | The money and funding gained when the Mission at a Response Mission site of level 1 is Won, and the Panic and funding change when the site is Expired or its Mission Lost. |
-| `operation_level_2` | FactionOperationLevel | Calculation parameter | As `operation_level_1`, for level 2.                                                                                                                                       |
+| GDR                 | Type                  | GDR purpose           | What it supplies                                                                                                                                                                                                             |
+| ------------------- | --------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `red_dawn`          | FactionArchetype      | Archetype             | The only Faction: its name and its initial Faction activity level, `faint`.                                                                                                                                                  |
+| `faint`             | FactionActivityLevel  | Calculation parameter | How long the level lasts, how often an operation occurs, the weight of each Faction operation level, and the next level, `active`.                                                                                           |
+| `active`            | FactionActivityLevel  | Calculation parameter | As `faint`; the next level is `war`.                                                                                                                                                                                         |
+| `war`               | FactionActivityLevel  | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level.                                                                                                                                                         |
+| `operation_level_1` | FactionOperationLevel | Calculation parameter | The money and funding gained when the Mission at a Response Mission site of level 1 is Won, and the [Panic](../mechanics/domain-model.md#campaign-standing) and funding change when the site is Expired or its Mission Lost. |
+| `operation_level_2` | FactionOperationLevel | Calculation parameter | As `operation_level_1`, for level 2.                                                                                                                                                                                         |
 
 Each MissionSiteArchetype of kind response states its Faction operation level. A Faction selects a level by weight, and
 [MissionSiteArchetype selection](../mechanics/missions.md#missionsitearchetype-selection) in Missions then selects a MissionSiteArchetype of kind response

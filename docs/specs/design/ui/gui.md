@@ -18,21 +18,12 @@ the [Main menu](../foundation/campaign-lifecycle.md#glossary), where no [Campaig
 playing it. For every screen, the guiding question is what the Player needs to see by default and what can stay one
 step away. How each screen looks is owned by [Visual Design](visual-design.md).
 
-# Relationships
-
-- Uses [Campaign Lifecycle](../foundation/campaign-lifecycle.md)
-- Uses [Domain Model](../mechanics/domain-model.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Used by [Gameplay Dependency Direction](../../implementation/guidance/gameplay-dependency-direction.md)
-- Used by [Headless First](../../implementation/guidance/headless-first.md)
-- Used by [Visual Design](visual-design.md)
-
 # Main menu
 
-The GUI opens at the Main menu, the Session state with no [Current campaign](../foundation/engine-contract.md#session-data) under
+The GUI opens at the [Main menu](../foundation/campaign-lifecycle.md#glossary), the [Session](../foundation/core-concepts.md#campaign-and-session) state with no [Current campaign](../foundation/engine-contract.md#session-data) under
 [Session lifecycle](../foundation/campaign-lifecycle.md#session-lifecycle) in Campaign Lifecycle.
 
-The Main menu lists the [Campaign saves](../foundation/engine-contract.md#persisted-data), and lets the Player delete each listed Campaign save and each listed Campaign
+The Main menu lists the [Campaign saves](../foundation/engine-contract.md#persisted-data), and lets the Player delete each listed Campaign save and each listed [Campaign](../foundation/core-concepts.md#campaign-and-session)
 with all its Campaign saves, under [Deleting Campaign saves](../foundation/saves.md#deleting-campaign-saves) in Saves.
 Because deleting cannot be undone, the GUI asks the Player to confirm each deletion first, naming the Campaign save or
 the Campaign and how many Campaign saves it removes.

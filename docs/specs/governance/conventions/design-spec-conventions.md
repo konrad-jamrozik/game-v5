@@ -10,36 +10,31 @@
 
 # Overview
 
-A [Design specification](spec-conventions.md#specifications) is the only durable record of a design decision: an [Implementation](artifact-relationships.md#artifacts) is built from it and can be
+A [Design specification](spec-conventions.md#specifications) is the only durable record of a design decision: an [Implementation](spec-conventions.md#artifacts) is built from it and can be
 rebuilt from it at any time. So it must say everything that matters to the game and nothing that does not. What
 matters is what a player, a save, or a replay could notice, together with the [GDRs](../../design/foundation/core-concepts.md#game-build-and-content) that the [Game designer](spec-conventions.md#participants) authors;
 everything else is left to the [Implementer](spec-conventions.md#participants), who decides it differently in every Implementation.
 
 What it says must also be exact enough to test. Every rule names its inputs, its boundaries, and its outcome, and an
-acceptance example shows it at work. Design Specification Conventions refines Specification Conventions: Specification Conventions says
+acceptance example shows it at work. Design Specification Conventions builds on Specification Conventions: Specification Conventions says
 how any specification is written, and Design Specification Conventions says what a Design specification states and how precisely.
-
-# Relationships
-
-- Refines [Specification Conventions](spec-conventions.md)
 
 # Glossary
 
-Terms about specifications in general are in the Specification Conventions glossary.
+Terms about [specifications](spec-conventions.md#specifications) in general are in the Specification Conventions glossary.
 
-| Term               | Definition                                                                                                                                                                                                                        |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results.                                                                                                                                 |
-| Evidence basis     | Informative material inspected when drafting a specification; it is not a formal [relationship](artifact-relationships.md#glossary) unless also declared under [Relationships](artifact-relationships.md#relationship-structure). |
+| Term           | Definition                                                                                                                                                                                         |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Evidence basis | Informative material inspected when drafting a specification; it is not a formal [requirement](spec-conventions.md#specifications) and makes no [Reference](artifact-relationships.md#references). |
 
 # What belongs in a Design specification
 
-Design specifications describe the design of the game; any implementation that obeys them is acceptable. A statement
+[Design specifications](spec-conventions.md#specifications) describe the design of the game; any [implementation](spec-conventions.md#artifacts) that obeys them is acceptable. A statement
 belongs in a Design specification only if it meets at least one of the following criteria. This list is exhaustive:
 
 1. **Observable:** a black-box test through the engine API, a save, or a replay could fail when the statement is
    violated.
-2. **Designer-authored:** the statement is a GDR or a description of game behavior that the [Engine designer](spec-conventions.md#participants) must write down.
+2. **Designer-authored:** the statement is a [GDR](../../design/foundation/core-concepts.md#game-build-and-content) or a description of game behavior that the [Engine designer](spec-conventions.md#participants) must write down.
 3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
 
 Everything else is left to the implementer's discretion and must not be specified. E.g., the following are out
@@ -52,7 +47,7 @@ of scope:
 A statement about one of these matters belongs in a specification only when it states an observable consequence, and
 then the specification states the consequence rather than the mechanism. Non-observable steering for implementers,
 e.g. architecture or code-quality advice, never belongs in a Design specification. Record it, when it is worth
-recording, only in an Implementation specification, under
+recording, only in an [Implementation](spec-conventions.md#artifacts) specification, under
 [What belongs in an Implementation specification](implementation-spec-conventions.md#what-belongs-in-an-implementation-specification).
 
 ## Non-behavioural Design specifications
@@ -84,7 +79,7 @@ unresolved decisions rather than filling them with assumptions.
 
 # Writing exact rules
 
-An Implementer reads a rule once and implements exactly what it says, so a rule leaves nothing to be guessed.
+An [Implementer](spec-conventions.md#participants) reads a rule once and implements exactly what it says, so a rule leaves nothing to be guessed.
 
 A rule should make its trigger, inputs, preconditions, outcome, and state changes clear. Use a transition table or pseudocode where prose would conceal ordering. Define:
 
@@ -171,7 +166,7 @@ reader would otherwise expect the missing rule, in the topic section where they 
 Do not collect exclusions in Overview or in a list. Something that will be specified later is not out of scope; it is
 a TODO under [Kinds of unspecified content](spec-conventions.md#kinds-of-unspecified-content).
 
-Name each exclusion with its canonical term, or with the title of the specification or section that owns it. Do not
+Name each exclusion with its [canonical term](terminology-conventions.md#glossary), or with the title of the specification or section that owns it. Do not
 coin a descriptive phrase for an exclusion under [Canonical terminology](terminology-conventions.md#canonical-terminology); an exclusion that no
 defined term or owning section names is rarely worth stating.
 
@@ -182,7 +177,7 @@ specification says nothing about what the specification does not cover.
 
 An example shows that a rule means what its author intended, and an acceptance example makes that checkable. Every substantial rule must be covered by an acceptance example. Foundation specifications
 using embedded examples may instead explain their modeling contracts through self-contained illustrations alongside
-the concepts, linking to the applicable requirements. These illustrations introduce no production gameplay rules and
+the concepts, linking to the applicable [requirements](spec-conventions.md#specifications). These illustrations introduce no production gameplay rules and
 need not be organized as test fixtures or command sequences. Every acceptance example must identify all applicable
 items in this checklist:
 

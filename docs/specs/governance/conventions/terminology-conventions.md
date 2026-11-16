@@ -16,18 +16,13 @@ defined once, in the Glossary of the specification that owns it, and used in ful
 
 Two exceptions keep this workable. A Non-term is a word deliberately left undefined, because it means different things
 in different places. A Prohibited synonym is a word that is known to compete with a canonical term; it is recorded
-beside the term it competes with, so that writers and reviewers can find and replace it. Terminology Conventions refines
+beside the term it competes with, so that writers and reviewers can find and replace it. Terminology Conventions builds on
 Specification Conventions: Specification Conventions says how any specification is written, and Terminology Conventions says which
 words it may use for its concepts.
 
-# Relationships
-
-- Refines [Specification Conventions](spec-conventions.md)
-- Used by [Glossary Conventions](glossary-conventions.md)
-
 # Glossary
 
-Terms about specifications in general are in the Specification Conventions glossary.
+Terms about [specifications](spec-conventions.md#specifications) in general are in the Specification Conventions glossary.
 
 | Term               | Definition                                                                                                                                                               |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -62,22 +57,20 @@ as an adjective describing that exposure, e.g., "this value is [Player](spec-con
 Use the full glossary term on every mention. Do not abbreviate it, drop words, split its words across a compound,
 or substitute a generic noun after introducing the full term. E.g., use GDR rather than "content"
 or "entry", and [Campaign instance](../../design/foundation/core-concepts.md#campaign-instances) rather than "instance", when referring to those modeling concepts. Grammatical plurals and possessives must retain every word of the term:
-GDRs (under the approved abbreviation exception) and Campaign instance's are valid; entries and instance's are not substitutes.
+GDRs (under the approved abbreviation exception) and [Campaign instance](../../design/foundation/core-concepts.md#campaign-instances)'s are valid; entries and instance's are not substitutes.
 
 This rule applies throughout specifications and all other project documentation, including headings, tables, diagram
 labels, examples, and generated views. Update the owning sources and regenerate derived documentation. Document titles,
 file paths, literal code identifiers, and exact quotations retain their actual spelling. Ordinary words remain valid
 when they describe something else; e.g., a glossary entry is not a GDR. Review each use in context; do not infer compliance from text search alone.
 
-If two similar terms are retained, they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must not be redefined. It needs no link: the generated glossary lists every term with its owner. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
+If two similar terms are [retained](../../design/foundation/world-history.md#glossary), they must represent distinct concepts and have separate, non-overlapping definitions in the appropriate Glossary. A term owned by another specification must not be redefined. It needs no link: the generated glossary lists every term with its owner. When an author or reviewer encounters a likely synonym, resolve whether it denotes the same concept. If it does,
 replace it with the canonical term and record it as a Prohibited synonym of that term, under
 [Prohibited synonyms](#prohibited-synonyms). If the concepts differ, make their distinct definitions explicit. Do not
 leave terminology unresolved.
 
-Relationship content uses `Dependency`, `Dependent`, `relationship`, `artifact`, and `relationship kind` exactly as defined by Artifact Relationships. Relationship or glossary content must not substitute competing formal terms for them.
 The modeling term [Type](../../design/foundation/core-concepts.md#data-modeling) describes data independently of a programming
-language. Explicit programming-language terminology remains valid for programming contracts and explanatory analogies;
-“relationship type” remains a prohibited substitute for “[Relationship kind](artifact-relationships.md#relationship-structure).”
+language. Explicit programming-language terminology remains valid for programming contracts and explanatory analogies.
 
 # Non-terms
 
@@ -93,7 +86,7 @@ The following list of Non-terms is exhaustive:
 
 | Word                    | Reason            | Meaning in context                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ----------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| game behavior           | Context-dependent | What the specification at hand describes the executable implementation doing; e.g., a mechanic's effects or the engine's query guarantees.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| game behavior           | Context-dependent | What the specification at hand describes the executable [implementation](spec-conventions.md#artifacts) doing; e.g., a mechanic's effects or the engine's query guarantees.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | rule; rules; game rules | Context-dependent | The usual meaning: a statement of how the game behaves or of what must hold. A validation rule in these conventions is also a rule. A rule about the game takes one of the following five shapes, and this list is exhaustive: a calculation, i.e. a formula that produces a value; an eligibility condition, deciding whether an action is permitted; an effect, changing the game's data; a creation, stating when new data comes into existence and with which initial values; or an invariant, something that must always hold. The shapes describe usage only: a specification never labels a rule with its shape, and no obligation attaches to a shape. |
 | rule set; ruleset       | Context-dependent | Another way of saying "rules": the rules that apply in some context, taken together. It has no separate meaning.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | modeling role           | Context-dependent | Which modeling concept an element is or exemplifies; e.g., the "Modeling role" column of the worked-example tables in Game Data Records, whose values include Type, GDR, and [Authoritative value](../../design/foundation/core-concepts.md#value-classification). Also used when specifying a game concept, below. Unrelated to the defined term [Role Type](../../design/foundation/campaign-instances.md#glossary).                                                                                                                                                                                                                                         |

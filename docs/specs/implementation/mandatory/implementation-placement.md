@@ -18,14 +18,6 @@ Each Implementation must reside in its own Implementation repo, a sibling of the
 Implementation repo as if nothing else existed. Several Implementations may therefore exist side by side, each
 independent of the others and of the Spec repo.
 
-# Relationships
-
-- Uses [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md)
-- Used by [GitHub Pages Deployment](../recipes/github-pages-deployment.md)
-- Used by [Implementation Feedback](implementation-feedback.md)
-- Used by [Specification Tracking](specification-tracking.md)
-- Used by [Specification Updates](../recipes/specification-updates.md)
-
 # Glossary
 
 | Term                | Definition                                                                                                                                                                                                                                                           |
@@ -75,7 +67,7 @@ nothing outside it existed:
 ## Game data in an Implementation
 
 The [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md#glossary) are authored under the `content/` directory of the Spec
-repo. An Implementation that builds them into its Game build must hold its own copy of the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files it uses inside its
+repo. An Implementation that builds them into its [Game build](../../design/foundation/core-concepts.md#game-build-and-content) must hold its own copy of the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files it uses inside its
 Implementation repo, and its Game build must read that copy rather than the `content/` directory of the Spec repo.
 
 # Edge cases and failure behavior

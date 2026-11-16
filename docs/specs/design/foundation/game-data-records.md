@@ -21,38 +21,33 @@ whenever a calculation needs it, or be referenced from Campaign state, which may
 identity. A GDR that no game behavior reads exists only for the player to see. One GDR may serve several purposes at
 once, e.g. the Thug GDR is the [Archetype](core-concepts.md#campaign-instances) of an [Enemy](../mechanics/domain-model.md#combat) and also supplies its display name.
 
-# Relationships
+# Glossary
 
-- Uses [Campaign Instances](./campaign-instances.md)
-- Uses [Campaign State](./campaign-state.md)
-- Uses [Core Concepts](./core-concepts.md)
-- Uses [Engine Contract](./engine-contract.md)
-- Uses [Player API](./player-api.md)
-- Used by [Bootstrap GDRs](../content/bootstrap-gdrs.md)
-- Used by [Domain Model](../mechanics/domain-model.md)
-- Used by [Missions](../mechanics/missions.md)
+| Term                          | Definition                                                                                                                                                                                                                                                                                                 |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Campaign configuration preset | A [GDR](core-concepts.md#game-build-and-content) supplying a value for every [Campaign configuration](campaign-state.md#glossary) value, from which campaign creation obtains the initial Campaign configuration, under [Campaign configuration presets](configuration.md#campaign-configuration-presets). |
 
 # Purposes of GDRs
 
-A GDR never changes during play, but it can matter to a Campaign in different ways, e.g. by supplying an initial value,
+A [GDR](core-concepts.md#game-build-and-content) never changes during play, but it can matter to a [Campaign](core-concepts.md#campaign-and-session) in different ways, e.g. by supplying an initial value,
 by being read in a calculation, or by being referenced from Campaign state.
 
-GDRs can serve the following seven purposes. The purposes can overlap; they do not define separate Types or required
+GDRs can serve the following seven purposes. The purposes can overlap; they do not define separate [Types](core-concepts.md#data-modeling) or required
 implementation interfaces. Each GDR purpose section below is a worked example of one purpose.
 
-| Purpose                                                    | How the engine uses the GDR                                                                                                                                                                                             | Example                                                                                                                                                                                                                        |
-| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Campaign instance initialization                           | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance. The player cannot override the value.                 | A newly hired [Agent](../mechanics/domain-model.md#agency-and-agents) has base skill 100, the value of the new-base-Agent-skill GDR.                                                                                           |
-| [Campaign configuration preset](configuration.md#glossary) | Campaign creation takes the GDR’s values as the complete initial [Campaign configuration](campaign-state.md#glossary). Before creation, the engine lets the player override individual values of the selected preset.   | A Campaign created from the Hard preset with one override has starting money 80 and investigation difficulty multiplier 2.                                                                                                     |
-| Calculation parameter                                      | The engine reads a GDR when computing a [Derived value](core-concepts.md#value-classification).                                                                                                                         | The engine reads the rate from the Standard contracting GDR to calculate contracting income.                                                                                                                                   |
-| Archetype                                                  | A Campaign instance references the GDR as its Archetype; the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-instances.md#campaign-instance-creation).            | A newly created Enemy whose Archetype is Thug has current health 10 and a fresh [Instance ID](campaign-instances.md#glossary).                                                                                                 |
-| Referenced GDR                                             | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                                                                                                | An [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) holds a reference to the [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) GDR it pursues. |
-| Key for campaign facts                                     | Campaign state holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                                                                                                   | The engine records completions against a Lead GDR’s identity.                                                                                                                                                                  |
-| Display content                                            | No game behavior reads the GDR's value; the engine exposes it to the player through [Player API](engine-contract.md#api-surfaces), subject to [Player-visible information](engine-contract.md#api-surfaces) boundaries. | The Thug GDR's display name and description appear in the enemy list and the encyclopedia.                                                                                                                                     |
+| Purpose                                                                 | How the engine uses the GDR                                                                                                                                                                                                                         | Example                                                                                                                                                                                                                        |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Campaign instance](core-concepts.md#campaign-instances) initialization | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) takes a GDR’s value as the initial value of a property of a new Campaign instance. The player cannot override the value.                                             | A newly hired [Agent](../mechanics/domain-model.md#agency-and-agents) has [base skill](../mechanics/agents-spec.md#combatant-attributes) 100, the value of the new-base-Agent-skill GDR.                                       |
+| [Campaign configuration preset](configuration.md#glossary)              | Campaign creation takes the GDR’s values as the complete initial [Campaign configuration](campaign-state.md#glossary). Before creation, the engine lets the player override individual values of the selected preset.                               | A Campaign created from the Hard preset with one override has starting money 80 and investigation difficulty multiplier 2.                                                                                                     |
+| Calculation parameter                                                   | The engine reads a GDR when computing a [Derived value](core-concepts.md#value-classification).                                                                                                                                                     | The engine reads the rate from the Standard contracting GDR to calculate contracting income.                                                                                                                                   |
+| Archetype                                                               | A Campaign instance references the GDR as its [Archetype](core-concepts.md#campaign-instances); the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-instances.md#campaign-instance-creation). | A newly created [Enemy](../mechanics/domain-model.md#combat) whose Archetype is Thug has [current health](../mechanics/agents-spec.md#combatant-attributes) 10 and a fresh [Instance ID](campaign-instances.md#glossary).      |
+| Referenced GDR                                                          | A Campaign instance holds a reference to a GDR other than its Archetype.                                                                                                                                                                            | An [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) holds a reference to the [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) GDR it pursues. |
+| Key for campaign facts                                                  | [Campaign state](core-concepts.md#campaign-and-session) holds facts keyed by a GDR’s identity while the GDR remains immutable.                                                                                                                      | The engine records completions against a Lead GDR’s identity.                                                                                                                                                                  |
+| Display content                                                         | No game behavior reads the GDR's value; the engine exposes it to the player through [Player API](engine-contract.md#api-surfaces), subject to [Player-visible information](engine-contract.md#api-surfaces) boundaries.                             | The Thug GDR's display name and description appear in the enemy list and the encyclopedia.                                                                                                                                     |
 
 # GDR authoring format
 
-GDRs are authored as YAML files that the Game build supplies. YAML is the authoring format only: how a Game build
+GDRs are authored as YAML files that the [Game build](core-concepts.md#game-build-and-content) supplies. YAML is the authoring format only: how a Game build
 packages, loads, or represents GDRs while the game runs is the Implementer's choice.
 
 Each of the following GDR purpose sections shows one GDR of its worked example as YAML. The snippets illustrate the
@@ -83,7 +78,12 @@ A GDR added later goes into the file of its Type, and a file is added only for a
 
 # GDR purpose: campaign instance initialization
 
-Consider an illustrative creation of an Agent hired during play:
+The engine exposes no way for the player to change a value this purpose supplies. That distinguishes it from the
+Campaign configuration preset purpose, described next.
+
+## Worked example: campaign instance initialization
+
+E.g., an illustrative creation of an Agent hired during play:
 
 | Element                                                            | Modeling role                                                                  | Meaning in this example                                                                                                                                                         |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -102,11 +102,11 @@ type: Skill
 value: 100
 ```
 
-New base Agent skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies
+New base [Agent](../mechanics/domain-model.md#agency-and-agents) skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies
 to newly hired Agents of every Archetype without being repeated in each Archetype.
 
-The example shows only the base skill initial value; Agent hiring also sets the Agent's other initial values. When the hiring action completes, the new Committed state contains an Agent Campaign instance
-with a fresh Instance ID and base skill 100 in State, the value of the new-base-Agent-skill GDR.
+The example shows only the [base skill](../mechanics/agents-spec.md#combatant-attributes) initial value; Agent hiring also sets the Agent's other initial values. When the hiring action completes, the new [Committed state](engine-contract.md#player-actions-and-turns) contains an Agent Campaign instance
+with a fresh [Instance ID](campaign-instances.md#glossary) and base skill 100 in [State](core-concepts.md#campaign-instances), the value of the new-base-Agent-skill GDR.
 
 ```mermaid
 flowchart LR
@@ -120,9 +120,6 @@ flowchart LR
 If training later raises the Agent's base skill to 110, the engine reads 110 from the Agent Campaign instance’s State.
 The new-base-Agent-skill GDR still contains the initial value of 100.
 
-The engine exposes no way for the player to change a value this purpose supplies. That distinguishes it from the
-Campaign configuration preset purpose, described next.
-
 # GDR purpose: campaign configuration preset
 
 When serving the Campaign configuration preset purpose, a GDR supplies one value for every Campaign configuration
@@ -134,7 +131,9 @@ A value belongs to Campaign configuration if and only if the preset GDRs supply 
 not Campaign configuration. It is either a GDR serving another purpose, e.g. the new-base-Agent-skill GDR, or game behavior,
 e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign.
 
-Consider an illustrative Game build with two presets and two Campaign configuration values:
+## Worked example: campaign configuration preset
+
+E.g., an illustrative Game build with two presets and two Campaign configuration values:
 
 | Element                             | Modeling role                                                                  | Meaning in this example                                                                                                                                                         |
 | ----------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -159,7 +158,7 @@ investigation_difficulty_multiplier: 2
 
 Campaign creation copies the selected preset's values into the initial Campaign configuration, replacing each
 overridden value with the player's override. The initial Campaign configuration therefore holds starting money 80 and
-investigation difficulty multiplier 2, and the newly created Agency has money 80 in State. The Hard GDR still has
+investigation difficulty multiplier 2, and the newly created [Agency](../mechanics/domain-model.md#agency-and-agents) has money 80 in State. The Hard GDR still has
 starting money 60: the override changed nothing in the GDR. Campaign state holds the resulting values and no
 reference to Hard.
 
@@ -176,12 +175,16 @@ flowchart LR
 The preset supplies both classes of Campaign configuration value. If the player later changes the investigation
 difficulty multiplier to 1 during play, the engine reads 1 from Campaign configuration, and the Hard GDR still has
 multiplier 2. Starting money is fixed after creation: it stays 80 in Campaign configuration even after an expense
-reduces Agency money to 70, because Agency money is a separate Authoritative value in the Agency Campaign instance's
+reduces Agency money to 70, because Agency money is a separate [Authoritative value](core-concepts.md#value-classification) in the Agency Campaign instance's
 State.
 
 # GDR purpose: calculation parameter
 
-Consider an illustrative contracting income calculation for one Agent. Its complete local setup is:
+When serving the Calculation parameter purpose, the engine reads a GDR when computing a Derived value.
+
+## Worked example: calculation parameter
+
+E.g., an illustrative contracting income calculation for one Agent. Its complete local setup is:
 
 | Element                        | Modeling role       | Meaning in this example                                                               |
 | ------------------------------ | ------------------- | ------------------------------------------------------------------------------------- |
@@ -220,13 +223,18 @@ flowchart LR
 
 # GDR purpose: archetype
 
-Consider an illustrative creation of two Enemy Campaign instances whose Archetype is the same Thug GDR:
+When serving the Archetype purpose, a GDR is the Archetype a Campaign instance references, supplying shared
+characteristics and initial values.
+
+## Worked example: archetype
+
+E.g., an illustrative creation of two Enemy Campaign instances whose Archetype is the same Thug GDR:
 
 | Element                                                            | Modeling role                                                                  | Meaning in this example                                                                                                                                                                                                         |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Enemy                                                              | Type                                                                           | Describes the Enemy Campaign instances.                                                                                                                                                                                         |
 | EnemyArchetype                                                     | Type                                                                           | Describes the shared enemy characteristics and initial values.                                                                                                                                                                  |
-| Thug                                                               | GDR serving the Archetype purpose                                              | Has Type EnemyArchetype and base health 10.                                                                                                                                                                                     |
+| Thug                                                               | GDR serving the Archetype purpose                                              | Has Type EnemyArchetype and [base health](../mechanics/agents-spec.md#combatant-attributes) 10.                                                                                                                                 |
 | Enemy creation                                                     | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) | A newly created Enemy Campaign instance has a fresh Instance ID, its EnemyArchetype as its Archetype, empty [Constants](core-concepts.md#campaign-instances), and current health in State equal to the Archetype's base health. |
 | enemy_1 and enemy_2                                                | Campaign instances                                                             | Distinct Enemy Campaign instances sharing Thug as their Archetype, with independent State and Constants.                                                                                                                        |
 | [Current health](../mechanics/agents-spec.md#combatant-attributes) | Authoritative value                                                            | Initially 10 in each Enemy Campaign instance’s State.                                                                                                                                                                           |
@@ -242,7 +250,7 @@ base_weapon_damage: 8
 is_officer: false
 ```
 
-Each newly created Enemy Campaign instance whose Archetype is Thug has current health 10 in State and its own fresh
+Each newly created [Enemy](../mechanics/domain-model.md#combat) Campaign instance whose Archetype is Thug has [current health](../mechanics/agents-spec.md#combatant-attributes) 10 in State and its own fresh
 Instance ID; here the two Instance IDs are enemy_1 and enemy_2. Each belongs to a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).
 Both Enemy Campaign instances refer to the same GDR; damaging enemy_1 changes its current health without changing enemy_2 or Thug.
 
@@ -257,13 +265,16 @@ flowchart LR
 # GDR purpose: referenced GDR
 
 When serving the Referenced GDR purpose, a GDR is referenced by a Campaign instance other than as its Archetype.
-Consider an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
 
-| Example concept        | Modeling role                                                                                                                                   | Question it answers                                                        |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Lead                   | GDR serving the Referenced GDR purpose, representing a Lead to pursue.                                                                          | Which Lead can be pursued?                                                 |
-| Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in State, and an immutable Lead reference in Constants. | Which Investigation concerns that Lead, and how has it progressed?         |
-| InvestigationArchetype | GDR used as an Investigation's Archetype, supplying shared characteristics and initial values independently of the referenced Lead.             | What shared characteristics and initial values does the Investigation use? |
+## Worked example: referenced GDR
+
+E.g., an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
+
+| Example concept        | Modeling role                                                                                                                                                                          | Question it answers                                                                                                                                |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lead                   | GDR serving the Referenced GDR purpose, representing a [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) to pursue.                                 | Which Lead can be pursued?                                                                                                                         |
+| Investigation          | Campaign instance for investigation of a given Lead, with its own Instance ID, progress in State, and an immutable Lead reference in [Constants](core-concepts.md#campaign-instances). | Which [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) concerns that Lead, and how has it progressed? |
+| InvestigationArchetype | GDR used as an Investigation's Archetype, supplying shared characteristics and initial values independently of the referenced Lead.                                                    | What shared characteristics and initial values does the Investigation use?                                                                         |
 
 E.g., lead_1 as YAML, with illustrative properties that this example does not use:
 
@@ -316,7 +327,9 @@ regardless of whether some properties match.
 When serving the Key for campaign facts purpose, a GDR’s identity associates campaign-specific facts with that GDR. The facts belong to Campaign state;
 the GDR remains shared and immutable.
 
-Continuing the illustrative Investigation example, suppose investigation_2 completes after investigation_1 was abandoned.
+## Worked example: key for campaign facts
+
+E.g., continuing the illustrative Investigation example, suppose investigation_2 completes after investigation_1 was abandoned.
 Campaign state retains both Investigation Campaign instances, including the values of the Lead reference property
 within each Campaign instance’s Constants property and the lifecycle property within its State property.
 
@@ -364,15 +377,18 @@ flowchart LR
 # GDR purpose: display content
 
 When serving the Display content purpose, a GDR supplies values that exist only for the player to see, e.g. names,
-descriptions, in-game encyclopedia articles, and references to images or other media. Consider an illustrative Thug
-enemy and its encyclopedia article:
+descriptions, in-game encyclopedia articles, and references to images or other media.
 
-| Element             | Modeling role                                          | Meaning in this example                                                                                        |
-| ------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| EnemyArchetype      | Type                                                   | Describes the shared enemy characteristics and initial values, including a display name and a description.     |
-| Thug                | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, base health 10, display name "Thug", and a one-sentence description.                  |
-| EncyclopediaArticle | Type                                                   | Describes an encyclopedia article: a title, body text, an image reference, and a reference to its subject GDR. |
-| Thug article        | GDR serving the Display content purpose                | Has Type EncyclopediaArticle, title "Thug", body text, an image reference, and a reference to the Thug GDR.    |
+## Worked example: display content
+
+E.g., an illustrative Thug enemy and its encyclopedia article:
+
+| Element             | Modeling role                                          | Meaning in this example                                                                                                                           |
+| ------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EnemyArchetype      | Type                                                   | Describes the shared enemy characteristics and initial values, including a display name and a description.                                        |
+| Thug                | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, [base health](../mechanics/agents-spec.md#combatant-attributes) 10, display name "Thug", and a one-sentence description. |
+| EncyclopediaArticle | Type                                                   | Describes an encyclopedia article: a title, body text, an image reference, and a reference to its subject GDR.                                    |
+| Thug article        | GDR serving the Display content purpose                | Has Type EncyclopediaArticle, title "Thug", body text, an image reference, and a reference to the Thug GDR.                                       |
 
 E.g., the Thug article as YAML. It identifies its subject by the identifier of the Thug GDR:
 
@@ -385,7 +401,7 @@ image: images/enemies/thug.png
 subject: thug
 ```
 
-The Combat specification reads Thug's base health 10 as its Archetype initial value; no game behavior reads its display name, its description,
+The [Combat](../mechanics/domain-model.md#combat) specification reads Thug's base health 10 as its Archetype initial value; no game behavior reads its display name, its description,
 or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible
 view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the encyclopedia once the player is
 entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.

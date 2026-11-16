@@ -10,7 +10,7 @@ than they need to. Deterministic checks come first only as a preflight, so the s
 problems a command can find.
 
 The conventions are the authority for every rule this skill applies: [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md)
-and the specifications that refine it, all in `docs/specs/governance/conventions/`. Read the ones each Target follows,
+and the specifications that build on it, all in `docs/specs/governance/conventions/`. Read the ones each Target follows,
 under [Following the conventions](../../../docs/specs/governance/conventions/spec-conventions.md#following-the-conventions),
 before reviewing; every rule in them is a review check. The generated
 [Specification Review Checklist](../../../docs/derived/review-checklist.md) lists every rule section of the conventions
@@ -46,7 +46,7 @@ current state of the documents around it.
 
 1. **Targets:** read each Target in full.
 2. **Context documents:** for each Target, collect:
-   - every document in its Relationships section, in both directions;
+   - every specification it references, and every specification that references it, as the term links in their text show;
    - every specification it links in prose, including the owning Glossaries of the terms it uses;
    - the conventions the Target follows, in particular [Terminology Conventions](../../../docs/specs/governance/conventions/terminology-conventions.md),
      the [Prohibited synonyms](../../../docs/derived/glossary.md#prohibited-synonyms) collected in the derived glossary,
@@ -84,7 +84,7 @@ each other as well as with their context documents. Check every use in context, 
    defined term. Each causes inconsistency because readers cannot tell whether two words mean one concept or two. A
    likely synonym that the owning Glossary does not record as a Prohibited synonym is also a finding.
 5. **Meta documentation:** text about the document instead of its subject, as prohibited by Subject before document,
-   e.g. "This section defines…", "X owns Y", or "This document refines Z by specifying A, B, and C". This includes
+   e.g. "This section defines…", "X owns Y", or "This document details Z by specifying A, B, and C". This includes
    Overviews that inventory facts instead of orienting the reader, and topic sections without a lead sentence.
 6. **Verbosity:** text that can be shortened or removed without losing a rule, definition, or explanation the reader
    needs, e.g. a paragraph that restates its own heading, or rationale padding inside a normative rule. Do not flag
@@ -100,9 +100,9 @@ each other as well as with their context documents. Check every use in context, 
 
 These are semantic checks the linter deliberately cannot prove:
 
-- relationship truth: each relationship entry reflects a real reliance on content the target currently owns, with the
-  right Relationship kind, and entries made obsolete by moved, renamed, or deleted content are pruned;
-- refinements preserve the parent contract, and permitted `uses` cycles have a stated meaning;
+- reference truth: each linked first mention uses the term in the sense its owner defines, and a mention that only
+  points elsewhere or illustrates a rule is marked as such rather than stated as a rule;
+- a specification that details another preserves the contract of the one it builds on;
 - each section, rule, and term sits in the specification that should own it, and a topic that has outgrown its
   specification is split;
 - each Glossary group's name and description cover its terms;

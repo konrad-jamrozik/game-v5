@@ -20,41 +20,24 @@ Three caps limit what the Agency can do at once: the Agent cap on the Agents it 
 it has [Deployed](agents-spec.md#assignments), and the Training cap on the Agents on [Training](agents-spec.md#assignments). Each Upgrade either raises one cap or raises the base weapon
 damage of Agents, and it can be bought again at the same price.
 
-Economy and Upgrades refines [Domain Model](domain-model.md): Domain Model says that the Agency holds money and employs
+Economy and Upgrades builds on [Domain Model](domain-model.md): Domain Model says that the Agency holds money and employs
 Agents, and Economy and Upgrades says how that money is earned and spent.
-
-# Relationships
-
-- Uses [Configuration](../foundation/configuration.md)
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Developer Access](../foundation/developer-access.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Numbers](../foundation/numbers.md)
-- Uses [Player API](../foundation/player-api.md)
-- Refines [Agents](./agents-spec.md)
-- Refines [Domain Model](domain-model.md)
-- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Missions](./missions.md)
-- Used by [Panic and Endings](./panic-and-endings.md)
-- Used by [Turn Advancement](./turn-advancement.md)
 
 # Glossary
 
-These terms are specific to the Agency's economy. General terms are in the
+These terms are specific to the [Agency](domain-model.md#agency-and-agents)'s economy. General terms are in the
 [Domain Model glossary](domain-model.md#glossary); terms about Agents are in the
 [Agents glossary](agents-spec.md#glossary).
 
 | Term                  | Definition                                                                                                                                                                        | Prohibited synonyms                           |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| Upgrade               | A permanent improvement the Agency buys with money, any number of times.                                                                                                          |                                               |
-| Acquisitions          | For one Upgrade, the number of times the Agency has purchased it.                                                                                                                 |                                               |
+| Acquisitions          | For one [Upgrade](domain-model.md#agency-and-agents), the number of times the Agency has purchased it.                                                                            |                                               |
 | Increment             | How much one acquisition of an Upgrade raises the value it improves: the Upgrade's `increment`.                                                                                   |                                               |
 | Upgrade bonus         | For one effect identifier, what every Upgrade with that effect adds to the starting value of the value they improve: the sum of each such Upgrade's Increment × its Acquisitions. |                                               |
-| Cap Upgrade           | An Upgrade that raises the Agent cap, the Transport cap, or the Training cap.                                                                                                     | Cap effect                                    |
-| Weapon damage Upgrade | An Upgrade that raises the base weapon damage of Agents.                                                                                                                          | Base weapon damage effect; Agent value effect |
-| Agent cap             | The most Agents the Agency can employ when it hires another one.                                                                                                                  |                                               |
-| Transport cap         | The most Agents the Agency can have Deployed at the same time.                                                                                                                    |                                               |
-| Training cap          | The most Agents the Agency can have assigned to Training at the same time.                                                                                                        |                                               |
+| Cap Upgrade           | An Upgrade that raises the [Agent cap](domain-model.md#agency-and-agents), the Transport cap, or the Training cap.                                                                | Cap effect                                    |
+| Weapon damage Upgrade | An Upgrade that raises the [base weapon damage](agents-spec.md#combatant-attributes) of Agents.                                                                                   | Base weapon damage effect; Agent value effect |
+| Transport cap         | The most Agents the Agency can have [Deployed](agents-spec.md#assignments) at the same time.                                                                                      |                                               |
+| Training cap          | The most Agents the Agency can have assigned to [Training](agents-spec.md#assignments) at the same time.                                                                          |                                               |
 
 # Economy GDRs
 
@@ -66,14 +49,14 @@ apart from the `id` and `type` that every GDR has.
 
 EconomyParameters bundles the scalar values that hiring, upkeep, Agency income, and the caps read.
 
-| Property                       | Meaning                                                                | Read by                         |
-| ------------------------------ | ---------------------------------------------------------------------- | ------------------------------- |
-| `hire_cost`                    | The money one hire costs.                                              | [Hiring Agents](#hiring-agents) |
-| `upkeep_per_agent`             | The money each Serving Agent costs in one Advance turn.                | [Upkeep](#upkeep)               |
-| `contracting_income_per_agent` | The money each Agent working on Contracting earns in one Advance turn. | [Agency income](#agency-income) |
-| `base_agent_cap`               | The Agent cap before any Upgrade is acquired.                          | [Agency caps](#agency-caps)     |
-| `base_transport_cap`           | The Transport cap before any Upgrade is acquired.                      | [Agency caps](#agency-caps)     |
-| `base_training_cap`            | The Training cap before any Upgrade is acquired.                       | [Agency caps](#agency-caps)     |
+| Property                       | Meaning                                                                                                                       | Read by                         |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `hire_cost`                    | The money one hire costs.                                                                                                     | [Hiring Agents](#hiring-agents) |
+| `upkeep_per_agent`             | The money each [Serving](agents-spec.md#agent-statuses) [Agent](domain-model.md#agency-and-agents) costs in one Advance turn. | [Upkeep](#upkeep)               |
+| `contracting_income_per_agent` | The money each Agent working on [Contracting](agents-spec.md#assignments) earns in one Advance turn.                          | [Agency income](#agency-income) |
+| `base_agent_cap`               | The Agent cap before any Upgrade is acquired.                                                                                 | [Agency caps](#agency-caps)     |
+| `base_transport_cap`           | The Transport cap before any Upgrade is acquired.                                                                             | [Agency caps](#agency-caps)     |
+| `base_training_cap`            | The Training cap before any Upgrade is acquired.                                                                              | [Agency caps](#agency-caps)     |
 
 ## Upgrade
 
@@ -104,7 +87,7 @@ An AgencyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-in
 **Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for
 EconomyParameters, Upgrade, and AgencyArchetype GDRs. A Game build whose GDRs violate one of these rules is defective:
 no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under
-[Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in Engine Contract.
+[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **One AgencyArchetype:** The Game build supplies exactly one AgencyArchetype, so no rule selects among
    AgencyArchetypes.
@@ -135,7 +118,7 @@ in Configuration requires. Each [Campaign configuration preset](../foundation/co
 Neither value is adjustable during play, so a Campaign configuration change naming either is invalid, under
 [Changing Campaign configuration during play](../foundation/configuration.md#changing-campaign-configuration-during-play).
 A [Preset edit](../foundation/configuration.md#glossary) setting either to a value outside its permitted values is rejected, under
-[Preset selection and edits](../foundation/configuration.md#preset-selection-and-edits). A Campaign configuration preset
+[Preset selection and edits](../foundation/configuration.md#preset-selection-and-edits). A [Campaign configuration preset](../foundation/game-data-records.md#glossary)
 whose own value of either is outside its permitted values makes the Game build defective, with the consequences stated
 under [Economy GDR validation](#economy-gdr-validation). Campaign configuration keeps both values for the whole Campaign
 as the values the Campaign started with; no rule reads them after campaign creation, and a later change of the Agency's
@@ -162,7 +145,7 @@ The Agency also has these [Derived values](../foundation/core-concepts.md#value-
 [Agency caps](#agency-caps); its projected income and projected upkeep, under
 [Projected income and upkeep](#projected-income-and-upkeep); and its roster, i.e. every Agent whose Agency reference
 identifies it, whatever that Agent's [Agent status](domain-model.md#agency-and-agents), under [Agent properties](agents-spec.md#agent-properties) in
-Agents. Its money has the two [Turn series](../foundation/world-history.md#glossary) under [Turn series of money](#turn-series-of-money); funding and Acquisitions
+Agents. Its money has the two [Turn series](../foundation/world-history.md#turn-series) under [Turn series of money](#turn-series-of-money); funding and Acquisitions
 have none.
 
 The following table is the exhaustive list of rules that change the Agency's State:
@@ -174,7 +157,7 @@ The following table is the exhaustive list of rules that change the Agency's Sta
 | Acquisitions | [Purchasing Upgrades](#purchasing-upgrades)                                                                                                                                                       | No rule                                                                                                     |
 
 A rule of another specification that changes money adds a whole amount to it, positive or negative, and the result is
-never clamped. The Agency is retained for the whole Campaign and never removed.
+never clamped. The Agency is [retained](../foundation/world-history.md#glossary) for the whole Campaign and never removed.
 
 ## Agency creation
 
@@ -194,7 +177,7 @@ table is exhaustive.
 | Acquisitions        | 0 for every Upgrade GDR the Game build supplies.   | This rule.                                                                                     |
 
 Campaign creation also records the Agency's initial money as the value of Money at the start of turn for the first
-Turn, under [Turn series of money](#turn-series-of-money).
+[Turn](../foundation/engine-contract.md#player-actions-and-turns), under [Turn series of money](#turn-series-of-money).
 
 ## Funding changes
 
@@ -207,8 +190,8 @@ funding after = max(0, funding before + sum of the amounts)
 ```
 
 Inputs: funding before is the Agency's funding as the [Step-start value](turn-advancement.md#glossary) of the [Turn advancement step](turn-advancement.md#glossary) that makes the
-changes, a whole number of at least 0; the amounts are every funding change that rules apply in that one Turn
-advancement step, each a whole number of money. When one Turn advancement step makes several funding changes, they are
+changes, a whole number of at least 0; the amounts are every funding change that rules apply in that one [Turn
+advancement step](domain-model.md#turn-advancement-steps), each a whole number of money. When one Turn advancement step makes several funding changes, they are
 added up first and the floor is applied once, to the sum, so the result does not depend on the order in which an
 implementation applies them. No rounding occurs, because every term is a whole number. The result is a whole number of
 at least 0.
@@ -242,7 +225,7 @@ A cap with no Upgrade of its effect identifier equals its base. No rounding occu
 bound.
 
 **Counting Training:** An Agent assigned to Training occupies a place under the Training cap from the moment of the
-assignment, while it is still In transit, and keeps it until its Assignment stops being Training. An Agent
+assignment, while it is still [In transit](domain-model.md#agency-and-agents), and keeps it until its Assignment stops being Training. An Agent
 travelling away from Training, e.g. one assigned from Training to [Standby](agents-spec.md#assignments), no longer counts.
 
 **Counting Deployed Agents:** A Deployed Agent occupies a place under the Transport cap from the moment it is deployed
@@ -277,12 +260,12 @@ money after = money before + income
 
 Inputs:
 
-| Symbol                         | Meaning                                                                                                                                                                                                                                              | Unit and domain                                |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| funding                        | The Agency's funding, as the Step-start value of the Agency income step.                                                                                                                                                                             | Money; a whole number of at least 0.           |
-| `contracting_income_per_agent` | The value of EconomyParameters.                                                                                                                                                                                                                      | Money per Agent; a whole number of at least 0. |
-| C                              | The number of Agents that are Serving, whose Assignment is Contracting, and that were At assignment in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), under [Transit rule](agents-spec.md#transit-rule) in Agents. | Agents; a whole number of at least 0.          |
-| money before                   | The Agency's money as the Step-start value of the Agency income step.                                                                                                                                                                                | Money; any whole number.                       |
+| Symbol                         | Meaning                                                                                                                                                                                                                                                                                   | Unit and domain                                |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| funding                        | The Agency's funding, as the [Step-start value](domain-model.md#turn-advancement-steps) of the Agency income step.                                                                                                                                                                        | Money; a whole number of at least 0.           |
+| `contracting_income_per_agent` | The value of EconomyParameters.                                                                                                                                                                                                                                                           | Money per Agent; a whole number of at least 0. |
+| C                              | The number of Agents that are Serving, whose Assignment is Contracting, and that were [At assignment](domain-model.md#agency-and-agents) in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), under [Transit rule](agents-spec.md#transit-rule) in Agents. | Agents; a whole number of at least 0.          |
+| money before                   | The Agency's money as the Step-start value of the Agency income step.                                                                                                                                                                                                                     | Money; any whole number.                       |
 
 An Agent that arrives at Contracting in the Transit step of the same Advance turn is not counted in C. No rounding
 occurs, because every term is a whole number. Income is a whole number of at least 0, so money never falls in this step.
@@ -321,7 +304,7 @@ that spend money, are rejected, because each precondition requires money of at l
 ## Projected income and upkeep
 
 **Proposed rule:** The Agency has two Derived values that state what the next Advance turn will add and charge if it is
-committed from the current Committed state:
+committed from the current [Committed state](../foundation/engine-contract.md#player-actions-and-turns):
 
 ```text
 projected income = funding + contracting_income_per_agent × C'
@@ -361,7 +344,7 @@ State changes: when both preconditions hold, the action is one Player action tha
 Turn:
 
 - The Agency's money falls by `hire_cost`. Because money was at least `hire_cost`, money afterwards is at least 0.
-- One Agent is created under [Agent creation](agents-spec.md#agent-creation) in Agents: Serving, on Standby, In transit,
+- One Agent is created under [Agent creation](agents-spec.md#agent-creation) in Agents: Serving, on [Standby](agents-spec.md#assignments), In transit,
   with Turn hired equal to the current turn number, and with the initial base weapon damage under
   [Weapon damage Upgrade](#weapon-damage-upgrade).
 
@@ -525,7 +508,7 @@ Agents. The effect changes no other Agent value, no Weapon GDR, and no [Enemy](d
 
 # Turn series of money
 
-**Proposed rule:** The Agency's money has exactly the following two Turn series, under
+**Proposed rule:** The Agency's money has exactly the following two [Turn series](../foundation/world-history.md#glossary), under
 [Turn series](../foundation/world-history.md#turn-series) in World History. Each records the Agency's money, a whole
 number of money that may be negative.
 
@@ -542,8 +525,8 @@ The values are recorded as follows:
   for Turn t is the Agency's money in the Turn-end state, i.e. before the Agency income step of that Advance turn, so it
   includes every Player action of Turn t, e.g. hiring and purchases. Money at the start of turn for Turn t + 1 is the
   Agency's money at the Turn close step, i.e. after every earlier step of that Advance turn, which is the money in the
-  Turn-start state of Turn t + 1. The Turn close step records both values even when the Campaign received a Campaign
-  ending in the Ending check step of the same Advance turn.
+  Turn-start state of Turn t + 1. The Turn close step records both values even when the Campaign received a [Campaign
+  ending](domain-model.md#campaign-standing) in the Ending check step of the same Advance turn.
 
 The current Turn has a recorded value of Money at the start of turn but none of Money at the end of turn, because its
 Turn-end state is not reached until its Advance turn is committed. Player actions during a Turn never change a value
@@ -890,10 +873,10 @@ build defective, so no Campaign is created from it: setting `weapon_damage`'s `e
 # TODOs
 
 - TODO (later): An Upgrade that raises training skill gain, under [Upgrade effects](#upgrade-effects).
-- TODO (later): An Upgrade that raises exhaustion recovery, under [Upgrade effects](#upgrade-effects).
+- TODO (later): An Upgrade that raises [exhaustion](agents-spec.md#combatant-attributes) recovery, under [Upgrade effects](#upgrade-effects).
 - TODO (later): An Upgrade that raises health recovery, under [Upgrade effects](#upgrade-effects).
-- TODO (later): An Upgrade that raises base health, under [Upgrade effects](#upgrade-effects).
-- TODO (later): Contracting income that depends on an Agent's base skill, under [Agency income](#agency-income).
+- TODO (later): An Upgrade that raises [base health](agents-spec.md#combatant-attributes), under [Upgrade effects](#upgrade-effects).
+- TODO (later): Contracting income that depends on an Agent's [base skill](agents-spec.md#combatant-attributes), under [Agency income](#agency-income).
 - TODO (later): Upgrade prices that rise with each acquisition, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): A limit on the Acquisitions of an Upgrade, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): Selling an Upgrade, under [Upgrades](#upgrades).

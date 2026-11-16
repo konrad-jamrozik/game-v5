@@ -9,7 +9,6 @@ import {
   analyzeSpecifications as analyzeSpecificationsRaw,
   lintSectionReferences,
   lintSpecifications as lintSpecificationsRaw,
-  relationshipEvidence as relationshipEvidenceRaw,
   termMentions as termMentionsRaw,
 } from '../scripts/spec-linter/linter.ts'
 import {
@@ -207,29 +206,13 @@ function diagnosticCodes(files: readonly SourceFile[]): readonly string[] {
   return lintSpecifications({ files }).map((diagnostic) => diagnostic.code)
 }
 
-function cycleCorpus(kind: 'follows' | 'refines' | 'uses'): SourceFile[] {
-  const active = { follows: 'Follows', refines: 'Refines', uses: 'Uses' }[kind]
-  const passive = { follows: 'Followed by', refines: 'Refined by', uses: 'Used by' }[kind]
-  return pairCorpus(
-    '- ' + active + ' [Beta](beta.md)\n- ' + passive + ' [Beta](beta.md)',
-    '- ' + active + ' [Alpha](alpha.md)\n- ' + passive + ' [Alpha](alpha.md)',
-  )
-}
-
-/** The valid corpus plus a Beta copy of Alpha, with the given Relationships inventories for Alpha and Beta. */
-function pairCorpus(alphaInventory: string, betaInventory: string): SourceFile[] {
+/** The valid corpus plus Beta, a copy of Alpha. */
+function pairCorpus(): SourceFile[] {
   const files = validCorpus()
   const alpha = files[2]
   if (!alpha) return files
-  const betaContent = insertSection(
-    alpha.content.replaceAll('Alpha', 'Beta').replaceAll('AAA', 'BBB').replaceAll('aaa', 'bbb'),
-    ['Overview'],
-    '# Relationships\n\n' + betaInventory,
-  )
-  return [
-    ...withRelationships(files, alpha.path, alphaInventory),
-    { path: 'docs/specs/design/foundation/beta.md', content: betaContent },
-  ]
+  const betaContent = alpha.content.replaceAll('Alpha', 'Beta').replaceAll('AAA', 'BBB').replaceAll('aaa', 'bbb')
+  return [...files, { path: 'docs/specs/design/foundation/beta.md', content: betaContent }]
 }
 
 function insertSection(content: string, after: readonly string[], section: string): string {
@@ -238,14 +221,6 @@ function insertSection(content: string, after: readonly string[], section: strin
   const next = headings.find((match) => (match.index ?? 0) > (anchor?.index ?? 0))
   const position = next?.index ?? content.length
   return content.slice(0, position) + section + '\n\n' + content.slice(position)
-}
-
-function withRelationships(files: readonly SourceFile[], path: string, inventory: string): SourceFile[] {
-  return files.map((file) =>
-    file.path === path
-      ? { ...file, content: insertSection(file.content, ['Overview'], '# Relationships\n\n' + inventory) }
-      : file,
-  )
 }
 
 function withGlossary(files: readonly SourceFile[], path: string, glossary: string): SourceFile[] {
@@ -363,15 +338,6 @@ describe('specification linter', () => {
       '| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |',
     )
     expect(diagnosticCodes(fixed)).toEqual([])
-    const relationships = analyzeSpecifications({ files: fixed }).corpus.relationships
-    expect(
-      relationships.some(
-        (relationship) =>
-          relationship.dependencyId === 'DCONV' &&
-          relationship.dependentId === 'AAA' &&
-          relationship.kind === 'follows',
-      ),
-    ).toBe(true)
   })
 
   test('accepts a Prohibited synonyms column and keeps its words out of the prohibited-term scan', () => {
@@ -618,101 +584,18 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toContain('SPEC501')
   })
 
-  test.each([
-    ['Uses', 'Used by', 'uses'],
-    ['Refines', 'Refined by', 'refines'],
-    ['Follows', 'Followed by', 'follows'],
-    ['Implements', 'Implemented by', 'implements'],
-    ['Verifies', 'Verified by', 'verifies'],
-  ])('normalizes %s and %s into one correctly directed edge', (active, passive, kind) => {
-    const files = withRelationships(
-      withRelationships(
-        validCorpus(),
-        'docs/specs/design/foundation/alpha.md',
-        `- ${active} [Game Specification Index](../../README.md)`,
-      ),
-      'docs/specs/README.md',
-      `- ${passive} [Alpha](design/foundation/alpha.md)`,
+  test('rejects a Relationships section', () => {
+    const files = mutate(
+      validCorpus(),
+      'docs/specs/design/foundation/alpha.md',
+      '# Alpha behavior',
+      '# Relationships\n\n- Uses [Game Specification Index](../../README.md)\n\n# Alpha behavior',
     )
-    const result = analyzeSpecifications({ files })
-    expect(result.diagnostics).toEqual([])
-    expect(result.corpus.relationships.filter((edge) => edge.origin === 'explicit')).toEqual([
-      expect.objectContaining({ dependencyId: 'INDEX', dependentId: 'AAA', kind }),
-    ])
-    expect(result.corpus.relationships.every((edge) => !('scope' in edge))).toBe(true)
-  })
-
-  test.each([
-    ['old table', '| Dependency | Relationship | Scope |\n| --- | --- | --- |', 'SPEC401'],
-    ['old subsection', '## Dependencies\n\nNo explicit relationships.', 'SPEC208'],
-    [
-      'old empty sentence',
-      'Only [implicit dependencies](../../governance/conventions/spec-conventions.md#implicit-relationships).',
-      'SPEC401',
-    ],
-    ['annotated entry', '- Uses [Game Specification Index](../../README.md): rules', 'SPEC407'],
-    ['nested entry', '- Uses [Game Specification Index](../../README.md)\n  - details', 'SPEC407'],
-    ['ordered list', '1. Uses [Game Specification Index](../../README.md)', 'SPEC401'],
-    ['wrong phrase case', '- uses [Game Specification Index](../../README.md)', 'SPEC409'],
-    ['external destination', '- Uses [Example](https://example.com)', 'SPEC408'],
-    ['nonregistered destination', '- Uses [Missing](missing.md)', 'SPEC408'],
-    ['fragment destination', '- Uses [Game Specification Index](../../README.md#glossary)', 'SPEC408'],
-    ['incorrect title', '- Uses [Index](../../README.md)', 'SPEC410'],
-    [
-      'duplicate',
-      '- Uses [Game Specification Index](../../README.md)\n- Uses [Game Specification Index](../../README.md)',
-      'SPEC412',
-    ],
-    ['self reference', '- Uses [Alpha](alpha.md)', 'SPEC411'],
-    [
-      'wrong group order',
-      '- Refines [Game Specification Index](../../README.md)\n- Uses [Game Specification Index](../../README.md)',
-      'SPEC415',
-    ],
-    [
-      'wrong title order',
-      '- Uses [Specification Conventions](../../governance/conventions/spec-conventions.md)\n- Uses [Game Specification Index](../../README.md)',
-      'SPEC415',
-    ],
-    [
-      'empty mixed with entries',
-      'No explicit relationships.\n\n- Uses [Game Specification Index](../../README.md)',
-      'SPEC401',
-    ],
-  ])('rejects %s', (_name, inventory, code) => {
-    expect(
-      diagnosticCodes(withRelationships(validCorpus(), 'docs/specs/design/foundation/alpha.md', inventory)),
-    ).toContain(code)
-  })
-
-  test('does not accept a mirror with the wrong direction', () => {
-    const files = withRelationships(
-      withRelationships(
-        validCorpus(),
-        'docs/specs/design/foundation/alpha.md',
-        '- Uses [Game Specification Index](../../README.md)',
-      ),
-      'docs/specs/README.md',
-      '- Uses [Alpha](design/foundation/alpha.md)',
-    )
-    expect(diagnosticCodes(files).filter((code) => code === 'SPEC413')).toHaveLength(2)
+    expect(diagnosticCodes(files)).toContain('SPEC401')
   })
 
   test('accepts a valid in-memory corpus', () => {
     expect(lintSpecifications({ files: validCorpus() })).toEqual([])
-  })
-
-  test.each([
-    ['- Uses [Game Specification Index](../../README.md) for the shared contract.', 'description bullet'],
-    ['- Used by [Game Specification Index](../../README.md)', 'bare inventory bullet'],
-  ])('rejects a repeated inventory entry in Overview (%s)', (bullet) => {
-    const files = mutate(
-      validCorpus(),
-      'docs/specs/design/foundation/alpha.md',
-      'Alpha purpose.',
-      'Alpha purpose.\n\n' + bullet + '\n',
-    )
-    expect(diagnosticCodes(files)).toEqual(['SPEC417'])
   })
 
   test('accepts ordinary bullets in Overview', () => {
@@ -917,31 +800,6 @@ describe('specification linter', () => {
       'SPEC304',
     ],
     [
-      'None dependencies',
-      (files: SourceFile[]) => withRelationships(files, 'docs/specs/design/foundation/alpha.md', 'None.'),
-      'SPEC401',
-    ],
-    [
-      'invalid relationship kind',
-      (files: SourceFile[]) =>
-        withRelationships(
-          files,
-          'docs/specs/design/foundation/alpha.md',
-          '- Copies [Specification Conventions](../../governance/conventions/spec-conventions.md)',
-        ),
-      'SPEC409',
-    ],
-    [
-      'missing relationship mirror',
-      (files: SourceFile[]) =>
-        withRelationships(
-          files,
-          'docs/specs/design/foundation/alpha.md',
-          '- Uses [Specification Conventions](../../governance/conventions/spec-conventions.md)',
-        ),
-      'SPEC413',
-    ],
-    [
       'prohibited formal terminology',
       (files: SourceFile[]) => withGlossary(files, 'docs/specs/design/foundation/alpha.md', '# Glossary\n\nSource.'),
       'SPEC501',
@@ -984,32 +842,6 @@ describe('specification linter', () => {
           left.message.localeCompare(right.message, 'en'),
       ),
     )
-  })
-
-  test.each(['follows', 'refines', 'uses'] as const)('rejects %s cycles', (kind) => {
-    expect(diagnosticCodes(cycleCorpus(kind))).toContain('SPEC414')
-  })
-
-  test('rejects cycles that mix uses and refines', () => {
-    expect(
-      diagnosticCodes(
-        pairCorpus(
-          '- Uses [Beta](beta.md)\n- Refined by [Beta](beta.md)',
-          '- Refines [Alpha](alpha.md)\n- Used by [Alpha](alpha.md)',
-        ),
-      ),
-    ).toEqual(['SPEC414', 'SPEC414'])
-  })
-
-  test('rejects a pair related by both uses and refines', () => {
-    expect(
-      diagnosticCodes(
-        pairCorpus(
-          '- Uses [Beta](beta.md)\n- Refines [Beta](beta.md)',
-          '- Used by [Alpha](alpha.md)\n- Refined by [Alpha](alpha.md)',
-        ),
-      ),
-    ).toEqual(['SPEC418', 'SPEC418'])
   })
 
   test('rejects duplicate glossary ownership and aliases', () => {
@@ -1484,100 +1316,38 @@ describe('derived documentation on a sample corpus', () => {
   })
 })
 
-describe('relationship evidence', () => {
-  function evidence(files: readonly SourceFile[]): readonly string[] {
-    return relationshipEvidenceRaw({ files: withOverviews(files) }).map(
-      (finding) =>
-        `${finding.category} ${posix.basename(finding.dependencyPath)} -> ${posix.basename(finding.dependentPath)}` +
-        (finding.terms.length > 0 ? ` ${finding.terms.join(', ')}` : ''),
-    )
-  }
-
-  /** Alpha owns the term Widget; Beta's Rule section says the given text. */
-  function widgetCorpus(alphaInventory: string, betaInventory: string, betaRule: string): SourceFile[] {
-    return pairCorpus(alphaInventory, betaInventory).map((file) => {
-      if (file.path.endsWith('/alpha.md')) {
-        return {
-          ...file,
-          content: insertSection(
-            file.content,
-            ['Overview', 'Relationships'],
-            '# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Widget | A thing Alpha has. |',
-          ),
-        }
-      }
-      if (file.path.endsWith('/beta.md')) {
-        return { ...file, content: file.content.replace('Beta must be deterministic.', betaRule) }
-      }
-      return file
-    })
-  }
-
-  test('reports a term applied without a recorded relationship', () => {
-    expect(evidence(widgetCorpus('', '', 'Each Widget is counted.'))).toEqual(['missing alpha.md -> beta.md widget x1'])
-  })
-
-  test('ignores a term applied only in an example introduced with "e.g."', () => {
-    expect(evidence(widgetCorpus('', '', 'Things are counted, e.g. a Widget. Counting is exact.'))).toEqual([])
-  })
-
-  test('ignores every sentence of a paragraph that opens with "E.g."', () => {
-    const rule = 'Counting is exact.\n\nE.g., two things are counted. The second is a Widget.'
-    expect(evidence(widgetCorpus('', '', rule))).toEqual([])
-  })
-
-  test('reports a recorded uses that the Normative text does not show', () => {
-    expect(
-      evidence(widgetCorpus('- Used by [Beta](beta.md)', '- Uses [Alpha](alpha.md)', 'Counting is exact.')),
-    ).toEqual(['unsupported uses alpha.md -> beta.md'])
-  })
-
-  test('accepts a recorded uses that the Normative text shows', () => {
-    expect(
-      evidence(widgetCorpus('- Used by [Beta](beta.md)', '- Uses [Alpha](alpha.md)', 'Each Widget is counted.')),
-    ).toEqual([])
-  })
-
-  test('reports a recorded refines whose Dependency has no Handoff', () => {
-    expect(
-      evidence(widgetCorpus('- Refined by [Beta](beta.md)', '- Refines [Alpha](alpha.md)', 'Each Widget is counted.')),
-    ).toEqual(['refines without handoff alpha.md -> beta.md'])
-  })
-
-  test('ignores a table row that only names a term and points to where it is stated', () => {
-    const table = lines(['| Part | Stated in |', '| --- | --- |', '| Widget | [Rule](alpha.md#rule) in Alpha |'])
-    expect(evidence(widgetCorpus('', '', 'Counting is exact.\n\n' + table))).toEqual([])
-  })
-
-  test('scans a table row that states more than a Pointer', () => {
-    const table = lines([
-      '| Part | Stated in |',
-      '| --- | --- |',
-      '| Widget | [Rule](alpha.md#rule), counted each time |',
-    ])
-    expect(evidence(widgetCorpus('', '', 'Counting is exact.\n\n' + table))).toEqual([
-      'missing alpha.md -> beta.md widget x1',
-    ])
-  })
-
-  test('reports a term applied against the recorded order as upward', () => {
-    const files = widgetCorpus('- Uses [Beta](beta.md)', '- Used by [Alpha](alpha.md)', 'Each Widget is counted.')
-    expect(evidence(files)).toContain('upward alpha.md -> beta.md widget x1')
-  })
-})
-
 describe('term mentions', () => {
-  /** Alpha owns the term Widget in an ungrouped Glossary; Beta's Rule section says the given text. */
-  function mentionCorpus(betaRule: string): SourceFile[] {
-    return pairCorpus('', '').map((file) => {
+  /** Alpha owns Widget and Gear in its Parts group and Hammer and Wrench in its Tools group; Beta's Rule section says the given text. */
+  function mentionCorpus(betaRule: string, alphaRule = 'Alpha must be deterministic.'): SourceFile[] {
+    return pairCorpus().map((file) => {
       if (file.path.endsWith('/alpha.md')) {
         return {
           ...file,
           content: insertSection(
             file.content,
-            ['Overview', 'Relationships'],
-            '# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Widget | A thing Alpha has. |',
-          ),
+            ['Overview'],
+            lines([
+              '# Glossary',
+              '',
+              '## Parts',
+              '',
+              'What Alpha is made of.',
+              '',
+              '| Term | Definition |',
+              '| --- | --- |',
+              '| Widget | A thing Alpha has. |',
+              '| Gear | Another thing Alpha has. |',
+              '',
+              '## Tools',
+              '',
+              'What Alpha is made with.',
+              '',
+              '| Term | Definition |',
+              '| --- | --- |',
+              '| Hammer | A tool Alpha uses. |',
+              '| Wrench | Another tool Alpha uses. |',
+            ]),
+          ).replace('Alpha must be deterministic.', alphaRule),
         }
       }
       if (file.path.endsWith('/beta.md')) {
@@ -1594,17 +1364,15 @@ describe('term mentions', () => {
   }
 
   test('reports only the first mention of a term another specification owns', () => {
-    expect(mentions('Each Widget is counted, and every Widget is kept.')).toEqual(['beta.md Widget none #glossary'])
+    expect(mentions('Each Widget is counted, and every Widget is kept.')).toEqual(['beta.md Widget none #parts'])
   })
 
   test('accepts a first mention linked to the Glossary group of its owner', () => {
-    expect(mentions('Each [Widget](alpha.md#glossary) is counted.')).toEqual(['beta.md Widget correct #glossary'])
+    expect(mentions('Each [Widget](alpha.md#parts) is counted.')).toEqual(['beta.md Widget correct #parts'])
   })
 
   test('skips a capitalized one-word term that opens a sentence', () => {
-    expect(mentions('Widget counting is exact. Each Widgets total is kept.')).toEqual([
-      'beta.md Widgets none #glossary',
-    ])
+    expect(mentions('Widget counting is exact. Each Widgets total is kept.')).toEqual(['beta.md Widgets none #parts'])
   })
 
   test('skips terms of Governance specifications in other specifications', () => {
@@ -1618,25 +1386,60 @@ describe('term mentions', () => {
 
   test('links an unlinked first mention to the Glossary group of its owner', () => {
     expect(linkedBeta('Each Widget is counted, and every Widget is kept.')).toContain(
-      'Each [Widget](alpha.md#glossary) is counted, and every Widget is kept.',
+      'Each [Widget](alpha.md#parts) is counted, and every Widget is kept.',
     )
   })
 
   test('corrects the anchor of a first mention linked to its owner elsewhere', () => {
-    expect(linkedBeta('Each [Widget](alpha.md#rule) is counted.')).toContain(
-      'Each [Widget](alpha.md#glossary) is counted.',
+    expect(linkedBeta('Each [Widget](alpha.md#tools) is counted.')).toContain(
+      'Each [Widget](alpha.md#parts) is counted.',
     )
   })
 
   test('rejects an unlinked first mention and a link to the wrong anchor', () => {
-    const termCodes = (rule: string): readonly string[] =>
-      diagnosticCodes(mentionCorpus(rule)).filter((code) => code === 'SPEC508' || code === 'SPEC509')
+    const termCodes = (rule: string): readonly string[] => diagnosticCodes(mentionCorpus(rule))
     expect(termCodes('Each Widget is counted.')).toEqual(['SPEC508'])
-    expect(termCodes('Each [Widget](alpha.md#rule) is counted.')).toEqual(['SPEC509'])
-    expect(termCodes('Each [Widget](alpha.md#glossary) is counted.')).toEqual([])
+    expect(termCodes('Each [Widget](alpha.md#tools) is counted.')).toEqual(['SPEC509'])
+    expect(termCodes('Each [Widget](alpha.md#parts) is counted.')).toEqual([])
+  })
+
+  test.each([
+    ['an e.g. clause', 'Things are counted, e.g. a Widget. Counting is exact.'],
+    ['a paragraph that opens with E.g.', 'Counting is exact.\n\nE.g., two things are counted. The second is a Widget.'],
+    ['the block after an E.g. paragraph ending with a colon', 'Counting is exact.\n\nE.g., these:\n\n- one Widget'],
+    [
+      'a table column headed Example',
+      'Counting is exact.\n\n| Rule | Example |\n| --- | --- |\n| Count all | one Widget |',
+    ],
+    ['an informative rationale', 'Counting is exact.\n\n**Informative rationale:** a Widget is easy to count.'],
+  ])('does not count a mention in %s', (_name, rule) => {
+    expect(mentions(rule)).toEqual([])
+  })
+
+  test('does not count a mention inside a link to a section of the owner', () => {
+    expect(mentions('Counting follows [Widget rules](alpha.md#rule).')).toEqual([])
+  })
+
+  test('rejects a cycle of References', () => {
+    const files = mentionCorpus(
+      'Each [Widget](alpha.md#parts) is counted.',
+      'Each [Sprocket](beta.md#glossary) turns.',
+    ).map((file) =>
+      file.path.endsWith('/beta.md')
+        ? {
+            ...file,
+            content: insertSection(
+              file.content,
+              ['Overview'],
+              '# Glossary\n\n| Term | Definition |\n| --- | --- |\n| Sprocket | A thing Beta has. |',
+            ),
+          }
+        : file,
+    )
+    expect(diagnosticCodes(files)).toEqual(['SPEC414', 'SPEC414'])
   })
 
   test('changes nothing once every first mention is linked', () => {
-    expect(linkedBeta('Each [Widget](alpha.md#glossary) is counted.')).toBeUndefined()
+    expect(linkedBeta('Each [Widget](alpha.md#parts) is counted.')).toBeUndefined()
   })
 })

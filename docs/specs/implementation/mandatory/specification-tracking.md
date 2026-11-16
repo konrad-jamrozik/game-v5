@@ -20,12 +20,6 @@ conforms to, so the changes since then are the difference between that revision 
 names, for each specification, the files that implement it, so each change leads to the files it can affect.
 [Specification Updates](../recipes/specification-updates.md) suggests how to use both records to update an Implementation.
 
-# Relationships
-
-- Uses [Implementation Feedback](implementation-feedback.md)
-- Uses [Implementation Placement](implementation-placement.md)
-- Used by [Specification Updates](../recipes/specification-updates.md)
-
 # Glossary
 
 | Term                   | Definition                                                                                                         |

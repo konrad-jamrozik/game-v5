@@ -20,30 +20,17 @@ back. At random intervals it carries out a [Faction operation occurrence](domain
 is at stake, and each occurrence creates one [Response Mission site](domain-model.md#leads-investigations-mission-sites-and-missions), the Agency's chance to
 stop it. A Faction that becomes Eliminated stops escalating and operating for the rest of the Campaign.
 
-Factions refines [Domain Model](domain-model.md): Domain Model says that Factions create Response Mission sites, and
+Factions builds on [Domain Model](domain-model.md): Domain Model says that Factions create Response Mission sites, and
 Factions says when they do and how severe each operation is.
-
-# Relationships
-
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Numbers](../foundation/numbers.md)
-- Uses [Player API](../foundation/player-api.md)
-- Refines [Domain Model](domain-model.md)
-- Used by [Leads and Progression](./leads-and-progression.md)
-- Used by [Panic and Endings](./panic-and-endings.md)
-- Used by [Turn Advancement](./turn-advancement.md)
-- Refined by [Missions](./missions.md)
 
 # Glossary
 
 These terms are specific to Factions. General terms are in the [Domain Model glossary](domain-model.md#glossary).
 
-| Term                    | Definition                                                                                                                                                                                                                                    | Prohibited synonyms                                                                                                                |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Faction activity level  | How aggressively a Faction currently acts: how often it carries out operations and how severe they are.                                                                                                                                       |                                                                                                                                    |
-| Faction operation level | How severe one Faction operation occurrence is; it decides the [Consequences](domain-model.md#leads-investigations-mission-sites-and-missions) of the Response Mission site the occurrence creates.                                           |                                                                                                                                    |
-| Eliminated              | Permanently put out of action by a Won [Mission](domain-model.md#leads-investigations-mission-sites-and-missions): an Eliminated Faction no longer escalates or carries out operations, and it stays Eliminated for the rest of the Campaign. | Defeated; defeat, naming the end of a Faction. Defeat remains the Campaign ending under [Panic and Endings](panic-and-endings.md). |
+| Term                    | Definition                                                                                                                                                                                                                                                                                         | Prohibited synonyms |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Faction activity level  | How aggressively a [Faction](domain-model.md#factions) currently acts: how often it carries out operations and how severe they are.                                                                                                                                                                |                     |
+| Faction operation level | How severe one [Faction operation occurrence](domain-model.md#factions) is; it decides the [Consequences](domain-model.md#leads-investigations-mission-sites-and-missions) of the [Response Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) the occurrence creates. |                     |
 
 # Faction GDRs
 
@@ -66,32 +53,32 @@ that every GDR has.
 A FactionActivityLevel describes one Faction activity level. It is shared by every Faction at that level. This
 property table is exhaustive apart from `id` and `type`.
 
-| Property                  | Meaning                                                                                                                                                                                                        | Read by                                                   |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `name`                    | The level's display name.                                                                                                                                                                                      | [Player-visible information](#player-visible-information) |
-| `lasts_turns`             | Either a pair `[lo, hi]` of whole numbers of Advance turns, the inclusive range of how long a Faction stays at this level, or `null` for a final level, at which a Faction stays for the rest of the Campaign. | [Level duration](#level-duration)                         |
-| `operation_every_turns`   | A pair `[lo, hi]` of whole numbers of Advance turns: the inclusive range of the interval between two Faction operation occurrences of a Faction at this level.                                                 | [Operation interval](#operation-interval)                 |
-| `operation_level_weights` | A map from the `level` of a FactionOperationLevel to a whole-number weight: how often a Faction operation occurrence of a Faction at this level has each Faction operation level, relative to the others.      | [Operation level](#operation-level)                       |
-| `next`                    | A reference to the FactionActivityLevel a Faction moves to when its time at this level ends, or `null` for a final level.                                                                                      | [Escalation](#escalation)                                 |
+| Property                  | Meaning                                                                                                                                                                                                                                                               | Read by                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `name`                    | The level's display name.                                                                                                                                                                                                                                             | [Player-visible information](#player-visible-information) |
+| `lasts_turns`             | Either a pair `[lo, hi]` of whole numbers of Advance turns, the inclusive range of how long a Faction stays at this level, or `null` for a final level, at which a Faction stays for the rest of the [Campaign](../foundation/core-concepts.md#campaign-and-session). | [Level duration](#level-duration)                         |
+| `operation_every_turns`   | A pair `[lo, hi]` of whole numbers of Advance turns: the inclusive range of the interval between two Faction operation occurrences of a Faction at this level.                                                                                                        | [Operation interval](#operation-interval)                 |
+| `operation_level_weights` | A map from the `level` of a FactionOperationLevel to a whole-number weight: how often a Faction operation occurrence of a Faction at this level has each Faction operation level, relative to the others.                                                             | [Operation level](#operation-level)                       |
+| `next`                    | A reference to the FactionActivityLevel a Faction moves to when its time at this level ends, or `null` for a final level.                                                                                                                                             | [Escalation](#escalation)                                 |
 
 ## FactionOperationLevel
 
 A FactionOperationLevel describes one Faction operation level. This property table is exhaustive apart from `id` and
 `type`.
 
-| Property             | Meaning                                                                                                                                                                         | Read by                                                                                                           |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `level`              | The Faction operation level as a whole number; it is the key that `operation_level_weights` uses, and the value that the MissionSiteArchetype property `operation_level` names. | [Operation level](#operation-level); [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) |
-| `name`               | The level's display name.                                                                                                                                                       | [Player-visible information](#player-visible-information)                                                         |
-| `on_win`             | What the Agency gains when a [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions) at a site of this level is Won.                                | [Missions](missions.md)                                                                                           |
-| `on_ignored_or_lost` | What changes when a Response Mission site of this level is Expired or its Mission Lost.                                                                                         | [Missions](missions.md)                                                                                           |
+| Property             | Meaning                                                                                                                                                                               | Read by                                                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `level`              | The Faction operation level as a whole number; it is the key that `operation_level_weights` uses, and the value that the MissionSiteArchetype property `operation_level` names.       | [Operation level](#operation-level); [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) |
+| `name`               | The level's display name.                                                                                                                                                             | [Player-visible information](#player-visible-information)                                                         |
+| `on_win`             | What the [Agency](domain-model.md#agency-and-agents) gains when a [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions) at a site of this level is Won. | [Missions](missions.md)                                                                                           |
+| `on_ignored_or_lost` | What changes when a Response Mission site of this level is Expired or its [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) Lost.                            | [Missions](missions.md)                                                                                           |
 
 ## Faction GDR validation
 
 **Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Faction
 GDRs. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it,
 and the violation is reported as a data defect, never repaired into different gameplay, under
-[Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in Engine Contract.
+[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **Known properties:** Each FactionArchetype, FactionActivityLevel, and FactionOperationLevel has every property its
    table above lists and no property other than those, apart from `id` and `type`. Each `name` is non-empty text. The
@@ -128,10 +115,10 @@ FactionArchetype. Its [State](../foundation/core-concepts.md#campaign-instances)
 | Faction activity level         | A Mutable reference to the FactionActivityLevel the Faction is currently at.                                                                        | [Authoritative value](../foundation/core-concepts.md#value-classification). Always resolves to a FactionActivityLevel the Game build supplies.                                             |
 | Turns until the next level     | The number of Advance turns left before the Faction moves to its Faction activity level's `next`, or absent.                                        | Authoritative value. A whole number, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). Absent exactly when the Faction activity level's `next` is `null`. |
 | Turns until the next operation | The number of Advance turns left before the Faction's next Faction operation occurrence.                                                            | Authoritative value. A whole number. Always present.                                                                                                                                       |
-| Eliminated                     | Whether the Faction is Eliminated: no or yes.                                                                                                       | Authoritative value. Starts as no and changes only under [Elimination](#elimination).                                                                                                      |
+| Eliminated                     | Whether the Faction is [Eliminated](domain-model.md#factions): no or yes.                                                                           | Authoritative value. Starts as no and changes only under [Elimination](#elimination).                                                                                                      |
 | Eliminated turn                | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) whose Advance turn made the Faction Eliminated, or absent. | Authoritative value. A whole number of at least 1. Absent exactly when Eliminated is no.                                                                                                   |
 
-**Range invariant:** In every Committed state, for every Faction whose Eliminated is no, Turns until the next operation is
+**Range invariant:** In every [Committed state](../foundation/engine-contract.md#player-actions-and-turns), for every Faction whose Eliminated is no, Turns until the next operation is
 at least 1, and Turns until the next level is at least 1 whenever it is present. The rules under
 [Escalation](#escalation) and [Faction operation occurrence generation](#faction-operation-occurrence-generation)
 maintain this: a countdown that reaches zero takes, within the same [Turn advancement step](turn-advancement.md#glossary), the value of a
@@ -204,7 +191,7 @@ they sum to 1. The outcome depends only on that level's `operation_level_weights
 
 # Faction activity
 
-**Proposed rule:** During each Advance turn, in the Turn advancement step Faction activity under
+**Proposed rule:** During each Advance turn, in the [Turn advancement step](domain-model.md#turn-advancement-steps) Faction activity under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Faction whose Eliminated
 is no applies [Escalation](#escalation) and then
 [Faction operation occurrence generation](#faction-operation-occurrence-generation), in that order. A Faction whose
@@ -282,7 +269,7 @@ activity step of the same Advance turn:
 A Faction operation occurrence is not a separate Campaign instance, and its Response Mission site retains these facts,
 under [Game concepts](domain-model.md#game-concepts) in Domain
 Model. A Response Mission site created in this step does not count down toward expiration in the same Advance turn, because
-Mission site expiration precedes Faction activity under
+[Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) expiration precedes Faction activity under
 [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
 A Faction operation occurrence does not depend on any existing Mission site. In particular, an Active Response Mission

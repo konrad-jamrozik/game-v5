@@ -1,14 +1,26 @@
 import type { Link, Text } from 'mdast'
 import type { Node } from 'unist'
 
-import { headingText, isHeading, isLink, isParent, isTable, type ParsedDocument, tableRows } from './markdown.ts'
+import {
+  headingText,
+  isHeading,
+  isLink,
+  isParent,
+  isTable,
+  type ParsedDocument,
+  tableRows,
+  textOf,
+} from './markdown.ts'
 import { FAMILY_KIND } from './overviews.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from './paths.ts'
 import type { SpecificationFamily } from './types.ts'
 
 /**
- * Finds, in each specification, the first mention of every Glossary term another specification owns. That mention must
- * link to the term's Glossary group in its owning specification; the links then form the reference graph.
+ * Finds, in each specification's rule text, the first mention of every Glossary term another specification owns. That
+ * mention must link to the term's Glossary group in its owning specification, and each such mention makes the
+ * specification reference the owner. Rule text excludes the Overview, acceptance examples, sections titled as examples,
+ * and examples introduced with "e.g.". A term spelled like its owner's title names that specification, e.g.
+ * "Bootstrap GDRs", so it points to the specification rather than using a term of it, and does not count.
  */
 
 export interface MentionSpecification {
@@ -44,8 +56,20 @@ export interface TermMention {
   readonly linkEnd: number | undefined
 }
 
-/** Sections whose text is not scanned: the inventory that term links replace. */
-const SKIPPED_SECTIONS: ReadonlySet<string> = new Set(['Relationships'])
+/** Top-level sections that are not rule text. */
+const SKIPPED_SECTIONS: ReadonlySet<string> = new Set(['Overview', 'Acceptance examples'])
+
+/** Headings of sections that hold only examples. */
+const EXAMPLE_SECTION = /^(?:Examples?|Worked examples?)\b/i
+
+/** An example introduced with "e.g.": up to the end of its sentence, its table cell, its paragraph, or its list item. */
+const EXAMPLE_CLAUSE = /\be\.g\.[\s\S]*?(?=[.!?](?:\s|$)|\||\n\s*\n|\n\s*[-*+]\s|$)/gi
+
+/**
+ * A block that opens with "e.g." is one example, however many sentences it runs to; one labeled as informative
+ * rationale explains a choice and states no rule.
+ */
+const OPENS_WITH_EXAMPLE = /^(?:[-*+]\s+|\d+\.\s+)?[*_]*(?:e\.g\.|Informative rationale)/i
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -133,6 +157,48 @@ export function termPattern(terms: readonly string[]): RegExp | undefined {
   return new RegExp(`(?<![\\p{L}\\p{N}])(${alternatives.join('|')})(?:s|es)?(?![\\p{L}\\p{N}])`, 'gu')
 }
 
+function lowerFirst(value: string): string {
+  return (value[0]?.toLowerCase() ?? '') + value.slice(1)
+}
+
+/**
+ * The terms written in prose with a lowercase first letter, e.g. "current health", although a Glossary table starts
+ * every term with a capital. A term of several words is one of them when its owner's own text writes it lowercase more
+ * often than capitalized; a one-word term, when at least five times as often. Uses that open a sentence, and uses
+ * inside a longer term, e.g. "state" inside "Campaign state", are not counted. Every other term keeps its capital, so
+ * that ordinary words, e.g. "turn", are not read as the term "Turn".
+ */
+function lowercaseTerms(
+  specifications: readonly MentionSpecification[],
+  definitions: readonly TermDefinition[],
+  byForm: ReadonlyMap<string, TermDefinition>,
+): ReadonlySet<string> {
+  const anyCase = termPattern([...byForm.keys()])
+  const counts = new Map<string, { lower: number; upper: number }>()
+  if (!anyCase) return new Set()
+  for (const specification of specifications) {
+    const { content } = specification.document
+    for (const match of content.matchAll(anyCase)) {
+      const definition = byForm.get(normalizeTerm(match[1] ?? ''))
+      if (definition?.ownerPath !== specification.path || startsSentence(content, match.index)) continue
+      const count = counts.get(definition.term) ?? { lower: 0, upper: 0 }
+      if (/^\p{Ll}/u.test(match[0])) count.lower += 1
+      else count.upper += 1
+      counts.set(definition.term, count)
+    }
+  }
+  return new Set(
+    definitions
+      .filter((definition) => {
+        const count = counts.get(definition.term)
+        if (count === undefined) return false
+        // A one-word term may also be an ordinary word, e.g. "state", so its owner must write it lowercase far more often.
+        return /\s/.test(definition.term) ? count.lower > count.upper : count.lower >= 5 * Math.max(count.upper, 1)
+      })
+      .map((definition) => definition.term),
+  )
+}
+
 interface LinkContext {
   readonly path: string | undefined
   readonly anchor: string | undefined
@@ -143,6 +209,7 @@ export function findFirstMentions(
   specifications: readonly MentionSpecification[],
   definitions: readonly TermDefinition[],
 ): readonly TermMention[] {
+  const titleByPath = new Map(specifications.map((specification) => [specification.path, specification.title]))
   const byForm = new Map(
     definitions.flatMap((definition) =>
       termForms(definition.term).map((form) => [normalizeTerm(form), definition] as const),
@@ -164,7 +231,20 @@ export function findFirstMentions(
   const kindByPath = new Map(
     specifications.map((specification) => [specification.path, FAMILY_KIND[specification.family]]),
   )
-  const pattern = termPattern([...spellings])
+  const lowercase = lowercaseTerms(specifications, definitions, byForm)
+  const pattern = termPattern(
+    [...spellings].map((spelling) => {
+      const definition = byForm.get(normalizeTerm(spelling))
+      return definition && lowercase.has(definition.term) ? lowerFirst(spelling) : spelling
+    }),
+  )
+  // The anchors that land in an owner's Glossary; any other anchor of the owner is one of its sections.
+  const glossaryAnchors = new Map<string, Set<string>>()
+  for (const definition of definitions) {
+    const anchors = glossaryAnchors.get(definition.ownerPath) ?? new Set<string>(['glossary'])
+    anchors.add(definition.anchor)
+    glossaryAnchors.set(definition.ownerPath, anchors)
+  }
   if (!pattern) return []
   const mentions: TermMention[] = []
 
@@ -172,6 +252,8 @@ export function findFirstMentions(
     const kind = FAMILY_KIND[specification.family]
     const seen = new Set<string>()
     const { content } = specification.document
+    let examples: { start: number; end: number }[] = []
+    const inExample = (offset: number): boolean => examples.some((range) => offset >= range.start && offset < range.end)
 
     const linkContext = (node: Link): LinkContext => {
       if (isExternalUrl(node.url)) return { path: undefined, anchor: undefined, node }
@@ -195,6 +277,10 @@ export function findFirstMentions(
         // Specifications outside Governance follow the Governance conventions without linking their terms.
         if (kindByPath.get(definition.ownerPath) === 'Governance' && kind !== 'Governance') continue
         if (link && link.path !== definition.ownerPath) continue
+        // A link to the owner as a whole or to one of its sections names that document or section, not the term, e.g.
+        // "[Killed and Incapacitated](…)"; only a link into the owner's Glossary is a term link.
+        if (link && (link.anchor === undefined || !glossaryAnchors.get(definition.ownerPath)?.has(link.anchor)))
+          continue
         const range =
           nodeStart === undefined
             ? undefined
@@ -202,6 +288,9 @@ export function findFirstMentions(
         // A capitalized one-word term opening a sentence may be an ordinary word, e.g. "State what…"; it does not count.
         const oneCapitalizedWord = !/\s/.test(match[1] ?? '') && /^\p{Lu}/u.test(match[1] ?? '')
         if (oneCapitalizedWord && range && startsSentence(content, range.start)) continue
+        if (range && inExample(range.start)) continue
+        // A term spelled like its owner's title points to that specification instead of using a term of it.
+        if (definition.term === titleByPath.get(definition.ownerPath)) continue
         seen.add(key)
         const before = node.value.slice(0, match.index)
         const lineBreaks = before.split('\n').length - 1
@@ -241,20 +330,46 @@ export function findFirstMentions(
     let started = false
     let skipping = false
     let inGlossary = false
+    let exampleDepth = 0
+    // A paragraph that opens with "e.g." and ends with a colon introduces the block after it as the same example.
+    let introducedExample = false
     for (const child of specification.document.children) {
+      const introduced = introducedExample
+      introducedExample = false
       if (isHeading(child)) {
+        if (exampleDepth > 0 && child.depth <= exampleDepth) exampleDepth = 0
         if (child.depth === 1) {
           // The first H1 is the title; it and the metadata table below it name no terms.
           skipping = !started || SKIPPED_SECTIONS.has(headingText(child))
           started = true
           inGlossary = headingText(child) === 'Glossary'
+        } else if (EXAMPLE_SECTION.test(headingText(child))) {
+          exampleDepth = child.depth
         }
         continue
       }
-      if (skipping) continue
+      if (skipping || exampleDepth > 0 || introduced) continue
+      examples = []
+      if (child.position) {
+        const start = child.position.start.offset ?? 0
+        const source = content.slice(start, child.position.end.offset)
+        if (OPENS_WITH_EXAMPLE.test(source)) {
+          examples.push({ start, end: start + source.length })
+          introducedExample = child.type === 'paragraph' && source.trimEnd().endsWith(':')
+        }
+        for (const match of source.matchAll(EXAMPLE_CLAUSE)) {
+          examples.push({ start: start + match.index, end: start + match.index + match[0].length })
+        }
+      }
       if (isTable(child) && !inGlossary) {
-        // A table's header row names its columns, not terms.
-        for (const row of tableRows(child).slice(1)) for (const cell of row) walk(cell, undefined)
+        // A table's header row names its columns, not terms; a column headed as an example holds only examples.
+        const rows = tableRows(child)
+        const exampleColumns = new Set(
+          (rows[0] ?? []).flatMap((cell, index) => (EXAMPLE_SECTION.test(textOf(cell).trim()) ? [index] : [])),
+        )
+        for (const row of rows.slice(1)) {
+          for (const [index, cell] of row.entries()) if (!exampleColumns.has(index)) walk(cell, undefined)
+        }
         continue
       }
       if (inGlossary && isTable(child)) {

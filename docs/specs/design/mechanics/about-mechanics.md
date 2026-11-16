@@ -5,7 +5,7 @@
 # What this family is for
 
 Mechanics specifications own the player-facing game systems: their rules, transitions, formulas, and effects. [Domain Model](domain-model.md) defines the game's
-concepts and how they relate, and each other one refines part of it with what its concepts have and the detailed
+concepts and how they relate, and each other one details part of it with what its concepts have and the detailed
 behavior of one system, using
 [Numbers](../foundation/numbers.md) for arithmetic. Each one owns the distributions of its own random outcomes. Exact balance values and
 catalogs are Game Data Records (GDRs); [Turn Advancement](turn-advancement.md) states when each rule applies during Advance turn,
@@ -18,7 +18,7 @@ and which values it uses.
 [Domain Model](domain-model.md) answers _what exists in this game?_ It owns the game concepts and how they relate: the
 Agency, Agents, Leads, Investigations, Mission sites, Missions, Combat, Factions, weapons, and upgrades. It applies Core
 Concepts' vocabulary and Campaign State's rules to these concepts. It defines each concept briefly and states the
-rules that span several concepts; each other Mechanics specification refines one concept with what that concept has,
+rules that span several concepts; each other Mechanics specification details one concept with what that concept has,
 its lifecycle, formulas, and transitions.
 
 ## Panic and Endings
@@ -78,13 +78,14 @@ subsystem. It is the canonical order: a Mechanics specification that contradicts
 
 # How they relate
 
-The family is arranged in layers with Domain Model as the base and Turn Advancement as the tip. Every Mechanics document is refined from the Foundation
+The family is arranged in layers with Domain Model as the base. Every Mechanics document builds on the Foundation
 family and supplies the meanings that Game Data Records (GDRs) fill with values.
 
 ## The layer rule
 
-A document's layer is one after the latest layer among the Mechanics documents it uses or refines; a document that
-depends on no Mechanics document is in layer 1. The first diagram below shows each document's layer.
+A document's layer is one after the latest layer among the Mechanics documents it references, i.e. whose terms its
+rules use; a document that references no Mechanics document is in layer 1. The first diagram below shows each
+document's layer.
 
 A document in an earlier layer states what its things are and what can happen to them. A document in a later layer
 states when it happens and by how much. A document may link to those later details, but never depends on them.
@@ -92,27 +93,18 @@ states when it happens and by how much. A document may link to those later detai
 E.g., Agents states what current health and base health are and that current health can go down and up. The Combat
 specification states how a Combat lowers current health, and Agent Recovery states how it goes back up.
 
-A document refines an earlier one when the earlier one hands it the detail of a term the earlier one owns, e.g. Agents
-owns current health and hands to the Combat specification how current health goes down. It uses an earlier one when it
-applies a term or rule the earlier one owns to describe its own subject, e.g. the Combat specification uses Agent base
-skill to resolve a Combat. A document therefore applies only the terms it owns and terms owned in earlier layers.
+A document therefore uses only the terms it owns and terms owned in earlier layers. A term that documents of several
+layers use belongs in Domain Model, e.g. Agent status or Upgrade.
 
-E.g., Panic and Endings uses Economy and Upgrades, which is in layer 3, so Panic and Endings is in layer 4, and Missions,
-which uses Panic and Endings, is in layer 5.
+E.g., Missions uses terms of Combat, which is in layer 3, so Missions is in layer 4.
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
+_Generated from the links between the specifications by `npm run docs:generate`; do not edit between the markers. An arrow runs from a specification to each specification that references it, i.e. links to it; layer 1 holds the specifications that reference no other specification of the Family, specifications that reference each other in a cycle share a layer, and dashed boxes stand for whole other Families._
 
 ## Within the family
 
-### Uses
-
-![Mechanics family: uses relationships within the family](../../../images/diagrams/mechanics-family-within-uses.svg)
-
-### Refines
-
-![Mechanics family: refines relationships within the family](../../../images/diagrams/mechanics-family-within-refines.svg)
+![Mechanics family: references within the family](../../../images/diagrams/mechanics-family-within.svg)
 
 ## Across families
 
@@ -132,7 +124,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
   single system.
 - **Domain Model versus the other Mechanics documents:** Domain Model holds each concept's definition and the rules
   relating one concept to another; what a single concept has and does on its own belongs to the Mechanics document
-  that refines it. E.g., that an Agent's Assignment places the Agent in a Current team is in Domain Model, and
+  that details it. E.g., that an Agent's Assignment places the Agent in a Current team is in Domain Model, and
   the Agent statuses are in Agents. A statement belongs where the first of these questions that answers yes
   places it:
   1. Does it say what a word means? It is a Glossary definition in Domain Model, unless the word is about a single
@@ -142,7 +134,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
      How concepts relate table in Domain Model.
   4. Is it about the Campaign as a whole, with no single concept to own it? It is a short section of Domain Model,
      e.g. Campaign instance identity scope.
-  5. Anything else describes one concept on its own and belongs to the Mechanics document that refines that concept.
+  5. Anything else describes one concept on its own and belongs to the Mechanics document that details that concept.
 - **Turn Advancement versus the rest:** Advance turn applies rules from many Mechanics documents, and the order in
   which they apply changes outcomes. Turn Advancement states that order canonically and depends on every document
   whose rules it orders; those documents only point to it, keep the formulas and effects of their own rules, and are
@@ -152,7 +144,7 @@ _Generated from the specifications’ Relationships sections by `npm run docs:ge
 # Reading order
 
 Read in layer order: [Domain Model](domain-model.md) (layer 1); then [Agents](agents-spec.md) and
-[Factions](factions.md) (layer 2); then [Combat](combat.md) and [Economy and Upgrades](economy-and-upgrades.md)
-(layer 3); then [Panic and Endings](panic-and-endings.md) (layer 4); then [Missions](missions.md) (layer 5); then
-[Agent Recovery](agent-recovery.md) and [Leads and Progression](leads-and-progression.md) (layer 6); then
-[Investigations](investigations.md) (layer 7); then [Turn Advancement](turn-advancement.md) (layer 8).
+[Panic and Endings](panic-and-endings.md) (layer 2); then [Agent Recovery](agent-recovery.md), [Combat](combat.md),
+[Economy and Upgrades](economy-and-upgrades.md), [Factions](factions.md), and
+[Leads and Progression](leads-and-progression.md) (layer 3); then [Investigations](investigations.md),
+[Missions](missions.md), and [Turn Advancement](turn-advancement.md) (layer 4).

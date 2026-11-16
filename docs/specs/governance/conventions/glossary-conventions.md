@@ -15,13 +15,8 @@ it serves that one look-up. Terms are grouped by subject so the right row is qui
 plain words what the term means rather than how it is modeled, and the words that must not stand in for the term sit in
 the same row.
 
-Glossary Conventions refines Specification Conventions, which places the Glossary among the framing sections of a
-specification; Glossary Conventions says what goes inside it.
-
-# Relationships
-
-- Uses [Terminology Conventions](terminology-conventions.md)
-- Refines [Specification Conventions](spec-conventions.md)
+[Specification Conventions](spec-conventions.md) places the Glossary among the framing sections of a specification;
+Glossary Conventions says what goes inside it.
 
 # Glossary groups
 
@@ -29,7 +24,7 @@ A Glossary is where a reader looks a term up, so it is arranged for finding. Whe
 after the subject its terms cover, never after its role in the document. Each group contains a one-sentence
 description followed by exactly one Term and Definition table, and holds at least two terms. A Glossary whose terms
 form only one group is not grouped: it keeps a single Term and Definition table directly under its H1 and has no H2
-subsections. A Glossary defines only the terms its specification owns. It may open with at most two sentences that name the
+subsections. A Glossary defines only the terms its [specification](spec-conventions.md#specifications) owns. It may open with at most two sentences that name the
 Glossaries a reader should consult for other terms: the one this specification builds on, and any that add detail to
 it. It must not list terms that other Glossaries define. E.g., "These terms are specific to Orders. General terms are
 in the Store Model glossary; terms about refunds are in the Refunds glossary." A Glossary contains no
@@ -51,10 +46,10 @@ defined by its structure, because that structure is its meaning.
 
 A Glossary row may record the words that must not stand in for its term, so that a writer who looks the term up also
 sees what not to write. A Term and Definition table may have a third column, `Prohibited synonyms`, and then every
-table of that Glossary has it. A cell of that column lists the [Prohibited synonyms](terminology-conventions.md#glossary) of the row's term, under
+table of that Glossary has it. A cell of that column lists the [Prohibited synonyms](terminology-conventions.md#prohibited-synonyms) of the row's term, under
 [Prohibited synonyms](terminology-conventions.md#prohibited-synonyms), separated by semicolons. When the synonym is prohibited only
 in some uses, a sentence after the list states the use it is prohibited in, or the ordinary uses that remain valid. A
-row whose term has no Prohibited synonym leaves the cell empty.
+row whose term has no [Prohibited synonym](terminology-conventions.md#glossary) leaves the cell empty.
 
 E.g., a store specification's Glossary row for the term Order may record "Purchase; sale" in its Prohibited synonyms
 cell, followed by "Ordinary uses of "sale", e.g. a seasonal sale, remain valid."

@@ -38,22 +38,21 @@ boundary that keeps every channel of Player API from revealing what its queries 
 
 [Campaign State](campaign-state.md) answers _what is a Campaign's data made of?_ It divides Campaign state into World
 state, with its Current world state and World history, and Campaign configuration, and says how Campaign initialization
-produces the first Campaign state. It refines Core Concepts, which names Campaign state and leaves its components to
+produces the first Campaign state. It builds on Core Concepts, which names Campaign state and leaves its components to
 Campaign State. It stays generic: the rules would hold for any game built on this engine.
 
 ## Campaign Instances
 
 [Campaign Instances](campaign-instances.md) answers _how is one thing in a Campaign's world modeled?_ Every such thing
 is a Campaign instance with the same four properties, created with a fresh Instance ID, referenced only through valid
-references, and able to adopt Role Types. It refines Core Concepts, which names the Campaign instance, and builds on
+references, and able to adopt Role Types. It builds on Core Concepts, which names the Campaign instance, and on
 Campaign State, which places every Campaign instance in World state.
 
 ## World History
 
 [World History](world-history.md) answers _what must a Campaign remember?_ It keeps the historical facts that rules and
 queries need, the Turn series that charts use, and the Turn report and History entries, and what Player API returns
-of them. It refines Campaign State's
-World history component.
+of them. It details Campaign State's World history component.
 
 ## Game Data Records
 
@@ -109,28 +108,20 @@ Mechanics specification owns the distributions of its own random outcomes.
 
 # How they relate
 
-Core Concepts sits underneath everything. Engine Contract states the guarantees shared by every subsystem, and Player
-API builds on it for what the player sees and does. Campaign State and Campaign Instances refine Core Concepts;
-Campaign Instances builds on Campaign State, and World History refines it. Numbers stands alone and is used by Mechanics. Campaign
-Lifecycle, Saves, Timeline, Configuration, Autopilot, Developer Access, Determinism and Randomness, and Numbers each
-own one engine subsystem outright, and all but Numbers use Engine Contract; Timeline also refines Saves, which leaves one further Autosave to it. Game Data
-Records builds on Campaign State and Campaign Instances. No Foundation specification depends on a Mechanics specification; the
-[Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base and Turn
-Advancement, the owner of the Turn advancement engine subsystem, as its tip.
+Core Concepts sits underneath everything, and Engine Contract, which states the guarantees shared by every subsystem,
+comes next. Campaign State, Campaign Lifecycle, and Player API build directly on those two. Determinism and Randomness
+and Game Data Records build on Campaign State; Campaign Instances, Numbers, and Saves build on Determinism and
+Randomness; Timeline and World History build on Campaign Instances; and Autopilot, Configuration, and Developer
+Access, which use Timeline, are the top layer. No Foundation specification references a Mechanics specification;
+the [Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base.
 
 <!-- generated:family-diagram:start -->
 
-_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._
+_Generated from the links between the specifications by `npm run docs:generate`; do not edit between the markers. An arrow runs from a specification to each specification that references it, i.e. links to it; layer 1 holds the specifications that reference no other specification of the Family, specifications that reference each other in a cycle share a layer, and dashed boxes stand for whole other Families._
 
 ## Within the family
 
-### Uses
-
-![Foundation family: uses relationships within the family](../../../images/diagrams/foundation-family-within-uses.svg)
-
-### Refines
-
-![Foundation family: refines relationships within the family](../../../images/diagrams/foundation-family-within-refines.svg)
+![Foundation family: references within the family](../../../images/diagrams/foundation-family-within.svg)
 
 ## Across families
 

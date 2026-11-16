@@ -19,40 +19,21 @@ Contract. Three rules shape it: a value is Player-visible only where the specifi
 action states its preconditions and its changes, and a rejected one changes nothing; and no answer, error, or
 identifier reveals what the queries hide. The specification owning each value or gameplay action supplies the detail.
 
-# Relationships
-
-- Uses [Core Concepts](./core-concepts.md)
-- Uses [Engine Contract](./engine-contract.md)
-- Used by [Agent Recovery](../mechanics/agent-recovery.md)
-- Used by [Agents](../mechanics/agents-spec.md)
-- Used by [Combat](../mechanics/combat.md)
-- Used by [Command-Line Interface](../ui/cli.md)
-- Used by [Developer Access](./developer-access.md)
-- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
-- Used by [Factions](../mechanics/factions.md)
-- Used by [Game Data Records](./game-data-records.md)
-- Used by [Investigations](../mechanics/investigations.md)
-- Used by [Leads and Progression](../mechanics/leads-and-progression.md)
-- Used by [Missions](../mechanics/missions.md)
-- Used by [Panic and Endings](../mechanics/panic-and-endings.md)
-- Used by [Saves](./saves.md)
-- Used by [World History](./world-history.md)
-
 # Player-visible information
 
 [Player-visible information](engine-contract.md#api-surfaces) describes deliberate ordinary-player exposure. The specification that owns a value states
 whether it is Player-visible information and under which reveal conditions, e.g. each Mechanics specification for the
 values it owns. A value that no specification declares Player-visible is not Player-visible information.
 
-Player API queries always return Player-visible information. The same query at equal [Campaign state](core-concepts.md#campaign-and-session) returns the
-same Player-visible information for the [Session controller](engine-contract.md#principals-and-access) and Autopilot AI, independent of [Dev mode](engine-contract.md#principals-and-access).
+[Player API](engine-contract.md#api-surfaces) queries always return Player-visible information. The same query at equal [Campaign state](core-concepts.md#campaign-and-session) returns the
+same Player-visible information for the [Session controller](engine-contract.md#principals-and-access) and [Autopilot AI](engine-contract.md#principals-and-access), independent of [Dev mode](engine-contract.md#principals-and-access).
 
 # Gameplay actions
 
 The mechanics specification owning each gameplay action, e.g. `assignAgents(...)` or `purchaseUpgrade(...)`, states
 the action's preconditions, what the player observes when a precondition fails, and the action's state changes: when
 they apply, which values change, and by how much. A rejected action changes nothing, under
-[Committed state integrity](engine-contract.md#player-actions-and-turns) in Engine Contract, and a successful one is
+[Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract, and a successful one is
 one [Player action](engine-contract.md#player-actions-and-turns), under [Player actions](engine-contract.md#player-actions) in Engine Contract.
 
 The gameplay action inventory is extensible; future gameplay actions follow the same atomicity, visibility, and replay

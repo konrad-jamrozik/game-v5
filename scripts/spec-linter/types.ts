@@ -31,7 +31,8 @@ export type SpecificationFamily =
   | 'Guidance'
   | 'Recipes'
 
-export type RelationshipKind = 'follows' | 'refines' | 'uses' | 'implements' | 'verifies'
+/** The one relationship between specifications: a specification references every specification its text links. */
+export type RelationshipKind = 'references'
 
 export interface SpecificationRecord {
   readonly id: string
@@ -56,8 +57,6 @@ export interface RelationshipRecord {
   readonly dependentId: string
   readonly dependentPath: string
   readonly kind: RelationshipKind
-  readonly origin: 'explicit' | 'implicit'
-  readonly sourcePaths: readonly string[]
 }
 
 export interface SpecificationCorpus {

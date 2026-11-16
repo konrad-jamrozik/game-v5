@@ -20,50 +20,31 @@ Mission's [Combat](domain-model.md#combat) is fought in the next Advance turn: t
 otherwise. What follows depends on the kind of Mission site. A Won [Initiative Mission](domain-model.md#leads-investigations-mission-sites-and-missions) rewards the Agency and can eliminate
 its target Faction. A Lost [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions), like an Expired Response Mission site, raises [Panic](domain-model.md#campaign-standing) and changes funding.
 
-Missions refines [Factions](./factions.md): Factions says when a Faction operation occurs, and Missions says how the
+Missions builds on [Factions](./factions.md): Factions says when a Faction operation occurs, and Missions says how the
 Agency can answer it.
-
-# Relationships
-
-- Uses [Agents](./agents-spec.md)
-- Uses [Combat](./combat.md)
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Economy and Upgrades](./economy-and-upgrades.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Game Data Records](../foundation/game-data-records.md)
-- Uses [Numbers](../foundation/numbers.md)
-- Uses [Panic and Endings](./panic-and-endings.md)
-- Uses [Player API](../foundation/player-api.md)
-- Refines [Domain Model](domain-model.md)
-- Refines [Factions](./factions.md)
-- Used by [Agent Recovery](./agent-recovery.md)
-- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Investigations](./investigations.md)
-- Used by [Leads and Progression](./leads-and-progression.md)
-- Used by [Turn Advancement](./turn-advancement.md)
 
 # Mission GDRs
 
-A Mission site has a MissionSiteArchetype and a Mission a MissionArchetype as its [Archetype](../foundation/core-concepts.md#campaign-instances); both are [Game Data Record](../foundation/core-concepts.md#game-build-and-content)
+A [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) has a MissionSiteArchetype and a [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) a MissionArchetype as its [Archetype](../foundation/core-concepts.md#campaign-instances); both are [Game Data Record](../foundation/core-concepts.md#game-build-and-content)
 (GDR) [Types](../foundation/core-concepts.md#data-modeling). Two properties of the FactionOperationLevel Type, `on_win` and `on_ignored_or_lost`, give the [Consequences](domain-model.md#leads-investigations-mission-sites-and-missions)
-of a Response Mission site and its Mission. The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by
+of a [Response Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) and its Mission. The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by
 [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names.
 
 ## MissionSiteArchetype
 
 A MissionSiteArchetype is the Archetype of a Mission site. It describes the site: its kind, its expiration, its Enemies, and,
-for an Initiative Mission, its rewards. No MissionSiteArchetype references a Faction; the target Faction of a Mission
+for an [Initiative Mission](domain-model.md#leads-investigations-mission-sites-and-missions), its rewards. No MissionSiteArchetype references a [Faction](domain-model.md#factions); the target Faction of a Mission
 site comes from its origin, under [Mission site creation](#mission-site-creation). The following property table is
 exhaustive apart from the `id` and `type` that every GDR has.
 
-| Property           | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Read by                                                                                                                                |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`             | The display name of the kind of Mission site.                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | [Player-visible information](#player-visible-information)                                                                              |
-| `kind`             | `initiative` for an [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions), or `response` for a Response Mission site.                                                                                                                                                                                                                                                                                                                                                             | [Mission site creation](#mission-site-creation); [MissionSiteArchetype selection](#missionsitearchetype-selection)                     |
-| `expires_in_turns` | The number of Advance turns a newly created Mission site stays Active before it is Expired, if no team is deployed to it.                                                                                                                                                                                                                                                                                                                                                                                              | [Mission site creation](#mission-site-creation)                                                                                        |
-| `enemies`          | An ordered map from the identifier of an EnemyArchetype to a count: which Enemies are present at the Mission site, and how many of each. The order of its keys, as authored, is part of the GDR; [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) in Game Data Records guarantees that this order is preserved.                                                                                                                                                                         | [Mission site creation](#mission-site-creation)                                                                                        |
-| `on_win`           | Only for the `initiative` kind, and optional: what a Won Mission gives. It may hold `money`, the money the Agency gains; `funding`, the funding change; `panic_reduction_pct`, the Panic reduction, a whole number of Panic percentage points subtracted from Panic, never a percent of the current Panic; and `eliminate_target_faction`, whether a win makes the target Faction [Eliminated](factions.md#glossary). A missing `on_win` or a missing property of it means 0, or false for `eliminate_target_faction`. | [Consequences](#consequences)                                                                                                          |
-| `operation_level`  | Only for the `response` kind, and required: the `level` of the [Faction operation level](factions.md#glossary) the MissionSiteArchetype serves.                                                                                                                                                                                                                                                                                                                                                                        | [MissionSiteArchetype selection](#missionsitearchetype-selection); [MissionSiteArchetype validation](#missionsitearchetype-validation) |
+| Property           | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Read by                                                                                                                                |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`             | The display name of the kind of Mission site.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | [Player-visible information](#player-visible-information)                                                                              |
+| `kind`             | `initiative` for an [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions), or `response` for a Response Mission site.                                                                                                                                                                                                                                                                                                                                                                                                                                       | [Mission site creation](#mission-site-creation); [MissionSiteArchetype selection](#missionsitearchetype-selection)                     |
+| `expires_in_turns` | The number of Advance turns a newly created Mission site stays Active before it is Expired, if no team is deployed to it.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | [Mission site creation](#mission-site-creation)                                                                                        |
+| `enemies`          | An ordered map from the identifier of an EnemyArchetype to a count: which Enemies are present at the Mission site, and how many of each. The order of its keys, as authored, is part of the GDR; [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) in Game Data Records guarantees that this order is preserved.                                                                                                                                                                                                                                                   | [Mission site creation](#mission-site-creation)                                                                                        |
+| `on_win`           | Only for the `initiative` kind, and optional: what a Won Mission gives. It may hold `money`, the money the [Agency](domain-model.md#agency-and-agents) gains; `funding`, the funding change; `panic_reduction_pct`, the [Panic](domain-model.md#campaign-standing) reduction, a whole number of Panic percentage points subtracted from Panic, never a percent of the current Panic; and `eliminate_target_faction`, whether a win makes the target Faction [Eliminated](factions.md#glossary). A missing `on_win` or a missing property of it means 0, or false for `eliminate_target_faction`. | [Consequences](#consequences)                                                                                                          |
+| `operation_level`  | Only for the `response` kind, and required: the `level` of the [Faction operation level](factions.md#glossary) the MissionSiteArchetype serves.                                                                                                                                                                                                                                                                                                                                                                                                                                                  | [MissionSiteArchetype selection](#missionsitearchetype-selection); [MissionSiteArchetype validation](#missionsitearchetype-validation) |
 
 Of an [EnemyArchetype](combat.md#enemyarchetype), only its identifier is read, through `enemies`.
 
@@ -86,7 +67,7 @@ Mission, whose Faction operation level is that FactionOperationLevel, under [Con
 
 | Property             | Meaning                                                                                                                                                                                                                                                                                                                      | Read by                       |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| `on_win`             | What the Agency gains when such a Response Mission is Won: exactly the two properties `money`, the money the Agency gains, and `funding`, the funding change.                                                                                                                                                                | [Consequences](#consequences) |
+| `on_win`             | What the Agency gains when such a [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions) is Won: exactly the two properties `money`, the money the Agency gains, and `funding`, the funding change.                                                                                             | [Consequences](#consequences) |
 | `on_ignored_or_lost` | What changes when such a Response Mission is Lost or such a Response Mission site is Expired: exactly the two properties `panic_increase_pct`, the Panic increase, a whole number of Panic percentage points added to Panic, never a percent of the current Panic, and `funding`, the funding change, which may be negative. | [Consequences](#consequences) |
 
 ## MissionSiteArchetype validation
@@ -94,9 +75,9 @@ Mission, whose Faction operation level is that FactionOperationLevel, under [Con
 **Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the GDR Type
 MissionSiteArchetype and the FactionOperationLevel properties `on_win` and `on_ignored_or_lost`, and it adds to
 [Faction GDR validation](factions.md#faction-gdr-validation) in Factions and
-[Combat GDR validation](combat.md#combat-gdr-validation) in Combat. A Game build whose GDRs violate one of these rules
+[Combat GDR validation](combat.md#combat-gdr-validation) in [Combat](domain-model.md#combat). A Game build whose GDRs violate one of these rules
 is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into
-different gameplay, under [Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in
+different gameplay, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in
 Engine Contract.
 
 1. **Known properties:** Each MissionSiteArchetype has `name`, `kind`, `expires_in_turns`, and `enemies`, and no
@@ -122,7 +103,7 @@ Engine Contract.
 These rules guarantee that every Mission site has at least one [Enemy](domain-model.md#combat) and an expiration of at least one Advance turn, that
 every Enemy it names can be created, that every Consequence under [Consequences](#consequences) is a whole number, and
 that [MissionSiteArchetype selection](#missionsitearchetype-selection) has at least one possible value for every
-Faction operation occurrence. That every MissionSiteArchetype the creating rule of an Initiative Mission site supplies
+[Faction operation occurrence](domain-model.md#factions). That every MissionSiteArchetype the creating rule of an Initiative Mission site supplies
 has the `kind` `initiative` is validated under [Lead GDR validation](leads-and-progression.md#lead-gdr-validation).
 
 ## MissionArchetype validation
@@ -147,15 +128,15 @@ where it came from, and how long it stays Active.
 reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties.
 This table is exhaustive.
 
-| Property               | Part      | Value                                                                                                                                                                                                                                                                                               | Classification and range                                                                                                                                                                                                      |
-| ---------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Kind                   | Constants | Initiative or Response.                                                                                                                                                                                                                                                                             | [Authoritative value](../foundation/core-concepts.md#value-classification). Equals the MissionSiteArchetype's `kind`.                                                                                                         |
-| Origin                 | Constants | For an Initiative Mission site, an Immutable reference to the Investigation whose completion created it. For a Response Mission site, its Faction operation occurrence: an Immutable reference to the initiating Faction and an Immutable reference to the FactionOperationLevel of the occurrence. | Authoritative value, under [Mission site kind and provenance](#mission-site-kind-and-provenance).                                                                                                                             |
-| Target Faction         | Constants | An Immutable reference to the Faction whose Enemies are present at the Mission site.                                                                                                                                                                                                                | Authoritative value. Always exactly one Faction of the Campaign.                                                                                                                                                              |
-| Turn created           | Constants | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) whose Advance turn created the Mission site.                                                                                                                                                               | Authoritative value. A whole number of at least 1.                                                                                                                                                                            |
-| Lifecycle              | State     | Active, Attempted, Expired, or Cancelled, under [Mission site lifecycle](#mission-site-lifecycle).                                                                                                                                                                                                  | Authoritative value.                                                                                                                                                                                                          |
-| Turns until expiration | State     | The number of Advance turns after which an Active Mission site is Expired.                                                                                                                                                                                                                          | Authoritative value. A whole number, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities), from 0 to `expires_in_turns`. Changes only under [Mission site expiration](#mission-site-expiration). |
-| Enemies                | State     | The ordered list of the Enemies present at the Mission site, in their creation order.                                                                                                                                                                                                               | Authoritative value. No rule changes the list after creation; each Enemy has its own values under [Combat](combat.md).                                                                                                        |
+| Property               | Part      | Value                                                                                                                                                                                                                                                                                                                                                                  | Classification and range                                                                                                                                                                                                      |
+| ---------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kind                   | Constants | Initiative or Response.                                                                                                                                                                                                                                                                                                                                                | [Authoritative value](../foundation/core-concepts.md#value-classification). Equals the MissionSiteArchetype's `kind`.                                                                                                         |
+| Origin                 | Constants | For an Initiative Mission site, an Immutable reference to the [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) whose completion created it. For a Response Mission site, its Faction operation occurrence: an Immutable reference to the initiating Faction and an Immutable reference to the FactionOperationLevel of the occurrence. | Authoritative value, under [Mission site kind and provenance](#mission-site-kind-and-provenance).                                                                                                                             |
+| Target Faction         | Constants | An Immutable reference to the Faction whose Enemies are present at the Mission site.                                                                                                                                                                                                                                                                                   | Authoritative value. Always exactly one Faction of the Campaign.                                                                                                                                                              |
+| Turn created           | Constants | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) whose Advance turn created the Mission site.                                                                                                                                                                                                                                  | Authoritative value. A whole number of at least 1.                                                                                                                                                                            |
+| Lifecycle              | State     | Active, Attempted, Expired, or Cancelled, under [Mission site lifecycle](#mission-site-lifecycle).                                                                                                                                                                                                                                                                     | Authoritative value.                                                                                                                                                                                                          |
+| Turns until expiration | State     | The number of Advance turns after which an Active Mission site is Expired.                                                                                                                                                                                                                                                                                             | Authoritative value. A whole number, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities), from 0 to `expires_in_turns`. Changes only under [Mission site expiration](#mission-site-expiration). |
+| Enemies                | State     | The ordered list of the Enemies present at the Mission site, in their creation order.                                                                                                                                                                                                                                                                                  | Authoritative value. No rule changes the list after creation; each Enemy has its own values under [Combat](combat.md).                                                                                                        |
 
 A Mission site also has [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its Mission, i.e. the Mission whose Mission site
 reference identifies it, when one exists, under [Mission at a Mission site](#mission-at-a-mission-site);
@@ -164,7 +145,7 @@ Won and when its Mission is Lost or it is Expired, read from its
 MissionSiteArchetype and, for a Response Mission site, from the FactionOperationLevel of its origin; and the [Combat
 rating](combat.md#combatant-condition-in-a-combat) of its Enemies, under [Combat rating](combat.md#combat-rating) in Combat. A Mission site has no [Turn series](../foundation/world-history.md#glossary).
 
-**Invariants:** In every Committed state, every Mission site satisfies all of the following. A Committed state that
+**Invariants:** In every [Committed state](../foundation/engine-contract.md#player-actions-and-turns), every Mission site satisfies all of the following. A Committed state that
 violates one is an internal invariant violation, reported under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
@@ -176,7 +157,7 @@ violates one is an internal invariant violation, reported under
 
 **Retention:** A Mission site keeps every property above for the whole Campaign, whatever its lifecycle state, so that
 every reference to it resolves, e.g. from an Enemy or a Mission. A Mission site in a final state no longer participates
-in current gameplay and is retained in [World history](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World
+in current gameplay and is [retained](../foundation/world-history.md#glossary) in [World history](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World
 History. No Mission site is ever removed.
 
 ## Mission site kind and provenance
@@ -212,7 +193,7 @@ adds a Mission site to it. Every Mission site comes into existence during an Adv
    about the creating rule is read. The creating rule is the completion effect under
    [Leads and Progression](leads-and-progression.md), and the completion that triggers it is under
    [Investigations](investigations.md).
-2. **From a Faction operation occurrence:** in the Turn advancement step Faction activity, under item 2 of
+2. **From a Faction operation occurrence:** in the [Turn advancement step](domain-model.md#turn-advancement-steps) Faction activity, under item 2 of
    [Faction operation occurrence generation](factions.md#faction-operation-occurrence-generation) in Factions, which
    supplies the initiating Faction, the Faction operation level, and the turn number. The MissionSiteArchetype is the
    value of the occurrence's [MissionSiteArchetype selection](#missionsitearchetype-selection) outcome. The Mission site
@@ -276,7 +257,7 @@ The set is exhaustive. Every Mission site is Active when it is created. The tran
 | ------------ | ------------ | --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Active       | Attempted    | The `deployAgents` [Player action](../foundation/engine-contract.md#player-actions-and-turns) names the Mission site. | Every precondition under [Deploying Agents](#deploying-agents) holds.                                                                     | A new Mission at the Mission site comes into existence, [Deployed](agents-spec.md#assignments), with its [Current team](domain-model.md#leads-investigations-mission-sites-and-missions), and those Agents are Deployed at once, under [Deploying Agents](#deploying-agents). |
 | Active       | Expired      | Advance turn, in the Turn advancement step Mission site expiration: its Turns until expiration reaches 0.             | The Mission site already existed in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) of this Advance turn. | The Expired Consequences apply, under [Mission site expiration](#mission-site-expiration) and [Consequences](#consequences). It never has a Mission.                                                                                                                          |
-| Active       | Cancelled    | Advance turn, at the end of the Turn advancement step Mission resolution, after every Combat of that step.            | Its target Faction is Eliminated.                                                                                                         | None, under [Consequences](#consequences). It never has a Mission.                                                                                                                                                                                                            |
+| Active       | Cancelled    | Advance turn, at the end of the Turn advancement step Mission resolution, after every Combat of that step.            | Its target Faction is [Eliminated](domain-model.md#factions).                                                                             | None, under [Consequences](#consequences). It never has a Mission.                                                                                                                                                                                                            |
 
 Every transition not listed is impossible; e.g., an Attempted Mission site is never Cancelled or Expired, and nothing
 leaves Attempted, Expired, or Cancelled. Attempted, Expired, and Cancelled are final. A Mission site cannot be attempted
@@ -325,7 +306,7 @@ participates in current gameplay and is retained in World history with its final
 Mission is ever removed.
 
 The Agents who took part in a Mission remain recorded after its Current team is empty: in its Team sent and in each
-Agent's Participation history, under
+[Agent](domain-model.md#agency-and-agents)'s [Participation history](domain-model.md#agency-and-agents), under
 [Participation history records](agents-spec.md#participation-history-records) in Agents.
 
 ## Mission at a Mission site
@@ -352,10 +333,10 @@ whether its Combat is still to be fought and whether it was Won or Lost.
 **Proposed rule:** A Mission is in exactly one of the lifecycle states Deployed, Won, and Lost. The set is exhaustive.
 Every Mission is Deployed when it is created, under [Deploying Agents](#deploying-agents). The transition table is:
 
-| Source state | Target state | Trigger                                                                                        | Condition                                 | Effects                                                                                                                                                                                                                   |
-| ------------ | ------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Deployed     | Won          | Advance turn, in the Turn advancement step Mission resolution: the Mission's Combat is fought. | The Combat outcome is Prevailed.          | Its Combat report joins the Turn report; its Agents return or are [Killed](agents-spec.md#agent-statuses); the Won Consequences apply, under [Mission resolution](#mission-resolution) and [Consequences](#consequences). |
-| Deployed     | Lost         | Advance turn, in the Turn advancement step Mission resolution: the Mission's Combat is fought. | The Combat outcome is Retreated or Wiped. | Its Combat report joins the Turn report; its Agents return or are Killed; the Lost Consequences apply, under [Mission resolution](#mission-resolution) and [Consequences](#consequences).                                 |
+| Source state | Target state | Trigger                                                                                        | Condition                                                               | Effects                                                                                                                                                                                                                   |
+| ------------ | ------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Deployed     | Won          | Advance turn, in the Turn advancement step Mission resolution: the Mission's Combat is fought. | The [Combat outcome](combat.md#combat-rounds-and-results) is Prevailed. | Its Combat report joins the Turn report; its Agents return or are [Killed](agents-spec.md#agent-statuses); the Won Consequences apply, under [Mission resolution](#mission-resolution) and [Consequences](#consequences). |
+| Deployed     | Lost         | Advance turn, in the Turn advancement step Mission resolution: the Mission's Combat is fought. | The Combat outcome is Retreated or Wiped.                               | Its Combat report joins the Turn report; its Agents return or are Killed; the Lost Consequences apply, under [Mission resolution](#mission-resolution) and [Consequences](#consequences).                                 |
 
 Every transition not listed is impossible; e.g., nothing leaves Won or Lost. Won and Lost are final, and a Lost Mission
 stays Lost.
@@ -453,28 +434,28 @@ For each Deployed Mission M, at Mission site S:
    Enemies' side is S's Enemies list, in its order, under [Fixed order of each side](combat.md#fixed-order-of-each-side).
    The current values of every [Combatant](domain-model.md#combat) are their [Step-start values](turn-advancement.md#glossary) of this step, under
    [Combat inputs and outputs](combat.md#combat-inputs-and-outputs). Every Agent of M's Current team is Serving,
-   Deployed on M, and At assignment, because no Player action or earlier step can change a Deployed Agent's lifecycle
+   Deployed on M, and [At assignment](domain-model.md#agency-and-agents), because no Player action or earlier step can change a Deployed Agent's lifecycle
    state or Assignment, so the lists are valid Combat inputs.
 2. **Combat report:** The Combat's Combat report, which names M as its Mission, becomes part of the Turn report of this
    Advance turn, under [Combat report](combat.md#combat-report) in Combat.
 3. **Lifecycle:** M becomes Won when the Combat outcome is Prevailed, and Lost when it is Retreated or Wiped, under
    [Combat outcomes](combat.md#combat-outcomes).
-4. **Killed Agents:** Every Agent whose current health reached 0 in the Combat is Killed under
-   [Killed and Incapacitated](combat.md#combatant-condition-in-a-combat) in Combat; [Agent status](agents-spec.md#agent-status)
+4. **Killed Agents:** Every Agent whose [current health](agents-spec.md#combatant-attributes) reached 0 in the Combat is Killed under
+   [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat; [Agent status](agents-spec.md#agent-status)
    in Agents removes its Assignment and Agent status and records M in its Participation history.
 5. **Survivors:** Every other Agent of M's Current team survives, including an Agent that ended the Combat
-   Incapacitated. Its Assignment becomes [Recovery](agents-spec.md#assignments) when its current health is below its base health, and [Standby](agents-spec.md#assignments) when
+   [Incapacitated](combat.md#combatant-condition-in-a-combat). Its Assignment becomes [Recovery](agents-spec.md#assignments) when its current health is below its [base health](agents-spec.md#combatant-attributes), and [Standby](agents-spec.md#assignments) when
    its current health equals its base health; in both cases its Agent status becomes [In transit](agents-spec.md#agent-statuses), under
    [Assignment changes](agents-spec.md#assignment-changes) in Agents. It leaves M's Current team, and M
    is recorded in its Participation history under [Participation history records](agents-spec.md#participation-history-records).
-   Under [Transit rule](agents-spec.md#transit-rule), it is still In transit when this Advance turn ends. It then
-   regains current health and exhaustion under [Agent Recovery](agent-recovery.md).
+   Under [Transit rule](agents-spec.md#transit-rule), it is still [In transit](domain-model.md#agency-and-agents) when this Advance turn ends. It then
+   regains current health and [exhaustion](agents-spec.md#combatant-attributes) under [Agent Recovery](agent-recovery.md).
 6. **Current team:** M's Current team is now empty.
 7. **Consequences:** The Consequences of M's new lifecycle state apply, under [Consequences](#consequences).
 
-S stays Attempted. A Won Mission can also change Lead prerequisites and Lead availability, under
+S stays Attempted. A Won Mission can also change Lead prerequisites and [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions), under
 [Leads and Progression](leads-and-progression.md). A Mission raises an Agent's exhaustion only through its Combat,
-under [Combat](combat.md), and changes an Agent's base skill in no way, under
+under [Combat](combat.md), and changes an Agent's [base skill](agents-spec.md#combatant-attributes) in no way, under
 [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents.
 
 ## Cancellation
@@ -482,7 +463,7 @@ under [Combat](combat.md), and changes an Agent's base skill in no way, under
 After every Deployed Mission of the step has been resolved and its Consequences applied, every Mission site that is
 Active and whose target Faction is Eliminated becomes Cancelled. Eliminated is read at that moment, so a Faction made Eliminated
 by any Won Mission of this step counts, whichever Mission an implementation resolved first. This is the one
-rule of this step that does not read Step-start values: it reads Eliminated after the step's own Consequences. A Cancelled
+rule of this step that does not read [Step-start values](domain-model.md#turn-advancement-steps): it reads Eliminated after the step's own Consequences. A Cancelled
 Mission site has no Consequences, and its Enemies keep their values.
 
 Only Active Mission sites are cancelled. An Attempted Mission site whose target Faction becomes Eliminated in the same
@@ -499,7 +480,7 @@ The result of the step is the same whichever order an implementation resolves th
   the step changes.
 - **Consequences are sums:** Money changes are added to money, and addition does not depend on order. Funding changes
   are summed and floored once for the step, under [Funding changes](economy-and-upgrades.md#funding-changes). Panic
-  increases and Panic reductions are added to the [Pending panic change](panic-and-endings.md#glossary), whose sum does not depend on order, under
+  increases and Panic reductions are added to the [Pending panic change](panic-and-endings.md#pending-panic-change), whose sum does not depend on order, under
   [Pending panic change](panic-and-endings.md#pending-panic-change).
 - **Elimination is idempotent:** Applying [Elimination](factions.md#elimination) to a Faction that is already Eliminated changes nothing,
   and every application in one step sets the same Eliminated turn, so two Won Missions that eliminate the same Faction
@@ -566,11 +547,11 @@ How each kind of change applies:
   Economy and Upgrades: every funding change of one Turn advancement step, i.e. all of Mission resolution or all of
   Mission site expiration, is summed and then floored at 0 once. A funding change first affects Agency income in the
   next Advance turn, because the Agency income step precedes both steps.
-- **Panic:** Each Panic increase and Panic reduction is added to the Pending panic change under
+- **Panic:** Each Panic increase and Panic reduction is added to the [Pending panic change](panic-and-endings.md#glossary) under
   [Pending panic change](panic-and-endings.md#pending-panic-change) in Panic and Endings, never applied to Panic
   directly; the Panic step of the same Advance turn applies the sum. Each amount is a whole number of Panic percentage
   points that is added to or subtracted from Panic, never a percent of the current Panic, under
-  [Percent values](../foundation/numbers.md#glossary) in Numbers; e.g., a Panic increase of 8 raises a Panic of 10
+  [Percent values](../foundation/numbers.md#percent-values) in Numbers; e.g., a Panic increase of 8 raises a Panic of 10
   to 18, not to 10.8. No rounding occurs, and an amount of 0 changes nothing.
 - **Elimination:** Making a Faction Eliminated has the effects under [Elimination](factions.md#elimination) in Factions. This is the
   only rule that makes a Faction Eliminated.
@@ -578,7 +559,7 @@ How each kind of change applies:
 Every amount a Consequence applies is read from GDRs when the transition happens; a missing `on_win` property of a
 MissionSiteArchetype of kind initiative contributes 0, or no elimination. The Consequences of a Mission site and its Mission
 depend only on the Mission site's kind, the final state of the Mission site or its Mission, and the GDRs they read. A
-Lost Mission yields no benefit from the damage dealt by its team, and no Consequence of a Mission or a Mission site
+Lost Mission yields no benefit from the [damage dealt](combat.md#combat-rounds-and-results) by its team, and no Consequence of a Mission or a Mission site
 slows a Faction's escalation or its operations.
 
 **Informative rationale:** game-ts paid the reward for stopping a Faction operation twice; here a Won Response Mission
@@ -661,7 +642,7 @@ Mission site. An empty Current team of a Won or Lost Mission is reported as empt
   violating an invariant under [Mission site properties](#mission-site-properties) or
   [Mission properties](#mission-properties), e.g. an Active Mission site with a Mission, is an internal invariant
   violation.
-- **Campaign ended:** Once the Campaign has a Campaign ending, `deployAgents` and Advance turn are rejected, under
+- **Campaign ended:** Once the Campaign has a [Campaign ending](domain-model.md#campaign-standing), `deployAgents` and Advance turn are rejected, under
   [Panic and Endings](panic-and-endings.md).
 
 # Acceptance examples

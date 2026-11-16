@@ -32,7 +32,7 @@ These informative views are derived from the registered Markdown specifications.
 | ICONV | [Implementation Specification Conventions](../specs/governance/conventions/implementation-spec-conventions.md) | What an Implementation specification may state, and how its Binding decides its wording.                                            |
 | INDEX | [Game Specification Index](../specs/README.md)                                                                 | Specification registration, navigation, and ownership summaries.                                                                    |
 | OVW   | [Overview Conventions](../specs/governance/conventions/overview-conventions.md)                                | How the Overview of a specification and the overviews of Specification kinds and Families orient a reader.                          |
-| REL   | [Artifact Relationships](../specs/governance/conventions/artifact-relationships.md)                            | Artifact relationship terminology, direction, inventories, and graph validation.                                                    |
+| REL   | [Artifact Relationships](../specs/governance/conventions/artifact-relationships.md)                            | Term links, the References between specifications that they make, and the Reference graph's layering.                               |
 | TERM  | [Terminology Conventions](../specs/governance/conventions/terminology-conventions.md)                          | Canonical terms, Non-terms, and how Prohibited synonyms are recorded.                                                               |
 
 ## Process

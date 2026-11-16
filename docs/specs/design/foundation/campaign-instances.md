@@ -20,21 +20,9 @@ Campaign instance can also take on a shared capability through a Role Type, e.g.
 changing that shape. Campaign Instances builds on [Campaign State](campaign-state.md), which places every Campaign
 instance in [World state](campaign-state.md#glossary).
 
-# Relationships
-
-- Uses [Campaign State](./campaign-state.md)
-- Uses [Determinism and Randomness](./determinism-and-randomness.md)
-- Uses [Engine Contract](./engine-contract.md)
-- Refines [Core Concepts](./core-concepts.md)
-- Used by [Developer Access](./developer-access.md)
-- Used by [Domain Model](../mechanics/domain-model.md)
-- Used by [Game Data Records](./game-data-records.md)
-- Used by [Timeline](./timeline.md)
-- Used by [World History](./world-history.md)
-
 # Glossary
 
-These terms are specific to Campaign Instances. Campaign instance, Archetype, State, Constants, and other general terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Campaign State glossary](campaign-state.md#glossary).
+These terms are specific to Campaign Instances. [Campaign instance](core-concepts.md#campaign-instances), [Archetype](core-concepts.md#campaign-instances), [State](core-concepts.md#campaign-instances), [Constants](core-concepts.md#campaign-instances), and other general terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Campaign State glossary](campaign-state.md#glossary).
 
 | Term        | Definition                                                                                                                                                                                                                      | Prohibited synonyms                                                                   |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -43,9 +31,9 @@ These terms are specific to Campaign Instances. Campaign instance, Archetype, St
 
 # Campaign instance structure
 
-Every thing in a Campaign's world is described in the same terms, so any two of them can be compared, inspected, and
+Every thing in a [Campaign](core-concepts.md#campaign-and-session)'s world is described in the same terms, so any two of them can be compared, inspected, and
 referenced alike. A Campaign instance Type always has exactly four properties: Instance ID, an Archetype reference,
-Constants, and State. Every Campaign instance has exactly these four properties. The singleton [Agency](../mechanics/domain-model.md#agency-and-agents) is not exempt:
+Constants, and State. Every Campaign instance has exactly these four properties. E.g., the singleton [Agency](../mechanics/domain-model.md#agency-and-agents) is not exempt:
 its Archetype reference is required like that of any other Campaign instance.
 
 The four-property shape is the ubiquitous language for Campaign instances. It is chosen for uniformity and ease of
@@ -91,7 +79,7 @@ of its own, so nothing references a Role Type's occurrence; references target th
 
 # References
 
-Campaign instances can point at one another and at GDRs, e.g. an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) at its [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). Every reference names a
+Campaign instances can point at one another and at [GDRs](core-concepts.md#game-build-and-content), e.g. an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) at its [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). Every reference names a
 target of its expected Type. In [Committed state](engine-contract.md#player-actions-and-turns), Campaign instance references resolve within the same Campaign, and GDR
 references resolve against the current [Game build](core-concepts.md#game-build-and-content). Required historical references remain resolvable, under [Historical fact preservation](world-history.md#historical-fact-preservation) in World History. Relationships must not
 be inferred from display names or identifier text.

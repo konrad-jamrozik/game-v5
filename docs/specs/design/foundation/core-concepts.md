@@ -19,34 +19,6 @@ Type and Property; what the Game build supplies, i.e. Game Data Records (GDRs) a
 Campaign and its Campaign state, as opposed to the Session that runs it. One classification runs across all of them:
 every value is either an Authoritative value, kept as a fact, or a Derived value, calculated from other values.
 
-# Relationships
-
-- Used by [Agents](../mechanics/agents-spec.md)
-- Used by [Autopilot](./autopilot.md)
-- Used by [Campaign Lifecycle](./campaign-lifecycle.md)
-- Used by [Combat](../mechanics/combat.md)
-- Used by [Configuration](./configuration.md)
-- Used by [Determinism and Randomness](./determinism-and-randomness.md)
-- Used by [Developer Access](./developer-access.md)
-- Used by [Domain Model](../mechanics/domain-model.md)
-- Used by [Economy and Upgrades](../mechanics/economy-and-upgrades.md)
-- Used by [Engine Contract](./engine-contract.md)
-- Used by [Factions](../mechanics/factions.md)
-- Used by [Game Data Records](./game-data-records.md)
-- Used by [Gameplay Dependency Direction](../../implementation/guidance/gameplay-dependency-direction.md)
-- Used by [Investigations](../mechanics/investigations.md)
-- Used by [Leads and Progression](../mechanics/leads-and-progression.md)
-- Used by [Missions](../mechanics/missions.md)
-- Used by [Panic and Endings](../mechanics/panic-and-endings.md)
-- Used by [Player API](./player-api.md)
-- Used by [Saves](./saves.md)
-- Used by [Storage Schema](../../implementation/guidance/storage-schema.md)
-- Used by [Timeline](./timeline.md)
-- Used by [Turn Advancement](../mechanics/turn-advancement.md)
-- Used by [World History](./world-history.md)
-- Refined by [Campaign Instances](./campaign-instances.md)
-- Refined by [Campaign State](./campaign-state.md)
-
 # Glossary
 
 ## Data modeling
@@ -87,7 +59,7 @@ divides into components.
 | Term           | Definition                                                                                                                          | Prohibited synonyms                                                                          |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | Campaign       | A particular playthrough with its own evolving Campaign state.                                                                      |                                                                                              |
-| Campaign state | Data describing one Campaign, including retained data describing its past Campaign state or events.                                 | Evolving campaign facts; Continuation state; continuation data; Controller continuation data |
+| Campaign state | Data describing one Campaign, including data describing its past Campaign state or events.                                          | Evolving campaign facts; Continuation state; continuation data; Controller continuation data |
 | Session        | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |                                                                                              |
 
 ## Value classification
@@ -122,10 +94,14 @@ consequences:
 - **Campaign state consists of Authoritative values:** two Campaign states are equal exactly when their Authoritative
   values are equal.
 
-Which values are Authoritative is the Engine designer's choice, because the player can see the difference. E.g.,
-current health always equals base health minus damage taken, and a level-up raises base health by 5. If base health
-and damage taken are Authoritative, current health rises by 5. If base health and current health are Authoritative,
-damage taken rises by 5 instead. The way a specification defines a value fixes its classification, so no separate
+Which values are Authoritative is the Engine designer's choice, because the player can see the difference.
+
+E.g.,
+current health always equals base health minus damage taken, and a level-up raises base health by 5. If [base health](../mechanics/agents-spec.md#combatant-attributes)
+and [damage taken](../mechanics/combat.md#combat-rounds-and-results) are Authoritative, [current health](../mechanics/agents-spec.md#combatant-attributes) rises by 5. If base health and current health are Authoritative,
+damage taken rises by 5 instead.
+
+The way a specification defines a value fixes its classification, so no separate
 label is needed. The classification is independent of mutability, of player visibility, and of what an implementation
 stores.
 

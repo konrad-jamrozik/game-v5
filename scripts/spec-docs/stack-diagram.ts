@@ -1,5 +1,6 @@
 import { FAMILY_KIND } from '../spec-linter/overviews.ts'
 import type { SpecificationCorpus, SpecificationFamily, SpecificationRecord } from '../spec-linter/types.ts'
+import { computeLayers } from './svg-diagram.ts'
 
 /** The generated layer diagram of the Foundation and Mechanics specifications, linked from the specification index. */
 export const STACK_DIAGRAM_PATH = 'docs/images/diagrams/specification-stack.svg'
@@ -33,13 +34,13 @@ function compareText(left: string, right: string): number {
 }
 
 /**
- * Splits the Foundation and Mechanics specifications into rectangles and rows using only their explicit uses and
- * refines relationships:
+ * Splits the Foundation and Mechanics specifications into rectangles and rows using their references:
  *
  * - Every specification is in its Family's rectangle. Within it, a specification's layer is one above the
  *   highest layer of the specifications of the same rectangle it depends on; one that depends on none of them is in
  *   layer 1, the bottom row. A specification that neither depends on nor is depended on by anything in its rectangle is
- *   drawn in the top row, nearest the specifications above that use it.
+ *   drawn in the top row, nearest the specifications above that use it. Specifications that reference each other in a
+ *   cycle share a layer, placed as if the cycle were one specification.
  */
 export function computeStackLayout(corpus: SpecificationCorpus): StackLayout {
   const stack = corpus.specifications.filter((specification) => STACK_FAMILIES.includes(specification.family))
@@ -47,8 +48,6 @@ export function computeStackLayout(corpus: SpecificationCorpus): StackLayout {
   const dependencies = new Map<string, Set<string>>(stack.map((specification) => [specification.id, new Set<string>()]))
   const dependents = new Map<string, Set<string>>(stack.map((specification) => [specification.id, new Set<string>()]))
   for (const relationship of corpus.relationships) {
-    if (relationship.origin !== 'explicit') continue
-    if (relationship.kind !== 'uses' && relationship.kind !== 'refines') continue
     if (!stackIds.has(relationship.dependencyId) || !stackIds.has(relationship.dependentId)) continue
     dependencies.get(relationship.dependentId)?.add(relationship.dependencyId)
     dependents.get(relationship.dependencyId)?.add(relationship.dependentId)
@@ -64,17 +63,12 @@ export function computeStackLayout(corpus: SpecificationCorpus): StackLayout {
   const rowsOf = (members: readonly SpecificationRecord[]): SpecificationRecord[][] => {
     const memberIds = new Set(members.map((member) => member.id))
     const inside = (ids: ReadonlySet<string>): string[] => [...ids].filter((id) => memberIds.has(id))
-    const layers = new Map<string, number>()
-    const layerOf = (id: string, visiting: ReadonlySet<string> = new Set()): number => {
-      const known = layers.get(id)
-      if (known !== undefined) return known
-      if (visiting.has(id)) return 1
-      const next = new Set([...visiting, id])
-      const layer = 1 + Math.max(0, ...inside(dependenciesOf(id)).map((dependency) => layerOf(dependency, next)))
-      layers.set(id, layer)
-      return layer
-    }
-    for (const member of members) layerOf(member.id)
+    const layers = new Map(
+      computeLayers(
+        members.map((member) => member.id),
+        members.flatMap((member) => inside(dependenciesOf(member.id)).map((from) => ({ from, to: member.id }))),
+      ),
+    )
     const top = Math.max(1, ...layers.values())
     for (const member of members) {
       if (inside(dependenciesOf(member.id)).length === 0 && inside(dependentsOf(member.id)).length === 0) {

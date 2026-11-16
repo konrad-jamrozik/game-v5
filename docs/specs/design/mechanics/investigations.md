@@ -21,29 +21,16 @@ Investigation applies its Lead's completion effect, e.g. creating an [Initiative
 [Standby](agents-spec.md#assignments). Progress survives a member leaving but not the whole team leaving: an Investigation whose last member is
 assigned elsewhere becomes Abandoned, and a later Investigation of the same Lead starts again from 0.
 
-# Relationships
-
-- Uses [Agents](./agents-spec.md)
-- Uses [Core Concepts](../foundation/core-concepts.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Leads and Progression](./leads-and-progression.md)
-- Uses [Missions](./missions.md)
-- Uses [Numbers](../foundation/numbers.md)
-- Uses [Player API](../foundation/player-api.md)
-- Refines [Domain Model](domain-model.md)
-- Used by [Basic Autopilot AI](../autopilot-ais/basic-autopilot-ai.md)
-- Used by [Turn Advancement](./turn-advancement.md)
-
 # Glossary
 
-Investigation progress and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
+[Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
 
-The Investigation states Active, Completed, and Abandoned are defined by the state table under
+The [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) states Active, Completed, and Abandoned are defined by the state table under
 [Investigation lifecycle](#investigation-lifecycle).
 
 # Investigation GDRs
 
-Investigations read the [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Type](../foundation/core-concepts.md#data-modeling) InvestigationArchetype and one property of the Lead GDR. The GDRs a
+Investigations read the [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Type](../foundation/core-concepts.md#data-modeling) InvestigationArchetype and one property of the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) GDR. The GDRs a
 [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files
 it names.
 
@@ -72,7 +59,7 @@ the divisor of the completion probability is never zero. No Investigation rule r
 **Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the
 InvestigationArchetype. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from
 it, and the violation is reported as a data defect, never repaired into different gameplay, under
-[Committed state integrity](../foundation/engine-contract.md#player-actions-and-turns) in Engine Contract.
+[Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
 1. **One InvestigationArchetype:** The Game build supplies exactly one InvestigationArchetype. Every Investigation has
    it as its Archetype, so no rule selects among InvestigationArchetypes.
@@ -90,13 +77,13 @@ on its team now, and how much progress the team has made.
 reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties.
 This table is exhaustive.
 
-| Property                                                                        | Part      | Value                                                                                                                                                                   | Classification and range                                                                                                                                                                                       |
-| ------------------------------------------------------------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lead                                                                            | Constants | An Immutable reference to the Lead GDR the Investigation investigates.                                                                                                  | [Authoritative value](../foundation/core-concepts.md#value-classification), under [How concepts relate](domain-model.md#how-concepts-relate). Always resolves to a Lead GDR the Game build supplies.           |
-| Turn started                                                                    | Constants | The turn number of the Turn in which the `startInvestigation` [Player action](../foundation/engine-contract.md#player-actions-and-turns) created the Investigation.     | Authoritative value. A whole number of at least 1.                                                                                                                                                             |
-| Lifecycle                                                                       | State     | Active, Completed, or Abandoned, under [Investigation lifecycle](#investigation-lifecycle).                                                                             | Authoritative value.                                                                                                                                                                                           |
-| Investigation progress                                                          | State     | The Investigation progress, in skill points.                                                                                                                            | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). Changes only under [Progress gain](#progress-gain). |
-| [Current team](domain-model.md#leads-investigations-mission-sites-and-missions) | State     | The set of Agents whose [Assignment](domain-model.md#agency-and-agents) references the Investigation, whatever their [Agent status](domain-model.md#agency-and-agents). | Authoritative value. It has no order. It agrees with Assignments under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model.                                     |
+| Property                                                                        | Part      | Value                                                                                                                                                                                                                            | Classification and range                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lead                                                                            | Constants | An Immutable reference to the Lead GDR the Investigation investigates.                                                                                                                                                           | [Authoritative value](../foundation/core-concepts.md#value-classification), under [How concepts relate](domain-model.md#how-concepts-relate). Always resolves to a Lead GDR the Game build supplies.           |
+| Turn started                                                                    | Constants | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) in which the `startInvestigation` [Player action](../foundation/engine-contract.md#player-actions-and-turns) created the Investigation. | Authoritative value. A whole number of at least 1.                                                                                                                                                             |
+| Lifecycle                                                                       | State     | Active, Completed, or Abandoned, under [Investigation lifecycle](#investigation-lifecycle).                                                                                                                                      | Authoritative value.                                                                                                                                                                                           |
+| Investigation progress                                                          | State     | The Investigation progress, in skill points.                                                                                                                                                                                     | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). Changes only under [Progress gain](#progress-gain). |
+| [Current team](domain-model.md#leads-investigations-mission-sites-and-missions) | State     | The set of Agents whose [Assignment](domain-model.md#agency-and-agents) references the Investigation, whatever their [Agent status](domain-model.md#agency-and-agents).                                                          | Authoritative value. It has no order. It agrees with Assignments under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model.                                     |
 
 An Investigation also has one [Derived value](../foundation/core-concepts.md#value-classification), which is never stored: its projected completion probability, under
 [Projected completion probability](#projected-completion-probability). The Agents who took part in an Investigation
@@ -105,7 +92,7 @@ remain recorded after they leave its Current team, in each [Agent](domain-model.
 Investigation are that same relationship seen from the Investigation's side, not a separate fact. An Investigation has no
 [Turn series](../foundation/world-history.md#glossary).
 
-**Invariants:** In every Committed state, every Investigation satisfies all of the following. A Committed state that
+**Invariants:** In every [Committed state](../foundation/engine-contract.md#player-actions-and-turns), every Investigation satisfies all of the following. A Committed state that
 violates one is an internal invariant violation, reported under
 [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
@@ -119,7 +106,7 @@ violates one is an internal invariant violation, reported under
 
 **Retention:** An Investigation keeps every property above for the whole Campaign, whatever its lifecycle state, so that
 every reference to it resolves, e.g. from an Agent's Participation history or from the origin of an Initiative Mission
-site. A Completed or Abandoned Investigation no longer participates in current gameplay and is retained in [World history](../foundation/campaign-state.md#glossary)
+site. A Completed or Abandoned Investigation no longer participates in current gameplay and is [retained](../foundation/world-history.md#glossary) in [World history](../foundation/campaign-state.md#glossary)
 with its final values, including its final Investigation progress, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Investigation is ever removed.
@@ -154,7 +141,7 @@ Abandoned. The transition table is:
 
 | Source state | Target state | Trigger                                                                                                                                                                                           | Condition                                                                           | Effects                            |
 | ------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
-| Active       | Completed    | Advance turn, in the Turn advancement step Investigation progress.                                                                                                                                | The Investigation completion outcome of the Investigation is "completes".           | Under [Completion](#completion).   |
+| Active       | Completed    | Advance turn, in the [Turn advancement step](domain-model.md#turn-advancement-steps) Investigation progress.                                                                                      | The Investigation completion outcome of the Investigation is "completes".           | Under [Completion](#completion).   |
 | Active       | Abandoned    | A Player action changes the Assignment of a member of the Investigation's Current team to something else: `assignAgents`, `deployAgents`, `startInvestigation`, or `assignAgentsToInvestigation`. | The Investigation's Current team is empty after every change of that Player action. | Under [Abandonment](#abandonment). |
 
 Every transition not listed is impossible; e.g., an Abandoned Investigation never becomes Active again, a Completed
@@ -258,7 +245,7 @@ State changes: when every precondition holds, the action is one Player action th
 Turn:
 
 - For every Agent in `agents`: its Assignment becomes the Investigation, with a Mutable reference to it, and its
-  Agent status becomes In transit, under [Transit rule](agents-spec.md#transit-rule) and
+  Agent status becomes [In transit](domain-model.md#agency-and-agents), under [Transit rule](agents-spec.md#transit-rule) and
   [Assignment changes](agents-spec.md#assignment-changes) in Agents. It joins the Investigation's Current
   team.
 - For every Agent in `agents` whose Assignment was another Investigation: it leaves that Investigation's Current
@@ -281,7 +268,7 @@ list is exhaustive:
 2. **Completion:** The Investigation becomes Completed, under [Completion](#completion).
 
 No other rule removes an Agent from an Investigation's Current team: an Agent on an Investigation cannot be dismissed,
-because `dismissAgents` requires Standby, and it cannot be [Killed](agents-spec.md#agent-statuses), because only a [Deployed](agents-spec.md#assignments) Agent can be Killed, under
+because `dismissAgents` requires [Standby](agents-spec.md#assignments), and it cannot be [Killed](agents-spec.md#agent-statuses), because only a [Deployed](agents-spec.md#assignments) Agent can be Killed, under
 [Agent status](agents-spec.md#agent-status) in Agents. Whenever an Agent leaves, the Investigation is added to its
 Participation history under [Participation history records](agents-spec.md#participation-history-records) in Agents.
 
@@ -334,17 +321,17 @@ Investigation progress    = Investigation progress before + S
 
 Inputs:
 
-| Symbol                        | Meaning                                                                                                                                                                                                                                                                                                                                                             | Unit and domain                             |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| working member                | A member of the Investigation's Current team that was [At assignment](agents-spec.md#agent-statuses) in the Turn-end state of this Advance turn, i.e. in the Committed state in which this Advance turn began. A member that arrived in the Transit step of this Advance turn is not a working member, under [Transit rule](agents-spec.md#transit-rule) in Agents. | An Agent.                                   |
-| effective skill               | The working member's [Effective skill](agents-spec.md#combatant-attributes), computed from its [Step-start values](turn-advancement.md#glossary) of this step.                                                                                                                                                                                                      | Skill points; a whole number of at least 0. |
-| S                             | The sum over every working member; 0 when the Investigation has no working member.                                                                                                                                                                                                                                                                                  | Skill points; a whole number of at least 0. |
-| Investigation progress before | The Investigation's Investigation progress when the step begins.                                                                                                                                                                                                                                                                                                    | Skill points; a whole number of at least 0. |
+| Symbol                                                 | Meaning                                                                                                                                                                                                                                                                                                                                                             | Unit and domain                             |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| working member                                         | A member of the Investigation's Current team that was [At assignment](agents-spec.md#agent-statuses) in the Turn-end state of this Advance turn, i.e. in the Committed state in which this Advance turn began. A member that arrived in the Transit step of this Advance turn is not a working member, under [Transit rule](agents-spec.md#transit-rule) in Agents. | An Agent.                                   |
+| [effective skill](agents-spec.md#combatant-attributes) | The working member's [Effective skill](agents-spec.md#effective-skill), computed from its [Step-start values](turn-advancement.md#glossary) of this step.                                                                                                                                                                                                           | Skill points; a whole number of at least 0. |
+| S                                                      | The sum over every working member; 0 when the Investigation has no working member.                                                                                                                                                                                                                                                                                  | Skill points; a whole number of at least 0. |
+| Investigation progress before                          | The Investigation's Investigation progress when the step begins.                                                                                                                                                                                                                                                                                                    | Skill points; a whole number of at least 0. |
 
 No rounding occurs, because every term is a whole number. The result is a whole number of at least Investigation
 progress before; Investigation progress has no upper bound. Investigation progress is added even when S is 0, in which
-case it is unchanged. Investigating changes no value of a member; in particular it raises no exhaustion and lowers no
-current health. An Investigation's progress after the step therefore depends only on its progress before the step and the effective
+case it is unchanged. Investigating changes no value of a member; in particular it raises no [exhaustion](agents-spec.md#combatant-attributes) and lowers no
+[current health](agents-spec.md#combatant-attributes). An Investigation's progress after the step therefore depends only on its progress before the step and the effective
 skill of its working members. Progress grows linearly with the team's effective skill, so a larger team gains
 progress in proportion to its effective skill, with no diminishing returns.
 
@@ -352,7 +339,7 @@ progress in proportion to its effective skill, with no diminishing returns.
 
 After [Progress gain](#progress-gain), each Active Investigation has exactly one named random outcome in this step, the
 **Investigation completion** outcome. Its possible values are "completes" and "does not complete". It takes the value
-"completes" with the Probability:
+"completes" with the [Probability](../foundation/numbers.md#glossary):
 
 ```text
 completion probability = min(1, Investigation progress / (difficulty × 100))
@@ -360,11 +347,11 @@ completion probability = min(1, Investigation progress / (difficulty × 100))
 
 Inputs:
 
-| Symbol                 | Meaning                                                                                                                                                               | Unit and domain                                          |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| Investigation progress | The Investigation's Investigation progress after [Progress gain](#progress-gain) of this step.                                                                        | Skill points; a whole number of at least 0.              |
-| difficulty             | The `difficulty` of the Investigation's Lead, i.e. its Lead difficulty.                                                                                               | Points of Lead difficulty; a whole number of at least 1. |
-| 100                    | The skill points that count as one point of Lead difficulty: Effective skill 100 counts as 1 against Lead difficulty. It is a constant of this rule, not a GDR value. | Skill points per point of Lead difficulty.               |
+| Symbol                 | Meaning                                                                                                                                                                                                      | Unit and domain                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| Investigation progress | The Investigation's Investigation progress after [Progress gain](#progress-gain) of this step.                                                                                                               | Skill points; a whole number of at least 0.              |
+| difficulty             | The `difficulty` of the Investigation's Lead, i.e. its Lead difficulty.                                                                                                                                      | Points of Lead difficulty; a whole number of at least 1. |
+| 100                    | The skill points that count as one point of Lead difficulty: [Effective skill](agents-spec.md#combatant-attributes) 100 counts as 1 against Lead difficulty. It is a constant of this rule, not a GDR value. | Skill points per point of Lead difficulty.               |
 
 Evaluation: the ratio is an exact Probability under [Probabilities](../foundation/numbers.md#probabilities) and
 [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, and it is never rounded or stored. The divisor
@@ -394,13 +381,13 @@ this list is exhaustive:
    difficulty × 100, e.g. after a large team's last Advance turn of work.
 2. **Completion effect:** The completion effect of its Lead applies, under
    [Completion effect](leads-and-progression.md#completion-effect) in Leads and Progression. With the effect
-   `create_mission_site`, this creates one Initiative Mission site whose origin is this Investigation, under
+   `create_mission_site`, this creates one [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) whose origin is this Investigation, under
    [Mission site creation](missions.md#mission-site-creation) in Missions.
 3. **Members:** Every member of the Current team, whatever it contributed, gets the Assignment Standby and the
    Agent status In transit, under [Assignment changes](agents-spec.md#assignment-changes) in Agents. This
    includes every member that arrived in the Transit step of this Advance turn and added no progress, under the
    destination-ends exception of [Transit rule](agents-spec.md#transit-rule). Every member that was In transit in the
-   Turn-end state arrived in the Transit step, so every member is At assignment when this change applies. Each member
+   Turn-end state arrived in the Transit step, so every member is [At assignment](domain-model.md#agency-and-agents) when this change applies. Each member
    leaves the Current team, and the Investigation is added to its Participation history under
    [Participation history records](agents-spec.md#participation-history-records). Under the
    [Transit rule](agents-spec.md#transit-rule), each member is still In transit when this Advance turn ends.
@@ -411,7 +398,7 @@ progress and its Current team.
 
 ## Independence within the step
 
-Every rule of this step uses Step-start values, under [Values a step uses](turn-advancement.md#values-a-step-uses) in
+Every rule of this step uses [Step-start values](domain-model.md#turn-advancement-steps), under [Values a step uses](turn-advancement.md#values-a-step-uses) in
 Turn Advancement, and the result is the same whichever order an implementation processes the Investigations in:
 
 - An Agent belongs to at most one Current team, so no Agent counts toward two Investigations, and the members a
@@ -429,7 +416,7 @@ change the Investigation: it stays Active, keeps its Current team and Investigat
 [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation), still gains progress, and can still
 complete and apply its Lead's completion effect.
 
-A Mission site created that way targets a Faction that is already Eliminated. It is created Active in Investigation
+A Mission site created that way targets a [Faction](domain-model.md#factions) that is already [Eliminated](factions.md#glossary). It is created Active in Investigation
 progress and becomes Cancelled in the Cancellation part of [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) resolution of the same Advance turn, under
 [Cancellation](missions.md#cancellation) in Missions, so no Committed state shows it Active. The player can instead end
 such an Investigation by assigning its members elsewhere, which makes it Abandoned under [Abandonment](#abandonment).
@@ -459,7 +446,7 @@ When no Player action changes the Investigation or its members before the next A
 probability equals the Probability of that Advance turn's Investigation completion outcome exactly. The members At
 assignment in this Committed state are exactly the working members of that Advance turn, because this Committed state is
 then its Turn-end state, and their effective skill does not change in the Turn advancement steps before Investigation
-progress, because none of those steps changes the base skill, current health, or exhaustion of an Agent on an Investigation. The
+progress, because none of those steps changes the [base skill](agents-spec.md#combatant-attributes), current health, or exhaustion of an Agent on an Investigation. The
 projected completion probability changes at once whenever a Player action changes its inputs, under
 [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. A Completed
 or Abandoned Investigation has no projected completion probability.
@@ -543,7 +530,7 @@ completion probability, reported as absent; the visible lifecycle state explains
 - **Completion and exhaustion:** Investigating raises no exhaustion, so completion never coincides with an exhaustion
   change; members returning to Standby, In transit, recover no exhaustion in the same Advance turn under
   [Agent Recovery](agent-recovery.md) ([Progress gain](#progress-gain), [Completion](#completion)).
-- **Lead no longer available:** An Active Investigation continues; its Mission site, when its Faction is Eliminated, is
+- **Lead no longer available:** An Active Investigation continues; its Mission site, when its Faction is [Eliminated](domain-model.md#factions), is
   Cancelled in the same Advance turn ([Lead no longer available](#lead-no-longer-available)).
 - **Mission site created in the same Advance turn:** The Mission site a completion creates does not count down in Mission
   site expiration of the same Advance turn, under [Mission site creation](missions.md#mission-site-creation) in Missions.
@@ -552,7 +539,7 @@ completion probability, reported as absent; the visible lifecycle state explains
   and no Campaign is created from it. A Committed state violating an invariant under
   [Investigation properties](#investigation-properties), e.g. an Active Investigation with an empty Current team, is an
   internal invariant violation.
-- **Campaign ended:** Once the Campaign has a Campaign ending, `startInvestigation`, `assignAgentsToInvestigation`, and
+- **Campaign ended:** Once the Campaign has a [Campaign ending](domain-model.md#campaign-standing), `startInvestigation`, `assignAgentsToInvestigation`, and
   Advance turn are rejected under [Panic and Endings](panic-and-endings.md).
 
 # Acceptance examples

@@ -16,12 +16,8 @@ details read as consequences instead of a list to memorize.
 
 The same aim shapes overviews at every level. A specification's Overview introduces one subject; a [Family](spec-conventions.md#specifications) overview
 explains how the specifications of a Family divide their subjects between them; a [Specification kind](spec-conventions.md#specifications) overview explains
-how its Families divide. Overview Conventions refines Specification Conventions, which places Overview first among the
+how its Families divide. Overview Conventions builds on Specification Conventions, which places Overview first among the
 framing sections; Overview Conventions says what an overview says.
-
-# Relationships
-
-- Refines [Specification Conventions](spec-conventions.md)
 
 # Specification Overview
 
@@ -34,8 +30,8 @@ Overview introduces the subject to a reader who has not met it. It moves from th
    concepts as consequences of that principle, each with what sets it apart; e.g., "Everything about an Order follows
    from one rule: the store never ships what has not been paid for, and never keeps money for what it cannot ship."
    It introduces at most four concepts; the rest belongs to the topic sections.
-3. **Its place:** when the subject refines or stands beside the subject of another specification, one or two
-   sentences say what this subject focuses on relative to that one and why it is separate; e.g., "Orders refines
+3. **Its place:** when the subject builds on or stands beside the subject of another [specification](spec-conventions.md#specifications), one or two
+   sentences say what this subject focuses on relative to that one and why it is separate; e.g., "Orders builds on
    Store Model: Store Model says what the store sells, and Orders says how one sale proceeds, which changes far more
    often."
 
@@ -56,7 +52,7 @@ reconstruct the idea that explains them.
 
 > Orders follow constraints on placement, payment, shipping, cancellation, and total calculation. An Order is placed,
 > paid, shipped, and delivered or cancelled, and its total is the sum of its lines plus shipping. These constraints
-> refine Store Model.
+> build on Store Model.
 
 The following Overview of the same subject orients the reader instead:
 
@@ -66,15 +62,15 @@ The following Overview of the same subject orients the reader instead:
 >
 > Everything about an Order follows from one rule: the store never ships what has not been paid for, and never keeps
 > money for what it cannot ship. So payment comes before shipping, and an Order can be cancelled, with a full refund,
-> only until it ships. Orders refines Store Model: Store Model says what the store sells, and Orders says how one sale
+> only until it ships. Orders builds on Store Model: Store Model says what the store sells, and Orders says how one sale
 > proceeds, which changes far more often.
 
 # Family overviews
 
-Each Family that has at least one registered specification has an informative Family overview at
+Each [Family](spec-conventions.md#specifications) that has at least one [registered](spec-conventions.md#specifications) specification has an informative Family overview at
 `docs/specs/<kind directory>/<family directory>/about-<family directory>.md`, e.g.
 `design/foundation/about-foundation.md`. A Family overview is not a
-specification: it has no metadata, Spec ID, or relationship inventory, and it owns no game behavior, contract,
+specification: it has no metadata or Spec ID, and it owns no game behavior, contract,
 term, or [GDR](../../design/foundation/core-concepts.md#game-build-and-content). It explains what question each specification in the Family answers, how they relate, and why the
 boundaries between them sit where they do, linking each specification instead of restating its content.
 
@@ -82,11 +78,11 @@ A Family overview begins with the H1 `About the <Family> family` and contains th
 Documents, How they relate, and Why these boundaries, in that order; further sections, e.g. Reading order, may follow.
 It links every registered specification of its Family. The How they relate section contains one pair of
 `<!-- generated:family-diagram:start -->` and `<!-- generated:family-diagram:end -->` markers. `npm run docs:generate`
-replaces the content between them with diagrams of the Family's [Explicit relationships](artifact-relationships.md#relationship-structure), both within the Family and with
+replaces the content between them with diagrams of the [References](artifact-relationships.md#references) of the Family's specifications, both within the Family and with
 other Families, so the diagrams are never edited by hand. The prose outside the markers is maintained by hand: update it
 when adding, renaming, re-scoping, or moving a specification in that Family.
 
-Each Specification kind that has at least one registered specification also has an informative overview at
+Each [Specification kind](spec-conventions.md#specifications) that has at least one registered specification also has an informative overview at
 `docs/specs/<kind directory>/about-<kind directory>.md`, e.g. `design/about-design.md`. It begins with the H1
 `About <Specification kind> specifications`, explains what the Specification kind governs and why its Families are
 divided as they are, and links the overview of each of its Families. Like a Family overview, it is not a

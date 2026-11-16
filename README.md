@@ -51,25 +51,26 @@ The reported versions should satisfy the `engines` field in `package.json`. Then
 
 ## Commands
 
-| Command                        | Purpose                                                                          |
-| ------------------------------ | -------------------------------------------------------------------------------- |
-| `npm run typecheck`            | Check tests and tooling                                                          |
-| `npm run lint:code`            | Run type-aware Oxlint; warnings fail                                             |
-| `npm run lint:specs`           | Deterministically lint registered specifications                                 |
-| `npm run docs:generate`        | Update views derived from registered specifications                              |
-| `npm run docs:check`           | Check that derived specification views are current                               |
-| `npm run relationships:report` | Report where recorded relationships and specification text disagree; never fails |
-| `npm run lint`                 | Run code and specification linting                                               |
-| `npm run lint:fix`             | Fix code lint, then check specifications read-only                               |
-| `npm run check:commit`         | Run the read-only checks used by the commit hook                                 |
-| `npm run format`               | Format supported files                                                           |
-| `npm run format:check`         | Check formatting without editing                                                 |
-| `npm test`                     | Run tests once                                                                   |
-| `npm run test:watch`           | Watch tests                                                                      |
-| `npm run test:ui`              | Start the local Vitest UI                                                        |
-| `npm run test:coverage`        | Generate text, HTML, and LCOV reports in `coverage/`                             |
-| `npm run hooks:install`        | Enable the tracked Git hooks for this checkout                                   |
-| `npm run check`                | Run the same validation used in CI                                               |
+| Command                   | Purpose                                                     |
+| ------------------------- | ----------------------------------------------------------- |
+| `npm run typecheck`       | Check tests and tooling                                     |
+| `npm run lint:code`       | Run type-aware Oxlint; warnings fail                        |
+| `npm run lint:specs`      | Deterministically lint registered specifications            |
+| `npm run docs:generate`   | Update views derived from registered specifications         |
+| `npm run docs:check`      | Check that derived specification views are current          |
+| `npm run docs:link-terms` | Link the first mention of every term to its definition      |
+| `npm run terms:report`    | List the first mention of every term in every specification |
+| `npm run lint`            | Run code and specification linting                          |
+| `npm run lint:fix`        | Fix code lint, then check specifications read-only          |
+| `npm run check:commit`    | Run the read-only checks used by the commit hook            |
+| `npm run format`          | Format supported files                                      |
+| `npm run format:check`    | Check formatting without editing                            |
+| `npm test`                | Run tests once                                              |
+| `npm run test:watch`      | Watch tests                                                 |
+| `npm run test:ui`         | Start the local Vitest UI                                   |
+| `npm run test:coverage`   | Generate text, HTML, and LCOV reports in `coverage/`        |
+| `npm run hooks:install`   | Enable the tracked Git hooks for this checkout              |
+| `npm run check`           | Run the same validation used in CI                          |
 
 ## Verification
 

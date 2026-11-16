@@ -18,10 +18,6 @@ Every screen listed by the [Graphical User Interface](gui.md) is drawn with the 
 screen that has no Artboard yet still looks like the screens that have one. The rules here are stated as text and are
 complete on their own; Artboards illustrate them.
 
-# Relationships
-
-- Uses [Graphical User Interface](gui.md)
-
 # Glossary
 
 These terms are specific to Visual Design.
@@ -201,7 +197,7 @@ with its title on the left and its current value on the right in the Headline fi
 
 The History tab leads with Panic, because Panic is how a Campaign is lost. The Panic chart spans the full width of the
 tab above the other charts, is at least 180 px tall at a window 1280 px wide, and draws its series in Accent with a 14%
-Accent fill below the line. Its current value uses a 30 px Figure style in Accent text. The Panic limit is a 1.5 px
+Accent fill below the line. Its current value uses a 30 px Figure style in Accent text. The [Panic limit](../mechanics/panic-and-endings.md#glossary) is a 1.5 px
 Danger line at the limit value with a Limit band below it, labelled "LOSS AT" and the limit, e.g. "LOSS AT 100%".
 
 # TODOs
@@ -209,5 +205,5 @@ Danger line at the limit value with a Limit band below it, labelled "LOSS AT" an
 - TODO: Define the light theme's Design tokens under [Colours](#colours), since the Settings panel lets the Player
   choose a light theme, including the value of every colour token and the contrast each text colour keeps against its
   fill.
-- TODO (later): Artboards for the Mission sites, [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), [Agency](../mechanics/domain-model.md#agency-and-agents), and [Turn report](../foundation/world-history.md#glossary) tabs, under
+- TODO (later): Artboards for the [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), [Agency](../mechanics/domain-model.md#agency-and-agents), and [Turn report](../foundation/world-history.md#glossary) tabs, under
   [Reading Artboards](#reading-artboards).

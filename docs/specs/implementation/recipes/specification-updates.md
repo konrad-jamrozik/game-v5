@@ -15,19 +15,13 @@ reading everything again. The changes since its [Specification baseline](../mand
 revisions](../mandatory/specification-tracking.md#glossary), and that difference, rather than the full specifications, is the work to do.
 
 The difference is suggested to drive every step. It shows which specifications changed and which of their sections,
-and the [Specification map](../mandatory/specification-tracking.md#glossary), under [Specification Tracking](../mandatory/specification-tracking.md), leads from each changed
+and the [Specification map](../mandatory/specification-tracking.md#specification-map), under [Specification Tracking](../mandatory/specification-tracking.md), leads from each changed
 specification to the files that implement it. The implementer then reads those files, makes the change, and moves the
 Specification baseline forward, leaving every unchanged specification and every unaffected file unread.
 
-# Relationships
-
-- Uses [Implementation Feedback](../mandatory/implementation-feedback.md)
-- Uses [Implementation Placement](../mandatory/implementation-placement.md)
-- Uses [Specification Tracking](../mandatory/specification-tracking.md)
-
 # Finding what changed
 
-The difference between the Specification baseline and the target Specification revision is the complete list of
+The difference between the [Specification baseline](../mandatory/specification-tracking.md#glossary) and the target [Specification revision](../mandatory/specification-tracking.md#glossary) is the complete list of
 changes to apply, so it is suggested to be computed first and read before anything else. In the
 [Spec repo](../mandatory/implementation-placement.md#glossary), the implementer should run
 `git diff --find-renames <baseline>..<target> -- docs/specs content`, where `<baseline>` is the Specification baseline
@@ -48,13 +42,13 @@ sort every changed passage before opening any file of the Implementation. Each c
 - **Normative:** a rule, term definition, formula, GDR, or Repository constraint now requires something different;
   e.g., a formula gains a term or a glossary definition narrows.
 
-An editorial change needs no change to the Implementation's behavior, though it can still need a Specification map
+An editorial change needs no change to the Implementation's behavior, though it can still need a [Specification map](../mandatory/specification-tracking.md#specification-map)
 change, under [Restructured specifications](#restructured-specifications). When a large change looks editorial, e.g. a
 term renamed across many specifications, `git diff --word-diff` shows only the changed words and confirms it quickly.
 
 # Locating affected code
 
-Each normative change is suggested to lead to code through the Specification map, under
+Each normative change is suggested to lead to code through the [Specification map](../mandatory/specification-tracking.md#glossary), under
 [Specification map](../mandatory/specification-tracking.md#specification-map), rather than through a search of the whole
 Implementation. The implementer should read the files listed under the changed specification's Spec ID and, within
 them, the code that carries out the changed section, which the section's heading and wording identify.

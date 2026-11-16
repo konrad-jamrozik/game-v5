@@ -19,12 +19,6 @@ So an Implementation is suggested to be built headless first: the engine and its
 through the Command-Line Interface. The Graphical User Interface then adds presentation only, over an engine API that is
 already known to work.
 
-# Relationships
-
-- Uses [Command-Line Interface](../../design/ui/cli.md)
-- Uses [Engine Contract](../../design/foundation/engine-contract.md)
-- Uses [Graphical User Interface](../../design/ui/gui.md)
-
 # Headless milestone
 
 The Headless milestone is reached when each of the following can be done through the Command-Line Interface alone. The

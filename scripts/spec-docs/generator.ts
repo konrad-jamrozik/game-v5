@@ -34,20 +34,14 @@ export const DERIVED_BASE_OUTPUT_PATHS = [
   'docs/derived/relationships.md',
 ] as const
 
-const RELATIONSHIP_ORDER: readonly RelationshipKind[] = ['follows', 'refines', 'uses', 'implements', 'verifies']
+const RELATIONSHIP_ORDER: readonly RelationshipKind[] = ['references']
 const PASSIVE_DESCRIPTIONS: Readonly<Record<RelationshipKind, string>> = {
-  follows: 'A → B means A is followed by B.',
-  refines: 'A → B means A is refined by B.',
-  uses: 'A → B means A is used by B.',
-  implements: 'A → B means A is implemented by B.',
-  verifies: 'A → B means A is verified by B.',
+  references: 'A → B means A is referenced by B: the text of B links to A.',
 }
-const GAME_LAYER_DESCRIPTION =
-  'The game specifications are layered by their uses and refines relationships together, so a specification is in the same layer in the Uses and Refines diagrams. Layer 1 is drawn at the top and holds the specifications that depend on no other specification through either kind; every other specification is drawn in the layer below the lowest-drawn specification it depends on.'
-const SINGLE_LAYER_DESCRIPTION =
-  'Layer 1 holds the specifications that depend on no other specification in the diagram.'
+const LAYER_DESCRIPTION =
+  'Layer 1 is drawn at the top and holds the specifications that reference no other specification in the diagram; every other specification is drawn in the layer below the lowest-drawn specification it references. Specifications that reference each other in a cycle share a layer.'
 const FAMILY_DIAGRAM_NOTICE =
-  '_Generated from the specifications’ Relationships sections by `npm run docs:generate`; do not edit between the markers. Arrows run from Dependency to Dependent; the Uses and Refines diagrams share their layers, and layer 1 holds the specifications that depend on no other specification of the Family; dashed boxes stand for whole other Families._'
+  '_Generated from the links between the specifications by `npm run docs:generate`; do not edit between the markers. An arrow runs from a specification to each specification that references it, i.e. links to it; layer 1 holds the specifications that reference no other specification of the Family, specifications that reference each other in a cycle share a layer, and dashed boxes stand for whole other Families._'
 const GENERATED_NOTICE =
   '> **Generated — do not edit.** Run `npm run docs:generate` after changing registered specifications.'
 
@@ -204,8 +198,7 @@ function relationshipSort(left: RelationshipRecord, right: RelationshipRecord): 
   return (
     compareText(left.dependencyId, right.dependencyId) ||
     compareText(left.dependentId, right.dependentId) ||
-    RELATIONSHIP_ORDER.indexOf(left.kind) - RELATIONSHIP_ORDER.indexOf(right.kind) ||
-    compareText(left.origin, right.origin)
+    RELATIONSHIP_ORDER.indexOf(left.kind) - RELATIONSHIP_ORDER.indexOf(right.kind)
   )
 }
 
@@ -232,9 +225,7 @@ function relationshipOutputPath(kind: RelationshipKind): string {
 }
 
 function explicitRelationships(corpus: SpecificationCorpus, kind: RelationshipKind): readonly RelationshipRecord[] {
-  return uniqueGraphRelationships(
-    corpus.relationships.filter((relationship) => relationship.kind === kind && relationship.origin === 'explicit'),
-  )
+  return uniqueGraphRelationships(corpus.relationships.filter((relationship) => relationship.kind === kind))
 }
 
 function renderedRelationshipKinds(corpus: SpecificationCorpus): readonly RelationshipKind[] {
@@ -248,16 +239,14 @@ function renderRelationshipsIndex(corpus: SpecificationCorpus): string {
     '',
     GENERATED_NOTICE,
     '',
-    'Each relationship-kind diagram has its own page. Arrows run from Dependency to Dependent and are read in the passive direction described on that page. These views contain declared relationships only and do not infer relationships from citations, paths, review order, or transitive reachability.',
+    'A specification references every other specification its text links. The diagram page draws those references; it infers nothing from paths, review order, or transitive reachability.',
     '',
     '[Back to the derived specification catalog](README.md)',
     '',
     ...kinds.map((kind) => `- [${titleForRelationshipKind(kind)} relationships](relationships/${kind}.md)`),
-    ...RELATIONSHIP_ORDER.filter((kind) => kind !== 'follows' && !kinds.includes(kind)).map(
-      (kind) => `- ${titleForRelationshipKind(kind)}: No explicit ${kind} relationships are declared.`,
+    ...RELATIONSHIP_ORDER.filter((kind) => !kinds.includes(kind)).map(
+      (kind) => `- ${titleForRelationshipKind(kind)}: No specification links another.`,
     ),
-    '',
-    'The always-present implicit `follows` relationship from Specification Conventions to every other registered specification is intentionally not rendered.',
   ].join('\n')}\n`
 }
 
@@ -270,7 +259,7 @@ interface RelationshipSection {
 /** Splits the relationships of one kind into the diagrams its page shows. */
 function relationshipSections(corpus: SpecificationCorpus, kind: RelationshipKind): readonly RelationshipSection[] {
   const kindRelationships = explicitRelationships(corpus, kind)
-  if (kind === 'uses' || kind === 'refines') {
+  {
     const kindById = new Map(
       corpus.specifications.map((specification) => [specification.id, FAMILY_KIND[specification.family]]),
     )
@@ -310,21 +299,16 @@ function relationshipSvgLabel(kind: RelationshipKind, section: RelationshipSecti
 }
 
 /**
- * The relationships that decide the layers of a diagram. The game diagrams of the uses and refines kinds are layered
- * together, so that a specification is in the same layer in both, even when the specifications it depends on are
- * linked to it only in the other kind.
+ * The relationships that decide the layers of a diagram: the References of the section it draws.
  */
 function layeringRelationships(
   corpus: SpecificationCorpus,
   kind: RelationshipKind,
   section: RelationshipSection,
 ): readonly RelationshipRecord[] {
-  if ((kind !== 'uses' && kind !== 'refines') || section.slug === 'governance') return section.relationships
-  return (['uses', 'refines'] as const).flatMap((layeredKind) =>
-    relationshipSections(corpus, layeredKind)
-      .filter((layeredSection) => layeredSection.slug !== 'governance')
-      .flatMap((layeredSection) => layeredSection.relationships),
-  )
+  return relationshipSections(corpus, kind)
+    .filter((layeredSection) => layeredSection.slug === section.slug)
+    .flatMap((layeredSection) => layeredSection.relationships)
 }
 
 function renderRelationshipSvg(
@@ -371,7 +355,7 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
     '',
     GENERATED_NOTICE,
     '',
-    `${passiveDescription(kind)} ${kind === 'uses' || kind === 'refines' ? GAME_LAYER_DESCRIPTION : SINGLE_LAYER_DESCRIPTION}`,
+    `${passiveDescription(kind)} ${LAYER_DESCRIPTION}`,
     '',
     '[Back to the relationship graph index](../relationships.md)',
     '',
@@ -419,7 +403,6 @@ function familyDiagramData(corpus: SpecificationCorpus, family: SpecificationFam
     .toSorted((left, right) => compareText(left.id, right.id))
   const edges = new Map<string, { from: string; to: string; kinds: Set<RelationshipKind> }>()
   for (const relationship of corpus.relationships) {
-    if (relationship.origin !== 'explicit') continue
     const dependencyFamily = familyById.get(relationship.dependencyId)
     const dependentFamily = familyById.get(relationship.dependentId)
     if (!dependencyFamily || !dependentFamily) continue
@@ -440,11 +423,9 @@ function familyDiagramData(corpus: SpecificationCorpus, family: SpecificationFam
   return { members, internalEdges, crossEdges }
 }
 
-/** The within-family diagrams each show one relationship kind; the across-families diagram shows them all. */
-type WithinKind = 'uses' | 'refines'
-type DiagramScope = `within-${WithinKind}` | 'across'
-
-const WITHIN_KINDS: readonly WithinKind[] = ['uses', 'refines']
+/** The within-family diagram draws the references among a Family's members; the across diagram those with other Families. */
+type WithinKind = RelationshipKind
+type DiagramScope = 'within' | 'across'
 
 /** The widest row of member boxes, in pixels, before the across-families diagram starts another row. */
 const ACROSS_FAMILIES_ROW_WIDTH = 900
@@ -456,7 +437,7 @@ function familySvgFileName(family: SpecificationFamily, scope: DiagramScope): st
 function familySvgLabel(family: SpecificationFamily, scope: DiagramScope): string {
   return scope === 'across'
     ? `${family} family: relationships with other families`
-    : `${family} family: ${scope.slice('within-'.length)} relationships within the family`
+    : `${family} family: references within the family`
 }
 
 function specificationLabel(specification: SpecificationRecord): string {
@@ -483,11 +464,9 @@ function renderWithinFamilySvg(family: SpecificationFamily, data: FamilyDiagramD
   const edges = withinEdgesOfKind(data, kind)
   const related = new Set(data.internalEdges.flatMap((edge) => [edge.from, edge.to]))
   const shown = new Set(edges.flatMap((edge) => [edge.from, edge.to]))
-  const members = data.members.filter(
-    (specification) => shown.has(specification.id) || (kind === 'uses' && !related.has(specification.id)),
-  )
+  const members = data.members.filter((specification) => shown.has(specification.id) || !related.has(specification.id))
   return renderSvgDiagram({
-    label: familySvgLabel(family, `within-${kind}`),
+    label: familySvgLabel(family, 'within'),
     nodes: members.map((specification) => ({
       id: specification.id,
       lines: [specificationLabel(specification)],
@@ -585,9 +564,8 @@ export function renderFamilyDiagramFiles(
     if (overviewPath === undefined || !sources.has(overviewPath)) continue
     const data = familyDiagramData(corpus, family)
     if (data.members.length > 1) {
-      for (const kind of WITHIN_KINDS) {
-        if (withinEdgesOfKind(data, kind).length === 0) continue
-        outputs.set(imagePath(familySvgFileName(family, `within-${kind}`)), renderWithinFamilySvg(family, data, kind))
+      if (withinEdgesOfKind(data, 'references').length > 0) {
+        outputs.set(imagePath(familySvgFileName(family, 'within')), renderWithinFamilySvg(family, data, 'references'))
       }
     }
     if (data.crossEdges.length > 0) {
@@ -617,7 +595,7 @@ export function isGeneratedDiagramFilePath(path: string): boolean {
   return (
     `${IMAGES_DIRECTORY}/${fileName}` === STACK_DIAGRAM_PATH ||
     `${IMAGES_DIRECTORY}/${fileName}` === FAMILY_ARCHITECTURE_PATH ||
-    /^[a-z0-9-]+-family-(within-uses|within-refines|across)\.svg$/.test(fileName) ||
+    /^[a-z0-9-]+-family-(within|across)\.svg$/.test(fileName) ||
     RELATIONSHIP_ORDER.some((kind) => fileName.startsWith(`${kind}-`) && /^[a-z0-9-]+\.svg$/.test(fileName))
   )
 }
@@ -629,23 +607,19 @@ export function renderFamilyDiagram(corpus: SpecificationCorpus, family: Specifi
     `docs/specs/${familyDirectoryPath(family)}/${familyOverviewFileName(family)}`
   const sections = ['## Within the family', '']
   if (members.length > 1) {
-    for (const [position, kind] of WITHIN_KINDS.entries()) {
-      sections.push(`### ${titleForRelationshipKind(kind)}`, '')
-      if (internalEdges.some((edge) => edge.kinds.has(kind))) {
-        sections.push(imageLink(family, `within-${kind}`, overviewPath))
-      } else {
-        sections.push(`No ${kind} relationships are declared within this family.`)
-      }
-      if (position + 1 < WITHIN_KINDS.length) sections.push('')
-    }
+    sections.push(
+      internalEdges.length > 0
+        ? imageLink(family, 'within', overviewPath)
+        : 'No specification of this family links another specification of it.',
+    )
   } else {
-    sections.push('This family has a single specification, so there are no relationships within it.')
+    sections.push('This family has a single specification, so there are no references within it.')
   }
   sections.push('', '## Across families', '')
   if (crossEdges.length > 0) {
     sections.push(imageLink(family, 'across', overviewPath))
   } else {
-    sections.push('No relationships are declared with specifications in other families.')
+    sections.push('No specification of this family links a specification of another family, or is linked by one.')
   }
   return sections.join('\n')
 }

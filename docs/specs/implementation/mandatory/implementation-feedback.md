@@ -20,12 +20,6 @@ Every Implementation must therefore keep this feedback in two files inside its
 Implementation decisions it made, each decision linked to the problems it settles. The Engine designer reads the
 feedback to improve the specifications and to compare Implementations.
 
-# Relationships
-
-- Uses [Implementation Placement](implementation-placement.md)
-- Used by [Specification Tracking](specification-tracking.md)
-- Used by [Specification Updates](../recipes/specification-updates.md)
-
 # Glossary
 
 | Term                    | Definition                                                                                                                             |
@@ -35,7 +29,7 @@ feedback to improve the specifications and to compare Implementations.
 
 # Feedback files
 
-Every Implementation must keep these two Markdown files in its Implementation repo:
+Every Implementation must keep these two Markdown files in its [Implementation repo](implementation-placement.md#glossary):
 
 | Path                                   | Contents                                           |
 | -------------------------------------- | -------------------------------------------------- |

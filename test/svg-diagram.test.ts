@@ -25,16 +25,12 @@ function specification(id: string, family: SpecificationRecord['family']): Speci
   return { id, family, title: `Title ${id}`, owns: 'Rules.', path: `docs/specs/${directory}/${id}.md` }
 }
 
-function relationship(dependencyId: string, dependentId: string, kind: RelationshipKind): RelationshipRecord {
-  return {
-    dependencyId,
-    dependencyPath: '',
-    dependentId,
-    dependentPath: '',
-    kind,
-    origin: 'explicit',
-    sourcePaths: [],
-  }
+function relationship(dependencyId: string, dependentId: string): RelationshipRecord {
+  return { dependencyId, dependencyPath: '', dependentId, dependentPath: '', kind: 'references' }
+}
+
+function arrowLines(svg: string): string[] {
+  return svg.split('\n').filter((line) => line.includes('class="edge ') && !line.includes(' H '))
 }
 
 function mechanicsCorpus(): SpecificationCorpus {
@@ -48,13 +44,14 @@ function mechanicsCorpus(): SpecificationCorpus {
     ],
     glossary: [],
     relationships: [
-      relationship('BASE', 'MID', 'uses'),
-      relationship('BASE', 'MID', 'refines'),
-      relationship('MID', 'TOP', 'uses'),
-      relationship('BASE', 'TOP', 'refines'),
-      relationship('FOUND', 'BASE', 'refines'),
-      relationship('FOUND', 'MID', 'refines'),
-      relationship('TOP', 'FACE', 'uses'),
+      relationship('BASE', 'MID'),
+      // A duplicate of the reference above; the diagrams draw it once.
+      relationship('BASE', 'MID'),
+      relationship('MID', 'TOP'),
+      relationship('BASE', 'TOP'),
+      relationship('FOUND', 'BASE'),
+      relationship('FOUND', 'MID'),
+      relationship('TOP', 'FACE'),
     ],
   }
 }
@@ -108,10 +105,10 @@ describe('SVG diagram renderer', () => {
       { id: 'D', lines: ['D — Delta'], layer: 3 },
     ],
     edges: [
-      { from: 'A', to: 'B', kinds: kinds('uses') },
-      { from: 'A', to: 'C', kinds: kinds('refines') },
-      { from: 'B', to: 'C', kinds: kinds('uses', 'refines') },
-      { from: 'C', to: 'D', kinds: kinds('uses') },
+      { from: 'A', to: 'B', kinds: kinds('references') },
+      { from: 'A', to: 'C', kinds: kinds('references') },
+      { from: 'B', to: 'C', kinds: kinds('references') },
+      { from: 'C', to: 'D', kinds: kinds('references') },
     ],
     showLayerLabels: true,
   }
@@ -125,16 +122,21 @@ describe('SVG diagram renderer', () => {
     expect(svg.endsWith('</svg>\n')).toBe(true)
   })
 
-  test('draws one arrow per relationship pair in the style of its kinds and lists only used styles', () => {
+  test('draws one references arrow per edge and a legend of only the references style', () => {
     const svg = renderSvgDiagram(input)
-    const arrows = svg.split('\n').filter((line) => line.includes('class="edge ') && !line.includes(' H '))
+    const arrows = arrowLines(svg)
     expect(arrows).toHaveLength(4)
-    expect(arrows.filter((line) => line.includes('edge-uses'))).toHaveLength(2)
-    expect(arrows.filter((line) => line.includes('edge-refines'))).toHaveLength(1)
-    expect(arrows.filter((line) => line.includes('edge-both'))).toHaveLength(1)
-    expect(svg).toContain('>refined by and used by<')
-    expect(svg).not.toContain('>other relationship kinds<')
+    expect(
+      arrows.every((line) => line.includes('class="edge edge-references" marker-end="url(#head-references)"')),
+    ).toBe(true)
+    expect(svg.match(/>referenced by</g)).toHaveLength(1)
     expect(svg).not.toContain('>another family<')
+  })
+
+  test('draws no legend entry for the references style when there is no arrow', () => {
+    const svg = renderSvgDiagram({ ...input, edges: [] })
+    expect(arrowLines(svg)).toHaveLength(0)
+    expect(svg).not.toContain('>referenced by<')
   })
 
   test('keeps boxes of one layer apart and omits layer labels on request', () => {
@@ -169,7 +171,7 @@ describe('SVG diagram renderer', () => {
       edges: Array.from({ length: 12 }, (_, index) => ({
         from: 'ROOT',
         to: `N${String(index).padStart(2, '0')}`,
-        kinds: kinds('uses'),
+        kinds: kinds('references'),
       })),
       showLayerLabels: true,
     }
@@ -191,38 +193,37 @@ describe('family SVG diagrams', () => {
   const overviewPath = 'docs/specs/mechanics/about-mechanics.md'
   const sources = new Map([[overviewPath, '']])
 
-  test('links the SVG files from the overview of a family that uses them', () => {
+  test('links the within and across SVG files from the overview of the family', () => {
     const diagram = renderFamilyDiagram(mechanicsCorpus(), 'Mechanics')
-    expect(diagram).toContain(
-      '![Mechanics family: uses relationships within the family](../../images/diagrams/mechanics-family-within-uses.svg)',
+    expect(diagram).toBe(
+      [
+        '## Within the family',
+        '',
+        '![Mechanics family: references within the family](../../images/diagrams/mechanics-family-within.svg)',
+        '',
+        '## Across families',
+        '',
+        '![Mechanics family: relationships with other families](../../images/diagrams/mechanics-family-across.svg)',
+      ].join('\n'),
     )
-    expect(diagram).toContain(
-      '![Mechanics family: refines relationships within the family](../../images/diagrams/mechanics-family-within-refines.svg)',
-    )
-    expect(diagram).toContain(
-      '![Mechanics family: relationships with other families](../../images/diagrams/mechanics-family-across.svg)',
-    )
+    expect(diagram).not.toContain('### ')
     expect(diagram).not.toContain('```mermaid')
   })
 
-  test('renders the uses, refines, and across files with shared layers, grouped members, and other families', () => {
+  test('renders the within and across files with layers, grouped members, and other families', () => {
     const files = renderFamilyDiagramFiles(mechanicsCorpus(), sources)
     expect([...files.keys()]).toEqual([
-      'docs/images/diagrams/mechanics-family-within-uses.svg',
-      'docs/images/diagrams/mechanics-family-within-refines.svg',
+      'docs/images/diagrams/mechanics-family-within.svg',
       'docs/images/diagrams/mechanics-family-across.svg',
     ])
     for (const path of files.keys()) expect(isGeneratedDiagramFilePath(path)).toBe(true)
-    const uses = files.get('docs/images/diagrams/mechanics-family-within-uses.svg') ?? ''
-    expect(uses).toContain('LAYER 3')
-    expect(uses).toContain('TOP — Title TOP')
-    expect(uses).not.toContain(' family<')
-    expect(uses).not.toContain('class="edge edge-refines"')
-    const refines = files.get('docs/images/diagrams/mechanics-family-within-refines.svg') ?? ''
-    expect(refines).toContain('class="edge edge-refines"')
-    expect(refines).not.toContain('class="edge edge-uses"')
-    // MID is in layer 2 because of its uses relationship, so the refines diagram keeps it there.
-    expect(refines).toContain('LAYER 2')
+    const within = files.get('docs/images/diagrams/mechanics-family-within.svg') ?? ''
+    expect(within).toContain('LAYER 3')
+    expect(within).toContain('TOP — Title TOP')
+    expect(within).not.toContain(' family<')
+    // BASE → MID, MID → TOP, and BASE → TOP; the duplicate BASE → MID reference is drawn once.
+    expect(arrowLines(within)).toHaveLength(3)
+    expect(arrowLines(within).every((line) => line.includes('class="edge edge-references"'))).toBe(true)
     const across = files.get('docs/images/diagrams/mechanics-family-across.svg') ?? ''
     expect(across).toContain('>Foundation family<')
     expect(across).toContain('>Guidance family<')
@@ -230,6 +231,23 @@ describe('family SVG diagrams', () => {
     expect(across).not.toContain('LAYER')
     // BASE and MID relate to other families identically, so they share one box.
     expect(across.match(/<rect class="box"/g)).toHaveLength(2)
+  })
+
+  test('recognizes the file names of generated diagrams', () => {
+    for (const fileName of [
+      'specification-stack.svg',
+      'family-architecture.svg',
+      'references-all.svg',
+      'references-game.svg',
+      'references-governance.svg',
+      'mechanics-family-within.svg',
+      'mechanics-family-across.svg',
+    ]) {
+      expect(isGeneratedDiagramFilePath(`docs/images/diagrams/${fileName}`)).toBe(true)
+    }
+    expect(isGeneratedDiagramFilePath('docs/images/diagrams/hand-made.svg')).toBe(false)
+    expect(isGeneratedDiagramFilePath('docs/images/diagrams/nested/references-all.svg')).toBe(false)
+    expect(isGeneratedDiagramFilePath('docs/images/references-all.svg')).toBe(false)
   })
 
   test('renders files only for a family whose overview exists', () => {
@@ -241,7 +259,7 @@ describe('family SVG diagrams', () => {
   test('check mode reports a stale, a missing, and an unexpected diagram file', () => {
     const expected = renderFamilyDiagramFiles(mechanicsCorpus(), sources)
     const outputs = { expected, overviews: new Map<string, string>(), sources }
-    const within = 'docs/images/diagrams/mechanics-family-within-uses.svg'
+    const within = 'docs/images/diagrams/mechanics-family-within.svg'
     const across = 'docs/images/diagrams/mechanics-family-across.svg'
     expect(expected.has(within) && expected.has(across)).toBe(true)
     expect(checkDerivedOutputs(outputs, expected)).toEqual([])
@@ -251,7 +269,7 @@ describe('family SVG diagrams', () => {
     expect(checkDerivedOutputs(outputs, new Map([...expected].filter(([path]) => path !== across)))).toEqual([
       `${across}: generated documentation is missing; run npm run docs:generate.`,
     ])
-    const extra = 'docs/images/diagrams/old-family-within.svg'
+    const extra = 'docs/images/diagrams/old-family-across.svg'
     // An unexpected file is reported alone, before any stale or missing file.
     expect(checkDerivedOutputs(outputs, new Map([...expected, [within, '<svg/>'], [extra, '<svg/>']]))).toEqual([
       `${extra}: unexpected generated documentation file; remove or relocate it.`,
@@ -274,18 +292,30 @@ describe('specification stack diagram', () => {
       ],
       glossary: [],
       relationships: [
-        relationship('CORE', 'ENG', 'uses'),
-        relationship('ENG', 'DOM', 'uses'),
-        relationship('DOM', 'ONE', 'refines'),
-        relationship('DOM', 'TWO', 'refines'),
-        relationship('ONE', 'TWO', 'uses'),
-        relationship('DOM', 'TURN', 'uses'),
-        relationship('ONE', 'TURN', 'uses'),
-        relationship('TWO', 'TURN', 'uses'),
-        relationship('ENG', 'IMPL', 'uses'),
+        relationship('CORE', 'ENG'),
+        relationship('ENG', 'DOM'),
+        relationship('DOM', 'ONE'),
+        relationship('DOM', 'TWO'),
+        relationship('ONE', 'TWO'),
+        relationship('DOM', 'TURN'),
+        relationship('ONE', 'TURN'),
+        relationship('TWO', 'TURN'),
+        relationship('ENG', 'IMPL'),
       ],
     }
   }
+
+  test('gives specifications that reference each other in a cycle one layer', () => {
+    const corpus = stackCorpus()
+    const layout = computeStackLayout({
+      ...corpus,
+      relationships: [...corpus.relationships, relationship('TWO', 'ONE')],
+    })
+    expect(layout.bands.map((band) => [band.family, band.rows.map((row) => row.map((member) => member.id))])).toEqual([
+      ['Mechanics', [['TURN'], ['ONE', 'TWO'], ['DOM']]],
+      ['Foundation', [['ENG', 'NUM'], ['CORE']]],
+    ])
+  })
 
   test('orders each Family by its layers', () => {
     const layout = computeStackLayout(stackCorpus())
@@ -322,10 +352,10 @@ describe('family architecture diagram', () => {
       ],
       glossary: [],
       relationships: [
-        relationship('ENG', 'MECH', 'uses'),
-        relationship('MECH', 'SCREEN', 'uses'),
-        relationship('SCREEN', 'IMPL', 'uses'),
-        relationship('ENG', 'IMPL', 'uses'),
+        relationship('ENG', 'MECH'),
+        relationship('MECH', 'SCREEN'),
+        relationship('SCREEN', 'IMPL'),
+        relationship('ENG', 'IMPL'),
       ],
     }
   }

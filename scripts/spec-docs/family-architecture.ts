@@ -18,8 +18,8 @@ export interface FamilyArchitectureRow {
 }
 
 /**
- * Derives what each Family builds on from the explicit uses and refines relationships between specifications: a Family
- * builds on another Family when one of its specifications uses or refines a specification of that other Family.
+ * Derives what each Family builds on from the References between specifications: a Family
+ * builds on another Family when one of its specifications references a specification of that other Family.
  * `families` lists every Family to draw, in order, including Families that have no specification yet.
  */
 export function computeFamilyArchitecture(
@@ -29,8 +29,6 @@ export function computeFamilyArchitecture(
   const familyById = new Map(corpus.specifications.map((specification) => [specification.id, specification.family]))
   const buildsOn = new Map<string, Set<string>>(families.map((family) => [family, new Set<string>()]))
   for (const relationship of corpus.relationships) {
-    if (relationship.origin !== 'explicit') continue
-    if (relationship.kind !== 'uses' && relationship.kind !== 'refines') continue
     const dependent = familyById.get(relationship.dependentId)
     const dependency = familyById.get(relationship.dependencyId)
     if (dependent === undefined || dependency === undefined || dependent === dependency) continue
@@ -200,7 +198,7 @@ export function renderFamilyArchitecture(corpus: SpecificationCorpus, rows: read
   }
   parts.push(...edges)
 
-  const captions = ['Arrows point from a Family to the Families its specifications use or refine.']
+  const captions = ['Arrows point from a Family to the Families its specifications reference.']
   const empty = others.filter((row) => (counts.get(row.family) ?? 0) === 0).map((row) => row.family)
   if (empty.length > 0) {
     captions.push(

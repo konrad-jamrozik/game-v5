@@ -18,13 +18,6 @@ reading commands and writing results.
 Because it adds no presentation of its own, the CLI is headless: it shows what the engine API returns and nothing else.
 Everything a Player can do in the game can therefore be done through it, from the [Main menu](../foundation/campaign-lifecycle.md#glossary) to the end of a [Campaign](../foundation/core-concepts.md#campaign-and-session).
 
-# Relationships
-
-- Uses [Campaign Lifecycle](../foundation/campaign-lifecycle.md)
-- Uses [Engine Contract](../foundation/engine-contract.md)
-- Uses [Player API](../foundation/player-api.md)
-- Used by [Headless First](../../implementation/guidance/headless-first.md)
-
 # Reach of the CLI
 
 Every [Session API](../foundation/engine-contract.md#api-surfaces) and [Player API](../foundation/engine-contract.md#api-surfaces) operation under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) is

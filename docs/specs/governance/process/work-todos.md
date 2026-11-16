@@ -20,24 +20,20 @@ can be handled when that Batch is drafted or reviewed. Recording a Work item nei
 status, and each specification remains authoritative until it is revised. A link from a Work item to a
 specification is a citation, not a relationship.
 
-# Relationships
-
-- Uses [Specification Work Plan and Backlog](work-plan.md)
-
 # Glossary
 
 Batch is defined in the [Specification Work Plan and Backlog glossary](work-plan.md#glossary).
 
-| Term      | Definition                                                                                                                              |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Work item | One known outstanding issue in one or more registered specifications, recorded in this document until it is resolved or found obsolete. |
+| Term      | Definition                                                                                                                                                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Work item | One known outstanding issue in one or more [registered](../conventions/spec-conventions.md#specifications) [specifications](../conventions/spec-conventions.md#specifications), recorded in this document until it is resolved or found obsolete. |
 
 # Adding and removing Work items
 
 Add a Work item when an issue is found that is not fixed in the same change. Give it the next unused label, the form
 `TODO-NNN` with three digits, and a heading of the form `TODO-NNN: short title` under the matching category. Never
 reuse a label. The label is a short handle for discussion; references from other documents link to the Work item's
-heading, as required by [Requirement wording](../conventions/spec-conventions.md#specifications).
+heading, as required by [Requirement wording](../conventions/spec-conventions.md#requirement-wording).
 
 Remove a Work item in the same change that resolves it, or when the issue no longer exists. Do not mark Work items as
 done or keep resolved ones; Git history is the record. When a resolution changes only part of a Work item, update the
@@ -73,11 +69,11 @@ The Work items below were measured against these recorded rules and decisions:
   belongs only if it is Observable (a black-box test through the engine API, a save, or a replay could fail),
   Designer-authored (a [GDR](../../design/foundation/core-concepts.md#game-build-and-content) or a description of game behavior), or Vocabulary. Everything else is the implementer's choice.
 - **Determinism decision:** [Determinism](../../design/foundation/determinism-and-randomness.md#determinism) and
-  [Campaign seed](../../design/foundation/determinism-and-randomness.md#glossary). Every [Campaign](../../design/foundation/core-concepts.md#campaign-and-session) has a Campaign seed, supplied by
+  [Campaign seed](../../design/foundation/determinism-and-randomness.md#campaign-seed). Every [Campaign](../../design/foundation/core-concepts.md#campaign-and-session) has a [Campaign seed](../../design/foundation/determinism-and-randomness.md#glossary), supplied by
   the [Session controller](../../design/foundation/engine-contract.md#principals-and-access) at campaign creation or chosen by the engine, and every random outcome derives from it and
   from nothing else. The same [Game build](../../design/foundation/core-concepts.md#game-build-and-content), initial [Campaign configuration](../../design/foundation/campaign-state.md#glossary), Campaign seed, and ordered committed
   [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns) reproduce the same [Campaign state](../../design/foundation/core-concepts.md#campaign-and-session). Determinism is required only within one
-  implementation and Game build. How random outcomes are derived from the Campaign seed, the order of random draws,
+  [implementation](../conventions/spec-conventions.md#artifacts) and Game build. How random outcomes are derived from the Campaign seed, the order of random draws,
   the order of [Campaign instance](../../design/foundation/core-concepts.md#campaign-instances) creation within one Player action, and the sequence and format of generated [Instance IDs](../../design/foundation/campaign-instances.md#glossary)
   are the implementer's choice. [Acceptance examples](../conventions/design-spec-conventions.md#glossary) assert replay equality, including from the same Campaign seed, or
   use fixed injected random outcomes, never which outcome a particular Campaign seed produces.
@@ -108,7 +104,7 @@ observable or designer-authored outcome.
 
 > - Which state snapshot supplies each input and when each effect becomes visible.
 
-(CONV, Writing exact requirements checklist.)
+(CONV, Writing exact [requirements](../conventions/spec-conventions.md#specifications) checklist.)
 
 **Why it is an issue:** Which values an input uses changes outcomes, so it is designer-authored and belongs in the
 specifications. The wording, however, describes a mechanism (snapshots and reads) rather than the outcome.

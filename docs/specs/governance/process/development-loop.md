@@ -14,7 +14,7 @@ The [Game designer](../conventions/spec-conventions.md#participants) delegates a
 specifications and the code, while the Game designer keeps every creative and design decision. That is how the game
 can be developed fast and still be tightly designed and fun to play, rather than generic.
 
-The split rests on one rule: the design lives only in the specifications, and an [Implementation](../conventions/artifact-relationships.md#artifacts) is derived from them
+The split rests on one rule: the design lives only in the specifications, and an [Implementation](../conventions/spec-conventions.md#artifacts) is derived from them
 and can be rebuilt at any time. Every change therefore enters as a change to the specifications and reaches the code
 only through an Implementation update. Building and updating an Implementation teaches the [Implementer](../conventions/spec-conventions.md#participants) where the
 specifications fall short, which becomes Implementer feedback; playing it shows the Game designer what to change, which
@@ -22,12 +22,12 @@ becomes Designer feedback. Both flow back into the specifications, and the loop 
 
 # Glossary
 
-| Term                 | Definition                                                                                                                                                  |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Development loop     | The repeating cycle in which specifications are changed, an Implementation is built or updated from them, and what that shows is fed back into them.        |
-| Implementer feedback | What an Implementer learns about the specifications while building or updating an Implementation: the defects it met and the choices it made in their gaps. |
-| Designer feedback    | What the Game designer finds wrong, or wants changed, after playing or reviewing an Implementation.                                                         |
-| LLM skill            | A packaged set of instructions that an LLM agent loads to carry out one recurring task of the Development loop.                                             |
+| Term                 | Definition                                                                                                                                                                                                                                                |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Development loop     | The repeating cycle in which [specifications](../conventions/spec-conventions.md#specifications) are changed, an [Implementation](../conventions/spec-conventions.md#artifacts) is built or updated from them, and what that shows is fed back into them. |
+| Implementer feedback | What an [Implementer](../conventions/spec-conventions.md#participants) learns about the specifications while building or updating an Implementation: the defects it met and the choices it made in their gaps.                                            |
+| Designer feedback    | What the [Game designer](../conventions/spec-conventions.md#participants) finds wrong, or wants changed, after playing or reviewing an Implementation.                                                                                                    |
+| LLM skill            | A packaged set of instructions that an LLM agent loads to carry out one recurring task of the Development loop.                                                                                                                                           |
 
 # Durable specifications and disposable Implementations
 
@@ -93,12 +93,12 @@ The Implementation is a conformance defect only when every Family involved alrea
 expects, e.g. the rule and its GDR are both present and the Implementation still leaves the feature out. Otherwise the
 following table, which is exhaustive, decides what changes:
 
-| Where the specifications fall short                                                                                   | What changes                                                                |
-| --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| The feature is not specified, so no GDR can supply it                                                                 | Foundation or Mechanics first, then Content for the GDRs the new rule reads |
-| The feature is specified, but its GDR is missing or has the wrong values                                              | Content only                                                                |
-| What a user interface shows, how it arranges it, or how it looks, while the engine API already allows it              | UI, including its visual design                                             |
-| How an Autopilot AI chooses its [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns) | Autopilot AIs                                                               |
+| Where the specifications fall short                                                                                      | What changes                                                                |
+| ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| The feature is not specified, so no [GDR](../../design/foundation/core-concepts.md#game-build-and-content) can supply it | Foundation or Mechanics first, then Content for the GDRs the new rule reads |
+| The feature is specified, but its GDR is missing or has the wrong values                                                 | Content only                                                                |
+| What a user interface shows, how it arranges it, or how it looks, while the engine API already allows it                 | UI, including its visual design                                             |
+| How an Autopilot AI chooses its [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns)    | Autopilot AIs                                                               |
 
 Whether a value is [Player](../conventions/spec-conventions.md#participants)-visible at all is a rule of Foundation or Mechanics, not of UI: a user interface presents
 the [Player-visible information](../../design/foundation/engine-contract.md#api-surfaces) and cannot reveal what the rules hide, though it can choose how prominently to show it.
@@ -154,7 +154,7 @@ its product physical. Everything in an [Implementation repo](../../implementatio
 be the only record of a decision. The separation also lets several Implementations exist side by side, and keeps any
 of them from depending on files of the Spec repo.
 
-**Why is an Implementation never changed directly?** Because a direct change lives only in a disposable artifact. A
+**Why is an Implementation never changed directly?** Because a direct change lives only in a disposable [artifact](../conventions/spec-conventions.md#artifacts). A
 rebuild loses it, another Implementation never receives it, and the specifications still say the old thing, so the
 next Implementer repeats the mistake. Even without a rebuild, an update applies only the difference in the
 specifications, knows nothing of the direct change, and can undo it when it touches the same code.
