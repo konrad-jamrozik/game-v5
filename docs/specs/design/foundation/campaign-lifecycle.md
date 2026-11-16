@@ -79,7 +79,8 @@ At the Main menu the Session still has to be managed before any Campaign is curr
 create a Campaign.
 
 The following Session API operations need no Current campaign, and this list is complete: `session.getStatus()`,
-every `session.globalConfiguration` operation, `session.saves.list()`, `session.saves.load(save)`, `session.campaign.create(options)`, every
+every `session.globalConfiguration` operation, `session.saves.list()`, `session.saves.load(save)`, `session.saves.delete(save)`,
+`session.saves.deleteCampaign(campaign)`, `session.campaign.create(options)`, every
 `session.newCampaignSetup` operation, and `session.autopilot.listAutopilotAis()`. Every other operation that depends on a
 Campaign fails when no Current campaign exists, and the failure changes nothing, under
 [Committed state integrity](engine-contract.md#committed-state-integrity).

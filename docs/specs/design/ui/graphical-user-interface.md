@@ -31,6 +31,11 @@ step away.
 The GUI opens at the Main menu, the Session state with no Current campaign under
 [Session lifecycle](../foundation/campaign-lifecycle.md#session-lifecycle) in Campaign Lifecycle.
 
+The Main menu lists the Campaign saves, and lets the Player delete each listed Campaign save and each listed Campaign
+with all its Campaign saves, under [Deleting Campaign saves](../foundation/saves.md#deleting-campaign-saves) in Saves.
+Because deleting cannot be undone, the GUI asks the Player to confirm each deletion first, naming the Campaign save or
+the Campaign and how many Campaign saves it removes.
+
 # TODOs
 
 - TODO: State what the Main menu offers by default, e.g. creating a Campaign, loading a Campaign save, and changing

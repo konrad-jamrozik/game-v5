@@ -5,7 +5,7 @@
 | Spec ID     | SAVES                                                                                                                                                                      |
 | Family      | Foundation                                                                                                                                                                 |
 | Audience    | Engine designer, UI designer, Implementer                                                                                                                                  |
-| Owns        | Campaign save contents, saving, loading, Autosaves, the Save size limit, and Game build compatibility.                                                                     |
+| Owns        | Campaign save contents, saving, loading, Autosaves, deleting Campaign saves, the Save size limit, and Game build compatibility.                                            |
 | Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -17,7 +17,9 @@ one Campaign at one Committed state, together with its Timeline and Autopilot me
 Campaign saves come from two sources. The Session controller saves on request, either over the Current save or as a
 new Campaign save that keeps an earlier line of play intact. The engine writes Autosaves by itself, so that play can
 resume even after the game stops unexpectedly, and so that undo can reach back across recent Turns. Every Campaign save
-is bounded by the Save size limit, and a Game build may reject a Campaign save written by a different Game build.
+is bounded by the Save size limit, and a Game build may reject a Campaign save written by a different Game build. The
+Session controller deletes the Campaign saves it no longer wants, one at a time or a whole Campaign at once, e.g. those
+that a different Game build wrote and that can no longer be loaded.
 
 # Relationships
 
@@ -116,7 +118,8 @@ not resumed.
 
 An Autosave is a Campaign save and holds what every Campaign save holds, under
 [Campaign save contents](#campaign-save-contents). It belongs to the Campaign it was written from. Only the engine
-writes, replaces, or removes an Autosave; the Session controller can load one with `session.saves.load(save)`.
+writes or replaces an Autosave; the Session controller can load one with `session.saves.load(save)` and delete one under
+[Deleting Campaign saves](#deleting-campaign-saves).
 
 The following list of Autosaves is complete.
 
@@ -164,6 +167,30 @@ Player action. It does not verify that a Campaign save can be loaded: a listed C
 load, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). The exact form of an entry is
 the Implementer's choice and follows the [Information boundary](player-api.md#information-boundary).
 
+# Deleting Campaign saves
+
+Deleting removes Campaign saves from Game storage for good. It is how the player discards a line of play, a Campaign
+they no longer want, or a Campaign save that can no longer be loaded. The following two operations are the complete
+set that delete Campaign saves at the Session controller's request:
+
+- `session.saves.delete(save)` deletes the one Campaign save with that Campaign save ID, whatever its kind, including
+  an Autosave of any kind.
+- `session.saves.deleteCampaign(campaign)` deletes every Campaign save whose Campaign ID is `campaign`, including
+  every Autosave of that Campaign. Afterwards `session.saves.list()` reports no Campaign save of that Campaign.
+
+The following rules are complete.
+
+- **Not the Current campaign:** A request to delete a Campaign save of the Current campaign, or to delete the Current
+  campaign, fails and deletes nothing. The player closes the Campaign first, under
+  [Campaign selection](campaign-lifecycle.md#campaign-selection), so the Current Autosave of a Campaign being played is
+  never removed by a request.
+- **Any Campaign save that is listed:** Every Campaign save that `session.saves.list()` reports can be deleted,
+  including one that fails to load, e.g. one rejected under [Game build compatibility](#game-build-compatibility).
+- **Permanent:** A deleted Campaign save cannot be restored. Deleting is not a Player action and is not recorded in
+  any Timeline.
+- **Nothing else changes:** Deleting changes no other Campaign save, no Global configuration, and nothing of the
+  Session, apart from what `session.saves.list()` reports afterwards.
+
 # Save size limit
 
 The Save size limit is 100 MiB. It is a safety measure against unbounded storage use, not a gameplay rule.
@@ -181,18 +208,21 @@ a Campaign save written by a different Game build.
 
 A load that fails leaves the entire prior Session unchanged, including its Current campaign and Current save, under
 [Committed state integrity](engine-contract.md#committed-state-integrity). A save that fails writes and changes no
-Campaign save.
+Campaign save. A delete that fails deletes no Campaign save.
 
-A failed load or save reports the failure to the Session controller, with exactly one reason and a message that
-names the Campaign save concerned. The following list of reasons is complete.
+A failed load, save, or delete reports the failure to the Session controller, with exactly one reason and a message
+that names the Campaign save or the Campaign concerned. The following list of reasons is complete.
 
-| Operation | Reason                   | When it applies                                                                                    |
-| --------- | ------------------------ | -------------------------------------------------------------------------------------------------- |
-| Load      | Incompatible Game build  | The Campaign save is rejected under [Game build compatibility](#game-build-compatibility).         |
-| Load      | Corrupt Campaign save    | The Campaign save can be read but its contents are not a valid Campaign save.                      |
-| Load      | Unreadable Campaign save | The Campaign save cannot be read, e.g. it no longer exists or Game storage is unavailable.         |
-| Save      | Save size limit exceeded | The Campaign save would exceed the Save size limit.                                                |
-| Save      | Unwritable Campaign save | The Campaign save cannot be written, e.g. Game storage is full, unavailable, or refuses the write. |
+| Operation | Reason                    | When it applies                                                                                                                 |
+| --------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Load      | Incompatible Game build   | The Campaign save is rejected under [Game build compatibility](#game-build-compatibility).                                      |
+| Load      | Corrupt Campaign save     | The Campaign save can be read but its contents are not a valid Campaign save.                                                   |
+| Load      | Unreadable Campaign save  | The Campaign save cannot be read, e.g. it no longer exists or Game storage is unavailable.                                      |
+| Save      | Save size limit exceeded  | The Campaign save would exceed the Save size limit.                                                                             |
+| Save      | Unwritable Campaign save  | The Campaign save cannot be written, e.g. Game storage is full, unavailable, or refuses the write.                              |
+| Delete    | Current campaign          | The Campaign save, or the Campaign, belongs to the Current campaign, under [Deleting Campaign saves](#deleting-campaign-saves). |
+| Delete    | Unknown Campaign save     | No Campaign save has that Campaign save ID, or no Campaign save has that Campaign ID.                                           |
+| Delete    | Undeletable Campaign save | Game storage cannot delete the Campaign save, e.g. it is unavailable or refuses the deletion.                                   |
 
 A failed operation is not retried automatically, and it is not an engine defect. An interface shows the reason and
 message and takes no further action; e.g., a user interface shows an error message and stays on the screen
@@ -239,5 +269,13 @@ replaced is removed rather than left holding an earlier Committed state.
   Autopilot engagement ([Autosaves](#autosaves)).
 - **Autosave limit 0:** With the Autosave limit 0, commit two actions and Advance turn. No Turn-end Autosave is
   written, and the Current Autosave holds the Committed state after Advance turn ([Autosaves](#autosaves)).
+- **Deleting a Campaign save and a Campaign:** Create Campaign A, `save()`, Advance turn, and `saveAsNew()`, then
+  close it. `session.saves.delete(save)` with the first Campaign save deletes it; `session.saves.list()` still
+  reports the second and the Autosaves of Campaign A. `session.saves.deleteCampaign(campaign)` with the Campaign ID of
+  A then deletes all of them, and `session.saves.list()` reports no Campaign save of Campaign A
+  ([Deleting Campaign saves](#deleting-campaign-saves)).
+- **Deleting while playing:** Load a Campaign save of Campaign A. Deleting any Campaign save of Campaign A, or Campaign
+  A itself, fails with the reason Current campaign and deletes nothing. Deleting a Campaign save of another Campaign
+  succeeds ([Deleting Campaign saves](#deleting-campaign-saves)).
 - **Too large:** Save a Campaign whose Campaign save would exceed 100 MiB. The save fails, every existing Campaign
   save is unchanged, and the Session keeps its Current campaign ([Save size limit](#save-size-limit)).
