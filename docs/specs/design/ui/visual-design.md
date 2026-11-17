@@ -151,6 +151,28 @@ Even spacing is what makes the screens read as orderly, so spacing follows fixed
 - Two pieces of text on one line never touch: they are at least 8 px apart, or joined by a " · " separator, e.g. a
   Mission site's name, kind, and Faction, and a value right-aligned after them.
 
+## Alignment
+
+A screen reads as one instrument only when its parts line up, so every element is aligned with its neighbours by
+these rules, at every window width, and no alignment is left to the content an element happens to hold. This list is
+exhaustive.
+
+- **Text on one line:** pieces of text on one line share one baseline, whatever their styles, e.g. the Panel heading
+  "Agents" and the figures "20 / 20 · Training 4 / 4" after it in the Agents View. Text is never centred on its line
+  by the height of its box, because styles of different sizes then sit at different heights.
+- **Controls in one row:** the controls of one row, e.g. the filters, buttons, and close control of a Detail view's
+  title row, are equally tall and share one centre line. Text in the row, e.g. a count of selected rows after a
+  button, is centred on that line too.
+- **Labelled groups:** a group of controls under a Label, e.g. the "Show agents" filters of the Agents View, stands
+  its Label above its controls, and the controls share the row's centre line with every control of the row that has
+  no Label, e.g. the close control sits level with those filters, not with their Label.
+- **Cards side by side:** cards in one row are equally tall, and each part of a card starts at the same height on
+  every card of the row, because each part takes the height of its tallest instance in the row. E.g., when the change
+  of one Upgrade card wraps onto a second line, the Buy buttons of all the Upgrade cards still sit on one line.
+- **A note beside a control:** a note about a control, e.g. the money missing for a disabled Buy button, sits on the
+  control's row, 8 px after it, and never moves below it; a note longer than the space left beside the control wraps
+  within that space.
+
 # Components
 
 Components are the building blocks every screen reuses. A screen that needs a control not described here builds it from
@@ -166,8 +188,11 @@ Buttons come in three kinds so that the Player can tell at a glance what a butto
 - A destructive button has no fill, a Danger border outline, and Danger text, e.g. Delete and Delete campaign.
 
 A button is 36 px tall, 32 px inside a table row, and 44 to 46 px for the main action of a screen. A button's label
-never wraps onto a second line. Buttons that belong together sit in one row with 8 px between them, aligned to the right
-edge of their row or panel; when the row is too narrow, the whole group wraps below the content, never a single label.
+never wraps onto a second line. Buttons that belong together sit in one row with 8 px between them. A row of buttons
+that follows content on the same line, e.g. the Load and Delete of a Campaign save, or that ends a panel or dialog,
+aligns to the right edge of its row or panel. A row of buttons that is a part of its own in a card whose parts are
+stacked, e.g. the Buy button of an Upgrade card, starts at the card's left content edge, as the card's text does. When
+a row is too narrow, the whole group wraps below the content, never a single label.
 A disabled button keeps its kind and is drawn at 40% opacity.
 
 ## Inputs
@@ -312,7 +337,8 @@ The [Side panel](gui.md#glossary) is the console beside the globe, so it reads a
   bottom edge.
 - **Detail view:** it covers the Globe stage inset by 16 px, on a Surface fill with a 2 px Accent top edge and 18 px of inner
   padding. Its title is in the Panel heading style on the left, with its buttons and then its close control in one row
-  on the right, under [Buttons](#buttons). A Detail view taller than the Globe stage scrolls inside, keeping its title row in
+  on the right, under [Buttons](#buttons) and [Alignment](#alignment). The close control is a square neutral button,
+  36 px wide and tall, holding a ✕. A Detail view taller than the Globe stage scrolls inside, keeping its title row in
   view.
 
 ## Background artwork

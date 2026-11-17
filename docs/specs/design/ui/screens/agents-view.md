@@ -18,7 +18,8 @@ it is one table, because the Player compares Agents with one another and acts on
 # Header
 
 The header shows the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents against the [Agent cap](../../mechanics/domain-model.md#agency-and-agents) and the number of Agents counted against
-the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) against that cap, e.g. "Agents 10 / 12 · Training 2 / 3", and these controls, in this order:
+the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) against that cap, e.g. "Agents 10 / 12 · Training 2 / 3", with the counts on the baseline of the title, under
+[Alignment](../visual-design.md#alignment) in Visual Design, and these controls, in this order:
 
 1. **Hire,** labelled with `hire_cost`, which makes one `hireAgent` [Player action](../../foundation/engine-contract.md#player-actions-and-turns), under [Hiring Agents](../../mechanics/economy-and-upgrades.md#hiring-agents) in
    Economy and Upgrades.
@@ -56,7 +57,8 @@ shown Agents can be selected.
 ## Row filters
 
 At the right of the title row, a group labelled "Show agents" holds three filters, each with its count, of which
-exactly one is on at a time. All is on whenever the Agents View opens.
+exactly one is on at a time. All is on whenever the Agents View opens. The filters sit level with the close control,
+with their Label above them, under [Alignment](../visual-design.md#alignment) in Visual Design.
 
 - **All:** every Serving Agent.
 - **Assignable:** every Serving Agent that can be assigned, under [Agents that can be assigned](../../mechanics/agents-spec.md#agents-that-can-be-assigned) in Agents, and is

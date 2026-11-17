@@ -29,13 +29,18 @@ them, under [Panels and cards](../visual-design.md#panels-and-cards) in Visual D
 - Its [Acquisitions](../../mechanics/economy-and-upgrades.md#glossary) so far, as a count, e.g. "Bought 2×".
 - A primary Buy button labelled with its `price`, which makes one `purchaseUpgrade` [Player action](../../foundation/engine-contract.md#player-actions-and-turns), under
   [Purchasing Upgrades](../../mechanics/economy-and-upgrades.md#purchasing-upgrades) in Economy and Upgrades. While money is below the price, the button is disabled and the
-  card says how much money is missing, in Danger.
+  card says how much money is missing, in Danger, beside the button.
 - Below the Buy button, a tally of its Acquisitions, under [Tallies](../visual-design.md#tallies) in Visual Design, so that the button keeps its
   place on the card as the tally grows.
+
+The cards line up these parts with one another, so that every Buy button sits on one line and starts at its card's left
+content edge, whatever the length of each card's change or note, under [Alignment](../visual-design.md#alignment) and
+[Buttons](../visual-design.md#buttons) in Visual Design.
 
 # Artboard
 
 ![Upgrades View panel Artboard: the agency's money in the header and one card per Upgrade, each with its kind, the value it changes before and after one more acquisition, its Acquisitions as a count, a Buy button with its price, one of them disabled with the money missing, and a tally of squares of its Acquisitions under the button](../../../../images/artboards/upgrades-view.png)
 
 The sample values, e.g. the Upgrade names, prices, and caps, appear only on the Artboard, under
-[Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
+[Reading Artboards](../visual-design.md#reading-artboards) in Visual Design. The [Artboard](../visual-design.md#glossary)'s Weapon damage card sets its
+Buy button lower than the other cards' Buy buttons; the text applies, and every Buy button sits on one line.
