@@ -46,9 +46,9 @@ formats; the list is complete:
 The Soundtrack is every such file, and the Game build supplies every Track unchanged, in its own format. Any other file
 in the directory, e.g. a README, is not a Track.
 
-The Track title is the file name without its extension, with each underscore replaced by a space, so a file name may
-write its spaces either way. E.g., the file `Black_Orbit_Watch.opus` is the Track titled "Black Orbit Watch", and the
-file `v03AI UFO 1.mp3` is the Track titled "v03AI UFO 1". No two Tracks have the same Track title.
+The Track title is the file name without its extension, unchanged, so that the title the Player sees is the name of
+the file that holds the Track. E.g., the file `GEO-4.opus` is the Track titled "GEO-4". No two Tracks have the same
+Track title.
 
 # Music settings
 
@@ -146,7 +146,7 @@ right:
    [Loudness](#loudness); the Music volume is set through `session.globalConfiguration.set` when the Player releases
    it, so that dragging stores one value rather than one for each step. The slider stays enabled while Music on is
    `false`.
-3. **Track title:** the Track title of the Current Track, after a music note, e.g. "♪ Black Orbit Watch", in the
+3. **Track title:** the Track title of the Current Track, after a music note, e.g. "♪ GEO-4", in the
    Caption style. While Music on is `false` it reads "Music off" in Muted text instead, and before the first Track
    starts it reads nothing. A title too long for the space ends in an ellipsis, and the whole title shows on hover.
 
@@ -169,23 +169,23 @@ Music is never worth interrupting play for, so every failure of it is silent to 
 
 # Acceptance examples
 
-These examples use a Soundtrack of three Tracks, `Depth_Signal.opus`, `Silent_Contact.opus`, and
-`Unseen_Sector.opus`, each 120 seconds long.
+These examples use a Soundtrack of three Tracks, `GEO-5.opus`, `GEO-6.opus`, and `GEO-12.opus`, each 120 seconds
+long.
 
-- **Track title:** The Track of `Silent_Contact.opus` is titled "Silent Contact", and the Music control shows
-  "♪ Silent Contact" while it plays. A file `Silent Contact.mp3` would have the same Track title, so it cannot be
-  added beside it ([Soundtrack](#soundtrack)).
-- **Rounds:** With the round order of the first round fixed to Silent Contact, Unseen Sector, Depth Signal, the Session
+- **Track title:** The Track of `GEO-6.opus` is titled "GEO-6", and the Music control shows "♪ GEO-6" while it
+  plays. A file `GEO-6.mp3` would have the same Track title, so it cannot be added beside it
+  ([Soundtrack](#soundtrack)).
+- **Rounds:** With the round order of the first round fixed to GEO-6, GEO-12, GEO-5, the Session
   plays those three Tracks in that order. The second round's order is one of the four orders that do not start with
-  Depth Signal, e.g. Unseen Sector, Depth Signal, Silent Contact ([Playing order](#playing-order)).
+  GEO-5, e.g. GEO-12, GEO-5, GEO-6 ([Playing order](#playing-order)).
 - **Fade in:** With the Music volume 50, 1.5 seconds after a Track starts f is 0.5 and the gain is
   0.5 × 0.5² = 0.125; from 3 seconds on, the gain is 0.25 ([Loudness](#loudness), [Fades](#fades)).
 - **Fade out to the next Track:** 118.5 seconds into a Track, f is 0.5. At 120 seconds the Track ends with f at 0, and
   the next Track of the round starts at once with f at 0 ([Fades](#fades), [Playback](#playback)).
-- **Off and on again:** 60 seconds into Unseen Sector the Player selects the Music toggle. Music on is stored as
+- **Off and on again:** 60 seconds into GEO-12 the Player selects the Music toggle. Music on is stored as
   `false`, the Track fades out over 1 second and pauses at 61 seconds, and the Music control reads "Music off". The
   Player selects the Music toggle again: the Track resumes at 61 seconds, fades in over 1 second, and the Music
-  control reads "♪ Unseen Sector" ([Playback](#playback)).
+  control reads "♪ GEO-12" ([Playback](#playback)).
 - **Volume across screens and Sessions:** On the Main menu the Player drags the Volume slider to 30 and releases it.
   Music volume is stored as 30. The Player loads a Campaign save: the Current Track plays on without a break, and the
   Music control of the Campaign screen shows 30. In the next Session the music starts with the Music volume 30
@@ -193,6 +193,6 @@ These examples use a Soundtrack of three Tracks, `Depth_Signal.opus`, `Silent_Co
 - **Blocked sound:** In a web browser that blocks sound until the first interaction, the GUI opens at the Main menu
   and the Track title reads nothing. The Player clicks Load on a Campaign save: the first Track starts from its
   beginning with its fade in, and the Campaign loads ([Playback](#playback)).
-- **Unplayable Track:** The file of Silent Contact is damaged. When Silent Contact is next in a round, it is skipped,
+- **Unplayable Track:** The file of GEO-6 is damaged. When GEO-6 is next in a round, it is skipped,
   and the Track after it starts at once; no error is shown
   ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)).

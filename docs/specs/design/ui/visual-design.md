@@ -184,6 +184,15 @@ checkbox is a 16 px square with the control corner radius, drawn in these states
 The pointer over a disabled checkbox shows that it cannot be changed. A checkbox's label, when it has one, sits to its
 right in Body text, 8 px from it.
 
+## Sliders
+
+A slider shows its value as the filled share of its track, so the Player reads it at a glance, e.g. the Volume slider
+of the [Music control](music.md#music-control). At the least value no part of the track is filled and at the greatest
+value all of it is, and no part of the track ever shows beyond the thumb at either end. The track is 4 px tall with
+fully rounded ends, in Accent from its left end up to the thumb and in Divider beyond. The thumb is a 14 px Accent
+circle whose centre sits at the end of the filled part, so at either end of the track it overhangs by half its width
+and the track spans exactly the thumb's travel.
+
 ## Panels and cards
 
 A panel groups what belongs together on a Surface fill with no outline. A card is a panel for one item of a list, e.g.
