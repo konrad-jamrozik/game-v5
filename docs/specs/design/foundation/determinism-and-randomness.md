@@ -91,7 +91,7 @@ complete:
 - **Fixed:** The Campaign seed never changes after creation. No action, [Timeline](engine-contract.md#persisted-data) navigation, save, or load changes it.
 - **Kept:** The Campaign seed is Campaign state; [Campaign state composition](campaign-state.md#campaign-state-composition)
   in Campaign State places it in [Current world state](campaign-state.md#glossary). Every [Campaign save](engine-contract.md#persisted-data) therefore holds it.
-- **Readable:** `session.getStatus()` reports the Campaign seed of the [Current campaign](engine-contract.md#session-data) to the Session controller,
+- **Readable:** `session.getStatus()` reports the Campaign seed of the [Current campaign](core-concepts.md#campaign-and-session) to the Session controller,
   in every [Dev mode](engine-contract.md#principals-and-access) setting and whether it was supplied or chosen, in a form `create(options)` accepts; e.g., the
   Session controller can share it or create another Campaign with it.
 - **Not Player-visible:** The Campaign seed is not Player-visible information, because together with the Game build
@@ -156,7 +156,8 @@ choice.
   same Campaign seed. No Player API query returns it, with Dev mode enabled or disabled
   ([Campaign seed](#campaign-seed)).
 - **Identifiers under replay:** Hire an Agent, undo, and redo. The redone Agent has the same Instance ID as before the
-  undo. Save the Campaign twice with `saveAsNew()`; the two Campaign saves have different Campaign save IDs
+  undo. Save the Campaign, commit an action, and save again; the two Campaign saves have different Campaign
+  save IDs
   ([Unique identifiers](#unique-identifiers)).
 - **Seed length limits:** Creating a Campaign with a 64-character seed of printable ASCII characters succeeds;
   creating one with a 65-character seed, an empty seed, or a seed containing `é` fails and leaves the Session as it

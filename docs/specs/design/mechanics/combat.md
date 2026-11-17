@@ -170,7 +170,7 @@ effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agen
 current health is 0 is dead; being dead is a Derived value of its current health, not a stored state.
 
 **Retention:** An Enemy keeps every property above for the whole Campaign, so that every reference to it resolves, e.g.
-from a Combat report. Once its Mission site no longer participates in current gameplay, the Enemy is [retained](../foundation/world-history.md#glossary) in [World
+from a Combat report. An Enemy becomes [Retired](../foundation/world-history.md#glossary) when its Mission site becomes Retired, and is kept in [World
 history](../foundation/campaign-state.md#glossary) with its final values, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Enemy is ever removed.
@@ -572,7 +572,7 @@ the Advance turn in which its Combat was fought, and no Mission or other Campaig
 Engine Contract. How the Turn report organizes its Combat reports is left to the implementation. Once produced, a
 Combat report is never rewritten or recomputed, even when the values of its participants change later, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. Whatever
-presents a Combat later uses the retained values. After the next Advance turn, only the facts that its [History entry](../foundation/world-history.md#glossary) holds need to remain available,
+presents a Combat later uses the [retained](../foundation/world-history.md#glossary) values. After the next Advance turn, only the facts that its [History entry](../foundation/world-history.md#glossary) holds need to remain available,
 under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
 
 # Player-visible information

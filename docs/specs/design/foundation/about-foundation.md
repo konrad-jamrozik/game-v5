@@ -79,7 +79,7 @@ replay. Each Mechanics specification still owns the distributions of its own ran
 ## Saves
 
 [Saves](saves.md) answers _what do saving and loading do, and what does the engine save by itself?_ It owns what a
-Campaign save holds, saving, saving as new, loading, the Autosaves the engine writes, the Save size limit, and which
+Campaign save holds, saving, loading, the Autosaves the engine writes, the Save size limit, and which
 Campaign saves a Game build loads.
 
 ## Timeline

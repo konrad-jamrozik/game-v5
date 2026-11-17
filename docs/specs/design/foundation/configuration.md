@@ -65,7 +65,7 @@ The [Session controller](engine-contract.md#principals-and-access) reads and cha
 | `session.globalConfiguration.reset(setting)`      | Removes the stored value of `setting`, so the setting follows the Game build default.                                                           |
 
 A successful `set` or `reset` is persisted in Game storage at once and applies from then on, in this Session and in
-later ones. These operations need no [Current campaign](engine-contract.md#session-data). They are not [Player actions](engine-contract.md#player-actions) and change no Campaign state,
+later ones. These operations need no [Current campaign](core-concepts.md#campaign-and-session). They are not [Player actions](engine-contract.md#player-actions) and change no Campaign state,
 [Timeline](engine-contract.md#persisted-data), or Campaign save, so undo, redo, and load never change Global configuration. They remain available during
 an [Autopilot engagement](engine-contract.md#autopilot), under [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency);
 e.g., the player can change the volume while an [Autopilot AI](engine-contract.md#principals-and-access) plays.

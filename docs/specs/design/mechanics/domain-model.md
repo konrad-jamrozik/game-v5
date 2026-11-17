@@ -326,7 +326,7 @@ Each row independently changes fixture A and describes an invalid state.
 Given i1 is Completed and the Combat of m1 is fought and m1 becomes Won, a valid resulting state has:
 
 - i1 no longer Active, with an empty Current team, and a1 retained in its Participation history.
-- s1 still Attempted, and m1 still its Mission; m1 now has an empty Current team, and a2 has m1 in its Participation
+- s1 Concluded, and m1 still its Mission; m1 now has an empty Current team, and a2 has m1 in its Participation
   history; the Turn report holds the Combat report of m1's Combat; no Assignment of a2 references m1.
 - a1 and a2 each with an Assignment that references neither i1 nor m1.
 

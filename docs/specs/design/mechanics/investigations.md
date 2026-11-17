@@ -138,7 +138,7 @@ violates one is an internal invariant violation, reported under
 
 **Retention:** An Investigation keeps every property above for the whole Campaign, whatever its lifecycle state, so that
 every reference to it resolves, e.g. from an Agent's Participation history or from the origin of an Initiative Mission
-site. A Completed or Abandoned Investigation no longer participates in current gameplay and is [retained](../foundation/world-history.md#glossary) in [World history](../foundation/campaign-state.md#glossary)
+site. An Investigation becomes [Retired](../foundation/world-history.md#glossary) when it becomes Completed or Abandoned, and is kept in [World history](../foundation/campaign-state.md#glossary)
 with its final values, including its final Investigation progress, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Investigation is ever removed.
@@ -391,7 +391,7 @@ When an Investigation becomes Abandoned:
 - Its lifecycle state becomes Abandoned, which is final.
 - Its Current team is empty; every former member already has the Investigation in its Participation history.
 - Its Investigation progress is 0, because [Progress loss](#progress-loss) applied with no member left, unless every
-  member that left had effective skill 0. It keeps that final value as a retained fact, but no rule reads it again
+  member that left had effective skill 0. It keeps that final value as a [retained](../foundation/world-history.md#glossary) fact, but no rule reads it again
   for gameplay. It is never resumed: a later Investigation of the same Lead is a new Investigation that starts from 0,
   under [Investigation creation](#investigation-creation).
 - Its Assessed keeps its value, so a Lead whose Abandoned Investigation was Assessed remains an Assessed Lead, under

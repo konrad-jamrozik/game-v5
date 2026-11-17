@@ -267,7 +267,7 @@ the same Timeline, and the list is complete:
 - **Nothing in Campaign state changes:** Because no Player action can commit, Panic, money, and every other value stay as
   the Advance turn that recorded the Campaign ending left them. The Campaign ending is not cleared by any rule.
 - **Other operations are not restricted:** The operations of [Session API](../foundation/engine-contract.md#api-surfaces), e.g. saving, Timeline navigation, and
-  closing the [Current campaign](../foundation/engine-contract.md#session-data), are not Player actions, so a Campaign ending does not reject them. Their availability
+  closing the [Current campaign](../foundation/core-concepts.md#campaign-and-session), are not Player actions, so a Campaign ending does not reject them. Their availability
   follows their own rules, e.g. in [Timeline](../foundation/timeline.md) and [Saves](../foundation/saves.md). An
   [Autopilot engagement](../foundation/engine-contract.md#autopilot) that is active when a Campaign ending is recorded ends with the disengagement reason campaign
   ended, under [Autopilot lifecycle and concurrency](../foundation/autopilot.md#autopilot-lifecycle-and-concurrency) in

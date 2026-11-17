@@ -24,7 +24,7 @@ is an ordinary [Player action](engine-contract.md#player-actions-and-turns) that
 # Dev mode
 
 Only the [Session controller](engine-contract.md#principals-and-access) can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires
-a [Current campaign](engine-contract.md#session-data) and no active [Autopilot engagement](engine-contract.md#autopilot). Inspection returns detached, read-only full
+a [Current campaign](core-concepts.md#campaign-and-session) and no active [Autopilot engagement](engine-contract.md#autopilot). Inspection returns detached, read-only full
 [Campaign state](core-concepts.md#campaign-and-session). It never reveals hidden facts through ordinary game behavior.
 Every [Player cheat action](engine-contract.md#player-actions-and-turns) belongs in `developer.actions` and follows [Player cheat actions](#player-cheat-actions).
 

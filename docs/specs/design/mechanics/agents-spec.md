@@ -175,8 +175,8 @@ weapon values. An Agent also has three [Derived values](../foundation/core-conce
 [Start-work gate](#start-work-gate). An Agent has no [Turn series](../foundation/world-history.md#glossary).
 
 **Retention:** An Agent keeps every property above for the whole Campaign, whatever its Agent status, so that every
-reference to it resolves, e.g. from a [Combat report](domain-model.md#combat) or a Participation history. A Terminated Agent no longer
-participates in current gameplay and is [retained](../foundation/world-history.md#glossary) in [World history](../foundation/campaign-state.md#glossary) with its final values, under
+reference to it resolves, e.g. from a [Combat report](domain-model.md#combat) or a Participation history. An Agent becomes
+[Retired](../foundation/world-history.md#glossary) when it becomes Terminated, and is kept in [World history](../foundation/campaign-state.md#glossary) with its final values, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Agent is ever removed.
 

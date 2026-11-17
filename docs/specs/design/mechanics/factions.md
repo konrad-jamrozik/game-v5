@@ -127,7 +127,7 @@ and are never read again.
 
 A Faction's name is not a State property: it is the `name` of its FactionArchetype. A Faction has no [Turn series](../foundation/world-history.md#glossary).
 
-**Retention:** A Faction participates in current gameplay for the whole Campaign, including after it is Eliminated, and
+**Retention:** A Faction is never [Retired](../foundation/world-history.md#glossary): it stays in [Current world state](../foundation/campaign-state.md#glossary) for the whole Campaign, including after it is Eliminated, and
 keeps every property above, so that every reference to it, e.g. a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions)'s target Faction, resolves, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No
 Faction is ever removed.

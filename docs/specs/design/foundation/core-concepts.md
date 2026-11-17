@@ -56,11 +56,12 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 A playthrough, its data, and the runtime context that selects it. [Campaign State](campaign-state.md) states how Campaign state
 divides into components.
 
-| Term           | Definition                                                                                                                          | Prohibited synonyms                                                                          |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Campaign       | A particular playthrough with its own evolving Campaign state.                                                                      |                                                                                              |
-| Campaign state | Data describing one Campaign, including data describing its past Campaign state or events.                                          | Evolving campaign facts; Continuation state; continuation data; Controller continuation data |
-| Session        | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |                                                                                              |
+| Term             | Definition                                                                                                                          | Prohibited synonyms                                                                          |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Campaign         | A particular playthrough with its own evolving Campaign state.                                                                      |                                                                                              |
+| Campaign state   | Data describing one Campaign, including data describing its past Campaign state or events.                                          | Evolving campaign facts; Continuation state; continuation data; Controller continuation data |
+| Session          | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |                                                                                              |
+| Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.         |                                                                                              |
 
 ## Value classification
 

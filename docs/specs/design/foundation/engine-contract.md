@@ -38,12 +38,12 @@ The parts of the engine that each have one owning specification, listed under [E
 
 Kinds of engine API caller and the Session access settings that govern them.
 
-| Term               | Definition                                                                                                                                                                                                                                                                                                                                                                                                          | Prohibited synonyms                                                                         |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                                                                | Role; execution role. Ordinary uses of "role" and the term Role Type remain valid.          |
-| Session controller | The Principal holding Session authority: managing the Session, changing Global configuration, selecting the Current campaign, navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using a command-line or graphical interface, or an LLM-based agent driving the API; the Principal's authority does not depend on which kind of caller holds it. | Holistic AI; overarching AI                                                                 |
-| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory.                                                                                                                                                                                                                                                                        | Delegated AI; Delegated agent; scoped AI; intellect. Agent remains the game-domain concept. |
-| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                                                                  |                                                                                             |
+| Term               | Definition                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Prohibited synonyms                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| Principal          | A kind of engine API caller, defined by the API authority it holds rather than by what kind of caller it is. The Principals are Session controller and Autopilot AI.                                                                                                                                                                                                                                                                                         | Role; execution role. Ordinary uses of "role" and the term Role Type remain valid.          |
+| Session controller | The Principal holding Session authority: managing the Session, changing Global configuration, selecting the [Current campaign](core-concepts.md#campaign-and-session), navigating the Timeline, changing Dev mode, and engaging or disengaging Autopilot. Typical callers are, e.g., a human using a command-line or graphical interface, or an LLM-based agent driving the API; the Principal's authority does not depend on which kind of caller holds it. | Holistic AI; overarching AI                                                                 |
+| Autopilot AI       | The Principal that plays through Player API while Autopilot is engaged, with access only to Player-visible information and Autopilot memory.                                                                                                                                                                                                                                                                                                                 | Delegated AI; Delegated agent; scoped AI; intellect. Agent remains the game-domain concept. |
+| Dev mode           | A Session access setting that grants the Session controller Developer API access without changing Player API visibility or Autopilot AI authority.                                                                                                                                                                                                                                                                                                           |                                                                                             |
 
 ## Autopilot
 
@@ -93,16 +93,6 @@ group into.
 | Turn-start state    | The Committed state immediately after campaign creation or immediately after a committed Advance turn. No other Player action of its Turn has happened yet.                                                                                                                                                                                                     | Turn-start checkpoint. Review checkpoints in the work plan remain valid. |
 | Turn-end state      | The Committed state in which a committed Advance turn began.                                                                                                                                                                                                                                                                                                    |                                                                          |
 
-## Session data
-
-What a Session has selected, which is never persisted. [Data ownership](#data-ownership) shows everything
-else a Session holds.
-
-| Term             | Definition                                                                                                                                                                           | Prohibited synonyms |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
-| Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure.                                                          |                     |
-| Current save     | The Campaign save that the Current campaign was most recently loaded from or written to, if any; it is Session state and is cleared when the Current campaign is closed or replaced. |                     |
-
 # API hierarchy
 
 The engine API is the source of truth for execution and access behavior. Every user interface, e.g. a command-line or
@@ -136,7 +126,6 @@ Engine API
 │   │   ├── list()
 │   │   ├── load(save)
 │   │   ├── save()
-│   │   ├── saveAsNew()
 │   │   ├── delete(save)
 │   │   └── deleteCampaign(campaign)
 │   ├── newCampaignSetup
@@ -234,7 +223,6 @@ Game storage (persisted)
 
 Session (runtime, never persisted)
 ├── Current campaign selection
-├── Current save
 ├── Dev mode
 ├── Active Autopilot engagement (at most one)
 │   ├── Autopilot engagement ID

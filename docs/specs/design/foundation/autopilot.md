@@ -11,7 +11,7 @@
 # Overview
 
 Autopilot lets the player hand play over to an AI for a while and then take it back, e.g. to let an [Autopilot AI](engine-contract.md#principals-and-access) play
-out the next few [Turns](engine-contract.md#player-actions-and-turns). During each [Autopilot engagement](engine-contract.md#autopilot), the Autopilot AI plays the [Current campaign](engine-contract.md#session-data) through [Player API](engine-contract.md#api-surfaces)
+out the next few [Turns](engine-contract.md#player-actions-and-turns). During each [Autopilot engagement](engine-contract.md#autopilot), the Autopilot AI plays the [Current campaign](core-concepts.md#campaign-and-session) through [Player API](engine-contract.md#api-surfaces)
 in place of the [Session controller](engine-contract.md#principals-and-access), as the [Engine Contract glossary](engine-contract.md#glossary) defines it.
 
 The guiding principle is that an Autopilot AI plays as an ordinary player would, and no further. It receives only
@@ -40,7 +40,7 @@ least:
 
 - the `autopilotAiId` that `engage` accepts;
 - a name an interface can show; e.g., a user interface offers these names for the player to choose from;
-- whether it wrote the [Autopilot memory](engine-contract.md#persisted-data) of the [Current campaign](engine-contract.md#session-data), when there is a Current campaign that has Autopilot
+- whether it wrote the [Autopilot memory](engine-contract.md#persisted-data) of the [Current campaign](core-concepts.md#campaign-and-session), when there is a Current campaign that has Autopilot
   memory. Engaging any other Autopilot AI discards that Autopilot memory, under [Autopilot memory](#autopilot-memory).
 
 Listing needs no Current campaign, changes nothing, and is not a Player action. An Autopilot AI may become
@@ -118,8 +118,9 @@ cannot change Campaign state or write Autopilot memory. Timeline navigation rema
 Engaging Autopilot writes an [Autosave](saves.md#autosave-kinds), and no [Turn-end Autosave](saves.md#autosave-kinds) is written during an Autopilot engagement, under
 [Autosaves](saves.md#autosaves). An Autopilot engagement that ends the Turn is
 therefore reversed as a whole through [Autosave navigation](timeline.md#autosave-navigation), while the Timeline
-entries of its last Turn are reversed one by one. Completing disengagement writes no Autosave of its own: the [Current
-Autosave](saves.md#autosave-kinds) already holds the [Committed state](engine-contract.md#player-actions-and-turns) in which the Autopilot engagement ended.
+entries of its last Turn are reversed one by one. Completing disengagement writes the [Disengagement
+Autosave](saves.md#autosave-kinds), holding the [Committed state](engine-contract.md#player-actions-and-turns) in which the Autopilot engagement ended, under
+[Autosaves](saves.md#autosaves) in Saves.
 
 # Autopilot memory
 

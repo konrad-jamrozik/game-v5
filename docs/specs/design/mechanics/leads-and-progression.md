@@ -149,12 +149,12 @@ to the MissionSiteArchetype GDR itself, never to text parsed from an identifier.
 read; it is never stored, and it is not a state. A Lead L is available exactly when all of the following four
 conditions hold. The list is exhaustive.
 
-| Condition                      | It holds exactly when                                                                                             |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| 1. Prerequisites hold          | Every prerequisite in the `requires` of L holds, under [Prerequisites](#prerequisites).                           |
-| 2. No Mission Won              | No Mission from L is Won, i.e. no Mission at a Mission site created by L is Won.                                  |
-| 3. No Mission site in progress | No Mission site created by L is Active, and no Mission from L is [Deployed](agents-spec.md#assignments).          |
-| 4. Faction not Eliminated      | The Faction whose Archetype is the FactionArchetype named by the `faction` of L exists, and its Eliminated is no. |
+| Condition                                             | It holds exactly when                                                                                             |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| 1. Prerequisites hold                                 | Every prerequisite in the `requires` of L holds, under [Prerequisites](#prerequisites).                           |
+| 2. No Mission Won                                     | No Mission from L is Won, i.e. no Mission at a Mission site created by L is Won.                                  |
+| 3. No [Unfinished Mission site](missions.md#glossary) | No Mission site created by L is an [Unfinished Mission site](missions.md#glossary).                               |
+| 4. Faction not Eliminated                             | The Faction whose Archetype is the FactionArchetype named by the `faction` of L exists, and its Eliminated is no. |
 
 The Lead is available exactly when conditions 1 to 4 all hold. When it is not available, its **Blocking conditions** are
 all of the conditions that do not hold; there may be several. No condition reads an Investigation: whether a Lead that
@@ -180,7 +180,7 @@ exhaustive for what changes a condition.
 
 | Situation                                                                                                                            | Conditions that change                                   | Result for L                                                                                                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| The [Completion effect](#completion-effect) of L creates a Mission site                                                              | 3 stops holding.                                         | Not available while that Mission site is Active or its Mission is Deployed; Lead status Inactive.                                                                                                              |
+| The [Completion effect](#completion-effect) of L creates a Mission site                                                              | 3 stops holding.                                         | Not available while that Mission site is Active or its Mission is [Deployed](agents-spec.md#assignments); Lead status Inactive.                                                                                |
 | The Mission at that Mission site becomes Lost                                                                                        | 3 holds again.                                           | Available again, if the other conditions hold; Lead status Available. A new Investigation creates a new Mission site.                                                                                          |
 | That Mission site becomes Expired                                                                                                    | 3 holds again.                                           | Available again, as for Lost.                                                                                                                                                                                  |
 | The Mission at that Mission site becomes Won                                                                                         | 3 holds again; 2 stops holding.                          | Never available again, for the rest of the Campaign, because a Won Mission stays Won under [Missions from a Lead](#missions-from-a-lead); Lead status Archived.                                                |
@@ -234,11 +234,11 @@ conditions in the order of the following table, which is exhaustive. game-ts rev
 three statuses Active, Inactive, and Archived, in `getLeadStatus` of `web/src/lib/model_utils/leadUtils.ts`; Active is
 called Available here, because it holds exactly when the Lead is available.
 
-| Lead status | It holds exactly when                                   | Later change                                                                                                                           |
-| ----------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Archived    | Condition 2 or condition 4 does not hold.               | None: conditions 2 and 4, once not holding, never hold again.                                                                          |
-| Inactive    | Conditions 2 and 4 hold, and condition 3 does not hold. | Available when the Mission site becomes Lost or Expired; Archived when its Mission is Won or its Faction is Eliminated.                |
-| Available   | Conditions 1 to 4 all hold, i.e. the Lead is available. | Inactive when the [Completion effect](#completion-effect) of the Lead creates a Mission site; Archived when its Faction is Eliminated. |
+| Lead status | It holds exactly when                                   | Later change                                                                                                                                        |
+| ----------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Archived    | Condition 2 or condition 4 does not hold.               | None: conditions 2 and 4, once not holding, never hold again.                                                                                       |
+| Inactive    | Conditions 2 and 4 hold, and condition 3 does not hold. | Available when the Mission site becomes Expired, or Concluded with its Mission Lost; Archived when its Mission is Won or its Faction is Eliminated. |
+| Available   | Conditions 1 to 4 all hold, i.e. the Lead is available. | Inactive when the [Completion effect](#completion-effect) of the Lead creates a Mission site; Archived when its Faction is Eliminated.              |
 
 A discovered Lead satisfies condition 1, so the table covers every discovered Lead. An undiscovered Lead has no Lead
 status. Lead status reads no Investigation: whether an Investigation of an Available Lead can be started now is decided
@@ -402,11 +402,11 @@ This example exercises [Prerequisites](#prerequisites), [Lead availability](#lea
 
 In the initial Campaign state there are no Investigations, no Mission sites, and no Missions. Red Dawn is not Eliminated.
 
-| Lead      | 1. Prerequisites hold                                                  | 2. No Mission Won | 3. No Mission site in progress | 4. Faction not Eliminated | Discovered | Available | Blocking conditions | Lead status |
-| --------- | ---------------------------------------------------------------------- | ----------------- | ------------------------------ | ------------------------- | ---------- | --------- | ------------------- | ----------- |
-| member    | Holds: `requires` is empty                                             | Holds             | Holds                          | Holds                     | Yes        | Yes       | None                | Available   |
-| safehouse | Does not hold: no Mission at an `apprehend_member` Mission site is Won | Holds             | Holds                          | Holds                     | No         | No        | 1                   | None        |
-| hq        | Does not hold: no Mission at a `raid_safehouse` Mission site is Won    | Holds             | Holds                          | Holds                     | No         | No        | 1                   | None        |
+| Lead      | 1. Prerequisites hold                                                  | 2. No Mission Won | 3. No Unfinished Mission site | 4. Faction not Eliminated | Discovered | Available | Blocking conditions | Lead status |
+| --------- | ---------------------------------------------------------------------- | ----------------- | ----------------------------- | ------------------------- | ---------- | --------- | ------------------- | ----------- |
+| member    | Holds: `requires` is empty                                             | Holds             | Holds                         | Holds                     | Yes        | Yes       | None                | Available   |
+| safehouse | Does not hold: no Mission at an `apprehend_member` Mission site is Won | Holds             | Holds                         | Holds                     | No         | No        | 1                   | None        |
+| hq        | Does not hold: no Mission at a `raid_safehouse` Mission site is Won    | Holds             | Holds                         | Holds                     | No         | No        | 1                   | None        |
 
 A Player-visible query of the Leads returns member alone, with its properties, its availability, the four conditions,
 and Lead status Available. It returns nothing about safehouse or hq, not even that further Leads exist
@@ -576,7 +576,7 @@ Lead, whose Completed Investigation revealed it.
 
 - TODO (later): A prerequisite kind that holds once an Investigation of another Lead is Completed, i.e. Leads discovered
   through another Lead, as game-ts's dependency on a Lead, under [Prerequisites](#prerequisites).
-- TODO (later): A condition that makes a Lead Inactive while a Mission site of another Lead is in progress, as game-ts's
+- TODO (later): A condition that makes a Lead Inactive while another Lead has an Unfinished Mission site, as game-ts's
   negated dependency, under [Lead availability](#lead-availability).
 - TODO (later): Repeatable Leads, under [What changes availability](#what-changes-availability). The Game designer's
   notes are in [Lead repeatability](../../../design-notes/lead-repeatability.md).

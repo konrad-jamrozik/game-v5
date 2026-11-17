@@ -121,11 +121,12 @@ Timeline entry. Going back to an earlier Turn, and forward again, is [Autosave n
 
 # Autosave navigation
 
-Autosave navigation is undo and redo across Turns. It moves the [Current campaign](engine-contract.md#session-data) between Autosaves and never applies
-or reverses a Player action itself. The Turn-end Autosave and the [Engagement Autosave](saves.md#autosave-kinds) are written under
+Autosave navigation is undo and redo across Turns. It moves the [Current campaign](core-concepts.md#campaign-and-session) between Autosaves and never applies
+or reverses a Player action itself. The Turn-end Autosave, the [Engagement Autosave](saves.md#autosave-kinds), and the [Disengagement Autosave](saves.md#autosave-kinds) are written under
 [Autosaves](saves.md#autosaves); this section adds the Return Autosave.
 
-The targets of Autosave navigation are the Turn-end Autosaves, the Engagement Autosave, and the Return Autosave of
+The targets of Autosave navigation are the Turn-end Autosaves, the Engagement Autosave, the Disengagement Autosave, and
+the Return Autosave of
 the Current campaign, limited to those holding a Committed state that is earlier or later than the current Committed
 state. The Current Autosave is never a target: it holds the current Committed state.
 
@@ -151,7 +152,7 @@ The following rules are complete.
   Autosave of the Campaign is removed unless it holds the Committed state in which that action began or an earlier
   Committed state. The removal happens before any Autosave that the action itself causes is written.
 - **Loading a target:** Loading a target restores the Campaign state, Timeline, and [Autopilot memory](engine-contract.md#persisted-data) it holds, as
-  [Loading](saves.md#loading) in Saves states, with these differences: the [Current save](engine-contract.md#session-data) and [Dev mode](engine-contract.md#principals-and-access) stay unchanged.
+  [Loading](saves.md#loading) in Saves states, with this difference: [Dev mode](engine-contract.md#principals-and-access) stays unchanged.
 - **Never a side effect:** Autosave navigation is never a side effect of another operation. In particular,
   `undoAction()` at a Turn-start state is rejected and does not load an Autosave, under
   [Edge cases and failure behavior](#edge-cases-and-failure-behavior). An interface presents Autosave navigation as a
@@ -258,8 +259,8 @@ play are not targets. They stay in [Game storage](engine-contract.md#persisted-d
 - **A Campaign save holds one Turn of Timeline:** Commit two actions, Advance turn, commit one action, and save. Load
   that Campaign save. One `undoAction()` restores the Turn-start state, and a second is rejected
   ([Timeline entries](#timeline-entries)).
-- **Keeping Undone actions by saving as new:** Commit three actions and call `saveAsNew()`, creating Campaign save
-  S1. Undo two actions, commit a different action, and call `saveAsNew()`, creating S2. Loading S1 restores the three
+- **Keeping a line of play:** Commit three actions and save, creating Campaign save S1. Undo two actions, commit a
+  different action, and save, creating S2, because its Committed state differs from that of S1. Loading S1 restores the three
   original actions; loading S2 restores the new line of play ([Action navigation](#action-navigation)).
 - **Campaign configuration follows undo and redo:** Commit a Campaign configuration change. Undo restores the
   preceding Campaign configuration and [World state](campaign-state.md#glossary); redo restores the changed Campaign configuration and World state
