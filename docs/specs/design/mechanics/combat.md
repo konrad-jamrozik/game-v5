@@ -447,7 +447,9 @@ defender is affected.
 of these that holds:
 
 1. **Dead:** Its current health is 0. It is dead and is not Incapacitated. A dead Agent becomes Killed at this moment, under
-   [Agent status](agents-spec.md#agent-status) in Agents. A dead Enemy stays an Enemy with current health 0.
+   [Agent status](agents-spec.md#agent-status) in Agents, and its Killed by references the attacker and the attacker's
+   Mission site. A dead Enemy stays an Enemy with current health 0, and the Enemies killed of the attacking Agent rises
+   by 1, under [Service record](agents-spec.md#service-record) in Agents.
 2. **Incapacitated:** It meets the [Incapacitation condition](#incapacitation-condition). Its Incapacitated property
    becomes yes, if it was not already.
 3. Otherwise nothing changes.

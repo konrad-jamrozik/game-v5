@@ -153,19 +153,22 @@ number of at least 1. These rules guarantee that every newly created Agent satis
 when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties. This table is
 exhaustive.
 
-| Property                                                   | Part      | Value                                                                                                                                                                                             | Classification and range                                                                                                                                   |
-| ---------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Agency                                                     | Constants | An Immutable reference to the Agency that employs the Agent.                                                                                                                                      | [Authoritative value](../foundation/core-concepts.md#value-classification). Always the Campaign's one Agency.                                              |
-| Turn hired                                                 | Constants | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) in which the Agent was created.                                                                          | Authoritative value. A whole number of at least 1.                                                                                                         |
-| Base skill                                                 | State     | The Agent's base skill.                                                                                                                                                                           | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). |
-| Current health                                             | State     | The Agent's current health.                                                                                                                                                                       | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
-| Base health                                                | State     | The Agent's base health.                                                                                                                                                                          | Authoritative value. A whole number of at least 1. No rule in scope changes it after creation.                                                             |
-| Exhaustion                                                 | State     | The Agent's exhaustion.                                                                                                                                                                           | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
-| Weapon                                                     | State     | A reference to the Weapon GDR the Agent is equipped with.                                                                                                                                         | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule in scope changes it after creation.                                  |
-| Base weapon damage                                         | State     | The Agent's base weapon damage.                                                                                                                                                                   | Authoritative value. A whole number of at least 1. Only the rules under [Modifiable values](#modifiable-values) change it.                                 |
-| Assignment                                                 | State     | Present exactly when the Agent is Serving: one of Standby, Contracting, Training, Recovery, an Investigation with a Mutable reference to it, or Deployed with a Mutable reference to the Mission. | Authoritative value, under [Assignment and Agent status](#assignment-and-agent-status).                                                                    |
-| Agent status                                               | State     | At assignment, In transit, Recovering, Killed, or Dismissed, under [Agent status](#agent-status).                                                                                                 | Authoritative value, under [Agent status](#agent-status) and [Assignment and Agent status](#assignment-and-agent-status).                                  |
-| [Participation history](domain-model.md#agency-and-agents) | State     | The Investigations and Missions the Agent took part in and has left.                                                                                                                              | Authoritative value, under [Participation history records](#participation-history-records).                                                                |
+| Property                                                   | Part      | Value                                                                                                                                                                                                                                | Classification and range                                                                                                                                   |
+| ---------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agency                                                     | Constants | An Immutable reference to the Agency that employs the Agent.                                                                                                                                                                         | [Authoritative value](../foundation/core-concepts.md#value-classification). Always the Campaign's one Agency.                                              |
+| Turn hired                                                 | Constants | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) in which the Agent was created.                                                                                                             | Authoritative value. A whole number of at least 1.                                                                                                         |
+| Base skill                                                 | State     | The Agent's base skill.                                                                                                                                                                                                              | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). |
+| Current health                                             | State     | The Agent's current health.                                                                                                                                                                                                          | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
+| Base health                                                | State     | The Agent's base health.                                                                                                                                                                                                             | Authoritative value. A whole number of at least 1. No rule in scope changes it after creation.                                                             |
+| Exhaustion                                                 | State     | The Agent's exhaustion.                                                                                                                                                                                                              | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges).                                                                           |
+| Weapon                                                     | State     | A reference to the Weapon GDR the Agent is equipped with.                                                                                                                                                                            | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule in scope changes it after creation.                                  |
+| Base weapon damage                                         | State     | The Agent's base weapon damage.                                                                                                                                                                                                      | Authoritative value. A whole number of at least 1. Only the rules under [Modifiable values](#modifiable-values) change it.                                 |
+| Assignment                                                 | State     | Present exactly when the Agent is Serving: one of Standby, Contracting, Training, Recovery, an Investigation with a Mutable reference to it, or Deployed with a Mutable reference to the Mission.                                    | Authoritative value, under [Assignment and Agent status](#assignment-and-agent-status).                                                                    |
+| Agent status                                               | State     | At assignment, In transit, Recovering, Killed, or Dismissed, under [Agent status](#agent-status).                                                                                                                                    | Authoritative value, under [Agent status](#agent-status) and [Assignment and Agent status](#assignment-and-agent-status).                                  |
+| [Participation history](domain-model.md#agency-and-agents) | State     | The Investigations and Missions the Agent took part in and has left.                                                                                                                                                                 | Authoritative value, under [Participation history records](#participation-history-records).                                                                |
+| Enemies killed                                             | State     | The number of [Enemies](domain-model.md#combat) the Agent's attacks have made dead.                                                                                                                                                  | Authoritative value. A whole number of at least 0, under [Service record](#service-record).                                                                |
+| Turn terminated                                            | State     | Present exactly when the Agent is Terminated: the turn number of the Turn in which it became Terminated.                                                                                                                             | Authoritative value. A whole number of at least its Turn hired, under [Service record](#service-record).                                                   |
+| Killed by                                                  | State     | Present exactly when the Agent is Killed: an Immutable reference to the Enemy whose attack made it dead, and an Immutable reference to that Enemy's [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions). | Authoritative value, under [Service record](#service-record).                                                                                              |
 
 Base skill, current health, base health, exhaustion, Weapon, and base weapon damage are the properties the
 [Combatant Role Type](#combatant-role-type) requires; Weapon and base weapon damage together are the equipped
@@ -188,6 +191,27 @@ the reason may be that the player assigns the Agent elsewhere, that the Investig
 Combat is fought. Nothing is ever removed from a Participation history, and recording it neither assigns nor
 reserves the Agent, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain
 Model.
+
+## Service record
+
+An Agent that leaves the Agency keeps a record of how its service ended and what it achieved, so that the player can
+look back on it after the [Combat reports](domain-model.md#combat) that told the story are no longer kept in full.
+
+**Proposed rule:** Enemies killed, Turn terminated, and Killed by change only as follows:
+
+- **Enemies killed** is 0 when the Agent is created, under [Agent creation](#agent-creation), and rises by 1 each time
+  an attack the Agent makes leaves its defender dead, under [Killed and Incapacitated](combat.md#killed-and-incapacitated)
+  in Combat. No rule lowers it.
+- **Turn terminated** is set when the Agent becomes Terminated, under [Agent status](#agent-status): for a Killed
+  Agent, the turn number of the Turn that the Advance turn fighting its Combat ends; for a Dismissed Agent, the turn
+  number of the Turn in which `dismissAgents` dismissed it.
+- **Killed by** is set when the Agent becomes Killed, under [Killed and Incapacitated](combat.md#killed-and-incapacitated)
+  in Combat, to the attacking Enemy and that Enemy's Mission site.
+
+Once set, Turn terminated and Killed by never change, and Enemies killed never changes after the Agent is Terminated,
+because a Terminated Agent fights no Combat. E.g., an Agent hired in Turn 3 that makes two Enemies dead in the Combat
+of the Advance turn ending Turn 6 and is made dead by enemy-7 at Mission site s4 in the Combat of the Advance turn
+ending Turn 9 ends with Enemies killed 2, Turn terminated 9, and Killed by enemy-7 at s4.
 
 # Agent status
 
@@ -218,8 +242,9 @@ The following invariants hold in every [Committed state](../foundation/engine-co
   has zero current health, and a Dismissed Agent has positive current health.
 
 When an Agent becomes Killed or Dismissed, its Assignment is removed in the same Player action,
-and the Investigation or Mission it belonged to, if any, is recorded under
-[Participation history records](#participation-history-records).
+the Investigation or Mission it belonged to, if any, is recorded under
+[Participation history records](#participation-history-records), and its Turn terminated, and for a Killed Agent its
+Killed by, are set under [Service record](#service-record).
 
 # Attributes and effectiveness
 
@@ -603,6 +628,9 @@ Campaign Instances. This table is exhaustive.
 | Assignment            | Standby.                                                                                          | This rule.                                                                       |
 | Agent status          | At assignment for an Agent of the initial roster; In transit for every Agent created during play. | This rule, under [Transit rule](#transit-rule).                                  |
 | Participation history | Empty.                                                                                            | This rule.                                                                       |
+| Enemies killed        | 0.                                                                                                | This rule.                                                                       |
+| Turn terminated       | Absent.                                                                                           | This rule.                                                                       |
+| Killed by             | Absent.                                                                                           | This rule.                                                                       |
 
 The table above states the initial base weapon damage before any Upgrade has been acquired; for an Agent created after an
 Upgrade has been acquired, the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises it. The new Agent joins the Agency's roster of Agents. No [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above.
@@ -696,18 +724,19 @@ Agency already employs as many Agents as the [Agent cap](domain-model.md#agency-
 [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the
 moment it exists, without a reveal condition, for every Agent whatever its Agent status. The table is exhaustive.
 
-| Value                                                                                                            | Player-visible information |
-| ---------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| An Agent's Instance ID, its AgentArchetype including the AgentArchetype's `name`, its Agency, and its Turn hired | Yes                        |
-| An Agent's base skill, current health, base health, exhaustion, Weapon, and base weapon damage                   | Yes                        |
-| An Agent's effective skill                                                                                       | Yes                        |
-| An Agent's Agent status, and its Assignment, including the Investigation or Mission it references                | Yes                        |
-| Whether an Agent can be assigned, and whether it is Fit for work                                                 | Yes                        |
-| An Agent's Participation history                                                                                 | Yes                        |
-| Every property of the AgentArchetype and of AgentParameters                                                      | Yes                        |
+| Value                                                                                                                | Player-visible information |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| An Agent's Instance ID, its AgentArchetype including the AgentArchetype's `name`, its Agency, and its Turn hired     | Yes                        |
+| An Agent's base skill, current health, base health, exhaustion, Weapon, and base weapon damage                       | Yes                        |
+| An Agent's effective skill                                                                                           | Yes                        |
+| An Agent's Agent status, and its Assignment, including the Investigation or Mission it references                    | Yes                        |
+| Whether an Agent can be assigned, and whether it is Fit for work                                                     | Yes                        |
+| An Agent's Participation history                                                                                     | Yes                        |
+| An Agent's Enemies killed, Turn terminated, and Killed by, including the Enemy and Mission site Killed by references | Yes                        |
+| Every property of the AgentArchetype and of AgentParameters                                                          | Yes                        |
 
 **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. A Terminated
-Agent has no Assignment; Player API reports it as absent, and the visible Agent status explains why. An empty Participation history is reported as empty, not as absent.
+Agent has no Assignment; Player API reports it as absent, and the visible Agent status explains why. A Serving Agent has no Turn terminated, and an Agent that is not Killed has no Killed by; Player API reports each as absent. An empty Participation history is reported as empty, not as absent.
 
 # Edge cases and failure behavior
 
@@ -1024,7 +1053,7 @@ which is above `exhaustion_incapacitation`.
 # TODOs
 
 - TODO (later): Skill gained from Missions and Combats, under [Changes to attributes](#changes-to-attributes).
-- TODO (later): Career statistics beyond Participation history, under
-  [Participation history records](#participation-history-records).
+- TODO (later): Career statistics beyond Participation history and the Service record, under
+  [Service record](#service-record).
 - TODO (later): Transit durations that differ between Assignments, under [Transit rule](#transit-rule).
 - TODO (later): Selection among several AgentArchetypes, under [Agent GDR validation](#agent-gdr-validation).

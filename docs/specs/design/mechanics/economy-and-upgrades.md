@@ -398,7 +398,8 @@ is the Implementer's choice. A rejected action changes nothing, under
 
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same
 Turn, to every Agent in `agents`: the Agent becomes Dismissed under [Agent status](agents-spec.md#agent-status) in
-Agents, which removes its Assignment and Agent status. No money is refunded or spent, and nothing else changes.
+Agents, which removes its Assignment and Agent status and sets its Turn terminated to the current turn number, under
+[Service record](agents-spec.md#service-record). No money is refunded or spent, and nothing else changes.
 A Dismissed Agent stops counting toward the Agent cap and in projected upkeep at once, and is not counted in any later
 Upkeep step. It stays in the Agency's roster and in [World history](../foundation/campaign-state.md#glossary) with its final values.
 
@@ -825,16 +826,16 @@ Standby, At assignment; a3 is on Standby, In transit; a4 is on Contracting, At a
 Killed. Projected upkeep is 10 × 5 = 50. Each call is made on its own from this state, and each rejected call changes
 nothing:
 
-| Call                      | Result                                                                                                               |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `dismissAgents([])`       | Rejected: `agents` is empty.                                                                                         |
-| `dismissAgents([a1, a1])` | Rejected: a1 is listed twice.                                                                                        |
-| `dismissAgents([a3])`     | Rejected: a3 is In transit.                                                                                          |
-| `dismissAgents([a4])`     | Rejected: a4 is on Contracting.                                                                                      |
-| `dismissAgents([a5])`     | Rejected: a5 is Deployed.                                                                                            |
-| `dismissAgents([a6])`     | Rejected: a6 is not Serving.                                                                                         |
-| `dismissAgents([a1, a3])` | Rejected as a whole: a3 is In transit. a1 stays Serving, on Standby.                                                 |
-| `dismissAgents([a1, a2])` | Succeeds: a1 and a2 are Dismissed and have no Assignment. Money stays 120, and projected upkeep becomes 10 × 3 = 30. |
+| Call                      | Result                                                                                                                                        |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dismissAgents([])`       | Rejected: `agents` is empty.                                                                                                                  |
+| `dismissAgents([a1, a1])` | Rejected: a1 is listed twice.                                                                                                                 |
+| `dismissAgents([a3])`     | Rejected: a3 is In transit.                                                                                                                   |
+| `dismissAgents([a4])`     | Rejected: a4 is on Contracting.                                                                                                               |
+| `dismissAgents([a5])`     | Rejected: a5 is Deployed.                                                                                                                     |
+| `dismissAgents([a6])`     | Rejected: a6 is not Serving.                                                                                                                  |
+| `dismissAgents([a1, a3])` | Rejected as a whole: a3 is In transit. a1 stays Serving, on Standby.                                                                          |
+| `dismissAgents([a1, a2])` | Succeeds: a1 and a2 are Dismissed, with Turn terminated 8, and have no Assignment. Money stays 120, and projected upkeep becomes 10 × 3 = 30. |
 
 ## Transport cap
 

@@ -66,6 +66,7 @@ exhaustive.
 | `missions-view.png`        | Panel  | `MissionsView.dc.html`       | [Missions View](screens/missions-view.md)       |
 | `leads-view.png`           | Panel  | `LeadsView.dc.html`          | [Leads View](screens/leads-view.md)             |
 | `agents-view.png`          | Panel  | `AgentsView.dc.html`         | [Agents View](screens/agents-view.md)           |
+| `agents-memorial.png`      | Panel  | `AgentsMemorial.dc.html`     | [Agents View](screens/agents-view.md)           |
 | `upgrades-view.png`        | Panel  | `UpgradesView.dc.html`       | [Upgrades View](screens/upgrades-view.md)       |
 | `turn-report-view.png`     | Panel  | `TurnReportView.dc.html`     | [Turn Report View](screens/turn-report-view.md) |
 | `history-view.png`         | Panel  | `HistoryView.dc.html`        | [History View](screens/history-view.md)         |
@@ -195,6 +196,24 @@ Tables carry most of the game's data, so they are dense but aligned. A header ro
 rule; body rows are separated by Raised dividers. Columns that hold numbers use the Figure style and are right-aligned,
 their header included. Row actions sit in the last column, right-aligned, under [Buttons](#buttons). Text that encodes
 a state uses the colour of that state, e.g. Positive for a won Mission, and Text muted for an idle Agent.
+
+A table keeps its columns still, so that the Player's eye finds a value where it was a moment ago. Each column's width
+is fixed by the table's design, as a fixed width or as a share of the table's width, and only resizing the table
+changes it; what the rows hold never does. E.g., an Assignment that gains "· In transit", or a filter that hides
+rows, moves and resizes no column. A value too long for its column wraps onto further lines within its row.
+
+A table whose rows each have a selection checkbox lets the Player select several rows at once, in these ways:
+
+- **Click:** clicking a row's checkbox, or the row outside its links and buttons, selects or clears that row and makes
+  it the anchor.
+- **Shift-click:** Shift-clicking a row gives every row from the anchor to that row, both included, the state the
+  anchor has. E.g., after clicking agent-10 to select it and then Shift-clicking agent-3, agent-3 to agent-10 are all
+  selected.
+- **Drag:** pressing on a row and moving the pointer across others gives each row passed over the state the pressed
+  row took, so one drag selects or clears a run of rows.
+
+A row whose checkbox is disabled is skipped by every one of these. Pressing or dragging over the rows never selects
+their text.
 
 ## Detail views and navigation
 

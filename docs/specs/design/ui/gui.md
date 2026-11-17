@@ -55,7 +55,9 @@ Investigation, whatever the new Assignment, the GUI asks the Player to confirm, 
 transit doing nothing. For an Investigation, it also names each Investigation that loses members, with its
 [Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) before and after the loss, under [Progress loss](../mechanics/investigations.md#progress-loss) in Investigations, and each that becomes
 Abandoned and loses all its progress, under [Abandonment](../mechanics/investigations.md#abandonment). An order that interrupts no
-such Agent, e.g. moving an Agent between Standby and Training, needs no confirmation.
+such Agent, e.g. moving an Agent between Standby and Training, needs no confirmation. The [Agents View](screens/agents-view.md) asks no such
+confirmation, because its Allow re-assigning checkbox takes its place, under
+[Re-assigning](screens/agents-view.md#re-assigning) in Agents View.
 
 # Warning on deploying tired Agents
 
