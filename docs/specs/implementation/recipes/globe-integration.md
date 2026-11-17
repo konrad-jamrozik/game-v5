@@ -26,14 +26,13 @@ Implementation without a globe is still correct.
 The `lib/globe/` directory of the [Spec repo](../mandatory/implementation-placement.md#glossary) holds a globe that already works, so that an implementer copies a known
 result instead of approximating one. Its files are the following; the table is exhaustive.
 
-| Path                              | Content                                                                                       |
-| --------------------------------- | --------------------------------------------------------------------------------------------- |
-| `README.md`                       | How to run the reference viewer, what each map holds, and where the imagery is from.          |
-| `index.html`                      | The page of the reference viewer, which pins the version of three.js it runs on.              |
-| `globe.js`                        | The scene, the shaders, the orbit and zoom controls, and their tunable `SETTINGS`.            |
-| `assets/`                         | The four maps the globe is drawn from, about 14 MB together.                                  |
-| `assets-small/`                   | The same four maps encoded smaller, about 5.3 MB together, kept to compare against `assets/`. |
-| `scripts/build-globe-textures.py` | The script that rebuilds the maps from their public-domain originals.                         |
+| Path                              | Content                                                                              |
+| --------------------------------- | ------------------------------------------------------------------------------------ |
+| `README.md`                       | How to run the reference viewer, what each map holds, and where the imagery is from. |
+| `index.html`                      | The page of the reference viewer, which pins the version of three.js it runs on.     |
+| `globe.js`                        | The scene, the shaders, the orbit and zoom controls, and their tunable `SETTINGS`.   |
+| `assets/`                         | The four maps the globe is drawn from, about 5.3 MB together.                        |
+| `scripts/build-globe-textures.py` | The script that rebuilds the maps from their public-domain originals.                |
 
 The reference viewer is the standard for how the globe looks. The implementer should run it as `README.md` describes
 before changing anything, and an Implementation's globe should be indistinguishable from it at the same camera
@@ -66,6 +65,17 @@ The copied maps and the ported module implement Globe Integration, so they are w
 [Finding what changed](specification-updates.md#finding-what-changed), the implementer should add `lib/globe` to the
 paths of the difference and copy again each file that changed.
 
+# Full-quality maps
+
+The maps in `assets/` are compressed, because a side-by-side comparison showed no visible difference from the same
+maps at full quality, which are about 14 MB together. The full-quality maps are not kept in the Spec repo, but they can
+be rebuilt whenever the compression is suspected of costing detail, e.g. on a much larger display.
+
+`README.md` describes how to build them into `assets-full/` and how to compare the two sets in the reference viewer.
+An Implementation that is to show them should copy the four files of `assets-full/` in place of those of `assets/`,
+under [Globe files in the Implementation repo](#globe-files-in-the-implementation-repo), and change the four map
+addresses in the ported module to the new file names. Nothing else in the module depends on which set is used.
+
 # Globe in the user interface
 
 The globe is decoration, so it should never displace game information or reach into the game. The implementer should
@@ -93,7 +103,7 @@ Implementation credits its other sources, with the wording under Sources in `REA
 
 # Loading and running cost
 
-The globe is far heavier than the rest of a Game build: its maps are about 14 MB to download and take a few hundred
+The globe is far heavier than the rest of a Game build: its maps are about 5.3 MB to download and take a few hundred
 megabytes of graphics memory, and it redraws on every frame. A Player who never opens the globe should pay none of
 that, and a Player who leaves it should stop paying:
 
