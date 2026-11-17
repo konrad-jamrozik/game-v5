@@ -4,7 +4,8 @@
       "Bash(git push origin HEAD:main)",
       "Bash(git push -q origin HEAD:main)",
       "Bash(git push)",
-      "Bash(git push -q)"
+      "Bash(git push -q)",
+      "Artifact"
     ]
   }
 }

@@ -31,7 +31,8 @@ distinct where a host truncates them.
 
 2. **Find the Implementation repo from the main local clone**, never from the worktree: its siblings are the
    Implementation repos, and it is the parent of `git rev-parse --path-format=absolute --git-common-dir`.
-3. **Self-review.** Make the changes, run `npm run docs:generate` and `npm run check`, run `git add -N .`, and review
+3. **Self-review.** Make the changes, publishing every changed Artboard to the Design canvas without asking, as
+   Editing files and running commands in `AGENTS.md` directs, run `npm run docs:generate` and `npm run check`, run `git add -N .`, and review
    the whole diff yourself. Record every decision made on the user's behalf, with the option chosen, the alternatives,
    and why, for the report. Then go to step 4 without waiting.
 

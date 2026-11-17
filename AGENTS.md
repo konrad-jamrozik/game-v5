@@ -37,6 +37,9 @@ These rules apply in this repository and in every Implementation repo:
 - To read or search a specification as prose rather than as link syntax, run `npm run docs:plain -- <file>`.
 - To export Artboard images from the Design canvas, use `npm run artboards:export`, as
   [Design canvas](docs/specs/design/ui/visual-design.md#design-canvas) describes, never a one-off script.
+- Whenever an Artboard changes, publish the edited canvas artboard to the Design canvas with the Artifact tool, then
+  export its image from the published version. Never ask the user before publishing it, and never commit an Artboard
+  image whose canvas artboard was not published, because the next export from the canvas would undo the change.
 - Never use `git stash` to set work aside or to compare with an earlier commit; check the earlier commit out in a
   temporary `git worktree` instead.
 
