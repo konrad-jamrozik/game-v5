@@ -91,7 +91,7 @@ lists such elements of it, e.g. the Resume button under [Main Menu](screens/main
 # Design tokens
 
 Design tokens keep every screen consistent: a screen uses these values and no other colours, fonts, or radii. The
-interface has a dark theme only; the light theme is a TODO.
+interface has a dark theme only: a light theme, and any setting that switches themes, is out of scope.
 
 ## Colours
 
@@ -456,9 +456,3 @@ with its title on the left and its current value on the right in the Headline fi
 - Grid lines are Raised; the baseline is Border.
 - A series is a 2 px line in Text colour with its latest point marked by a dot.
 - At a window 1280 px wide, a chart's plot area is at least 120 px tall, and at most three charts sit side by side.
-
-# TODOs
-
-- TODO: Define the light theme's Design tokens under [Colours](#colours), since the Settings panel lets the Player
-  choose a light theme, including the value of every colour token and the contrast each text colour keeps against its
-  fill.
