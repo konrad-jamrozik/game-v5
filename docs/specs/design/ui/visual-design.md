@@ -324,6 +324,14 @@ tall with 3 px gaps. Each full tenth of the limit fills one segment in Accent, a
 segment in Accent dim, and the other segments are Divider. The value and the limit are written above the meter's right
 end in Accent text, e.g. "24 / 100%".
 
+## Tallies
+
+A tally shows a count that has no limit as a stack of marks, so the Player can compare counts at a glance, e.g. the
+Acquisitions of each Upgrade. It is one Accent square per counted item, 12 px wide and tall with 3 px gaps, filled left
+to right in rows of 10, e.g. 13 items show one full row and 3 squares under it. It grows by a row with every 10 items up to
+10 rows, and a count above 100 still shows 100 squares. A count of 0 shows no squares. The exact count is also shown as
+text, e.g. "Bought 137×", because the squares stop growing.
+
 ## Progress bars
 
 A [Progress bar](gui.md#glossary) lets the Player read at a glance how close an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is to completing, so its colour warms as
