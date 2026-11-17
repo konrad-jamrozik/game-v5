@@ -1,13 +1,11 @@
 id: missions_view_artwork
 type: BackgroundArtwork
 detail_view: missions
-image: assets/images/v03ai-nano21-command-center-hd.jpg
-alternative_images:
-  - assets/images/v03ai-nano21-command-center.jpg
-opacity_pct: 12
+image: assets/images/v03ai-nano21-command-center.jpg
+opacity_pct: 30
 ---
 id: agents_view_artwork
 type: BackgroundArtwork
 detail_view: agents
 image: assets/images/chatgpt-agents-i2.png
-opacity_pct: 12
+opacity_pct: 30

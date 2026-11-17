@@ -201,10 +201,10 @@ MissionArchetype `standard_mission`, which only name the Player's own Agency and
 
 Type owner: [Visual Design](../ui/visual-design.md).
 
-| GDR                     | Type              | GDR purpose     | What it supplies                                                                                                                                                                                                                                     |
-| ----------------------- | ----------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `missions_view_artwork` | BackgroundArtwork | Display content | The [Background artwork](../ui/visual-design.md#background-artwork) of the [Missions View](../ui/screens/missions-view.md), a command center, and its opacity, with the image at its earlier, lower resolution as an alternative for Artwork tuning. |
-| `agents_view_artwork`   | BackgroundArtwork | Display content | The Background artwork of the [Agents View](../ui/screens/agents-view.md), Agents in an equipment room, and its opacity.                                                                                                                             |
+| GDR                     | Type              | GDR purpose     | What it supplies                                                                                                                                               |
+| ----------------------- | ----------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `missions_view_artwork` | BackgroundArtwork | Display content | The [Background artwork](../ui/visual-design.md#background-artwork) of the [Missions View](../ui/screens/missions-view.md), a command center, and its opacity. |
+| `agents_view_artwork`   | BackgroundArtwork | Display content | The Background artwork of the [Agents View](../ui/screens/agents-view.md), Agents in an equipment room, and its opacity.                                       |
 
 # Bootstrap GDR files
 
