@@ -1,0 +1,5 @@
+{
+  "permissions": {
+    "allow": ["Bash(git push origin HEAD:main)", "Bash(git push -q origin HEAD:main)"]
+  }
+}

@@ -25,6 +25,11 @@ Do not copy or restate their rules here; when this skill and those specification
    which and stop; never pull, stash, commit, or reset to make it pass.
 2. Identify the Implementation repo: the sibling of the Spec repo that the user names, or the only one whose name
    starts with `game-v5-impl-`. Ask the user when several match.
+   - Refuse to start when another session may be changing the Implementation repo: it must be on `main` and have no
+     uncommitted or untracked files. Uncommitted changes there are another session's work in progress; tell the user
+     and stop, and never stash, commit, or discard them.
+   - When the Implementation repo has a remote, run `git fetch` there and fast-forward `main` to its remote branch
+     before reading anything, so that the update starts from every commit another session has already pushed.
 3. Take the target Specification revision as the Spec repo's latest commit, unless the user names another.
 4. Read `tracking/specification-baseline.md` in the Implementation repo.
    - If it is missing, the Implementation has never been tracked. Tell the user that adopting a Specification baseline
@@ -41,6 +46,9 @@ Do not copy or restate their rules here; when this skill and those specification
 7. Commit the change in the Implementation repo. Never add a Git remote there. Push only when the Implementation
    already has a remote and its own publishing setup expects pushes, e.g. after
    [GitHub Pages Deployment](../../../docs/specs/implementation/recipes/github-pages-deployment.md).
+   - Before pushing, run `git fetch` and rebase onto the remote branch, then rerun the Implementation's checks when the
+     rebase brought in new commits. When the rebase conflicts, or another session moved the Specification baseline,
+     abort the rebase, tell the user, and stop; never force-push.
 
 ## Report
 
