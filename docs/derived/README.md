@@ -16,9 +16,9 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Foundation    | 15             |
 | Design             | Mechanics     | 12             |
 | Design             | Content       | 1              |
-| Design             | UI            | 15             |
+| Design             | UI            | 16             |
 | Design             | Autopilot AIs | 1              |
-| Implementation     | Mandatory     | 3              |
+| Implementation     | Mandatory     | 4              |
 | Implementation     | Guidance      | 4              |
 | Implementation     | Recipes       | 3              |
 
@@ -99,6 +99,7 @@ These informative views are derived from the registered Markdown specifications.
 | HVIEW  | [History View](../specs/design/ui/screens/history-view.md)         | What the History View of the Campaign screen shows and in which order.                                                                          |
 | LVIEW  | [Leads View](../specs/design/ui/screens/leads-view.md)             | What the Leads View of the Campaign screen shows, how its panes are arranged, and how it starts and staffs Investigations.                      |
 | MENU   | [Main Menu](../specs/design/ui/screens/main-menu.md)               | What the Main menu screen of the graphical user interface shows and how it is laid out.                                                         |
+| MUSIC  | [Music](../specs/design/ui/music.md)                               | The music of the graphical user interface: the Soundtrack, how it is played, its settings, and the Music control.                               |
 | MVIEW  | [Missions View](../specs/design/ui/screens/missions-view.md)       | What the Missions View of the Campaign screen shows, how its panes are arranged, and how it deploys Agents.                                     |
 | SITP   | [Situation Panel](../specs/design/ui/screens/situation-panel.md)   | What the Situation panel of the Campaign screen shows.                                                                                          |
 | TRVIEW | [Turn Report View](../specs/design/ui/screens/turn-report-view.md) | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report.                        |
@@ -117,6 +118,7 @@ These informative views are derived from the registered Markdown specifications.
 | ID       | Document                                                                                  | Owns                                                                                                                        |
 | -------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | FEEDBACK | [Implementation Feedback](../specs/implementation/mandatory/implementation-feedback.md)   | The feedback files of Specification problems and Implementation decisions that each Implementation keeps.                   |
+| LICENSE  | [Implementation License](../specs/implementation/mandatory/implementation-license.md)     | The license under which each Implementation is published, and the files that state it.                                      |
 | PLACE    | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to the Spec repo.                                        |
 | TRACK    | [Specification Tracking](../specs/implementation/mandatory/specification-tracking.md)     | The Specification baseline and Specification map records that tie each Implementation to the specifications it conforms to. |
 

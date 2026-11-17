@@ -25,19 +25,22 @@
   <text class="legend" x="66" y="36">referenced by</text>
   <rect class="box external" x="182.4" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="214.4" y="36">another family</text>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 165.8 249 C 165.8 283.5 244.9 283.5 244.9 318"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 522.8 239.5 C 522.8 278.8 439.1 278.8 439.1 318"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 433.2 239.5 C 433.2 278.8 290.1 278.8 290.1 318"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 478 113 C 478 152.3 478 152.3 478 191.5"/>
-  <rect class="box external" x="399.1" y="68" width="157.8" height="45" rx="6"/>
-  <text class="label" x="478" y="94">Foundation family</text>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 165.8 249 C 165.8 283.5 241.1 283.5 241.1 318"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 522.8 239.5 C 522.8 278.8 435.3 278.8 435.3 318"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 433.2 239.5 C 433.2 278.8 286.3 278.8 286.3 318"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 395.9 113 C 395.9 152.3 433.2 152.3 433.2 191.5"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 560.1 113 C 560.1 152.3 522.8 152.3 522.8 191.5"/>
+  <rect class="box external" x="317" y="68" width="157.8" height="45" rx="6"/>
+  <text class="label" x="395.9" y="94">Foundation family</text>
+  <rect class="box external" x="510.8" y="68" width="98.6" height="45" rx="6"/>
+  <text class="label" x="560.1" y="94">UI family</text>
   <rect class="box" x="24" y="185" width="283.6" height="64" rx="6"/>
   <text class="label" x="165.8" y="211">FEEDBACK — Implementation Feedback</text>
   <text class="label" x="165.8" y="230">TRACK — Specification Tracking</text>
   <rect class="box" x="343.6" y="194.5" width="268.8" height="45" rx="6"/>
   <text class="label" x="478" y="220.5">PLACE — Implementation Placement</text>
-  <rect class="box external" x="199.7" y="321" width="135.6" height="45" rx="6"/>
-  <text class="label" x="267.5" y="347">Recipes family</text>
-  <rect class="box external" x="371.3" y="321" width="135.6" height="45" rx="6"/>
-  <text class="label" x="439.1" y="347">Process family</text>
+  <rect class="box external" x="195.9" y="321" width="135.6" height="45" rx="6"/>
+  <text class="label" x="263.7" y="347">Recipes family</text>
+  <rect class="box external" x="367.5" y="321" width="135.6" height="45" rx="6"/>
+  <text class="label" x="435.3" y="347">Process family</text>
 </svg>

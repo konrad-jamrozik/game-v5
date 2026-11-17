@@ -70,6 +70,13 @@ The [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md#glossary) are author
 repo. An Implementation that builds them into its [Game build](../../design/foundation/core-concepts.md#game-build-and-content) must hold its own copy of the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files it uses inside its
 Implementation repo, and its Game build must read that copy rather than the `content/` directory of the Spec repo.
 
+## Music in an Implementation
+
+The [Soundtrack](../../design/ui/music.md#glossary) is authored under the `assets/music/` directory of the Spec repo.
+An Implementation that plays it must hold its own copy of every [Track](../../design/ui/music.md#glossary) file inside
+its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/music/` directory of
+the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/music/`.
+
 # Edge cases and failure behavior
 
 An Implementation that needs a change outside its Implementation repo, e.g. a new CI job in the Spec repo, cannot

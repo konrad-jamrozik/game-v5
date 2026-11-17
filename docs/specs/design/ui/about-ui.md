@@ -36,6 +36,12 @@ them.
 direction, the Design tokens, and the styling of components and charts, and the Design canvas every Artboard is
 exported from.
 
+## Music
+
+[Music](music.md) answers _what does the graphical user interface sound like?_ It owns the Soundtrack, the random
+order and the fades in which it is played, the two Global configuration settings that turn it off and set its volume,
+and the Music control that the Main Menu and the Campaign Screen both show.
+
 ## Screens
 
 The `screens/` directory groups one specification per screen, panel, or dialog of the graphical user interface, so
@@ -57,7 +63,8 @@ Lifecycle from the Foundation family; the Command-Line Interface also uses Playe
 lists the screen specifications, which use Domain Model and the Mechanics specifications that detail the concepts each
 shows, and World History for the Turn report. The Situation Panel, the Turn Summary, and every Detail view
 specification are parts of the Campaign Screen. Every screen specification uses Visual Design for its look, and Visual Design names each screen
-specification as the place of its Artboard. Headless First in the Guidance family uses both, and Gameplay Dependency
+specification as the place of its Artboard. Music uses Configuration for its two settings, and the Main Menu and the
+Campaign Screen place its Music control. Headless First in the Guidance family uses both, and Gameplay Dependency
 Direction uses the Graphical User Interface.
 
 <!-- generated:family-diagram:start -->

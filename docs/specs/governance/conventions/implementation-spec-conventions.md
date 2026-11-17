@@ -34,8 +34,8 @@ An Implementation specification steers how an Implementation is built, never wha
 an Implementation specification only if it meets at least one of the following criteria. This list is exhaustive:
 
 1. **Repository constraint:** the statement is in a Mandatory specification, and it constrains where in this repository
-   an implementation resides, which files outside that place it may touch, or which records it keeps there, so that a
-   check of the repository could fail when the statement is violated.
+   an implementation resides, which files outside that place it may touch, or which records or license it keeps there,
+   so that a check of the repository could fail when the statement is violated.
 2. **Implementation steering:** the statement is in a Guidance specification, and it suggests how to build or maintain
    an Implementation, e.g. architecture or code-quality advice, or the steps of one recurring task.
 

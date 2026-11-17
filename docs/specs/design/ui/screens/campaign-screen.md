@@ -49,8 +49,10 @@ It holds, from top to bottom:
    and selecting the button of the open Detail view closes it.
 2. **[Situation panel](situation-panel.md):** it fills the height that the navigation and the footer leave, and
    scrolls inside when its content is taller.
-3. **Footer:** the [Autopilot](../../foundation/engine-contract.md#autopilot) controls, collapsed to one row until the Player expands them, and the entries to the
-   keyboard shortcuts and the developer tools.
+3. **Footer:** the [Autopilot](../../foundation/engine-contract.md#autopilot) controls, collapsed to one row until the Player expands them, the entries to the
+   keyboard shortcuts and the developer tools, and, in the bottom row, the [Music control](../music.md#music-control)
+   with the title of the [Track](../music.md#glossary) that is playing, so that the bottom right corner of the screen holds the controls the
+   Player reaches for at any moment.
 
 # Detail views
 

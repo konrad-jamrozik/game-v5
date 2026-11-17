@@ -45,6 +45,9 @@ shows, how it is laid out, and how it is illustrated:
   [Turn Report View](screens/turn-report-view.md), [History View](screens/history-view.md),
   [Charts View](screens/charts-view.md), and [Compendium View](screens/compendium-view.md).
 
+Both screens play the same background music without a break between them, and both offer the Music control, under
+[Music](music.md).
+
 # Confirming interrupted Assignments
 
 Taking an [Agent](../mechanics/domain-model.md#agency-and-agents) off [Contracting](../mechanics/agents-spec.md#assignments) or an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) interrupts its work and costs it an Advance turn

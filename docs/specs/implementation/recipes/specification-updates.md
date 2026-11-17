@@ -24,9 +24,13 @@ Specification baseline forward, leaving every unchanged specification and every 
 The difference between the [Specification baseline](../mandatory/specification-tracking.md#glossary) and the target [Specification revision](../mandatory/specification-tracking.md#glossary) is the complete list of
 changes to apply, so it is suggested to be computed first and read before anything else. In the
 [Spec repo](../mandatory/implementation-placement.md#glossary), the implementer should run
-`git diff --find-renames <baseline>..<target> -- docs/specs content`, where `<baseline>` is the Specification baseline
-and `<target>` is the target Specification revision, usually the latest commit. The `content` path covers the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files
-that the Implementation copies under [Game data in an Implementation](../mandatory/implementation-placement.md#game-data-in-an-implementation).
+`git diff --find-renames <baseline>..<target> -- docs/specs content assets LICENSE`, where `<baseline>` is the
+Specification baseline and `<target>` is the target Specification revision, usually the latest commit. The other paths
+cover the files that the Implementation copies: `content` the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files, under
+[Game data in an Implementation](../mandatory/implementation-placement.md#game-data-in-an-implementation); `assets` the
+[Soundtrack](../../design/ui/music.md#glossary), under
+[Music in an Implementation](../mandatory/implementation-placement.md#music-in-an-implementation); and `LICENSE` the
+license text, under [License files](../mandatory/implementation-license.md#license-files).
 
 Commit messages between the two Specification revisions explain why things changed and help to read the difference,
 e.g. by naming the rule a commit rewrote. The difference itself, not a commit message, decides what must change.

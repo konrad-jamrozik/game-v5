@@ -5,8 +5,8 @@
 # What this family is for
 
 The Development loop needs a few things from every Implementation, whatever its platform: that it lives where it can be
-found and rebuilt, that it writes down what it learned about the specifications, and that it records which
-specifications it follows. Mandatory specifications state those repository constraints. They are checked against the
+found and rebuilt, that it writes down what it learned about the specifications, that it records which
+specifications it follows, and that it is published on the same terms as the specifications. Mandatory specifications state those repository constraints. They are checked against the
 files of an Implementation rather than through the engine API.
 
 # Documents
@@ -28,12 +28,19 @@ implementation to keep feedback on the specifications: the problems it met in th
 where?_ It requires each implementation to name the commit of the specifications it conforms to and to map every
 specification to the files that implement it.
 
+## Implementation License
+
+[Implementation License](implementation-license.md) answers _under which license is an implementation published?_ It
+requires each implementation to be published under the license of the specifications, CC BY-NC 4.0, and to state it
+in its `LICENSE` file, its README, and its project metadata.
+
 # How they relate
 
 Implementation Feedback and Specification Tracking use Implementation Placement: their files are kept in its
 Implementation repo. Specification Tracking also uses Implementation Feedback, whose Specification problems are
-the only exceptions to conformance it allows. Implementation Placement uses Bootstrap GDRs from the Content family,
-whose files each implementation copies.
+the only exceptions to conformance it allows. Implementation Placement uses Bootstrap GDRs from the Content family
+and Music from the UI family, whose files each implementation copies. Implementation License uses Implementation
+Placement for the Implementation repo whose files state the license.
 
 <!-- generated:family-diagram:start -->
 
@@ -51,6 +58,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 
 # Why these boundaries
 
-Mandatory specifications are kept to placement, feedback, and tracking, so that several independent implementations
-can coexist beside the specifications and each can be updated from their changes. Each covers one kind of file an
+Mandatory specifications are kept to placement, feedback, tracking, and licensing, so that several independent
+implementations can coexist beside the specifications, each can be updated from their changes, and each can be shared
+on known terms. Each covers one kind of file an
 implementation keeps, so a change to one never forces a change to the others.
