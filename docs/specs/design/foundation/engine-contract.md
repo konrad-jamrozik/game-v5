@@ -219,7 +219,8 @@ Game storage (persisted)
         ├── Campaign save ID and Campaign ID
         ├── Campaign state (at the saved Committed state)
         ├── Timeline (of the Turn that Committed state belongs to)
-        └── Autopilot memory
+        ├── Autopilot memory
+        └── Time it was last written
 
 Session (runtime, never persisted)
 ├── Current campaign selection

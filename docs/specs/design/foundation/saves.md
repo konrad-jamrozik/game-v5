@@ -63,7 +63,8 @@ A Campaign save holds, as shown under [Data ownership](engine-contract.md#data-o
 - its Campaign save ID and the Campaign ID of its Campaign;
 - the Campaign state at the saved Committed state;
 - the [Timeline](engine-contract.md#persisted-data) as it is at that Committed state, which is the Timeline of the Turn that Committed state belongs to;
-- the [Autopilot memory](engine-contract.md#persisted-data) of the Campaign.
+- the [Autopilot memory](engine-contract.md#persisted-data) of the Campaign;
+- the time it was last written, which is not Campaign state, so gameplay never consults it.
 
 A Campaign save holds nothing a Session holds and no Global configuration. It holds no Timeline of an earlier Turn. How
 a Campaign save is encoded and stored is the Implementer's choice.
@@ -151,7 +152,8 @@ Autosave. It needs no Current campaign, so a Session can list Campaign saves bef
 
 - its Campaign save ID and its Campaign ID, so the Campaign saves of one Campaign can be grouped;
 - whether it is an Autosave, and of which kind;
-- the Turn its saved Committed state belongs to.
+- the Turn its saved Committed state belongs to;
+- the time it was last written, so that a user interface can tell which Campaign save is the most recent.
 
 The Campaign save ID it reports is what `session.saves.load(save)` accepts. Listing changes nothing and is not a
 Player action. It does not verify that a Campaign save can be loaded: a listed Campaign save may still fail to

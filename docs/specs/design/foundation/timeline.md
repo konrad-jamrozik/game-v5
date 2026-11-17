@@ -144,6 +144,9 @@ The following rules are complete.
   Player actions lead from the other to it, and the other is then earlier. Committed states that neither of these
   relates belong to different lines of play; e.g., two Committed states reached by different actions after the same
   undo.
+- **Equal targets:** When two targets hold equal Committed states, the operation loads the Return Autosave if it is one
+  of them; e.g., the Disengagement Autosave can hold the Committed state that the Return Autosave holds. Between two
+  other targets holding equal Committed states, which one is loaded is the Implementer's choice.
 - **Return Autosave:** `undoToAutosave()` writes the Return Autosave, holding the current Committed state with its
   Timeline, before going back, unless the Campaign has a Return Autosave holding a later Committed state than the
   current one. A Campaign has at most one Return Autosave. Loading the Return Autosave through `redoToAutosave()`
