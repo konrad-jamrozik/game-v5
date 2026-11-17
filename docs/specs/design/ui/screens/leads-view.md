@@ -80,7 +80,7 @@ the middle pane shows the Investigation's projected progress gain, which counts 
 
 # Artboard
 
-![Leads View panel Artboard: Active Investigations, Leads to investigate, and Inactive and Archived Leads on the left; the selected Lead with its description, Progress bar, and the Mission site its completion creates in the middle; and its Current team with Agents to add on the right](../../../../images/artboards/leads-view.png)
+![Leads View panel Artboard: Active Investigations, Leads to investigate, and Inactive and Archived Leads on the left; the selected Lead with its description, Progress bar, and the Mission site its completion creates in the middle; and its Current team, the Agents to add table, and the Team progress estimate on the right](../../../../images/artboards/leads-view.png)
 
 The sample values, e.g. the Lead names, their descriptions, and the Agent IDs, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
