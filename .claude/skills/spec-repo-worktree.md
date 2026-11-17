@@ -21,7 +21,12 @@ distinguishable even where a host truncates their names. Generate `<id>` with
 `node -e "console.log(require('crypto').randomBytes(2).toString('hex'))"`; never make it up.
 
 1. **Create the worktree** at the start of the skill, before reading any specification. When the session is already in
-   a worktree, e.g. `t3_worktree_status` reports `attached: true`, ask the user how to proceed instead.
+   a worktree, e.g. `t3_worktree_status` reports `attached: true` because an earlier skill run in the same thread left
+   it there, run `git fetch origin` in it and check whether it is spent: `git status --porcelain` prints nothing and
+   `git merge-base --is-ancestor HEAD origin/main` succeeds, so it holds no uncommitted change and no unpushed commit.
+   Reuse a spent worktree instead of creating one: run `git merge --ff-only origin/main` in it and continue with the
+   checks below, keeping its name. Ask the user how to proceed only when it is not spent, and name the uncommitted
+   files and unpushed commits it holds.
    - **T3 Code:** call `t3_worktree_handoff` with the worktree name as `branch`, `baseRef: "main"`, and
      `startFromOrigin: true`, as the last call of the turn. It creates the worktree in the location set in T3 Code's
      settings, attaches the thread to it, and ends the live session. Its `continuationPrompt` names the skill, restates
