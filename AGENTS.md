@@ -70,6 +70,8 @@ for chat only and never appear in committed files.
 - 🔧 A fix that was not part of the plan, e.g. a resolved rebase conflict, a repaired failing check, or a reverted edit.
 - 🚧 Work left for later, e.g. Open Specification problems or a deferred feature.
 - 👟 The next step, every time it is mentioned, e.g. "👟 Next, run the `update-implementation` skill".
+- 🔍 The heading of the decisions for the user to review, once for the whole section rather than on each decision, e.g.
+  "🔍 Decisions to review".
 
 ## Linking to documents in chat
 
