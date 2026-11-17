@@ -55,7 +55,7 @@ shows every fact the Combat report holds, under [Combat report](../../mechanics/
 
 # Artboard
 
-![Turn Report View panel Artboard in the Field HUD direction: the Turn the report covers in its heading, and its sections: a Won Mission with its Combat report button, a completed Investigation, Mission sites created, Expired, and Cancelled, and a discovered Lead](../../../../images/artboards/turn-report-view.png)
+![Turn Report View panel Artboard: the Turn the report covers in its heading, and its sections: a Won Mission with its Combat report button, a completed Investigation, Mission sites created, Expired, and Cancelled, and a discovered Lead](../../../../images/artboards/turn-report-view.png)
 
 The sample values, e.g. the Mission site names, the Lead names, and the numbers, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

@@ -33,7 +33,7 @@ Three smaller charts show the resources the agency runs on. They sit side by sid
 
 # Artboard
 
-![Charts View panel Artboard in the Field HUD direction: a full-width Panic chart with its loss limit above three smaller charts for Money at start, Serving Agents and Funding](../../../../images/artboards/charts-view.png)
+![Charts View panel Artboard: a full-width Panic chart with its loss limit above three smaller charts for Money at start, Serving Agents and Funding](../../../../images/artboards/charts-view.png)
 
 The sample values, e.g. the Turn numbers and the values of each series, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

@@ -12,7 +12,7 @@
 
 The graphical user interface looks like a dark tactical command console: a near-black field, a single signal-orange
 accent, condensed uppercase headings, and monospaced figures, so that the Player reads the state of the agency at a
-glance, as an operator reads a heads-up display. The direction is called Field HUD.
+glance, as an operator reads a heads-up display.
 
 Every screen listed by the [Graphical User Interface](gui.md) is drawn with the same Design tokens and components, so a
 screen that has no Artboard yet still looks like the screens that have one. The rules here are stated as text and are
@@ -39,9 +39,10 @@ artifact in the Game designer's private account, at <https://claude.ai/artifact/
 Claude agents working through that account edit it, with the Artifact tool. An Implementer is not expected to open it:
 the specifications and the Artboard images carry everything an Implementer needs.
 
-The canvas holds only the chosen Field HUD direction. Each of its artboards is one HTML file, `project/<name>.dc.html`,
-listed in the index `project/canvas.json`. A screen artboard embeds each panel artboard it shows with `<dc-import>`
-instead of copying it, so that a change to a panel appears in every screen artboard that shows it.
+The canvas, named Game v5 Web UI design canvas, holds only the chosen direction. Each of its artboards is one HTML
+file, `project/<name>.dc.html`, listed in the index `project/canvas.json`. A screen artboard embeds each panel
+artboard it shows with `<dc-import>` instead of copying it, so that a change to a panel appears in every screen
+artboard that shows it.
 
 To change an Artboard, edit its canvas artboard, then export the image of that artboard and of every screen artboard
 that embeds it, and save each image under the name the table below gives it. An image is exported by reading the

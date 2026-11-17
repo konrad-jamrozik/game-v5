@@ -36,7 +36,7 @@ newly committed state makes Player-visible appears without reopening the Compend
 
 # Artboard
 
-![Compendium View panel Artboard in the Field HUD direction: a search field above three panes, the categories with their counts, the articles of the selected category, and the selected article with its body and a table of its subject's properties](../../../../images/artboards/compendium-view.png)
+![Compendium View panel Artboard: a search field above three panes, the categories with their counts, the articles of the selected category, and the selected article with its body and a table of its subject's properties](../../../../images/artboards/compendium-view.png)
 
 The sample values, e.g. the article titles, bodies, and property values, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

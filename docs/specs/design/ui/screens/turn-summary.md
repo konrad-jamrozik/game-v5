@@ -61,7 +61,7 @@ text.
 
 # Artboard
 
-![Turn summary panel Artboard in the Field HUD direction: the dialog alone, listing a Won Mission with its Killed Agents, Agents sent to Recovery, and Consequences; a completed Investigation with a Progress bar marking the progress before the last Advance turn, the gain that completed it, and a check where it completed; new Mission sites; an Expired Mission site; and a discovered Lead, with Open Turn report and Continue buttons](../../../../images/artboards/turn-summary.png)
+![Turn summary panel Artboard: the dialog alone, listing a Won Mission with its Killed Agents, Agents sent to Recovery, and Consequences; a completed Investigation with a Progress bar marking the progress before the last Advance turn, the gain that completed it, and a check where it completed; new Mission sites; an Expired Mission site; and a discovered Lead, with Open Turn report and Continue buttons](../../../../images/artboards/turn-summary.png)
 
 The following appear only on the [Artboard](../visual-design.md#glossary) and must not be implemented, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:

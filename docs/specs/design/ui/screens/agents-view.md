@@ -52,7 +52,7 @@ to it: its AgentArchetype's `name`, its [Turn](../../foundation/engine-contract.
 
 # Artboard
 
-![Agents View panel Artboard in the Field HUD direction: the header with Agent and Training counts and the Hire, Standby, Contracting, Training, and Dismiss buttons above the table of Serving Agents with their skill, health, exhaustion, weapon damage, and Assignment](../../../../images/artboards/agents-view.png)
+![Agents View panel Artboard: the header with Agent and Training counts and the Hire, Standby, Contracting, Training, and Dismiss buttons above the table of Serving Agents with their skill, health, exhaustion, weapon damage, and Assignment](../../../../images/artboards/agents-view.png)
 
 The sample values, e.g. the Agent IDs and their values, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

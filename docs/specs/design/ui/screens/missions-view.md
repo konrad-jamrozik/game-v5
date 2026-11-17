@@ -71,7 +71,7 @@ applies. It is disabled while no Agent is checked or while the checked Agents wo
 
 # Artboard
 
-![Missions View panel Artboard in the Field HUD direction: Active Mission sites and the Missions deployed this Turn on the left, the selected Mission site with its Enemies and Consequences in the middle, and the deployment pane with checked Agents, Transport cap usage, and the Deploy button on the right](../../../../images/artboards/missions-view.png)
+![Missions View panel Artboard: Active Mission sites and the Missions deployed this Turn on the left, the selected Mission site with its Enemies and Consequences in the middle, and the deployment pane with checked Agents, Transport cap usage, and the Deploy button on the right](../../../../images/artboards/missions-view.png)
 
 The sample values, e.g. the Mission site names, the Enemies, and the Agent IDs, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

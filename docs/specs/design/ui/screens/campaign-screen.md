@@ -73,9 +73,9 @@ A Detail view is styled under [Detail views and navigation](../visual-design.md#
 
 # Artboards
 
-![Campaign screen Artboard in the Field HUD direction: a status bar with Turn, Money, Funding, Agents, a segmented Panic meter and the Faction; the globe centred in the Globe stage on the left; the Side panel on the right with the Operations and Records navigation buttons, the compact Situation panel, and the Autopilot footer](../../../../images/artboards/campaign-screen.png)
+![Campaign screen Artboard: a status bar with Turn, Money, Funding, Agents, a segmented Panic meter and the Faction; the globe centred in the Globe stage on the left; the Side panel on the right with the Operations and Records navigation buttons, the compact Situation panel, and the Autopilot footer](../../../../images/artboards/campaign-screen.png)
 
-![Campaign screen Artboard in the Field HUD direction with the Agents Detail view open over the Globe stage: the Agents button of the Side panel marked as open, the Situation panel still in view, and a sample Agents table in the Detail view](../../../../images/artboards/campaign-screen-view.png)
+![Campaign screen Artboard with the Agents Detail view open over the Globe stage: the Agents button of the Side panel marked as open, the Situation panel still in view, and a sample Agents table in the Detail view](../../../../images/artboards/campaign-screen-view.png)
 
 The [Artboards](../visual-design.md#glossary) show the Situation panel and the Agents Detail view as sample content of their regions; each is detailed
 by its own specification and Artboard. The following appear only on the Artboards and must not be implemented, under

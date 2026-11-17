@@ -33,7 +33,7 @@ them, under [Panels and cards](../visual-design.md#panels-and-cards) in Visual D
 
 # Artboard
 
-![Upgrades View panel Artboard in the Field HUD direction: the agency's money in the header and one card per Upgrade, each with its kind, the value it changes before and after one more acquisition, its Acquisitions, and a Buy button with its price, one of them disabled with the money missing](../../../../images/artboards/upgrades-view.png)
+![Upgrades View panel Artboard: the agency's money in the header and one card per Upgrade, each with its kind, the value it changes before and after one more acquisition, its Acquisitions, and a Buy button with its price, one of them disabled with the money missing](../../../../images/artboards/upgrades-view.png)
 
 The sample values, e.g. the Upgrade names, prices, and caps, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

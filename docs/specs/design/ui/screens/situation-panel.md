@@ -49,7 +49,7 @@ Investigation or a Lead opens Leads, and the Agents line opens Agents.
 
 # Artboard
 
-![Situation panel Artboard in the Field HUD direction: one-line items grouped as Active Mission sites with their Turns until expiration, one urgent; Active Investigations with a Progress circle and a Completion estimate, one that may complete any turn and one not yet assessed; a Lead to investigate; and the Agents line](../../../../images/artboards/situation-panel.png)
+![Situation panel Artboard: one-line items grouped as Active Mission sites with their Turns until expiration, one urgent; Active Investigations with a Progress circle and a Completion estimate, one that may complete any turn and one not yet assessed; a Lead to investigate; and the Agents line](../../../../images/artboards/situation-panel.png)
 
 The sample values, e.g. the Lead names and the numbers of Agents, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

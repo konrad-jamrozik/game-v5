@@ -52,10 +52,16 @@ The implementer should therefore give the Implementation its own copy of what th
    comparison with the Spec repo shows only real changes.
 2. **The scene.** `globe.js` should be ported into the user-interface source of the Implementation as one module. The
    shaders and the `SETTINGS` values should be kept as they are, and only what the stack requires should change, e.g.
-   type annotations for TypeScript.
+   type annotations for TypeScript. The reference viewer is a page that owns its globe until it closes, so the port
+   should turn it into a function that draws on a canvas it is given and returns a way to pause the drawing and to
+   release everything, under [Globe in the user interface](#globe-in-the-user-interface). The parts that only serve
+   the viewer's page should be left out: the map-set switch and its `?maps=` address parameter, the rotation button,
+   and the status and credit text. The rotation should still stop when the Player's system asks for reduced motion,
+   as it does in the viewer.
 3. **three.js.** The Implementation should declare three.js as a dependency of its own, at the version `index.html`
-   pins, in place of the import from a content delivery network. A Game build that loads code from a third-party host
-   stops working when that host does.
+   pins, in place of the import from a content delivery network, together with its type declarations at the same
+   version when the stack needs them, e.g. `@types/three` for TypeScript. A Game build that loads code from a
+   third-party host stops working when that host does.
 
 The implementer should not copy `index.html`, `README.md`, or the script: the page is replaced by the Implementation's
 own user interface, and the maps are rebuilt only in the Spec repo.
@@ -95,13 +101,18 @@ wrap the ported module in one component of the graphical user interface that fol
 - **Sized by its container.** The reference viewer fills the browser window. The component should instead take the size
   of the element that holds it and follow that element when it changes size.
 - **Framed by Visual Design.** The colours of the globe come from the maps. The panel around it, its heading, and any
-  message shown in its place should follow [Visual Design](../../design/ui/visual-design.md).
+  message shown in its place should follow [Visual Design](../../design/ui/visual-design.md). The space behind the
+  planet should be the Globe stage's Background colour, set as the renderer's opaque clear colour in place of the
+  viewer's own near-black. It should not be a transparent canvas over the page: the atmosphere shell is blended
+  additively onto what is already drawn, so over a transparent canvas a dark ring shows where its glow should be.
 - **Reachable without a pointer.** The canvas should carry a text alternative that says what it shows, and the rest of
   the screen should stay reachable by keyboard while the globe is in view. The wheel should zoom the globe only while
   the pointer is over it.
 
 The imagery is in the public domain and needs no licence. The implementer should still credit it where the
-Implementation credits its other sources, with the wording under Sources in `README.md`.
+Implementation credits its other sources, with the wording under Sources in `README.md`. An Implementation that has no
+place for credits in its user interface can show the short credit of the reference viewer, e.g. "Imagery: NASA Blue
+Marble and Earth at Night", in a corner of the Globe stage, hidden while a Detail view covers it.
 
 # Loading and running cost
 
@@ -133,6 +144,12 @@ requested before the globe is first shown, and that drawing stops while the glob
 Automated tests should not compare rendered pixels, which differ between graphics hardware. One test is suggested: that
 the component mounts and unmounts cleanly where WebGL is unavailable, as it is in a test environment without a browser.
 
+A browser that runs tests without a display usually draws the globe in software, slowly enough that the globe takes
+most of the time of the page, e.g. a test that lets the [Autopilot](../../design/foundation/engine-contract.md#autopilot) play many Turns then runs many times longer. A browser test
+that is not about the globe should therefore take WebGL 2 away from its page, e.g. by making
+`getContext('webgl2')` return nothing before the page loads, which also exercises the case where WebGL 2 is
+unavailable.
+
 # Edge cases and failure behavior
 
 A failure of the globe should never cost the Player the game. The implementer should treat each case below as follows;
@@ -143,7 +160,8 @@ the list is exhaustive for the cases this guidance covers.
 - **A map fails to load.** The component should show a short message in the globe's place, without retrying on its
   own. Showing the globe again, e.g. after closing a Detail view that covered it, is the retry.
 - **The graphics context is lost.** A browser may drop the graphics context, e.g. after the computer sleeps. The
-  component should create the renderer again the next time the globe is shown.
+  component should create the renderer again the next time the globe is shown, on a new canvas element, because a
+  canvas whose graphics context was lost cannot be drawn on again until the browser restores it.
 - **A map is larger than the graphics hardware accepts.** The ported module already reduces such a map to the largest
   size the hardware accepts, so the globe is shown less sharp rather than not at all.
 - **A newer three.js is wanted.** The shaders rely on what three.js adds around them, which changes between versions.

@@ -22,7 +22,7 @@ Design, with these columns in this order: Turn, Money at the start of the Turn, 
 
 # Artboard
 
-![History View panel Artboard in the Field HUD direction: the Turn by Turn table, newest first, with income in Positive and upkeep in Danger](../../../../images/artboards/history-view.png)
+![History View panel Artboard: the Turn by Turn table, newest first, with income in Positive and upkeep in Danger](../../../../images/artboards/history-view.png)
 
 The sample values, e.g. the Turn numbers and the events of each Turn, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
