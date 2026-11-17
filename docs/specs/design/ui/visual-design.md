@@ -224,13 +224,28 @@ its title and buttons in view.
 
 Tables carry most of the game's data, so they are dense but aligned. A header row uses the Label style over a Border
 rule; body rows are separated by Raised dividers. Columns that hold numbers use the Figure style and are right-aligned,
-their header included. Row actions sit in the last column, right-aligned, under [Buttons](#buttons). Text that encodes
+their header included. Row actions sit in the last column, under [Buttons](#buttons). Text that encodes
 a state uses the colour of that state, e.g. Positive for a won Mission, and Text muted for an idle Agent.
 
-A table keeps its columns still, so that the Player's eye finds a value where it was a moment ago. Each column's width
-is fixed by the table's design, as a fixed width or as a share of the table's width, and only resizing the table
-changes it; what the rows hold never does. E.g., an Assignment that gains "· In transit", or a filter that hides
-rows, moves and resizes no column. A value too long for its column wraps onto further lines within its row.
+A table keeps its columns still, so that the Player's eye finds a value where it was a moment ago. Each column has a
+fixed width set by the table's design, and neither what the rows hold nor the width of the screen changes it. E.g., an
+Assignment that gains "· In transit", a filter that hides rows, or a wider window moves and resizes no column.
+
+A table's columns sit side by side from its left edge, and no column stretches to fill a wide table, so that every
+value stays close to the rest of its row. On a wide screen the spare width lies to the right of the last column, never
+between two columns; e.g., the reason column of the [Agents View](screens/agents-view.md) follows the Assignment column
+directly, however wide the screen. A table narrower than its columns scrolls sideways within its panel.
+
+Every row of a table is one line tall, so that rows line up and a long value does not push the rows below it down.
+Each column is wide enough to hold on one line every value that the specifications list for it, e.g. the reason
+"Already on Contracting" in the [Agents View](screens/agents-view.md). A value of free text that can still be too long
+for its column, e.g. the message of an engine rejection, is cut short with "…" and shown in full while the pointer rests
+on it.
+
+In a table that the Player sorts by pressing a column header, the header of the column it is sorted by shows "▲" after
+its label while the order is ascending and "▼" while it is descending, and pressing that header again reverses the
+order. A header is never cut short: each column's width holds its header's label together with that mark, e.g. the
+base weapon damage column of the [Agents View](screens/agents-view.md) is wide enough for its label followed by "▼".
 
 A table whose rows each have a selection checkbox lets the Player select several rows at once, in these ways:
 
