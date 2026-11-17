@@ -57,6 +57,19 @@ In every document and in chat, introduce every example with "e.g.", as defined i
 [Marking examples](docs/specs/governance/conventions/spec-conventions.md#marking-examples). Never state an example as a bare
 sentence after a general statement; the reader must not have to infer whether a sentence is general or illustrative.
 
+## Reply markers
+
+In chat replies, mark these lines with an emoji at the start of the line or bullet, never mid-sentence. The markers are
+for chat only and never appear in committed files.
+
+- ❓ A question to the user.
+- ⌛ The one question or decision without which the work cannot continue. Use it at most once per reply, as the last
+  line, and instead of ❓.
+- ✅ A confirmation that a piece of work is complete, e.g. "✅ `npm run check` passes".
+- 🚀 A push to the Spec repo or an Implementation repo, on the line that gives the commit link.
+- 🔧 A fix that was not part of the plan, e.g. a resolved rebase conflict, a repaired failing check, or a reverted edit.
+- 🚧 Work left for later, e.g. Open Specification problems or a deferred feature.
+
 ## Linking to documents in chat
 
 When pointing the user at a repository document or section, use a Markdown link whose target is the file's absolute local
