@@ -48,8 +48,8 @@ Model concept, in a row of their own.
 | Faction                                                                                                | One FactionArchetype, three [Faction activity levels](../mechanics/factions.md#glossary), and two [Faction operation levels](../mechanics/factions.md#glossary) | 6     |
 | Panic and endings                                                                                      | One parameter GDR                                                                                                                                               | 1     |
 | [Encyclopedia article](../mechanics/compendium.md#glossary)                                            | Six [Guide articles](../mechanics/compendium.md#glossary) and one article about each of 20 other Bootstrap GDRs                                                 | 26    |
-| [Background artwork](../ui/visual-design.md#glossary)                                                  | Two BackgroundArtworks                                                                                                                                          | 2     |
-| **Total**                                                                                              |                                                                                                                                                                 | 64    |
+| [Background artwork](../ui/visual-design.md#glossary)                                                  | Three BackgroundArtworks                                                                                                                                        | 3     |
+| **Total**                                                                                              |                                                                                                                                                                 | 65    |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of
 Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
@@ -205,6 +205,7 @@ Type owner: [Visual Design](../ui/visual-design.md).
 | ----------------------- | ----------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `missions_view_artwork` | BackgroundArtwork | Display content | The [Background artwork](../ui/visual-design.md#background-artwork) of the [Missions View](../ui/screens/missions-view.md), a command center, and its opacity. |
 | `agents_view_artwork`   | BackgroundArtwork | Display content | The Background artwork of the [Agents View](../ui/screens/agents-view.md), Agents in an equipment room, and its opacity.                                       |
+| `leads_view_artwork`    | BackgroundArtwork | Display content | The Background artwork of the [Leads View](../ui/screens/leads-view.md), an agent watching a crowded street in the rain, and its opacity.                      |
 
 # Bootstrap GDR files
 
@@ -237,7 +238,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 | `content/factions/faction_operation_levels.yaml`       | FactionOperationLevel   | `operation_level_1`, `operation_level_2`                                                  |
 | `content/panic-and-endings/ending_parameters.yaml`     | EndingParameters        | `endings`                                                                                 |
 | `content/compendium/encyclopedia_articles.yaml`        | EncyclopediaArticle     | The 26 GDRs under [Compendium GDRs](#compendium-gdrs)                                     |
-| `content/visual-design/background_artworks.yaml`       | BackgroundArtwork       | `missions_view_artwork`, `agents_view_artwork`                                            |
+| `content/visual-design/background_artworks.yaml`       | BackgroundArtwork       | `missions_view_artwork`, `agents_view_artwork`, `leads_view_artwork`                      |
 
 # Victory path
 

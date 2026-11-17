@@ -9,3 +9,9 @@ type: BackgroundArtwork
 detail_view: agents
 image: assets/images/chatgpt-agents-i2.png
 opacity_pct: 30
+---
+id: leads_view_artwork
+type: BackgroundArtwork
+detail_view: leads
+image: assets/images/chatgpt-investigation-i2.png
+opacity_pct: 30
