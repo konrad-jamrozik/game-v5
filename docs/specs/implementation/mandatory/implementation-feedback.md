@@ -52,6 +52,7 @@ Implementation decision identifiers the form `DEC-<number>`, numbered from 1 in 
 entry states:
 
 - **Category:** one category from the tables below.
+- **Severity:** for a Specification problem only, one Severity from the table below.
 - **Affected specifications:** each affected specification by Spec ID and section heading, e.g. `DEPDIR, Dependency
 direction`, with the relevant wording quoted. Specifications are named rather than linked, because the
   Implementation refers to no file outside its Implementation repo, as
@@ -78,6 +79,19 @@ Something a specification marks as the Implementer's choice, as left to the impl
 scope, as defined under [Kinds of unspecified content](../../governance/conventions/spec-conventions.md#kinds-of-unspecified-content),
 is not an Implicit gap. The implementer records how it was settled as an Implementation decision of the Asked by the
 specifications category instead.
+
+## Severity
+
+Each Specification problem states how much harm it does if it stays, so that the Engine designer can settle the most
+harmful problems first. The implementer rates it when recording it and rates it again when a later change to the
+specifications or the Implementation changes that harm. The following table is exhaustive.
+
+| Severity | Meaning                                                                                                                                                                                                                                 |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Critical | The game cannot be implemented as specified, or Implementations built from the specifications would break a rule or contradict each other on core play.                                                                                 |
+| High     | The implementer had to guess behavior the [Player](../../governance/conventions/spec-conventions.md#participants) can see, so another Implementation may play differently, e.g. an Implicit gap in a formula or in what a screen shows. |
+| Medium   | The implementer had to guess something the Player barely notices, or copies of one rule invite drift, e.g. a Duplicate whose copies still agree on behavior.                                                                            |
+| Low      | Wording only, with no effect on what an Implementation does, e.g. an unclear term the implementer read as intended.                                                                                                                     |
 
 ## Resolution
 

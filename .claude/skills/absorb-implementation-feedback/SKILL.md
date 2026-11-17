@@ -35,17 +35,10 @@ escalation, and its handling of push conflicts. Steps 0, 7, and 8 below name whe
 3. Read `tracking/specification-baseline.md`. When the worktree's `HEAD`, which is the latest `origin/main`, is ahead of it, check with
    `git diff <baseline>..HEAD` on each problem's affected specifications whether a later commit already removed the
    problem, and set those aside as already fixed.
-4. Rate each remaining problem from its entry, and from the affected sections only where the entry leaves the rating
-   unclear. Treat related problems, e.g. two entries about one formula, as one item rated by its most severe entry:
-   - **Critical:** the game cannot be implemented as specified, or rebuilt Implementations would break a rule or
-     contradict each other on core play, e.g. a Conflict between two rules of Mechanics.
-   - **High:** the implementer had to guess Player-visible behavior, e.g. an Implicit gap in a formula or a screen, so
-     a rebuild may play differently.
-   - **Medium:** the implementer had to guess something the Player barely notices, or two copies of a rule invite
-     drift, e.g. a Duplicate whose copies still agree on behavior.
-   - **Low:** wording only, with no effect on behavior, e.g. an unclear term the implementer read correctly.
-
-   Then pick the top 3 items: the most severe, breaking ties by the most Player-visible, then by the oldest entry.
+4. Take each remaining problem's Severity from its entry, under
+   [Severity](../../../docs/specs/implementation/mandatory/implementation-feedback.md#severity). Rate an entry that
+   states none yourself on that scale, and mark the rating as yours when showing it. Treat related problems, e.g. two
+   entries about one formula, as one item with the Severity of its most severe entry. Then pick the top 3 items: the most severe, breaking ties by the most Player-visible, then by the oldest entry.
 
 5. For each of the top 3, read only the affected specification sections the entry names, and name the Family of
    the Design specifications that falls short, under the table in
