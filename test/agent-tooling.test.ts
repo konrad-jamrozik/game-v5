@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 
 import { describe, expect, test } from 'vitest'
 
-import { artboardSources, composeArtboard, importsOf, withEmbedders } from '../scripts/export-artboards.ts'
+import { artboardSources, blobId, composeArtboard, importsOf, withEmbedders } from '../scripts/export-artboards.ts'
 import { plainMarkdown } from '../scripts/plain-docs.ts'
 
 describe('plainMarkdown', () => {
@@ -44,5 +44,11 @@ describe('export-artboards', () => {
       '<!doctype html><html><head><meta charset="utf-8"><style>.p{}</style><style>.s{}</style></head>' +
         '<body><main><section>panel</section></main></body></html>',
     )
+  })
+
+  test('recognises the path of a canvas upload and nothing else', () => {
+    expect(blobId('/_blob/2cc3fc40822d53d3e35c2181042712ec')).toBe('2cc3fc40822d53d3e35c2181042712ec')
+    expect(blobId('/_blob/../secret')).toBeUndefined()
+    expect(blobId('/support.js')).toBeUndefined()
   })
 })

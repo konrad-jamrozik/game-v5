@@ -23,13 +23,14 @@ that screen's or panel's specification, e.g. [Main Menu](screens/main-menu.md).
 
 These terms are specific to Visual Design.
 
-| Term            | Definition                                                                                                                                                              |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Artboard        | A mockup of one screen or one panel of the graphical user interface, exported from the Design canvas and kept in the repository as an image in `docs/images/artboards`. |
-| Design canvas   | The claude.ai design artifact from which every Artboard is exported, under [Design canvas](#design-canvas).                                                             |
-| Design token    | A named visual value, e.g. a colour, a font, or a spacing step, that every screen uses in place of a literal value.                                                     |
-| Panel Artboard  | An Artboard of one panel or dialog on its own, without the screen around it, e.g. the History View.                                                                     |
-| Screen Artboard | An Artboard of a whole screen, which shows where each region of the screen sits; the panels on it are sample content, each detailed by its own specification.           |
+| Term               | Definition                                                                                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Artboard           | A mockup of one screen or one panel of the graphical user interface, exported from the Design canvas and kept in the repository as an image in `docs/images/artboards`. |
+| Background artwork | An image that a [Detail view](gui.md#glossary) draws faintly behind its content, under [Background artwork](#background-artwork).                                       |
+| Design canvas      | The claude.ai design artifact from which every Artboard is exported, under [Design canvas](#design-canvas).                                                             |
+| Design token       | A named visual value, e.g. a colour, a font, or a spacing step, that every screen uses in place of a literal value.                                                     |
+| Panel Artboard     | An Artboard of one panel or dialog on its own, without the screen around it, e.g. the History View.                                                                     |
+| Screen Artboard    | An Artboard of a whole screen, which shows where each region of the screen sits; the panels on it are sample content, each detailed by its own specification.           |
 
 # Design canvas
 
@@ -50,8 +51,10 @@ artboard's published files with the Artifact tool and rendering them in a headle
 width of the artboard's frame in `project/canvas.json` and a device pixel ratio of 1, with each `<dc-import>` replaced
 by the body of the artboard it imports, and screenshotting the artboard's whole height. The repository script
 `npm run artboards:export -- <canvas-dir> [<image> ...]` does all of this from a local copy of the artboard's
-published files, and also exports every screen artboard that embeds a named one. Commit the images with the
-specification change they illustrate.
+published files, and also exports every screen artboard that embeds a named one. An image uploaded to the canvas, e.g.
+a [Background artwork](#background-artwork), is referenced by an artboard as `/_blob/<id>`; the script reads it from
+`<canvas-dir>/assets/<id>.<extension>`, a copy that the Artifact tool saves when it reads that upload by its id. Commit
+the images with the specification change they illustrate.
 
 ## Artboard sources
 
@@ -311,6 +314,34 @@ The [Side panel](gui.md#glossary) is the console beside the globe, so it reads a
   padding. Its title is in the Panel heading style on the left, with its buttons and then its close control in one row
   on the right, under [Buttons](#buttons). A Detail view taller than the Globe stage scrolls inside, keeping its title row in
   view.
+
+## Background artwork
+
+Background artwork lets the Player enjoy a picture of the agency at work while reading a Detail view, without the
+picture ever competing with what the Player reads: it is drawn so faintly that it reads as part of the dark field, not
+as an image laid over it. It is decoration only: it shows no game state and the Player cannot act on it.
+
+Each image is a file in the `assets/images/` directory at the repository root, and only the Detail views in this table
+show one. This table is exhaustive.
+
+| Detail view                               | Image                             |
+| ----------------------------------------- | --------------------------------- |
+| [Missions View](screens/missions-view.md) | `v03ai-nano21-command-center.jpg` |
+| [Agents View](screens/agents-view.md)     | `chatgpt-agents-i2.png`           |
+
+A Detail view draws its Background artwork as follows:
+
+- **Place:** between its Surface fill and its content, filling the whole Detail view below its top edge. The image is
+  scaled to cover that area with its proportions kept, centred, and cropped where the proportions differ. It stays in
+  place while the content scrolls over it.
+- **Opacity:** 12%, so that even where the image is white, Text muted keeps a contrast ratio of at least 4.5:1 against
+  what lies behind it.
+- **Panels inside it:** a panel inside the Detail view, e.g. a pane of the Missions View, draws its Background fill at
+  35% opacity, so that the image shows through it too while the panel still reads as an area of its own. A selected row
+  and a button keep their fills opaque.
+
+The Detail view shows its Background artwork whatever it holds, e.g. the Agents View with its Memorial filter on. When
+the image cannot be loaded, the Detail view looks as it would without it.
 
 ## Status bar
 

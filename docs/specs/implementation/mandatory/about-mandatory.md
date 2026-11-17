@@ -39,7 +39,7 @@ in its `LICENSE` file, its README, and its project metadata.
 Implementation Feedback and Specification Tracking use Implementation Placement: their files are kept in its
 Implementation repo. Specification Tracking also uses Implementation Feedback, whose Specification problems are
 the only exceptions to conformance it allows. Implementation Placement uses Bootstrap GDRs from the Content family
-and Music from the UI family, whose files each implementation copies. Implementation License uses Implementation
+and Music and Visual Design from the UI family, whose files each implementation copies. Implementation License uses Implementation
 Placement for the Implementation repo whose files state the license.
 
 <!-- generated:family-diagram:start -->

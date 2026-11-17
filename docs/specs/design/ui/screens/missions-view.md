@@ -73,5 +73,8 @@ applies. It is disabled while no Agent is checked or while the checked Agents wo
 
 ![Missions View panel Artboard: Active Mission sites and the Missions deployed this Turn on the left, the selected Mission site with its Enemies and Consequences in the middle, and the deployment pane with checked Agents, Transport cap usage, and the Deploy button on the right](../../../../images/artboards/missions-view.png)
 
+The Missions View shows its [Background artwork](../visual-design.md#background-artwork), a command center, behind its
+panes, as the [Artboard](../visual-design.md#glossary) shows.
+
 The sample values, e.g. the Mission site names, the Enemies, and the Agent IDs, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

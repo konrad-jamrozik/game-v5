@@ -135,5 +135,8 @@ in place of the table, with a control that returns to it: its AgentArchetype's `
 
 ![Agents View Memorial panel Artboard: the Memorial filter on, the Assign to group and Dismiss disabled, and the table of Terminated Agents with base skill, base health, Turn terminated, cause, Missions, Turns with the Agency, Enemies killed, and details of how each Agent's service ended](../../../../images/artboards/agents-memorial.png)
 
+The Agents View shows its [Background artwork](../visual-design.md#background-artwork), Agents in an equipment room,
+behind its content, as both [Artboards](../visual-design.md#glossary) show.
+
 The sample values, e.g. the Agent IDs and their values, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -8,7 +8,8 @@ import { fileURLToPath } from 'node:url'
  * Usage: `npm run artboards:export -- <canvas-dir> [<image.png | Board.dc.html> ...]`
  *
  * `<canvas-dir>` holds the canvas's published files as read with the Artifact tool, i.e. `project/canvas.json` and
- * `project/<Board>.dc.html`. With no image or board named, every Artboard in the Artboard sources table is exported;
+ * `project/<Board>.dc.html`, and in `assets/` each file uploaded to the canvas that those artboards show, named by its
+ * upload id, e.g. `assets/2cc3fc40822d53d3e35c2181042712ec.png`. With no image or board named, every Artboard in the Artboard sources table is exported;
  * otherwise the named ones and every Artboard whose canvas artboard embeds one of them.
  */
 
@@ -85,6 +86,23 @@ export function boardWidths(canvasJson: string): Map<string, number> {
   return widths
 }
 
+const CANVAS_ORIGIN = 'https://canvas.invalid'
+
+/** The id of a canvas upload from its URL path `/_blob/<id>`, or undefined for any other path. */
+export function blobId(path: string): string | undefined {
+  return /^\/_blob\/([0-9a-f]{32})$/.exec(path)?.[1]
+}
+
+/** The local copy of a canvas upload: the file in `<canvas-dir>/assets` whose name, without its extension, is its id. */
+function blobFile(canvasDirectory: string, id: string): string {
+  const directory = join(canvasDirectory, 'assets')
+  const name = existsSync(directory) ? readdirSync(directory).find((file) => file.split('.')[0] === id) : undefined
+  if (name === undefined) {
+    throw new Error(`Upload ${id} is missing; read it from the Design canvas with the Artifact tool into ${directory}`)
+  }
+  return join(directory, name)
+}
+
 async function main(): Promise<void> {
   const [canvasArgument, ...names] = process.argv.slice(2)
   if (!canvasArgument)
@@ -125,7 +143,17 @@ async function main(): Promise<void> {
       const width = widths.get(source.board)
       if (width === undefined) throw new Error(`${source.board} is not in canvas.json`)
       const page = await browser.newPage({ viewport: { width, height: 300 }, deviceScaleFactor: 1 })
-      await page.setContent(composeArtboard(source.board, read), { waitUntil: 'networkidle' })
+      const html = composeArtboard(source.board, read)
+      // The page is served from a stand-in origin so that the canvas's uploaded files, at `/_blob/<id>`, resolve to
+      // their local copies; every other request, e.g. Google Fonts, goes to the network.
+      await page.route(`${CANVAS_ORIGIN}/**`, async (route) => {
+        const path = new URL(route.request().url()).pathname
+        if (path === '/') return route.fulfill({ contentType: 'text/html', body: html })
+        const id = blobId(path)
+        if (id === undefined) return route.fulfill({ status: 404 })
+        return route.fulfill({ path: blobFile(canvasArgument, id) })
+      })
+      await page.goto(`${CANVAS_ORIGIN}/`, { waitUntil: 'networkidle' })
       await page.evaluate(async () => {
         await document.fonts.ready
       })
