@@ -38,6 +38,35 @@
         top: 50%;
         padding: 0 24px;
       }
+      #controls {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 44px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+      }
+      #controls[hidden] {
+        display: none;
+      }
+      button {
+        height: 36px;
+        padding: 0 14px;
+        background: #22211c;
+        border: 1px solid #3a382f;
+        border-radius: 2px;
+        color: #e8e4d8;
+        font: inherit;
+        cursor: pointer;
+      }
+      button:hover {
+        border-color: #9c978a;
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
       #credit {
         bottom: 12px;
         font-size: 13px;
@@ -55,6 +84,10 @@
       aria-label="Rotating globe of the Earth built from NASA satellite imagery, with clouds, an atmosphere glow, a day and night side, and city lights at night"
     ></canvas>
     <div id="status" role="status">Loading NASA imagery…</div>
+    <div id="controls" hidden>
+      <button id="maps" type="button"></button>
+      <button id="spin" type="button"></button>
+    </div>
     <div id="credit">Drag to orbit · scroll to zoom · Imagery: NASA Blue Marble and Earth at Night</div>
     <script type="module" src="./globe.js"></script>
   </body>

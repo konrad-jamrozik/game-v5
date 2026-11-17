@@ -26,13 +26,14 @@ Implementation without a globe is still correct.
 The `lib/globe/` directory of the [Spec repo](../mandatory/implementation-placement.md#glossary) holds a globe that already works, so that an implementer copies a known
 result instead of approximating one. Its files are the following; the table is exhaustive.
 
-| Path                              | Content                                                                              |
-| --------------------------------- | ------------------------------------------------------------------------------------ |
-| `README.md`                       | How to run the reference viewer, what each map holds, and where the imagery is from. |
-| `index.html`                      | The page of the reference viewer, which pins the version of three.js it runs on.     |
-| `globe.js`                        | The scene, the shaders, the orbit and zoom controls, and their tunable `SETTINGS`.   |
-| `assets/`                         | The four maps the globe is drawn from, about 14 MB together.                         |
-| `scripts/build-globe-textures.py` | The script that rebuilds the maps from their public-domain originals.                |
+| Path                              | Content                                                                                       |
+| --------------------------------- | --------------------------------------------------------------------------------------------- |
+| `README.md`                       | How to run the reference viewer, what each map holds, and where the imagery is from.          |
+| `index.html`                      | The page of the reference viewer, which pins the version of three.js it runs on.              |
+| `globe.js`                        | The scene, the shaders, the orbit and zoom controls, and their tunable `SETTINGS`.            |
+| `assets/`                         | The four maps the globe is drawn from, about 14 MB together.                                  |
+| `assets-small/`                   | The same four maps encoded smaller, about 5.3 MB together, kept to compare against `assets/`. |
+| `scripts/build-globe-textures.py` | The script that rebuilds the maps from their public-domain originals.                         |
 
 The reference viewer is the standard for how the globe looks. The implementer should run it as `README.md` describes
 before changing anything, and an Implementation's globe should be indistinguishable from it at the same camera

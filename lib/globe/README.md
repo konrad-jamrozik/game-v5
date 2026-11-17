@@ -17,7 +17,9 @@ Then open <http://localhost:4173/>. Any static file server works, e.g. `npx serv
 The page loads three.js r159 from the jsDelivr CDN, so the first load needs an internet connection. It needs a browser
 with WebGL 2.
 
-Drag to orbit the camera and scroll to zoom.
+Drag to orbit the camera and scroll to zoom. Two buttons sit below the globe: one switches between the two map sets
+without moving the camera, so they can be compared in place, and one stops and starts the rotation. Adding
+`?maps=small` to the address starts with the smaller map set.
 
 ## Files
 
@@ -25,15 +27,17 @@ Drag to orbit the camera and scroll to zoom.
 | --------------------------------- | -------------------------------------------------------------- |
 | `index.html`                      | The page: a full-window canvas and the three.js import map.    |
 | `globe.js`                        | The scene, the three shaders, and the orbit and zoom controls. |
-| `assets/`                         | The four maps the viewer loads.                                |
-| `scripts/build-globe-textures.py` | Rebuilds `assets/` from NASA's original maps.                  |
+| `assets/`                         | The reference map set.                                         |
+| `assets-small/`                   | The same maps encoded smaller, for comparison.                 |
+| `scripts/build-globe-textures.py` | Rebuilds both map sets from NASA's original maps.              |
 
 The values most worth tuning, e.g. spin speed, sharpness, and whether clouds are drawn, are in `SETTINGS` at the top of
 `globe.js`.
 
 ## Maps
 
-Every map is equirectangular, with north at the top and longitude -180° at the left edge.
+Every map is equirectangular, with north at the top and longitude -180° at the left edge. `assets/` holds the
+reference set, about 14 MB:
 
 | File                      | Size        | Content                                                                                    |
 | ------------------------- | ----------- | ------------------------------------------------------------------------------------------ |
@@ -41,6 +45,16 @@ Every map is equirectangular, with north at the top and longitude -180° at the 
 | `earth-night-lights.jpg`  | 8192 × 4096 | One channel: city lights only.                                                             |
 | `earth-normal-water.webp` | 4096 × 2048 | Red and green: tangent-space normal, x towards east and y towards north. Blue: water mask. |
 | `earth-clouds.jpg`        | 4096 × 2048 | One channel: cloud cover.                                                                  |
+
+`assets-small/` holds the same four maps encoded smaller, about 5.3 MB, to judge how much quality the smaller files
+cost:
+
+| File                      | Size        | Difference from the reference set                             |
+| ------------------------- | ----------- | ------------------------------------------------------------- |
+| `earth-day.webp`          | 8192 × 4096 | Lossy WebP in place of a high-quality JPEG.                   |
+| `earth-night-lights.webp` | 8192 × 4096 | Lossy WebP in place of JPEG.                                  |
+| `earth-normal-water.jpg`  | 4096 × 2048 | JPEG at full colour resolution in place of lossless WebP.     |
+| `earth-clouds.webp`       | 2048 × 1024 | Lossy WebP at the source size; the reference set upscales it. |
 
 ## How it is drawn
 

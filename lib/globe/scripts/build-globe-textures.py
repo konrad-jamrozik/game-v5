@@ -1,4 +1,4 @@
-"""Build the Earth texture set in lib/globe/assets from NASA's public-domain maps.
+"""Build the Earth texture sets in lib/globe/assets and lib/globe/assets-small from NASA's public-domain maps.
 
 Usage, from the repository root:
 
@@ -13,6 +13,13 @@ Outputs, all equirectangular with north at the top and longitude -180 at the lef
     earth-night-lights.jpg   8192x4096  one channel: city lights only
     earth-normal-water.webp  4096x2048  R,G = tangent-space normal x (east), y (north); B = water mask
     earth-clouds.jpg         4096x2048  one channel: cloud cover
+
+lib/globe/assets-small holds the same four maps encoded smaller, about 5.3 MB against 14 MB:
+
+    earth-day.webp           8192x4096  lossy WebP
+    earth-night-lights.webp  8192x4096  lossy WebP
+    earth-normal-water.jpg   4096x2048  JPEG at full colour resolution instead of lossless
+    earth-clouds.webp        2048x1024  lossy WebP at the source size, not upscaled
 
 Sources (NASA Earth Observatory, public domain):
 
@@ -42,7 +49,9 @@ SOURCES = {
 
 out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets")
 src = sys.argv[1] if len(sys.argv) > 1 else os.path.join(tempfile.gettempdir(), ".globe-texture-cache")
+small = os.path.join(os.path.dirname(out), "assets-small")
 os.makedirs(out, exist_ok=True)
+os.makedirs(small, exist_ok=True)
 os.makedirs(src, exist_ok=True)
 
 for name, url in SOURCES.items():
@@ -58,6 +67,7 @@ day = Image.open(os.path.join(src, "day.jpg"))
 day.draft("RGB", (10800, 5400))
 day = day.convert("RGB").resize((8192, 4096), Image.LANCZOS)
 day.save(os.path.join(out, "earth-day.jpg"), quality=90, subsampling=0, optimize=True)
+day.save(os.path.join(small, "earth-day.webp"), quality=82, method=6)
 
 # Water mask from the day map: water is where blue clearly dominates. Taking it from the
 # day map keeps the glint exactly on what the Player sees as water, lakes included.
@@ -88,20 +98,22 @@ def encode(a):
 
 
 # Lossless: lossy WebP halves the colour resolution, which would blur the normals.
-Image.merge("RGB", (encode(nx), encode(ny), water_img)).save(
-    os.path.join(out, "earth-normal-water.webp"), lossless=True, method=4
-)
+normal_water = Image.merge("RGB", (encode(nx), encode(ny), water_img))
+normal_water.save(os.path.join(out, "earth-normal-water.webp"), lossless=True, method=4)
+# The smaller set keeps full colour resolution (subsampling=0), which lossy WebP cannot.
+normal_water.save(os.path.join(small, "earth-normal-water.jpg"), quality=94, subsampling=0, optimize=True)
 
 # Night lights: the source has a dark blue land and ocean base; keep only the warm lights.
 night = Image.open(os.path.join(src, "night.jpg")).convert("RGB").resize((8192, 4096), Image.LANCZOS)
 n = np.asarray(night, dtype=np.float32)
 lights = np.clip((n[..., 0] - 0.28 * n[..., 2] - 4.0) / 200.0, 0, 1) ** 0.85
-Image.fromarray((lights * 255).astype(np.uint8)).save(
-    os.path.join(out, "earth-night-lights.jpg"), quality=90, optimize=True
-)
+lights_img = Image.fromarray((lights * 255).astype(np.uint8))
+lights_img.save(os.path.join(out, "earth-night-lights.jpg"), quality=90, optimize=True)
+lights_img.convert("RGB").save(os.path.join(small, "earth-night-lights.webp"), quality=80, method=6)
 
 # Clouds: upscale smoothly so the GPU does not show the 2048-pixel grid.
-clouds = Image.open(os.path.join(src, "clouds2k.jpg")).convert("L").resize((4096, 2048), Image.BICUBIC)
-clouds.save(os.path.join(out, "earth-clouds.jpg"), quality=92, optimize=True)
+clouds = Image.open(os.path.join(src, "clouds2k.jpg")).convert("L")
+clouds.resize((4096, 2048), Image.BICUBIC).save(os.path.join(out, "earth-clouds.jpg"), quality=92, optimize=True)
+clouds.convert("RGB").save(os.path.join(small, "earth-clouds.webp"), quality=85, method=6)
 
-print("wrote", out)
+print("wrote", out, "and", small)
