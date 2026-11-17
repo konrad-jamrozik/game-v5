@@ -51,6 +51,10 @@ whether the Implementation gets a remote repository, e.g. on GitHub, and where t
 the Engine designer after the Implementation is reviewed. The Implementation repo must be ready to become a standalone
 repository, e.g. by holding its own Git ignore rules.
 
+The Implementation repo must hold a `.gitattributes` file that stores every text file with LF line endings and checks
+it out with LF, e.g. `* text=auto eol=lf`. Without it, a checkout on Windows with `core.autocrlf` enabled shows files
+as modified whose content is unchanged, e.g. after the formatter rewrites them.
+
 # Repository root of an Implementation
 
 An Implementation must treat the root directory of its Implementation repo as its repository root and must behave as if

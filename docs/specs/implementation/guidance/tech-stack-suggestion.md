@@ -35,6 +35,15 @@ libraries listed with it.
 - Dexie, with `dexie-react-hooks`, for IndexedDB persistence.
 - dependency-cruiser for enforcing module dependency rules.
 
+# Known pitfalls
+
+Some libraries in or near the stack fail in ways that are slow to diagnose, and each pitfall below names the symptom
+and the remedy.
+
+- **Unstable table data:** A headless table library that derives its rows from the data it is given, e.g. TanStack
+  Table's `useReactTable`, can re-render without end, and freeze the page, when it receives a new data array on every
+  render. Pass it an array whose reference changes only when its content does, e.g. one built with `useMemo`.
+
 # References
 
 The stack was originally adapted from the stack of the `web` directory of

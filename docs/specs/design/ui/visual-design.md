@@ -48,7 +48,9 @@ To change an Artboard, edit its canvas artboard, then export the image of that a
 that embeds it, and save each image under the name the table below gives it. An image is exported by reading the
 artboard's published files with the Artifact tool and rendering them in a headless browser, e.g. Playwright, at the
 width of the artboard's frame in `project/canvas.json` and a device pixel ratio of 1, with each `<dc-import>` replaced
-by the body of the artboard it imports, and screenshotting the artboard's whole height. Commit the images with the
+by the body of the artboard it imports, and screenshotting the artboard's whole height. The repository script
+`npm run artboards:export -- <canvas-dir> [<image> ...]` does all of this from a local copy of the artboard's
+published files, and also exports every screen artboard that embeds a named one. Commit the images with the
 specification change they illustrate.
 
 ## Artboard sources

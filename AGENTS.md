@@ -20,6 +20,24 @@ As of 2026-11-14, the environment for this repository is:
 Choose verification commands as described in the [Verification](README.md#verification) section of `README.md`. Before
 declaring repository changes complete, run `npm run check` and report any failures.
 
+## Editing files and running commands
+
+These rules apply in this repository and in every Implementation repo:
+
+- Never put multi-line text, or text with quotes or backticks, inside a shell command, e.g. a script passed with
+  `python -c` or `node -e`, a heredoc, or a PowerShell here-string. The shell's quoting breaks it, e.g. with
+  "unexpected EOF while looking for matching". Create or replace a file with the Write tool and change one with the
+  Edit tool; when a change needs a script, e.g. one replacement repeated across many files, write the script to a file
+  in the scratchpad first and run that file.
+- Edit a file only against its current content. `npm run docs:link-terms`, `npm run docs:generate`, and the
+  formatter rewrite files, e.g. they add links or re-pad table columns, so text copied before they ran no longer
+  matches. Make all planned edits first, then run them once, and read a section again before editing it after they ran.
+- To read or search a specification as prose rather than as link syntax, run `npm run docs:plain -- <file>`.
+- To export Artboard images from the Design canvas, use `npm run artboards:export`, as
+  [Design canvas](docs/specs/design/ui/visual-design.md#design-canvas) describes, never a one-off script.
+- Never use `git stash` to set work aside or to compare with an earlier commit; check the earlier commit out in a
+  temporary `git worktree` instead.
+
 ## Implementing the game
 
 When implementing the game, follow every specification in `docs/specs/implementation/mandatory/`, e.g.
