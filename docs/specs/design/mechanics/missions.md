@@ -377,7 +377,8 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 4. `agents` contains the same Instance ID more than once.
 5. An Instance ID in `agents` identifies no Agent of the Campaign.
 6. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned)
-   in Agents.
+   in Agents, or is [In transit](domain-model.md#agency-and-agents). An Agent In transit can be assigned, but deploying
+   it would let it skip its transit.
 7. An Agent in `agents` has an Assignment other than a [Base Assignment](agents-spec.md#assignments), i.e. other than
    [Standby](agents-spec.md#assignments) or [Training](agents-spec.md#assignments). An Agent on [Contracting](agents-spec.md#assignments) or an Investigation must first be recalled to base.
 8. The Agents would exceed the [Transport cap](economy-and-upgrades.md#glossary):
@@ -943,7 +944,7 @@ Contracting, At assignment. Each call is made on its own from this state, and ea
 | `deployAgents(s7, [a4, a5])` | Rejected: 3 + 2 = 5 is more than the Transport cap 4. Neither a4 nor a5 changes, and s7 stays Active.         |
 | `deployAgents(s7, [])`       | Rejected: `agents` is empty.                                                                                  |
 | `deployAgents(s7, [a4, a4])` | Rejected: a4 is listed twice.                                                                                 |
-| `deployAgents(s7, [a6])`     | Rejected: a6 is In transit and cannot be assigned.                                                            |
+| `deployAgents(s7, [a6])`     | Rejected: a6 is In transit, although it can be assigned.                                                      |
 | `deployAgents(s7, [a7])`     | Rejected: a7 is on Recovery and cannot be assigned.                                                           |
 | `deployAgents(s7, [a8])`     | Rejected: a8 is on Contracting, not on Standby or Training.                                                   |
 | `deployAgents(s7, [a1])`     | Rejected: a1 is Deployed and cannot be assigned.                                                              |

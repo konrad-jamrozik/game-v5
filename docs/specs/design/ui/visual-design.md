@@ -93,26 +93,28 @@ interface has a dark theme only; the light theme is a TODO.
 Each colour has one role, so that the same colour always means the same thing across screens. This table is
 exhaustive.
 
-| Token          | Value                    | Role                                                                                                                                                                                                   |
-| -------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Background     | `#0D0D0B`                | The page behind all panels, and the fill of inputs.                                                                                                                                                    |
-| Surface        | `#151512`                | Panels, cards, and chart frames.                                                                                                                                                                       |
-| Raised         | `#22211C`                | Neutral buttons, navigation buttons, and row dividers inside panels.                                                                                                                                   |
-| Divider        | `#2B2A24`                | Dividers between panel sections, and empty meter segments.                                                                                                                                             |
-| Border         | `#3A382F`                | Borders of controls, table header rules, chart baselines, and the top edge of a plain card.                                                                                                            |
-| Text           | `#E8E4D8`                | Primary text and the lines of neutral chart series.                                                                                                                                                    |
-| Text secondary | `#B8B3A6`                | Supporting prose, e.g. the game description on the Main menu.                                                                                                                                          |
-| Text muted     | `#9C978A`                | Labels, hints, and idle states, e.g. an Agent on standby.                                                                                                                                              |
-| Axis           | `#8F8A7D`                | Chart axis labels.                                                                                                                                                                                     |
-| Accent         | `#FF7A1A`                | The primary action, the open-Detail-view marker, the current [Campaign](../foundation/core-concepts.md#campaign-and-session)'s card edge, and [Panic](../mechanics/domain-model.md#campaign-standing). |
-| Accent dim     | `#7A4A22`                | A partly filled meter segment.                                                                                                                                                                         |
-| Accent text    | `#FF8A33`                | Text that needs attention, e.g. a count on a navigation button, a low health value, or an expired [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).        |
-| On accent      | `#1A0B00`                | Text on an Accent fill.                                                                                                                                                                                |
-| Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or an Agent on an assignment.                                         |
-| Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                                                       |
-| Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                                                    |
-| Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                                                         |
-| Scrim          | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog.                                                                                                                                                        |
+| Token          | Value                    | Role                                                                                                                                                                                                               |
+| -------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Background     | `#0D0D0B`                | The page behind all panels, and the fill of inputs.                                                                                                                                                                |
+| Surface        | `#151512`                | Panels, cards, and chart frames.                                                                                                                                                                                   |
+| Raised         | `#22211C`                | Neutral buttons, navigation buttons, and row dividers inside panels.                                                                                                                                               |
+| Divider        | `#2B2A24`                | Dividers between panel sections, and empty meter segments.                                                                                                                                                         |
+| Border         | `#3A382F`                | Borders of controls, table header rules, chart baselines, and the top edge of a plain card.                                                                                                                        |
+| Text           | `#E8E4D8`                | Primary text and the lines of neutral chart series.                                                                                                                                                                |
+| Text secondary | `#B8B3A6`                | Supporting prose, e.g. the game description on the Main menu.                                                                                                                                                      |
+| Text muted     | `#9C978A`                | Labels, hints, and idle states, e.g. an Agent on standby.                                                                                                                                                          |
+| Axis           | `#8F8A7D`                | Chart axis labels.                                                                                                                                                                                                 |
+| Accent         | `#FF7A1A`                | The primary action, the open-Detail-view marker, the current [Campaign](../foundation/core-concepts.md#campaign-and-session)'s card edge, and [Panic](../mechanics/domain-model.md#campaign-standing).             |
+| Accent dim     | `#7A4A22`                | A partly filled meter segment.                                                                                                                                                                                     |
+| Accent text    | `#FF8A33`                | Text that needs attention, e.g. a count on a navigation button, a low health value, or an expired [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).                    |
+| On accent      | `#1A0B00`                | Text on an Accent fill.                                                                                                                                                                                            |
+| Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or an Agent on an assignment.                                                     |
+| Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                                                                   |
+| Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                                                                |
+| Warning        | `#E3C14B`                | Values that need watching before they become a problem, e.g. an Agent's exhaustion at which it can no longer start work, under [Agent condition](#agent-condition).                                                |
+| Danger deep    | `#A3271F`                | The far end of the [current health](../mechanics/agents-spec.md#combatant-attributes) scale: an [Agent](../mechanics/domain-model.md#agency-and-agents) close to death, under [Agent condition](#agent-condition). |
+| Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                                                                     |
+| Scrim          | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog.                                                                                                                                                                    |
 
 ## Typography
 
@@ -214,6 +216,27 @@ A table whose rows each have a selection checkbox lets the Player select several
 
 A row whose checkbox is disabled is skipped by every one of these. Pressing or dragging over the rows never selects
 their text.
+
+The header row holds a Select all checkbox above the rows' checkboxes. Checking it selects every shown row whose
+checkbox is enabled, and it stays checked while the selection follows that set: whenever which rows are shown, or which
+of them can be selected, changes, e.g. because a filter changed, the selection becomes exactly the shown rows that can
+be selected. Unchecking it clears the selection, and clicking, Shift-clicking, or dragging over any row unchecks it and
+keeps the selection as it then is.
+
+## Agent condition
+
+Wherever a table shows an [Agent](../mechanics/domain-model.md#agency-and-agents)'s [exhaustion](../mechanics/agents-spec.md#combatant-attributes) or [current health](../mechanics/agents-spec.md#combatant-attributes), its colour tells the Player at a glance how worn
+down the Agent is, so that a tired or hurt Agent stands out before it is sent anywhere.
+
+- **Exhaustion:** Text below `exhaustion_work_start_max`; Warning from `exhaustion_work_start_max`; Accent text from the
+  midpoint of `exhaustion_work_start_max` and `exhaustion_work_limit`, rounded up; and Danger from
+  `exhaustion_work_limit`, with a warning-triangle icon before the value. The thresholds come from
+  [AgentParameters](../mechanics/agents-spec.md#agentparameters), so they follow the [GDRs](../foundation/core-concepts.md#game-build-and-content). E.g., with the Bootstrap values 30 and 70, exhaustion 29 is
+  in Text, 30 in Warning, 50 in Accent text, and 70 in Danger with the triangle.
+- **Current health:** a smooth scale over the share of [base health](../mechanics/agents-spec.md#combatant-attributes) that current health is. Its stops are Text at
+  100%, Warning at 75%, Accent text at 50%, Danger at 25%, and Danger deep at 0%, and a share between two stops takes
+  the colour between them in proportion, mixed in sRGB. E.g., 30 of 30 is in Text, 15 of 30 in Accent text, and 1 of
+  30 almost in Danger deep.
 
 ## Detail views and navigation
 

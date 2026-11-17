@@ -398,11 +398,14 @@ exactly when the Agents of its Current team are Deployed on it.
 **Proposed rule:** An Agent can be assigned exactly when all of the following hold:
 
 1. It is Serving.
-2. Its Agent status is At assignment.
+2. Its Agent status is At assignment or In transit.
 3. Its Assignment is Standby, Contracting, Training, or an Investigation.
 
-A Recovering Agent, an Agent In transit, and a Deployed Agent therefore cannot be assigned, and neither can a
-Terminated Agent. Whether an Agent can be assigned is a Derived value. Every Player action that changes an Agent's
+A Recovering Agent, an Agent In transit to Recovery, and a Deployed Agent therefore cannot be assigned, and neither can a
+Terminated Agent. An Agent In transit to any other Assignment can be assigned, and then travels toward its new
+Assignment instead, under [Transit rule](#transit-rule); deploying it is still refused, because
+[Deploying Agents](missions.md#deploying-agents) in Missions also requires that it is At assignment. Whether an Agent
+can be assigned is a Derived value. Every Player action that changes an Agent's
 Assignment requires that the Agent can be assigned: `assignAgents` under [Assigning Agents](#assigning-agents), and the
 Player actions of [Investigations](investigations.md) and [Missions](missions.md) that assign Agents to an Investigation
 or deploy them to a Mission site. A new Work Assignment also requires that the Agent is Fit for work, under
@@ -436,32 +439,34 @@ without a stated cause.
 status, with its trigger and the owner of the trigger. An Assignment of "Investigation" in the
 table means an Investigation with its reference.
 
-| From                                                               | To                                                                        | Trigger and who triggers it                                                                                                                      | Owner of the trigger and its conditions                    |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| Standby or Training; At assignment                                 | The other of Standby and Training; At assignment                          | The player assigns it, through the `assignAgents` Player action.                                                                                 | This document, under [Assigning Agents](#assigning-agents) |
-| Standby or Training; At assignment                                 | Contracting; In transit                                                   | The player assigns it, through the `assignAgents` Player action.                                                                                 | This document, under [Assigning Agents](#assigning-agents) |
-| Contracting or an Investigation; At assignment                     | Standby, Contracting, or Training, other than the current one; In transit | The player assigns it, through the `assignAgents` Player action.                                                                                 | This document, under [Assigning Agents](#assigning-agents) |
-| Standby, Contracting, Training, or an Investigation; At assignment | An Investigation; In transit                                              | The player starts an Investigation with it or adds it to one, through a Player action of Investigations.                                         | [Investigations](investigations.md)                        |
-| Standby or Training; At assignment                                 | Deployed on a Mission; At assignment                                      | The player deploys it, through the `deployAgents` Player action.                                                                                 | [Missions](missions.md)                                    |
-| Any Assignment other than Recovery; In transit                     | The same Assignment; At assignment                                        | Advance turn, in the Transit step.                                                                                                               | This document, under [Transit rule](#transit-rule)         |
-| Recovery; In transit                                               | Recovery; Recovering                                                      | Advance turn, in the Transit step.                                                                                                               | This document, under [Transit rule](#transit-rule)         |
-| An Investigation; At assignment                                    | Standby; In transit                                                       | Advance turn: the Investigation completes in the [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) step. | [Investigations](investigations.md)                        |
-| Contracting or an Investigation; At assignment                     | Standby; In transit                                                       | Advance turn: the Agent's work raises its exhaustion to `exhaustion_work_limit` or more, in the Agency income or Investigation progress step.    | This document, under [Forced return](#forced-return)       |
-| Training; At assignment                                            | Standby; At assignment                                                    | Advance turn: the Agent's work raises its exhaustion to `exhaustion_work_limit` or more, in the Training step.                                   | This document, under [Forced return](#forced-return)       |
-| Deployed; At assignment                                            | Recovery; In transit                                                      | Advance turn: the Agent survives the Combat in the Mission resolution step with current health below its base health.                            | [Missions](missions.md)                                    |
-| Deployed; At assignment                                            | Standby; In transit                                                       | Advance turn: the Agent survives the Combat in the Mission resolution step with current health equal to its base health.                         | [Missions](missions.md)                                    |
-| Recovery; Recovering                                               | Standby; At assignment                                                    | Advance turn: the Agent's current health reaches its base health in the Agent recovery step.                                                     | [Agent Recovery](agent-recovery.md)                        |
+| From                                                                             | To                                                                        | Trigger and who triggers it                                                                                                                      | Owner of the trigger and its conditions                    |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| Standby or Training; At assignment                                               | The other of Standby and Training; At assignment                          | The player assigns it, through the `assignAgents` Player action.                                                                                 | This document, under [Assigning Agents](#assigning-agents) |
+| Standby or Training; At assignment                                               | Contracting; In transit                                                   | The player assigns it, through the `assignAgents` Player action.                                                                                 | This document, under [Assigning Agents](#assigning-agents) |
+| Contracting or an Investigation; At assignment                                   | Standby, Contracting, or Training, other than the current one; In transit | The player assigns it, through the `assignAgents` Player action.                                                                                 | This document, under [Assigning Agents](#assigning-agents) |
+| Standby, Contracting, Training, or an Investigation; In transit                  | Standby, Contracting, or Training, other than the current one; In transit | The player assigns it, through the `assignAgents` Player action.                                                                                 | This document, under [Assigning Agents](#assigning-agents) |
+| Standby, Contracting, Training, or an Investigation; At assignment or In transit | An Investigation; In transit                                              | The player starts an Investigation with it or adds it to one, through a Player action of Investigations.                                         | [Investigations](investigations.md)                        |
+| Standby or Training; At assignment                                               | Deployed on a Mission; At assignment                                      | The player deploys it, through the `deployAgents` Player action.                                                                                 | [Missions](missions.md)                                    |
+| Any Assignment other than Recovery; In transit                                   | The same Assignment; At assignment                                        | Advance turn, in the Transit step.                                                                                                               | This document, under [Transit rule](#transit-rule)         |
+| Recovery; In transit                                                             | Recovery; Recovering                                                      | Advance turn, in the Transit step.                                                                                                               | This document, under [Transit rule](#transit-rule)         |
+| An Investigation; At assignment                                                  | Standby; In transit                                                       | Advance turn: the Investigation completes in the [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) step. | [Investigations](investigations.md)                        |
+| Contracting or an Investigation; At assignment                                   | Standby; In transit                                                       | Advance turn: the Agent's work raises its exhaustion to `exhaustion_work_limit` or more, in the Agency income or Investigation progress step.    | This document, under [Forced return](#forced-return)       |
+| Training; At assignment                                                          | Standby; At assignment                                                    | Advance turn: the Agent's work raises its exhaustion to `exhaustion_work_limit` or more, in the Training step.                                   | This document, under [Forced return](#forced-return)       |
+| Deployed; At assignment                                                          | Recovery; In transit                                                      | Advance turn: the Agent survives the Combat in the Mission resolution step with current health below its base health.                            | [Missions](missions.md)                                    |
+| Deployed; At assignment                                                          | Standby; In transit                                                       | Advance turn: the Agent survives the Combat in the Mission resolution step with current health equal to its base health.                         | [Missions](missions.md)                                    |
+| Recovery; Recovering                                                             | Standby; At assignment                                                    | Advance turn: the Agent's current health reaches its base health in the Agent recovery step.                                                     | [Agent Recovery](agent-recovery.md)                        |
 
 Every change not listed is impossible; e.g., an Agent on Recovery cannot be assigned to Contracting, a Deployed Agent
-cannot be recalled, an Agent In transit cannot be assigned anywhere, and an Agent on Contracting or an Investigation
-cannot be deployed. Recalling an Agent is assigning it to a [Base Assignment](#assignments): from Contracting or an
-Investigation it starts In transit, and from Training it does not.
+cannot be recalled, an Agent In transit to Recovery cannot be assigned anywhere, an Agent In transit cannot be deployed,
+and an Agent on Contracting or an Investigation cannot be deployed. Recalling an Agent is assigning it to a
+[Base Assignment](#assignments): from Contracting or an Investigation it starts In transit, and from Training, At
+assignment, it does not. An Agent assigned while In transit stays In transit, now toward its new Assignment.
 
 The following diagram draws the table. Each box is one pair of Assignment and Agent status; Standby and Training form the
 base, and Contracting and Investigations are away. A Forced return follows the same arrow as recalling the Agent to
 Standby.
 
-![Agent Assignment transitions: Standby and Training, the Base Assignments, switch to each other at once and are the only Assignments an Agent can be deployed from; every move to, from, or between Contracting and Investigations, the Away Assignments, passes through In transit for one Advance turn; Deployed and Recovering are left only by an Advance turn; Killed and Dismissed are final](../../../images/diagrams/agent-assignment-transitions.svg)
+![Agent Assignment transitions: Standby and Training, the Base Assignments, switch to each other at once and are the only Assignments an Agent can be deployed from; every move to, from, or between Contracting and Investigations, the Away Assignments, passes through In transit for one Advance turn, and an order re-routes an Agent In transit to any of them without restarting its transit; Deployed and Recovering are left only by an Advance turn; Killed and Dismissed are final](../../../images/diagrams/agent-assignment-transitions.svg)
 
 A Serving Agent's Assignment also ends, without a replacement, when it becomes Terminated under
 [Agent status](#agent-status): a Deployed Agent that is Killed in a Combat, and an Agent
@@ -475,8 +480,8 @@ step](domain-model.md#turn-advancement-steps) under [Turn advancement steps](tur
 are complete:
 
 1. **Starting In transit:** Every new Assignment starts In transit, with four exceptions: an Agent becomes
-   Deployed At assignment at once; an Agent moved from one [Base Assignment](#assignments) to the other is At
-   assignment at once; a Recovering Agent whose current health reaches base health becomes Standby At assignment at
+   Deployed At assignment at once; an Agent At assignment moved from one [Base Assignment](#assignments) to the other
+   is At assignment at once; a Recovering Agent whose current health reaches base health becomes Standby At assignment at
    once; and an Agent of the [Initial roster](#initial-roster) starts At assignment.
 2. **Arrival:** An Agent that is In transit in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) of an Advance turn, i.e. in the Committed state in
    which that Advance turn began, becomes At assignment in the Transit step of that Advance turn, or Recovering when
@@ -485,6 +490,9 @@ are complete:
    fights in no Combat, and recovers neither current health nor exhaustion.
 3. **Departure:** An Agent that becomes In transit during an Advance turn is still In transit in the Committed state
    after that Advance turn. The Transit step applies only to Agents that were In transit in the Turn-end state.
+4. **Re-routing:** An Agent given a new Assignment while In transit stays In transit, toward the new Assignment, and
+   arrives under statement 2 exactly when it would have arrived at the old one: its transit neither restarts nor ends
+   early, even when both Assignments are [Base Assignments](#assignments).
 
 Wherever the rule of a Turn advancement step after Transit applies to Agents At assignment or Recovering, it means
 Agents that already had that Agent status in the Turn-end state and that still have it when the step begins. There are
@@ -501,7 +509,8 @@ statement 2:
   [Investigations](investigations.md).
 
 **Within base:** Standby and Training are both carried out in the Agency's base, so an Agent moved between them by
-`assignAgents` travels nowhere: it is At assignment at once, and it can be assigned again in the same Turn.
+`assignAgents` travels nowhere: when it was At assignment, it is At assignment at once, and it can be assigned again
+in the same Turn.
 
 **Deployed:** Deploying to a Mission site does not start In transit, and only an Agent on a Base Assignment can be
 deployed, under [Deploying Agents](missions.md#deploying-agents) in Missions. The moment the player
@@ -683,8 +692,9 @@ nothing hidden.
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same
 Turn, to every Agent in `agents`:
 
-- Its Assignment becomes `assignment`. Its Agent status becomes At assignment when both its former Assignment and
-  `assignment` are [Base Assignments](#assignments), and In transit otherwise, under [Transit rule](#transit-rule).
+- Its Assignment becomes `assignment`. Its Agent status becomes At assignment when it was At assignment and both its
+  former Assignment and `assignment` are [Base Assignments](#assignments), and In transit otherwise, under
+  [Transit rule](#transit-rule).
 - If its Assignment was an Investigation, it leaves that Investigation's Current team, and the Investigation is
   recorded under [Participation history records](#participation-history-records). Leaving also affects the
   Investigation under [Leaving an Investigation](investigations.md#leaving-an-investigation), e.g. it is Abandoned
@@ -884,22 +894,23 @@ At assignment, during Turn 5.
 
 | Moment                                      | Assignment  | Agent status  | What happens to a1                                                                                            |
 | ------------------------------------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------- |
-| `assignAgents([a1], Contracting)` in Turn 5 | Contracting | In transit    | The action succeeds; a1 can no longer be assigned in Turn 5.                                                  |
+| `assignAgents([a1], Contracting)` in Turn 5 | Contracting | In transit    | The action succeeds; a1 is In transit to Contracting.                                                         |
 | Advance turn ending Turn 5                  | Contracting | At assignment | a1 arrives in the Transit step. It earns no contracting income in Agency income, and it is counted in Upkeep. |
 | Turn 6                                      | Contracting | At assignment | a1 can be assigned.                                                                                           |
 | Advance turn ending Turn 6                  | Contracting | At assignment | a1 was At assignment in the Turn-end state, so Agency income counts it: its first contracting income.         |
 
-A second `assignAgents([a1], Standby)` in Turn 5, after the first, is rejected, because a1 is In transit and cannot be
-assigned; a1 stays on Contracting, In transit.
+A second `assignAgents([a1], Standby)` in Turn 5, after the first, succeeds: a1 is re-routed and is on Standby, In
+transit, and it arrives on Standby in the Advance turn ending Turn 5, as it would have arrived on Contracting. A
+`deployAgents` naming a1 in Turn 5 is rejected, because a1 is In transit.
 
 ## Transit: hired Agent
 
 This example exercises [Agent creation](#agent-creation) and [Transit rule](#transit-rule). During Turn 5 the player
 hires one Agent through the `hireAgent` Player action of [Economy and Upgrades](economy-and-upgrades.md). The new Agent
 a5 has Turn hired 5, base skill 100, current health 30 of 30, exhaustion 0, Weapon `sidearm`, base weapon damage 10, and is on Standby,
-In transit. During the rest of Turn 5, `assignAgents([a5], Training)` is rejected because a5 cannot be assigned. In the
-Advance turn ending Turn 5, a5 arrives in the Transit step and is counted in Upkeep; nothing else applies to it. In Turn
-6, a5 is on Standby, At assignment, and can be assigned.
+In transit. During the rest of Turn 5, `assignAgents([a5], Training)` succeeds and a5 is on Training, still In
+transit, under statement 4 of [Transit rule](#transit-rule). In the Advance turn ending Turn 5, a5 arrives in the Transit
+step and is counted in Upkeep; nothing else applies to it. In Turn 6, a5 is on Training, At assignment.
 
 ## Transit: returning survivors
 
@@ -912,7 +923,7 @@ current health 30 of 30, are deployed to Mission site s1 during Turn 5 through t
 | ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
 | Right after deployment, Turn 5 | Deployed on m1, At assignment                                                        | Deployed on m1, At assignment                                                         |
 | Advance turn ending Turn 5     | Fights in the Combat; ends with current health 30 of 30; becomes Standby, In transit | Fights in the Combat; ends with current health 18 of 30; becomes Recovery, In transit |
-| Turn 6                         | Standby, In transit; cannot be assigned                                              | Recovery, In transit; cannot be assigned                                              |
+| Turn 6                         | Standby, In transit; can be assigned, but not deployed                               | Recovery, In transit; cannot be assigned                                              |
 | Advance turn ending Turn 6     | Arrives in Transit; recovers no exhaustion                                           | Arrives in Transit; recovers no current health                                        |
 | Turn 7                         | Standby, At assignment; can be assigned                                              | Recovery, Recovering; cannot be assigned                                              |
 | Advance turn ending Turn 7     | Recovers exhaustion, under [Agent Recovery](agent-recovery.md)                       | Recovers current health for the first time, under [Agent Recovery](agent-recovery.md) |
@@ -979,7 +990,7 @@ of 30.
 | Advance turn ending Turn 20, Training       |                                                                                                | Training gain Probability 61 / 100, then exhaustion 70: Forced return, to Standby, At assignment. |                                                         |
 | Advance turn ending Turn 20, Agent recovery | Does not recover.                                                                              | On Standby, At assignment, since the Turn-end state: 70 − 5 = 65.                                 | 31 − 5 = 26.                                            |
 | Advance turn ending Turn 21, Agency income  | Earns with effective skill 61, then exhaustion 70: Forced return, to Standby, In transit.      | Recovers 65 − 5 = 60 in Agent recovery.                                                           | Recovers 26 − 5 = 21.                                   |
-| Turn 22                                     | Standby, In transit; cannot be assigned.                                                       | Standby, At assignment; not Fit for work: `assignAgents([a2], Training)` is rejected.             | Fit for work.                                           |
+| Turn 22                                     | Standby, In transit; not Fit for work, so it can be assigned to no Work Assignment.            | Standby, At assignment; not Fit for work: `assignAgents([a2], Training)` is rejected.             | Fit for work.                                           |
 
 In Turn 20, `assignAgents([a4], Contracting)` succeeds, because a4's exhaustion 30 equals `exhaustion_work_start_max`,
 and `assignAgents([a3, a4], Contracting)` would have been rejected as a whole because of a3. Recalling a1 or a2 to Standby
@@ -999,7 +1010,7 @@ a7 is on Investigation i1, At assignment, together with a8. Each call is made on
 | `assignAgents([], Standby)`        | Rejected: `agents` is empty.                                                                                                                                                                    |
 | `assignAgents([a1, a1], Standby)`  | Rejected: a1 is listed twice.                                                                                                                                                                   |
 | `assignAgents([a1], Contracting)`  | Rejected: a1 is already on Contracting.                                                                                                                                                         |
-| `assignAgents([a1, a2], Training)` | Rejected as a whole: a2 is In transit. a1 stays on Contracting, At assignment.                                                                                                                  |
+| `assignAgents([a1, a2], Training)` | Succeeds: a1 is on Training, In transit, and a2 is on Training, still In transit, re-routed under [Transit rule](#transit-rule).                                                                |
 | `assignAgents([a3], Standby)`      | Rejected: a3 is on Recovery.                                                                                                                                                                    |
 | `assignAgents([a4], Standby)`      | Rejected: a4 is Deployed.                                                                                                                                                                       |
 | `assignAgents([a6], Standby)`      | Rejected: a6 is Killed.                                                                                                                                                                         |

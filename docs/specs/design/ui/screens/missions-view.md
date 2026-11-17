@@ -56,9 +56,9 @@ lifecycle state.
 
 The right pane deploys a team to the selected Mission site when it is Active, and is left out otherwise. It lists the
 Agents that [Deploying Agents](../../mechanics/missions.md#deploying-agents) in Missions allows to be deployed, i.e. the Agents that
-can be assigned, under [Agents that can be assigned](../../mechanics/agents-spec.md#agents-that-can-be-assigned) in Agents, and whose [Assignment](../../mechanics/domain-model.md#agency-and-agents) is [Standby](../../mechanics/agents-spec.md#assignments) or [Training](../../mechanics/agents-spec.md#assignments), one row each with a checkbox,
+can be assigned, under [Agents that can be assigned](../../mechanics/agents-spec.md#agents-that-can-be-assigned) in Agents, are [At assignment](../../mechanics/domain-model.md#agency-and-agents), and whose [Assignment](../../mechanics/domain-model.md#agency-and-agents) is [Standby](../../mechanics/agents-spec.md#assignments) or [Training](../../mechanics/agents-spec.md#assignments), one row each with a checkbox,
 its [Instance ID](../../foundation/campaign-instances.md#glossary), its Assignment, and its [effective skill](../../mechanics/agents-spec.md#combatant-attributes). An [Agent](../../mechanics/domain-model.md#agency-and-agents) whose [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) is at or above the threshold
-of [Warning on deploying tired Agents](../gui.md#warning-on-deploying-tired-agents) in the GUI shows its exhaustion in Accent text.
+of [Warning on deploying tired Agents](../gui.md#warning-on-deploying-tired-agents) in the GUI shows its exhaustion, coloured under [Agent condition](../visual-design.md#agent-condition) in Visual Design.
 
 Above the rows, the pane shows how many places of the [Transport cap](../../mechanics/economy-and-upgrades.md#glossary) the Deployed Agents and the checked Agents
 together take, against the Transport cap, e.g. "Transport 3 / 4". The pane adds no other figure, e.g. no sum of the

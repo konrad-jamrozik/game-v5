@@ -357,9 +357,9 @@ Inputs:
 
 Evaluation: the product is formed before the division, under [Exact evaluation](../foundation/numbers.md#exact-evaluation)
 in Numbers, and rounded down once. When S_before is 0, the divisor would be zero, and the Investigation progress is
-unchanged instead. A member In transit adds nothing to either sum: it cannot leave, under
-[Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents, and the progress it will add has
-not started. The result lies from 0 to Investigation progress before, so Progress loss never raises progress. When the
+unchanged instead. A member In transit adds nothing to either sum: the progress it will add has not started, so
+when it is assigned elsewhere, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in
+Agents, the Investigation loses no progress for it. The result lies from 0 to Investigation progress before, so Progress loss never raises progress. When the
 action leaves the Current team without a member [At assignment](domain-model.md#agency-and-agents), S_after is 0 and the Investigation progress becomes 0.
 
 Progress loss leaves Assessed unchanged: an Investigation that was Assessed stays Assessed, whatever progress remains.
@@ -381,10 +381,10 @@ team.
 
 Every member of the Current team counts, whatever its Agent status. A member In transit toward the Investigation belongs to
 its Current team, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain
-Model, cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents, and
-does not work, so it has no Forced return; it cannot leave. An Investigation with at least one member In transit is
-therefore never Abandoned. An Investigation becomes Abandoned exactly when a Player action assigns elsewhere, or Forced
-returns send back, every member that remains in its Current team.
+Model, and does not work, so it has no Forced return; it leaves only when a Player action assigns it elsewhere, under
+[Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents. An Investigation becomes Abandoned
+exactly when a Player action assigns elsewhere, or Forced returns send back, every member that remains in its Current
+team.
 
 When an Investigation becomes Abandoned:
 
@@ -927,7 +927,7 @@ other Agent has exhaustion at most 30. Each call is made on its own from this st
 | `startInvestigation(locate_red_dawn_hq, [a1])`            | Rejected with the same error as the row above: hq is not discovered, because no Mission at a `raid_safehouse` Mission site is Won, so the rejection does not reveal that hq exists.                      |
 | `startInvestigation(locate_red_dawn_safehouse, [])`       | Rejected: `agents` is empty.                                                                                                                                                                             |
 | `startInvestigation(locate_red_dawn_safehouse, [a1, a1])` | Rejected: a1 is listed twice.                                                                                                                                                                            |
-| `startInvestigation(locate_red_dawn_safehouse, [a1, a2])` | Rejected as a whole: a2 is In transit. a1 stays on Contracting, At assignment.                                                                                                                           |
+| `startInvestigation(locate_red_dawn_safehouse, [a1, a2])` | Succeeds: a new Investigation with Current team {a1, a2}; a1 starts In transit, and a2, re-routed, is still In transit.                                                                                  |
 | `startInvestigation(locate_red_dawn_safehouse, [a3])`     | Rejected: a3 is on Recovery.                                                                                                                                                                             |
 | `startInvestigation(locate_red_dawn_safehouse, [a5])`     | Rejected: a5 is not Fit for work, because its exhaustion 31 is above 30.                                                                                                                                 |
 | `assignAgentsToInvestigation(i11, [a5])`                  | Rejected: a5 is not Fit for work.                                                                                                                                                                        |
