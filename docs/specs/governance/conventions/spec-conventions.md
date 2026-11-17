@@ -69,7 +69,8 @@ category. Neither is tied to authoring order.
 
 Every registered specification declares exactly one of these Families in metadata, and its Specification kind follows
 from that Family. With the exception of the root index, its file must be a direct child of the directory the following
-table names for its Family. The following table is exhaustive.
+table names for its Family, or of a subdirectory of that directory, one level deep, that groups specifications the
+Family's overview names together. The following table is exhaustive.
 
 | Specification kind | Family        | Directory                   | Ownership boundary                                                                                                | Builds on                                                    |
 | ------------------ | ------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |

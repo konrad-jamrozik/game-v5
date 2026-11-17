@@ -26,21 +26,34 @@ output.
 
 ## Graphical User Interface
 
-[Graphical User Interface](gui.md) answers _which screens does the graphical user interface need,
-and what does each show by default?_ It owns that guidance for the game's graphical user interface.
+[Graphical User Interface](gui.md) answers _which screens does the graphical user interface have,
+and what do they share?_ It lists the screens and owns the Progress bar and the confirmations and warnings that span
+them.
 
 ## Visual Design
 
 [Visual Design](visual-design.md) answers _what does the graphical user interface look like?_ It owns the visual
-direction, the Design tokens, and the styling of components and charts, illustrated by Artboards.
+direction, the Design tokens, and the styling of components and charts, and the Design canvas every Artboard is
+exported from.
+
+## Screens
+
+The `screens/` directory groups one specification per screen, panel, or dialog of the graphical user interface, so
+that each answers _what does this part show by default, and how is it laid out?_ next to its Artboard. The
+[Main Menu](screens/main-menu.md) is where the GUI opens, and the [Campaign Screen](screens/campaign-screen.md) is where
+a Campaign is played. The parts of the Campaign screen that need more than a line have their own: the
+[Situation Panel](screens/situation-panel.md) for the work waiting for the Player, the
+[Turn Summary](screens/turn-summary.md) for what an Advance turn did, and the [History Tab](screens/history-tab.md) for
+how the Campaign has gone.
 
 # How they relate
 
 Both interfaces present the same engine API and neither depends on the other. Each uses Engine Contract and Campaign
 Lifecycle from the Foundation family; the Command-Line Interface also uses Player API, and the Graphical User Interface
-uses Domain Model and the Mechanics specifications that detail the concepts its Campaign screen shows, and World History
-for the Turn report. Visual Design uses the Graphical User Interface: it styles the screens that
-the Graphical User Interface lists. Headless First in the Guidance family uses both, and Gameplay Dependency
+lists the screen specifications, which use Domain Model and the Mechanics specifications that detail the concepts each
+shows, and World History for the Turn report. The Situation Panel, Turn Summary, and History Tab are parts of the
+Campaign Screen. Every screen specification uses Visual Design for its look, and Visual Design names each screen
+specification as the place of its Artboard. Headless First in the Guidance family uses both, and Gameplay Dependency
 Direction uses the Graphical User Interface.
 
 <!-- generated:family-diagram:start -->

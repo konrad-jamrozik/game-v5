@@ -16,7 +16,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Foundation    | 15             |
 | Design             | Mechanics     | 11             |
 | Design             | Content       | 1              |
-| Design             | UI            | 3              |
+| Design             | UI            | 8              |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 3              |
 | Implementation     | Guidance      | 4              |
@@ -87,11 +87,16 @@ These informative views are derived from the registered Markdown specifications.
 
 ## UI
 
-| ID  | Document                                              | Owns                                                                                                                                         |
-| --- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| CLI | [Command-Line Interface](../specs/design/ui/cli.md)   | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.                     |
-| GUI | [Graphical User Interface](../specs/design/ui/gui.md) | Guidance on the screens of the graphical user interface, what each shows the Player by default, and the confirmations and warnings it gives. |
-| VIS | [Visual Design](../specs/design/ui/visual-design.md)  | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts.                   |
+| ID   | Document                                                         | Owns                                                                                                                                     |
+| ---- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| CLI  | [Command-Line Interface](../specs/design/ui/cli.md)              | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.                 |
+| CSCR | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md) | The regions of the Campaign screen of the graphical user interface and the tabs of its main area.                                        |
+| GUI  | [Graphical User Interface](../specs/design/ui/gui.md)            | Which screens the graphical user interface has, the Progress bar that several of them show, and the confirmations and warnings it gives. |
+| HTAB | [History Tab](../specs/design/ui/screens/history-tab.md)         | What the History tab of the Campaign screen shows and in which order.                                                                    |
+| MENU | [Main Menu](../specs/design/ui/screens/main-menu.md)             | What the Main menu screen of the graphical user interface shows and how it is laid out.                                                  |
+| SITP | [Situation Panel](../specs/design/ui/screens/situation-panel.md) | What the Situation panel of the Campaign screen shows.                                                                                   |
+| TSUM | [Turn Summary](../specs/design/ui/screens/turn-summary.md)       | When the Turn summary dialog of the Campaign screen appears and what it shows.                                                           |
+| VIS  | [Visual Design](../specs/design/ui/visual-design.md)             | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts.               |
 
 ## Autopilot AIs
 

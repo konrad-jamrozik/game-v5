@@ -371,10 +371,10 @@ function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void 
       const relativePath = specification.path.slice(parsed.specificationRoot.length + 1)
       const actualDirectory = directoryOf(relativePath)
       const expectedDirectory = specification.path === parsed.indexPath ? '' : familyDirectoryPath(specification.family)
-      if (
-        actualDirectory !== expectedDirectory ||
-        (specification.path === parsed.indexPath && specification.family !== INDEX_FAMILY)
-      ) {
+      const inFamilyDirectory =
+        actualDirectory === expectedDirectory ||
+        (specification.path !== parsed.indexPath && directoryOf(actualDirectory) === expectedDirectory)
+      if (!inFamilyDirectory || (specification.path === parsed.indexPath && specification.family !== INDEX_FAMILY)) {
         addDiagnostic(
           diagnostics,
           specification.path,
@@ -382,7 +382,7 @@ function validateMetadata(parsed: ParsedInput, diagnostics: Diagnostic[]): void 
           'SPEC110',
           specification.path === parsed.indexPath
             ? `The specification index must use Family ${INDEX_FAMILY} and remain at ${parsed.indexPath}.`
-            : `Family ${specification.family} specifications must be direct children of ${parsed.specificationRoot}/${expectedDirectory}.`,
+            : `Family ${specification.family} specifications must be direct children of ${parsed.specificationRoot}/${expectedDirectory} or of one of its subdirectories.`,
         )
       }
     }

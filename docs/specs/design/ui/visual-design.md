@@ -16,71 +16,62 @@ glance, as an operator reads a heads-up display. The direction is called Field H
 
 Every screen listed by the [Graphical User Interface](gui.md) is drawn with the same Design tokens and components, so a
 screen that has no Artboard yet still looks like the screens that have one. The rules here are stated as text and are
-complete on their own; Artboards illustrate them.
+complete on their own; Artboards illustrate them. What is particular to one screen or panel, and its Artboard, is in
+that screen's or panel's specification, e.g. [Main Menu](screens/main-menu.md).
 
 # Glossary
 
 These terms are specific to Visual Design.
 
-| Term          | Definition                                                                                                                                            |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Artboard      | A mockup of one screen of the graphical user interface, drawn on the Design canvas and kept in the repository as an image in `docs/images/artboards`. |
-| Design canvas | The private claude.ai design artifact on which the UI designer draws and compares Artboards.                                                          |
-| Design token  | A named visual value, e.g. a colour, a font, or a spacing step, that every screen uses in place of a literal value.                                   |
+| Term            | Definition                                                                                                                                                              |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Artboard        | A mockup of one screen or one panel of the graphical user interface, exported from the Design canvas and kept in the repository as an image in `docs/images/artboards`. |
+| Design canvas   | The claude.ai design artifact from which every Artboard is exported, under [Design canvas](#design-canvas).                                                             |
+| Design token    | A named visual value, e.g. a colour, a font, or a spacing step, that every screen uses in place of a literal value.                                                     |
+| Panel Artboard  | An Artboard of one panel or dialog on its own, without the screen around it, e.g. the History tab.                                                                      |
+| Screen Artboard | An Artboard of a whole screen, which shows where each region of the screen sits; the panels on it are sample content, each detailed by its own specification.           |
 
-# Visual direction
+# Design canvas
 
-The Design canvas holds three directions drawn for the same two screens, one per row: A · Situation Room, B · Ops
-Terminal, and C · Field HUD. Only C · Field HUD is chosen; rows A and B stay on the canvas as rejected alternatives and
-must not be followed.
+The Design canvas is the source of every Artboard: each image in `docs/images/artboards` is an export of one of its
+artboards, so an Artboard is changed on the canvas and never by editing its image. The canvas is a claude.ai Design
+artifact in the Game designer's private account, at <https://claude.ai/artifact/Fga63mUQ26RSxkyFybWmLc>, and only
+Claude agents working through that account edit it, with the Artifact tool. An Implementer is not expected to open it:
+the specifications and the Artboard images carry everything an Implementer needs.
 
-The Design canvas is at <https://claude.ai/artifact/Fga63mUQ26RSxkyFybWmLc>. It is private to the UI designer, so an
-Implementer is not expected to open it: this specification and the Artboard images below carry everything an
-Implementer needs. The UI designer edits Artboards on the Design canvas and re-exports the changed ones into
-`docs/images/artboards`.
+The canvas holds only the chosen Field HUD direction. Each of its artboards is one HTML file, `project/<name>.dc.html`,
+listed in the index `project/canvas.json`. A screen artboard embeds each panel artboard it shows with `<dc-import>`
+instead of copying it, so that a change to a panel appears in every screen artboard that shows it.
+
+To change an Artboard, edit its canvas artboard, then export the image of that artboard and of every screen artboard
+that embeds it, and save each image under the name the table below gives it. An image is exported by reading the
+artboard's published files with the Artifact tool and rendering them in a headless browser, e.g. Playwright, at the
+width of the artboard's frame in `project/canvas.json` and a device pixel ratio of 1, with each `<dc-import>` replaced
+by the body of the artboard it imports, and screenshotting the artboard's whole height. Commit the images with the
+specification change they illustrate.
+
+## Artboard sources
+
+Each Artboard image comes from exactly one canvas artboard and is shown in exactly one specification. This table is
+exhaustive.
+
+| Image                 | Kind   | Canvas artboard          | Shown in                                      |
+| --------------------- | ------ | ------------------------ | --------------------------------------------- |
+| `main-menu.png`       | Screen | `Main.dc.html`           | [Main Menu](screens/main-menu.md)             |
+| `campaign-screen.png` | Screen | `CampaignScreen.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
+| `history-tab.png`     | Panel  | `HistoryTab.dc.html`     | [History Tab](screens/history-tab.md)         |
+| `situation-panel.png` | Panel  | `SituationPanel.dc.html` | [Situation Panel](screens/situation-panel.md) |
+| `turn-summary.png`    | Panel  | `TurnSummary.dc.html`    | [Turn Summary](screens/turn-summary.md)       |
 
 # Reading Artboards
 
 An Artboard shows how the rules of this specification look when applied to one screen. It is a picture, not a contract:
 the rules are complete only as text, and when an Artboard and the text disagree, the text applies.
 
-What a screen shows and which operations it offers is owned by the [Graphical User Interface](gui.md) and the
-specifications it uses, never by an Artboard. An element that appears on an Artboard but that no specification
-requires must not be implemented. E.g., the following appear only on Artboards:
-
-- The Resume button in the header of each [Campaign](../foundation/core-concepts.md#campaign-and-session) on the [Main menu](../foundation/campaign-lifecycle.md#glossary).
-- The sample values, e.g. Turn 16, Money 625, and the [Agent](../mechanics/domain-model.md#agency-and-agents) IDs.
-- The labels, order, and grouping of the controls in the Campaign status bar, e.g. "Menu" instead of "Main menu", and
-  the missing keyboard-shortcut hints.
-- The layout inside each [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) card of the [Turn summary](gui.md#glossary), and the labels of its buttons, e.g. "Continue" and "Open
-  Turn report".
-
-## Main menu Artboard
-
-The Main menu shows the [Campaign saves](../foundation/engine-contract.md#persisted-data) grouped by Campaign on the left and the New Campaign and Settings panels stacked
-on the right.
-
-![Main menu Artboard in the Field HUD direction: Campaign saves grouped by Campaign on the left, with Load and Delete on each save and Delete campaign in each Campaign header; New Campaign and Settings panels on the right](../../../images/artboards/gui-main-menu.png)
-
-## Campaign History Artboard
-
-The Campaign screen shows the status bar across the top, the Agents panel on the left, and the tabbed panels on the
-right, here with the History tab selected.
-
-![Campaign screen Artboard in the Field HUD direction with the History tab selected: a status bar with Turn, Money, Funding, Agents, a segmented Panic meter and the Faction; the Agents panel on the left; a full-width Panic chart with its loss limit above three smaller charts and the Turn by Turn table](../../../images/artboards/gui-campaign-history.png)
-
-## Situation panel Artboard
-
-The [Situation panel](gui.md#situation-panel) heads the left column of the Campaign screen, above the Agents panel, with
-every one of its groups shown.
-
-![Campaign screen Artboard in the Field HUD direction with the Situation panel above the Agents panel: groups for two Active Investigations with progress bars, one with its required progress range marked and a preview of the next Turn's gain, one not yet assessed, a Lead to investigate with its required progress range, Active Mission sites with their Turns until expiration, free Training places, and Agents on Standby](../../../images/artboards/gui-situation-panel.png)
-
-## Turn summary Artboard
-
-The [Turn summary](gui.md#turn-summary) sits as a dialog over the dimmed Campaign screen after an Advance turn.
-
-![Turn summary Artboard in the Field HUD direction: a dialog over the dimmed Campaign screen listing a Won Mission with its Killed Agents, Agents sent to Recovery, and Consequences; a completed Investigation with a progress bar marking the progress before the last Advance turn, the gain that completed it, and a check where it completed; new Mission sites; an Expired Mission site; and a discovered Lead, with Open Turn report and Continue buttons](../../../images/artboards/gui-turn-summary.png)
+What a screen shows and which operations it offers is owned by the [Graphical User Interface](gui.md), the
+specification of that screen or panel, and the specifications they use, never by an Artboard. An element that appears
+on an Artboard but that no specification requires must not be implemented; each specification that shows an Artboard
+lists such elements of it, e.g. the Resume button under [Main Menu](screens/main-menu.md).
 
 # Design tokens
 
@@ -92,26 +83,26 @@ interface has a dark theme only; the light theme is a TODO.
 Each colour has one role, so that the same colour always means the same thing across screens. This table is
 exhaustive.
 
-| Token          | Value                    | Role                                                                                                                                                                         |
-| -------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Background     | `#0D0D0B`                | The page behind all panels, and the fill of inputs.                                                                                                                          |
-| Surface        | `#151512`                | Panels, cards, and chart frames.                                                                                                                                             |
-| Raised         | `#22211C`                | Neutral buttons, the selected tab, and row dividers inside panels.                                                                                                           |
-| Divider        | `#2B2A24`                | Dividers between panel sections, and empty meter segments.                                                                                                                   |
-| Border         | `#3A382F`                | Borders of controls, table header rules, chart baselines, and the top edge of a plain card.                                                                                  |
-| Text           | `#E8E4D8`                | Primary text and the lines of neutral chart series.                                                                                                                          |
-| Text secondary | `#B8B3A6`                | Supporting prose, e.g. the game description on the Main menu.                                                                                                                |
-| Text muted     | `#9C978A`                | Labels, hints, and idle states, e.g. an Agent on standby.                                                                                                                    |
-| Axis           | `#8F8A7D`                | Chart axis labels.                                                                                                                                                           |
-| Accent         | `#FF7A1A`                | The primary action, the selected-tab marker, the current Campaign's card edge, and [Panic](../mechanics/domain-model.md#campaign-standing).                                  |
-| Accent dim     | `#7A4A22`                | A partly filled meter segment.                                                                                                                                               |
-| Accent text    | `#FF8A33`                | Text that needs attention, e.g. a tab count, a low health value, or an expired [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). |
-| On accent      | `#1A0B00`                | Text on an Accent fill.                                                                                                                                                      |
-| Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or an Agent on an assignment.               |
-| Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                             |
-| Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                          |
-| Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                               |
-| Scrim          | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog.                                                                                                                              |
+| Token          | Value                    | Role                                                                                                                                                                                               |
+| -------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Background     | `#0D0D0B`                | The page behind all panels, and the fill of inputs.                                                                                                                                                |
+| Surface        | `#151512`                | Panels, cards, and chart frames.                                                                                                                                                                   |
+| Raised         | `#22211C`                | Neutral buttons, the selected tab, and row dividers inside panels.                                                                                                                                 |
+| Divider        | `#2B2A24`                | Dividers between panel sections, and empty meter segments.                                                                                                                                         |
+| Border         | `#3A382F`                | Borders of controls, table header rules, chart baselines, and the top edge of a plain card.                                                                                                        |
+| Text           | `#E8E4D8`                | Primary text and the lines of neutral chart series.                                                                                                                                                |
+| Text secondary | `#B8B3A6`                | Supporting prose, e.g. the game description on the Main menu.                                                                                                                                      |
+| Text muted     | `#9C978A`                | Labels, hints, and idle states, e.g. an Agent on standby.                                                                                                                                          |
+| Axis           | `#8F8A7D`                | Chart axis labels.                                                                                                                                                                                 |
+| Accent         | `#FF7A1A`                | The primary action, the selected-tab marker, the current [Campaign](../foundation/core-concepts.md#campaign-and-session)'s card edge, and [Panic](../mechanics/domain-model.md#campaign-standing). |
+| Accent dim     | `#7A4A22`                | A partly filled meter segment.                                                                                                                                                                     |
+| Accent text    | `#FF8A33`                | Text that needs attention, e.g. a tab count, a low health value, or an expired [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).                       |
+| On accent      | `#1A0B00`                | Text on an Accent fill.                                                                                                                                                                            |
+| Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or an Agent on an assignment.                                     |
+| Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                                                   |
+| Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                                                |
+| Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                                                     |
+| Scrim          | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog.                                                                                                                                                    |
 
 ## Typography
 
@@ -120,7 +111,7 @@ monospaced font carries every number and identifier. All three are Google Fonts.
 
 | Style           | Font             | Weight | Size  | Case and spacing                | Use                                                                                             |
 | --------------- | ---------------- | ------ | ----- | ------------------------------- | ----------------------------------------------------------------------------------------------- |
-| Screen title    | Barlow Condensed | 700    | 56 px | Uppercase, 0.04 em              | The game title on the Main menu.                                                                |
+| Screen title    | Barlow Condensed | 700    | 56 px | Uppercase, 0.04 em              | The game title on the [Main menu](../foundation/campaign-lifecycle.md#glossary).                |
 | Section heading | Barlow Condensed | 700    | 22 px | Uppercase, 0.08 em              | The heading of a Main menu column.                                                              |
 | Panel heading   | Barlow Condensed | 700    | 18 px | Uppercase, 0.08 em              | The heading of a panel, a table, or a headline chart.                                           |
 | Label           | Barlow Condensed | 600    | 13 px | Uppercase, 0.12 em, Text muted  | Field labels, table headers, and status bar labels.                                             |
@@ -171,21 +162,19 @@ aligns its value to the right.
 
 A panel groups what belongs together on a Surface fill with no outline. A card is a panel for one item of a list, e.g.
 one Campaign on the Main menu; it has a 2 px top edge in Border, or in Accent when it is the item the Player most likely
-wants, e.g. the Campaign of the most recent Campaign save.
+wants, e.g. the Campaign of the most recent [Campaign save](../foundation/engine-contract.md#persisted-data).
 
-A panel that lists groups, e.g. the Situation panel, heads each group with a Label and its
-count in the Figure style and Accent text, and separates groups with Divider rules. A [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that expires within two [Turns](../foundation/engine-contract.md#player-actions-and-turns) shows its Turns until expiration
-in Accent text. The [Situation panel](gui.md#glossary) heads the left column of the Campaign screen, above the Agents panel, and is
-as wide as it.
+A panel that lists groups, e.g. the panel of the Campaign screen that lists the work waiting for the Player, heads
+each group with a Label and its count in the Figure style and Accent text, and separates groups with Divider rules. A [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that expires within two [Turns](../foundation/engine-contract.md#player-actions-and-turns) shows its Turns until expiration
+in Accent text.
 
 ## Dialogs
 
-A dialog interrupts the screen only for what the Player must see before going on, e.g. the
-[Turn summary](gui.md#turn-summary). It sits centred over a Scrim on a Surface fill with a 2 px Accent top edge, at most
+A dialog interrupts the screen only for what the Player must see before going on, e.g. what an Advance turn did. It
+sits centred over a Scrim on a Surface fill with a 2 px Accent top edge, at most
 640 px wide, with its title in the Section heading style and its buttons in one row at the bottom right under
 [Buttons](#buttons); the action that dismisses it is primary. A dialog taller than the window scrolls inside, keeping
-its title and buttons in view. In the Turn summary, each Mission is a card, with its outcome in Positive for Won or
-Danger for Lost, its [Killed](../mechanics/agents-spec.md#agent-statuses) Agents in Danger, and its Agents sent to [Recovery](../mechanics/agents-spec.md#assignments) in Accent text.
+its title and buttons in view.
 
 ## Tables
 
@@ -231,7 +220,7 @@ completion nears instead of switching hue. It is 8 px tall in a panel row and 10
   Positive, e.g. "+1.74 / turn".
 - **Unscaled bar:** the bar of a [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that is not an [Assessed Lead](../mechanics/investigations.md#glossary) has a dashed track of Divider dashes 6 px long with
   4 px gaps, and an Accent dim stub 12% of its width.
-- **Completed Investigation:** in the Turn summary, the gain of the last Advance turn is a Positive segment labelled
+- **Completed Investigation:** in a dialog, the gain of the last Advance turn is a Positive segment labelled
   with that gain above it in Positive, and the point where the Investigation completed carries a check in a Positive
   circle 20 px wide, with the check in Background and the final [Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) under it in Positive.
 
@@ -246,15 +235,8 @@ with its title on the left and its current value on the right in the Headline fi
 - A series is a 2 px line in Text colour with its latest point marked by a dot.
 - At a window 1280 px wide, a chart's plot area is at least 120 px tall, and at most three charts sit side by side.
 
-The History tab leads with Panic, because Panic is how a Campaign is lost. The Panic chart spans the full width of the
-tab above the other charts, is at least 180 px tall at a window 1280 px wide, and draws its series in Accent with a 14%
-Accent fill below the line. Its current value uses a 30 px Figure style in Accent text. The [Panic limit](../mechanics/panic-and-endings.md#glossary) is a 1.5 px
-Danger line at the limit value with a Limit band below it, labelled "LOSS AT" and the limit, e.g. "LOSS AT 100%".
-
 # TODOs
 
 - TODO: Define the light theme's Design tokens under [Colours](#colours), since the Settings panel lets the Player
   choose a light theme, including the value of every colour token and the contrast each text colour keeps against its
   fill.
-- TODO (later): Artboards for the [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), [Agency](../mechanics/domain-model.md#agency-and-agents), and [Turn report](../foundation/world-history.md#glossary) tabs, under
-  [Reading Artboards](#reading-artboards).

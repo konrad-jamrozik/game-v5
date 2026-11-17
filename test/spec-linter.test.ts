@@ -430,6 +430,20 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toEqual(['SPEC112'])
   })
 
+  test('accepts a specification one subdirectory below its Family directory', () => {
+    const files = pairCorpus().map((file) =>
+      file.path.endsWith('/beta.md') ? { ...file, path: 'docs/specs/design/foundation/screens/beta.md' } : file,
+    )
+    expect(diagnosticCodes(files)).not.toContain('SPEC110')
+  })
+
+  test('rejects a specification two subdirectories below its Family directory', () => {
+    const files = pairCorpus().map((file) =>
+      file.path.endsWith('/beta.md') ? { ...file, path: 'docs/specs/design/foundation/screens/deep/beta.md' } : file,
+    )
+    expect(diagnosticCodes(files)).toContain('SPEC110')
+  })
+
   test('requires Overview', () => {
     const files = mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', '# Overview', '# Introduction')
     expect(diagnosticCodes(files)).toContain('SPEC206')

@@ -76,7 +76,8 @@ boundaries between them sit where they do, linking each specification instead of
 
 A Family overview begins with the H1 `About the <Family> family` and contains the H1 sections What this family is for,
 Documents, How they relate, and Why these boundaries, in that order; further sections, e.g. Reading order, may follow.
-It links every registered specification of its Family. The How they relate section contains one pair of
+It links every registered specification of its Family, and when the Family keeps specifications in a subdirectory, its
+Documents section says what that subdirectory groups. The How they relate section contains one pair of
 `<!-- generated:family-diagram:start -->` and `<!-- generated:family-diagram:end -->` markers. `npm run docs:generate`
 replaces the content between them with diagrams of the [References](artifact-relationships.md#references) of the Family's specifications, both within the Family and with
 other Families, so the diagrams are never edited by hand. The prose outside the markers is maintained by hand: update it
