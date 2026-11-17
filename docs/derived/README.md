@@ -20,7 +20,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 3              |
 | Implementation     | Guidance      | 4              |
-| Implementation     | Recipes       | 2              |
+| Implementation     | Recipes       | 3              |
 
 ## Conventions
 
@@ -118,7 +118,8 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Recipes
 
-| ID      | Document                                                                              | Owns                                                                                                                       |
-| ------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| GHPAGES | [GitHub Pages Deployment](../specs/implementation/recipes/github-pages-deployment.md) | Guidance on publishing an Implementation to a public GitHub repository that checks and deploys it to GitHub Pages.         |
-| UPDATES | [Specification Updates](../specs/implementation/recipes/specification-updates.md)     | Non-behavioural guidance for bringing an Implementation from its Specification baseline to a later Specification revision. |
+| ID      | Document                                                                              | Owns                                                                                                                             |
+| ------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| GHPAGES | [GitHub Pages Deployment](../specs/implementation/recipes/github-pages-deployment.md) | Guidance on publishing an Implementation to a public GitHub repository that checks and deploys it to GitHub Pages.               |
+| GLOBE   | [Globe Integration](../specs/implementation/recipes/globe-integration.md)             | Guidance on carrying the reference globe of the Spec repo into an Implementation and showing it in its graphical user interface. |
+| UPDATES | [Specification Updates](../specs/implementation/recipes/specification-updates.md)     | Non-behavioural guidance for bringing an Implementation from its Specification baseline to a later Specification revision.       |

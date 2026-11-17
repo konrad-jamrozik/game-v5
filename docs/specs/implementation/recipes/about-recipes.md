@@ -22,11 +22,20 @@ files through the Specification map instead of rebuilding the implementation.
 Engine designer asks for it?_ It takes an implementation whose Game build a browser runs from static files to a public
 GitHub repository, whose CI workflow checks every push and deploys the passing ones to GitHub Pages.
 
+## Globe Integration
+
+[Globe Integration](globe-integration.md) answers _how does an implementation show the rotating Earth that the Spec
+repo keeps?_ It has the implementer copy the reference globe's maps and scene into the Implementation repo and mount
+them as a decoration that reads no game state and costs nothing until the Player opens it.
+
 # How they relate
 
-Both Recipes specifications carry out a task on files that the Mandatory family requires. GitHub Pages Deployment uses
-Implementation Placement, because the published repository is the Implementation repo. Specification Updates uses
-all three Mandatory specifications, because an update reads the tracking files and settles feedback entries.
+Every Recipes specification carries out a task on files that the Mandatory family constrains. GitHub Pages Deployment
+uses Implementation Placement, because the published repository is the Implementation repo. Specification Updates uses
+all three Mandatory specifications, because an update reads the tracking files and settles feedback entries. Globe
+Integration uses Implementation Placement and Specification Tracking, because the globe is copied into the
+Implementation repo and its files are recorded there; it also uses the other two Recipes specifications, for keeping
+the copy current and for serving the maps once published.
 
 <!-- generated:family-diagram:start -->
 
