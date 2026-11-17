@@ -55,7 +55,9 @@ after loading a [Campaign save](../../foundation/engine-contract.md#persisted-da
 
 # Mission cards
 
-Each Mission is a card, so that the outcome of a Mission reads apart from the lists around it. Its outcome is in
+Each Mission is a card, so that the outcome of a Mission reads apart from the lists around it. The card is an item that
+takes more than one line, under [Panels and cards](../visual-design.md#panels-and-cards) in Visual Design: its first line
+holds its Mission site's name, kind, and target Faction, with the outcome as its value. Its outcome is in
 Positive for Won or Danger for Lost, its [Killed](../../mechanics/agents-spec.md#agent-statuses) Agents are in Danger, and its Agents sent to [Recovery](../../mechanics/agents-spec.md#assignments) are in Accent
 text.
 
@@ -66,5 +68,5 @@ text.
 The following appear only on the [Artboard](../visual-design.md#glossary) and must not be implemented, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
-- The layout inside each Mission card, and the labels of the buttons, e.g. "Continue" and "Open Turn report".
+- The layout inside each Mission card below its first line, and the labels of the buttons, e.g. "Continue" and "Open Turn report".
 - The sample values, e.g. the Mission site names and the Agent IDs.

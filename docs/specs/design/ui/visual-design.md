@@ -143,6 +143,8 @@ Even spacing is what makes the screens read as orderly, so spacing follows fixed
 - A panel has 18 px of inner padding; a table cell has 8 px vertical and 10 px horizontal padding.
 - The Main menu has at least 24 px of outer padding, and the Main menu content is at most 1216 px wide and centred.
 - Controls have a 2 px corner radius; panels and cards have square corners and no outline.
+- Two pieces of text on one line never touch: they are at least 8 px apart, or joined by a " · " separator, e.g. a
+  Mission site's name, kind, and Faction, and a value right-aligned after them.
 
 # Components
 
@@ -203,8 +205,11 @@ A panel that lists groups, e.g. the panel of the Campaign screen that lists the 
 each group with a Label and its count in the Figure style and Accent text, and separates groups with Divider rules.
 In a panel whose items take one line each, each item is a row 28 px tall, separated by Raised dividers: its name in Body on the left, and
 its value, e.g. a [Completion estimate](gui.md#glossary), right-aligned in the Figure style and Text secondary, with a
-[Progress circle](gui.md#glossary) between them. A [Completion estimate](gui.md#glossary) whose earliest Advance turn is the next one is in
-Accent text, and "stalled" and "ETA ?" are in Text muted. A [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that expires within two [Turns](../foundation/engine-contract.md#player-actions-and-turns) shows its Turns until expiration
+[Progress circle](gui.md#glossary) between them. In a panel whose items take more than one line, e.g. the
+[Turn Summary](screens/turn-summary.md), an item's value, e.g. the [Turns](../foundation/engine-contract.md#player-actions-and-turns) until expiration of a new [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), is
+likewise right-aligned on the item's first line, in the Figure style when it is a number, and the item's further lines
+hold its details. A [Completion estimate](gui.md#glossary) whose earliest Advance turn is the next one is in
+Accent text, and "in transit", "stalled", and "ETA ?" are in Text muted. A [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that expires within two [Turns](../foundation/engine-contract.md#player-actions-and-turns) shows its Turns until expiration
 in Accent text.
 
 ## Dialogs

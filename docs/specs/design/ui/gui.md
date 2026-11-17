@@ -110,12 +110,19 @@ drawn depends on what the Player knows:
 
 A Completion estimate tells the Player roughly when an Active Investigation will complete, so that a plan can be made
 without reading the Progress bar. It is worked out by the GUI from [Player-visible information](../foundation/engine-contract.md#api-surfaces) only: the Investigation
-progress p, the projected progress gain g, under [Projected progress gain](../mechanics/investigations.md#projected-progress-gain) in Investigations, and the
-Lead's [Required progress range](../mechanics/investigations.md#glossary) from R, its Required progress, to M, its greatest value. It is not a [Derived value](../foundation/core-concepts.md#value-classification)
-of the engine, and it assumes that g stays as it is. It is written with "T" for Advance turns:
+progress p, the projected progress gain g, under [Projected progress gain](../mechanics/investigations.md#projected-progress-gain) in Investigations, the
+Lead's [Required progress range](../mechanics/investigations.md#glossary) from R, its Required progress, to M, its greatest value, and the
+[Agent status](../mechanics/agents-spec.md#agent-statuses) of each member of the [Current team](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). It is not a [Derived value](../foundation/core-concepts.md#value-classification)
+of the engine, and it assumes that g stays as it is. It is written with "T" for Advance turns, by the first of the
+following cases that applies:
 
-- **Assessed Lead and g above 0:** the Investigation completes at the earliest after a = max(1, ⌈(R − p) / g⌉) and at the
-  latest after b = ⌈(M − p) / g⌉ Advance turns, written "ETA a–b T", or "ETA a T" when a equals b, e.g. "ETA 3–5 T".
-  Once p has reached R, it is written "ETA ≤ b T", because the Investigation may complete in any Advance turn.
-- **g is 0,** e.g. while every member of the [Current team](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is [In transit](../mechanics/domain-model.md#agency-and-agents): "stalled".
-- **Lead that is not an Assessed Lead:** "ETA ?", because R and M are hidden.
+1. **g is 0 and a member of the Current team is [In transit](../mechanics/domain-model.md#agency-and-agents):** "in transit", e.g. just after the Investigation
+   started, because the Investigation gains progress once those members have arrived, under
+   [Transit rule](../mechanics/agents-spec.md#transit-rule) in Agents.
+2. **g is 0 otherwise,** e.g. when every member is At assignment with an [Effective skill](../mechanics/agents-spec.md#effective-skill) of 0: "stalled", because
+   the Investigation gains no progress until the Player changes its Current team.
+3. **Lead that is not an Assessed Lead:** "ETA ?", because R and M are hidden.
+4. **Assessed Lead and g above 0:** the Investigation completes at the earliest after a = max(1, ⌈(R − p) / g⌉) and at
+   the latest after b = ⌈(M − p) / g⌉ Advance turns, written "ETA a–b T", or "ETA a T" when a equals b, e.g.
+   "ETA 3–5 T". Once p has reached R, it is written "ETA ≤ b T", because the Investigation may complete in any Advance
+   turn.
