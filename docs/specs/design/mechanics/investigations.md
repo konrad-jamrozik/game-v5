@@ -1,12 +1,12 @@
 # Investigations
 
-| Metadata    | Value                                                                                                                                                                                                                                                                             |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | INVSTG                                                                                                                                                                                                                                                                            |
-| Family      | Mechanics                                                                                                                                                                                                                                                                         |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                                                                                       |
-| Owns        | What an Investigation has, the InvestigationArchetype and InvestigationParameters GDRs, the Investigation lifecycle, the startInvestigation and assignAgentsToInvestigation actions, leaving, Progress loss, and abandonment, Investigation progress, Assessment, and completion. |
-| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                                                                                        |
+| Metadata    | Value                                                                                                                                                                                                                                                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec ID     | INVSTG                                                                                                                                                                                                                                                                                                              |
+| Family      | Mechanics                                                                                                                                                                                                                                                                                                           |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                                                                                                                         |
+| Owns        | What an Investigation has, the InvestigationArchetype and InvestigationParameters GDRs, the Investigation lifecycle, the startInvestigation and assignAgentsToInvestigation actions, leaving, Progress loss, and abandonment, Investigation progress, Assessment, completion, and the Team progress estimate query. |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                                                                                                                          |
 
 # Overview
 
@@ -573,6 +573,27 @@ or Abandoned Investigation has no projected progress gain.
 No Derived value states whether the next Advance turn completes an Investigation, because that depends on the hidden
 Actual required progress.
 
+# Team progress estimate
+
+**Proposed rule:** The [Player API](../foundation/engine-contract.md#api-surfaces) query `estimateTeamProgressGain(agents)` returns, for a set of Agents given by their
+Instance IDs, the gain that [Progress gain](#progress-gain) would add if exactly those Agents were the working members
+of an Investigation: the formula of Progress gain with n the number of distinct Agents in the set and S the sum of
+their current [Effective skill](agents-spec.md#effective-skill). An empty set gives 0. The value is a whole number of
+hundredths of a progress point. The query reads no Investigation and changes no Campaign state, so it answers for a
+team that does not exist yet, e.g. the Agents the player is about to start an Investigation with, or an Active
+Investigation's Current team together with the Agents the player may add to it. It rejects a set that names an Instance
+ID that is not of a [Serving](agents-spec.md#agent-statuses) Agent.
+
+The estimate takes every Agent in the set as working, whatever its Agent status and Assignment, so it leaves out the
+Advance turn an Agent spends [In transit](agents-spec.md#agent-statuses) before it works, under
+[Transit rule](agents-spec.md#transit-rule), and the exhaustion that work adds, under
+[Work exhaustion](agents-spec.md#work-exhaustion). It is therefore the gain per Advance turn once the team works, not
+the gain of the next Advance turn: for an Active Investigation whose members are all At assignment, the estimate of its
+Current team equals its projected progress gain, under [Projected progress gain](#projected-progress-gain), and
+otherwise it can be greater. E.g., with the Bootstrap `team_efficiency_exponent` 0.8, two Agents of effective skill
+100 on Standby give 174, as in the table under Progress gain, while the Investigation they start has a projected
+progress gain of 0 until they arrive.
+
 # Turn report
 
 **Proposed rule:** The Turn report of an Advance turn holds the Investigations completed in it: every Investigation
@@ -601,6 +622,7 @@ table states, for every Investigation whatever its lifecycle state. The table is
 | An Investigation's Actual required progress                                                                                                                                                                                                                                     | No                                            |
 | An Investigation's Current team, with each member's Agent status, which [Player-visible information](agents-spec.md#player-visible-information) in Agents makes visible                                                                                                         | Yes                                           |
 | An Active Investigation's projected progress gain                                                                                                                                                                                                                               | Yes                                           |
+| The Team progress estimate of any set of Serving Agents, under [Team progress estimate](#team-progress-estimate)                                                                                                                                                                | Yes                                           |
 | The Investigations completed in an Advance turn, each with the gain of its last Progress gain, under [Turn report](#turn-report)                                                                                                                                                | Yes                                           |
 | Every property of InvestigationParameters                                                                                                                                                                                                                                       | Yes                                           |
 | For each discovered Lead, whether it is an Assessed Lead                                                                                                                                                                                                                        | Yes                                           |

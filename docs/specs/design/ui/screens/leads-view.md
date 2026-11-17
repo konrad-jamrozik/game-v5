@@ -56,15 +56,27 @@ Active Investigation.
   [Standby](../../mechanics/agents-spec.md#assignments) through `assignAgents`, after the confirmation under
   [Confirming interrupted Assignments](../gui.md#confirming-interrupted-assignments) in the GUI.
 - **Agents to add:** the [Agents](../../mechanics/domain-model.md#agency-and-agents) that can be assigned, under [Agents that can be assigned](../../mechanics/agents-spec.md#agents-that-can-be-assigned) in Agents, and are [Fit for work](../../mechanics/agents-spec.md#assignments) and are not on this
-  Investigation, one row each with a checkbox, its Instance ID, its [Assignment](../../mechanics/domain-model.md#agency-and-agents), and its effective skill.
+  Investigation, in a table under [Tables](../visual-design.md#tables) in Visual Design, one row each with a checkbox
+  and these columns, each under its header, in this order: Instance ID, [Assignment](../../mechanics/domain-model.md#agency-and-agents), effective skill, [base skill](../../mechanics/agents-spec.md#combatant-attributes), and
+  [exhaustion](../../mechanics/agents-spec.md#combatant-attributes), coloured under [Agent condition](../visual-design.md#agent-condition) in Visual Design. Its default order
+  puts first the Agents whose Assignment is Standby or [Training](../../mechanics/agents-spec.md#assignments), which join without interrupting any work, and then
+  the rest, i.e. those on [Contracting](../../mechanics/agents-spec.md#assignments) or another Investigation; within each group by effective skill, highest first,
+  and then by Instance ID. Pressing a column header sorts it by that column, under Tables.
+- **Team progress estimate:** while at least one [Agent](../../mechanics/domain-model.md#agency-and-agents) is checked, the gain per Advance turn of the team the primary
+  button would make, under [Team progress estimate](../../mechanics/investigations.md#team-progress-estimate) in
+  Investigations, in [progress points](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), e.g. "Est. +3.62 / turn": for Start, of the checked Agents; for Assign, of the
+  Current team together with the checked Agents. It is an estimate, because it takes every Agent's effective skill as
+  it is now and counts no Advance turn In transit.
 - **Primary button:** for a Lead to investigate, Start makes one `startInvestigation` [Player action](../../foundation/engine-contract.md#player-actions-and-turns) with the checked
   Agents, under [Starting an Investigation](../../mechanics/investigations.md#starting-an-investigation) in Investigations; for an Active Investigation, Assign makes one
   `assignAgentsToInvestigation`, under [Assigning Agents to an Investigation](../../mechanics/investigations.md#assigning-agents-to-an-investigation) in Investigations. Either
   asks for the confirmation under Confirming interrupted Assignments when it takes an [Agent](../../mechanics/domain-model.md#agency-and-agents) off [Contracting](../../mechanics/agents-spec.md#assignments) or another
-  Investigation, and is disabled while no Agent is checked.
+  Investigation, naming each such Agent, so the Player never takes an Agent off its work unwarned, and is disabled
+  while no Agent is checked.
 
-The pane shows no gain for the checked Agents, because the engine returns a projected progress gain only for an
-Active Investigation's Current team; the gain is shown in the middle pane once the Player action is made.
+The Team progress estimate is the engine's, not the GUI's, under
+[API hierarchy](../../foundation/engine-contract.md#api-hierarchy) in Engine Contract. Once the Player action is made,
+the middle pane shows the Investigation's projected progress gain, which counts only the members [At assignment](../../mechanics/domain-model.md#agency-and-agents).
 
 # Artboard
 
