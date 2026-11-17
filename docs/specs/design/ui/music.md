@@ -37,12 +37,18 @@ Player makes once applies in every later [Session](../foundation/core-concepts.m
 # Soundtrack
 
 The Soundtrack is authored as audio files, so that a composer adds a Track by adding a file and nothing else. Each
-Track is one file directly in the `assets/music/` directory at the repository root, in the Ogg Opus format with the
-extension `.opus`. The Soundtrack is every such file, and the Game build supplies every Track unchanged.
+Track is one audio file directly in the `assets/music/` directory at the repository root, in one of the following
+formats; the list is complete:
 
-The file name of a Track is its Track title with each space replaced by an underscore, so the Track title is the file
-name without its extension and with each underscore replaced by a space. E.g., the file `Black_Orbit_Watch.opus` is
-the Track titled "Black Orbit Watch". No two Tracks have the same Track title.
+- Ogg Opus, with the extension `.opus`, the preferred format because it is the smallest at the same quality.
+- MP3, with the extension `.mp3`, for music whose source cannot export Ogg Opus.
+
+The Soundtrack is every such file, and the Game build supplies every Track unchanged, in its own format. Any other file
+in the directory, e.g. a README, is not a Track.
+
+The Track title is the file name without its extension, with each underscore replaced by a space, so a file name may
+write its spaces either way. E.g., the file `Black_Orbit_Watch.opus` is the Track titled "Black Orbit Watch", and the
+file `v03AI UFO 1.mp3` is the Track titled "v03AI UFO 1". No two Tracks have the same Track title.
 
 # Music settings
 
@@ -167,7 +173,8 @@ These examples use a Soundtrack of three Tracks, `Depth_Signal.opus`, `Silent_Co
 `Unseen_Sector.opus`, each 120 seconds long.
 
 - **Track title:** The Track of `Silent_Contact.opus` is titled "Silent Contact", and the Music control shows
-  "♪ Silent Contact" while it plays ([Soundtrack](#soundtrack)).
+  "♪ Silent Contact" while it plays. A file `Silent Contact.mp3` would have the same Track title, so it cannot be
+  added beside it ([Soundtrack](#soundtrack)).
 - **Rounds:** With the round order of the first round fixed to Silent Contact, Unseen Sector, Depth Signal, the Session
   plays those three Tracks in that order. The second round's order is one of the four orders that do not start with
   Depth Signal, e.g. Unseen Sector, Depth Signal, Silent Contact ([Playing order](#playing-order)).
