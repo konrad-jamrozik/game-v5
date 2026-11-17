@@ -11,13 +11,18 @@ Use this skill when the user asks to back-propagate what an Implementation learn
 Building or updating an Implementation records, as feedback, the defects it met in the specifications, under
 [Implementation Feedback](../../../docs/specs/implementation/mandatory/implementation-feedback.md). Only the specifications are
 durable: a fix that stays in an Implementation is lost when the Implementation is rebuilt. This skill moves each fix
-into the specifications. The user is the Engine designer and decides every outcome; propose, never settle a design
-question silently.
+into the specifications.
+
+The user hands the outcomes to you: decide each problem yourself with the outcome you would recommend, and carry the
+result through to `main` without waiting for approval. The user is the Engine designer and reviews your decisions
+afterwards, from the report, so never settle a design question silently: record every decision. Escalate only as
+[Spec repo changes in a worktree](../spec-repo-worktree.md) directs, i.e. for a far-reaching change or a conflict with no
+natural resolution. Never run the `update-implementation` skill unless the user explicitly asks for it.
 
 ## Workflow
 
-Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its plan and local diff
-gate, and its handling of push conflicts. Steps 0, 6, and 7 below name where each applies.
+Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its self-review and
+escalation, and its handling of push conflicts. Steps 0, 6, and 7 below name where each applies.
 
 0. Create the Spec repo worktree, under step 1 of Spec repo changes in a worktree, before reading any specification.
 1. Identify the Implementation repo: the sibling of the Spec repo's main local clone that the user names, or the only
@@ -33,29 +38,34 @@ gate, and its handling of push conflicts. Steps 0, 6, and 7 below name where eac
    the Design specifications that falls short, under the table in
    [Designer feedback](../../../docs/specs/governance/process/development-loop.md#designer-feedback), e.g. a problem
    met in a Mechanics rule may be fixed by a missing or wrong GDR in Content, or by a UI or visual design gap, with
-   the rule left as it is. Then propose one outcome with a recommendation:
+   the rule left as it is. Then choose one outcome, the one you would recommend:
    - **Fix the specifications:** remove a Conflict or Duplicate, or answer an Implicit gap or Needed TODO.
    - **Adopt the Implementation decision:** write the option the Implementation chose into the specifications, so a
      rebuilt Implementation chooses it too.
    - **Make it an Implementer's choice:** state at the rule that the matter is the Implementer's choice, under
      [Kinds of unspecified content](../../../docs/specs/governance/conventions/spec-conventions.md#kinds-of-unspecified-content),
      so it stops being a problem.
-   - **Decline:** leave the specifications as they are. Warn that nothing durable records a decline, so a rebuilt
-     Implementation may record the same problem again.
-5. Present the proposals to the user in small groups and wait for each decision. Group related problems, e.g. two
-   entries about one formula, so one decision covers them.
-6. When every problem has a decision, make the accepted specification changes in the worktree under
-   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), then publish the plan
-   Artifact covering every accepted specification change and every decline together with the local diff, and wait for
-   approval, under step 3 of Spec repo changes in a worktree. Then commit, push, release the worktree, and update the
-   main local clone, under steps 4 to 6 of Spec repo changes in a worktree.
+   - **Decline:** leave the specifications as they are. Nothing durable records a decline, so a rebuilt
+     Implementation may record the same problem again; prefer another outcome when one fits.
+5. Record each decision with its alternatives and reason for the report. Group related problems, e.g. two entries
+   about one formula, so one decision covers them.
+6. When every problem has a decision, make the specification changes in the worktree under
+   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md) and self-review them,
+   under step 3 of Spec repo changes in a worktree. Then commit, push, resolving any conflicts, release the worktree,
+   and update the main local clone, under steps 4 to 6 of Spec repo changes in a worktree.
 7. After the worktree is released, for each declined problem, set its Resolution in the Implementation's feedback file
-   to Declined, naming the Spec repo's reviewed commit by its full hash and the user's reason, and commit that in the
+   to Declined, naming the Spec repo's reviewed commit by its full hash and the reason, and commit that in the
    Implementation repo without adding a Git remote. Leave fixed problems Open: the next run of the `update-implementation` skill applies the
    change to the code and sets them Resolved.
 
 ## Report
 
-Tell the user, for each reviewed problem, its identifier and the outcome, with the specification commit that carries
-it, and whether the main local clone of the Spec repo was updated. List the problems set aside as already fixed, and suggest running the `update-implementation` skill to apply the
-new specification changes to the Implementation.
+Tell the user:
+
+- for each reviewed problem, its identifier and the outcome, with the commit diff link that carries it; the problems set
+  aside as already fixed; how any conflicts were resolved; and whether the main local clone of the Spec repo was
+  updated;
+- **Decisions to review:** every decision made on the user's behalf, each with the outcome chosen, the alternatives,
+  and why, most consequential first, declines included;
+- that the next step is to run the `update-implementation` skill, which applies the new specification changes to the
+  Implementation and sets the fixed problems Resolved.

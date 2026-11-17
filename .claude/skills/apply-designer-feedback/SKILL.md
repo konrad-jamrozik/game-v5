@@ -12,10 +12,16 @@ The Implementation is disposable, so the fix must start from the specifications.
 owned by [Designer feedback](../../../docs/specs/governance/process/development-loop.md#designer-feedback) in Development Loop;
 follow it, and let it win when this skill disagrees.
 
+The user hands the design of the change to you: design it, make every judgement call yourself with the option you
+would recommend, and carry it through to `main` without waiting for approval. The user reviews your decisions
+afterwards, from the report. Escalate only as [Spec repo changes in a worktree](../spec-repo-worktree.md) directs, i.e. for a
+far-reaching change or a conflict with no natural resolution. Never run the `update-implementation` skill unless the
+user explicitly asks for it.
+
 ## Workflow
 
-Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its plan and local diff
-gate, and its handling of push conflicts.
+Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its self-review and
+escalation, and its handling of push conflicts.
 
 0. Create the Spec repo worktree, under step 1 of Spec repo changes in a worktree, before reading any specification.
 1. Identify the Implementation repo: the sibling of the Spec repo's main local clone that the user names, or the only
@@ -25,8 +31,8 @@ gate, and its handling of push conflicts.
    its visual design. Search the specifications for the feature's terms, or go from the Implementation's files back
    to Spec IDs through its `tracking/specification-map.md`. Read only the sections that govern the observed behavior,
    at the Implementation's Specification baseline in `tracking/specification-baseline.md`.
-3. Classify the feedback into one case of Designer feedback for each Family involved, and show the user the governing
-   wording of each and what the Implementation does:
+3. Classify the feedback into one case of Designer feedback for each Family involved, noting the governing wording of
+   each and what the Implementation does:
    - **The specifications say otherwise:** a conformance defect, only when every Family involved already specifies
      what the user expects, e.g. the rule and its GDR are both present.
    - **The specifications say what the Implementation does:** a design change.
@@ -35,24 +41,29 @@ gate, and its handling of push conflicts.
    Name the Family that falls short under the table in Designer feedback, e.g. "the feature is specified but its GDR
    is missing" changes Content only, while "the feature is not specified" changes Mechanics first and then Content.
 
-4. Propose what to do with a recommendation, and wait for the user's decision; the user is the Game designer and
-   decides every design question.
+4. Decide what to do, choosing the option you would recommend for every open design question, e.g. which Family
+   changes, the exact wording, or a value the feedback leaves open, and record each decision with its alternatives and
+   reason for the report. When the feedback is ambiguous, take its most plausible reading and record that as a
+   decision too.
 5. Carry out the decision:
    - **Specification change**, for a design change, a newly specified open matter, or a clarification of ambiguous
      wording: edit the specifications in the worktree under
-     [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), publish the plan
-     Artifact together with the local diff and wait for approval, then commit, push, release the worktree, and update
-     the main local clone, under steps 3 to 6 of Spec repo changes in a worktree. Then run the `update-implementation` skill when the user asked
-     for the change to reach the Implementation.
+     [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), self-review it, then
+     commit, push, resolving any conflicts, release the worktree, and update the main local clone, under steps 3 to 6
+     of Spec repo changes in a worktree.
    - **Conformance fix:** first release the unchanged worktree: outside T3 Code, remove it with `ExitWorktree` and
      `action: "remove"`, because the session must leave it before changing the Implementation repo; in T3 Code, leave
      it in place, as under step 5 of Spec repo changes in a worktree. Then change the Implementation to match the
      specifications at its Specification baseline, add a test that would have caught the defect, keep the
-     Specification map current, and commit there without adding a Git remote. Leave the Specification baseline unchanged. No plan
-     and local diff gate applies, because the user approved the fix in step 4 after seeing the governing
-     wording and what the Implementation does.
+     Specification map current, and commit there without adding a Git remote. Leave the Specification baseline
+     unchanged.
 
 ## Report
 
-Tell the user the case, the governing specification sections, what changed and where, the commits, whether the
-main local clone of the Spec repo was updated, and whether `update-implementation` still needs to run.
+Tell the user:
+
+- the case for each Family involved, the governing specification sections, what changed and where, the commit diff
+  links, how any conflicts were resolved, and whether the main local clone of the Spec repo was updated;
+- **Decisions to review:** every decision made on the user's behalf, each with the option chosen, the alternatives,
+  and why, most consequential first;
+- that the next step is to run the `update-implementation` skill, unless the change was a conformance fix only.

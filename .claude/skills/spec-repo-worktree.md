@@ -4,7 +4,9 @@ The `absorb-implementation-feedback` and `apply-designer-feedback` skills make e
 worktree of their own, so that other work in the main local clone, e.g. another agent's uncommitted edits, neither
 blocks them nor leaks into their change. Both skills link to the steps below by number; this file is not a skill of its
 own. For those skills, it replaces the standing authorization to commit and push under Committing and publishing
-changes in `AGENTS.md`. The Spec repo and Implementation repo are defined in the Glossary of
+changes in `AGENTS.md`: the skill decides, commits, and pushes on its own, and escalates to the user only as step 3 and
+step 4 direct. A skill never runs the `update-implementation` skill unless the user explicitly asks for it; it ends by
+telling the user that `update-implementation` is the next step. The Spec repo and Implementation repo are defined in the Glossary of
 [Implementation Placement](../../docs/specs/implementation/mandatory/implementation-placement.md#glossary); the main local
 clone is the Spec repo's root directory, e.g. `repos/game-v5/`.
 
@@ -35,28 +37,40 @@ distinguishable even where a host truncates their names. Generate `<id>` with
 2. **Find the Implementation repo from the main local clone**, never from the worktree: the main local clone is the
    parent directory of `git rev-parse --path-format=absolute --git-common-dir`, and Implementation repos are its
    siblings.
-3. **Gate: plan and local diff.** After every follow-up question is answered and every outcome is decided, make the
-   changes in the worktree, run `npm run docs:generate` and `npm run check`, then run `git add -N .` so that new files
-   appear in the diff. Then present both for one approval:
+3. **Self-review, and escalate only far-reaching changes.** Make the changes in the worktree, run
+   `npm run docs:generate` and `npm run check`, then run `git add -N .` so that new files appear in the diff, and
+   review the whole diff yourself. On the happy path, continue to step 4 without waiting for the user: the user reviews
+   the decisions afterwards, from the report. Record every decision you made on the user's behalf as you go, each with
+   the option chosen, the alternatives, and why, for that report.
+
+   Stop before committing and escalate only when the change is far-reaching enough that publishing it unreviewed would
+   be destructive or force massive rework, e.g. the diff is suspiciously large for the feedback, it rewrites large
+   parts of several specifications, it reverses an established design decision, or it changes a fundamental
+   assumption of the game or of the Development loop; or when the user asked to review the diff before it is
+   committed. To escalate:
    - **Plan:** publish the plan as a private Artifact. For each specification file that changed, it names the file and
      its Spec ID, the affected sections, the change from current to proposed wording, or a precise description when
      the change is large, why the change is made, and its knock-on effects, e.g. Glossary rows, term links, derived
-     views, and Implementation feedback entries. It also lists what did not change, e.g. declined problems.
+     views, and Implementation feedback entries. It also lists what did not change, e.g. declined problems, and why
+     the change was escalated.
    - **Local diff:** in the same turn, show the user the worktree's absolute path, `git diff --stat`, and the full diff
      of the hand-written files with regenerated files only summarized.
 
-   Stop and wait for the user to approve both. After each requested change, edit the worktree, run the checks again,
-   republish the same Artifact, and show the diff again.
+   Then wait for the user's approval. After each requested change, edit the worktree, run the checks again, republish
+   the same Artifact, and show the diff again.
 
 4. **Commit and push** to `main` with `git push origin HEAD:main`. The worktree's local branch is never pushed, so the
    rule against feature branches does not apply to it. When the push is rejected, run `git fetch origin` and
    `git rebase origin/main`:
-   - On a conflict, run `git rebase --abort` and never resolve it on your own. Tell the user each conflicting file and
-     hunk, the incoming commits by hash and subject, both sides, and a suggested resolution, and resolve it only after
-     the user approves.
-   - When the rebase succeeds but an incoming commit changed a file this change also changes, stop and show the user
-     those commits before pushing, because a textually clean rebase can still combine contradicting rules.
-   - Otherwise run `npm run check` again, push, and tell the user which commits the change was rebased onto.
+   - On a conflict, resolve it yourself when a natural resolution exists, i.e. one that keeps the intent of both sides
+     without contradicting either, e.g. both sides added rows to one table, or one side reworded a sentence the other
+     moved. Otherwise run `git rebase --abort` and escalate: tell the user each conflicting file and hunk, the incoming
+     commits by hash and subject, both sides, and a suggested resolution, and resolve it only after the user approves.
+   - When the rebase succeeds but an incoming commit changed a file this change also changes, read those incoming
+     changes, because a textually clean rebase can still combine contradicting rules. Fix a contradiction the same way
+     as a conflict: yourself when the fix is natural, otherwise escalate before pushing.
+   - Then run `npm run check` again, push, and tell the user which commits the change was rebased onto and how each
+     conflict or contradiction was resolved.
 
    After pushing, give the user the commit diff link, as under
    [Committing and publishing changes](../../AGENTS.md#committing-and-publishing-changes) in `AGENTS.md`.
