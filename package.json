@@ -29,6 +29,7 @@
     "test:ui": "vitest --ui --watch --no-open",
     "test:coverage": "vitest run --coverage",
     "hooks:install": "git config core.hooksPath .githooks",
+    "fix": "npm run docs:link-terms && npm run docs:generate && npm run format && npm run lint:code -- --fix",
     "check:commit": "npm run lint:specs && npm run docs:check && npm run format:check && npm run lint:code",
     "check": "npm run lint:specs && npm run docs:check && npm run format:check && npm run lint:code && npm run test && npm run typecheck"
   },

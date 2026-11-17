@@ -31,7 +31,9 @@ These rules apply in this repository and in every Implementation repo:
   in the scratchpad first and run that file.
 - Edit a file only against its current content. `npm run docs:link-terms`, `npm run docs:generate`, and the
   formatter rewrite files, e.g. they add links or re-pad table columns, so text copied before they ran no longer
-  matches. Make all planned edits first, then run them once, and read a section again before editing it after they ran.
+  matches. Make all planned edits first, then run `npm run fix` once, review what it changed, e.g. the term links it
+  added, and run `npm run check`. Read a section again before editing it after `npm run fix` ran. In an Implementation repo,
+  use its own `fix` script when it has one, e.g. `npm run fix` in `game-v5-impl-web`.
 - To read or search a specification as prose rather than as link syntax, run `npm run docs:plain -- <file>`.
 - To export Artboard images from the Design canvas, use `npm run artboards:export`, as
   [Design canvas](docs/specs/design/ui/visual-design.md#design-canvas) describes, never a one-off script.

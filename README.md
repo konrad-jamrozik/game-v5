@@ -75,6 +75,7 @@ for all projects across all environments:
 | `npm run artboards:export` | Export Artboard images from a local copy of the Design canvas |
 | `npm run terms:report`     | List the first mention of every term in every specification   |
 | `npm run lint`             | Run code and specification linting                            |
+| `npm run fix`              | Link terms, regenerate derived views, format, fix code lint   |
 | `npm run lint:fix`         | Fix code lint, then check specifications read-only            |
 | `npm run check:commit`     | Run the read-only checks used by the commit hook              |
 | `npm run format`           | Format supported files                                        |

@@ -36,7 +36,9 @@ to their definitions; `npm run lint:specs` then rejects an unlinked first mentio
 
 ## Before declaring a change complete
 
-Run `npm run check` and report every failure. A targeted check that passes does not replace the full run.
+Run `npm run fix` once after the last edit, review what it changed, e.g. the term links it added, and then run
+`npm run check` and report every failure. `npm run fix` runs, in order, every script that rewrites files into the form
+the checks demand: `docs:link-terms`, `docs:generate`, `format`, and `lint:code -- --fix`. A targeted check that passes does not replace the full run.
 
 ## What checks do not prove
 
