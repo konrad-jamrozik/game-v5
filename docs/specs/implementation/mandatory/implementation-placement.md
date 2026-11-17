@@ -55,6 +55,14 @@ The Implementation repo must hold a `.gitattributes` file that stores every text
 it out with LF, e.g. `* text=auto eol=lf`. Without it, a checkout on Windows with `core.autocrlf` enabled shows files
 as modified whose content is unchanged, e.g. after the formatter rewrites them.
 
+The Implementation repo must hold an `AGENTS.md` file at its root that tells every agent not to start a session in
+the Implementation repo, and to start it in the Spec repo instead and work on the Implementation repo from there. The
+agent instructions, skills, and conventions that govern work on an Implementation, e.g. the `update-implementation`
+skill and the rules for editing files and running commands, reside in the Spec repo, and a session started in the
+Implementation repo does not load them. The file must name the Spec repo by its location relative to the
+Implementation repo, e.g. `../game-v5`, and must hold no other agent instruction, so that no instruction applies only
+to a session that starts there.
+
 # Repository root of an Implementation
 
 An Implementation must treat the root directory of its Implementation repo as its repository root and must behave as if
