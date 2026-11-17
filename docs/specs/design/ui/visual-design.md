@@ -242,11 +242,6 @@ Each column is wide enough to hold on one line every value that the specificatio
 for its column, e.g. the message of an engine rejection, is cut short with "…" and shown in full while the pointer rests
 on it.
 
-In a table that the Player sorts by pressing a column header, the header of the column it is sorted by shows "▲" after
-its label while the order is ascending and "▼" while it is descending, and pressing that header again reverses the
-order. A header is never cut short: each column's width holds its header's label together with that mark, e.g. the
-base weapon damage column of the [Agents View](screens/agents-view.md) is wide enough for its label followed by "▼".
-
 A table whose rows each have a selection checkbox lets the Player select several rows at once, in these ways:
 
 - **Click:** clicking a row's checkbox, or the row outside its links and buttons, selects or clears that row and makes
@@ -265,6 +260,24 @@ checkbox is enabled, and it stays checked while the selection follows that set: 
 of them can be selected, changes, e.g. because a filter changed, the selection becomes exactly the shown rows that can
 be selected. Unchecking it clears the selection, and clicking, Shift-clicking, or dragging over any row unchecks it and
 keeps the selection as it then is.
+
+A table whose column headers sort it remembers up to four sort tiers, so that a new sort refines the earlier ones
+instead of discarding them. Rows are ordered by the first tier, rows equal in it by the second, and so on, and rows
+equal in every tier keep the table's default order. Pressing a header works as follows:
+
+- **A column in no tier** becomes the first tier, descending when it holds numbers and ascending otherwise; every
+  earlier tier moves down one, and a tier pushed past the fourth is dropped.
+- **The column of the first tier** flips its direction.
+- **The column of a lower tier** becomes the first tier with the direction it had, leaving its old tier, and the tiers
+  that were above it move down one.
+
+E.g., after sorting the [Agent table](screens/agents-view.md#agent-table) by effective skill and then by reason, the rows with an empty reason come first,
+and among them the rows are ordered by effective skill.
+
+The header of each column in a tier shows its direction as ▲ for ascending or ▼ for descending, after its label, at
+full opacity for the first tier and at 70 %, 45 %, and 25 % opacity for the second, third, and fourth tier. A header
+is never cut short: each column's width holds its header's label together with that arrow, e.g. the base weapon damage
+column of the [Agents View](screens/agents-view.md) is wide enough for its label followed by "▼".
 
 ## Agent condition
 

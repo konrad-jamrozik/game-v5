@@ -88,7 +88,7 @@ with a selection checkbox and these columns in this order: Instance ID, [effecti
 against [base health](../../mechanics/agents-spec.md#combatant-attributes), [exhaustion](../../mechanics/agents-spec.md#combatant-attributes), [base weapon damage](../../mechanics/agents-spec.md#combatant-attributes), Assignment with its [Agent status](../../mechanics/agents-spec.md#agent-statuses), and reason. An Assignment to an
 Investigation or a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) names its [Lead](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) or [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), and an Agent In transit says so, e.g.
 "Contracting · In transit". Current health and exhaustion take their colours under
-[Agent condition](../visual-design.md#agent-condition) in Visual Design. Pressing a column header sorts the table by that column.
+[Agent condition](../visual-design.md#agent-condition) in Visual Design. Its default order is by Instance ID, and pressing a column header sorts it by that column, under [Tables](../visual-design.md#tables) in Visual Design.
 
 A row whose Agent cannot be selected, under [Filters](#filters), has its checkbox disabled and its text in Text muted,
 except the colours of current health and exhaustion. Its reason says why, as the first of these that applies; the
@@ -108,7 +108,8 @@ reason of a row that can be selected is empty:
 The Memorial remembers the Agents who have left the [Agency](../../mechanics/domain-model.md#agency-and-agents) and how their service ended. While the Memorial filter is
 on, the table lists one row per Terminated Agent, as `getHistory()` returns it under
 [Current state, Turn report, and history](../../foundation/world-history.md#current-state-turn-report-and-history) in World History, newest [Turn](../../foundation/engine-contract.md#player-actions-and-turns) terminated first and then by
-Instance ID, and pressing a column header sorts it by that column. Its rows have no selection checkbox, and the buttons
+Instance ID, which is its default order, and pressing a column header sorts it by that column, under Tables in Visual
+Design. Its rows have no selection checkbox, and the buttons
 and selection filters of Assign to and Dismiss are disabled, because no Player action acts on a Terminated Agent. Its
 columns, in this order, are:
 
