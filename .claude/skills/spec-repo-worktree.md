@@ -3,8 +3,8 @@
 The `absorb-implementation-feedback` and `apply-designer-feedback` skills change the Spec repo only in a Git worktree of
 their own, so that other work in the main local clone, e.g. another agent's uncommitted edits, neither blocks nor leaks
 into their change. Both link to the steps below by number; this file is not a skill. For them it replaces the standing
-authorization in Committing and publishing changes in `AGENTS.md`: the skill decides, commits, and pushes on its own,
-and escalates only as steps 3 and 4 direct. It never runs `update-implementation` unless the user explicitly asks; it
+authorization in Committing and publishing changes in `AGENTS.md`: once the design is settled as the skill directs,
+it commits and pushes on its own and escalates only as steps 3 and 4 direct. It never runs `update-implementation` unless the user explicitly asks; it
 ends by naming it as the next step. The Spec repo and Implementation repo are defined in the Glossary of
 [Implementation Placement](../../docs/specs/implementation/mandatory/implementation-placement.md#glossary); the main local
 clone is the Spec repo's root directory, e.g. `repos/game-v5/`.

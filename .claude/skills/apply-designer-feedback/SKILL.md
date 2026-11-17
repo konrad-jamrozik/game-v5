@@ -12,11 +12,19 @@ The Implementation is disposable, so the fix must start from the specifications.
 owned by [Designer feedback](../../../docs/specs/governance/process/development-loop.md#designer-feedback) in Development Loop;
 follow it, and let it win when this skill disagrees.
 
-The user hands the design of the change to you: design it, make every judgement call yourself with the option you
-would recommend, and carry it through to `main` without waiting for approval. The user reviews your decisions
-afterwards, from the report. Escalate only as [Spec repo changes in a worktree](../spec-repo-worktree.md) directs, i.e. for a
-far-reaching change or a conflict with no natural resolution. Never run the `update-implementation` skill unless the
-user explicitly asks for it.
+First choose the mode from how the user phrased the feedback:
+
+- **Go:** the user states the feedback as an instruction, e.g. "apply feedback: this UI renders wrong due to
+  alignment". Design the change yourself, make every judgement call with the option you would recommend, and carry it
+  through to `main` without waiting for approval; the user reviews your decisions afterwards, from the report.
+- **Discuss:** the feedback shows any hint of uncertainty, e.g. it asks a question ("should Missions be harder?"),
+  hedges ("maybe", "I'm not sure", "what do you think"), weighs options, or asks to discuss. Hold a design discussion
+  first: give your analysis and a recommendation with its alternatives, and wait. Make no specification change until
+  the user settles the design; then continue as in Go mode.
+
+When unsure which mode applies, use Discuss. In either mode, escalate only as
+[Spec repo changes in a worktree](../spec-repo-worktree.md) directs, i.e. for a far-reaching change or a conflict with no
+natural resolution, and never run the `update-implementation` skill unless the user explicitly asks for it.
 
 ## Workflow
 
@@ -41,7 +49,8 @@ escalation, and its handling of push conflicts.
    Name the Family that falls short under the table in Designer feedback, e.g. "the feature is specified but its GDR
    is missing" changes Content only, while "the feature is not specified" changes Mechanics first and then Content.
 
-4. Decide what to do, choosing the option you would recommend for every open design question, e.g. which Family
+4. In Discuss mode, hold the design discussion here and wait until the user settles it. Then decide what to do,
+   choosing the option you would recommend for every open design question, e.g. which Family
    changes, the exact wording, or a value the feedback leaves open, and record each decision with its alternatives and
    reason for the report. When the feedback is ambiguous, take its most plausible reading and record that as a
    decision too.

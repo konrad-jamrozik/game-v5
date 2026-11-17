@@ -65,7 +65,8 @@ review the local diff first, when either:
 In either case, tell the user the change set is uncommitted and why.
 
 The `absorb-implementation-feedback` and `apply-designer-feedback` skills never use this standing authorization. They
-change the Spec repo only as [Spec repo changes in a worktree](.claude/skills/spec-repo-worktree.md) directs: they make
-every decision themselves, push to `main` from a worktree, resolve natural conflicts, report the decisions for the user
-to review, and escalate only a far-reaching change. Never run the `update-implementation` skill unless the user
+change the Spec repo only as [Spec repo changes in a worktree](.claude/skills/spec-repo-worktree.md) directs: once the design is
+settled, they push to `main` from a worktree, resolve natural conflicts, report the decisions for the user to review,
+and escalate only a far-reaching change. `absorb-implementation-feedback` always has the user review the design first;
+`apply-designer-feedback` does so only when the user's feedback shows any uncertainty. Never run the `update-implementation` skill unless the user
 explicitly asks for it.

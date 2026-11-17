@@ -13,11 +13,11 @@ Building or updating an Implementation records, as feedback, the defects it met 
 durable: a fix that stays in an Implementation is lost when the Implementation is rebuilt. This skill moves each fix
 into the specifications.
 
-The user hands the outcomes to you: decide each problem yourself with the outcome you would recommend, and carry the
-result through to `main` without waiting for approval. The user is the Engine designer and reviews your decisions
-afterwards, from the report, so never settle a design question silently: record every decision. Escalate only as
-[Spec repo changes in a worktree](../spec-repo-worktree.md) directs, i.e. for a far-reaching change or a conflict with no
-natural resolution. Never run the `update-implementation` skill unless the user explicitly asks for it.
+The user is the Engine designer and always reviews the design first: propose an outcome for every problem and wait
+until the user settles them, however clear the problems seem. Once they are settled, carry the result through to
+`main` without asking again, escalating only as [Spec repo changes in a worktree](../spec-repo-worktree.md) directs, i.e.
+for a far-reaching change or a conflict with no natural resolution. Never run the `update-implementation` skill unless
+the user explicitly asks for it.
 
 ## Workflow
 
@@ -38,7 +38,7 @@ escalation, and its handling of push conflicts. Steps 0, 6, and 7 below name whe
    the Design specifications that falls short, under the table in
    [Designer feedback](../../../docs/specs/governance/process/development-loop.md#designer-feedback), e.g. a problem
    met in a Mechanics rule may be fixed by a missing or wrong GDR in Content, or by a UI or visual design gap, with
-   the rule left as it is. Then choose one outcome, the one you would recommend:
+   the rule left as it is. Then propose one outcome with a recommendation:
    - **Fix the specifications:** remove a Conflict or Duplicate, or answer an Implicit gap or Needed TODO.
    - **Adopt the Implementation decision:** write the option the Implementation chose into the specifications, so a
      rebuilt Implementation chooses it too.
@@ -47,8 +47,10 @@ escalation, and its handling of push conflicts. Steps 0, 6, and 7 below name whe
      so it stops being a problem.
    - **Decline:** leave the specifications as they are. Nothing durable records a decline, so a rebuilt
      Implementation may record the same problem again; prefer another outcome when one fits.
-5. Record each decision with its alternatives and reason for the report. Group related problems, e.g. two entries
-   about one formula, so one decision covers them.
+5. **Design review:** present the proposals to the user, grouping related problems, e.g. two entries about one
+   formula, so one decision covers them. For each, give the governing wording, the recommended outcome, and the
+   alternatives. Stop and wait; discuss until the user settles every proposal. When the user approves a group without
+   answering a detail, e.g. the exact wording, choose it yourself and record it as a decision for the report.
 6. When every problem has a decision, make the specification changes in the worktree under
    [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md) and self-review them,
    under step 3 of Spec repo changes in a worktree. Then commit, push, resolving any conflicts, release the worktree,
@@ -65,7 +67,7 @@ Tell the user:
 - for each reviewed problem, its identifier and the outcome, with the commit diff link that carries it; the problems set
   aside as already fixed; how any conflicts were resolved; and whether the main local clone of the Spec repo was
   updated;
-- **Decisions to review:** every decision made on the user's behalf, each with the outcome chosen, the alternatives,
-  and why, most consequential first, declines included;
+- **Decisions to review:** every detail decided on the user's behalf after the design review, each with the option
+  chosen, the alternatives, and why, or that there were none;
 - that the next step is to run the `update-implementation` skill, which applies the new specification changes to the
   Implementation and sets the fixed problems Resolved.
