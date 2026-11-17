@@ -2,7 +2,7 @@
 
 Usage, from the repository root:
 
-    python lib/globe/scripts/build-globe-textures.py [--full] [--trial] [cache-dir]
+    python lib/globe/scripts/build-globe-textures.py [--full] [cache-dir]
 
 Requires Python 3 with Pillow and NumPy. The source maps are downloaded into cache-dir
 (default: .globe-texture-cache in the system temp directory) and reused on later runs.
@@ -22,11 +22,6 @@ into lib/globe/assets-full, which Git ignores:
     earth-night-lights.jpg   8192x4096  JPEG at quality 90
     earth-normal-water.webp  4096x2048  lossless WebP
     earth-clouds.jpg         4096x2048  JPEG, upscaled smoothly from the 2048x1024 source
-
-With --trial, the same four maps are also written more compressed than lib/globe/assets,
-about 3.7 MB together, into lib/globe/assets-trial, which Git ignores. They exist to judge
-in the viewer whether the committed maps could be made smaller still; every file keeps the
-name and size it has in lib/globe/assets, at a lower quality setting.
 
 Sources (NASA Earth Observatory, public domain):
 
@@ -54,20 +49,16 @@ SOURCES = {
     "clouds2k.jpg": ASSETS + "/content-feature/bluemarble/images/cloud_combined_2048.jpg",
 }
 
-args = [a for a in sys.argv[1:] if not a.startswith("--")]
+args = [a for a in sys.argv[1:] if a != "--full"]
 build_full = "--full" in sys.argv[1:]
-build_trial = "--trial" in sys.argv[1:]
 globe = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 out = os.path.join(globe, "assets")
 full = os.path.join(globe, "assets-full")
-trial = os.path.join(globe, "assets-trial")
 src = args[0] if args else os.path.join(tempfile.gettempdir(), ".globe-texture-cache")
 os.makedirs(out, exist_ok=True)
 os.makedirs(src, exist_ok=True)
 if build_full:
     os.makedirs(full, exist_ok=True)
-if build_trial:
-    os.makedirs(trial, exist_ok=True)
 
 for name, url in SOURCES.items():
     path = os.path.join(src, name)
@@ -82,8 +73,6 @@ day = Image.open(os.path.join(src, "day.jpg"))
 day.draft("RGB", (10800, 5400))
 day = day.convert("RGB").resize((8192, 4096), Image.LANCZOS)
 day.save(os.path.join(out, "earth-day.webp"), quality=82, method=6)
-if build_trial:
-    day.save(os.path.join(trial, "earth-day.webp"), quality=72, method=6)
 if build_full:
     day.save(os.path.join(full, "earth-day.jpg"), quality=90, subsampling=0, optimize=True)
 
@@ -118,8 +107,6 @@ def encode(a):
 # JPEG with subsampling=0 keeps full colour resolution; lossy WebP would halve it and blur the normals.
 normal_water = Image.merge("RGB", (encode(nx), encode(ny), water_img))
 normal_water.save(os.path.join(out, "earth-normal-water.jpg"), quality=94, subsampling=0, optimize=True)
-if build_trial:
-    normal_water.save(os.path.join(trial, "earth-normal-water.jpg"), quality=88, subsampling=0, optimize=True)
 if build_full:
     normal_water.save(os.path.join(full, "earth-normal-water.webp"), lossless=True, method=4)
 
@@ -129,8 +116,6 @@ n = np.asarray(night, dtype=np.float32)
 lights = np.clip((n[..., 0] - 0.28 * n[..., 2] - 4.0) / 200.0, 0, 1) ** 0.85
 lights_img = Image.fromarray((lights * 255).astype(np.uint8))
 lights_img.convert("RGB").save(os.path.join(out, "earth-night-lights.webp"), quality=80, method=6)
-if build_trial:
-    lights_img.convert("RGB").save(os.path.join(trial, "earth-night-lights.webp"), quality=68, method=6)
 if build_full:
     lights_img.save(os.path.join(full, "earth-night-lights.jpg"), quality=90, optimize=True)
 
@@ -138,13 +123,9 @@ if build_full:
 # not show the 2048-pixel grid.
 clouds = Image.open(os.path.join(src, "clouds2k.jpg")).convert("L")
 clouds.convert("RGB").save(os.path.join(out, "earth-clouds.webp"), quality=85, method=6)
-if build_trial:
-    clouds.convert("RGB").save(os.path.join(trial, "earth-clouds.webp"), quality=75, method=6)
 if build_full:
     clouds.resize((4096, 2048), Image.BICUBIC).save(os.path.join(full, "earth-clouds.jpg"), quality=92, optimize=True)
 
 print("wrote", out)
 if build_full:
     print("wrote", full)
-if build_trial:
-    print("wrote", trial)

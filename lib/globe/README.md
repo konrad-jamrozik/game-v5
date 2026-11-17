@@ -90,19 +90,6 @@ camera, so they can be compared in place. Adding `?maps=full` to the address sta
 To use the full-quality maps for good, make `full` the default in `MAP_SETS` at the top of `globe.js`, remove
 `assets-full/` from `.gitignore`, and commit the folder.
 
-## Trial maps
-
-To judge whether the committed maps could be smaller still, the script can also build a more compressed set, about
-3.7 MB together:
-
-```bash
-python lib/globe/scripts/build-globe-textures.py --trial
-```
-
-This writes four files into `assets-trial/`, which Git ignores. Each has the name and size it has in `assets/` and a
-lower quality setting. Once the folder exists, the viewer's map button steps through every set that is present, and
-`?maps=trial` starts with the trial set.
-
 ## Sources
 
 All imagery is from NASA's Earth Observatory and is in the public domain.
