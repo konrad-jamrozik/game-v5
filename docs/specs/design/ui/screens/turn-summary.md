@@ -44,8 +44,10 @@ list is exhaustive.
 4. **Mission sites ended:** each Mission site that became Expired or Cancelled, under the same Turn report section, with
    its MissionSiteArchetype's `name`, its kind, the lifecycle state it reached, and, for an Expired one, its
    [Consequences](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).
-5. **Leads discovered:** each Lead under [Turn report](../../mechanics/leads-and-progression.md#turn-report) in Leads and Progression, with its Required
-   progress range when it is an [Assessed Lead](../../mechanics/investigations.md#glossary), and otherwise that the range is unknown.
+5. **Leads discovered:** each Lead under [Turn report](../../mechanics/leads-and-progression.md#turn-report) in Leads and Progression, with its `name` only. Its
+   Required progress range is left out: a Lead discovered in the Advance turn has no Investigation yet, so it is never
+   an [Assessed Lead](../../mechanics/investigations.md#glossary) and the range is always unknown here. The [Leads View](leads-view.md) shows the range once the Lead
+   is an Assessed Lead.
 
 # Showing and dismissing
 
