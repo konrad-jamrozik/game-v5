@@ -10,8 +10,9 @@
 
 # Overview
 
-The Turn summary tells the Player, once, what an Advance turn did that the Player must know before going on, so that a
-won Mission or a new Mission site is not missed in the full Turn report. It is a dialog over the
+The Turn summary tells the Player, as soon as an Advance turn ends, what it did that the Player must know before going
+on, so that a won Mission or a new Mission site is not missed in the full Turn report. The Player can reopen it later
+in the Turn. It is a dialog over the
 [Campaign Screen](campaign-screen.md), styled under [Dialogs](../visual-design.md#dialogs) in Visual Design.
 
 # Glossary
@@ -54,6 +55,12 @@ list is exhaustive.
 The Player dismisses the Turn summary with one action, and it offers to open the full Turn report. It is not shown
 after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data), after undo, redo, or other [Timeline](../../foundation/timeline.md) navigation, nor for an Advance turn that
 [Autopilot](../../foundation/engine-contract.md#autopilot) requested, so that a long run of Advance turns does not open one Turn summary for each.
+
+The Player reopens the Turn summary from the [Turn Report View](turn-report-view.md), whenever the Turn report it shows
+has an item for at least one group under [Groups](#groups), including after loading a Campaign save or after [Timeline](../../foundation/engine-contract.md#persisted-data)
+navigation. A reopened Turn summary reads the current Committed state as it does when first shown, so an item read from
+it, e.g. the Agents whose Assignment is now Recovery, shows its current value, not its value when the Advance turn
+ended.
 
 # Mission cards
 

@@ -88,24 +88,24 @@ These informative views are derived from the registered Markdown specifications.
 
 ## UI
 
-| ID     | Document                                                           | Owns                                                                                                                                            |
-| ------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| AVIEW  | [Agents View](../specs/design/ui/screens/agents-view.md)           | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents.                                              |
-| CLI    | [Command-Line Interface](../specs/design/ui/cli.md)                | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.                        |
-| COMPV  | [Compendium View](../specs/design/ui/screens/compendium-view.md)   | What the Compendium View of the Campaign screen shows and how the Player finds an article in it.                                                |
-| CSCR   | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md)   | The regions of the Campaign screen of the graphical user interface, its Side panel, and its Detail views.                                       |
-| CVIEW  | [Charts View](../specs/design/ui/screens/charts-view.md)           | Which charts the Charts View of the Campaign screen shows and in which order.                                                                   |
-| GUI    | [Graphical User Interface](../specs/design/ui/gui.md)              | Which screens the graphical user interface has, the progress indicators that several of them show, and the confirmations and warnings it gives. |
-| HVIEW  | [History View](../specs/design/ui/screens/history-view.md)         | What the History View of the Campaign screen shows and in which order.                                                                          |
-| LVIEW  | [Leads View](../specs/design/ui/screens/leads-view.md)             | What the Leads View of the Campaign screen shows, how its panes are arranged, and how it starts and staffs Investigations.                      |
-| MENU   | [Main Menu](../specs/design/ui/screens/main-menu.md)               | What the Main menu screen of the graphical user interface shows and how it is laid out.                                                         |
-| MUSIC  | [Music](../specs/design/ui/music.md)                               | The music of the graphical user interface: the Soundtrack, how it is played, its settings, and the Music control.                               |
-| MVIEW  | [Missions View](../specs/design/ui/screens/missions-view.md)       | What the Missions View of the Campaign screen shows, how its panes are arranged, and how it deploys Agents.                                     |
-| SITP   | [Situation Panel](../specs/design/ui/screens/situation-panel.md)   | What the Situation panel of the Campaign screen shows.                                                                                          |
-| TRVIEW | [Turn Report View](../specs/design/ui/screens/turn-report-view.md) | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report.                        |
-| TSUM   | [Turn Summary](../specs/design/ui/screens/turn-summary.md)         | When the Turn summary dialog of the Campaign screen appears and what it shows.                                                                  |
-| UVIEW  | [Upgrades View](../specs/design/ui/screens/upgrades-view.md)       | What the Upgrades View of the Campaign screen shows and how it purchases Upgrades.                                                              |
-| VIS    | [Visual Design](../specs/design/ui/visual-design.md)               | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts.                      |
+| ID     | Document                                                           | Owns                                                                                                                                                 |
+| ------ | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AVIEW  | [Agents View](../specs/design/ui/screens/agents-view.md)           | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents.                                                   |
+| CLI    | [Command-Line Interface](../specs/design/ui/cli.md)                | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.                             |
+| COMPV  | [Compendium View](../specs/design/ui/screens/compendium-view.md)   | What the Compendium View of the Campaign screen shows and how the Player finds an article in it.                                                     |
+| CSCR   | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md)   | The regions of the Campaign screen of the graphical user interface, its Side panel, and its Detail views.                                            |
+| CVIEW  | [Charts View](../specs/design/ui/screens/charts-view.md)           | Which charts the Charts View of the Campaign screen shows and in which order.                                                                        |
+| GUI    | [Graphical User Interface](../specs/design/ui/gui.md)              | Which screens the graphical user interface has, the progress indicators that several of them show, and the confirmations and warnings it gives.      |
+| HVIEW  | [History View](../specs/design/ui/screens/history-view.md)         | What the History View of the Campaign screen shows and in which order.                                                                               |
+| LVIEW  | [Leads View](../specs/design/ui/screens/leads-view.md)             | What the Leads View of the Campaign screen shows, how its panes are arranged, and how it starts and staffs Investigations.                           |
+| MENU   | [Main Menu](../specs/design/ui/screens/main-menu.md)               | What the Main menu screen of the graphical user interface shows and how it is laid out.                                                              |
+| MUSIC  | [Music](../specs/design/ui/music.md)                               | The music of the graphical user interface: the Soundtrack, how it is played, its settings, and the Music control.                                    |
+| MVIEW  | [Missions View](../specs/design/ui/screens/missions-view.md)       | What the Missions View of the Campaign screen shows, how its panes are arranged, and how it deploys Agents.                                          |
+| SITP   | [Situation Panel](../specs/design/ui/screens/situation-panel.md)   | What the Situation panel of the Campaign screen shows.                                                                                               |
+| TRVIEW | [Turn Report View](../specs/design/ui/screens/turn-report-view.md) | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report or reopens the Turn summary. |
+| TSUM   | [Turn Summary](../specs/design/ui/screens/turn-summary.md)         | When the Turn summary dialog of the Campaign screen appears and what it shows.                                                                       |
+| UVIEW  | [Upgrades View](../specs/design/ui/screens/upgrades-view.md)       | What the Upgrades View of the Campaign screen shows and how it purchases Upgrades.                                                                   |
+| VIS    | [Visual Design](../specs/design/ui/visual-design.md)               | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts.                           |
 
 ## Autopilot AIs
 

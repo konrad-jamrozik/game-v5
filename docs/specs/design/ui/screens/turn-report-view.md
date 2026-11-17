@@ -5,7 +5,7 @@
 | Spec ID     | TRVIEW                                                                                                                                                                           |
 | Family      | UI                                                                                                                                                                               |
 | Audience    | UI designer, Implementer                                                                                                                                                         |
-| Owns        | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report.                                                         |
+| Owns        | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report or reopens the Turn summary.                             |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -19,6 +19,11 @@ It shows only the Turn report of the most recent committed Advance turn, because
 under [Turn report and history](../../foundation/world-history.md#turn-report-and-history) in World History; earlier [Turns](../../foundation/engine-contract.md#player-actions-and-turns) are read in the reduced form of the
 [History View](history-view.md). Its heading names the Turn that Advance turn ended and the Turn it began. Before the
 first committed Advance turn of a Campaign, it says that there is no Turn report yet.
+
+A Turn summary button in its title row, to the left of its close control, reopens the Turn summary of the Turn report
+it shows, under [Showing and dismissing](turn-summary.md#showing-and-dismissing) in Turn Summary. The button is
+disabled, not hidden, when there is no Turn report yet or the Turn summary would have no group, so that the title row
+keeps the same controls from Turn to Turn.
 
 # Sections
 
