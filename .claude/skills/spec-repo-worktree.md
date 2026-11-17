@@ -35,18 +35,20 @@ distinguishable even where a host truncates their names. Generate `<id>` with
 2. **Find the Implementation repo from the main local clone**, never from the worktree: the main local clone is the
    parent directory of `git rev-parse --path-format=absolute --git-common-dir`, and Implementation repos are its
    siblings.
-3. **Gate 1: plan.** After every follow-up question is answered and every outcome is decided, and before editing any
-   file, publish the plan as a private Artifact. For each specification file that will change, it names the file and
-   its Spec ID, the affected sections, the change from current to proposed wording, or a precise description when the
-   change is large, why the change is made, and its knock-on effects, e.g. Glossary rows, term links,
-   derived views, and Implementation feedback entries. It also lists what will not change, e.g. declined problems.
-   Stop and wait for the user to approve it; republish the same Artifact after each requested change.
-4. **Gate 2: local diff.** Make the approved changes in the worktree, run `npm run docs:generate` and
-   `npm run check`, then run `git add -N .` so that new files appear in the diff. Show the user the worktree's absolute
-   path, `git diff --stat`, the full diff of the hand-written files with regenerated files only summarized, and every
-   departure from the approved plan. Stop and wait for the user to approve it; show the diff again after each requested
-   change.
-5. **Commit and push** to `main` with `git push origin HEAD:main`. The worktree's local branch is never pushed, so the
+3. **Gate: plan and local diff.** After every follow-up question is answered and every outcome is decided, make the
+   changes in the worktree, run `npm run docs:generate` and `npm run check`, then run `git add -N .` so that new files
+   appear in the diff. Then present both for one approval:
+   - **Plan:** publish the plan as a private Artifact. For each specification file that changed, it names the file and
+     its Spec ID, the affected sections, the change from current to proposed wording, or a precise description when
+     the change is large, why the change is made, and its knock-on effects, e.g. Glossary rows, term links, derived
+     views, and Implementation feedback entries. It also lists what did not change, e.g. declined problems.
+   - **Local diff:** in the same turn, show the user the worktree's absolute path, `git diff --stat`, and the full diff
+     of the hand-written files with regenerated files only summarized.
+
+   Stop and wait for the user to approve both. After each requested change, edit the worktree, run the checks again,
+   republish the same Artifact, and show the diff again.
+
+4. **Commit and push** to `main` with `git push origin HEAD:main`. The worktree's local branch is never pushed, so the
    rule against feature branches does not apply to it. When the push is rejected, run `git fetch origin` and
    `git rebase origin/main`:
    - On a conflict, run `git rebase --abort` and never resolve it on your own. Tell the user each conflicting file and
@@ -59,7 +61,7 @@ distinguishable even where a host truncates their names. Generate `<id>` with
    After pushing, give the user the commit diff link, as under
    [Committing and publishing changes](../../AGENTS.md#committing-and-publishing-changes) in `AGENTS.md`.
 
-6. **Release the worktree** once the push succeeded: run `git fetch origin` and confirm with
+5. **Release the worktree** once the push succeeded: run `git fetch origin` and confirm with
    `git merge-base --is-ancestor HEAD origin/main` that `origin/main` holds the pushed commits.
    - **T3 Code:** leave the worktree in place, because the thread's session runs inside it, and tell the user its
      absolute path; T3 Code removes it with the thread, as set up in Agent environment setup in `README.md`.
@@ -67,14 +69,14 @@ distinguishable even where a host truncates their names. Generate `<id>` with
      needed because `ExitWorktree` compares against the main local clone's `main`, which does not hold the pushed
      commits yet. When the user abandons the change, or approval is still pending at the end of the session, use
      `action: "keep"` and give the user the worktree's absolute path.
-7. **Update the main local clone** with `git fetch origin` and `git merge --ff-only origin/main` run in it, from it in
+6. **Update the main local clone** with `git fetch origin` and `git merge --ff-only origin/main` run in it, from it in
    any other host and through `git -C <main local clone>` in T3 Code, and tell the user whether it succeeded. Do not
    use `git pull`: with `pull.rebase` set, it refuses whenever the main local clone has any uncommitted change. When
    the merge fails, e.g. because uncommitted changes there would be overwritten, the main local clone is not on
    `main`, or its `main` has commits missing from `origin/main`, tell the user why and leave the main local clone as it
    is: never stash, merge otherwise, or reset it.
 
-Until step 6, make Git changes only in the worktree; make every Git change in the main local clone or an
-Implementation repo, e.g. a commit in an Implementation repo, only after step 6. Outside T3 Code, while the session is
+Until step 5, make Git changes only in the worktree; make every Git change in the main local clone or an
+Implementation repo, e.g. a commit in an Implementation repo, only after step 5. Outside T3 Code, while the session is
 in the worktree, the harness also refuses Git commands aimed at the main local clone, e.g. through `git -C`, and may
 refuse those aimed at an Implementation repo.

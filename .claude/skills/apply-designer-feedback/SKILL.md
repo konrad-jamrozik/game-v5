@@ -14,8 +14,8 @@ follow it, and let it win when this skill disagrees.
 
 ## Workflow
 
-Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its Gate 1 plan Artifact,
-its Gate 2 local diff, and its handling of push conflicts.
+Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its plan and local diff
+gate, and its handling of push conflicts.
 
 0. Create the Spec repo worktree, under step 1 of Spec repo changes in a worktree, before reading any specification.
 1. Identify the Implementation repo: the sibling of the Spec repo's main local clone that the user names, or the only
@@ -39,17 +39,17 @@ its Gate 2 local diff, and its handling of push conflicts.
    decides every design question.
 5. Carry out the decision:
    - **Specification change**, for a design change, a newly specified open matter, or a clarification of ambiguous
-     wording: publish the Gate 1 plan Artifact and wait for approval, edit the specifications in the worktree under
-     [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), show the Gate 2
-     local diff and wait for approval, then commit, push, release the worktree, and update the main local clone, under
-     steps 3 to 7 of Spec repo changes in a worktree. Then run the `update-implementation` skill when the user asked
+     wording: edit the specifications in the worktree under
+     [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), publish the plan
+     Artifact together with the local diff and wait for approval, then commit, push, release the worktree, and update
+     the main local clone, under steps 3 to 6 of Spec repo changes in a worktree. Then run the `update-implementation` skill when the user asked
      for the change to reach the Implementation.
    - **Conformance fix:** first release the unchanged worktree: outside T3 Code, remove it with `ExitWorktree` and
      `action: "remove"`, because the session must leave it before changing the Implementation repo; in T3 Code, leave
-     it in place, as under step 6 of Spec repo changes in a worktree. Then change the Implementation to match the
+     it in place, as under step 5 of Spec repo changes in a worktree. Then change the Implementation to match the
      specifications at its Specification baseline, add a test that would have caught the defect, keep the
      Specification map current, and commit there without adding a Git remote. Leave the Specification baseline unchanged. No plan
-     Artifact or local diff gate applies, because the user approved the fix in step 4 after seeing the governing
+     and local diff gate applies, because the user approved the fix in step 4 after seeing the governing
      wording and what the Implementation does.
 
 ## Report

@@ -16,8 +16,8 @@ question silently.
 
 ## Workflow
 
-Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its Gate 1 plan Artifact,
-its Gate 2 local diff, and its handling of push conflicts. Steps 0, 6, and 7 below name where each applies.
+Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-repo-worktree.md): its worktree, its plan and local diff
+gate, and its handling of push conflicts. Steps 0, 6, and 7 below name where each applies.
 
 0. Create the Spec repo worktree, under step 1 of Spec repo changes in a worktree, before reading any specification.
 1. Identify the Implementation repo: the sibling of the Spec repo's main local clone that the user names, or the only
@@ -44,11 +44,11 @@ its Gate 2 local diff, and its handling of push conflicts. Steps 0, 6, and 7 bel
      Implementation may record the same problem again.
 5. Present the proposals to the user in small groups and wait for each decision. Group related problems, e.g. two
    entries about one formula, so one decision covers them.
-6. When every problem has a decision, publish the Gate 1 plan Artifact covering every accepted specification change
-   and every decline, and wait for approval. Then make the approved specification changes in the worktree under
-   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), show the Gate 2 local
-   diff, and wait for approval. Then commit, push, release the worktree, and update the main local clone, under steps 5
-   to 7 of Spec repo changes in a worktree.
+6. When every problem has a decision, make the accepted specification changes in the worktree under
+   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), then publish the plan
+   Artifact covering every accepted specification change and every decline together with the local diff, and wait for
+   approval, under step 3 of Spec repo changes in a worktree. Then commit, push, release the worktree, and update the
+   main local clone, under steps 4 to 6 of Spec repo changes in a worktree.
 7. After the worktree is released, for each declined problem, set its Resolution in the Implementation's feedback file
    to Declined, naming the Spec repo's reviewed commit by its full hash and the user's reason, and commit that in the
    Implementation repo without adding a Git remote. Leave fixed problems Open: the next run of the `update-implementation` skill applies the
