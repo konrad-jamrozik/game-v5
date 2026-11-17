@@ -79,5 +79,5 @@
   <circle class="entry" cx="414" cy="268" r="5"/>
   <text class="m" x="428" y="272">Timeline entry</text>
   <circle class="badge" cx="34" cy="298" r="9"/><text class="b mid" x="34" y="302.5">1</text>
-  <text class="m" x="52" y="302">to 4: successive undoToAutosave() calls. Call 1 first writes the Return Autosave from the current Committed state.</text>
+  <text class="m" x="52" y="302">to 4: successive undoToAutosave() calls. Call 1 first writes the Furthest progress Autosave from the current Committed state.</text>
 </svg>

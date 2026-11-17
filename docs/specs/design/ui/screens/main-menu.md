@@ -30,8 +30,15 @@ it.
 - The Campaign saves fill the left column, one card per Campaign, under
   [Panels and cards](../visual-design.md#panels-and-cards) in Visual Design. The card of the Campaign of the most recent
   Campaign save has the Accent top edge.
-- A card's header shows the Campaign and its latest [Turn](../../foundation/engine-contract.md#player-actions-and-turns), with Delete campaign at its right edge.
-- Each Campaign save of the Campaign is one row of the card: its name, its [Turn](../../foundation/engine-contract.md#player-actions-and-turns) in the Figure style, and Load and Delete
+- A card's header shows the Campaign and its latest [Turn](../../foundation/engine-contract.md#player-actions-and-turns), with Resume and Delete campaign at its right edge. Resume
+  returns the Player to the Campaign where they left it, by loading its [Current Autosave](../../foundation/saves.md#autosave-kinds), or its most recent Campaign
+  save when it has none. Resume is the primary button on the card with the Accent top edge and a neutral button on the
+  others, so that going back to the Campaign just left from the Campaign screen takes one click.
+- When the Player reached the Main menu by leaving a Campaign from the Campaign screen, a close button marked X sits at
+  the upper right corner of the screen. It and the Escape key do what Resume does for that Campaign, so the Main menu
+  closes like any view opened over play. A Main menu reached otherwise, e.g. when the game starts, has no close button.
+- Each Campaign save of the Campaign is one row of the card: its name, its [Turn](../../foundation/engine-contract.md#player-actions-and-turns) and its number of [Player actions](../../foundation/engine-contract.md#player-actions-and-turns) in
+  that Turn in the Figure style, e.g. T13 A5, under [Listing Campaign saves](../../foundation/saves.md#listing-campaign-saves) in Saves, and Load and Delete
   in the last column. Load and Delete sit side by side in one row, right-aligned, under
   [Buttons](../visual-design.md#buttons) in Visual Design, so that the buttons of every row line up in the same two
   columns.
@@ -47,8 +54,9 @@ it.
 The following appear only on the [Artboard](../visual-design.md#glossary) and must not be implemented, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
-- The Resume button in the header of each Campaign.
 - The sample values, e.g. the Campaign IDs and Turn 16.
+- The missing number of Player actions after the Turn of each Campaign save, e.g. T16 instead of T16 A3.
+- The missing close button at the upper right corner of the screen.
 
 # TODOs
 

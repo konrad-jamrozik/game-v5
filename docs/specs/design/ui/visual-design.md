@@ -116,7 +116,7 @@ exhaustive.
 | Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or an Agent on an assignment.                                                                                                                                                                                                                        |
 | Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                                                                                                                                                                                                                                      |
 | Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                                                                                                                                                                                                                                   |
-| Warning        | `#E3C14B`                | Values that need watching before they become a problem, e.g. an Agent's exhaustion at which it can no longer start work, under [Agent condition](#agent-condition).                                                                                                                                                                                                                   |
+| Warning        | `#E3C14B`                | Values that need watching before they become a problem, e.g. an Agent's exhaustion at which it can no longer start work, under [Agent condition](#agent-condition), and the outline and text of a weighty button.                                                                                                                                                                     |
 | Danger deep    | `#A3271F`                | The far end of the [current health](../mechanics/agents-spec.md#combatant-attributes) scale: an [Agent](../mechanics/domain-model.md#agency-and-agents) close to death, under [Agent condition](#agent-condition).                                                                                                                                                                    |
 | Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                                                                                                                                                                                                                                        |
 | Scrim          | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog.                                                                                                                                                                                                                                                                                                                                       |
@@ -180,12 +180,14 @@ the Design tokens in the same manner.
 
 ## Buttons
 
-Buttons come in three kinds so that the Player can tell at a glance what a button will do. This list is exhaustive.
+Buttons come in four kinds so that the Player can tell at a glance what a button will do. This list is exhaustive.
 
 - A neutral button has a Raised fill, a Border outline, and Text-coloured text.
 - A primary button has an Accent fill and On-accent text. A panel has at most one primary button, and it is the action
   the panel exists for, e.g. Start Campaign or Advance turn.
 - A destructive button has no fill, a Danger border outline, and Danger text, e.g. Delete and Delete campaign.
+- A weighty button has no fill, a Warning outline, and Warning text. It marks a reversible step with a larger reach
+  than its usual form, e.g. Undo Turn in place of Undo Action.
 
 A button is 36 px tall, 32 px inside a table row, and 44 to 46 px for the main action of a screen. A button's label
 never wraps onto a second line. Buttons that belong together sit in one row with 8 px between them. A row of buttons

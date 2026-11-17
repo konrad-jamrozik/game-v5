@@ -5,7 +5,7 @@
 | Spec ID     | CSCR                                                                                                                                                                             |
 | Family      | UI                                                                                                                                                                               |
 | Audience    | UI designer, Implementer                                                                                                                                                         |
-| Owns        | The regions of the Campaign screen of the graphical user interface, its Side panel, and its Detail views.                                                                        |
+| Owns        | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views, and its undo and redo controls.                                            |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -76,6 +76,27 @@ views are, in these groups and this order; the list is exhaustive:
 
 A Detail view is styled under [Detail views and navigation](../visual-design.md#detail-views-and-navigation) in Visual Design.
 
+# Undo and redo
+
+The Player undoes and redoes with one Undo button and one Redo button in the status bar, and the GUI chooses the
+[Timeline](../../foundation/engine-contract.md#persisted-data) navigation behind each, within the current [Turn](../../foundation/engine-contract.md#player-actions-and-turns) or across Turns, so that the Player never manages [Campaign saves](../../foundation/engine-contract.md#persisted-data) to go back or forward. Each
+button names the step it takes:
+
+| Button | Label       | When                                                              | Operation          |
+| ------ | ----------- | ----------------------------------------------------------------- | ------------------ |
+| Undo   | Undo Action | `undoAction()` is available                                       | `undoAction()`     |
+| Undo   | Undo Turn   | `undoAction()` is unavailable and `undoToAutosave()` is available | `undoToAutosave()` |
+| Redo   | Redo Action | `redoAction()` is available                                       | `redoAction()`     |
+| Redo   | Redo Turn   | `redoAction()` is unavailable and `redoToAutosave()` is available | `redoToAutosave()` |
+
+The operations are those of [Action navigation](../../foundation/timeline.md#action-navigation) and
+[Autosave navigation](../../foundation/timeline.md#autosave-navigation) in Timeline. A button with no available
+operation is disabled and keeps its Action label. A button is a neutral button while it takes an Action step and a
+weighty button while it takes a Turn step, under [Buttons](../visual-design.md#buttons) in Visual Design, and it keeps
+one width, that of its wider label, so that no control moves when its label changes. A Turn step's tooltip names the
+Turn and [Autosave](../../foundation/saves.md#autosave-kinds) it loads, as `getAutosaveStatus()` reports them, e.g. "Back to the end of Turn 12", because one step
+can cross a whole Autopilot engagement. The U and R keys press the Undo and Redo buttons.
+
 # Artboards
 
 ![Campaign screen Artboard: a status bar with Turn, Money, Funding, Agents, a segmented Panic meter and the Faction; the globe centred in the Globe stage on the left; the Side panel on the right with the Operations and Records navigation buttons, the compact Situation panel, and the Autopilot footer](../../../../images/artboards/campaign-screen.png)
@@ -93,5 +114,5 @@ by its own specification and Artboard. The following appear only on the Artboard
 
 # TODOs
 
-- TODO: State how the Campaign screen reaches Advance turn, [Timeline](../../foundation/engine-contract.md#persisted-data) navigation, saving, and
+- TODO: State how the Campaign screen reaches Advance turn, saving, and
   [Autopilot](../../foundation/engine-contract.md#autopilot), each through the operations that [API hierarchy](../../foundation/engine-contract.md#api-hierarchy) names.

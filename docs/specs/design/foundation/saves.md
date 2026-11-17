@@ -153,6 +153,8 @@ Autosave. It needs no Current campaign, so a Session can list Campaign saves bef
 - its Campaign save ID and its Campaign ID, so the Campaign saves of one Campaign can be grouped;
 - whether it is an Autosave, and of which kind;
 - the Turn its saved Committed state belongs to;
+- the number of Player actions that lead from the start of that Turn to its saved Committed state, not counting
+  Advance turn or any action that was undone; e.g., 0 when no Player action has been committed in that Turn yet;
 - the time it was last written, so that a user interface can tell which Campaign save is the most recent.
 
 The Campaign save ID it reports is what `session.saves.load(save)` accepts. Listing changes nothing and is not a

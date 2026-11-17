@@ -24,11 +24,11 @@ across Turns by loading the [Autosaves](saves.md#autosaves) of [Saves](saves.md)
 General terms are in the [Engine Contract glossary](engine-contract.md#glossary), [World history](campaign-state.md#glossary) is in the
 [Campaign State glossary](campaign-state.md#glossary), and [Autosave](saves.md#autosave-kinds) terms are in the [Saves glossary](saves.md#glossary).
 
-| Term            | Definition                                                                                                                                                                                                                                             |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Timeline entry  | One [Player action](engine-contract.md#player-actions-and-turns) of the current [Turn](engine-contract.md#player-actions-and-turns), other than Advance turn, recorded in the [Timeline](engine-contract.md#persisted-data).                           |
-| Undone action   | A Timeline entry that undo has reversed and that redo can restore. The Undone actions are always the last Timeline entries of the Timeline, and committing a new action discards all of them.                                                          |
-| Return Autosave | The Autosave holding the [Committed state](engine-contract.md#player-actions-and-turns) the [Session controller](engine-contract.md#principals-and-access) left by going back through [Autosave navigation](#autosave-navigation), so redo can return. |
+| Term                       | Definition                                                                                                                                                                                                                                                                                                                                                                                    |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Timeline entry             | One [Player action](engine-contract.md#player-actions-and-turns) of the current [Turn](engine-contract.md#player-actions-and-turns), other than Advance turn, recorded in the [Timeline](engine-contract.md#persisted-data).                                                                                                                                                                  |
+| Undone action              | A Timeline entry that undo has reversed and that redo can restore. The Undone actions are always the last Timeline entries of the Timeline, and committing a new action discards all of them.                                                                                                                                                                                                 |
+| Furthest progress Autosave | The Autosave holding the furthest [Committed state](engine-contract.md#player-actions-and-turns) of the current line of play, which the [Session controller](engine-contract.md#principals-and-access) left by going back through [Autosave navigation](#autosave-navigation), so redo can return to it, e.g. to a Turn the player has not ended and that therefore has no Turn-end Autosave. |
 
 # Timeline structure
 
@@ -123,20 +123,20 @@ Timeline entry. Going back to an earlier Turn, and forward again, is [Autosave n
 
 Autosave navigation is undo and redo across Turns. It moves the [Current campaign](core-concepts.md#campaign-and-session) between Autosaves and never applies
 or reverses a Player action itself. The Turn-end Autosave, the [Engagement Autosave](saves.md#autosave-kinds), and the [Disengagement Autosave](saves.md#autosave-kinds) are written under
-[Autosaves](saves.md#autosaves); this section adds the Return Autosave.
+[Autosaves](saves.md#autosaves); this section adds the Furthest progress Autosave.
 
 The targets of Autosave navigation are the Turn-end Autosaves, the Engagement Autosave, the Disengagement Autosave, and
-the Return Autosave of
+the Furthest progress Autosave of
 the Current campaign, limited to those holding a Committed state that is earlier or later than the current Committed
 state. The Current Autosave is never a target: it holds the current Committed state.
 
 The following list of operations is complete.
 
-| Operation                              | Effect                                                                                                                                                                 |
-| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `session.timeline.undoToAutosave()`    | Writes the Return Autosave when the rules below require it, then loads the target holding the latest Committed state that is earlier than the current Committed state. |
-| `session.timeline.redoToAutosave()`    | Loads the target holding the earliest Committed state that is later than the current Committed state.                                                                  |
-| `session.timeline.getAutosaveStatus()` | Reports, for each of the two operations above, whether it is available and which Autosave and Turn it loads.                                                           |
+| Operation                              | Effect                                                                                                                                                                            |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `session.timeline.undoToAutosave()`    | Writes the Furthest progress Autosave when the rules below require it, then loads the target holding the latest Committed state that is earlier than the current Committed state. |
+| `session.timeline.redoToAutosave()`    | Loads the target holding the earliest Committed state that is later than the current Committed state.                                                                             |
+| `session.timeline.getAutosaveStatus()` | Reports, for each of the two operations above, whether it is available and which Autosave and Turn it loads.                                                                      |
 
 The following rules are complete.
 
@@ -144,12 +144,12 @@ The following rules are complete.
   Player actions lead from the other to it, and the other is then earlier. Committed states that neither of these
   relates belong to different lines of play; e.g., two Committed states reached by different actions after the same
   undo.
-- **Equal targets:** When two targets hold equal Committed states, the operation loads the Return Autosave if it is one
-  of them; e.g., the Disengagement Autosave can hold the Committed state that the Return Autosave holds. Between two
+- **Equal targets:** When two targets hold equal Committed states, the operation loads the Furthest progress Autosave if it is one
+  of them; e.g., the Disengagement Autosave can hold the Committed state that the Furthest progress Autosave holds. Between two
   other targets holding equal Committed states, which one is loaded is the Implementer's choice.
-- **Return Autosave:** `undoToAutosave()` writes the Return Autosave, holding the current Committed state with its
-  Timeline, before going back, unless the Campaign has a Return Autosave holding a later Committed state than the
-  current one. A Campaign has at most one Return Autosave. Loading the Return Autosave through `redoToAutosave()`
+- **Furthest progress Autosave:** `undoToAutosave()` writes the Furthest progress Autosave, holding the current Committed state with its
+  Timeline, before going back, unless the Campaign has a Furthest progress Autosave holding a later Committed state than the
+  current one. A Campaign has at most one Furthest progress Autosave. Loading the Furthest progress Autosave through `redoToAutosave()`
   removes it.
 - **A new action removes Autosaves of abandoned play:** When a Player action commits, every
   Autosave of the Campaign is removed unless it holds the Committed state in which that action began or an earlier
@@ -158,8 +158,9 @@ The following rules are complete.
   [Loading](saves.md#loading) in Saves states, with this difference: [Dev mode](engine-contract.md#principals-and-access) stays unchanged.
 - **Never a side effect:** Autosave navigation is never a side effect of another operation. In particular,
   `undoAction()` at a Turn-start state is rejected and does not load an Autosave, under
-  [Edge cases and failure behavior](#edge-cases-and-failure-behavior). An interface presents Autosave navigation as a
-  control separate from Action navigation, because one call can cross many Turns.
+  [Edge cases and failure behavior](#edge-cases-and-failure-behavior). An interface may offer one undo control and one
+  redo control for both forms, provided each control names the form it takes before it is used, because one call of
+  Autosave navigation can cross many Turns; e.g., the GUI labels its undo control Undo Action or Undo Turn.
 
 Each target holds the Timeline as it is at its Committed state, including its Undone actions, under
 [Campaign save contents](saves.md#campaign-save-contents). Loading a target therefore restores undo and redo of that
@@ -168,7 +169,7 @@ Turn's Timeline entries, under [Action navigation](#action-navigation).
 Going back and going forward land on the same targets. Consequently, calling `undoToAutosave()` N times and then
 `redoToAutosave()` M times, with M no greater than N and no Player action in between, leaves the Current campaign
 where N minus M calls of `undoToAutosave()` leave it. With M equal to N, it is where it started, including its
-Timeline entries and Undone actions, because the last `redoToAutosave()` loads the Return Autosave.
+Timeline entries and Undone actions, because the last `redoToAutosave()` loads the Furthest progress Autosave.
 
 The following two hand-kept diagrams show one example Campaign. They illustrate the rules of this section and of
 [Autosaves](saves.md#autosaves), and they add no rule of their own. The player played Turn 3 and Turn 4, engaged
@@ -191,7 +192,7 @@ The diagrams read as follows:
 - **The Autopilot engagement:** the Engagement Autosave is written where it begins, and no Turn-end Autosave is
   written inside it. One call therefore crosses the whole Autopilot engagement. No Autosave marks where it ends: the
   Turn-end Autosave of Turn 9 holds that Turn's Timeline, which reaches back to it.
-- **The Return Autosave:** the first `undoToAutosave()` writes it in Turn 10, and the fourth `redoToAutosave()` loads
+- **The Furthest progress Autosave:** the first `undoToAutosave()` writes it in Turn 10, and the fourth `redoToAutosave()` loads
   it.
 - **After a call:** the loaded Autosave holds its own Turn's Timeline, so the player can then undo that Turn's
   Timeline entries one by one.
@@ -231,9 +232,9 @@ Autosave navigation fails for the reasons listed under
 [Edge cases and failure behavior](saves.md#edge-cases-and-failure-behavior) in Saves, with these complete
 consequences:
 
-- **A Return Autosave that cannot be written:** `undoToAutosave()` fails with the Save reason and changes nothing.
+- **A Furthest progress Autosave that cannot be written:** `undoToAutosave()` fails with the Save reason and changes nothing.
 - **A target that cannot be loaded:** `undoToAutosave()` or `redoToAutosave()` fails with the Load reason and leaves
-  the entire prior [Session](core-concepts.md#campaign-and-session) unchanged. A Return Autosave written by that call stays.
+  the entire prior [Session](core-concepts.md#campaign-and-session) unchanged. A Furthest progress Autosave written by that call stays.
 - **A missing Autosave:** An Autosave that could not be written is not a target; e.g., when the Turn-end Autosave of
   Turn 3 is missing, `undoToAutosave()` from Turn 4 loads the Turn-end Autosave of Turn 2.
 
@@ -287,6 +288,6 @@ play are not targets. They stay in [Game storage](engine-contract.md#persisted-d
   Autosave in Turn 5; four more load the Turn-end Autosaves of Turn 4 to Turn 1. Five `redoToAutosave()` calls then
   restore Turn 35 as it was left ([Autosave navigation](#autosave-navigation)).
 - **A new action removes later Autosaves:** From Turn 4, call `undoToAutosave()` twice, loading the Turn-end Autosave
-  of Turn 2, and commit a new action. The Turn-end Autosave of Turn 3 and the Return Autosave are removed, the
+  of Turn 2, and commit a new action. The Turn-end Autosave of Turn 3 and the Furthest progress Autosave are removed, the
   Turn-end Autosaves of Turn 1 and Turn 2 remain, and `redoToAutosave()` is rejected
   ([Autosave navigation](#autosave-navigation)).
