@@ -43,16 +43,20 @@ that each answers _what does this part show by default, and how is it laid out?_
 [Main Menu](screens/main-menu.md) is where the GUI opens, and the [Campaign Screen](screens/campaign-screen.md) is where
 a Campaign is played. The parts of the Campaign screen that need more than a line have their own: the
 [Situation Panel](screens/situation-panel.md) for the work waiting for the Player, the
-[Turn Summary](screens/turn-summary.md) for what an Advance turn did, and the [History Tab](screens/history-tab.md) for
-how the Campaign has gone.
+[Turn Summary](screens/turn-summary.md) for what an Advance turn did, and one specification for each Detail view the
+Side panel opens: the [Missions View](screens/missions-view.md), [Leads View](screens/leads-view.md),
+[Agents View](screens/agents-view.md), and [Upgrades View](screens/upgrades-view.md), in which the Player acts, and the
+[Turn Report View](screens/turn-report-view.md), [History View](screens/history-view.md),
+[Charts View](screens/charts-view.md), and [Compendium View](screens/compendium-view.md), in which the Player reads
+what has happened and how the game works.
 
 # How they relate
 
 Both interfaces present the same engine API and neither depends on the other. Each uses Engine Contract and Campaign
 Lifecycle from the Foundation family; the Command-Line Interface also uses Player API, and the Graphical User Interface
 lists the screen specifications, which use Domain Model and the Mechanics specifications that detail the concepts each
-shows, and World History for the Turn report. The Situation Panel, Turn Summary, and History Tab are parts of the
-Campaign Screen. Every screen specification uses Visual Design for its look, and Visual Design names each screen
+shows, and World History for the Turn report. The Situation Panel, the Turn Summary, and every Detail view
+specification are parts of the Campaign Screen. Every screen specification uses Visual Design for its look, and Visual Design names each screen
 specification as the place of its Artboard. Headless First in the Guidance family uses both, and Gameplay Dependency
 Direction uses the Graphical User Interface.
 

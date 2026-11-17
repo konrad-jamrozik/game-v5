@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1398" height="560" viewBox="0 0 1398 560" role="img" aria-label="Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics. Mandatory builds on Foundation. Guidance builds on Foundation. Recipes builds on Foundation and Mandatory. Foundation and Mechanics form the game engine.">
-  <title>Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics. Mandatory builds on Foundation. Guidance builds on Foundation. Recipes builds on Foundation and Mandatory. Foundation and Mechanics form the game engine.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1398" height="560" viewBox="0 0 1398 560" role="img" aria-label="Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics. Mandatory builds on Foundation. Guidance builds on Foundation. Recipes builds on Foundation and UI and Mandatory. Foundation and Mechanics form the game engine.">
+  <title>Family architecture. Content builds on Foundation and Mechanics. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics. Mandatory builds on Foundation. Guidance builds on Foundation. Recipes builds on Foundation and UI and Mandatory. Foundation and Mechanics form the game engine.</title>
   <style>
     :root { --bg: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #8a94a6; --box: #f6f7f9;
       --engine-bg: #f1f2f5; --found-bg: #dfe5f7; --found-fg: #2d3f8f; --mech-bg: #f7dceb; --mech-fg: #8c2a5d; }
@@ -31,7 +31,7 @@
   <text class="count" x="143" y="213">1 specification</text>
   <rect class="box" x="306" y="164" width="230" height="66" rx="10"/>
   <text class="title" x="421" y="192">UI</text>
-  <text class="count" x="421" y="213">8 specifications</text>
+  <text class="count" x="421" y="213">15 specifications</text>
   <rect class="box" x="584" y="164" width="230" height="66" rx="10"/>
   <text class="title" x="699" y="192">Autopilot AIs</text>
   <text class="count" x="699" y="213">1 specification</text>
@@ -45,7 +45,7 @@
   <text class="engine-title" x="699" y="327">Game engine</text>
   <rect class="band-mech" x="433" y="340" width="532" height="52" rx="8"/>
   <text class="band-name ink-mech" x="699" y="362">Mechanics</text>
-  <text class="band-count ink-mech" x="699" y="380">11 specifications</text>
+  <text class="band-count ink-mech" x="699" y="380">12 specifications</text>
   <rect class="band-found" x="393" y="400" width="612" height="52" rx="8"/>
   <text class="band-name ink-found" x="699" y="422">Foundation</text>
   <text class="band-count ink-found" x="699" y="440">15 specifications</text>
@@ -61,6 +61,8 @@
   <path class="head" d="M 983 290 L 995 290 L 989 300 Z"/>
   <path class="arrow" d="M 699 94 L 699 292"/>
   <path class="head" d="M 693 290 L 705 290 L 699 300 Z"/>
+  <path class="arrow" d="M 699 94 L 506 156"/>
+  <path class="head" d="M 500 154 L 512 154 L 506 164 Z"/>
   <path class="arrow" d="M 699 94 L 892 156"/>
   <path class="head" d="M 886 154 L 898 154 L 892 164 Z"/>
   <text class="caption" x="699" y="500">Arrows point from a Family to the Families its specifications reference.</text>

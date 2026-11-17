@@ -14,9 +14,9 @@ These informative views are derived from the registered Markdown specifications.
 | Governance         | Conventions   | 8              |
 | Governance         | Process       | 3              |
 | Design             | Foundation    | 15             |
-| Design             | Mechanics     | 11             |
+| Design             | Mechanics     | 12             |
 | Design             | Content       | 1              |
-| Design             | UI            | 8              |
+| Design             | UI            | 15             |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 3              |
 | Implementation     | Guidance      | 4              |
@@ -69,6 +69,7 @@ These informative views are derived from the registered Markdown specifications.
 | ------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | AGENT   | [Agents](../specs/design/mechanics/agents-spec.md)                          | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions.                 |
 | COMBAT  | [Combat](../specs/design/mechanics/combat.md)                               | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating, Combat outcomes, and the Combat report.                                                                                                    |
+| COMP    | [Compendium](../specs/design/mechanics/compendium.md)                       | The EncyclopediaArticle GDR, and when an Encyclopedia article is Player-visible.                                                                                                                                                                                                  |
 | DOM     | [Domain Model](../specs/design/mechanics/domain-model.md)                   | Game concepts, how they relate, and the structural invariants that span several concepts.                                                                                                                                                                                         |
 | ECON    | [Economy and Upgrades](../specs/design/mechanics/economy-and-upgrades.md)   | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, and the hireAgent, dismissAgents, purchaseUpgrade, and addMoney actions.                                                        |
 | ENDING  | [Panic and Endings](../specs/design/mechanics/panic-and-endings.md)         | Panic and how this Turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending.                                                                                                                  |
@@ -87,16 +88,23 @@ These informative views are derived from the registered Markdown specifications.
 
 ## UI
 
-| ID   | Document                                                         | Owns                                                                                                                                     |
-| ---- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| CLI  | [Command-Line Interface](../specs/design/ui/cli.md)              | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.                 |
-| CSCR | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md) | The regions of the Campaign screen of the graphical user interface and the tabs of its main area.                                        |
-| GUI  | [Graphical User Interface](../specs/design/ui/gui.md)            | Which screens the graphical user interface has, the Progress bar that several of them show, and the confirmations and warnings it gives. |
-| HTAB | [History Tab](../specs/design/ui/screens/history-tab.md)         | What the History tab of the Campaign screen shows and in which order.                                                                    |
-| MENU | [Main Menu](../specs/design/ui/screens/main-menu.md)             | What the Main menu screen of the graphical user interface shows and how it is laid out.                                                  |
-| SITP | [Situation Panel](../specs/design/ui/screens/situation-panel.md) | What the Situation panel of the Campaign screen shows.                                                                                   |
-| TSUM | [Turn Summary](../specs/design/ui/screens/turn-summary.md)       | When the Turn summary dialog of the Campaign screen appears and what it shows.                                                           |
-| VIS  | [Visual Design](../specs/design/ui/visual-design.md)             | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts.               |
+| ID     | Document                                                           | Owns                                                                                                                                            |
+| ------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| AVIEW  | [Agents View](../specs/design/ui/screens/agents-view.md)           | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents.                                              |
+| CLI    | [Command-Line Interface](../specs/design/ui/cli.md)                | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.                        |
+| COMPV  | [Compendium View](../specs/design/ui/screens/compendium-view.md)   | What the Compendium View of the Campaign screen shows and how the Player finds an article in it.                                                |
+| CSCR   | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md)   | The regions of the Campaign screen of the graphical user interface, its Side panel, and its Detail views.                                       |
+| CVIEW  | [Charts View](../specs/design/ui/screens/charts-view.md)           | Which charts the Charts View of the Campaign screen shows and in which order.                                                                   |
+| GUI    | [Graphical User Interface](../specs/design/ui/gui.md)              | Which screens the graphical user interface has, the progress indicators that several of them show, and the confirmations and warnings it gives. |
+| HVIEW  | [History View](../specs/design/ui/screens/history-view.md)         | What the History View of the Campaign screen shows and in which order.                                                                          |
+| LVIEW  | [Leads View](../specs/design/ui/screens/leads-view.md)             | What the Leads View of the Campaign screen shows, how its panes are arranged, and how it starts and staffs Investigations.                      |
+| MENU   | [Main Menu](../specs/design/ui/screens/main-menu.md)               | What the Main menu screen of the graphical user interface shows and how it is laid out.                                                         |
+| MVIEW  | [Missions View](../specs/design/ui/screens/missions-view.md)       | What the Missions View of the Campaign screen shows, how its panes are arranged, and how it deploys Agents.                                     |
+| SITP   | [Situation Panel](../specs/design/ui/screens/situation-panel.md)   | What the Situation panel of the Campaign screen shows.                                                                                          |
+| TRVIEW | [Turn Report View](../specs/design/ui/screens/turn-report-view.md) | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report.                        |
+| TSUM   | [Turn Summary](../specs/design/ui/screens/turn-summary.md)         | When the Turn summary dialog of the Campaign screen appears and what it shows.                                                                  |
+| UVIEW  | [Upgrades View](../specs/design/ui/screens/upgrades-view.md)       | What the Upgrades View of the Campaign screen shows and how it purchases Upgrades.                                                              |
+| VIS    | [Visual Design](../specs/design/ui/visual-design.md)               | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts.                      |
 
 ## Autopilot AIs
 

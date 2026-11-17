@@ -71,6 +71,12 @@ which creates its Mission, and turning Combat reports into Consequences.
 [Factions](factions.md) answers _how do the opponents push back?_ It owns escalating Faction pressure, Faction
 operation occurrence generation, and permanent elimination.
 
+## Compendium
+
+[Compendium](compendium.md) answers _what can the player look up about the game?_ It owns the EncyclopediaArticle GDR,
+written by the Game designer as Display content that no rule reads, and when an Encyclopedia article is Player-visible:
+always for a Guide article, and otherwise exactly when its subject is.
+
 ## Turn Advancement
 
 [Turn Advancement](turn-advancement.md) answers _what happens during Advance turn, and in which order?_ It owns the
@@ -148,4 +154,5 @@ Read in layer order: [Domain Model](domain-model.md) (layer 1); then [Agents](ag
 [Panic and Endings](panic-and-endings.md) (layer 2); then [Agent Recovery](agent-recovery.md), [Combat](combat.md),
 [Economy and Upgrades](economy-and-upgrades.md), [Factions](factions.md), and
 [Leads and Progression](leads-and-progression.md) (layer 3); then [Investigations](investigations.md),
-[Missions](missions.md), and [Turn Advancement](turn-advancement.md) (layer 4).
+[Missions](missions.md), and [Turn Advancement](turn-advancement.md) (layer 4); then [Compendium](compendium.md)
+(layer 5).

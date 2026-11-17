@@ -28,7 +28,7 @@ These terms are specific to Visual Design.
 | Artboard        | A mockup of one screen or one panel of the graphical user interface, exported from the Design canvas and kept in the repository as an image in `docs/images/artboards`. |
 | Design canvas   | The claude.ai design artifact from which every Artboard is exported, under [Design canvas](#design-canvas).                                                             |
 | Design token    | A named visual value, e.g. a colour, a font, or a spacing step, that every screen uses in place of a literal value.                                                     |
-| Panel Artboard  | An Artboard of one panel or dialog on its own, without the screen around it, e.g. the History tab.                                                                      |
+| Panel Artboard  | An Artboard of one panel or dialog on its own, without the screen around it, e.g. the History View.                                                                     |
 | Screen Artboard | An Artboard of a whole screen, which shows where each region of the screen sits; the panels on it are sample content, each detailed by its own specification.           |
 
 # Design canvas
@@ -55,13 +55,21 @@ specification change they illustrate.
 Each Artboard image comes from exactly one canvas artboard and is shown in exactly one specification. This table is
 exhaustive.
 
-| Image                 | Kind   | Canvas artboard          | Shown in                                      |
-| --------------------- | ------ | ------------------------ | --------------------------------------------- |
-| `main-menu.png`       | Screen | `Main.dc.html`           | [Main Menu](screens/main-menu.md)             |
-| `campaign-screen.png` | Screen | `CampaignScreen.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
-| `history-tab.png`     | Panel  | `HistoryTab.dc.html`     | [History Tab](screens/history-tab.md)         |
-| `situation-panel.png` | Panel  | `SituationPanel.dc.html` | [Situation Panel](screens/situation-panel.md) |
-| `turn-summary.png`    | Panel  | `TurnSummary.dc.html`    | [Turn Summary](screens/turn-summary.md)       |
+| Image                      | Kind   | Canvas artboard              | Shown in                                        |
+| -------------------------- | ------ | ---------------------------- | ----------------------------------------------- |
+| `main-menu.png`            | Screen | `Main.dc.html`               | [Main Menu](screens/main-menu.md)               |
+| `campaign-screen.png`      | Screen | `CampaignScreen.dc.html`     | [Campaign Screen](screens/campaign-screen.md)   |
+| `campaign-screen-view.png` | Screen | `CampaignScreenView.dc.html` | [Campaign Screen](screens/campaign-screen.md)   |
+| `situation-panel.png`      | Panel  | `SituationPanel.dc.html`     | [Situation Panel](screens/situation-panel.md)   |
+| `turn-summary.png`         | Panel  | `TurnSummary.dc.html`        | [Turn Summary](screens/turn-summary.md)         |
+| `missions-view.png`        | Panel  | `MissionsView.dc.html`       | [Missions View](screens/missions-view.md)       |
+| `leads-view.png`           | Panel  | `LeadsView.dc.html`          | [Leads View](screens/leads-view.md)             |
+| `agents-view.png`          | Panel  | `AgentsView.dc.html`         | [Agents View](screens/agents-view.md)           |
+| `upgrades-view.png`        | Panel  | `UpgradesView.dc.html`       | [Upgrades View](screens/upgrades-view.md)       |
+| `turn-report-view.png`     | Panel  | `TurnReportView.dc.html`     | [Turn Report View](screens/turn-report-view.md) |
+| `history-view.png`         | Panel  | `HistoryView.dc.html`        | [History View](screens/history-view.md)         |
+| `charts-view.png`          | Panel  | `ChartsView.dc.html`         | [Charts View](screens/charts-view.md)           |
+| `compendium-view.png`      | Panel  | `CompendiumView.dc.html`     | [Compendium View](screens/compendium-view.md)   |
 
 # Reading Artboards
 
@@ -83,26 +91,26 @@ interface has a dark theme only; the light theme is a TODO.
 Each colour has one role, so that the same colour always means the same thing across screens. This table is
 exhaustive.
 
-| Token          | Value                    | Role                                                                                                                                                                                               |
-| -------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Background     | `#0D0D0B`                | The page behind all panels, and the fill of inputs.                                                                                                                                                |
-| Surface        | `#151512`                | Panels, cards, and chart frames.                                                                                                                                                                   |
-| Raised         | `#22211C`                | Neutral buttons, the selected tab, and row dividers inside panels.                                                                                                                                 |
-| Divider        | `#2B2A24`                | Dividers between panel sections, and empty meter segments.                                                                                                                                         |
-| Border         | `#3A382F`                | Borders of controls, table header rules, chart baselines, and the top edge of a plain card.                                                                                                        |
-| Text           | `#E8E4D8`                | Primary text and the lines of neutral chart series.                                                                                                                                                |
-| Text secondary | `#B8B3A6`                | Supporting prose, e.g. the game description on the Main menu.                                                                                                                                      |
-| Text muted     | `#9C978A`                | Labels, hints, and idle states, e.g. an Agent on standby.                                                                                                                                          |
-| Axis           | `#8F8A7D`                | Chart axis labels.                                                                                                                                                                                 |
-| Accent         | `#FF7A1A`                | The primary action, the selected-tab marker, the current [Campaign](../foundation/core-concepts.md#campaign-and-session)'s card edge, and [Panic](../mechanics/domain-model.md#campaign-standing). |
-| Accent dim     | `#7A4A22`                | A partly filled meter segment.                                                                                                                                                                     |
-| Accent text    | `#FF8A33`                | Text that needs attention, e.g. a tab count, a low health value, or an expired [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).                       |
-| On accent      | `#1A0B00`                | Text on an Accent fill.                                                                                                                                                                            |
-| Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or an Agent on an assignment.                                     |
-| Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                                                   |
-| Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                                                |
-| Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                                                     |
-| Scrim          | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog.                                                                                                                                                    |
+| Token          | Value                    | Role                                                                                                                                                                                                   |
+| -------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Background     | `#0D0D0B`                | The page behind all panels, and the fill of inputs.                                                                                                                                                    |
+| Surface        | `#151512`                | Panels, cards, and chart frames.                                                                                                                                                                       |
+| Raised         | `#22211C`                | Neutral buttons, navigation buttons, and row dividers inside panels.                                                                                                                                   |
+| Divider        | `#2B2A24`                | Dividers between panel sections, and empty meter segments.                                                                                                                                             |
+| Border         | `#3A382F`                | Borders of controls, table header rules, chart baselines, and the top edge of a plain card.                                                                                                            |
+| Text           | `#E8E4D8`                | Primary text and the lines of neutral chart series.                                                                                                                                                    |
+| Text secondary | `#B8B3A6`                | Supporting prose, e.g. the game description on the Main menu.                                                                                                                                          |
+| Text muted     | `#9C978A`                | Labels, hints, and idle states, e.g. an Agent on standby.                                                                                                                                              |
+| Axis           | `#8F8A7D`                | Chart axis labels.                                                                                                                                                                                     |
+| Accent         | `#FF7A1A`                | The primary action, the open-Detail-view marker, the current [Campaign](../foundation/core-concepts.md#campaign-and-session)'s card edge, and [Panic](../mechanics/domain-model.md#campaign-standing). |
+| Accent dim     | `#7A4A22`                | A partly filled meter segment.                                                                                                                                                                         |
+| Accent text    | `#FF8A33`                | Text that needs attention, e.g. a count on a navigation button, a low health value, or an expired [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions).        |
+| On accent      | `#1A0B00`                | Text on an Accent fill.                                                                                                                                                                                |
+| Positive       | `#B7C77A`                | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or an Agent on an assignment.                                         |
+| Danger         | `#FF7F78`                | Losses, destructive actions, and limits, e.g. upkeep, Delete, and the [Panic limit](../mechanics/panic-and-endings.md#glossary).                                                                       |
+| Danger border  | `#5E2A26`                | The border of a destructive button.                                                                                                                                                                    |
+| Limit band     | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart.                                                                                                                                                         |
+| Scrim          | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog.                                                                                                                                                        |
 
 ## Typography
 
@@ -115,7 +123,7 @@ monospaced font carries every number and identifier. All three are Google Fonts.
 | Section heading | Barlow Condensed | 700    | 22 px | Uppercase, 0.08 em              | The heading of a Main menu column.                                                              |
 | Panel heading   | Barlow Condensed | 700    | 18 px | Uppercase, 0.08 em              | The heading of a panel, a table, or a headline chart.                                           |
 | Label           | Barlow Condensed | 600    | 13 px | Uppercase, 0.12 em, Text muted  | Field labels, table headers, and status bar labels.                                             |
-| Button          | Barlow Condensed | 600    | 14 px | Uppercase, 0.1 em               | Button and tab text; 17 px on a screen's main action.                                           |
+| Button          | Barlow Condensed | 600    | 14 px | Uppercase, 0.1 em               | Button text; 17 px on a screen's main action.                                                   |
 | Body            | Barlow           | 400    | 15 px | Sentence case, line height 1.45 | Prose, table cells that hold words, and input text.                                             |
 | Figure          | JetBrains Mono   | 400    | 15 px | Tabular figures                 | Every number and identifier, e.g. Money or a [Campaign ID](../foundation/saves.md#identifiers). |
 | Headline figure | JetBrains Mono   | 400    | 22 px | Tabular figures                 | A status bar value and the current value of a chart.                                            |
@@ -126,10 +134,10 @@ monospaced font carries every number and identifier. All three are Google Fonts.
 Even spacing is what makes the screens read as orderly, so spacing follows fixed steps rather than case-by-case values.
 
 - Controls in one group, e.g. Load and Delete, are 8 px apart.
-- Panels stacked in one column are 16 px apart on the Campaign screen and 24 px apart on the Main menu; columns and
-  the major regions of a screen are 20 px apart on the Campaign screen and 24 px apart on the Main menu.
+- Panels stacked in one column are 16 px apart on the Campaign screen and 24 px apart on the Main menu; columns are
+  24 px apart on the Main menu. The regions of the Campaign screen meet without a gap.
 - A panel has 18 px of inner padding; a table cell has 8 px vertical and 10 px horizontal padding.
-- A screen has at least 24 px of outer padding, and the Main menu content is at most 1216 px wide and centred.
+- The Main menu has at least 24 px of outer padding, and the Main menu content is at most 1216 px wide and centred.
 - Controls have a 2 px corner radius; panels and cards have square corners and no outline.
 
 # Components
@@ -165,7 +173,11 @@ one Campaign on the Main menu; it has a 2 px top edge in Border, or in Accent wh
 wants, e.g. the Campaign of the most recent [Campaign save](../foundation/engine-contract.md#persisted-data).
 
 A panel that lists groups, e.g. the panel of the Campaign screen that lists the work waiting for the Player, heads
-each group with a Label and its count in the Figure style and Accent text, and separates groups with Divider rules. A [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that expires within two [Turns](../foundation/engine-contract.md#player-actions-and-turns) shows its Turns until expiration
+each group with a Label and its count in the Figure style and Accent text, and separates groups with Divider rules.
+In a panel whose items take one line each, each item is a row 28 px tall, separated by Raised dividers: its name in Body on the left, and
+its value, e.g. a [Completion estimate](gui.md#glossary), right-aligned in the Figure style and Text secondary, with a
+[Progress circle](gui.md#glossary) between them. A [Completion estimate](gui.md#glossary) whose earliest Advance turn is the next one is in
+Accent text, and "stalled" and "ETA ?" are in Text muted. A [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that expires within two [Turns](../foundation/engine-contract.md#player-actions-and-turns) shows its Turns until expiration
 in Accent text.
 
 ## Dialogs
@@ -183,11 +195,21 @@ rule; body rows are separated by Raised dividers. Columns that hold numbers use 
 their header included. Row actions sit in the last column, right-aligned, under [Buttons](#buttons). Text that encodes
 a state uses the colour of that state, e.g. Positive for a won Mission, and Text muted for an idle Agent.
 
-## Tabs
+## Detail views and navigation
 
-Tabs switch the main area of the Campaign screen. A tab uses the Button text style with no fill; the selected tab has a
-Raised fill, a Border outline, and a 2 px Accent line along its bottom edge. A count on a tab, e.g. the number of
-Mission sites, follows the tab name in the Figure style and Accent text.
+The [Side panel](gui.md#glossary) is the console beside the globe, so it reads as one dark column and the globe as open space.
+
+- **[Globe stage](gui.md#glossary):** a Background fill behind the globe, with no panel or outline around it.
+- **Side panel:** 400 px wide, on a Surface fill with a 1 px Divider rule along its left edge. Its sections are
+  separated by Divider rules and have 16 px of inner padding.
+- **Navigation buttons:** each group name is in the Label style above its buttons, which sit two to a row with 8 px
+  between them. A navigation button is a neutral button in the Button style, its name on the left and its count, if
+  any, on the right in the Figure style and Accent text. The button of the open [Detail view](gui.md#glossary) has a 2 px Accent line along its
+  bottom edge.
+- **Detail view:** it covers the Globe stage inset by 16 px, on a Surface fill with a 2 px Accent top edge and 18 px of inner
+  padding. Its title is in the Panel heading style on the left, with its buttons and then its close control in one row
+  on the right, under [Buttons](#buttons). A Detail view taller than the Globe stage scrolls inside, keeping its title row in
+  view.
 
 ## Status bar
 
@@ -223,6 +245,13 @@ completion nears instead of switching hue. It is 8 px tall in a panel row and 10
 - **Completed Investigation:** in a dialog, the gain of the last Advance turn is a Positive segment labelled
   with that gain above it in Positive, and the point where the Investigation completed carries a check in a Positive
   circle 20 px wide, with the check in Background and the final [Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) under it in Positive.
+
+## Progress circles
+
+A [Progress circle](gui.md#glossary) is 18 px wide and sits on the text line it belongs to. Its track is a 1.5 px Border
+ring, and its fill is a sector from the top, clockwise, coloured as the Fill of [Progress bars](#progress-bars). A full
+circle is an Accent disc with a check in On accent. The circle of a [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that is not an [Assessed Lead](../mechanics/investigations.md#glossary) is a
+1.5 px dashed Accent dim ring with a question mark in a 9 px Figure style and Text muted.
 
 # Charts
 

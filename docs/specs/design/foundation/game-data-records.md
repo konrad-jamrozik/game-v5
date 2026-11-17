@@ -387,8 +387,8 @@ E.g., an illustrative Thug enemy and its encyclopedia article:
 | ------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | EnemyArchetype      | Type                                                   | Describes the shared enemy characteristics and initial values, including a display name and a description.                                        |
 | Thug                | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, [base health](../mechanics/agents-spec.md#combatant-attributes) 10, display name "Thug", and a one-sentence description. |
-| EncyclopediaArticle | Type                                                   | Describes an encyclopedia article: a title, body text, an image reference, and a reference to its subject GDR.                                    |
-| Thug article        | GDR serving the Display content purpose                | Has Type EncyclopediaArticle, title "Thug", body text, an image reference, and a reference to the Thug GDR.                                       |
+| EncyclopediaArticle | Type                                                   | Describes an encyclopedia article: a title, body text, and a reference to its subject GDR.                                                        |
+| Thug article        | GDR serving the Display content purpose                | Has Type EncyclopediaArticle, title "Thug", body text, and a reference to the Thug GDR.                                                           |
 
 E.g., the Thug article as YAML. It identifies its subject by the identifier of the Thug GDR:
 
@@ -397,7 +397,6 @@ id: thug_article
 type: EncyclopediaArticle
 title: Thug
 body: A hired street enforcer with little training and less loyalty.
-image: images/enemies/thug.png
 subject: thug
 ```
 
@@ -424,7 +423,7 @@ Display content follows these requirements:
 ```mermaid
 flowchart LR
     Thug["GDR: Thug<br/>base health 10<br/>display name and description"]
-    Article["GDR: Thug article<br/>title, body text, image reference"]
+    Article["GDR: Thug article<br/>title, body text"]
     Article -->|subject reference| Thug
     Thug -->|base health 10| Combat["Game behavior: Enemy creation and Combat"]
     Thug -->|display name and description| PlayerAPI["Player API:<br/>Player-visible information"]

@@ -46,7 +46,8 @@ Domain Model concept it serves.
 | Economy and upgrades                                                                                   | One parameter GDR and four [Upgrades](../mechanics/economy-and-upgrades.md#glossary)                                                                            | 5     |
 | Faction                                                                                                | One FactionArchetype, three [Faction activity levels](../mechanics/factions.md#glossary), and two [Faction operation levels](../mechanics/factions.md#glossary) | 6     |
 | Panic and endings                                                                                      | One parameter GDR                                                                                                                                               | 1     |
-| **Total**                                                                                              |                                                                                                                                                                 | 36    |
+| [Encyclopedia article](../mechanics/compendium.md#glossary)                                            | Six [Guide articles](../mechanics/compendium.md#glossary) and one article about each of 20 other Bootstrap GDRs                                                 | 26    |
+| **Total**                                                                                              |                                                                                                                                                                 | 62    |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of
 Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
@@ -182,6 +183,18 @@ Type owner: [Panic and Endings](../mechanics/panic-and-endings.md).
 | --------- | ---------------- | --------------------- | ---------------------------------------- |
 | `endings` | EndingParameters | Calculation parameter | The Panic at which the Campaign is lost. |
 
+## Compendium GDRs
+
+Type owner: [Compendium](../mechanics/compendium.md).
+
+| GDR                                                                                                                                                                                                                                                                                                                                                                               | Type                | GDR purpose     | What it supplies                                                                      |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | --------------- | ------------------------------------------------------------------------------------- |
+| `guide_agency`, `guide_agents`, `guide_investigations`, `guide_missions`, `guide_panic`, `guide_upgrades`                                                                                                                                                                                                                                                                         | EncyclopediaArticle | Display content | The six Guide articles, each explaining one part of the game in general.              |
+| One `<subject>_article` for each of `field_agent`, `initiate`, `soldier`, `cult_leader`, `sidearm`, `rifle`, `heavy_rifle`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | EncyclopediaArticle | Display content | An article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
+
+Every Bootstrap GDR with a `name` that the Player can see has an article, except the AgencyArchetype `agency` and the
+MissionArchetype `standard_mission`, which only name the Player's own Agency and every Mission.
+
 # Bootstrap GDR files
 
 The Bootstrap GDRs are authored in YAML files under the `content/` directory at the repository root. The YAML file of a
@@ -212,6 +225,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 | `content/factions/faction_activity_levels.yaml`        | FactionActivityLevel    | `faint`, `active`, `war`                                                                  |
 | `content/factions/faction_operation_levels.yaml`       | FactionOperationLevel   | `operation_level_1`, `operation_level_2`                                                  |
 | `content/panic-and-endings/ending_parameters.yaml`     | EndingParameters        | `endings`                                                                                 |
+| `content/compendium/encyclopedia_articles.yaml`        | EncyclopediaArticle     | The 26 GDRs under [Compendium GDRs](#compendium-gdrs)                                     |
 
 # Victory path
 

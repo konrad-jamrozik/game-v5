@@ -18,8 +18,9 @@ Everything about the hookup follows from treating the globe as a sealed decorati
 engine never learns of it, so it lives wholly in the user interface. It is also the heaviest thing a Game build ships,
 so it costs the Player nothing until it is first shown.
 
-The Graphical User Interface says what the Player needs to see, and the globe is decoration beside that: an
-Implementation without a globe is still correct.
+The Graphical User Interface says what the Player needs to see, and the globe is decoration behind that: the
+[Campaign Screen](../../design/ui/screens/campaign-screen.md) gives the globe most of the screen, but an Implementation
+without a globe is still correct.
 
 # Globe library
 
@@ -84,9 +85,10 @@ wrap the ported module in one component of the graphical user interface that fol
 - **Nothing from the game.** The component should import nothing from the engine, call no function of the engine API,
   and write nothing to [Game storage](../../design/foundation/engine-contract.md#persisted-data). What the globe shows, e.g. where the camera points, is not part of a Campaign and
   is forgotten when the globe is closed.
-- **Out of the way.** The globe should sit where the Player opens it by choice, e.g. as the last tab of the Campaign
-  screen, labelled "Globe". It should not replace anything the
-  [Graphical User Interface](../../design/ui/gui.md) shows by default.
+- **Where the GUI puts it.** The globe should be shown in the [Globe stage](../../design/ui/gui.md#glossary) of the
+  [Campaign Screen](../../design/ui/screens/campaign-screen.md), centred in it, and nowhere else. It is a
+  backdrop: it should never cover the [Side panel](../../design/ui/gui.md#glossary) or a [Detail view](../../design/ui/gui.md#glossary), and the [Campaign](../../design/foundation/core-concepts.md#campaign-and-session) screen should be usable before it has
+  loaded.
 - **Owned lifetime.** The component should create the renderer when it is first shown and release it when it is
   removed, including the textures, the geometries, the event listeners, and the animation frame request. The reference
   viewer never releases anything, because its page lives as long as its globe.
@@ -111,7 +113,7 @@ that, and a Player who leaves it should stop paying:
   shown, e.g. through a dynamic `import()`, which Vite emits as a separate file. While they load, the component should
   show a short message in the globe's place.
 - **Draw only while visible.** The component should stop requesting animation frames while the globe is not in view,
-  e.g. while another tab is selected or the browser tab is in the background, and resume when it is shown again.
+  e.g. while a Detail view covers the Globe stage or the browser tab is in the background, and resume when it is shown again.
 - **Relative map addresses.** The addresses of the maps should be relative to the Game build, so that the globe also
   loads under [Paths under GitHub Pages](github-pages-deployment.md#paths-under-github-pages).
 
@@ -139,7 +141,7 @@ the list is exhaustive for the cases this guidance covers.
 - **WebGL 2 is unavailable.** The component should show a short message in the globe's place and nothing else should
   change; every other part of the graphical user interface keeps working.
 - **A map fails to load.** The component should show a short message in the globe's place, without retrying on its
-  own. Showing the globe again, e.g. by selecting its tab again, is the retry.
+  own. Showing the globe again, e.g. after closing a Detail view that covered it, is the retry.
 - **The graphics context is lost.** A browser may drop the graphics context, e.g. after the computer sleeps. The
   component should create the renderer again the next time the globe is shown.
 - **A map is larger than the graphics hardware accepts.** The ported module already reduces such a map to the largest
