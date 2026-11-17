@@ -347,27 +347,54 @@ Background artwork lets the Player enjoy a picture of the agency at work while r
 picture ever competing with what the Player reads: it is drawn so faintly that it reads as part of the dark field, not
 as an image laid over it. It is decoration only: it shows no game state and the Player cannot act on it.
 
-Each image is a file in the `assets/images/` directory at the repository root, and only the Detail views in this table
-show one. This table is exhaustive.
+Each image is a file in the `assets/images/` directory at the repository root. Which Detail view shows which image, and
+how faintly, is content rather than design, so it comes from the BackgroundArtwork GDRs: the Content designer changes an
+image or its opacity in a GDR file without changing this specification. A Detail view that no BackgroundArtwork GDR
+names shows no Background artwork. The Bootstrap GDRs list each one under
+[Visual Design GDRs](../content/bootstrap-gdrs.md#visual-design-gdrs).
 
-| Detail view                               | Image                             |
-| ----------------------------------------- | --------------------------------- |
-| [Missions View](screens/missions-view.md) | `v03ai-nano21-command-center.jpg` |
-| [Agents View](screens/agents-view.md)     | `chatgpt-agents-i2.png`           |
+A BackgroundArtwork GDR serves the Display content purpose and has these properties; the list is exhaustive:
+
+| Property             | Meaning                                                                                                                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `detail_view`        | The Detail view that shows the image, by its name in lowercase words joined by underscores, e.g. `missions` for the [Missions View](screens/missions-view.md). No two GDRs name one Detail view. |
+| `image`              | The path of the image file relative to the repository root, e.g. `assets/images/chatgpt-agents-i2.png`.                                                                                          |
+| `alternative_images` | Optional. Paths of further image files, in the form of `image`, that [Artwork tuning](#artwork-tuning) offers in place of `image`. Only Artwork tuning ever shows them.                          |
+| `opacity_pct`        | The opacity at which the image is drawn, a whole number from 0 to 100.                                                                                                                           |
+
+The Content designer chooses `opacity_pct` so that Text muted keeps a contrast ratio of at least 4.5:1 against what lies
+behind it, e.g. 12 keeps it even where the image is white.
 
 A Detail view draws its Background artwork as follows:
 
 - **Place:** between its Surface fill and its content, filling the whole Detail view below its top edge. The image is
   scaled to cover that area with its proportions kept, centred, and cropped where the proportions differ. It stays in
   place while the content scrolls over it.
-- **Opacity:** 12%, so that even where the image is white, Text muted keeps a contrast ratio of at least 4.5:1 against
-  what lies behind it.
+- **Opacity:** the `opacity_pct` of its GDR.
 - **Panels inside it:** a panel inside the Detail view, e.g. a pane of the Missions View, draws its Background fill at
   35% opacity, so that the image shows through it too while the panel still reads as an area of its own. A selected row
   and a button keep their fills opaque.
 
 The Detail view shows its Background artwork whatever it holds, e.g. the Agents View with its Memorial filter on. When
 the image cannot be loaded, the Detail view looks as it would without it.
+
+### Artwork tuning
+
+Artwork tuning lets the Game designer settle each image and its opacity while seeing them in the game, before writing
+the chosen values into the BackgroundArtwork GDRs. The developer tools, opened from the footer of the
+[Side panel](screens/campaign-screen.md#side-panel), hold an Artwork tuning section with one row for each
+BackgroundArtwork GDR, labelled with the name of its Detail view. Each row holds:
+
+- **Opacity:** a slider from 0% to 100% in steps of 1%, with its value as a figure beside it, e.g. "12%". It starts at
+  the `opacity_pct` of the GDR.
+- **Image:** a choice among `image` and each of `alternative_images`, each shown by its file name, starting at
+  `image`. A row whose GDR has no `alternative_images` has no Image choice.
+
+A Detail view showing that Background artwork follows a change at once, so the Game designer can keep it open while
+moving the slider. A Reset button at the end of the section returns every row to the values of its GDR. Tuned values
+are part of the [Session](../foundation/core-concepts.md#campaign-and-session), not of [Campaign state](../foundation/core-concepts.md#campaign-and-session): they last until the Session ends and are never saved.
+Artwork tuning is available whether or not [Dev mode](../foundation/engine-contract.md#principals-and-access) is enabled, because it neither reveals hidden information nor
+changes Campaign state.
 
 ## Status bar
 

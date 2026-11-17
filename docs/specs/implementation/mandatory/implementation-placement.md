@@ -94,7 +94,9 @@ the Spec repo; e.g., a web Implementation built with Vite copies the files to `p
 The [Background artwork](../../design/ui/visual-design.md#glossary) is authored under the `assets/images/` directory of
 the Spec repo. An Implementation that shows it must hold its own copy of every image file it shows inside its
 Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/images/` directory of
-the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/images/`.
+the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/images/`. The image path in a
+BackgroundArtwork [GDR](../../design/foundation/core-concepts.md#game-build-and-content) names a file of the Spec repo; the Game build shows the Implementation's copy of that file, e.g. the
+path `assets/images/chatgpt-agents-i2.png` is served as `public/images/chatgpt-agents-i2.png`.
 
 # Edge cases and failure behavior
 
