@@ -6,7 +6,7 @@
 | Family      | UI                                                                                                                                                                               |
 | Audience    | UI designer, Implementer                                                                                                                                                         |
 | Owns        | The regions of the Campaign screen of the graphical user interface, its Side panel, and its Detail views.                                                                        |
-| Conventions | [Specification conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

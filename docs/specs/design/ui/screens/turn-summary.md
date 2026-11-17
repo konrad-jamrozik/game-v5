@@ -6,7 +6,7 @@
 | Family      | UI                                                                                                                                                                               |
 | Audience    | UI designer, Implementer                                                                                                                                                         |
 | Owns        | When the Turn summary dialog of the Campaign screen appears and what it shows.                                                                                                   |
-| Conventions | [Specification conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

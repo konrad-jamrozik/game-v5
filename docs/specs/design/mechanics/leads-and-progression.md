@@ -6,7 +6,7 @@
 | Family      | Mechanics                                                                                                                                                                  |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                |
 | Owns        | What a Lead GDR describes, Lead prerequisites, Lead discovery, Lead availability, Lead status, and the effect of completing a Lead.                                        |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

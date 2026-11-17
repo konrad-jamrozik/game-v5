@@ -6,7 +6,7 @@
 | Family      | UI                                                                                                                                                                               |
 | Audience    | UI designer, Implementer                                                                                                                                                         |
 | Owns        | What the Main menu screen of the graphical user interface shows and how it is laid out.                                                                                          |
-| Conventions | [Specification conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

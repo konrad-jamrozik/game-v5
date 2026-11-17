@@ -6,7 +6,7 @@
 | Family      | Foundation                                                                                                                                                                 |
 | Audience    | Engine designer, UI designer, AI designer, Implementer                                                                                                                     |
 | Owns        | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory.                                                                     |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

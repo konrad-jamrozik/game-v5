@@ -6,7 +6,7 @@
 | Family      | Mechanics                                                                                                                                                                      |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                    |
 | Owns        | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating, Combat outcomes, and the Combat report. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)     |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)     |
 
 # Overview
 

@@ -6,7 +6,7 @@
 | Family      | Mechanics                                                                                                                                                                  |
 | Audience    | Engine designer, Content designer, UI designer, Implementer                                                                                                                |
 | Owns        | The EncyclopediaArticle GDR, and when an Encyclopedia article is Player-visible.                                                                                           |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

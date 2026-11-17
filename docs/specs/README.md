@@ -25,7 +25,7 @@ These documents give the context every specification assumes: what the game is m
 written and related, and how the work on them proceeds.
 
 - [Game Design Brief](../game-design-brief.md): strategic intent and architectural constraints.
-- [Specification conventions](governance/conventions/spec-conventions.md): layout, precision requirements, ownership, and how specifications change.
+- [Specification Conventions](governance/conventions/spec-conventions.md): layout, precision requirements, ownership, and how specifications change.
 - [Artifact Relationships](governance/conventions/artifact-relationships.md): how linking a term to its definition
   makes one specification reference another, and how the references form layers.
 - [Specification work plan and backlog](governance/process/work-plan.md): review batches, parallel tracks, checkpoints, and current work state.

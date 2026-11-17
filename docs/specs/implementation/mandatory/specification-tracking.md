@@ -6,7 +6,7 @@
 | Family      | Mandatory                                                                                                                                                                                  |
 | Audience    | Engine designer, Implementer                                                                                                                                                               |
 | Owns        | The Specification baseline and Specification map records that tie each Implementation to the specifications it conforms to.                                                                |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

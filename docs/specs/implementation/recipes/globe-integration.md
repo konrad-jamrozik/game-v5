@@ -6,7 +6,7 @@
 | Family      | Recipes                                                                                                                                                                                    |
 | Audience    | UI designer, Implementer                                                                                                                                                                   |
 | Owns        | Guidance on carrying the reference globe of the Spec repo into an Implementation and showing it in its graphical user interface.                                                           |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

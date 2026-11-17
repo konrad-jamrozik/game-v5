@@ -6,7 +6,7 @@
 | Family      | Foundation                                                                                                                                                                 |
 | Audience    | Engine designer, Content designer, Implementer                                                                                                                             |
 | Owns        | How every thing in a Campaign's world is modeled as a Campaign instance.                                                                                                   |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

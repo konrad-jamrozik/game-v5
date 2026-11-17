@@ -6,7 +6,7 @@
 | Family      | UI                                                                                                                                                                               |
 | Audience    | UI designer, Implementer                                                                                                                                                         |
 | Owns        | What the Compendium View of the Campaign screen shows and how the Player finds an article in it.                                                                                 |
-| Conventions | [Specification conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

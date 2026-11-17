@@ -6,7 +6,7 @@
 | Family      | Mandatory                                                                                                                                                                                  |
 | Audience    | Implementer                                                                                                                                                                                |
 | Owns        | Where each implementation and everything it needs reside, relative to the Spec repo.                                                                                                       |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

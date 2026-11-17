@@ -6,7 +6,7 @@
 | Family      | Mandatory                                                                                                                                                                                  |
 | Audience    | Engine designer, Implementer                                                                                                                                                               |
 | Owns        | The feedback files of Specification problems and Implementation decisions that each Implementation keeps.                                                                                  |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

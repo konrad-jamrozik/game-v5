@@ -6,7 +6,7 @@
 | Family      | UI                                                                                                                                                                         |
 | Audience    | UI designer, Implementer                                                                                                                                                   |
 | Owns        | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts.                                                 |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

@@ -6,7 +6,7 @@
 | Family      | Foundation                                                                                                                                                                 |
 | Audience    | Engine designer, Content designer, Implementer                                                                                                                             |
 | Owns        | What Campaign state is made of, and how Campaign initialization produces it.                                                                                               |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

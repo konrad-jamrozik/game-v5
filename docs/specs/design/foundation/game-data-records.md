@@ -6,7 +6,7 @@
 | Family      | Foundation                                                                                                                                                                 |
 | Audience    | Engine designer, Content designer, Implementer                                                                                                                             |
 | Owns        | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each.                                                                  |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

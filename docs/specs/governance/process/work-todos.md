@@ -6,7 +6,7 @@
 | Family      | Process                                                                                  |
 | Audience    | Engine designer                                                                          |
 | Owns        | Known outstanding specification issues awaiting scheduling, with their affected batches. |
-| Conventions | [Specification conventions](../conventions/spec-conventions.md)                          |
+| Conventions | [Specification Conventions](../conventions/spec-conventions.md)                          |
 
 # Overview
 

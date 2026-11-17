@@ -6,7 +6,7 @@
 | Family      | Recipes                                                                                                                                                                                    |
 | Audience    | Engine designer, Implementer                                                                                                                                                               |
 | Owns        | Guidance on publishing an Implementation to a public GitHub repository that checks and deploys it to GitHub Pages.                                                                         |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 

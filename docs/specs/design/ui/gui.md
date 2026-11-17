@@ -6,7 +6,7 @@
 | Family      | UI                                                                                                                                                                         |
 | Audience    | UI designer, Implementer                                                                                                                                                   |
 | Owns        | Which screens the graphical user interface has, the progress indicators that several of them show, and the confirmations and warnings it gives.                            |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

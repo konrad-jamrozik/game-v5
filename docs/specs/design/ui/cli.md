@@ -6,7 +6,7 @@
 | Family      | UI                                                                                                                                                                         |
 | Audience    | UI designer, Implementer                                                                                                                                                   |
 | Owns        | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal.                                                   |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

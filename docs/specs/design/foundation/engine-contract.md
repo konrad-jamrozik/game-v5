@@ -6,7 +6,7 @@
 | Family      | Foundation                                                                                                                                                                 |
 | Audience    | Engine designer, UI designer, AI designer, Implementer                                                                                                                     |
 | Owns        | The engine as a whole: how it divides, who may call what, and the guarantees every engine subsystem keeps.                                                                 |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

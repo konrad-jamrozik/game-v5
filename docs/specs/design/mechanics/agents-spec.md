@@ -6,7 +6,7 @@
 | Family      | Mechanics                                                                                                                                                                                                                                                         |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                                                                       |
 | Owns        | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                                                                        |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                                                                        |
 
 # Overview
 

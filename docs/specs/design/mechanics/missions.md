@@ -6,7 +6,7 @@
 | Family      | Mechanics                                                                                                                                                                                               |
 | Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                             |
 | Owns        | What a Mission site and a Mission have, Mission site creation, the Mission site and Mission lifecycles, the deployAgents action, Mission resolution, expiration, and the Consequences for the Campaign. |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                              |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                              |
 
 # Overview
 

@@ -6,7 +6,7 @@
 | Family      | Process                                                               |
 | Audience    | Engine designer                                                       |
 | Owns        | Specification authoring order, review checkpoints, and work tracking. |
-| Conventions | [Specification conventions](../conventions/spec-conventions.md)       |
+| Conventions | [Specification Conventions](../conventions/spec-conventions.md)       |
 
 > **Stale — needs update.** This plan predates the removal of specification Status (Stub, Draft, Accepted) and still
 > describes Batches, work states, and current progress in terms of accepting specifications. Do not follow it until it

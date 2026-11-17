@@ -6,7 +6,7 @@
 | Family      | Process                                                                                                         |
 | Audience    | Game designer, Implementer                                                                                      |
 | Owns        | How the game is developed in a loop between specifications and Implementations, and the LLM skills that run it. |
-| Conventions | [Specification conventions](../conventions/spec-conventions.md)                                                 |
+| Conventions | [Specification Conventions](../conventions/spec-conventions.md)                                                 |
 
 # Overview
 

@@ -6,7 +6,7 @@
 | Family      | Autopilot AIs                                                                                                                                                              |
 | Audience    | AI designer, Implementer                                                                                                                                                   |
 | Owns        | The goals the Basic Autopilot AI pursues, how it prioritizes them within a Turn, and what it deliberately leaves alone.                                                    |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 

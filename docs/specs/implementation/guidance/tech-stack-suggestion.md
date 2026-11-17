@@ -6,7 +6,7 @@
 | Family      | Guidance                                                                                                                                                                                   |
 | Audience    | Implementer                                                                                                                                                                                |
 | Owns        | A suggested technology stack for a browser Implementation.                                                                                                                                 |
-| Conventions | [Specification conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
 
