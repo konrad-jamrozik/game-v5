@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Globe</title>
+    <link rel="stylesheet" href="./globe.css" />
     <style>
       html,
       body {
@@ -16,42 +17,24 @@
           sans-serif;
         overflow: hidden;
       }
-      canvas {
-        display: block;
-        width: 100vw;
-        height: 100vh;
-        cursor: grab;
-        touch-action: none;
+      #stage {
+        position: fixed;
+        inset: 0;
       }
-      canvas.dragging {
-        cursor: grabbing;
-      }
-      #status,
-      #credit {
+      /* Viewer only: the hint and the map-set comparison, which an Implementation does not copy. */
+      #viewer {
         position: fixed;
         left: 0;
         right: 0;
-        text-align: center;
+        bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
         pointer-events: none;
       }
-      #status {
-        top: 50%;
-        padding: 0 24px;
-      }
-      #controls {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 44px;
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-      }
-      #controls[hidden],
-      button[hidden] {
-        display: none;
-      }
-      button {
+      #viewer button {
+        pointer-events: auto;
         height: 36px;
         padding: 0 14px;
         background: #22211c;
@@ -61,15 +44,13 @@
         font: inherit;
         cursor: pointer;
       }
-      button:hover {
+      #viewer button:hover {
         border-color: #9c978a;
       }
-      button:disabled {
-        opacity: 0.4;
-        cursor: default;
+      #viewer button[hidden] {
+        display: none;
       }
-      #credit {
-        bottom: 12px;
+      #hint {
         font-size: 13px;
         color: #9c978a;
       }
@@ -79,17 +60,54 @@
     </script>
   </head>
   <body>
-    <canvas
-      id="globe"
-      role="img"
-      aria-label="Rotating globe of the Earth built from NASA satellite imagery, with clouds, an atmosphere glow, a day and night side, and city lights at night"
-    ></canvas>
-    <div id="status" role="status">Loading NASA imagery…</div>
-    <div id="controls" hidden>
-      <button id="maps" type="button"></button>
-      <button id="spin" type="button"></button>
+    <div id="stage"></div>
+    <div id="viewer">
+      <button id="maps" type="button" hidden></button>
+      <div id="hint">Drag to orbit · scroll to zoom</div>
     </div>
-    <div id="credit">Drag to orbit · scroll to zoom · Imagery: NASA Blue Marble and Earth at Night</div>
-    <script type="module" src="./globe.js"></script>
+    <script type="module">
+      import { mountGlobe } from './globe.js'
+
+      // `standard` is the committed set. `full` is the same maps at full quality, present only after building them as
+      // README.md describes; `?maps=full` in the address starts with it.
+      const MAP_SETS = {
+        standard: { label: '5.3 MB maps', mapBase: './assets/' },
+        full: {
+          label: '14 MB maps',
+          maps: {
+            day: './assets-full/earth-day.jpg',
+            night: './assets-full/earth-night-lights.jpg',
+            normalWater: './assets-full/earth-normal-water.webp',
+            clouds: './assets-full/earth-clouds.jpg',
+          },
+        },
+      }
+      const otherOf = (name) => (name === 'full' ? 'standard' : 'full')
+      const exists = async (name) => {
+        const set = MAP_SETS[name]
+        const day = set.maps?.day ?? `${set.mapBase}earth-day.webp`
+        return (await fetch(day, { method: 'HEAD' })).ok
+      }
+
+      const stage = document.getElementById('stage')
+      const mapsButton = document.getElementById('maps')
+      // carried from one globe to the next, so that switching map sets keeps the camera and the controls
+      const memory = {}
+      let globe = null
+      let mapSet = 'standard'
+
+      const show = (name) => {
+        globe?.dispose()
+        mapSet = name
+        globe = mountGlobe(stage, { ...MAP_SETS[name], memory })
+        const other = otherOf(name)
+        mapsButton.textContent = `Showing ${MAP_SETS[name].label} · switch to ${MAP_SETS[other].label}`
+      }
+
+      const asked = new URLSearchParams(location.search).get('maps')
+      show(asked in MAP_SETS && (await exists(asked)) ? asked : 'standard')
+      mapsButton.hidden = !(await exists(otherOf(mapSet)))
+      mapsButton.addEventListener('click', () => show(otherOf(mapSet)))
+    </script>
   </body>
 </html>

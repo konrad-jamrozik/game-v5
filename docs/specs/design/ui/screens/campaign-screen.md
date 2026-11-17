@@ -34,7 +34,10 @@ screen to the globe.
   stage, and so left of the centre of the screen.
 
 The globe is a decoration: it shows a rotating Earth that the Player can turn and zoom, reads no game state, and offers
-no [Player action](../../foundation/engine-contract.md#player-actions-and-turns). The screen is complete without it; when no globe can be shown, the Globe stage is left empty.
+no [Player action](../../foundation/engine-contract.md#player-actions-and-turns). Its own controls sit at the bottom left of the Globe stage, above its imagery credit: they
+stop and start its rotation, show its clouds in full, at half opacity, or not at all, and set the speed of its day and
+night cycle, as [Globe Integration](../../../implementation/recipes/globe-integration.md) describes. The screen is
+complete without the globe; when no globe can be shown, the Globe stage is left empty.
 
 # Side panel
 

@@ -1,7 +1,8 @@
 # Globe
 
-A reference viewer for a rotating Earth: NASA satellite maps on a sphere, with a cloud shell, an atmosphere glow, a day
-and night side, and city lights at night. It is eye candy with no game logic, kept as a working reference to copy from.
+A rotating Earth: NASA satellite maps on a sphere, with a cloud shell, an atmosphere glow, a day and night side, city
+lights at night, and its own controls. It is eye candy with no game logic, kept as a working globe that an
+Implementation copies unchanged, and this folder also holds a reference viewer to try it in.
 
 ## Run it on localhost
 
@@ -17,19 +18,87 @@ Then open <http://localhost:4173/>. Any static file server works, e.g. `npx serv
 The page loads three.js r159 from the jsDelivr CDN, so the first load needs an internet connection. It needs a browser
 with WebGL 2.
 
-Drag to orbit the camera and scroll to zoom. The button below the globe stops and starts the rotation.
+Drag to orbit the camera and scroll to zoom. The three buttons at the bottom left, above the imagery credit, are the
+globe's controls:
+
+| Button        | Each press                                                                           | Starts at |
+| ------------- | ------------------------------------------------------------------------------------ | --------- |
+| ■ or ▶        | Stops or starts the rotation of the planet in view.                                  | Rotating  |
+| Clouds        | Shows the clouds in full, then at half opacity, then not at all, then again in full. | Full      |
+| Day and night | Sets the speed of the day and night cycle: 1×, 2×, 4×, stopped, then 1× again.       | 1×        |
+
+The day and night cycle moves the sun over the surface, so it goes on while the rotation is stopped. With rotation on
+and the cycle at 1×, the two cancel and the sun stands still in view. A browser that asks for reduced motion starts
+with both the rotation and the cycle stopped.
 
 ## Files
 
-| Path                              | Content                                                        |
-| --------------------------------- | -------------------------------------------------------------- |
-| `index.html`                      | The page: a full-window canvas and the three.js import map.    |
-| `globe.js`                        | The scene, the three shaders, and the orbit and zoom controls. |
-| `assets/`                         | The four maps the viewer loads, about 5.3 MB together.         |
-| `scripts/build-globe-textures.py` | Rebuilds the maps from NASA's original maps.                   |
+| Path                              | Content                                                                                                        |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `globe.js`                        | `mountGlobe`: the globe's elements, its controls, its messages, and its lifetime. It does not import three.js. |
+| `globe-scene.js`                  | The scene, the three shaders, and the orbit and zoom. It imports three.js and is loaded on first show.         |
+| `globe.css`                       | The styles of the globe's elements, using the game's Design tokens where the page defines them.                |
+| `globe.d.ts`                      | The types of `globe.js`, for TypeScript.                                                                       |
+| `index.html`                      | The viewer page: the three.js import map, the globe filling the window, and the map-set comparison.            |
+| `assets/`                         | The four maps the globe loads, about 5.3 MB together.                                                          |
+| `scripts/build-globe-textures.py` | Rebuilds the maps from NASA's original maps.                                                                   |
 
-The values most worth tuning, e.g. spin speed, sharpness, and whether clouds are drawn, are in `SETTINGS` at the top of
-`globe.js`.
+The values most worth tuning, e.g. spin speed, day and night speed, and sharpness, are in `SETTINGS` at the top of
+`globe-scene.js`.
+
+## Use in an Implementation
+
+Copy `globe.js`, `globe-scene.js`, `globe.css`, and `globe.d.ts` unchanged into one source folder, e.g.
+`src/web/globe/`, copy the four maps of `assets/` unchanged into the folder the build serves as is, e.g. `public/globe/`
+with Vite, and add `three` at version 0.159.0 as a dependency. Leave the copied source folder out of the formatter and
+the linter, so the files stay as they are here. The Globe Integration recipe in `docs/specs/implementation/recipes/`
+explains why.
+
+Then mount the globe in the element that should hold it, which sets its size. In a page without a framework:
+
+```js
+import { mountGlobe } from './globe/globe.js'
+import './globe/globe.css' // or a <link rel="stylesheet"> to it
+
+const globe = mountGlobe(document.getElementById('globe-stage'), { mapBase: './globe/', background: '#0d0d0b' })
+// globe.setVisible(false) while a panel covers it, globe.setVisible(true) when it is closed
+// globe.dispose() when the element is removed
+```
+
+In React:
+
+```tsx
+import { useEffect, useRef } from 'react'
+import { mountGlobe, type GlobeHandle } from './globe/globe.js'
+import './globe/globe.css'
+
+export function Globe({ covered }: { covered: boolean }) {
+  const element = useRef<HTMLDivElement>(null)
+  const globe = useRef<GlobeHandle | null>(null)
+  useEffect(() => {
+    if (element.current === null) return
+    const background = getComputedStyle(element.current).getPropertyValue('--background').trim() || '#0d0d0b'
+    globe.current = mountGlobe(element.current, { mapBase: './globe/', background })
+    return () => {
+      globe.current?.dispose()
+      globe.current = null
+    }
+  }, [])
+  useEffect(() => {
+    globe.current?.setVisible(!covered)
+  }, [covered])
+  return <div ref={element} style={{ position: 'absolute', inset: 0 }} />
+}
+```
+
+`mapBase` is the address of the maps relative to the page, so the globe also loads when the build is served from a
+sub-path. `background` is the opaque colour behind the planet: the atmosphere is blended additively onto it, so it
+cannot be transparent. Everything else, i.e. loading three.js and the maps on first show, pausing while hidden, the
+controls, the messages, and recovery from a lost graphics context, is done by the copied files.
+
+A browser test that is not about the globe runs much faster without it, because a browser without a display draws the
+globe in software. Before the page loads, make `HTMLCanvasElement.prototype.getContext('webgl2')` return `null`; the
+globe then shows its message in its place.
 
 ## Maps
 
@@ -49,10 +118,12 @@ difference from the full-quality maps described below.
 
 - The surface is a sphere shaded from the four maps: day colour lit by a fixed sun, relief from the normal map, a sun
   glint on water only, and city lights that fade in on the night side.
-- The clouds are a second, slightly larger sphere that drifts over the surface and casts shadows on it.
+- The clouds are a second, slightly larger sphere that drifts over the surface at the day and night speed and casts
+  shadows on it. At half opacity both the clouds and their shadows are halved.
 - The atmosphere is a third, larger sphere drawn from the inside with additive blending, blue on the day side and
   orange near the terminator.
-- The sun stays fixed while the planet spins on a tilted axis, so the day and night cycle comes from the rotation.
+- The planet turns on a tilted axis, and the sun moves around that axis at the day and night speed. At 1× with
+  rotation on, the two cancel, so the sun stands still in view while day and night sweep over the surface.
 
 ## Rebuilding the maps
 
@@ -87,8 +158,8 @@ This also writes the following files into `assets-full/`, which Git ignores:
 Once `assets-full/` exists, the viewer shows a second button that switches between the two sets without moving the
 camera, so they can be compared in place. Adding `?maps=full` to the address starts with the full-quality set.
 
-To use the full-quality maps for good, make `full` the default in `MAP_SETS` at the top of `globe.js`, remove
-`assets-full/` from `.gitignore`, and commit the folder.
+To use the full-quality maps for good, make `full` the default in `MAP_SETS` in `index.html`, pass their addresses as
+`maps` to `mountGlobe` in an Implementation, remove `assets-full/` from `.gitignore`, and commit the folder.
 
 ## Sources
 
