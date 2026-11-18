@@ -161,12 +161,13 @@ exhaustive.
 - **Text on one line:** pieces of text on one line share one baseline, whatever their styles, e.g. the title
   "Agents" and the figures "20 / 20 · Training 4 / 4" after it in the Agents View. Text is never centred on its line
   by the height of its box, because styles of different sizes then sit at different heights.
-- **Controls in one row:** the controls of one row, e.g. the filters, buttons, and close control of a Detail view's
-  title row, are equally tall and share one centre line. Text in the row, e.g. a count of selected rows after a
-  button, is centred on that line too.
+- **Controls in one row:** the controls of one row, e.g. the filters and buttons of a Detail view's title row, are
+  equally tall and share one centre line. Text in the row, e.g. a count of selected rows after a button, is centred
+  on that line too. A close control is not one of the row's controls: it keeps its own place under
+  [Close controls](#close-controls).
 - **Labelled groups:** a group of controls under a Label, e.g. the "Show agents" filters of the Agents View, stands
   its Label above its controls, and the controls share the row's centre line with every control of the row that has
-  no Label, e.g. the close control sits level with those filters, not with their Label.
+  no Label, e.g. a button of the row sits level with those filters, not with their Label.
 - **Cards side by side:** cards in one row are equally tall, and each part of a card starts at the same height on
   every card of the row, because each part takes the height of its tallest instance in the row. E.g., when the change
   of one Upgrade card wraps onto a second line, the Buy buttons of all the Upgrade cards still sit on one line.
@@ -221,8 +222,8 @@ right in Body text, 8 px from it.
 
 ## Sliders
 
-A slider shows its value as the filled share of its track, so the Player reads it at a glance, e.g. the Volume slider
-of the [Music control](music.md#music-control). At the least value no part of the track is filled and at the greatest
+A slider shows its value as the filled share of its track, so the Player reads it at a glance, e.g. the
+[Music volume slider](music.md#music-volume-slider). At the least value no part of the track is filled and at the greatest
 value all of it is, and no part of the track ever shows beyond the thumb at either end. The track is 4 px tall with
 fully rounded ends, in Accent from its left end up to the thumb and in Divider beyond. The thumb is a 14 px Accent
 circle whose centre sits at the end of the filled part, so at either end of the track it overhangs by half its width
@@ -253,6 +254,22 @@ sits centred over a Scrim on a Surface fill with a 2 px Accent top edge, at most
 640 px wide, with its title in the Section heading style and its buttons in one row at the bottom right under
 [Buttons](#buttons); the action that dismisses it is primary. A dialog taller than the window scrolls inside, keeping
 its title and buttons in view.
+
+## Close controls
+
+The Player closes every view opened over a screen the same way and finds its close control in the same place, so that
+closing never needs a search. The views that close this way are a [Detail view](gui.md#glossary), the
+[Settings panel](gui.md#settings-panel), the keyboard shortcuts, the developer tools, and the
+[Main menu](screens/main-menu.md) reached from the Campaign screen; the list is exhaustive. A dialog that ends with
+buttons, e.g. the [Turn Summary](screens/turn-summary.md), is closed by those buttons instead.
+
+- **Shape:** the close control is a square neutral button, 36 px wide and tall, holding a ✕, never a text button,
+  e.g. one labelled Close.
+- **Place:** it sits at the upper right corner of the rectangle of its view, inset by that view's inner padding, never
+  at the corner of the window when the view is narrower. Its top edge is level with the top of the view's title line,
+  so it sits at the same place in every view of one kind, whatever the other controls of the title row, e.g. a row
+  that grows downward under a Label never moves it.
+- **Escape:** the Escape key does what the close control of the topmost open view does.
 
 ## Tables
 
@@ -342,12 +359,12 @@ The [Side panel](gui.md#glossary) is the console beside the globe, so it reads a
   any, on the right in the Figure style and Accent text. The button of the open [Detail view](gui.md#glossary) has a 2 px Accent line along its
   bottom edge.
 - **Detail view:** it covers the Globe stage inset by 16 px, on a Surface fill with a 2 px Accent top edge and 18 px of inner
-  padding. Its title is in the Section heading style on the left, with its buttons and then its close control in one row
-  on the right, under [Buttons](#buttons) and [Alignment](#alignment). The title sits at the same place in every
-  Detail view, its line starting at the top of the inner padding, so that switching Detail views never moves it; a
-  row whose controls stand taller than the title, e.g. a group under a Label, grows downward and never pushes the
-  title down. The close control is a square neutral button, 36 px wide and tall, holding a ✕. A Detail view taller
-  than the Globe stage scrolls inside, keeping its title row in view.
+  padding. Its title is in the Section heading style on the left, its buttons are in one row on the right, ending 8 px before the close control,
+  under [Buttons](#buttons) and [Alignment](#alignment), and its close control is at its upper right corner, under
+  [Close controls](#close-controls). The title and the close control sit at the same places in every Detail view,
+  each starting at the top of the inner padding, so that switching Detail views never moves either; a row whose
+  controls stand taller than the title, e.g. a group under a Label, grows downward and never pushes the title or the
+  close control down. A Detail view taller than the Globe stage scrolls inside, keeping its title row in view.
 - **Panes:** in a Detail view whose content is panes side by side, e.g. the Missions View, every heading inside a
   pane, e.g. the name of a group of the left pane, the name of the selected item, and the heading of each part of the
   right pane, is in the Pane heading style, so that the panes read alike and one level below the title. A pane that holds a table is never narrower than that table's columns while the
@@ -394,8 +411,8 @@ the image cannot be loaded, the Detail view looks as it would without it.
 ### Artwork tuning
 
 Artwork tuning lets the Game designer settle each image and its opacity while seeing them in the game, before writing
-the chosen values into the BackgroundArtwork GDRs. The developer tools, opened from the footer of the
-[Side panel](screens/campaign-screen.md#side-panel), hold an Artwork tuning section. The Game designer first picks the
+the chosen values into the BackgroundArtwork GDRs. The developer tools, opened from the
+[Settings panel](gui.md#settings-panel) of the Campaign screen, hold an Artwork tuning section. The Game designer first picks the
 Detail view to tune, and the controls below it then tune that Detail view's Background artwork alone, so no control
 reads as belonging to another Detail view. The section stacks these controls in this order, each under its Label in the
 manner of [Inputs](#inputs), 16 px apart; the list is exhaustive:

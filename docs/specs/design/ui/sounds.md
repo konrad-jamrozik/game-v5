@@ -50,11 +50,11 @@ name, and any other file in the directory, e.g. a README, is not a Sound.
 The GUI plays the following Sounds, each at the moments the linked section states; the table is complete. A file of
 the directory whose Sound name is not in the table is not played.
 
-| Sound name                 | Plays                                                                                                                         |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `main-click`               | On every Main click, under [Main click](#main-click).                                                                         |
-| `go-back-click`            | On every Go back, under [Go back](#go-back).                                                                                  |
-| `interesting-turn-summary` | When the [Turn summary](screens/turn-summary.md#glossary) appears after an Advance turn, under [Turn summary](#turn-summary). |
+| Sound name                 | Plays                                                                                                                                     |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `main-click`               | On every Main click, under [Main click](#main-click), and on releasing the Sounds volume slider, under [Sound settings](#sound-settings). |
+| `go-back-click`            | On every Go back, under [Go back](#go-back).                                                                                              |
+| `interesting-turn-summary` | When the [Turn summary](screens/turn-summary.md#glossary) appears after an Advance turn, under [Turn summary](#turn-summary).             |
 
 # When Sounds play
 
@@ -67,30 +67,36 @@ keyboard shortcut, plays the Sound that the button plays.
 ## Main click
 
 A Main click is the Player selecting a button that does something: it opens a view or a dialog, asks the engine for a
-[Player action](../foundation/engine-contract.md#player-actions-and-turns), confirms a choice, or starts, loads, or
-saves a [Campaign](../foundation/core-concepts.md#campaign-and-session). E.g., each of these is a Main click: opening a
-Detail view from the [Side panel](gui.md#glossary), Advance turn, Hire, assigning Agents, deploying Agents, confirming
-a deployment under [Warning on deploying tired Agents](gui.md#warning-on-deploying-tired-agents), Load on a Campaign
-save, and opening the Turn Report View from the Turn summary. The GUI plays `main-click` when the Player selects the
-button, before the engine answers, so the Sound does not wait for a long Player action.
+[Player action](../foundation/engine-contract.md#player-actions-and-turns), confirms a choice, starts, loads, or
+saves a [Campaign](../foundation/core-concepts.md#campaign-and-session), or changes a setting of Global configuration.
+E.g., each of these is a Main click: opening a Detail view from the [Side panel](gui.md#glossary), opening the
+[Settings panel](gui.md#settings-panel), Advance turn, Hire, assigning Agents, deploying Agents, confirming a
+deployment under [Warning on deploying tired Agents](gui.md#warning-on-deploying-tired-agents), Load on a Campaign
+save, opening the Turn Report View from the Turn summary, and the Music toggle of the
+[Music control](music.md#music-control), whichever way it turns the music. The GUI plays `main-click` when the Player
+selects the button, before the engine answers, so the Sound does not wait for a long Player action. Advance turn is
+the one exception: its Sound waits for the Advance turn to end, under [Turn summary](#turn-summary). The Sounds toggle
+under [Sound settings](#sound-settings) plays `main-click` when it turns Sounds on and no Sound when it turns them off.
 
 The following inputs are not Main clicks and play no Sound, because they only choose what a later Main click acts on
 or change how something is shown; the list is complete:
 
 - Selecting or clearing an item, e.g. checking the selection checkbox of an Agent, selecting rows of a table by
   pressing or dragging, or checking Select all.
-- Changing a toggle, filter, sort, or tab, e.g. the Allow re-assigning checkbox of the
-  [Agents View](screens/agents-view.md) or the Music toggle of the [Music control](music.md#music-control).
-- Dragging a slider, typing text, hovering, and scrolling.
+- Changing a toggle that is not a setting of Global configuration, or a filter, sort, or tab, e.g. the Allow
+  re-assigning checkbox of the [Agents View](screens/agents-view.md).
+- Dragging a slider, typing text, hovering, and scrolling. Releasing the Sounds volume slider plays `main-click`
+  under [Sound settings](#sound-settings), and releasing any other slider plays no Sound.
 - A Go back, which plays its own Sound.
 
 ## Go back
 
 A Go back is the Player leaving what they are looking at, or cancelling what they were about to do, without doing
 anything else. It is either the Escape key, when it closes or cancels something, or a control that does what the
-Escape key does at that moment, e.g. the close control of a Detail view or the close button of the
+Escape key does at that moment, e.g. the close control of a Detail view, of the Settings panel, or of the
 [Main menu](screens/main-menu.md). The GUI plays `go-back-click` on every Go back. E.g., each of these is a Go back:
-closing the open Detail view, which shows the globe again; closing the Main menu, which returns to the Campaign; and
+closing the open Detail view, which shows the globe again; closing the Main menu, which returns to the Campaign;
+closing the Settings panel or the developer tools; and
 cancelling a deployment of Agents before it is confirmed, e.g. dismissing the warning under
 [Warning on deploying tired Agents](gui.md#warning-on-deploying-tired-agents) without deploying.
 
@@ -101,10 +107,11 @@ open, is not a Go back and plays no Sound.
 
 When an Advance turn that the Player requested brings news that the Player must know, the GUI shows the
 [Turn summary](screens/turn-summary.md#glossary) under [Groups](screens/turn-summary.md#groups) in Turn Summary, and
-announces it with a Sound of its own, so that the news is heard before it is read. The Player's Advance turn is a Main
-click, so `main-click` plays first. When the Turn summary appears, `interesting-turn-summary` plays, starting no sooner
-than `main-click` ends, so the two are heard one after the other and never over each other. An Advance turn that shows
-no Turn summary plays only `main-click`.
+announces it with a Sound of its own, so that the news is heard before it is read. The Player's Advance turn therefore
+plays one Sound, and the GUI chooses it when the Advance turn ends, because only then does it know whether there is
+news: `interesting-turn-summary`, at once as the Turn summary appears, when the Advance turn shows one, and
+`main-click` otherwise. An Advance turn that shows a Turn summary plays no `main-click`, so the news is never heard
+after or over a click.
 
 Reopening the Turn summary from the [Turn Report View](screens/turn-report-view.md) is a Main click and plays only
 `main-click`, because it brings no news.
@@ -119,11 +126,26 @@ in Configuration. The following table is complete for Sounds.
 | Setting       | Permitted values                         | Game build default |
 | ------------- | ---------------------------------------- | ------------------ |
 | Sounds on     | `true` or `false`                        | `true`             |
-| Sounds volume | A whole number from 0 to 100, inclusive. | 50                 |
+| Sounds volume | A whole number from 0 to 100, inclusive. | 100                |
+
+The Sounds are authored to be heard over the music at their own level, so the [Game build default](../foundation/engine-contract.md#persisted-data) plays them as
+authored, and the Player turns them down from there.
 
 The two settings are independent of Music on and Music volume under [Music settings](music.md#music-settings), so the
-Player can silence the music and keep the Sounds, or the reverse. Each has a row of its own in the Settings panel of
-the [Main Menu](screens/main-menu.md).
+Player can silence the music and keep the Sounds, or the reverse. The Player sets both in one row of the
+[Settings panel](gui.md#settings-panel), labelled Sounds, which holds from left to right:
+
+1. **Sounds toggle:** a neutral button showing a speaker, struck through while Sounds on is `false`, drawn as the
+   Music toggle of the [Music control](music.md#music-control) is. Selecting it sets Sounds on to the opposite value
+   through `session.globalConfiguration.set`. Its accessible name is "Sounds on" or "Sounds off", after the state it
+   shows.
+2. **Sounds volume slider:** a horizontal slider from 0 to 100 in steps of 1, under
+   [Sliders](visual-design.md#sliders), showing the Sounds volume, followed by the Sounds volume in the Figure style.
+   The Sounds volume is set through `session.globalConfiguration.set` when the Player releases the slider, and on
+   release `main-click` plays at the new Sounds volume, so the Player hears the level they chose. The slider stays
+   enabled while Sounds on is `false`, and then plays no Sound on release.
+
+A setting that `session.globalConfiguration.set` rejects leaves the row showing the setting's previous value.
 
 While Sounds on is `false`, the GUI plays no Sound. Otherwise it plays each Sound at the gain
 
@@ -136,7 +158,7 @@ with a Sounds volume of 50, the gain is 0.5² = 0.25.
 # Playing a Sound
 
 A Sound plays once, from its beginning to its end, without a fade. It plays over the music, which neither pauses nor
-changes its gain, and over any Sound already playing, apart from the order under [Turn summary](#turn-summary). Changing
+changes its gain, and over any Sound already playing. Changing
 screen, opening or closing a [Detail view](gui.md#glossary), and a Go back do not stop a Sound that is playing. A change of Sounds on or
 Sounds volume applies to the Sounds that start after it.
 
@@ -167,15 +189,20 @@ Sounds on `true` and the Sounds volume 50.
 - **Cancelled deployment:** The Player selects a team with an Agent of exhaustion 25 and selects Deploy: `main-click`
   plays and the warning appears. The Player presses Escape: `go-back-click` plays, the warning closes, and no Agent is
   deployed ([Go back](#go-back)).
-- **Advance turn with news:** The Player selects Advance turn and the Advance turn wins a Mission: `main-click` plays,
-  and when the Turn summary appears, `interesting-turn-summary` plays after `main-click` ends. The Player selects
-  Advance turn again and that Advance turn does nothing listed under [Groups](screens/turn-summary.md#groups): only
-  `main-click` plays ([Turn summary](#turn-summary)).
+- **Advance turn with news:** The Player selects Advance turn and the Advance turn wins a Mission: no `main-click`
+  plays, and `interesting-turn-summary` plays as the Turn summary appears. The Player selects Advance turn again and
+  that Advance turn does nothing listed under [Groups](screens/turn-summary.md#groups): `main-click` plays when it ends
+  ([Turn summary](#turn-summary)).
 - **Reopened Turn summary:** In the Turn Report View the Player reopens the Turn summary: only `main-click` plays
   ([Turn summary](#turn-summary)).
 - **Autopilot:** During an Autopilot engagement, ten Advance turns are committed and none of them plays a Sound
   ([When Sounds play](#when-sounds-play)).
-- **Sounds off, music on:** The Player sets Sounds on to `false` in the Settings panel. The music plays on, and opening
-  a Detail view plays no Sound ([Sound settings](#sound-settings)).
+- **Music toggle:** The Player selects the Music toggle to turn the music off: `main-click` plays and the music fades
+  out. Selecting it again plays `main-click` and the music fades in ([Main click](#main-click)).
+- **Sounds off, music on:** The Player selects the Sounds toggle in the Settings panel: Sounds on is stored as
+  `false` and no Sound plays. The music plays on, and opening a Detail view plays no Sound
+  ([Sound settings](#sound-settings)).
+- **Setting the level:** The Player drags the Sounds volume slider to 70 and releases it: the Sounds volume is stored
+  as 70, and `main-click` plays at a gain of 0.7² = 0.49 ([Sound settings](#sound-settings)).
 - **Missing file:** A Game build without `go-back-click.wav` closes a Detail view on Escape in silence, and
   `main-click` still plays on every Main click ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)).

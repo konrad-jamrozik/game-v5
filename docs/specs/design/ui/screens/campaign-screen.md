@@ -49,10 +49,12 @@ It holds, from top to bottom:
    and selecting the button of the open Detail view closes it.
 2. **[Situation panel](situation-panel.md):** it fills the height that the navigation and the footer leave, and
    scrolls inside when its content is taller.
-3. **Footer:** the [Autopilot](../../foundation/engine-contract.md#autopilot) controls, collapsed to one row until the Player expands them, the entries to the
-   keyboard shortcuts and the developer tools, and, in the bottom row, the [Music control](../music.md#music-control)
-   with the title of the [Track](../music.md#glossary) that is playing, so that the bottom right corner of the screen holds the controls the
-   Player reaches for at any moment.
+3. **Footer:** the [Autopilot](../../foundation/engine-contract.md#autopilot) controls, collapsed to one row until the Player expands them, and, in the bottom row,
+   the [Music control](../music.md#music-control) with the title of the [Track](../music.md#glossary) that is playing,
+   followed at the right end by the Settings button, a square neutral button 36 px wide and tall holding a cogwheel,
+   with the accessible name "Settings", which opens the [Settings panel](../gui.md#settings-panel). The bottom right
+   corner of the screen thus holds the controls the Player reaches for at any moment, while the volumes, the other
+   settings, the keyboard shortcuts, and the developer tools wait one click away in the [Settings panel](../gui.md#glossary).
 
 # Detail views
 
@@ -111,6 +113,8 @@ by its own specification and Artboard. The following appear only on the Artboard
 - The labels, order, and grouping of the controls in the status bar, e.g. "Menu" instead of "Main menu", and the
   missing keyboard-shortcut hints.
 - The drawing of the globe, which stands in for the real one.
+- The footer's Shortcuts and Developer entries, which belong in the Settings panel, and its missing Music control and
+  Settings button.
 
 # TODOs
 

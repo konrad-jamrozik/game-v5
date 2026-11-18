@@ -13,8 +13,8 @@
 The GUI plays quiet background music under every screen, so that watching the Earth from the command console feels
 like a covert operation under way. The music is meant to be heard and then forgotten: it plays the Tracks of the
 Soundtrack in a random order, each fading in and out smoothly, and never stops or restarts because the Player changes
-screen. The Player can turn it off, set its volume, or skip to the next Track at any time, from the Main menu and
-from the Campaign screen, and can always see which Track is playing.
+screen. The Player can turn it off or skip to the next Track at any time, from the Main menu and from the Campaign
+screen, can always see which Track is playing, and sets its volume in the Settings panel.
 
 The music belongs to the [Graphical User Interface](gui.md) alone. It reads no game state, changes no
 [Campaign state](../foundation/core-concepts.md#campaign-and-session), and draws no random outcome of a
@@ -24,15 +24,15 @@ Player makes once applies in every later [Session](../foundation/core-concepts.m
 
 # Glossary
 
-| Term          | Definition                                                                                                                                                               |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Soundtrack    | The music that the [Game build](../foundation/core-concepts.md#game-build-and-content) supplies for the GUI to play, as a set of Tracks.                                 |
-| Track         | One piece of music of the Soundtrack, supplied as one audio file.                                                                                                        |
-| Track title   | The name by which the GUI shows a Track, derived from the name of its file under [Soundtrack](#soundtrack).                                                              |
-| Music on      | The [Global configuration](../foundation/engine-contract.md#persisted-data) setting that says whether the GUI plays music, under [Music settings](#music-settings).      |
-| Music volume  | The Global configuration setting that says how loud the GUI plays music, under [Music settings](#music-settings).                                                        |
-| Music control | The control through which the Player sets Music on and Music volume and skips the current Track, and which shows its Track title, under [Music control](#music-control). |
-| Current Track | The Track that is playing, or that is paused because Music on is false, under [Playback](#playback).                                                                     |
+| Term          | Definition                                                                                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Soundtrack    | The music that the [Game build](../foundation/core-concepts.md#game-build-and-content) supplies for the GUI to play, as a set of Tracks.                            |
+| Track         | One piece of music of the Soundtrack, supplied as one audio file.                                                                                                   |
+| Track title   | The name by which the GUI shows a Track, derived from the name of its file under [Soundtrack](#soundtrack).                                                         |
+| Music on      | The [Global configuration](../foundation/engine-contract.md#persisted-data) setting that says whether the GUI plays music, under [Music settings](#music-settings). |
+| Music volume  | The Global configuration setting that says how loud the GUI plays music, under [Music settings](#music-settings).                                                   |
+| Music control | The control through which the Player sets Music on and skips the current Track, and which shows its Track title, under [Music control](#music-control).             |
+| Current Track | The Track that is playing, or that is paused because Music on is false, under [Playback](#playback).                                                                |
 
 # Soundtrack
 
@@ -138,35 +138,41 @@ to 0 in 0.5 seconds. A Track shorter than 6 seconds fades in over its first half
 
 # Music control
 
-The Player should be able to silence the music, change its volume, or skip a Track without leaving what they are
-doing, and to find out what is playing. The Music control does all of these, and it appears in two places: in the
-Settings panel of the [Main Menu](screens/main-menu.md), and in the footer of the [Side panel](gui.md#glossary) of the
-[Campaign Screen](screens/campaign-screen.md), so it is always one click away. It holds, in one row, from left to
-right:
+The Player should be able to silence the music or skip a Track without leaving what they are doing, and to find out
+what is playing. The Music control does all of these, and it appears in two places: above the [Settings panel](gui.md#glossary) of the
+[Main Menu](screens/main-menu.md), and in the footer of the [Side panel](gui.md#glossary) of the
+[Campaign Screen](screens/campaign-screen.md), so it is always one click away. Setting the volume is rarer, so the
+Music volume slider sits in the Settings panel instead, under [Music volume slider](#music-volume-slider). The Music
+control holds, in one row, from left to right:
 
 1. **Music toggle:** a neutral button showing a speaker, struck through while Music on is `false`. Selecting it sets
    Music on to the opposite value through `session.globalConfiguration.set`. Its accessible name is "Music on" or
    "Music off", after the state it shows.
 2. **Skip button:** a neutral button showing "⏭", with the accessible name "Next Track". Selecting it skips the Current
    Track under [Playback](#playback). It is disabled while Music on is `false` and before the first Track starts.
-3. **Volume slider:** a horizontal slider from 0 to 100 in steps of 1, showing the Music volume, followed by the Music
-   volume in the Figure style. While the Player drags it, the gain follows the slider at once under
-   [Loudness](#loudness); the Music volume is set through `session.globalConfiguration.set` when the Player releases
-   it, so that dragging stores one value rather than one for each step. The slider stays enabled while Music on is
-   `false`.
-4. **Track title:** the Track title of the Current Track, after a music note, e.g. "♪ GEO-4", in the
+3. **Track title:** the Track title of the Current Track, after a music note, e.g. "♪ GEO-4", in the
    Caption style. While Music on is `false` it reads "Music off" in Muted text instead, and before the first Track
    starts it reads nothing. A title too long for the space ends in an ellipsis, and the whole title shows on hover.
 
 The Music control is drawn with the [Design tokens](visual-design.md#glossary) and components of [Visual Design](visual-design.md). A setting that
 `session.globalConfiguration.set` rejects leaves the Music control showing the setting's previous value.
 
+# Music volume slider
+
+The Music volume slider is the row of the Settings panel, under [Settings panel](gui.md#settings-panel) in the
+Graphical User Interface, through which the Player sets the Music volume. It is labelled Music volume and holds a
+horizontal slider from 0 to 100 in steps of 1, under [Sliders](visual-design.md#sliders), showing the Music volume,
+followed by the Music volume in the Figure style. While the Player drags it, the gain follows the slider at once under
+[Loudness](#loudness); the Music volume is set through `session.globalConfiguration.set` when the Player releases it,
+so that dragging stores one value rather than one for each step. The slider stays enabled while Music on is `false`. A
+setting that `session.globalConfiguration.set` rejects leaves the slider showing the previous value.
+
 # Edge cases and failure behavior
 
 Music is never worth interrupting play for, so every failure of it is silent to the Player apart from the Track title.
 
-- **Empty Soundtrack:** A Game build with no Track plays no music. The Music control still sets Music on and Music
-  volume, and its Track title reads nothing.
+- **Empty Soundtrack:** A Game build with no Track plays no music. The Music control still sets Music on, the Music
+  volume slider still sets Music volume, and the Track title reads nothing.
 - **Track that cannot be played:** A Track whose file cannot be loaded or decoded is skipped as if it had ended at
   once, and the next Track of the playing order starts. When every Track of a round fails, the GUI plays no more music
   in the Session, and the Track title reads nothing. Neither shows an error to the Player.
@@ -198,9 +204,9 @@ long.
   over 1 second and ends at 41 seconds, and GEO-12 starts from its beginning with its 3-second fade in; the Music
   control reads "♪ GEO-12". Selecting the Skip button twice within that second ends GEO-6 at the second press
   ([Playback](#playback), [Fades](#fades)).
-- **Volume across screens and Sessions:** On the Main menu the Player drags the Volume slider to 30 and releases it.
-  Music volume is stored as 30. The Player loads a Campaign save: the Current Track plays on without a break, and the
-  Music control of the Campaign screen shows 30. In the next Session the music starts with the Music volume 30
+- **Volume across screens and Sessions:** On the Main menu the Player drags the Music volume slider to 30 and
+  releases it. Music volume is stored as 30. The Player loads a Campaign save: the Current Track plays on without a
+  break, and the Music volume slider of the Settings panel of the Campaign screen shows 30. In the next Session the music starts with the Music volume 30
   ([Music settings](#music-settings), [Playback](#playback)).
 - **Blocked sound:** In a web browser that blocks sound until the first interaction, the GUI opens at the Main menu
   and the Track title reads nothing. The Player clicks Load on a Campaign save: the first Track starts from its

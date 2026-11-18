@@ -30,6 +30,7 @@ These terms are specific to the Graphical User Interface.
 | Completion estimate | The range of [Advance turns](../foundation/engine-contract.md#player-actions-and-turns) within which an Active [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) may complete if its projected progress gain stays as it is, under [Completion estimate](#completion-estimate). |
 | Progress bar        | The bar that shows an Investigation's progress against its [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s required progress, under [Progress bar](#progress-bar).                                                                                                                   |
 | Progress circle     | The small circle that shows an Active Investigation's progress as a share of its Lead's [Required progress](../mechanics/leads-and-progression.md#glossary), under [Progress circle](#progress-circle).                                                                                                                     |
+| Settings panel      | The panel, shown on both screens, through which the Player sets [Global configuration](../foundation/engine-contract.md#persisted-data), under [Settings panel](#settings-panel).                                                                                                                                           |
 
 # Screens
 
@@ -46,7 +47,32 @@ shows, how it is laid out, and how it is illustrated:
   [Charts View](screens/charts-view.md), and [Compendium View](screens/compendium-view.md).
 
 Both screens play the same background music without a break between them, and both offer the Music control, under
-[Music](music.md). Both answer the Player's clicks with short sounds, under [Sounds](sounds.md).
+[Music](music.md). Both answer the Player's clicks with short sounds, under [Sounds](sounds.md). Both offer the
+Settings panel, under [Settings panel](#settings-panel).
+
+# Settings panel
+
+The Player changes [Global configuration](../foundation/engine-contract.md#persisted-data) in one place, the Settings
+panel, so that a setting is found the same way on both screens, and the settings the Player rarely changes stay one
+click away rather than in view. On the [Main Menu](screens/main-menu.md) the Settings panel stands in its right
+column, always in view, with no close control. On the [Campaign Screen](screens/campaign-screen.md) it opens from the Settings button in the footer of the
+Side panel, centred over a Scrim and drawn as a dialog under [Dialogs](visual-design.md#dialogs) in Visual Design,
+except that it has no buttons at its bottom: the Player closes it with its close control or the Escape key, under
+[Close controls](visual-design.md#close-controls). Opening it neither pauses nor changes the Campaign.
+
+The Settings panel is titled Settings and holds these rows from top to bottom, each a row of a settings list under
+[Inputs](visual-design.md#inputs); the list is complete:
+
+1. **Music volume:** the [Music volume slider](music.md#music-volume-slider).
+2. **Sounds:** the Sounds toggle and the Sounds volume slider, under [Sound settings](sounds.md#sound-settings).
+3. **Other settings:** one row for each other Global configuration setting, e.g. the
+   [Autosave limit](../foundation/saves.md#glossary), with its input.
+4. **Tools,** on the Campaign Screen only: a neutral button for the keyboard shortcuts and one for the developer
+   tools. Each closes the Settings panel and opens what it names, which the Player closes with its close control or
+   the Escape key, under Close controls.
+
+Music on and Sounds on have no rows of their own beyond these: Music on is set with the Music control, and Sounds on
+with the Sounds toggle.
 
 # Confirming interrupted Assignments
 

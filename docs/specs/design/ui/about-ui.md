@@ -40,7 +40,8 @@ exported from.
 
 [Music](music.md) answers _what does the graphical user interface sound like?_ It owns the Soundtrack, the random
 order and the fades in which it is played, the two Global configuration settings that turn it off and set its volume,
-and the Music control that the Main Menu and the Campaign Screen both show.
+the Music control that the Main Menu and the Campaign Screen both show, and the Music volume slider of the Settings
+panel.
 
 ## Sounds
 
