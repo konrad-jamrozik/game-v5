@@ -58,9 +58,10 @@ It does not try to predict Faction behavior, and it does not dismiss Agents.
 
 # Assignments and transit
 
-Every assignment to, from, or between Contracting and Investigations costs one Advance turn of transit before the Agent
+Every assignment to or from Contracting and Investigations costs one Advance turn of transit before the Agent
 works, while moving between Standby and Training and deploying cost none; only an Agent on Standby or Training can be
-deployed, and an Agent [In transit](../mechanics/domain-model.md#agency-and-agents)
+deployed or given Contracting or an Investigation, an Agent on Contracting or an Investigation can only be recalled to
+Standby, and an Agent [In transit](../mechanics/domain-model.md#agency-and-agents)
 cannot be assigned, under [Transit rule](../mechanics/agents-spec.md#transit-rule) in Agents. The Basic Autopilot AI
 therefore plays by the following principles. The list is exhaustive.
 

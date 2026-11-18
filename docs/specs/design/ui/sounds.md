@@ -84,8 +84,8 @@ or change how something is shown; the list is complete:
 
 - Selecting or clearing an item, e.g. checking the selection checkbox of an Agent, selecting rows of a table by
   pressing or dragging, or checking Select all. Selecting an entry of the Compendium View is a Main click, as above.
-- Changing a toggle that is not a setting of Global configuration, or a filter, sort, or tab, e.g. the Allow
-  re-assigning checkbox of the [Agents View](screens/agents-view.md).
+- Changing a toggle that is not a setting of Global configuration, or a filter, sort, or tab, e.g. an
+  [Assignment filter](screens/agents-view.md#glossary) of the Agents View.
 - Dragging a slider, typing text, hovering, and scrolling. Releasing the Sounds volume slider plays `main-click`
   under [Sound settings](#sound-settings), and releasing any other slider plays no Sound.
 - A Go back, which plays its own Sound.

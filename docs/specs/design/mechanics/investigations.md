@@ -224,6 +224,9 @@ its changes. The action is rejected, as a whole, when any of the following holds
    in Agents.
 8. An Agent in `agents` is not [Fit for work](agents-spec.md#assignments), under
    [Start-work gate](agents-spec.md#start-work-gate) in Agents.
+9. An Agent in `agents` is not on a [Base Assignment](agents-spec.md#assignments), i.e. it is on [Contracting](agents-spec.md#assignments) or another
+   Investigation, which it can leave only for [Standby](agents-spec.md#assignments), under
+   [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents.
 
 Other preconditions apply to every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), under
 [Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md).
@@ -244,9 +247,6 @@ Turn:
 - For every Agent in `agents`: its Assignment becomes that new Investigation, with a Mutable reference to it, and
   its Agent status becomes [In transit](agents-spec.md#agent-statuses), under [Transit rule](agents-spec.md#transit-rule) and
   [Assignment changes](agents-spec.md#assignment-changes) in Agents.
-- For every Agent in `agents` whose Assignment was another Investigation: it leaves that Investigation's Current
-  team under [Leaving an Investigation](#leaving-an-investigation), which reduces that Investigation's progress under
-  [Progress loss](#progress-loss) and may make that Investigation Abandoned in this same Player action.
 
 Nothing else changes; e.g., no money is spent, and the Agents' base skill, current health, and exhaustion are unchanged. The Agents
 arrive in the next Advance turn and add their first Investigation progress in the Advance turn after it, under
@@ -289,6 +289,8 @@ its changes. The action is rejected, as a whole, when any of the following holds
    in Agents.
 7. An Agent in `agents` already belongs to the Investigation's Current team.
 8. An Agent in `agents` is not Fit for work, under [Start-work gate](agents-spec.md#start-work-gate) in Agents.
+9. An Agent in `agents` is not on a [Base Assignment](agents-spec.md#assignments), as under
+   [Starting an Investigation](#starting-an-investigation).
 
 The Lead's availability is not a precondition: an Active Investigation accepts Agents whatever its Lead's availability,
 under [Lead no longer available](#lead-no-longer-available). Other preconditions on every Player action apply as
@@ -303,9 +305,6 @@ Turn:
   Agent status becomes [In transit](domain-model.md#agency-and-agents), under [Transit rule](agents-spec.md#transit-rule) and
   [Assignment changes](agents-spec.md#assignment-changes) in Agents. It joins the Investigation's Current
   team.
-- For every Agent in `agents` whose Assignment was another Investigation: it leaves that Investigation's Current
-  team under [Leaving an Investigation](#leaving-an-investigation), which reduces that Investigation's progress under
-  [Progress loss](#progress-loss) and may make that Investigation Abandoned in this same Player action.
 
 Nothing else changes; in particular, the Investigation's Investigation progress is unchanged, because the added Agents
 are In transit and Agents joining cause no [Progress loss](#progress-loss). The added Agents count in
@@ -318,11 +317,11 @@ are In transit and Agents joining cause no [Progress loss](#progress-loss). The 
 list is exhaustive:
 
 1. **Assigned elsewhere:** A Player action changes the Agent's Assignment from that Investigation to something
-   else. The Player actions that can do so are exactly `assignAgents` under [Assigning Agents](agents-spec.md#assigning-agents)
-   in Agents, and `startInvestigation` and `assignAgentsToInvestigation`, each with an Agent whose Assignment is
-   another Investigation. `deployAgents` is not one of them, because only an Agent on a
-   [Base Assignment](agents-spec.md#assignments) can be deployed, under [Deploying Agents](missions.md#deploying-agents)
-   in Missions.
+   else. The only Player action that can do so is `assignAgents` to Standby, under
+   [Assigning Agents](agents-spec.md#assigning-agents) in Agents, because an Agent on an Investigation can be assigned
+   only to Standby, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned). Neither
+   `startInvestigation`, `assignAgentsToInvestigation`, nor `deployAgents` takes an Agent off an Investigation, because
+   each requires a [Base Assignment](agents-spec.md#assignments).
 2. **Completion:** The Investigation becomes Completed, under [Completion](#completion).
 3. **Forced return:** The Agent's work on the Investigation raises its [exhaustion](agents-spec.md#combatant-attributes) to `exhaustion_work_limit` or more in
    the Investigation progress step, under [Forced return](agents-spec.md#forced-return) in Agents.
@@ -357,9 +356,9 @@ Inputs:
 
 Evaluation: the product is formed before the division, under [Exact evaluation](../foundation/numbers.md#exact-evaluation)
 in Numbers, and rounded down once. When S_before is 0, the divisor would be zero, and the Investigation progress is
-unchanged instead. A member In transit adds nothing to either sum: the progress it will add has not started, so
-when it is assigned elsewhere, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in
-Agents, the Investigation loses no progress for it. The result lies from 0 to Investigation progress before, so Progress loss never raises progress. When the
+unchanged instead. A member In transit adds nothing to either sum: the progress it will add has not started, and it
+cannot be assigned elsewhere until it arrives, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in
+Agents. The result lies from 0 to Investigation progress before, so Progress loss never raises progress. When the
 action leaves the Current team without a member [At assignment](domain-model.md#agency-and-agents), S_after is 0 and the Investigation progress becomes 0.
 
 Progress loss leaves Assessed unchanged: an Investigation that was Assessed stays Assessed, whatever progress remains.
@@ -381,8 +380,9 @@ team.
 
 Every member of the Current team counts, whatever its Agent status. A member In transit toward the Investigation belongs to
 its Current team, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain
-Model, and does not work, so it has no Forced return; it leaves only when a Player action assigns it elsewhere, under
-[Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents. An Investigation becomes Abandoned
+Model, and does not work, so it has no Forced return, and it cannot be assigned, under
+[Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents, so it stays in the Current team at
+least until it arrives. An Investigation becomes Abandoned
 exactly when a Player action assigns elsewhere, or Forced returns send back, every member that remains in its Current
 team.
 
@@ -656,7 +656,7 @@ has no projected progress gain, reported as absent; the visible lifecycle state 
   Turn-end state of the first Advance turn after `startInvestigation`, so n and S are 0, the gain is 0, and Investigation
   progress stays 0 ([Progress gain](#progress-gain)).
 - **No working member but earlier progress:** An Active Investigation whose every remaining member is In transit, e.g.
-  after its only working member was assigned elsewhere while a newly added Agent travels to it, lost all its progress
+  after its only working member was recalled to Standby while a newly added Agent travels to it, lost all its progress
   when that member left and gains none in the next Advance turn ([Progress loss](#progress-loss),
   [Progress gain](#progress-gain)).
 - **Progress reaching or exceeding the Actual required progress:** The Investigation completes in that step; its final
@@ -676,22 +676,20 @@ has no projected progress gain, reported as absent; the visible lifecycle state 
 - **Two Investigations of different Leads:** Each gains progress from its own working members and has its own
   Completion check; both may complete in one step, each creating its own Mission site
   ([Independence within the step](#independence-within-the-step)).
-- **Agents taken from another Investigation by `startInvestigation`:** They leave that Investigation at once, which
-  loses progress under Progress loss. When they were all of its members, it becomes Abandoned in the same Player action
-  that creates the new Investigation ([Starting an Investigation](#starting-an-investigation), [Progress loss](#progress-loss), [Abandonment](#abandonment)).
-- **Restarting the Lead of an Investigation being emptied:** `startInvestigation` naming the Lead of an Active
-  Investigation is rejected, even when its `agents` are all of that Investigation's members, because
-  [One Active Investigation per Lead](#one-active-investigation-per-lead) is evaluated before the action's changes
-  ([Starting an Investigation](#starting-an-investigation)).
+- **Agents of another Investigation:** `startInvestigation` and `assignAgentsToInvestigation` reject, as a whole, a
+  list with an Agent on Contracting or another Investigation, or In transit. To move members from one Investigation to
+  another, the player recalls them to Standby, which costs the first Investigation progress under Progress loss, and
+  adds them to the other after they arrive ([Starting an Investigation](#starting-an-investigation),
+  [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents).
+- **Restarting the Lead of an Active Investigation:** `startInvestigation` naming the Lead of an Active Investigation is
+  rejected under [One Active Investigation per Lead](#one-active-investigation-per-lead), which is evaluated before the
+  action's changes ([Starting an Investigation](#starting-an-investigation)).
 - **Restarting an Abandoned Investigation's Lead:** A later `startInvestigation` of that Lead, when the Lead is available
   and has no other Active Investigation, creates a new Investigation with a new Instance ID, a new Actual required
   progress, and Investigation progress 0; the Abandoned Investigation keeps its final progress as a retained fact
   ([Abandonment](#abandonment), [Investigation creation](#investigation-creation)).
 - **Adding an Agent already in the Current team:** Rejected by `assignAgentsToInvestigation`, whether the Agent is At
   assignment or In transit ([Assigning Agents to an Investigation](#assigning-agents-to-an-investigation)).
-- **Moving Agents between two Investigations:** `assignAgentsToInvestigation` with members of another Investigation
-  moves them; the other Investigation loses progress under Progress loss and becomes Abandoned when they were all of
-  its members ([Assigning Agents to an Investigation](#assigning-agents-to-an-investigation), [Progress loss](#progress-loss), [Abandonment](#abandonment)).
 - **Mixed valid and invalid Agents:** One invalid Agent rejects the whole action; no Agent and no Investigation changes,
   and no Required progress outcome is drawn ([Starting an Investigation](#starting-an-investigation)).
 - **Completion and exhaustion:** The working members of an Investigation that completes still gain their work
@@ -853,7 +851,7 @@ creating Investigation i4 with the injected Required progress outcome 6.
 | ------------------------------------------------ | ----------------------------------- | --------------------------------- | ---------------------- | ----------------------- | -------------------------- |
 | Advance turn ending Turn 10                      | a1, a2 (both arrive)                | Gain 0                            | 0                      |                         | Stays Active.              |
 | Advance turn ending Turn 11                      | a1, a2 (At assignment)              | Gain 174                          | 174                    |                         | Assessed: 174 ≥ 150.       |
-| Turn 12: `assignAgents([a2], Contracting)`       | a1 (At assignment)                  | Loss: round down(174 × 100 / 200) | 87                     | 100                     | Stays Active and Assessed. |
+| Turn 12: `assignAgents([a2], Standby)`           | a1 (At assignment)                  | Loss: round down(174 × 100 / 200) | 87                     | 100                     | Stays Active and Assessed. |
 | Advance turn ending Turn 12                      | a1 (At assignment)                  | Gain 100                          | 187                    |                         | Stays Active.              |
 | Turn 13: `assignAgentsToInvestigation(i4, [a3])` | a1 (At assignment), a3 (In transit) | None                              | 187                    | 100                     | Stays Active.              |
 | Advance turn ending Turn 13                      | a1 (At assignment), a3 (arrives)    | Gain 100                          | 287                    |                         | Stays Active.              |
@@ -862,7 +860,7 @@ creating Investigation i4 with the injected Required progress outcome 6.
 | Advance turn ending Turn 15                      | a1, a3 (At assignment)              | Gain 174                          | 635                    |                         | 635 ≥ 600: Completed.      |
 
 In Turn 12, a2 leaves i4 at once and takes half of the effective skill At assignment with it, so i4 keeps half of its
-progress; a2 is on Contracting, In transit, and has i4 in its Participation history. i4 is not Abandoned, because a1
+progress; a2 is on Standby, In transit, and has i4 in its Participation history. i4 is not Abandoned, because a1
 remains. In Turn 13, a3 joins without loss and does not count toward the projected progress gain, because it is In
 transit. In the Advance turn ending Turn 15, i4 is Completed; a Mission site from `raid_safehouse` is created; a1 and a3
 both get Standby, In transit; both have i4 in their Participation history; i4's Current team is empty.
@@ -886,25 +884,27 @@ order during Turn 7:
 No Committed state of Turn 7 contains i1 Active with an empty Current team. The Lead stays an Assessed Lead throughout,
 because i1 is Assessed, so its range 3 to 4 stays visible while i5 has no progress yet.
 
-## Agents taken from another Investigation
+## Moving a member to another Investigation
 
 This example exercises [Starting an Investigation](#starting-an-investigation), [Progress loss](#progress-loss),
-[Abandonment](#abandonment), and [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation). It
-uses two test Leads, L1 with `required_progress` 2 and L2 with `required_progress` 4, both available and without
-prerequisites. During Turn 30, Investigation i6 of L1 is Active with Current team {a1, a2}, both At assignment, and
-Investigation progress 150.
+[Leaving an Investigation](#leaving-an-investigation), and
+[Assigning Agents to an Investigation](#assigning-agents-to-an-investigation). It uses two test Leads, L1 with
+`required_progress` 2 and L2 with `required_progress` 4, both available and without prerequisites. During Turn 30,
+Investigation i6 of L1 is Active with Current team {a1, a2}, both At assignment, and Investigation progress 150. Every
+Agent is Fit for work throughout.
 
-- `startInvestigation(L2, [a1])` succeeds: Investigation i7 of L2 is created with Current team {a1}; a1 is on i7, In
-  transit, and has i6 in its Participation history; i6 keeps a2, stays Active, and has Investigation progress
-  round down(150 × 100 / 200) = 75.
-- Then `startInvestigation(L2, [a2])` is rejected under
-  [One Active Investigation per Lead](#one-active-investigation-per-lead), because L2 now has an Active Investigation,
-  although L2 is still available.
-- Then `assignAgentsToInvestigation(i7, [a2])` succeeds: a2 joins i7, In transit. i6's Current team is now empty, so its
-  progress becomes round down(75 × 0 / 100) = 0 and it becomes Abandoned in that same Player action. i7 has Current team
-  {a1, a2}, both In transit, and Investigation progress 0.
-- Then `assignAgentsToInvestigation(i7, [a1])` is rejected, because a1 already belongs to i7's Current team (and is In
-  transit).
+- `startInvestigation(L2, [a1])` is rejected, because a1 is on i6, an Away Assignment, which it can leave only for
+  Standby.
+- Then `assignAgents([a1], Standby)` succeeds: a1 is on Standby, In transit, and has i6 in its Participation history;
+  i6 keeps a2, stays Active, and has Investigation progress round down(150 × 100 / 200) = 75.
+- Then `startInvestigation(L2, [a1])` is rejected again, because a1 is In transit and cannot be assigned.
+- In the Advance turn ending Turn 30, a1 arrives on Standby. In Turn 31, `startInvestigation(L2, [a1])` succeeds:
+  Investigation i7 of L2 is created with Current team {a1}, and a1 is on i7, In transit.
+- Then `startInvestigation(L2, [a2])` is rejected, because L2 now has an Active Investigation, under
+  [One Active Investigation per Lead](#one-active-investigation-per-lead), and because a2 is on i6; the error identifies
+  at least one of the two failed preconditions.
+- Then `assignAgentsToInvestigation(i7, [a1])` is rejected, because a1 already belongs to i7's Current team and is In
+  transit.
 
 ## Two Investigations in one step
 
@@ -940,24 +940,27 @@ and Investigation progress 200 when the Advance turn ending Turn 50 begins.
 This example exercises [Starting an Investigation](#starting-an-investigation) and
 [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation). During Turn 15: Investigation i11 is Active
 with Current team {a7}, a7 At assignment, and Investigation progress 100; Investigation i12 is Completed; a1 is on Contracting, At assignment; a2 is on
-Standby, In transit; a3 is on Recovery, [Recovering](agents-spec.md#agent-statuses); a4 is Deployed; a5 is on Standby, At assignment, with exhaustion 31; `locate_red_dawn_safehouse` is available; and no Mission at a `raid_safehouse` Mission site is Won. Every
+Standby, In transit; a3 is on Recovery, [Recovering](agents-spec.md#agent-statuses); a4 is Deployed; a5 is on Standby, At assignment, with exhaustion 31; a6 is on Training, At assignment; `locate_red_dawn_safehouse` is available; and no Mission at a `raid_safehouse` Mission site is Won. Every
 other Agent has exhaustion at most 30. Each call is made on its own from this state, and each rejected call changes nothing and draws no Required progress outcome.
 
-| Call                                                      | Result                                                                                                                                                                                                   |
-| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `startInvestigation(no_such_lead, [a1])`                  | Rejected: no Lead GDR has that identifier.                                                                                                                                                               |
-| `startInvestigation(locate_red_dawn_hq, [a1])`            | Rejected with the same error as the row above: hq is not discovered, because no Mission at a `raid_safehouse` Mission site is Won, so the rejection does not reveal that hq exists.                      |
-| `startInvestigation(locate_red_dawn_safehouse, [])`       | Rejected: `agents` is empty.                                                                                                                                                                             |
-| `startInvestigation(locate_red_dawn_safehouse, [a1, a1])` | Rejected: a1 is listed twice.                                                                                                                                                                            |
-| `startInvestigation(locate_red_dawn_safehouse, [a1, a2])` | Succeeds: a new Investigation with Current team {a1, a2}; a1 starts In transit, and a2, re-routed, is still In transit.                                                                                  |
-| `startInvestigation(locate_red_dawn_safehouse, [a3])`     | Rejected: a3 is on Recovery.                                                                                                                                                                             |
-| `startInvestigation(locate_red_dawn_safehouse, [a5])`     | Rejected: a5 is not Fit for work, because its exhaustion 31 is above 30.                                                                                                                                 |
-| `assignAgentsToInvestigation(i11, [a5])`                  | Rejected: a5 is not Fit for work.                                                                                                                                                                        |
-| `startInvestigation(locate_red_dawn_safehouse, [a4])`     | Rejected: a4 is Deployed.                                                                                                                                                                                |
-| `assignAgentsToInvestigation(i12, [a1])`                  | Rejected: i12 is not Active.                                                                                                                                                                             |
-| `assignAgentsToInvestigation(i11, [a7])`                  | Rejected: a7 already belongs to i11's Current team.                                                                                                                                                      |
-| `assignAgentsToInvestigation(i11, [a1])`                  | Succeeds: a1 is on i11, In transit; i11 has Current team {a7, a1} and unchanged progress 100.                                                                                                            |
-| `startInvestigation(locate_red_dawn_safehouse, [a1, a7])` | Succeeds: a new Investigation with Current team {a1, a7} and its own Actual required progress; i11 loses its only member a7, its progress becomes 0, and it becomes Abandoned in the same Player action. |
+| Call                                                      | Result                                                                                                                                                                              |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `startInvestigation(no_such_lead, [a1])`                  | Rejected: no Lead GDR has that identifier.                                                                                                                                          |
+| `startInvestigation(locate_red_dawn_hq, [a1])`            | Rejected with the same error as the row above: hq is not discovered, because no Mission at a `raid_safehouse` Mission site is Won, so the rejection does not reveal that hq exists. |
+| `startInvestigation(locate_red_dawn_safehouse, [])`       | Rejected: `agents` is empty.                                                                                                                                                        |
+| `startInvestigation(locate_red_dawn_safehouse, [a1, a1])` | Rejected: a1 is listed twice.                                                                                                                                                       |
+| `startInvestigation(locate_red_dawn_safehouse, [a1])`     | Rejected: a1 is on Contracting, an Away Assignment, which it can leave only for Standby.                                                                                            |
+| `startInvestigation(locate_red_dawn_safehouse, [a2])`     | Rejected: a2 is In transit and cannot be assigned until it arrives.                                                                                                                 |
+| `startInvestigation(locate_red_dawn_safehouse, [a3])`     | Rejected: a3 is on Recovery.                                                                                                                                                        |
+| `startInvestigation(locate_red_dawn_safehouse, [a5])`     | Rejected: a5 is not Fit for work, because its exhaustion 31 is above 30.                                                                                                            |
+| `assignAgentsToInvestigation(i11, [a5])`                  | Rejected: a5 is not Fit for work.                                                                                                                                                   |
+| `startInvestigation(locate_red_dawn_safehouse, [a4])`     | Rejected: a4 is Deployed.                                                                                                                                                           |
+| `assignAgentsToInvestigation(i12, [a1])`                  | Rejected: i12 is not Active.                                                                                                                                                        |
+| `assignAgentsToInvestigation(i11, [a7])`                  | Rejected: a7 already belongs to i11's Current team.                                                                                                                                 |
+| `assignAgentsToInvestigation(i11, [a1])`                  | Rejected: a1 is on Contracting.                                                                                                                                                     |
+| `startInvestigation(locate_red_dawn_safehouse, [a7])`     | Rejected: a7 is on i11, an Away Assignment; i11 keeps a7 and its progress 100.                                                                                                      |
+| `assignAgentsToInvestigation(i11, [a6])`                  | Succeeds: a6 is on i11, In transit; i11 has Current team {a7, a6} and unchanged progress 100.                                                                                       |
+| `startInvestigation(locate_red_dawn_safehouse, [a6])`     | Succeeds: a new Investigation with Current team {a6} and its own Actual required progress; a6 is on it, In transit.                                                                 |
 
 ## GDR validation
 

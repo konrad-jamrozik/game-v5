@@ -5,7 +5,7 @@
 | Spec ID     | GUI                                                                                                                                                                        |
 | Family      | UI                                                                                                                                                                         |
 | Audience    | UI designer, Implementer                                                                                                                                                   |
-| Owns        | Which screens the graphical user interface has, the progress indicators that several of them show, and the confirmations and warnings it gives.                            |
+| Owns        | Which screens the graphical user interface has, the progress indicators that several of them show, and the warnings it gives.                                              |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -74,23 +74,9 @@ The Settings panel is titled Settings and holds these rows from top to bottom, e
 Music on and Sounds on have no rows of their own beyond these: Music on is set with the Music control, and Sounds on
 with the Sounds toggle.
 
-# Confirming interrupted Assignments
-
-Taking an [Agent](../mechanics/domain-model.md#agency-and-agents) off [Contracting](../mechanics/agents-spec.md#assignments) or an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) interrupts its work and costs it an Advance turn
-[In transit](../mechanics/domain-model.md#agency-and-agents), under [Transit rule](../mechanics/agents-spec.md#transit-rule) in Agents, so the GUI guards against doing it by mistake.
-Before it makes any [Player action](../foundation/engine-contract.md#player-actions-and-turns) that changes the [Assignment](../mechanics/domain-model.md#agency-and-agents) of an Agent on Contracting or an
-Investigation, whatever the new Assignment, the GUI asks the Player to confirm, e.g. before `assignAgents`, `startInvestigation`, or
-`assignAgentsToInvestigation`. The confirmation names each such Agent and says that it spends the next Advance turn In
-transit doing nothing. For an Investigation, it also names each Investigation that loses members, with its
-[Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) before and after the loss, under [Progress loss](../mechanics/investigations.md#progress-loss) in Investigations, and each that becomes
-Abandoned and loses all its progress, under [Abandonment](../mechanics/investigations.md#abandonment). An order that interrupts no
-such Agent, e.g. moving an Agent between Standby and Training, needs no confirmation. The [Agents View](screens/agents-view.md) asks no such
-confirmation, because its Allow re-assigning checkbox takes its place, under
-[Re-assigning](screens/agents-view.md#re-assigning) in Agents View.
-
 # Warning on deploying tired Agents
 
-The engine lets an Agent of any [exhaustion](../mechanics/agents-spec.md#combatant-attributes) be deployed, under [Deploying Agents](../mechanics/missions.md#deploying-agents) in Missions,
+The engine lets an [Agent](../mechanics/domain-model.md#agency-and-agents) of any [exhaustion](../mechanics/agents-spec.md#combatant-attributes) be deployed, under [Deploying Agents](../mechanics/missions.md#deploying-agents) in Missions,
 because a tired team may be the only answer to a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). A tired Agent fights worse and drops out of a
 [Combat](../mechanics/domain-model.md#combat) sooner, under [Incapacitation condition](../mechanics/combat.md#incapacitation-condition) in Combat, so the GUI makes sure the Player
 deploys one knowingly. Before it makes a `deployAgents` [Player action](../foundation/engine-contract.md#player-actions-and-turns) whose team includes an Agent with exhaustion of
@@ -106,7 +92,7 @@ How it is drawn depends on what the Player knows:
 - **[Assessed Lead](../mechanics/investigations.md#glossary):** the bar spans 0 to the greatest value of the Lead's [Required progress range](../mechanics/investigations.md#glossary), e.g. 0 to 15 for a
   [Required progress](../mechanics/leads-and-progression.md#glossary) of 10. A tick marks the [Required progress](../mechanics/leads-and-progression.md#glossary), and the part from it to the end of the bar is marked
   as the zone in which the Investigation may complete in any Advance turn, because its Actual required progress lies
-  there. The fill runs from 0 to the Investigation progress. On an Active Investigation, a preview segment after the
+  there. The fill runs from 0 to the [Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). On an Active Investigation, a preview segment after the
   fill shows the projected progress gain, and a caption says that the Investigation may complete next turn when its
   progress and that gain together reach the Required progress, and that it may complete any turn once its progress has
   reached it.

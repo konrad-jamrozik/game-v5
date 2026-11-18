@@ -214,18 +214,18 @@ same formula from a base value of EconomyParameters and the Upgrade bonus of the
 cap = base + Upgrade bonus of the cap's effect identifier
 ```
 
-| Cap           | base                 | Effect identifier | What it limits                                                                                                                                                                       | Applied by                                                                                                                                           |
-| ------------- | -------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Agent cap     | `base_agent_cap`     | `agent_cap`       | The number of Serving Agents, whatever their [Assignment](domain-model.md#agency-and-agents) and Agent status.                                                                       | [Hiring Agents](#hiring-agents)                                                                                                                      |
-| Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Assignment is Deployed, over every [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) together.     | The `deployAgents` [Player action](../foundation/engine-contract.md#player-actions-and-turns) under [Deploying Agents](missions.md#deploying-agents) |
-| Training cap  | `base_training_cap`  | `training_cap`    | The number of Serving Agents whose Assignment is Training, counting both those [At assignment](agents-spec.md#agent-statuses) and those [In transit](agents-spec.md#agent-statuses). | [Training cap on assigning Agents](#training-cap-on-assigning-agents)                                                                                |
+| Cap           | base                 | Effect identifier | What it limits                                                                                                                                                                   | Applied by                                                                                                                                           |
+| ------------- | -------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agent cap     | `base_agent_cap`     | `agent_cap`       | The number of Serving Agents, whatever their [Assignment](domain-model.md#agency-and-agents) and Agent status.                                                                   | [Hiring Agents](#hiring-agents)                                                                                                                      |
+| Transport cap | `base_transport_cap` | `transport_cap`   | The number of Deployed Agents, i.e. Serving Agents whose Assignment is Deployed, over every [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) together. | The `deployAgents` [Player action](../foundation/engine-contract.md#player-actions-and-turns) under [Deploying Agents](missions.md#deploying-agents) |
+| Training cap  | `base_training_cap`  | `training_cap`    | The number of Serving Agents whose Assignment is Training, whatever their Agent status.                                                                                          | [Training cap on assigning Agents](#training-cap-on-assigning-agents)                                                                                |
 
 Inputs: base is a whole number of Agents of at least 0, and the Upgrade bonus is a whole number of Agents of at least 0.
 A cap with no Upgrade of its effect identifier equals its base. No rounding occurs, because every term is a whole number. Each cap is a whole number of at least its base, with no upper
 bound.
 
 **Counting Training:** An Agent assigned to Training occupies a place under the Training cap from the moment of the
-assignment, including while it is still [In transit](domain-model.md#agency-and-agents) from an [Away Assignment](agents-spec.md#assignments), and keeps it until its Assignment stops being Training. An Agent
+assignment, and keeps it until its Assignment stops being Training. An Agent
 assigned away from Training, e.g. to [Standby](agents-spec.md#assignments), no longer counts from that moment.
 
 **Counting Deployed Agents:** A Deployed Agent occupies a place under the Transport cap from the moment it is deployed
@@ -305,7 +305,7 @@ Inputs:
 | S                  | The number of Serving Agents, as Step-start values of the Upkeep step, whatever their Assignment and Agent status. | Agents; a whole number of at least 0.          |
 | money before       | The Agency's money as the Step-start value of the Upkeep step, i.e. after the Agency income step.                  | Money; any whole number.                       |
 
-S counts every Serving Agent, including one that is In transit, one that arrived in the Transit step of the same Advance
+S counts every Serving Agent, including one that is [In transit](domain-model.md#agency-and-agents), one that arrived in the Transit step of the same Advance
 turn, one on [Recovery](agents-spec.md#assignments), and one that is Deployed, under the upkeep exception of [Transit rule](agents-spec.md#transit-rule)
 in Agents. A Killed or [Dismissed](agents-spec.md#agent-statuses) Agent is not Serving and is not counted. An Agent Killed in the Mission resolution step
 of an Advance turn was Serving in the Upkeep step of that same Advance turn, so it is counted in that Advance turn and
@@ -413,7 +413,7 @@ when:
 T + number of Agents in agents  >  Training cap
 ```
 
-where T is the number of Serving Agents whose Assignment is Training, At assignment or In transit, in the
+where T is the number of Serving Agents whose Assignment is Training, whatever their Agent status, in the
 Committed state in which the action is requested, and the Training cap is under [Agency caps](#agency-caps). Every Agent
 in `agents` adds one, because the preconditions under [Assigning Agents](agents-spec.md#assigning-agents) already
 reject an Agent whose Assignment is Training.
@@ -605,9 +605,8 @@ reveals anything hidden.
 - **Agent cap reached:** With exactly as many Serving Agents as the Agent cap, `hireAgent` is rejected even with
   enough money. Serving Agents In transit, on Recovery, or Deployed count; Killed and Dismissed Agents do not
   ([Hiring Agents](#hiring-agents), [Agency caps](#agency-caps)).
-- **Training cap reached:** An Agent In transit to Training occupies a place, so an order to Training that would exceed
-  the cap is rejected even while some Agents on Training have not yet arrived
-  ([Training cap on assigning Agents](#training-cap-on-assigning-agents)).
+- **Training cap reached:** An order to Training that would exceed the cap is rejected as a whole, even when only one
+  of its Agents does not fit ([Training cap on assigning Agents](#training-cap-on-assigning-agents)).
 - **Count above a cap:** After a Player cheat action, e.g. `addAgents`, a count may exceed its cap; nothing is removed and
   only further additions are rejected ([Counts above a cap](#counts-above-a-cap)).
 - **Zero funding:** With funding 0 and no Agent working on Contracting, income is 0 and the Agency income step leaves
@@ -766,7 +765,7 @@ first Advance turn, which this rule forbids.
 
 This example exercises [Upkeep](#upkeep) and [Agency income](#agency-income). The Turn-end state of Turn 9 has money 300
 and funding 20, and these Agents: a1 on Standby, At assignment; a2 on Contracting, In transit; a3 Deployed on a Mission at
-Mission site s1; a4 on Recovery, [Recovering](agents-spec.md#agent-statuses); a5 on Contracting, At assignment; a6 on Training, In transit; a7 Killed in an
+Mission site s1; a4 on Recovery, [Recovering](agents-spec.md#agent-statuses); a5 on Contracting, At assignment; a6 on Standby, In transit; a7 Killed in an
 earlier Turn; and a8 Dismissed. Projected income is 20 + 30 × 1 = 50 and projected upkeep is 10 × 6 = 60.
 
 In the Advance turn ending Turn 9, Agency income counts only a5, because a2 arrives in the Transit step: money
@@ -852,18 +851,18 @@ survivors are no longer Deployed and stop counting.
 
 This example exercises [Training cap on assigning Agents](#training-cap-on-assigning-agents),
 [Agency caps](#agency-caps), and [Cap Upgrades](#cap-upgrades). During Turn 20 the Agency has money 250. Agents t1, t2,
-and t3 are on Training, At assignment; a1 is on Contracting, At assignment; a2 to a6 are on Standby, At assignment. The Training cap is 4 and T is 3. The
+and t3 are on Training, At assignment; a1 to a6 are on Standby, At assignment. The Training cap is 4 and T is 3. The
 calls are made in this order:
 
-| Call                                       | Result                                                                                   | T after |
-| ------------------------------------------ | ---------------------------------------------------------------------------------------- | ------- |
-| `assignAgents([a1, a2], Training)`         | Rejected as a whole: 3 + 2 = 5 is more than 4. Neither a1 nor a2 changes.                | 3       |
-| `assignAgents([a1], Training)`             | Succeeds: 3 + 1 = 4. a1 is on Training, In transit from Contracting, and already counts. | 4       |
-| `assignAgents([a2], Training)`             | Rejected: 4 + 1 = 5 is more than 4, although a1 has not yet arrived.                     | 4       |
-| `assignAgents([a2], Contracting)`          | Succeeds: the Training cap does not apply.                                               | 4       |
-| `purchaseUpgrade(training_cap)`            | Succeeds: money 50; the Training cap becomes 4 + 4 × 1 = 8.                              | 4       |
-| `assignAgents([a3, a4, a5, a6], Training)` | Succeeds: 4 + 4 = 8.                                                                     | 8       |
-| `assignAgents([t1], Standby)`              | Succeeds: t1 is no longer on Training and frees its place at once.                       | 7       |
+| Call                                       | Result                                                                    | T after |
+| ------------------------------------------ | ------------------------------------------------------------------------- | ------- |
+| `assignAgents([a1, a2], Training)`         | Rejected as a whole: 3 + 2 = 5 is more than 4. Neither a1 nor a2 changes. | 3       |
+| `assignAgents([a1], Training)`             | Succeeds: 3 + 1 = 4. a1 is on Training, At assignment, at once.           | 4       |
+| `assignAgents([a2], Training)`             | Rejected: 4 + 1 = 5 is more than 4.                                       | 4       |
+| `assignAgents([a2], Contracting)`          | Succeeds: the Training cap does not apply.                                | 4       |
+| `purchaseUpgrade(training_cap)`            | Succeeds: money 50; the Training cap becomes 4 + 4 × 1 = 8.               | 4       |
+| `assignAgents([a3, a4, a5, a6], Training)` | Succeeds: 4 + 4 = 8.                                                      | 8       |
+| `assignAgents([t1], Standby)`              | Succeeds: t1 is no longer on Training and frees its place at once.        | 7       |
 
 A second `purchaseUpgrade(training_cap)` in the same Turn is rejected, because money 50 is less than 200.
 

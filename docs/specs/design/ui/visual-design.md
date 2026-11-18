@@ -217,7 +217,8 @@ that follows content on the same line, e.g. the Load and Delete of a Campaign sa
 aligns to the right edge of its row or panel. A row of buttons that is a part of its own in a card whose parts are
 stacked, e.g. the Buy button of an Upgrade card, starts at the card's left content edge, as the card's text does. When
 a row is too narrow, the whole group wraps below the content, never a single label.
-A disabled button keeps its kind and is drawn at 40% opacity.
+A disabled button keeps its kind and is drawn at 60% opacity, so that its label stays readable over a
+[Background artwork](#background-artwork).
 
 ## Inputs
 
@@ -306,13 +307,13 @@ Assignment that gains "· In transit", a filter that hides rows, or a wider wind
 
 A table's columns sit side by side from its left edge, and no column stretches to fill a wide table, so that every
 value stays close to the rest of its row. On a wide screen the spare width lies to the right of the last column, never
-between two columns; e.g., the reason column of the [Agents View](screens/agents-view.md) follows the Assignment column
+between two columns; e.g., the Blocked by column of the [Agents View](screens/agents-view.md) follows the Assignment column
 directly, however wide the screen. A table narrower than its columns scrolls sideways within its panel, which happens
 only when the window is too narrow for the panel, e.g. a pane of a Detail view, to take the table's full width, under
 [Detail views and navigation](#detail-views-and-navigation).
 
 Every row of a table is one line tall, so that rows line up and a long value does not push the rows below it down.
-Each column is wide enough to hold on one line every value that the specifications list for it, e.g. the reason
+Each column is wide enough to hold on one line every value that the specifications list for it, e.g. the Blocked by
 "Already on Contracting" in the [Agents View](screens/agents-view.md). A value of free text that can still be too long
 for its column, e.g. the message of an engine rejection, is cut short with "…" and shown in full while the pointer rests
 on it.
@@ -346,11 +347,16 @@ equal in every tier keep the table's default order. Pressing a header works as f
 - **The column of a lower tier** becomes the first tier with the direction it had, leaving its old tier, and the tiers
   that were above it move down one.
 
-E.g., after sorting the [Agent table](screens/agents-view.md#agent-table) by effective skill and then by reason, the rows with an empty reason come first,
-and among them the rows are ordered by effective skill.
+E.g., after sorting the [Agent table](screens/agents-view.md#agent-table) by effective skill and then by Blocked by, the rows with an empty Blocked
+by come first, and among them the rows are ordered by effective skill.
+
+A view may lock a tier above the four, e.g. the Blocked by tier of the Agent table while an
+[Assignment filter](screens/agents-view.md#glossary) is on. Pressing a locked tier's header changes nothing, and pressing any other header changes the
+tiers under it as above.
 
 The header of each column in a tier shows its direction as ▲ for ascending or ▼ for descending, after its label, at
-full opacity for the first tier and at 70 %, 45 %, and 25 % opacity for the second, third, and fourth tier. A header
+full opacity for the first tier and at 70 %, 45 %, and 25 % opacity for the second, third, and fourth tier, counting a
+locked tier as the first and showing every tier past the fourth at 25 %. A header
 is never cut short: each column's width holds its header's label together with that arrow, e.g. the base weapon damage
 column of the [Agents View](screens/agents-view.md) is wide enough for its label followed by "▼".
 
