@@ -72,7 +72,8 @@ saves a [Campaign](../foundation/core-concepts.md#campaign-and-session), or chan
 E.g., each of these is a Main click: opening a Detail view from the [Side panel](gui.md#glossary), opening the
 [Settings panel](gui.md#settings-panel), Advance turn, Hire, assigning Agents, deploying Agents, confirming a
 deployment under [Warning on deploying tired Agents](gui.md#warning-on-deploying-tired-agents), Load on a Campaign
-save, opening the Turn Report View from the Turn summary, and the Music toggle of the
+save, opening the Turn Report View from the Turn summary, selecting a category or an article in the
+[Compendium View](screens/compendium-view.md), which opens it to be read, and the Music toggle of the
 [Music control](music.md#music-control), whichever way it turns the music. The GUI plays `main-click` when the Player
 selects the button, before the engine answers, so the Sound does not wait for a long Player action. Advance turn is
 the one exception: its Sound waits for the Advance turn to end, under [Turn summary](#turn-summary). The Sounds toggle
@@ -82,7 +83,7 @@ The following inputs are not Main clicks and play no Sound, because they only ch
 or change how something is shown; the list is complete:
 
 - Selecting or clearing an item, e.g. checking the selection checkbox of an Agent, selecting rows of a table by
-  pressing or dragging, or checking Select all.
+  pressing or dragging, or checking Select all. Selecting an entry of the Compendium View is a Main click, as above.
 - Changing a toggle that is not a setting of Global configuration, or a filter, sort, or tab, e.g. the Allow
   re-assigning checkbox of the [Agents View](screens/agents-view.md).
 - Dragging a slider, typing text, hovering, and scrolling. Releasing the Sounds volume slider plays `main-click`
@@ -186,6 +187,8 @@ Sounds on `true` and the Sounds volume 50.
   Player presses Escape again: nothing is open, so no Sound plays ([Main click](#main-click), [Go back](#go-back)).
 - **Selecting is silent:** In the Agents View the Player checks the selection checkboxes of three Agents and then
   clears one: no Sound plays. The Player then selects Hire: `main-click` plays ([Main click](#main-click)).
+- **Reading the Compendium:** In the Compendium View the Player selects the Enemies category and then one of its
+  articles: `main-click` plays each time. Typing in the search field plays no Sound ([Main click](#main-click)).
 - **Cancelled deployment:** The Player selects a team with an Agent of exhaustion 25 and selects Deploy: `main-click`
   plays and the warning appears. The Player presses Escape: `go-back-click` plays, the warning closes, and no Agent is
   deployed ([Go back](#go-back)).

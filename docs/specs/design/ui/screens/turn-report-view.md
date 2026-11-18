@@ -27,7 +27,8 @@ keeps the same controls from Turn to Turn.
 
 # Sections
 
-The Turn Report View shows the following sections in this order, each with the number of its items. They are exactly
+The Turn Report View shows the following sections in this order, each under a Group heading with the number of its
+items, under [Panels and cards](../visual-design.md#panels-and-cards) in Visual Design. They are exactly
 what the [Turn report](../../foundation/world-history.md#glossary) holds, each under the specification that owns it, so a section with nothing to show is left out
 and the View adds no section of its own, e.g. none for money or Panic, which the History View shows. The list is
 exhaustive.

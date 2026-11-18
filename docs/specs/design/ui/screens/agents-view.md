@@ -18,7 +18,7 @@ it is one table, because the Player compares Agents with one another and acts on
 # Header
 
 The header shows the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents against the [Agent cap](../../mechanics/domain-model.md#agency-and-agents) and the number of Agents counted against
-the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) against that cap, e.g. "Agents 10 / 12 · Training 2 / 3", with the counts on the baseline of the title, under
+the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) against that cap, e.g. "Agents 10 / 12 · Training 2 / 3", with the counts centred on the title, under
 [Alignment](../visual-design.md#alignment) in Visual Design, and these controls, in this order:
 
 1. **Hire,** labelled with `hire_cost`, which makes one `hireAgent` [Player action](../../foundation/engine-contract.md#player-actions-and-turns), under [Hiring Agents](../../mechanics/economy-and-upgrades.md#hiring-agents) in

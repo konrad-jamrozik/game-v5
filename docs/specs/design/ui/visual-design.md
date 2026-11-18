@@ -132,18 +132,25 @@ exhaustive.
 Three typefaces separate three kinds of text: condensed headings name things, the body font explains them, and the
 monospaced font carries every number and identifier. All three are Google Fonts. This table is exhaustive.
 
-| Style           | Font             | Weight | Size  | Case and spacing                   | Use                                                                                                              |
-| --------------- | ---------------- | ------ | ----- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Screen title    | Barlow Condensed | 700    | 56 px | Uppercase, 0.04 em                 | The game title on the [Main menu](../foundation/campaign-lifecycle.md#glossary).                                 |
-| Section heading | Barlow Condensed | 700    | 22 px | Uppercase, 0.08 em                 | The heading of a Main menu column, the title of a dialog, and the title of a Detail view.                        |
-| Panel heading   | Barlow Condensed | 700    | 18 px | Uppercase, 0.08 em                 | The heading of a panel, a table, or a headline chart.                                                            |
-| Pane heading    | Barlow Condensed | 700    | 16 px | Uppercase, 0.08 em, Text secondary | Every heading inside a pane of a Detail view, under [Detail views and navigation](#detail-views-and-navigation). |
-| Label           | Barlow Condensed | 600    | 13 px | Uppercase, 0.12 em, Text muted     | Field labels, table headers, and status bar labels.                                                              |
-| Button          | Barlow Condensed | 600    | 14 px | Uppercase, 0.1 em                  | Button text; 17 px on a screen's main action.                                                                    |
-| Body            | Barlow           | 400    | 15 px | Sentence case, line height 1.45    | Prose, table cells that hold words, and input text.                                                              |
-| Figure          | JetBrains Mono   | 400    | 15 px | Tabular figures                    | Every number and identifier, e.g. Money or a [Campaign ID](../foundation/saves.md#identifiers).                  |
-| Headline figure | JetBrains Mono   | 400    | 22 px | Tabular figures                    | A status bar value and the current value of a chart.                                                             |
-| Axis            | JetBrains Mono   | 400    | 11 px | Axis colour                        | Chart axis labels.                                                                                               |
+| Style           | Font             | Weight | Size  | Case and spacing                   | Use                                                                                                                                                                                                                       |
+| --------------- | ---------------- | ------ | ----- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Screen title    | Barlow Condensed | 700    | 56 px | Uppercase, 0.04 em                 | The game title on the [Main menu](../foundation/campaign-lifecycle.md#glossary).                                                                                                                                          |
+| Section heading | Barlow Condensed | 700    | 22 px | Uppercase, 0.08 em                 | The heading of a Main menu column, the title of a dialog, and the title of a Detail view.                                                                                                                                 |
+| Panel heading   | Barlow Condensed | 700    | 18 px | Uppercase, 0.08 em                 | The heading of a panel, a table, or a headline chart.                                                                                                                                                                     |
+| Group heading   | Barlow Condensed | 700    | 16 px | Uppercase, 0.08 em, Text secondary | The heading of a group of items in a panel or a dialog, under [Panels and cards](#panels-and-cards), and every heading inside a pane of a Detail view, under [Detail views and navigation](#detail-views-and-navigation). |
+| Label           | Barlow Condensed | 600    | 13 px | Uppercase, 0.12 em, Text muted     | Field labels, table headers, and status bar labels.                                                                                                                                                                       |
+| Button          | Barlow Condensed | 600    | 14 px | Uppercase, 0.1 em                  | Button text; 17 px on a screen's main action.                                                                                                                                                                             |
+| Body            | Barlow           | 400    | 15 px | Sentence case, line height 1.45    | Prose, table cells that hold words, and input text.                                                                                                                                                                       |
+| Figure          | JetBrains Mono   | 400    | 15 px | Tabular figures                    | Every number and identifier, e.g. Money or a [Campaign ID](../foundation/saves.md#identifiers).                                                                                                                           |
+| Headline figure | JetBrains Mono   | 400    | 22 px | Tabular figures                    | A status bar value and the current value of a chart.                                                                                                                                                                      |
+| Axis            | JetBrains Mono   | 400    | 11 px | Axis colour                        | Chart axis labels.                                                                                                                                                                                                        |
+
+Text steps down as it nests, so that the Player reads how a screen is built before reading its words: text nested
+under a heading is never larger than that heading, and each further level is no larger and no brighter than the level
+it sits under. E.g., in the Turn Summary, the "New Mission sites" Group heading
+outranks the name of each new Mission site under it, in Body and Text, and the name outranks its details, in Body and
+Text secondary or Text muted. A Label names a control or a column, not a group of items, e.g. "Show agents" above the
+filters of the Agents View or a table header, so it never heads a group of items.
 
 ## Spacing and shape
 
@@ -164,16 +171,17 @@ A screen reads as one instrument only when its parts line up, so every element i
 these rules, at every window width, and no alignment is left to the content an element happens to hold. This list is
 exhaustive.
 
-- **Text on one line:** pieces of text on one line share one baseline, whatever their styles, e.g. the title
-  "Agents" and the figures "20 / 20 · Training 4 / 4" after it in the Agents View. Text is never centred on its line
-  by the height of its box, because styles of different sizes then sit at different heights.
-- **Controls in one row:** the controls of one row, e.g. the filters and buttons of a Detail view's title row, are
-  equally tall and share one centre line. Text in the row, e.g. a count of selected rows after a button, is centred
-  on that line too. A close control is not one of the row's controls: it keeps its own place under
-  [Close controls](#close-controls).
+- **Text on one line:** pieces of text of one size on one line share one baseline. Smaller text after a heading on
+  its line, e.g. the figures "20 / 20 · Training 4 / 4" after the title "Agents" in the Agents View or the money
+  after the title of the Upgrades View, is centred on the heading: the middle of its capitals sits level with the
+  middle of the heading's capitals, never on the heading's baseline. Text is never centred on its line by the height
+  of its box, because styles of different sizes then sit at different heights.
+- **Controls in one row:** the controls of one row, e.g. the filters, buttons, and close control of a Detail view's
+  title row, are equally tall and share one centre line. Text in the row, e.g. a count of selected rows after a
+  button, is centred on that line too.
 - **Labelled groups:** a group of controls under a Label, e.g. the "Show agents" filters of the Agents View, stands
   its Label above its controls, and the controls share the row's centre line with every control of the row that has
-  no Label, e.g. a button of the row sits level with those filters, not with their Label.
+  no Label, e.g. a button or the close control of the row sits level with those filters, not with their Label.
 - **Cards side by side:** cards in one row are equally tall, and each part of a card starts at the same height on
   every card of the row, because each part takes the height of its tallest instance in the row. E.g., when the change
   of one Upgrade card wraps onto a second line, the Buy buttons of all the Upgrade cards still sit on one line.
@@ -248,14 +256,15 @@ one Campaign on the Main menu; it has a 2 px top edge in Border, or in Accent wh
 wants, e.g. the Campaign of the most recent [Campaign save](../foundation/engine-contract.md#persisted-data).
 
 A panel that lists groups, e.g. the panel of the Campaign screen that lists the work waiting for the Player, heads
-each group with a Label, or with a Pane heading in a pane of a Detail view, and its count in the Figure style and
-Accent text, and separates groups with Divider rules.
+each group with a Group heading and its count in the Figure style and Accent text, and separates groups with Divider
+rules.
 In a panel whose items take one line each, each item is a row 28 px tall, separated by Raised dividers: its name in Body on the left, and
 its value, e.g. a [Completion estimate](gui.md#glossary), right-aligned in the Figure style and Text secondary, with a
 [Progress circle](gui.md#glossary) between them. In a panel whose items take more than one line, e.g. the
 [Turn Summary](screens/turn-summary.md), an item's value, e.g. the [Turns](../foundation/engine-contract.md#player-actions-and-turns) until expiration of a new [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), is
 likewise right-aligned on the item's first line, in the Figure style when it is a number, and the item's further lines
-hold its details. A [Completion estimate](gui.md#glossary) whose earliest Advance turn is the next one is in
+hold its details. The item's name is in Body and Text, and its details are in Body or Figure and in Text secondary or
+Text muted, unless a colour of a state applies, under [Typography](#typography). A [Completion estimate](gui.md#glossary) whose earliest Advance turn is the next one is in
 Accent text, and "in transit", "stalled", and "ETA ?" are in Text muted. A [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that expires within two [Turns](../foundation/engine-contract.md#player-actions-and-turns) shows its Turns until expiration
 in Accent text.
 
@@ -277,10 +286,11 @@ buttons, e.g. the [Turn Summary](screens/turn-summary.md), is closed by those bu
 
 - **Shape:** the close control is a square neutral button, 36 px wide and tall, holding a ✕, never a text button,
   e.g. one labelled Close.
-- **Place:** it sits at the upper right corner of the rectangle of its view, inset by that view's inner padding, never
-  at the corner of the window when the view is narrower. Its top edge is level with the top of the view's title line,
-  so it sits at the same place in every view of one kind, whatever the other controls of the title row, e.g. a row
-  that grows downward under a Label never moves it.
+- **Place:** it ends the title row of its view, at the right edge of the view's rectangle inset by that view's inner
+  padding, never at the corner of the window when the view is narrower. It is one of the title row's controls under
+  [Alignment](#alignment), so it shares their centre line, and sits level with the controls of a group under a Label,
+  never with the Label, e.g. the "Show agents" filters of the Agents View. In a title row with no other control, it
+  is centred on the title's line.
 - **Escape:** the Escape key does what the close control of the topmost open view does.
 
 ## Tables
@@ -372,14 +382,13 @@ The [Side panel](gui.md#glossary) is the console beside the globe, so it reads a
   bottom edge.
 - **Detail view:** it covers the Globe stage inset by 16 px, on a Surface fill with a 2 px Accent top edge and 18 px of inner
   padding. Its title is in the Section heading style on the left, its buttons are in one row on the right, ending 8 px before the close control,
-  under [Buttons](#buttons) and [Alignment](#alignment), and its close control is at its upper right corner, under
-  [Close controls](#close-controls). The title and the close control sit at the same places in every Detail view,
-  each starting at the top of the inner padding, so that switching Detail views never moves either; a row whose
-  controls stand taller than the title, e.g. a group under a Label, grows downward and never pushes the title or the
-  close control down. A Detail view taller than the Globe stage scrolls inside, keeping its title row in view.
+  under [Buttons](#buttons) and [Alignment](#alignment), and its close control ends that row, under
+  [Close controls](#close-controls). The title sits at the same place in every Detail view, starting at the top of the
+  inner padding, so that switching Detail views never moves it; a row whose controls stand taller than the title,
+  e.g. a group under a Label, grows downward and never pushes the title down. A Detail view taller than the Globe stage scrolls inside, keeping its title row in view.
 - **Panes:** in a Detail view whose content is panes side by side, e.g. the Missions View, every heading inside a
   pane, e.g. the name of a group of the left pane, the name of the selected item, and the heading of each part of the
-  right pane, is in the Pane heading style, so that the panes read alike and one level below the title. A pane that holds a table is never narrower than that table's columns while the
+  right pane, is in the Group heading style, so that the panes read alike and one level below the title. A pane that holds a table is never narrower than that table's columns while the
   Detail view has room for it, and the panes share the rest of the width, so that a table scrolls sideways only when
   the window is too narrow for every pane to take its least width.
 

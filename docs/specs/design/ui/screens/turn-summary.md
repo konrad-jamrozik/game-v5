@@ -27,7 +27,8 @@ These terms are specific to the Turn Summary.
 
 After an Advance turn that the Player requested through the GUI is committed, the GUI shows the Turn summary when that
 Advance turn did at least one thing listed below, and shows nothing otherwise. It reads every item from the
-[Turn report](../../foundation/world-history.md#glossary) and the current [Committed state](../../foundation/engine-contract.md#player-actions-and-turns). Its groups follow in this order, each left out when empty; the
+[Turn report](../../foundation/world-history.md#glossary) and the current [Committed state](../../foundation/engine-contract.md#player-actions-and-turns). Its groups follow in this order, each under a Group heading with the number of its items, under
+[Panels and cards](../visual-design.md#panels-and-cards) in Visual Design, and each left out when empty; the
 list is exhaustive.
 
 1. **Missions:** for each [Combat report](../../mechanics/domain-model.md#combat) of the Turn report, its [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) with its
