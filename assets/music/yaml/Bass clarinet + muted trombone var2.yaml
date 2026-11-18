@@ -14,7 +14,9 @@ prompt_from:
   share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
   continues_from: 'Unseen Approach var1.mp3'
   meta_prompt: |-
-    OK now let's do Bass clarinet + muted trombone
+    OK so that generation was absolute banger. Let's now try, using the same Suno v6 interface
+
+    Bass clarinet + muted trombone
 prompt: |-
   Dark, brooding tactical strategy game soundtrack with deep bass drones, low-frequency rumbling, hollow bass clarinet, and ominous muted trombone. Sinister, mysterious, claustrophobic, and deeply unsettling.
 
@@ -29,3 +31,5 @@ control_sliders:
   weirdness_constraint: 0.4
   style_weight: 0.7
   aug_creativity: 0
+notes: |-
+  `prompt` is the Styles text ChatGPT produced, word for word: Suno's Variety control was Off (`aug_creativity: 0`), as ChatGPT recommended, so Suno stored the text as pasted. The `exclude_styles` and the Weirdness and Style influence sliders are also those ChatGPT recommended; it added heroic brass, big band, and jazz swing to the Exclude styles of Unseen Approach to keep the brass and woodwind from pulling the song toward jazz or orchestral brass.
