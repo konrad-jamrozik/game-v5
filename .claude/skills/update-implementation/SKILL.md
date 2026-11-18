@@ -36,25 +36,61 @@ Do not copy or restate their rules here; when this skill and those specification
      needs one pass over the Implementation to write the Specification map, and do it only after the user agrees,
      under Edge cases and failure behavior of Specification Tracking.
    - If it equals the target, report that the Implementation is up to date and stop.
-5. Follow Specification Updates: compute the difference, sort it into editorial and normative changes, reach the
+5. List the changed paths with
+   `git diff --name-status --find-renames <baseline>..<target> -- docs/specs content assets LICENSE` in the Spec repo.
+   When no path is under `docs/specs` and none is `LICENSE`, the difference is content-only: take the
+   [Content-only update](#content-only-update) below instead of steps 6 and 7, then continue at step 8.
+6. Follow Specification Updates: compute the difference, sort it into editorial and normative changes, reach the
    affected files through the Specification map, and complete the update in one change to the Implementation.
    - Read only the changed passages, the Specification map sections they lead to, and the files those sections list.
      Read an unchanged specification only to resolve a change's meaning, e.g. a term a changed rule now uses.
    - For a difference that touches several unrelated specifications, consider one subagent for each changed
      specification, each given only its part of the difference and its Specification map section.
-6. Run the Implementation's own checks from its Implementation repo, never the Spec repo's scripts.
-7. Commit the change in the Implementation repo. Never add a Git remote there. Push only when the Implementation
+7. Run the Implementation's own checks from its Implementation repo, never the Spec repo's scripts.
+8. Commit the change in the Implementation repo. Never add a Git remote there. Push only when the Implementation
    already has a remote and its own publishing setup expects pushes, e.g. after
    [GitHub Pages Deployment](../../../docs/specs/implementation/recipes/github-pages-deployment.md).
    - Before pushing, run `git fetch` and rebase onto the remote branch, then rerun the Implementation's checks when the
      rebase brought in new commits. When the rebase conflicts, or another session moved the Specification baseline,
      abort the rebase, tell the user, and stop; never force-push.
 
+## Content-only update
+
+A content-only difference changes only GDR files under `content/` and asset files under `assets/`, which the
+Implementation holds as copies under Implementation Placement. No rule changed, so the engine needs no change: the
+update refreshes the copies, runs the checks, and moves the Specification baseline. Read no specification and no
+Specification map section for it, and start no subagents.
+
+1. Refresh the copies from the difference, never from a fresh copy of whole directories, so that a deliberate
+   deviation of a copy survives, e.g. a GDR file whose values follow an Implementation decision.
+   - GDR files: write `git diff --binary --find-renames <baseline>..<target> -- content` from the Spec repo to a patch
+     file in the scratchpad, and run `git apply --3way <patch>` in the Implementation repo when its copy sits at the
+     same paths, e.g. `content/` in `game-v5-impl-web`; otherwise apply each changed file's hunks to the copy by hand.
+     A hunk that does not apply touches a file the Implementation changed on purpose: resolve it by hand as the
+     Implementation decision that file's copy follows requires, and record it there.
+   - Asset files: copy each added or changed asset to the Implementation's copy unchanged, and delete the copy of each
+     deleted one, under the Implementation Placement section for its kind, e.g. Music in an Implementation.
+   - Asset READMEs: the Implementation copies no README, so most README changes need nothing. The exception is the
+     Excluded tracks section of `assets/music/README.md`, which decides which Tracks the Soundtrack holds: delete the
+     copy of each newly excluded Track and copy each Track no longer excluded.
+   - Update the record of where the copies came from, e.g. the commit in `content/SOURCE.md`.
+2. Run the Implementation's `fix` script when it has one, then its checks. A test that pins a value the content
+   changed, e.g. an expected Track list or GDR value, is updated to the new value.
+3. Treat any other failure, e.g. GDR validation rejecting a new value, or code relying on a GDR record that is gone,
+   as a sign that the change is not content-only in effect: continue from step 6 of the Workflow with the same
+   difference instead.
+4. Set the Resolution of each Open Specification problem that names a changed GDR or asset file, when the change
+   settles it, and add a Specification map entry only for a newly added copied file that the map lists file by file.
+5. Set the Specification baseline to the target, and continue at step 8 of the Workflow, which commits and pushes;
+   the push redeploys the Implementation when its publishing setup deploys on push.
+
 ## Report
 
 Tell the user:
 
 - the old and new Specification baseline;
+- for a content-only update, each copied file added, changed, or deleted, and each test updated, instead of the
+  normative and editorial changes;
 - each normative change and the files it changed, and how many changes were editorial only;
 - each Specification problem whose Resolution changed, and each new Specification problem or Implementation decision;
 - the result of the Implementation's checks;
