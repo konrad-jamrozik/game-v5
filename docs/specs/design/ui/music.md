@@ -44,7 +44,8 @@ formats; the list is complete:
 - MP3, with the extension `.mp3`, for music whose source cannot export Ogg Opus.
 
 The Soundtrack is every such file, and the Game build supplies every Track unchanged, in its own format. Any other file
-in the directory, e.g. a README, is not a Track.
+in the directory, e.g. a README, is not a Track, and neither is a file that the Excluded tracks section of the
+directory's `README.md` names: the Game designer keeps it there, pending review, and it is never played.
 
 The Track title is the file name without its extension, unchanged, so that the title the Player sees is the name of
 the file that holds the Track. E.g., the file `GEO-4.opus` is the Track titled "GEO-4". No two Tracks have the same

@@ -173,7 +173,7 @@ these rules, at every window width, and no alignment is left to the content an e
 exhaustive.
 
 - **Text on one line:** pieces of text of one size on one line share one baseline. Smaller text after a heading on
-  its line, e.g. the figures "20 / 20 · Training 4 / 4" after the title "Agents" in the Agents View or the money
+  its line, e.g. the free places and their cap bars after the title "Agents" in the Agents View or the money
   after the title of the Upgrades View, is centred on the heading: the middle of its capitals sits level with the
   middle of the heading's capitals, never on the heading's baseline. Text is never centred on its line by the height
   of its box, because styles of different sizes then sit at different heights.
@@ -473,6 +473,15 @@ A meter shows a value against its limit, e.g. Panic against the Panic limit. It 
 tall with 3 px gaps. Each full tenth of the limit fills one segment in Accent, a remaining part of a tenth fills the next
 segment in Accent dim, and the other segments are Divider. The value and the limit are written above the meter's right
 end in Accent text, e.g. "24 / 100%".
+
+## Cap bars
+
+A cap bar shows at a glance how much of a cap is taken, e.g. of the [Agent cap](../mechanics/domain-model.md#agency-and-agents), so that the Player sees how much room
+is left without reading numbers. It is a solid bar 80 px wide and 8 px tall on a Divider track, whatever the size of
+the cap, so that a growing cap never widens it. Its fill covers, from the left, the share of the cap that is taken,
+coloured as the Fill of [Progress bars](#progress-bars), from Accent dim when the cap is empty to Accent when it is
+full; a cap with more taken than it allows shows a full bar. The exact values stand beside the bar as text, because the
+bar alone does not give them.
 
 ## Tallies
 

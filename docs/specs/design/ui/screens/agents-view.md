@@ -23,9 +23,18 @@ it is one table, because the Player compares Agents with one another and acts on
 
 # Header
 
-The header shows the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents against the [Agent cap](../../mechanics/domain-model.md#agency-and-agents) and the number of Agents counted against
-the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) against that cap, e.g. "Agents 10 / 12 · Training 2 / 3", with the counts centred on the title, under
-[Alignment](../visual-design.md#alignment) in Visual Design, and these controls, in this order:
+After the title, side by side, the header shows how many places are still free under two caps, so that the Player sees
+how much room is left to hire and to train:
+
+1. **Agent places free:** the [Agent cap](../../mechanics/domain-model.md#agency-and-agents) minus the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents, against the Agent cap.
+2. **Training places free:** the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) minus the number of Agents counted against it, against the Training cap.
+
+Each is its Label above its free count, in the Figure style, followed by its cap bar, under [Cap bars](../visual-design.md#cap-bars) in Visual Design, and the
+two together are as tall as the title's line and centred on it, under [Alignment](../visual-design.md#alignment) in Visual Design. A free count
+is never shown below 0. A cap bar fills with the share of its cap that is taken, not the share that is free, e.g.
+with Training places free 4 / 12, its cap bar is filled two thirds of the way from the left.
+
+Under the title row, the header holds these controls, in this order:
 
 1. **Hire,** labelled with `hire_cost`, which makes one `hireAgent` [Player action](../../foundation/engine-contract.md#player-actions-and-turns), under [Hiring Agents](../../mechanics/economy-and-upgrades.md#hiring-agents) in
    Economy and Upgrades.
@@ -50,15 +59,16 @@ shown Agents can be selected.
 
 ## Row filters
 
-At the right of the title row, a group labelled "Show agents" holds three filters, each with its count, of which
+At the right of the title row, a group labelled "Show agents" holds four filters, each with its count, of which
 exactly one is on at a time. All is on whenever the Agents View opens. The filters sit level with the close control,
 with their Label above them, under [Alignment](../visual-design.md#alignment) in Visual Design.
 
 - **All:** every Serving [Agent](../../mechanics/domain-model.md#agency-and-agents).
-- **Assignable:** every Serving Agent that can be assigned, under [Agents that can be assigned](../../mechanics/agents-spec.md#agents-that-can-be-assigned) in Agents, and is
-  [Fit for work](../../mechanics/agents-spec.md#assignments). It leaves out e.g. a Deployed Agent, a Recovering Agent, an Agent In transit, and an Agent too
-  exhausted to start work.
+- **[In base](../../mechanics/agents-spec.md#agent-statuses):** every Agent In base, i.e. [At assignment](../../mechanics/domain-model.md#agency-and-agents) on Standby or Training, or [Recovering](../../mechanics/agents-spec.md#agent-statuses), whatever its [current health](../../mechanics/agents-spec.md#combatant-attributes) and [exhaustion](../../mechanics/agents-spec.md#combatant-attributes).
+- **[Away](../../mechanics/agents-spec.md#agent-statuses):** every Agent Away, i.e. [In transit](../../mechanics/domain-model.md#agency-and-agents), [Deployed](../../mechanics/agents-spec.md#assignments), or At assignment on Contracting or an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), whatever its current health and exhaustion.
 - **Memorial:** every [Terminated](../../mechanics/agents-spec.md#agent-statuses) Agent, under [Memorial](#memorial).
+
+In base and Away split the Serving Agents, so their counts add up to the count of All.
 
 ## Assignment filters
 
@@ -107,7 +117,7 @@ Blocked by of a row that can be selected is empty, and so is every row's while n
 4. **On assignment:** it is on Contracting or an Investigation and the Assignment filter that is on is for Contracting
    or Training.
 5. **Already on Standby, Contracting, or Training:** the Assignment filter that is on is for the Assignment it has.
-6. **Too exhausted:** it is not Fit for work and the Assignment filter that is on is for Contracting or Training.
+6. **Too exhausted:** it is not [Fit for work](../../mechanics/agents-spec.md#assignments) and the Assignment filter that is on is for Contracting or Training.
 7. **Training full:** the Training Assignment filter is on and the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) has no place left.
 8. **Otherwise:** the message of the engine's rejection.
 
@@ -139,7 +149,7 @@ in place of the table, with a control that returns to it: its AgentArchetype's `
 
 # Artboard
 
-![Agents View panel Artboard: the header with Agent and Training counts, the Hire button, the Assign to group of Standby, Contracting, and Training buttons each with its Assignment filter, the Contracting one on, and the Dismiss button; the Show agents filters All, Assignable, and Memorial; and the table of Serving Agents with a Select all checkbox, their skill, colour-coded health and exhaustion, weapon damage, Assignment, and Blocked by, sorted first by the locked Blocked by tier so that the Agents that can be selected come first and then by effective skill, with each muted row saying what blocks it](../../../../images/artboards/agents-view.png)
+![Agents View panel Artboard: the header with the Agent places free and Training places free, each with its cap bar, the Hire button, the Assign to group of Standby, Contracting, and Training buttons each with its Assignment filter, the Contracting one on, and the Dismiss button; the Show agents filters All, In base, Away, and Memorial; and the table of Serving Agents with a Select all checkbox, their skill, colour-coded health and exhaustion, weapon damage, Assignment, and Blocked by, sorted first by the locked Blocked by tier so that the Agents that can be selected come first and then by effective skill, with each muted row saying what blocks it](../../../../images/artboards/agents-view.png)
 
 ![Agents View Memorial panel Artboard: the Memorial filter on, the Assign to group and Dismiss disabled, and the table of Terminated Agents with base skill, base health, Turn terminated, cause, Missions, Turns with the Agency, Enemies killed, and details of how each Agent's service ended](../../../../images/artboards/agents-memorial.png)
 

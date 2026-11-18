@@ -12,9 +12,9 @@
 
 Agents are the player's main resource: an [Agent](domain-model.md#agency-and-agents) is an operative of the [Agency](domain-model.md#agency-and-agents) who can do
 only one thing at a time, and changing what it does costs time. That one thing is its [Assignment](domain-model.md#agency-and-agents), e.g.
-Contracting to earn money or Training to gain base skill. Standby and Training are in the Agency's base, and Contracting
-and Investigations are away. Every trip to or from away work costs an Advance turn In transit, and only an Agent in base
-can be sent away or deployed to a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions), so Agents away are not at hand for one.
+Contracting to earn money or Training to gain base skill. Standby and Training are in the Agency's base, and
+Contracting and Investigations away. Every trip to or from away work costs an Advance turn In transit, and only an
+Agent In base, unless Recovering, can be sent away or deployed to a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions), so an Agent Away is not at hand.
 
 How well an Agent works and fights is its effective skill: its base skill, lowered by lost current health and by exhaustion
 above a free amount. Training raises base skill; work and [Combats](domain-model.md#combat) wear it down, so choosing an Assignment often
@@ -69,7 +69,7 @@ groups that decide whether a move between Assignments takes transit.
 
 ## Agent statuses
 
-Where an Agent stands toward its Assignment, and whether it still serves the Agency.
+Where an Agent stands toward its Assignment, whether it is in the Agency's base, and whether it still serves the Agency.
 
 | Term       | Definition                                                                                                                                                                     | Prohibited synonyms |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
@@ -78,6 +78,8 @@ Where an Agent stands toward its Assignment, and whether it still serves the Age
 | Dismissed  | The Agent status of an Agent the player dismissed. It is final.                                                                                                                |                     |
 | Serving    | Having the Agent status [At assignment](domain-model.md#agency-and-agents), [In transit](domain-model.md#agency-and-agents), or Recovering, i.e. still employed by the Agency. |                     |
 | Terminated | Having the Agent status Killed or Dismissed, i.e. no longer employed by the Agency.                                                                                            |                     |
+| In base    | Of a Serving Agent: At assignment on a Base Assignment, or Recovering, whatever its current health and exhaustion. Every Serving Agent is either In base or Away.              | At base             |
+| Away       | Of a Serving Agent: not In base, i.e. In transit to any Assignment, Deployed, or At assignment on an Away Assignment, whatever its current health and exhaustion.              | Out of base         |
 
 # Agent GDRs
 
@@ -219,6 +221,11 @@ ending Turn 9 ends with Enemies killed 2, Turn terminated 9, and Killed by enemy
 The set is exhaustive. An Agent is Serving exactly when its Agent status is At assignment, In transit, or Recovering,
 and Terminated exactly when it is Killed or Dismissed. Every Agent is Serving when it is created, under
 [Agent creation](#agent-creation).
+
+A Serving Agent is In base exactly when it is At assignment on Standby or Training, or Recovering, and Away otherwise,
+i.e. when it is In transit, whatever its Assignment, Deployed, or At assignment on Contracting or an Investigation.
+Neither depends on its current health or its exhaustion, and a Terminated Agent is neither. Whether an Agent is In base
+or Away is a Derived value, never stored.
 
 While an Agent is Serving, its Agent status moves between At assignment, In transit, and Recovering only as its
 Assignment changes and as it arrives, under [Assignment changes](#assignment-changes) and
@@ -413,7 +420,7 @@ Where an Agent that can be assigned may go depends on where it is:
 - **From base:** an Agent on a [Base Assignment](#assignments) can be given any Assignment the player can give: the
   other Base Assignment, Contracting, an Investigation, or Deployed.
 - **From away:** an Agent on an [Away Assignment](#assignments) can only be recalled, i.e. assigned to Standby. It
-  cannot be assigned to Training, Contracting, or an Investigation, or deployed, until it is back in base.
+  cannot be assigned to Training, Contracting, or an Investigation, or deployed, until it is [In base](#agent-statuses).
 
 A new Work Assignment also requires that the Agent is Fit for work, under
 [Start-work gate](#start-work-gate). `dismissAgents`, which ends the Assignment instead of changing it, has its
@@ -433,7 +440,7 @@ assigned to Standby and can be deployed, under [Deploying Agents](missions.md#de
 
 The gate applies only when the work starts. An Agent already on a Work Assignment keeps working whatever its exhaustion,
 until it is assigned elsewhere or until its [Forced return](#forced-return). E.g., with the Bootstrap values, an Agent
-on Contracting with exhaustion 45 keeps earning and can be recalled to Standby, and once back in base cannot be assigned
+on Contracting with exhaustion 45 keeps earning and can be recalled to Standby, and once In base cannot be assigned
 to Contracting, Training, or an Investigation until its exhaustion falls to 30.
 
 ## Assignment changes
@@ -528,7 +535,7 @@ Advance turn, so under statement 3 they are still In transit when it ends, and t
 **Informative rationale:** No GDR supplies a transit duration, so every transit takes exactly one Advance turn. Every
 trip to or from an [Away Assignment](#assignments) therefore costs one Advance turn before the Agent works,
 while moving within base and deploying from base cost none, and returning from a Mission costs one Turn during which
-the Agent can do nothing. Keeping Agents in base is the price of having them ready for a Mission site.
+the Agent can do nothing. Keeping Agents In base is the price of having them ready for a Mission site.
 
 # Training growth
 
@@ -765,7 +772,7 @@ moment it exists, without a reveal condition, for every Agent whatever its Agent
 | An Agent's base skill, current health, base health, exhaustion, Weapon, and base weapon damage                       | Yes                        |
 | An Agent's effective skill                                                                                           | Yes                        |
 | An Agent's Agent status, and its Assignment, including the Investigation or Mission it references                    | Yes                        |
-| Whether an Agent can be assigned, and whether it is Fit for work                                                     | Yes                        |
+| Whether an Agent can be assigned, whether it is Fit for work, and whether it is In base or Away                      | Yes                        |
 | An Agent's Participation history                                                                                     | Yes                        |
 | An Agent's Enemies killed, Turn terminated, and Killed by, including the Enemy and Mission site Killed by references | Yes                        |
 | Every property of the AgentArchetype and of AgentParameters                                                          | Yes                        |

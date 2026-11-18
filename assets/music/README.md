@@ -35,6 +35,12 @@ source.
 | `GEO-24.mp3`  | Bass clarinet + muted trombone var1                     | Suno v6           |
 | `GEO-25.mp3`  | Bass clarinet + muted trombone var2                     | Suno v6           |
 
+## Excluded tracks
+
+The Game designer excluded these files from the Soundtrack, pending review, so they are kept here but never played:
+
+- `GEO-3.opus`
+
 ## Tracks from ElevenLabs
 
 All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/), each saved under the file name ElevenLabs gave it,
