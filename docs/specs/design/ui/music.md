@@ -42,6 +42,7 @@ formats; the list is complete:
 
 - Ogg Opus, with the extension `.opus`, the preferred format because it is the smallest at the same quality.
 - MP3, with the extension `.mp3`, for music whose source cannot export Ogg Opus.
+- WAV, with the extension `.wav`, for music kept as its source exported it, uncompressed, the largest format.
 
 The Soundtrack is every such file, and the Game build supplies every Track unchanged, in its own format. Any other file
 in the directory, e.g. a README, is not a Track.
