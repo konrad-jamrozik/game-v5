@@ -3,8 +3,10 @@ source: Suno v5 via v03ai
 original_title: 'v03AI UFO 2'
 title_in_source: 'UFO 1'
 created: '2026-11-17 00:57'
+human_assessment: rejected, too irritating MIDI sounds
+tags: [Electronic, synth, ambient]
 prompt: |-
-  Electronic, synth, ambient. Dark 1990s sci-fi tactical strategy game soundtrack inspired by X-COM: UFO Defense (1994). Retro MIDI and Amiga synths, minimalist dark ambient, sci-fi horror. Very slow (55–70 BPM), sparse, restrained. Ominous bass drones, haunting minor-key motifs, dissonant pads, faint metallic percussion, eerie alien tones. Cold, hypnotic, paranoid, isolated.
+  Dark 1990s sci-fi tactical strategy game soundtrack inspired by X-COM: UFO Defense (1994). Retro MIDI and Amiga synths, minimalist dark ambient, sci-fi horror. Very slow (55–70 BPM), sparse, restrained. Ominous bass drones, haunting minor-key motifs, dissonant pads, faint metallic percussion, eerie alien tones. Cold, hypnotic, paranoid, isolated.
 
   Seamlessly loopable gameplay background music: steady, unobtrusive pacing and consistent low intensity. No dramatic builds, climaxes, drops, strong transitions, or clear beginning/end. Gentle harmonic shifts and evolving textures add variety without drawing attention.
 
@@ -16,4 +18,4 @@ prompt: |-
 
   Instrumental only. No vocals, cheerful melodies, energetic beats, orchestral swells, or
 notes: |-
-  The prompt ends mid-sentence: it was given to v03ai exactly so. Its title in v03ai is "UFO 1", the same as that of v03AI UFO 1.mp3, by mistake.
+  The prompt ends mid-sentence: it was given to v03ai exactly so, cut at v03ai's cap of 1,000 characters for a Suno v5 prompt. Its title in v03ai is "UFO 1", the same as that of v03AI UFO 1.mp3, by mistake.

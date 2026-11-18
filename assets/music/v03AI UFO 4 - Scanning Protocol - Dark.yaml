@@ -2,6 +2,7 @@ file: 'v03AI UFO 4 - Scanning Protocol - Dark.mp3'
 source: Suno v5 via v03ai
 original_title: 'v03AI UFO 4 - Scanning Protocol - Dark'
 created: 2026-11-17
+tags: [Dark ambient, bass-heavy, ominous, minimalist, brooding, atmospheric, industrial]
 prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
@@ -10,8 +11,6 @@ prompt_from:
   meta_prompt: |-
     OK now tweak the prompt so it is less electronic/space and more bassy / dark
 prompt: |-
-  Style: Dark ambient, bass-heavy, ominous, minimalist, brooding, atmospheric, industrial
-
   Dark, brooding tactical strategy game soundtrack with deep, heavy bass drones, low-frequency rumbling, ominous atmospheric textures, and slow, hypnotic bass pulses. Subdued, menacing, claustrophobic, and deeply unsettling.
 
   Minimalist arrangement dominated by thick, resonant low-end frequencies, shadowy minor-key harmonies, sparse percussion, and occasional distant metallic sounds. Subtle rhythmic movement creates persistent underlying tension without becoming energetic or driving.
@@ -20,4 +19,4 @@ prompt: |-
 
   Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no cinematic crescendos, no epic orchestration.
 notes: |-
-  This is the full prompt ChatGPT produced; the prompt given to v03ai was slightly truncated.
+  This is the full prompt ChatGPT produced; the prompt given to v03ai was slightly truncated, to fit v03ai's cap of 1,000 characters for a Suno v5 prompt.
