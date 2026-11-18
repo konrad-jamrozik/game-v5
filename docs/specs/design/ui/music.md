@@ -184,26 +184,26 @@ Music is never worth interrupting play for, so every failure of it is silent to 
 
 # Acceptance examples
 
-These examples use a Soundtrack of three Tracks, `GEO-5.opus`, `GEO-6.opus`, and `GEO-12.opus`, each 120 seconds
+These examples use a Soundtrack of three Tracks, `GEO-5.opus`, `GEO-6.opus`, and `GEO-7.opus`, each 120 seconds
 long.
 
 - **Track title:** The Track of `GEO-6.opus` is titled "GEO-6", and the Music control shows "♪ GEO-6" while it
   plays. A file `GEO-6.mp3` would have the same Track title, so it cannot be added beside it
   ([Soundtrack](#soundtrack)).
-- **Rounds:** With the round order of the first round fixed to GEO-6, GEO-12, GEO-5, the Session
+- **Rounds:** With the round order of the first round fixed to GEO-6, GEO-7, GEO-5, the Session
   plays those three Tracks in that order. The second round's order is one of the four orders that do not start with
-  GEO-5, e.g. GEO-12, GEO-5, GEO-6 ([Playing order](#playing-order)).
+  GEO-5, e.g. GEO-7, GEO-5, GEO-6 ([Playing order](#playing-order)).
 - **Fade in:** With the Music volume 50, 1.5 seconds after a Track starts f is 0.5 and the gain is
   0.5 × 0.5² = 0.125; from 3 seconds on, the gain is 0.25 ([Loudness](#loudness), [Fades](#fades)).
 - **Fade out to the next Track:** 118.5 seconds into a Track, f is 0.5. At 120 seconds the Track ends with f at 0, and
   the next Track of the round starts at once with f at 0 ([Fades](#fades), [Playback](#playback)).
-- **Off and on again:** 60 seconds into GEO-12 the Player selects the Music toggle. Music on is stored as
+- **Off and on again:** 60 seconds into GEO-7 the Player selects the Music toggle. Music on is stored as
   `false`, the Track fades out over 1 second and pauses at 61 seconds, and the Music control reads "Music off". The
   Player selects the Music toggle again: the Track resumes at 61 seconds, fades in over 1 second, and the Music
-  control reads "♪ GEO-12" ([Playback](#playback)).
-- **Skip:** 40 seconds into GEO-6, with GEO-12 next in the round, the Player selects the Skip button. GEO-6 fades out
-  over 1 second and ends at 41 seconds, and GEO-12 starts from its beginning with its 3-second fade in; the Music
-  control reads "♪ GEO-12". Selecting the Skip button twice within that second ends GEO-6 at the second press
+  control reads "♪ GEO-7" ([Playback](#playback)).
+- **Skip:** 40 seconds into GEO-6, with GEO-7 next in the round, the Player selects the Skip button. GEO-6 fades out
+  over 1 second and ends at 41 seconds, and GEO-7 starts from its beginning with its 3-second fade in; the Music
+  control reads "♪ GEO-7". Selecting the Skip button twice within that second ends GEO-6 at the second press
   ([Playback](#playback), [Fades](#fades)).
 - **Volume across screens and Sessions:** On the Main menu the Player drags the Music volume slider to 30 and
   releases it. Music volume is stored as 30. The Player loads a Campaign save: the Current Track plays on without a
