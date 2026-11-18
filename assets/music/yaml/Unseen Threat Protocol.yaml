@@ -16,6 +16,7 @@ prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afb9ab3-67b0-83e8-87db-9d7bf6ab3333
   share_url: https://chatgpt.com/share/6afe2395-cf20-83e8-95e4-6a466299dbfd
+  same_prompt_as: 'Unseen Sector.opus'
 prompt: |-
   Dark, atmospheric 1990s science-fiction tactical strategy game soundtrack, inspired by the original X-COM: UFO Defense (1994). Authentic retro MIDI and Amiga-era synthesizer sound, eerie ambient electronic music, ominous low-frequency drones, haunting minor-key melodies, sparse metallic percussion, unsettling dissonant synth chords, strange alien electronic textures, and subtle pulsing bass sequences.
 
@@ -24,4 +25,3 @@ prompt: |-
     Emphasize psychological tension and the fear of the unknown rather than action or heroism. Vintage 1990s PC game synthesizer aesthetic, slightly lo-fi digital
 notes: |-
   The prompt ends mid-sentence: ElevenLabs stores it exactly so, cut off after "slightly lo-fi digital".
-  This prompt is the beginning of the stem ChatGPT wrote in the conversation "Generate Game Audio with AI", answering the Game designer's request that begins "Give me description for sound-track generation in the style of OG xcom".
