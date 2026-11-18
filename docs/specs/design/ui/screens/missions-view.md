@@ -61,9 +61,13 @@ because its Agents' values have changed since its Combat; the Combat ratings its
 
 The right pane deploys a team to the selected Mission site when it is Active, and is left out otherwise. It lists the
 Agents that [Deploying Agents](../../mechanics/missions.md#deploying-agents) in Missions allows to be deployed, i.e. the Agents that
-can be assigned, under [Agents that can be assigned](../../mechanics/agents-spec.md#agents-that-can-be-assigned) in Agents, are [At assignment](../../mechanics/domain-model.md#agency-and-agents), and whose [Assignment](../../mechanics/domain-model.md#agency-and-agents) is [Standby](../../mechanics/agents-spec.md#assignments) or [Training](../../mechanics/agents-spec.md#assignments), one row each with a checkbox,
-its [Instance ID](../../foundation/campaign-instances.md#glossary), its Assignment, and its [effective skill](../../mechanics/agents-spec.md#combatant-attributes). An [Agent](../../mechanics/domain-model.md#agency-and-agents) whose [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) is at or above the threshold
-of [Warning on deploying tired Agents](../gui.md#warning-on-deploying-tired-agents) in the GUI shows its exhaustion, coloured under [Agent condition](../visual-design.md#agent-condition) in Visual Design.
+can be assigned, under [Agents that can be assigned](../../mechanics/agents-spec.md#agents-that-can-be-assigned) in Agents, are [At assignment](../../mechanics/domain-model.md#agency-and-agents), and whose [Assignment](../../mechanics/domain-model.md#agency-and-agents) is [Standby](../../mechanics/agents-spec.md#assignments) or [Training](../../mechanics/agents-spec.md#assignments), in a table under
+[Tables](../visual-design.md#tables) in Visual Design, one row each with a selection checkbox and these columns in this order, each under
+its header: [Instance ID](../../foundation/campaign-instances.md#glossary), Assignment, [effective skill](../../mechanics/agents-spec.md#combatant-attributes), and [exhaustion](../../mechanics/agents-spec.md#combatant-attributes). The exhaustion of an [Agent](../../mechanics/domain-model.md#agency-and-agents) is shown only when it is at or above the
+threshold of [Warning on deploying tired Agents](../gui.md#warning-on-deploying-tired-agents) in the GUI, coloured under [Agent condition](../visual-design.md#agent-condition) in Visual Design, and its
+cell is empty otherwise. The table's default order is by Instance ID, and pressing a column header sorts it by that
+column, under Tables in Visual Design, so that, e.g., pressing the effective skill header puts the most skilled Agents
+first. The exhaustion column sorts by every Agent's exhaustion, whether its cell shows it or not. Sorting the rows changes neither which Agents are checked nor the order in which they were checked.
 
 Above the rows, the pane shows how many places of the [Transport cap](../../mechanics/economy-and-upgrades.md#glossary) the Deployed Agents and the checked Agents
 together take, against the Transport cap, e.g. "Transport 3 / 4". After it, on the same line, the pane shows the
