@@ -310,6 +310,16 @@ What becomes of Mission sites that target a Eliminated Faction, whether a [Lead]
 whether every Faction being Eliminated ends the Campaign are stated by [Missions](missions.md),
 [Leads and Progression](leads-and-progression.md), and [Panic and Endings](panic-and-endings.md).
 
+# Turn report
+
+**Proposed rule:** The [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds, for each Faction whose Faction activity level escalated in
+it or that had a Faction operation occurrence in it, in the order of the Factions in Campaign state, its Instance ID,
+the Faction activity level it escalated to, if it escalated, and the Response Mission site its Faction operation
+occurrence created with that occurrence's FactionOperationLevel, if one happened. The [History entry](../foundation/world-history.md#glossary) of the Turn the
+Advance turn ends holds the Factions that escalated in it, by Instance ID. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under
+[Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History; neither reveals
+either countdown, under [Player-visible information](#player-visible-information).
+
 # Player-visible information
 
 **Proposed rule:** Each Faction value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces), or not, as the table states, under

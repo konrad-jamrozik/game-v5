@@ -575,7 +575,9 @@ Engine Contract. How the Turn report organizes its Combat reports is left to the
 Combat report is never rewritten or recomputed, even when the values of its participants change later, under
 [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. Whatever
 presents a Combat later uses the [retained](../foundation/world-history.md#glossary) values. After the next Advance turn, only the facts that its [History entry](../foundation/world-history.md#glossary) holds need to remain available,
-under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
+under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History. The History
+entry of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) the Advance turn ends holds, of each Combat report, only its Combat outcome and its number of Combat
+rounds, beside what [Turn report](missions.md#turn-report) in Missions states it holds of that Combat's Mission.
 
 # Player-visible information
 

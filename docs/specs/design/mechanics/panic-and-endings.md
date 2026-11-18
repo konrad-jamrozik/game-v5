@@ -280,6 +280,15 @@ it, restores a Campaign state in which the Campaign ending is absent, under
 [Restored Committed states](../foundation/timeline.md#restored-committed-states) in Timeline. Play from there is
 ordinary play.
 
+# Turn report
+
+**Proposed rule:** The [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds Panic in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) and after the Advance turn, and
+the Campaign ending it recorded with its Ending reasons, or none, under [Recording the ending](#recording-the-ending).
+The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds Panic after the Advance turn and the Campaign ending it
+recorded, without its Ending reasons, or none, and holds Panic in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of
+that Turn. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under
+[Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
+
 # Player-visible information
 
 **Proposed rule:** Every value marked Yes below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under

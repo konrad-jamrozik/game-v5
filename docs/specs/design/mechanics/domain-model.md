@@ -345,7 +345,3 @@ Campaign state contains exactly one Agency, exactly two Factions, one with Arche
 no Mission sites, no Missions, and no Enemies, under [Initial Campaign state](#initial-campaign-state). An initial
 Campaign state with a second Faction of Archetype F1, with no Faction of Archetype F2, or with any Mission site, is
 invalid.
-
-# TODOs
-
-- TODO: State what the Turn report and each [History entry](../foundation/world-history.md#glossary) hold of each value the Mechanics specifications own, including the reduced form of a Combat report that a History entry keeps, e.g. which Agents survived, lost current health, or were Killed, and at least every value the [History View](../ui/screens/history-view.md) shows, e.g. income, upkeep, Panic, and the Factions that escalated, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.

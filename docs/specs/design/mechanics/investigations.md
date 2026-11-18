@@ -606,6 +606,14 @@ The [History entry](../foundation/world-history.md#glossary) of the Turn the Adv
 completes no Investigation holds an empty list. Neither reveals the Actual required progress: the player already knows
 from the Completed lifecycle state that the final Investigation progress has reached it.
 
+The Turn report also holds, for each Investigation that is Active when its Investigation progress step begins, in the
+order of the Investigations in Campaign state, its Instance ID, its Lead, the gain its Progress gain added, whether it
+became Assessed, whether it completed, the progress it lost to the Forced returns of that step, its Investigation
+progress after that step, whether it was abandoned in that step, and the Mission site its completion created, if any,
+each progress value in hundredths of a progress point. The History entry holds none of these, and holds the number of
+Active Investigations in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn. All are Player-visible
+information, under the same rule.
+
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under

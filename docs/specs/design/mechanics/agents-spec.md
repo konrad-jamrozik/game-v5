@@ -738,6 +738,21 @@ one, so each is Serving, on Standby, and In transit, with Turn hired equal to th
 it spends no money and ignores the [Agent cap](economy-and-upgrades.md#glossary): it succeeds even when the Agency's money is below the hiring cost or the
 Agency already employs as many Agents as the [Agent cap](domain-model.md#agency-and-agents) allows. Nothing else changes.
 
+# Turn report
+
+**Proposed rule:** The [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds, of its Agents:
+
+- **Arrivals:** the Agents that arrived at their Assignment in its Transit step, under [Transit rule](#transit-rule).
+- **Training:** for each Agent with a Training gain outcome in it, that outcome and the Agent's base skill and
+  exhaustion after its Training step, under [Training growth](#training-growth).
+- **Forced returns:** each Agent that had a Forced return in it, with the Assignment it was returned from, under
+  [Forced return](#forced-return).
+
+Each lists its Agents by Instance ID, in the order of the Agents in Campaign state. The [History entry](../foundation/world-history.md#glossary) of the Turn the
+Advance turn ends holds none of these, and holds the number of Serving Agents in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the
+Turn-end state of that Turn. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under
+[Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
+
 # Player-visible information
 
 **Proposed rule:** Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under

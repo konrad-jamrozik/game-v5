@@ -632,6 +632,22 @@ holds the same three lists, unreduced. Both are [Player-visible information](../
 Mission site is empty. The [Initial Mission sites](#initial-mission-sites) are created with the Campaign, not by an
 Advance turn, so no Turn report lists them.
 
+The Turn report also holds:
+
+- **Each Mission resolved:** in the order of its Combat reports, the Mission and its Mission site by Instance ID,
+  whether it is Won or Lost, the Agents of its Team sent that were Killed, the surviving Agents sent to Recovery, and
+  the surviving Agents sent to Standby, under [Resolving one Mission](#resolving-one-mission), and the
+  [Consequences](#consequences) that applied: the money, the funding change, the Panic increase, the Panic reduction,
+  and the Faction made Eliminated, if any.
+- **Each Mission site Expired:** besides its Instance ID in the list above, the Consequences that applied, in the same
+  form.
+
+The History entry holds, for each Mission resolved, in the same order, the Mission and its Mission site by Instance ID,
+whether it is Won or Lost, the Agents Killed, the surviving Agents sent to Recovery, and the surviving Agents sent to
+Standby, together with what [Combat report](combat.md#combat-report) in Combat states it holds of that Mission's Combat
+report; and the number of Active Mission sites in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn. It holds
+no Consequences. All are Player-visible information, under the same rule.
+
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under

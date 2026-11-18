@@ -581,6 +581,21 @@ upper limit applies.
 Effect: the Agency's money rises by `amount`. Nothing else changes; e.g., funding, Acquisitions, and the values already
 recorded in the Turn series are unchanged. Money that was negative may become zero or positive.
 
+# Turn report
+
+**Proposed rule:** The [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds, of the Agency's money and funding:
+
+- **Agency income step:** the funding it used, the number of Agents in C, the income it added, and the Agency's money
+  after it, under [Agency income](#agency-income).
+- **Upkeep step:** S, the upkeep it charged, and the Agency's money after it, under [Upkeep](#upkeep).
+- **Funding:** the Agency's funding in the Turn-end state and after the Advance turn.
+- **Money:** the Agency's money in the Turn-end state and after the Advance turn.
+
+The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds, of these, the income, the upkeep, and the Agency's money and
+funding after the Advance turn, and holds the Agency's money and funding in the Turn-start state and in the Turn-end
+state of that Turn. All are Player-visible information, under
+[Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
+
 # Player-visible information
 
 **Proposed rule:** Every value below is Player-visible information under
