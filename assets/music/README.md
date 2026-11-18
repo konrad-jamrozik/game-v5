@@ -15,31 +15,31 @@ designer's personal backup, outside it; its row in the table, and its track reco
 
 | File                                                          | Source            | Excluded |
 | ------------------------------------------------------------- | ----------------- | -------- |
-| `Abyss Protocol.opus`                                         | ElevenLabs        | No       |
-| `Abyssal Tactical Drift.opus`                                 | ElevenLabs        | No       |
+| `Abyss Protocol.opus`                                         | ElevenLabs        |          |
+| `Abyssal Tactical Drift.opus`                                 | ElevenLabs        |          |
 | `Beneath the Grid.opus`                                       | ElevenLabs        | Yes      |
-| `Black Orbit Watch.opus`                                      | ElevenLabs        | No       |
-| `Depth Signal.opus`                                           | ElevenLabs        | No       |
-| `Silent Contact.opus`                                         | ElevenLabs        | No       |
-| `Silent Contact Protocol.opus`                                | ElevenLabs        | No       |
-| `Silent Hostile Sector.opus`                                  | ElevenLabs        | No       |
-| `Silent Threat Protocol.opus`                                 | ElevenLabs        | No       |
+| `Black Orbit Watch.opus`                                      | ElevenLabs        |          |
+| `Depth Signal.opus`                                           | ElevenLabs        |          |
+| `Silent Contact.opus`                                         | ElevenLabs        |          |
+| `Silent Contact Protocol.opus`                                | ElevenLabs        |          |
+| `Silent Hostile Sector.opus`                                  | ElevenLabs        |          |
+| `Silent Threat Protocol.opus`                                 | ElevenLabs        |          |
 | `Subsurface Directive.opus`                                   | ElevenLabs        | Yes      |
-| `Unknown Contact.opus`                                        | ElevenLabs        | No       |
+| `Unknown Contact.opus`                                        | ElevenLabs        |          |
 | `Unseen Sector.opus`                                          | ElevenLabs        | Yes      |
 | `Unseen Threat Protocol.opus`                                 | ElevenLabs        | Yes      |
 | `v03AI UFO 1.mp3`                                             | Suno v5 via v03ai | Yes      |
 | `v03AI UFO 2.mp3`                                             | Suno v5 via v03ai | Yes      |
-| `v03AI UFO 3 - Scanning Protocol.mp3`                         | Suno v5 via v03ai | No       |
-| `v03AI UFO 4 - Scanning Protocol - Dark.mp3`                  | Suno v5 via v03ai | No       |
-| `v03AI UFO 5 - Scanning Protocol - Dark Violin.mp3`           | Suno v5 via v03ai | No       |
-| `v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3` | Suno v5 via v03ai | No       |
-| `Bass clarinet + muted trombone var1.mp3`                     | Suno v6           | No       |
-| `Bass clarinet + muted trombone var2.mp3`                     | Suno v6           | No       |
-| `Signal Intercept var1.mp3`                                   | Suno v6           | No       |
-| `Signal Intercept var2.mp3`                                   | Suno v6           | No       |
-| `Unseen Approach var1.mp3`                                    | Suno v6           | No       |
-| `Unseen Approach var2.mp3`                                    | Suno v6           | No       |
+| `v03AI UFO 3 - Scanning Protocol.mp3`                         | Suno v5 via v03ai |          |
+| `v03AI UFO 4 - Scanning Protocol - Dark.mp3`                  | Suno v5 via v03ai |          |
+| `v03AI UFO 5 - Scanning Protocol - Dark Violin.mp3`           | Suno v5 via v03ai |          |
+| `v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3` | Suno v5 via v03ai |          |
+| `Bass clarinet + muted trombone var1.mp3`                     | Suno v6           |          |
+| `Bass clarinet + muted trombone var2.mp3`                     | Suno v6           |          |
+| `Signal Intercept var1.mp3`                                   | Suno v6           |          |
+| `Signal Intercept var2.mp3`                                   | Suno v6           |          |
+| `Unseen Approach var1.mp3`                                    | Suno v6           |          |
+| `Unseen Approach var2.mp3`                                    | Suno v6           |          |
 
 ## Track records
 
