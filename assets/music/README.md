@@ -32,6 +32,8 @@ source.
 | `GEO-21.mp3`  | Signal Intercept var2                                   | Suno v6           |
 | `GEO-22.mp3`  | Unseen Approach var1                                    | Suno v6           |
 | `GEO-23.mp3`  | Unseen Approach var2                                    | Suno v6           |
+| `GEO-24.mp3`  | Bass clarinet + muted trombone var1                     | Suno v6           |
+| `GEO-25.mp3`  | Bass clarinet + muted trombone var2                     | Suno v6           |
 
 ## Tracks from ElevenLabs
 
@@ -49,6 +51,6 @@ e.g. `GEO-16.mp3` was `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`.
 
 ## Tracks from Suno v6
 
-`GEO-20.mp3` to `GEO-23.mp3` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export
+`GEO-20.mp3` to `GEO-25.mp3` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export
 Ogg Opus. Their original titles are the file names they had here, e.g. `GEO-20.mp3` was
 `Signal Intercept var1.mp3`.
