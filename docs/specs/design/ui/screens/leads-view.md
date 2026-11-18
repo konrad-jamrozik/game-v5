@@ -30,7 +30,9 @@ items. A group with no item is left out. The list is exhaustive.
    expands it, because it can never be investigated again.
 
 When the Leads View opens, the first item is selected, unless the Player opened it from an item of the
-[Situation Panel](situation-panel.md), which selects that item's Lead.
+[Situation Panel](situation-panel.md) or of the [Turn Report View](turn-report-view.md), which selects that item's Lead.
+The Leads View shows the [Back control](../gui.md#glossary) when the Player reached it by following an item, under
+[View trail](campaign-screen.md#view-trail) in Campaign Screen.
 
 # Selected Lead
 
@@ -77,7 +79,7 @@ the middle pane shows the Investigation's projected progress gain, which counts 
 
 # Artboard
 
-![Leads View panel Artboard: Active Investigations, Leads to investigate, and Inactive and Archived Leads on the left; the selected Lead with its description, Progress bar, and the Mission site its completion creates in the middle; and its Current team, the Agents to add table, and the Team progress estimate on the right](../../../../images/artboards/leads-view.png)
+![Leads View panel Artboard, as reached by following an item of the Turn Report View, so that its title row shows the Back control "‹ Turn report" before its close control: Active Investigations, Leads to investigate, and Inactive and Archived Leads on the left; the selected Lead with its description, Progress bar, and the Mission site its completion creates in the middle; and its Current team, the Agents to add table, and the Team progress estimate on the right](../../../../images/artboards/leads-view.png)
 
 The sample values, e.g. the Lead names, their descriptions, and the Agent IDs, appear only on the Artboard, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

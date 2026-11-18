@@ -293,7 +293,9 @@ buttons, e.g. the [Turn Summary](screens/turn-summary.md), is closed by those bu
   [Alignment](#alignment), so it shares their centre line, and sits level with the controls of a group under a Label,
   never with the Label, e.g. the "Show agents" filters of the Agents View. In a title row with no other control, it
   is centred on the title's line.
-- **Escape:** the Escape key does what the close control of the topmost open view does.
+- **Escape:** the Escape key does what the close control of the topmost open view does, except in a Detail view
+  that shows a [Back control](gui.md#glossary), where it does what the Back control does, under
+  [View trail](screens/campaign-screen.md#view-trail) in Campaign Screen.
 
 ## Tables
 
@@ -390,7 +392,9 @@ The [Side panel](gui.md#glossary) is the console beside the globe, so it reads a
 - **Detail view:** it covers the Globe stage inset by 16 px, on a Surface fill with a 2 px Accent top edge and 18 px of inner
   padding. Its title is in the Section heading style on the left, its buttons are in one row on the right, ending 8 px before the close control,
   under [Buttons](#buttons) and [Alignment](#alignment), and its close control ends that row, under
-  [Close controls](#close-controls). The title sits at the same place in every Detail view, starting at the top of the
+  [Close controls](#close-controls). While it shows a [Back control](gui.md#glossary), that neutral button in the
+  Button style, e.g. "‹ Turn report", is the last button of the row, 8 px before the close control, so that the Player
+  finds it beside the ✕ in every Detail view. The title sits at the same place in every Detail view, starting at the top of the
   inner padding, so that switching Detail views never moves it; a row whose controls stand taller than the title,
   e.g. a group under a Label, grows downward and never pushes the title down. A Detail view taller than the Globe stage scrolls inside, keeping its title row in view.
 - **Panes:** in a Detail view whose content is panes side by side, e.g. the Missions View, every heading inside a

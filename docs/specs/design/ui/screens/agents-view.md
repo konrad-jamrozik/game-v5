@@ -144,7 +144,8 @@ columns, in this order, are:
 # Agent details
 
 Selecting an Agent's Instance ID, in the table of Serving Agents or in the Memorial, opens its details one step away,
-in place of the table, with a control that returns to it: its AgentArchetype's `name`, its [Turn](../../foundation/engine-contract.md#player-actions-and-turns) hired, its Weapon, and its
+in place of the table, as a Follow under [View trail](campaign-screen.md#view-trail) in Campaign Screen, so the
+Escape key and the [Back control](../gui.md#glossary) return to the table. They show its AgentArchetype's `name`, its [Turn](../../foundation/engine-contract.md#player-actions-and-turns) hired, its Weapon, and its
 [Participation history](../../mechanics/domain-model.md#agency-and-agents), each Investigation or Mission by its Lead or Mission site and its outcome.
 
 # Artboard

@@ -1,12 +1,12 @@
 # Campaign Screen
 
-| Metadata    | Value                                                                                                                                                                            |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | CSCR                                                                                                                                                                             |
-| Family      | UI                                                                                                                                                                               |
-| Audience    | UI designer, Implementer                                                                                                                                                         |
-| Owns        | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views, its status bar controls, and its Autopilot controls.                       |
-| Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
+| Metadata    | Value                                                                                                                                                                                      |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | CSCR                                                                                                                                                                                       |
+| Family      | UI                                                                                                                                                                                         |
+| Audience    | UI designer, Implementer                                                                                                                                                                   |
+| Owns        | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar controls, and its Autopilot controls. |
+| Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md)           |
 
 # Overview
 
@@ -46,7 +46,7 @@ It holds, from top to bottom:
 
 1. **Navigation:** one button for each Detail view, in the two groups and the order under [Detail views](#detail-views), each group under
    its name. A button shows a count where that section gives one. Selecting the button of a Detail view opens it,
-   and selecting the button of the open Detail view closes it.
+   and selecting the button of the open Detail view closes it, each emptying the [View trail](#view-trail).
 2. **[Situation panel](situation-panel.md):** it fills the height that the navigation and the footer leave, and
    scrolls inside when its content is taller.
 3. **Footer:** the [Autopilot](../../foundation/engine-contract.md#autopilot) controls, collapsed to one row until the Player expands them, under [Autopilot controls](#autopilot-controls), and, in the bottom row,
@@ -60,8 +60,9 @@ It holds, from top to bottom:
 
 A Detail view opens over the Globe stage and covers it, while the status bar and the Side panel stay in view, so that the
 Player keeps the [Situation panel](situation-panel.md#glossary) in sight while acting in a Detail view. One Detail view is open at a time: opening another replaces
-it. The Player closes the open Detail view with its close control or the Escape key, which shows the globe again. The Detail
-views are, in these groups and this order; the list is exhaustive:
+it. The Player closes the open Detail view with its close control, which shows the globe again, and goes back through
+the Detail views they came from with the Escape key, under [View trail](#view-trail). The Detail views are, in these
+groups and this order; the list is exhaustive:
 
 - **Operations,** the Detail views in which the Player acts:
   1. [Missions](missions-view.md), for the [Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and the deployment of Agents to them, with the number of Active
@@ -77,6 +78,51 @@ views are, in these groups and this order; the list is exhaustive:
   4. [Compendium](compendium-view.md), for reference information about the game.
 
 A Detail view is styled under [Detail views and navigation](../visual-design.md#detail-views-and-navigation) in Visual Design.
+
+# View trail
+
+A Detail view often leads to another, e.g. a Lead discovered in the [Turn Report View](turn-report-view.md) opens the
+[Leads View](leads-view.md), and the Player who has read what they followed wants to be back where they were, not
+at the globe. The [View trail](../gui.md#glossary) remembers the places the Player came through, so that the Escape key
+retraces them one at a time, however many there are.
+
+A place is what the Detail view area shows: an open Detail view together with what it shows one step away in place of
+its content, e.g. the [Combat report](turn-report-view.md#combat-report) of the Turn Report View or the
+[Agent details](agents-view.md#agent-details) of the Agents View, its selected item, its filters, the lists the Player
+expanded, and its scroll position. The View trail is a stack of places, the most recent last, with no limit on its
+length. It changes only as follows; the list is exhaustive:
+
+1. **Follow:** when the Player, from inside the open Detail view, opens another Detail view or opens something one
+   step away in place of the Detail view's content, the place they leave is added to the end of the View trail, e.g.
+   selecting a Lead in the Turn Report View, a Combat report button, or an Agent's Instance ID. Selecting an item,
+   changing a filter, or expanding a list within the same place is not a Follow and changes nothing on the View
+   trail.
+2. **[Go back](../sounds.md#glossary):** the Escape key, or the [Back control](../gui.md#glossary), removes the last place from the View trail and shows it as the
+   Player left it, with each part read from the current state. A selected item that is no longer listed, e.g. a
+   Mission site that has since Expired, gives way to the item the Detail view selects when it opens. The Escape key
+   goes back only when no view is open over the Detail view, e.g. the [Settings panel](../gui.md#settings-panel), which
+   it closes first.
+3. **Start afresh:** the View trail is emptied when the Player opens a Detail view from outside the open one, i.e.
+   from the Side panel, an item of the [Situation panel](situation-panel.md), or the [Turn summary](turn-summary.md),
+   because the Player has chosen a new direction rather than followed a link.
+4. **Close:** the View trail is emptied when the open Detail view closes, by its close control or the Escape key with
+   an empty View trail, which shows the globe.
+5. **New [Turn](../../foundation/engine-contract.md#player-actions-and-turns):** the View trail is emptied, and the open place stays open, when the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) changes, e.g. on an Advance
+   turn or an Undo Turn, because the places on it showed a Turn that has passed. It is also empty whenever the
+   Campaign screen is shown anew, e.g. after a [Campaign](../../foundation/core-concepts.md#campaign-and-session) is loaded.
+
+While the View trail is not empty, the open Detail view shows a Back control, a neutral button that does what the
+Escape key does and is labelled "‹" and the name of the place it returns to: the Detail view's name, or the name of
+what that place shows one step away, e.g. "‹ Turn report" or "‹ Combat report". It is styled under
+[Detail views and navigation](../visual-design.md#detail-views-and-navigation) in Visual Design.
+
+E.g., the Player opens the Turn Report View from the Side panel and selects its Combat report button: the Combat report
+shows in place of the sections, with "‹ Turn report". The Player presses Escape: the sections show again, scrolled as
+they were, and the Back control is gone. The Player selects the discovered Lead "Locate Red Dawn safehouse": the Leads
+View opens with that Lead selected and "‹ Turn report". The Player starts an Investigation of it and presses Escape:
+the Turn Report View shows again. The Player presses Escape once more: the View trail is empty, so the Turn Report View
+closes and the globe shows. Had the Player instead selected Missions in the Side panel while in the Leads View, the
+Missions View would have opened with an empty View trail, and Escape would have closed it.
 
 # Status bar controls
 

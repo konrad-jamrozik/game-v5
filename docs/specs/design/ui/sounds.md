@@ -93,11 +93,13 @@ or change how something is shown; the list is complete:
 ## Go back
 
 A Go back is the Player leaving what they are looking at, or cancelling what they were about to do, without doing
-anything else. It is either the Escape key, when it closes or cancels something, or a control that does what the
-Escape key does at that moment, e.g. the close control of a Detail view, of the Settings panel, or of the
-[Main menu](screens/main-menu.md). The GUI plays `go-back-click` on every Go back. E.g., each of these is a Go back:
-closing the open Detail view, which shows the globe again; closing the Main menu, which returns to the Campaign;
-closing the Settings panel or the developer tools; and
+anything else. It is either the Escape key, when it closes, cancels, or goes back from something, or a control that
+closes or goes back, e.g. the close control of a Detail view, of the Settings panel, or of the
+[Main menu](screens/main-menu.md), or the [Back control](gui.md#glossary). The GUI plays `go-back-click` on every Go
+back. E.g., each of these is a Go back: closing the open Detail view, which shows the globe again; going back along
+the [View trail](screens/campaign-screen.md#view-trail), e.g. from the Leads View to the Turn Report View it was opened
+from; closing the [Main menu](../foundation/campaign-lifecycle.md#glossary), which returns to the Campaign;
+closing the [Settings panel](gui.md#glossary) or the developer tools; and
 cancelling a deployment of Agents before it is confirmed, e.g. dismissing the warning under
 [Warning on deploying tired Agents](gui.md#warning-on-deploying-tired-agents) without deploying.
 

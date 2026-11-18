@@ -45,12 +45,15 @@ exhaustive.
 4. **Leads discovered:** each under [Turn report](../../mechanics/leads-and-progression.md#turn-report) in Leads and Progression, with its
    `name`.
 
-Selecting a Mission site, an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or a Lead opens the Operations [Detail view](../gui.md#glossary) that details it, e.g. a new
-Mission site opens the [Missions View](missions-view.md).
+Selecting a Mission site, an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or a Lead opens the Operations [Detail view](../gui.md#glossary) that details it, with it selected, e.g. a new
+Mission site opens the [Missions View](missions-view.md) and a discovered Lead the [Leads View](leads-view.md). It is a
+Follow under [View trail](campaign-screen.md#view-trail) in Campaign Screen, so the Escape key and the
+[Back control](../gui.md#glossary) return to the Turn Report View.
 
 # Combat report
 
-The Combat report of a Mission opens one step away, in place of the sections, with a control that returns to them. It
+The Combat report of a Mission opens one step away, in place of the sections, as a Follow under
+[View trail](campaign-screen.md#view-trail) in Campaign Screen, so the Escape key and the Back control return to them. It
 shows every fact the Combat report holds, under [Combat report](../../mechanics/combat.md#combat-report) in Combat:
 
 - The participants of each side, in their fixed order, as a table under [Tables](../visual-design.md#tables) in Visual

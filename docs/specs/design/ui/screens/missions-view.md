@@ -33,7 +33,8 @@ reached, e.g. Concluded with its Mission Won, or Expired. The toggle is one step
 no decision.
 
 When the Missions View opens, the first Active Mission site is selected, unless the Player opened it from an item of
-the [Situation Panel](situation-panel.md), which selects that item's Mission site.
+the [Situation Panel](situation-panel.md) or of the [Turn Report View](turn-report-view.md), which selects that item's
+Mission site.
 
 # Selected Mission site
 
