@@ -14,7 +14,7 @@ prompt_from:
   share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
   continues_from: 'Unseen Approach var1.mp3'
   meta_prompt: |-
-    OK so that generation was absolute banger. Let's now try, using the same Suno v6 interface
+    Let's now try, using the same Suno v6 interface
 
     Bass clarinet + muted trombone
 prompt: |-
