@@ -31,7 +31,8 @@ These terms are specific to World History. General terms are in the [Campaign St
 | Retired       | Describes a [Campaign instance](core-concepts.md#campaign-instances) that has left [Current world state](campaign-state.md#glossary) and is kept in World history with every property at its final value for the rest of the [Campaign](core-concepts.md#campaign-and-session). `getCurrentState()` no longer returns it, and `getHistory()` returns it instead. The specification owning each Campaign instance [Type](core-concepts.md#data-modeling) states when its Campaign instances become Retired. |
 | Turn series   | Retained data in World history recording one value at stated moments of every [Turn](engine-contract.md#player-actions-and-turns) of the [Campaign](core-concepts.md#campaign-and-session), from campaign creation onward, under [Turn series](#turn-series). The specification owning the value declares it.                                                                                                                                                                                              |
 | Turn report   | Retained data in World history describing what one committed Advance turn did, e.g. each Combat it fought and how that Combat went. A Campaign has at most one Turn report: the one of its most recent committed Advance turn, under [Turn report and history](#turn-report-and-history).                                                                                                                                                                                                                  |
-| History entry | Retained data in World history describing one ended Turn: a reduced form of its [Turn-start state](engine-contract.md#player-actions-and-turns), of its [Turn-end state](engine-contract.md#player-actions-and-turns), and of the Turn report of the Advance turn that ended it. Reduced means holding only part of that information, to bound what is retained.                                                                                                                                           |
+| History entry | Retained data in World history describing one ended Turn: a reduced form of its [Turn-start state](engine-contract.md#player-actions-and-turns), of its [Turn-end state](engine-contract.md#player-actions-and-turns), and of the Turn report of the Advance turn that ended it, together with its Action record in full. Reduced means holding only part of that information, to bound what is retained.                                                                                                  |
+| Action record | Retained data in World history listing the [Player actions](engine-contract.md#player-actions-and-turns) of one Turn other than Advance turn, in the order they were committed, under [Action record](#action-record).                                                                                                                                                                                                                                                                                     |
 
 # Historical fact preservation
 
@@ -103,7 +104,31 @@ committed Advance turn, and one reduced History entry for every ended Turn. They
   them, and restoration restores them together with the rest of Campaign state. After undo, redo, or load, they are
   exactly those of the restored Committed state.
 - **Declared by the owner of each value:** What the Turn report and each History entry hold of a value is stated by
-  the specification owning that value.
+  the specification owning that value. The Action record of a History entry is stated under
+  [Action record](#action-record).
+
+## Action record
+
+The Action record keeps what the player did in each Turn, which neither the Turn-start state, the Turn-end state, nor
+the Turn report can tell, so that a past Turn can show both its decisions and their outcome. It follows these complete
+rules:
+
+- **What it lists:** The Action record of Turn t lists every Player action of Turn t other than Advance turn whose
+  result the Turn-end state of Turn t holds, i.e. every one that was not undone, in the order they were committed,
+  whichever [Principal](engine-contract.md#principals-and-access) made it. A [Player cheat action](engine-contract.md#player-actions-and-turns) is listed like any other Player action. A rejected action, an
+  action with no effect, and a query are not Player actions and are not listed.
+- **What each item holds:** Each item holds the name of the operation, e.g. `hireAgent`, the arguments it was called
+  with, e.g. the Instance IDs of a `deployAgents`, and any further value that the specification owning that value
+  declares for every item. Each value is a historical fact, under
+  [Historical fact preservation](#historical-fact-preservation), and each Instance ID it holds is a retained reference
+  that still resolves once its Campaign instance is Retired.
+- **Kept during the Turn:** The current Turn has an Action record in World history, empty in the Turn-start state.
+  Each Player action other than Advance turn adds its item to the end of it, so undo, redo, and load restore it
+  together with the rest of the Committed state. The Advance turn that ends Turn t puts that Action record into the
+  History entry of Turn t and starts an empty one for Turn t + 1. No query returns the Action record of the current
+  Turn.
+- **Player-visible:** The Action record of every History entry is [Player-visible information](engine-contract.md#api-surfaces), and `getHistory()`
+  returns it in full.
 
 # Current state, Turn report, and history
 
@@ -125,7 +150,8 @@ one query that returns it.
 
 Only Advance turn changes the Turn report and the History entries, under
 [Turn report and history](#turn-report-and-history), so Player actions, undo, and
-redo within a Turn change only what `getCurrentState()` returns. Undo, redo, and load restore what all three queries
+redo within a Turn change only what `getCurrentState()` returns, even though they change the Action record of the
+current Turn. Undo, redo, and load restore what all three queries
 return, and replay reproduces it, under [Derived value consistency](engine-contract.md#derived-value-consistency) in Engine Contract.
 
 Whether the engine stores each value these queries return, or computes it from other Campaign state when asked, is the
@@ -151,3 +177,8 @@ Implementer's choice.
   turn that ended Turn 8, and `getHistory()` return the History entries of Turns 1 to 8, whose last entry holds the
   reduced form of that new Turn report. Saving and loading the Campaign changes neither answer
   ([Current state, Turn report, and history](#current-state-turn-report-and-history)).
+- **Action record:** In Turn 3 the player calls `hireAgent()` twice, then `deployAgents(ms-4, [a1, a2, a3])`, and
+  undoes the last Player action. Advance turn then ends Turn 3, and the History entry of Turn 3 holds an Action record
+  of two items, each `hireAgent` with no arguments; the undone `deployAgents` is not listed. Had it not been undone,
+  its item would hold ms-4, a1, a2, and a3, and each would still resolve after its Campaign instance is Retired
+  ([Action record](#action-record)).

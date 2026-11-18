@@ -1,12 +1,12 @@
 # Economy and Upgrades
 
-| Metadata    | Value                                                                                                                                                                                                                      |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec ID     | ECON                                                                                                                                                                                                                       |
-| Family      | Mechanics                                                                                                                                                                                                                  |
-| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                                |
-| Owns        | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, and the hireAgent, dismissAgents, purchaseUpgrade, and addMoney actions. |
-| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                                 |
+| Metadata    | Value                                                                                                                                                                                                                                                              |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spec ID     | ECON                                                                                                                                                                                                                                                               |
+| Family      | Mechanics                                                                                                                                                                                                                                                          |
+| Audience    | Engine designer, Content designer, AI designer, Implementer                                                                                                                                                                                                        |
+| Owns        | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, the money change in each Action record, and the hireAgent, dismissAgents, purchaseUpgrade, and addMoney actions. |
+| Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md)                                                                                         |
 
 # Overview
 
@@ -550,6 +550,15 @@ Turn-end state is not reached until its Advance turn is committed. Player action
 already recorded. Both Turn series are [Player-visible information](../foundation/engine-contract.md#api-surfaces). Funding, Acquisitions, and the caps have no Turn
 series.
 
+## Money in the Action record
+
+**Proposed rule:** Every item of an [Action record](../foundation/world-history.md#glossary), under [Action record](../foundation/world-history.md#action-record) in World
+History, also holds its money change: the Agency's money right after its Player action minus the Agency's money right
+before it. It is a whole number, negative for money spent and positive for money added; e.g., −`hire_cost` for
+`hireAgent`, minus the Upgrade's `price` for `purchaseUpgrade`, `amount` for `addMoney`, and 0 for a Player action
+that changes no money, e.g. `assignAgents`. The money changes are Player-visible information, so the money a Turn's
+Player actions spent can be read back after the Turn has ended.
+
 # Player cheat actions
 
 A Player cheat action changes Campaign state in a way ordinary play does not allow. The Player cheat action for money gives the
@@ -578,17 +587,18 @@ recorded in the Turn series are unchanged. Money that was negative may become ze
 [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the
 moment it exists, without a reveal condition. The table is exhaustive.
 
-| Value                                                                                    | Player-visible information |
-| ---------------------------------------------------------------------------------------- | -------------------------- |
-| The Agency's Instance ID and its AgencyArchetype, including the AgencyArchetype's `name` | Yes                        |
-| The Agency's money, including a negative amount                                          | Yes                        |
-| The Agency's funding                                                                     | Yes                        |
-| The Agency's Acquisitions of each Upgrade                                                | Yes                        |
-| The Agent cap, Transport cap, and Training cap, each with its current value              | Yes                        |
-| The projected income and projected upkeep of the coming Advance turn                     | Yes                        |
-| Money at the start of turn and Money at the end of turn, in full                         | Yes                        |
-| Every property of EconomyParameters and of each Upgrade GDR                              | Yes                        |
-| The Campaign configuration values Starting money and Starting funding                    | Yes                        |
+| Value                                                                                                               | Player-visible information |
+| ------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| The Agency's Instance ID and its AgencyArchetype, including the AgencyArchetype's `name`                            | Yes                        |
+| The Agency's money, including a negative amount                                                                     | Yes                        |
+| The Agency's funding                                                                                                | Yes                        |
+| The Agency's Acquisitions of each Upgrade                                                                           | Yes                        |
+| The Agent cap, Transport cap, and Training cap, each with its current value                                         | Yes                        |
+| The projected income and projected upkeep of the coming Advance turn                                                | Yes                        |
+| Money at the start of turn and Money at the end of turn, in full                                                    | Yes                        |
+| The money change of every item of every Action record in a [History entry](../foundation/world-history.md#glossary) | Yes                        |
+| Every property of EconomyParameters and of each Upgrade GDR                                                         | Yes                        |
+| The Campaign configuration values Starting money and Starting funding                                               | Yes                        |
 
 **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. An
 Upgrade never purchased is reported with Acquisitions 0, not as absent. Money at the end of turn has no recorded value

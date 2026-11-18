@@ -5,24 +5,100 @@
 | Spec ID     | HVIEW                                                                                                                                                                            |
 | Family      | UI                                                                                                                                                                               |
 | Audience    | UI designer, Implementer                                                                                                                                                         |
-| Owns        | What the History View of the Campaign screen shows and in which order.                                                                                                           |
+| Owns        | What the History View of the Campaign screen shows and in which order: its columns, the events of each Turn, and the list of each Turn's Player actions.                         |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
-The History View lets the Player find the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) in which something changed in the [Campaign](../../foundation/core-concepts.md#campaign-and-session). It is one of the Records
-[Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md); the trends over the same Turns are in
-the [Charts View](charts-view.md).
+The History View lets the Player find the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) in which something changed in the [Campaign](../../foundation/core-concepts.md#campaign-and-session), and see what the
+player did in that Turn and what came of it. It is one of the Records [Detail views](../gui.md#glossary) of the
+[Campaign Screen](campaign-screen.md); the trends over the same Turns are in the [Charts View](charts-view.md).
+
+Everything it shows comes from `getHistory()`, one row for each [History entry](../../foundation/world-history.md#glossary), under
+[Current state, Turn report, and history](../../foundation/world-history.md#current-state-turn-report-and-history) in World History, so the current Turn,
+which has no History entry yet, has no row. Before the first committed Advance turn of a Campaign, the View says that no
+Turn has ended yet.
 
 # Turn by Turn table
 
-The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn table lists one row per Turn, newest first, under [Tables](../visual-design.md#tables) in Visual
-Design, with these columns in this order: Turn, Money at the start of the Turn, Money at its end, income, upkeep,
-[Panic](../../mechanics/domain-model.md#campaign-standing), [Serving](../../mechanics/agents-spec.md#agent-statuses) [Agents](../../mechanics/domain-model.md#agency-and-agents), and events. Income is in Positive and upkeep in Danger.
+The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn table lists one row per ended Turn, newest first, under [Tables](../visual-design.md#tables) in Visual Design. Its
+columns are the following, in this order; the list is exhaustive.
+
+| Column         | What it shows for Turn t                                                                                                                                                                                                                                                                                                                 | Form                                                                                  |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Turn           | The turn number t.                                                                                                                                                                                                                                                                                                                       | A number.                                                                             |
+| Money start    | Money at the start of turn for Turn t, under [Turn series of money](../../mechanics/economy-and-upgrades.md#turn-series-of-money) in Economy and Upgrades.                                                                                                                                                                               | A number.                                                                             |
+| Expenditures   | The money spent by the [Player actions](../../foundation/engine-contract.md#player-actions-and-turns) of Turn t: the sum of the money changes below 0 in its [Action record](../../foundation/world-history.md#glossary), under [Action record](../../foundation/world-history.md#action-record) in World History, as a positive amount. | "−" and the amount in Danger, or "0" in Text muted when nothing was spent.            |
+| Money end      | Money at the end of turn for Turn t, under [Turn series](../../foundation/world-history.md#glossary) of money.                                                                                                                                                                                                                           | A number.                                                                             |
+| Income         | The income that the [Agency](../../mechanics/domain-model.md#agency-and-agents) income step of the Advance turn ending Turn t added, under [Agency income](../../mechanics/economy-and-upgrades.md#agency-income) in Economy and Upgrades.                                                                                               | "+" and the amount in Positive.                                                       |
+| Upkeep         | The upkeep that the Upkeep step of that Advance turn charged, under [Upkeep](../../mechanics/economy-and-upgrades.md#upkeep) in Economy and Upgrades.                                                                                                                                                                                    | "−" and the amount in Danger.                                                         |
+| Panic          | [Panic](../../mechanics/domain-model.md#campaign-standing) after that Advance turn.                                                                                                                                                                                                                                                      | A percentage.                                                                         |
+| Agents         | The number of [Serving](../../mechanics/agents-spec.md#agent-statuses) [Agents](../../mechanics/domain-model.md#agency-and-agents) in the [Turn-end state](../../foundation/engine-contract.md#player-actions-and-turns) of Turn t.                                                                                                      | A number.                                                                             |
+| Player actions | The number of items in the Action record of Turn t, which opens the list under [Player actions list](#player-actions-list).                                                                                                                                                                                                              | A number after "▸", or "▾" while its list is open; "0" in Text muted, with no marker. |
+| Events         | What the Advance turn ending Turn t did, under [Events](#events).                                                                                                                                                                                                                                                                        | Short labels side by side.                                                            |
+
+Every column except Events holds numbers, under Tables in Visual Design. The four money columns read from left to
+right as the Turn's money flow: Money start less Expenditures is Money end, unless a [Player cheat action](../../foundation/engine-contract.md#player-actions-and-turns) added money,
+and Money end plus Income less Upkeep is the next Turn's Money start, unless the Turn's events changed money too, e.g.
+the Consequences of a Mission.
+
+# Events
+
+The Events column lists the following labels, in this order, each only when it applies; the list is exhaustive. Each
+counts or names what the reduced [Turn report](../../foundation/world-history.md#glossary) in the [History entry](../../foundation/world-history.md#glossary) holds, under the specification that owns it.
+
+1. **Each [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions):** for each [Combat](../../mechanics/domain-model.md#combat) the Advance turn fought, in the order of its [Combat reports](../../mechanics/domain-model.md#combat), under
+   [Combat report](../../mechanics/combat.md#combat-report) in Combat, its [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s [MissionSiteArchetype](../../mechanics/missions.md#missionsitearchetype) `name` followed by "won" in Positive or
+   "lost" in Danger, and then ", N killed" when N of its Agents were [Killed](../../mechanics/agents-spec.md#agent-statuses); e.g. "Apprehend member won, 1 killed".
+2. **Investigations completed:** "N Investigations completed", or "1 [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) completed", in Accent text, under
+   [Turn report](../../mechanics/investigations.md#turn-report) in Investigations.
+3. **Leads discovered:** "N [Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) discovered", or "1 Lead discovered", in Accent text, under
+   [Turn report](../../mechanics/leads-and-progression.md#turn-report) in Leads and Progression.
+4. **Mission sites expired:** "N Mission sites expired", or "1 Mission site expired", in Accent text, under
+   [Turn report](../../mechanics/missions.md#turn-report) in Missions.
+5. **Factions escalated:** "N Factions escalated", or "1 [Faction](../../mechanics/domain-model.md#factions) escalated", in Warning, for the Factions whose [Faction
+   activity level](../../mechanics/factions.md#glossary) rose in the Advance turn, under [Factions](../../mechanics/factions.md).
+6. **[Campaign ending](../../mechanics/domain-model.md#campaign-standing):** "Victory" in Positive or "Defeat" in Danger, when the Advance turn gave the [Campaign](../../foundation/core-concepts.md#campaign-and-session) its
+   [Campaign ending](../../mechanics/domain-model.md#campaign-standing), under [Panic and Endings](../../mechanics/panic-and-endings.md).
+
+A Turn with none of these leaves the cell empty. Labels too many for the column's width are cut short with "…" and
+shown in full while the pointer rests on the cell, under Tables in Visual Design.
+
+# Player actions list
+
+Pressing the Player actions cell of a Turn whose Action record is not empty opens, directly under that Turn's row, a
+list of what the player did in that Turn, and pressing it again closes the list; the Player can open the lists of
+several Turns at once. Like the [Combat log](../../mechanics/combat.md#combat-rounds-and-results) of a [Combat report](turn-report-view.md#combat-report), every list is closed
+when the View opens. The list spans the width of the table and shows one line for each item of the Action record, in
+its order, so the Turn's row stays one line tall.
+
+Each line starts with the number of the Player action in the Turn, from 1, in the Figure style and Text muted, followed
+by what that Player action did, under the following table, and ends with its money change in the Figure style, "−" and
+the amount in Danger or "+" and the amount in Positive, or nothing when it is 0. Consecutive items that name the same
+operation with the same arguments are one line, numbered with the first and last of their numbers, e.g. "1–4", whose
+count and money change are their totals. E.g., four `hireAgent` actions followed by three `purchaseUpgrade` of the
+Agent cap Upgrade are the two lines "1–4 Hired 4 Agents" and "5–7 Bought 3 Agent cap Upgrades". The table is
+exhaustive.
+
+| Operation                     | Line, where N is the number of Agents the arguments name, or for `hireAgent` and `purchaseUpgrade` the number of items the line covers                                                                                            |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hireAgent`                   | "Hired N Agents".                                                                                                                                                                                                                 |
+| `dismissAgents`               | "[Dismissed](../../mechanics/agents-spec.md#agent-statuses) N Agents".                                                                                                                                                            |
+| `purchaseUpgrade`             | "Bought N" and the [Upgrade](../../mechanics/economy-and-upgrades.md#upgrade)'s `name` followed by "[Upgrades](../../mechanics/domain-model.md#agency-and-agents)", e.g. "Bought 3 Agent cap Upgrades".                           |
+| `assignAgents`                | "Assigned N Agents to" and the [Assignment](../../mechanics/domain-model.md#agency-and-agents), e.g. "Assigned 5 Agents to Contracting".                                                                                          |
+| `startInvestigation`          | "Started Investigation of" and the [Lead](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s `name`, then "with N Agents", e.g. "Started Investigation of Locate Red Dawn courier with 2 Agents". |
+| `assignAgentsToInvestigation` | "Assigned N Agents to Investigation of" and its Lead's `name`.                                                                                                                                                                    |
+| `deployAgents`                | "[Deployed](../../mechanics/agents-spec.md#assignments) N Agents to" and the Mission site's MissionSiteArchetype `name`, e.g. "Deployed 3 Agents to Raid safehouse".                                                              |
+| `addMoney`                    | "Added" and the amount, then "money (cheat)".                                                                                                                                                                                     |
+| `addAgents`                   | "Added N Agents (cheat)".                                                                                                                                                                                                         |
+| Any other operation           | The operation's name, e.g. a Campaign configuration change by the name of its operation.                                                                                                                                          |
+
+A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents an action concerned; a line names only
+the Lead or Mission site it concerned, resolved through `getHistory()` when it is [Retired](../../foundation/world-history.md#glossary).
 
 # Artboard
 
-![History View panel Artboard: the Turn by Turn table, newest first, with income in Positive and upkeep in Danger](../../../../images/artboards/history-view.png)
+![History View panel Artboard: the Turn by Turn table, newest first, with Expenditures and upkeep in Danger, income in Positive, a Player actions count on each row with the list of Turn 14 open, and the events of each Turn](../../../../images/artboards/history-view.png)
 
-The sample values, e.g. the Turn numbers and the events of each Turn, appear only on the Artboard, under
-[Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
+The sample values, e.g. the Turn numbers, the events of each Turn, and the Player actions, appear only on the
+Artboard, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
