@@ -1,0 +1,9 @@
+id: music
+type: MusicParameters
+excluded_tracks:
+  - Beneath the Grid.opus
+  - Subsurface Directive.opus
+  - Unseen Sector.opus
+  - Unseen Threat Protocol.opus
+  - v03AI UFO 1.mp3
+  - v03AI UFO 2.mp3

@@ -43,14 +43,21 @@ formats; the list is complete:
 - Ogg Opus, with the extension `.opus`, the preferred format because it is the smallest at the same quality.
 - MP3, with the extension `.mp3`, for music whose source cannot export Ogg Opus.
 
-The Soundtrack is every such file, and the Game build supplies every Track unchanged, in its own format. Any other file
-in the directory, e.g. a README or a `.yaml` record of how a Track was made, is not a Track. The Game designer
-removes the file of a Track excluded from the Soundtrack from the directory, so it is never played.
+The Soundtrack is every such file except the excluded ones, and the Game build supplies every Track unchanged, in its
+own format. Any other file in the directory, e.g. a README or a `.yaml` record of how a Track was made, is not a Track.
+
+Which files are excluded is content rather than design, so it comes from the MusicParameters [GDR](../foundation/core-concepts.md#game-build-and-content) `music` in
+`content/music/music_parameters.yaml`: the Game designer excludes a file, e.g. one pending review, by naming it there
+without changing this specification. The GDR serves the Display content purpose and has this property; the list is
+exhaustive:
+
+| Property          | Meaning                                                                                                                                                                                                                                                               |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `excluded_tracks` | The files that are not Tracks, each by its file name with its extension, e.g. `Beneath the Grid.opus`. A file it names is never played. A name that matches no file in the directory is allowed, since the Game designer may keep an excluded file's audio elsewhere. |
 
 The Track title is the file name without its extension, unchanged, so that the title the Player sees is the name of
 the file that holds the Track. E.g., the file `Silent Threat Protocol.opus` is the Track titled "Silent Threat
-Protocol". No two Tracks have the same
-Track title.
+Protocol". No two Tracks have the same Track title.
 
 # Music settings
 

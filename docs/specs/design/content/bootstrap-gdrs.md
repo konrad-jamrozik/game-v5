@@ -31,8 +31,8 @@ Dawn and wins the Campaign. Meanwhile, Red Dawn's activity creates [Response Mis
 
 The Bootstrap GDRs keep every kind of GDR the [Game concepts](../mechanics/domain-model.md#game-concepts) of Domain Model
 require and reduce how many of each exist. The following table is exhaustive: it counts every Bootstrap GDR by the
-Domain Model concept it serves, and the [Background artwork](../ui/visual-design.md#glossary) GDRs, which serve the user interface rather than a Domain
-Model concept, in a row of their own.
+Domain Model concept it serves, and the [Background artwork](../ui/visual-design.md#glossary) and [Soundtrack](../ui/music.md#glossary) GDRs, which serve the user interface
+rather than a Domain Model concept, in rows of their own.
 
 | Domain Model concept                                                                                   | Bootstrap GDRs                                                                                                                                                  | Count |
 | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
@@ -49,7 +49,8 @@ Model concept, in a row of their own.
 | Panic and endings                                                                                      | One parameter GDR                                                                                                                                               | 1     |
 | [Encyclopedia article](../mechanics/compendium.md#glossary)                                            | Six [Guide articles](../mechanics/compendium.md#glossary) and one article about each of 20 other Bootstrap GDRs                                                 | 26    |
 | [Background artwork](../ui/visual-design.md#glossary)                                                  | Three BackgroundArtworks                                                                                                                                        | 3     |
-| **Total**                                                                                              |                                                                                                                                                                 | 65    |
+| [Soundtrack](../ui/music.md#glossary)                                                                  | One parameter GDR                                                                                                                                               | 1     |
+| **Total**                                                                                              |                                                                                                                                                                 | 66    |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of
 Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
@@ -207,6 +208,14 @@ Type owner: [Visual Design](../ui/visual-design.md).
 | `agents_view_artwork`   | BackgroundArtwork | Display content | The Background artwork of the [Agents View](../ui/screens/agents-view.md), Agents in an equipment room, and its opacity.                                       |
 | `leads_view_artwork`    | BackgroundArtwork | Display content | The Background artwork of the [Leads View](../ui/screens/leads-view.md), an agent watching a crowded street in the rain, and its opacity.                      |
 
+## Music GDRs
+
+Type owner: [Music](../ui/music.md).
+
+| GDR     | Type            | GDR purpose     | What it supplies                                                                        |
+| ------- | --------------- | --------------- | --------------------------------------------------------------------------------------- |
+| `music` | MusicParameters | Display content | The files of `assets/music/` excluded from the [Soundtrack](../ui/music.md#soundtrack). |
+
 # Bootstrap GDR files
 
 The Bootstrap GDRs are authored in YAML files under the `content/` directory at the repository root. The YAML file of a
@@ -239,6 +248,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 | `content/panic-and-endings/ending_parameters.yaml`     | EndingParameters        | `endings`                                                                                 |
 | `content/compendium/encyclopedia_articles.yaml`        | EncyclopediaArticle     | The 26 GDRs under [Compendium GDRs](#compendium-gdrs)                                     |
 | `content/visual-design/background_artworks.yaml`       | BackgroundArtwork       | `missions_view_artwork`, `agents_view_artwork`, `leads_view_artwork`                      |
+| `content/music/music_parameters.yaml`                  | MusicParameters         | `music`                                                                                   |
 
 # Victory path
 

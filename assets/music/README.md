@@ -6,35 +6,40 @@ describes. Each `.opus` or `.mp3` file is one track, and its title is its file n
 
 A track is named after the title its source gave it, so that the same name finds it in the source, in its track record,
 and in the game, e.g. the ElevenLabs song "Silent Threat Protocol" is `Silent Threat Protocol.opus`. The table lists
-each track with its source, including excluded tracks, although their files are no longer here.
+each track with its source and whether it is excluded from the Soundtrack.
 
-| File                                                          | Source            |
-| ------------------------------------------------------------- | ----------------- |
-| `Abyss Protocol.opus`                                         | ElevenLabs        |
-| `Abyssal Tactical Drift.opus`                                 | ElevenLabs        |
-| `Beneath the Grid.opus`                                       | ElevenLabs        |
-| `Black Orbit Watch.opus`                                      | ElevenLabs        |
-| `Depth Signal.opus`                                           | ElevenLabs        |
-| `Silent Contact.opus`                                         | ElevenLabs        |
-| `Silent Contact Protocol.opus`                                | ElevenLabs        |
-| `Silent Hostile Sector.opus`                                  | ElevenLabs        |
-| `Silent Threat Protocol.opus`                                 | ElevenLabs        |
-| `Subsurface Directive.opus`                                   | ElevenLabs        |
-| `Unknown Contact.opus`                                        | ElevenLabs        |
-| `Unseen Sector.opus`                                          | ElevenLabs        |
-| `Unseen Threat Protocol.opus`                                 | ElevenLabs        |
-| `v03AI UFO 1.mp3`                                             | Suno v5 via v03ai |
-| `v03AI UFO 2.mp3`                                             | Suno v5 via v03ai |
-| `v03AI UFO 3 - Scanning Protocol.mp3`                         | Suno v5 via v03ai |
-| `v03AI UFO 4 - Scanning Protocol - Dark.mp3`                  | Suno v5 via v03ai |
-| `v03AI UFO 5 - Scanning Protocol - Dark Violin.mp3`           | Suno v5 via v03ai |
-| `v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3` | Suno v5 via v03ai |
-| `Bass clarinet + muted trombone var1.mp3`                     | Suno v6           |
-| `Bass clarinet + muted trombone var2.mp3`                     | Suno v6           |
-| `Signal Intercept var1.mp3`                                   | Suno v6           |
-| `Signal Intercept var2.mp3`                                   | Suno v6           |
-| `Unseen Approach var1.mp3`                                    | Suno v6           |
-| `Unseen Approach var2.mp3`                                    | Suno v6           |
+The `excluded_tracks` of the GDR `music` in
+[`content/music/music_parameters.yaml`](../../content/music/music_parameters.yaml) decides which tracks are excluded,
+and the Excluded column mirrors it. An excluded track's audio file is not kept in this repository but in the Game
+designer's personal backup, outside it; its row in the table, and its track record where it has one, stay here.
+
+| File                                                          | Source            | Excluded |
+| ------------------------------------------------------------- | ----------------- | -------- |
+| `Abyss Protocol.opus`                                         | ElevenLabs        | No       |
+| `Abyssal Tactical Drift.opus`                                 | ElevenLabs        | No       |
+| `Beneath the Grid.opus`                                       | ElevenLabs        | Yes      |
+| `Black Orbit Watch.opus`                                      | ElevenLabs        | No       |
+| `Depth Signal.opus`                                           | ElevenLabs        | No       |
+| `Silent Contact.opus`                                         | ElevenLabs        | No       |
+| `Silent Contact Protocol.opus`                                | ElevenLabs        | No       |
+| `Silent Hostile Sector.opus`                                  | ElevenLabs        | No       |
+| `Silent Threat Protocol.opus`                                 | ElevenLabs        | No       |
+| `Subsurface Directive.opus`                                   | ElevenLabs        | Yes      |
+| `Unknown Contact.opus`                                        | ElevenLabs        | No       |
+| `Unseen Sector.opus`                                          | ElevenLabs        | Yes      |
+| `Unseen Threat Protocol.opus`                                 | ElevenLabs        | Yes      |
+| `v03AI UFO 1.mp3`                                             | Suno v5 via v03ai | Yes      |
+| `v03AI UFO 2.mp3`                                             | Suno v5 via v03ai | Yes      |
+| `v03AI UFO 3 - Scanning Protocol.mp3`                         | Suno v5 via v03ai | No       |
+| `v03AI UFO 4 - Scanning Protocol - Dark.mp3`                  | Suno v5 via v03ai | No       |
+| `v03AI UFO 5 - Scanning Protocol - Dark Violin.mp3`           | Suno v5 via v03ai | No       |
+| `v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3` | Suno v5 via v03ai | No       |
+| `Bass clarinet + muted trombone var1.mp3`                     | Suno v6           | No       |
+| `Bass clarinet + muted trombone var2.mp3`                     | Suno v6           | No       |
+| `Signal Intercept var1.mp3`                                   | Suno v6           | No       |
+| `Signal Intercept var2.mp3`                                   | Suno v6           | No       |
+| `Unseen Approach var1.mp3`                                    | Suno v6           | No       |
+| `Unseen Approach var2.mp3`                                    | Suno v6           | No       |
 
 ## Track records
 
@@ -43,19 +48,6 @@ that it can be told apart from the others and made again: its original title, so
 generated from, and what the source reports about it, e.g. tags, BPM, and length. A track record is not a track. Every
 track from a source that keeps its prompts, e.g. ElevenLabs, has one, including each excluded track, whose record stays
 here after its audio is removed.
-
-## Excluded tracks
-
-The Game designer excluded these tracks from the Soundtrack. Their audio files are not kept in this repository but in
-the Game designer's personal backup, outside it; their rows in the table, and their track records where they have one,
-stay here:
-
-- `Beneath the Grid.opus`
-- `Subsurface Directive.opus`
-- `Unseen Sector.opus`
-- `Unseen Threat Protocol.opus`
-- `v03AI UFO 1.mp3`
-- `v03AI UFO 2.mp3`
 
 ## Tracks from ElevenLabs
 
