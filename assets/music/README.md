@@ -96,3 +96,9 @@ The other `.mp3` files are from Suno v6, made directly on [suno.com](https://sun
 Each is named after its song's title in Suno, e.g. `Signal Intercept var1.mp3`; a Suno song with another title, e.g.
 a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model,
 creation time, tags, length, Styles text, Exclude styles text, and sliders.
+
+## Analyzing track contents
+
+To analyze what a track contains, e.g. its instruments, structure, or mood, the
+[NVIDIA Music Flamingo demo](https://nvidia-music-flamingo.hf.space/) is a good tool: it takes an audio file and answers
+questions about it.
