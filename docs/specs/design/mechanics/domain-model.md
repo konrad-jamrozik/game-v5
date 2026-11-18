@@ -273,7 +273,7 @@ Given Turn 3 and:
 - Agent a2, Deployed on Mission m1, so that its Assignment references m1, At assignment.
 - Investigation i0 referring to L2, no longer Active, with an empty Current team.
 - Active Investigation i1 referring to L1, Current team {a1}.
-- Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Attempted.
+- Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Deployed.
 - Mission m1 with Archetype M1 at Mission site s1, deployed in Turn 3, Deployed, with Current team {a2}.
 - Enemy e1 owned by s1, with Archetype E1.
 - Each Agent and Enemy has base skill 100, current health 10 of base health 10, exhaustion 0, and equipped values referring to W1.
@@ -288,7 +288,7 @@ that Mechanics specifications add are assumed valid:
 | a1, a2            | a1, a2 respectively | A1        | Agency ag1                                                             | Assignment, Agent status, the properties the Combatant Role Type requires, and Participation history |
 | i0                | i0                  | I1        | Lead L2                                                                | Not Active, empty Current team, Participation history                                                |
 | i1                | i1                  | I1        | Lead L1                                                                | Active, Current team {a1}, Participation history                                                     |
-| s1                | s1                  | S1        | Initiative kind; origin Investigation i0 of Lead L2; target Faction f1 | Attempted, Enemies {e1}                                                                              |
+| s1                | s1                  | S1        | Initiative kind; origin Investigation i0 of Lead L2; target Faction f1 | Deployed, Enemies {e1}                                                                               |
 | m1                | m1                  | M1        | Mission site s1; Turn deployed 3; team sent {a2}                       | Deployed, Current team {a2}                                                                          |
 | e1                | e1                  | E1        | Mission site s1                                                        | The properties the Combatant Role Type requires                                                      |
 | f1                | f1                  | F1        | Empty                                                                  | The values under [Faction State](factions.md#faction-state)                                          |

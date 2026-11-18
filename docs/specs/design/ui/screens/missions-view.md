@@ -44,13 +44,17 @@ The middle pane shows the selected Mission site:
   Turn created, and its Turns until expiration, under [Mission site properties](../../mechanics/missions.md#mission-site-properties) in Missions.
 - Its Enemies, in their order, one row each with the EnemyArchetype's `name`, [base skill](../../mechanics/agents-spec.md#combatant-attributes), [current health](../../mechanics/agents-spec.md#combatant-attributes) against [base
   health](../../mechanics/agents-spec.md#combatant-attributes), and [base weapon damage](../../mechanics/agents-spec.md#combatant-attributes), under [Player-visible information](../../mechanics/combat.md#player-visible-information) in Combat, and the
-  [Combat rating](../../mechanics/combat.md#combat-rating) of the Enemies' side above the rows.
+  [Combat rating](../../mechanics/combat.md#combat-rating) of the Enemies' side beside the Enemies heading, under
+  [Combat ratings](#combat-ratings).
 - Its [Consequences](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) for each final state, under [Consequences](../../mechanics/missions.md#consequences) in Missions: what a Won Mission changes,
   and what a Lost Mission or an Expired Mission site changes, each change written as what it does, e.g. "+60 money",
   "Panic −5", or "Red Dawn Eliminated".
 
 For a Mission site that is no longer Active, the pane also shows its Mission, if any, with its Team sent and its
-lifecycle state.
+lifecycle state. While the Mission is Deployed, a row under the Team sent shows the [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) of its [Current team](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions),
+which is its Team sent, under [Combat ratings](#combat-ratings). Once the Mission is Won or Lost, the row is left out,
+because its Agents' values have changed since its Combat; the Combat ratings its Combat had are in its
+[Combat report](turn-report-view.md#combat-report).
 
 # Deployment
 
@@ -61,13 +65,30 @@ its [Instance ID](../../foundation/campaign-instances.md#glossary), its Assignme
 of [Warning on deploying tired Agents](../gui.md#warning-on-deploying-tired-agents) in the GUI shows its exhaustion, coloured under [Agent condition](../visual-design.md#agent-condition) in Visual Design.
 
 Above the rows, the pane shows how many places of the [Transport cap](../../mechanics/economy-and-upgrades.md#glossary) the Deployed Agents and the checked Agents
-together take, against the Transport cap, e.g. "Transport 3 / 4". The pane adds no other figure, e.g. no sum of the
-checked Agents' effective skills and no chance of winning, because the engine returns neither for a team not yet
-deployed.
+together take, against the Transport cap, e.g. "Transport 3 / 4". After it, on the same line, the pane shows the
+Combat rating of the checked Agents taken as one side, under [Combat ratings](#combat-ratings), so that the Player can
+weigh the team against the Enemies' Combat rating before deploying it. It changes as Agents are checked and cleared,
+and is 0 while no Agent is checked. An Agent that meets the incapacitation condition adds nothing to it, under
+[Incapacitation condition](../../mechanics/combat.md#incapacitation-condition) and
+[Combat rating](../../mechanics/combat.md#combat-rating) in Combat. The pane adds no chance of winning, because the engine
+returns none for a team not yet deployed.
 
 The Deploy button is the pane's primary button. It makes one `deployAgents` [Player action](../../foundation/engine-contract.md#player-actions-and-turns) with the checked Agents in the
 order they were checked, after the warning under [Warning on deploying tired Agents](../gui.md#warning-on-deploying-tired-agents) in the GUI when it
 applies. It is disabled while no Agent is checked or while the checked Agents would exceed the Transport cap.
+
+# Combat ratings
+
+The Missions View shows three Combat ratings, under [Combat rating](../../mechanics/combat.md#combat-rating) in
+Combat: of the selected Mission site's Enemies, of a Deployed Mission's Current team, and of the checked Agents in the
+deployment pane. The Player decides whom to send by comparing them, so each stands out from the figures around it in
+one shared style: the Label "Combat rating" followed by the value in the Figure style and Accent text, under
+[Colours](../visual-design.md#colours) in Visual Design, e.g. "COMBAT RATING 120".
+
+The Enemies' Combat rating sits on the line of the Enemies heading, centred on it under
+[Alignment](../visual-design.md#alignment) in Visual Design, and ends at the right edge of the Enemies table, not of
+the pane, so that its last character lines up with the right-aligned figures of the table's last column, the base
+weapon damage. On a wide pane the spare width lies to the right of both the table and its Combat rating.
 
 # Artboard
 

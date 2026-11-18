@@ -429,7 +429,7 @@ Initial state: the state above, in Turn 1. The player starts Investigation i1 of
   supplies `apprehend_member`, i1, and Red Dawn to Missions, which creates exactly one Initiative Mission site s1, Active,
   with target Faction Red Dawn. Member is not available; its Blocking condition is 3, because s1 is Active, and its
   Lead status is Inactive. Safehouse stays undiscovered, blocked by 1. The Turn report lists no discovered Lead.
-- **Turn 5:** The player deploys a team to s1, so s1 is Attempted and its Mission m1 is Deployed. Member is still
+- **Turn 5:** The player deploys a team to s1, so s1 and its Mission m1 are Deployed. Member is still
   blocked by 3.
 - **Advance turn ending Turn 5:** The Combat outcome is Prevailed (input from Combat), so m1 becomes Won. Safehouse's condition 1
   now holds, because s1 is from `apprehend_member` and targets Red Dawn, the Faction of safehouse, so safehouse is
@@ -507,7 +507,7 @@ and [Edge cases and failure behavior](#edge-cases-and-failure-behavior). It uses
 alongside the Bootstrap GDRs.
 
 Initial state: Turn 60. A Mission site s6 from `raid_hq`, created by an Investigation i6 of hq that completed earlier, is
-Attempted, and its Mission m6 is Deployed; `test_lead` has an Active Investigation i7. The following happens in the Advance turn ending Turn 60.
+Deployed, as is its Mission m6; `test_lead` has an Active Investigation i7. The following happens in the Advance turn ending Turn 60.
 
 1. **Investigation progress:** i7 completes (input from Investigations). The effect creates Mission site s7 from
    `apprehend_member`, Active, with target Faction Red Dawn, which is not yet Eliminated.
