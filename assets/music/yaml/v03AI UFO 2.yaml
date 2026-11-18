@@ -5,6 +5,16 @@ title_in_source: 'UFO 1'
 created: '2026-11-17 00:57'
 human_assessment: rejected, too irritating MIDI sounds
 tags: [Electronic, synth, ambient]
+meta_prompt_taxonomy:
+  stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
+  adjustments:
+    - 'shortened for Suno v5 via v03ai'
+    - 'song-structure tags: [Intro], [Verse], [Bridge], [Outro]'
+    - 'steady, seamlessly loopable pacing; no builds or climaxes'
+    - "fit within v03ai's 1,000 characters"
+prompt_from:
+  tool: ChatGPT
+  conversation_title: 'Shorten Suno Prompt'
 prompt: |-
   Dark 1990s sci-fi tactical strategy game soundtrack inspired by X-COM: UFO Defense (1994). Retro MIDI and Amiga synths, minimalist dark ambient, sci-fi horror. Very slow (55–70 BPM), sparse, restrained. Ominous bass drones, haunting minor-key motifs, dissonant pads, faint metallic percussion, eerie alien tones. Cold, hypnotic, paranoid, isolated.
 
@@ -18,4 +28,4 @@ prompt: |-
 
   Instrumental only. No vocals, cheerful melodies, energetic beats, orchestral swells, or
 notes: |-
-  The prompt ends mid-sentence: it was given to v03ai exactly so, cut at v03ai's cap of 1,000 characters for a Suno v5 prompt. Its title in v03ai is "UFO 1", the same as that of v03AI UFO 1.mp3, by mistake.
+  The prompt ends mid-sentence: it was given to v03ai exactly so, cut at v03ai's cap of 1,000 characters for a Suno v5 prompt. Its title in v03ai is "UFO 1", the same as that of v03AI UFO 1.mp3, by mistake. The prompt is the final answer of the ChatGPT conversation "Shorten Suno Prompt", which ended with the Game designer's request "You still gotta fit in 1000 chars"; the prompt given to v03ai omits that answer's final words, "cinematic crescendos."

@@ -8,6 +8,10 @@ bpm: 119
 length: '1:00'
 description: |-
   A dark, minimalist retro game soundtrack built from eerie FM synths, low drones, and sparse metallic percussion. It evokes underwater dread, alien contact, and quiet tactical tension in a seamless looping form.
+meta_prompt_taxonomy:
+  stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
+  adjustments:
+    - 'a tint of Cthulhu and X-COM: Terror from the Deep'
 prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afb9ab3-67b0-83e8-87db-9d7bf6ab3333

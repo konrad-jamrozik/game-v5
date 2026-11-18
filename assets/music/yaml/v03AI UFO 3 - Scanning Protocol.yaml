@@ -3,6 +3,9 @@ source: Suno v5 via v03ai
 original_title: 'v03AI UFO 3 - Scanning Protocol'
 created: '2026-11-17 13:58'
 tags: [Dark ambient, sci-fi electronica, cinematic synth, minimal electronic, atmospheric, ominous]
+meta_prompt_taxonomy:
+  stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'
+  adjustments: []
 prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
