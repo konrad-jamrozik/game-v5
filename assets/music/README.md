@@ -2,66 +2,77 @@
 
 The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification
 describes. Each `.opus` or `.mp3` file is one track, and its title is its file name without the extension, e.g.
-`GEO-1.opus` is the track titled "GEO-1".
+`Silent Threat Protocol.opus` is the track titled "Silent Threat Protocol".
 
-Each file was renamed from the title its source gave it. The table maps each file to that original title and its
-source.
+A track is named after the title its source gave it, so that the same name finds it in the source, in its track record,
+and in the game, e.g. the ElevenLabs song "Silent Threat Protocol" is `Silent Threat Protocol.opus`. The table lists
+each track with its source, including excluded tracks, although their files are no longer here.
 
-| File          | Original title                                          | Source            |
-| ------------- | ------------------------------------------------------- | ----------------- |
-| `GEO-1.opus`  | Abyss Protocol                                          | ElevenLabs        |
-| `GEO-2.opus`  | Abyssal Tactical Drift                                  | ElevenLabs        |
-| `GEO-3.opus`  | Beneath the Grid                                        | ElevenLabs        |
-| `GEO-4.opus`  | Black Orbit Watch                                       | ElevenLabs        |
-| `GEO-5.opus`  | Depth Signal                                            | ElevenLabs        |
-| `GEO-6.opus`  | Silent Contact                                          | ElevenLabs        |
-| `GEO-7.opus`  | Silent Contact Protocol                                 | ElevenLabs        |
-| `GEO-8.opus`  | Silent Hostile Sector                                   | ElevenLabs        |
-| `GEO-9.opus`  | Silent Threat Protocol                                  | ElevenLabs        |
-| `GEO-10.opus` | Subsurface Directive                                    | ElevenLabs        |
-| `GEO-11.opus` | Unknown Contact                                         | ElevenLabs        |
-| `GEO-12.opus` | Unseen Sector                                           | ElevenLabs        |
-| `GEO-13.opus` | Unseen Threat Protocol                                  | ElevenLabs        |
-| `GEO-14.mp3`  | v03AI UFO 1                                             | Suno v5 via v03ai |
-| `GEO-15.mp3`  | v03AI UFO 2                                             | Suno v5 via v03ai |
-| `GEO-16.mp3`  | v03AI UFO 3 - Scanning Protocol                         | Suno v5 via v03ai |
-| `GEO-17.mp3`  | v03AI UFO 4 - Scanning Protocol - Dark                  | Suno v5 via v03ai |
-| `GEO-18.mp3`  | v03AI UFO 5 - Scanning Protocol - Dark Violin           | Suno v5 via v03ai |
-| `GEO-19.mp3`  | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |
-| `GEO-20.mp3`  | Signal Intercept var1                                   | Suno v6           |
-| `GEO-21.mp3`  | Signal Intercept var2                                   | Suno v6           |
-| `GEO-22.mp3`  | Unseen Approach var1                                    | Suno v6           |
-| `GEO-23.mp3`  | Unseen Approach var2                                    | Suno v6           |
-| `GEO-24.mp3`  | Bass clarinet + muted trombone var1                     | Suno v6           |
-| `GEO-25.mp3`  | Bass clarinet + muted trombone var2                     | Suno v6           |
+| File                                                          | Source            |
+| ------------------------------------------------------------- | ----------------- |
+| `Abyss Protocol.opus`                                         | ElevenLabs        |
+| `Abyssal Tactical Drift.opus`                                 | ElevenLabs        |
+| `Beneath the Grid.opus`                                       | ElevenLabs        |
+| `Black Orbit Watch.opus`                                      | ElevenLabs        |
+| `Depth Signal.opus`                                           | ElevenLabs        |
+| `Silent Contact.opus`                                         | ElevenLabs        |
+| `Silent Contact Protocol.opus`                                | ElevenLabs        |
+| `Silent Hostile Sector.opus`                                  | ElevenLabs        |
+| `Silent Threat Protocol.opus`                                 | ElevenLabs        |
+| `Subsurface Directive.opus`                                   | ElevenLabs        |
+| `Unknown Contact.opus`                                        | ElevenLabs        |
+| `Unseen Sector.opus`                                          | ElevenLabs        |
+| `Unseen Threat Protocol.opus`                                 | ElevenLabs        |
+| `v03AI UFO 1.mp3`                                             | Suno v5 via v03ai |
+| `v03AI UFO 2.mp3`                                             | Suno v5 via v03ai |
+| `v03AI UFO 3 - Scanning Protocol.mp3`                         | Suno v5 via v03ai |
+| `v03AI UFO 4 - Scanning Protocol - Dark.mp3`                  | Suno v5 via v03ai |
+| `v03AI UFO 5 - Scanning Protocol - Dark Violin.mp3`           | Suno v5 via v03ai |
+| `v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3` | Suno v5 via v03ai |
+| `Bass clarinet + muted trombone var1.mp3`                     | Suno v6           |
+| `Bass clarinet + muted trombone var2.mp3`                     | Suno v6           |
+| `Signal Intercept var1.mp3`                                   | Suno v6           |
+| `Signal Intercept var2.mp3`                                   | Suno v6           |
+| `Unseen Approach var1.mp3`                                    | Suno v6           |
+| `Unseen Approach var2.mp3`                                    | Suno v6           |
+
+## Track records
+
+A `.yaml` file with the same name as a track, e.g. `Silent Threat Protocol.yaml`, records how the track was made, so
+that it can be told apart from the others and made again: its original title, source, creation date, the prompt it was
+generated from, and what the source reports about it, e.g. tags, BPM, and length. A track record is not a track. Every
+track from a source that keeps its prompts, e.g. ElevenLabs, has one, including each excluded track, whose record stays
+here after its audio is removed.
 
 ## Excluded tracks
 
-The Game designer excluded these files from the Soundtrack, pending review, so they are kept here but never played:
+The Game designer excluded these tracks from the Soundtrack. Their audio files are not kept in this repository but in
+the Game designer's personal backup, outside it; their rows in the table, and their track records where they have one,
+stay here:
 
-- `GEO-3.opus`
-- `GEO-10.opus`
-- `GEO-12.opus`
-- `GEO-13.opus`
-- `GEO-14.mp3`
-- `GEO-15.mp3`
+- `Beneath the Grid.opus`
+- `Subsurface Directive.opus`
+- `Unseen Sector.opus`
+- `Unseen Threat Protocol.opus`
+- `v03AI UFO 1.mp3`
+- `v03AI UFO 2.mp3`
 
 ## Tracks from ElevenLabs
 
-All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/), each saved under the file name ElevenLabs gave it,
-with underscores for spaces, e.g. `GEO-9.opus` was `Silent_Threat_Protocol.opus`.
+All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/) Music. Each is named after its song's title in
+ElevenLabs, with the spaces kept, although ElevenLabs downloads it with underscores for spaces, e.g. the download
+`Silent_Threat_Protocol.opus` is saved as `Silent Threat Protocol.opus`. Their track records hold what the song's
+details panel in the ElevenLabs Assets page shows: the description and prompt, word for word, and the tags, BPM, and
+length.
 
 ## Tracks from Suno v5 via v03ai
 
-`GEO-14.mp3` to `GEO-19.mp3` are from Suno v5, made via [v03ai](https://v03ai.com/), which cannot export Ogg Opus.
-Their original titles, "v03AI UFO 1" and "v03AI UFO 2", are the file names they had here, not their titles in v03ai: by
-mistake, both are titled "UFO1" in the v03ai interface, and only these file names told them apart.
-
-The original titles of the later files from v03ai are the file names they had here without the number v03ai appended,
-e.g. `GEO-16.mp3` was `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`.
+The files named `v03AI UFO …` are from Suno v5, made via [v03ai](https://v03ai.com/), which cannot export Ogg Opus.
+Their names are not their titles in v03ai but the names the Game designer gave the downloads: by mistake, the first two
+are both titled "UFO1" in the v03ai interface, and only these names tell them apart. v03ai appends a number to the
+download's file name, e.g. `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`, which is removed.
 
 ## Tracks from Suno v6
 
-`GEO-20.mp3` to `GEO-25.mp3` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export
-Ogg Opus. Their original titles are the file names they had here, e.g. `GEO-20.mp3` was
-`Signal Intercept var1.mp3`.
+The other `.mp3` files are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus.
+Each is named after its song's title in Suno, e.g. `Signal Intercept var1.mp3`.

@@ -70,9 +70,9 @@ Specification map section for it, and start no subagents.
      Implementation decision that file's copy follows requires, and record it there.
    - Asset files: copy each added or changed asset to the Implementation's copy unchanged, and delete the copy of each
      deleted one, under the Implementation Placement section for its kind, e.g. Music in an Implementation.
-   - Asset READMEs: the Implementation copies no README, so most README changes need nothing. The exception is the
-     Excluded tracks section of `assets/music/README.md`, which decides which Tracks the Soundtrack holds: delete the
-     copy of each newly excluded Track and copy each Track no longer excluded.
+   - Asset READMEs and track records: the Implementation copies no README and no `.yaml` track record in
+     `assets/music/`, so changes to them need nothing. An excluded Track's file is deleted from `assets/music/`, so the
+     asset files rule above already deletes its copy.
    - Update the record of where the copies came from, e.g. the commit in `content/SOURCE.md`.
 2. Run the Implementation's `fix` script when it has one, then its checks. A test that pins a value the content
    changed, e.g. an expected Track list or GDR value, is updated to the new value.
