@@ -105,16 +105,17 @@ can cross a whole Autopilot engagement. The U and R keys press the Undo and Redo
 
 ![Campaign screen Artboard with the Agents Detail view open over the Globe stage: the Agents button of the Side panel marked as open, the Situation panel still in view, and a sample Agents table in the Detail view](../../../../images/artboards/campaign-screen-view.png)
 
+![Settings panel Artboard: the Settings dialog that the Settings button opens, with its close control, the Music volume slider, the Sounds toggle and Sounds volume slider, the Autosave limit, and the Keyboard shortcuts and Developer tools buttons](../../../../images/artboards/settings-panel.png)
+
 The [Artboards](../visual-design.md#glossary) show the Situation panel and the Agents Detail view as sample content of their regions; each is detailed
-by its own specification and Artboard. The following appear only on the Artboards and must not be implemented, under
+by its own specification and Artboard. The Settings panel Artboard shows the dialog that the Settings button opens,
+under [Settings panel](../gui.md#settings-panel) in the Graphical User Interface. The following appear only on the
+Artboards and must not be implemented, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
-- The sample values, e.g. Turn 16, Money 625, and the [Agent](../../mechanics/domain-model.md#agency-and-agents) IDs.
-- The labels, order, and grouping of the controls in the status bar, e.g. "Menu" instead of "Main menu", and the
-  missing keyboard-shortcut hints.
+- The sample values, e.g. Turn 16, Money 625, the [Agent](../../mechanics/domain-model.md#agency-and-agents) IDs, the Track title GEO-4, the Music volume
+  50, and the Autosave limit 5.
 - The drawing of the globe, which stands in for the real one.
-- The footer's Shortcuts and Developer entries, which belong in the Settings panel, and its missing Music control and
-  Settings button.
 
 # TODOs
 

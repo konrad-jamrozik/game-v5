@@ -57,7 +57,9 @@ escalation, and its handling of push conflicts.
 5. Carry out the decision:
    - **Specification change**, for a design change, a newly specified open matter, or a clarification of ambiguous
      wording: edit the specifications in the worktree under
-     [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), self-review it, then
+     [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), redraw on the Design
+     canvas every Artboard the change affects and export its image, which is always part of a UI change, never a
+     later option, then self-review it, then
      commit, push, resolving any conflicts, release the worktree, and update the main local clone, under steps 3 to 6
      of Spec repo changes in a worktree.
    - **Conformance fix:** first release the unchanged worktree: outside T3 Code, remove it with `ExitWorktree` and

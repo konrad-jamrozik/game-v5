@@ -37,6 +37,12 @@ These rules apply in this repository and in every Implementation repo:
 - To read or search a specification as prose rather than as link syntax, run `npm run docs:plain -- <file>`.
 - To export Artboard images from the Design canvas, use `npm run artboards:export`, as
   [Design canvas](docs/specs/design/ui/visual-design.md#design-canvas) describes, never a one-off script.
+- Redrawing Artboards is part of every specification change, never separate design work to defer. The Artboards and
+  the specifications together are the source from which an Implementation's UI is regenerated, so whenever a change
+  alters what a screen or panel shows or how it looks, redraw every Artboard that shows it, and draw a new Artboard
+  for a new screen, panel, or dialog, in the same change. Never record a difference between an Artboard and the new
+  text as an element that "appears only on the Artboard"; that list holds only what a picture cannot avoid, e.g.
+  sample values, as [Reading Artboards](docs/specs/design/ui/visual-design.md#reading-artboards) states.
 - Whenever an Artboard changes, publish the edited canvas artboard to the Design canvas with the Artifact tool, then
   export its image from the published version. Never ask the user before publishing it, and never commit an Artboard
   image whose canvas artboard was not published, because the next export from the canvas would undo the change.

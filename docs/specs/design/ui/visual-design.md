@@ -68,6 +68,7 @@ exhaustive.
 | `campaign-screen-view.png` | Screen | `CampaignScreenView.dc.html` | [Campaign Screen](screens/campaign-screen.md)   |
 | `situation-panel.png`      | Panel  | `SituationPanel.dc.html`     | [Situation Panel](screens/situation-panel.md)   |
 | `turn-summary.png`         | Panel  | `TurnSummary.dc.html`        | [Turn Summary](screens/turn-summary.md)         |
+| `settings-panel.png`       | Panel  | `SettingsPanel.dc.html`      | [Campaign Screen](screens/campaign-screen.md)   |
 | `missions-view.png`        | Panel  | `MissionsView.dc.html`       | [Missions View](screens/missions-view.md)       |
 | `leads-view.png`           | Panel  | `LeadsView.dc.html`          | [Leads View](screens/leads-view.md)             |
 | `agents-view.png`          | Panel  | `AgentsView.dc.html`         | [Agents View](screens/agents-view.md)           |
@@ -80,13 +81,18 @@ exhaustive.
 
 # Reading Artboards
 
-An Artboard shows how the rules of this specification look when applied to one screen. It is a picture, not a contract:
-the rules are complete only as text, and when an Artboard and the text disagree, the text applies.
+An Artboard shows how the rules of this specification look when applied to one screen. The Artboards and the text
+together are the source from which every Implementation's graphical user interface is regenerated, so they must never
+disagree: a specification change that changes what a screen or panel shows, or how it looks, redraws every Artboard
+that shows it on the [Design canvas](#design-canvas) and exports their images in the same change. An Artboard that
+still disagrees with the text is a defect of the specifications, fixed by redrawing it; until it is, the text applies,
+because the rules are complete only as text.
 
 What a screen shows and which operations it offers is owned by the [Graphical User Interface](gui.md), the
 specification of that screen or panel, and the specifications they use, never by an Artboard. An element that appears
 on an Artboard but that no specification requires must not be implemented; each specification that shows an Artboard
-lists such elements of it, e.g. the Resume button under [Main Menu](screens/main-menu.md).
+lists such elements of it. That list holds only what a picture cannot avoid, e.g. its sample values or a drawing that
+stands in for the real globe, and never a difference left for a later redraw.
 
 # Design tokens
 

@@ -31,8 +31,11 @@ distinct where a host truncates them.
 
 2. **Find the Implementation repo from the main local clone**, never from the worktree: its siblings are the
    Implementation repos, and it is the parent of `git rev-parse --path-format=absolute --git-common-dir`.
-3. **Self-review.** Make the changes, publishing every changed Artboard to the Design canvas without asking, as
-   Editing files and running commands in `AGENTS.md` directs, run `npm run docs:generate` and `npm run check`, run `git add -N .`, and review
+3. **Self-review.** Make the changes. A change that alters what a screen or panel shows or how it looks is not done
+   until every Artboard that shows it is redrawn on the Design canvas, published without asking, and exported, and a
+   new screen, panel, or dialog has an Artboard of its own, as Editing files and running commands in `AGENTS.md`
+   directs; never defer a redraw, offer it as a later option, or list the difference as an element that appears only
+   on the Artboard. Run `npm run docs:generate` and `npm run check`, run `git add -N .`, and review
    the whole diff yourself. Record every decision made on the user's behalf, with the option chosen, the alternatives,
    and why, for the report. Then go to step 4 without waiting.
 

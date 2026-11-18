@@ -57,11 +57,7 @@ it.
 The following appear only on the [Artboard](../visual-design.md#glossary) and must not be implemented, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
-- The sample values, e.g. the Campaign IDs and Turn 16.
-- The missing number of Player actions after the Turn of each Campaign save, e.g. T16 instead of T16 A3.
-- The missing close control at the upper right corner of the Main menu's content.
-- The Settings panel with only the [Autosave limit](../../foundation/saves.md#limits), without the Music control above it and the rows of the Settings
-  panel.
+- The sample values, e.g. the Campaign IDs, T16 A3, the Track title GEO-4, and the Music volume 50.
 
 # TODOs
 

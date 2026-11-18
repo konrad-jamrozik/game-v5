@@ -64,8 +64,9 @@ escalation, and its handling of push conflicts. Steps 0, 7, and 8 below name whe
    decision for the report.
 
 7. When every item of the top 3 has a decision, make the specification changes in the worktree under
-   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md) and self-review them,
-   under step 3 of Spec repo changes in a worktree. Then commit, push, resolving any conflicts, release the worktree,
+   [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md), redraw on the Design
+   canvas every Artboard they affect and export its image, which is always part of a UI change, never a later option,
+   and self-review them, under step 3 of Spec repo changes in a worktree. Then commit, push, resolving any conflicts, release the worktree,
    and update the main local clone, under steps 4 to 6 of Spec repo changes in a worktree.
 8. After the worktree is released, for each declined problem, set its Resolution in the Implementation's feedback file
    to Declined, naming the Spec repo's reviewed commit by its full hash and the reason, and commit that in the
