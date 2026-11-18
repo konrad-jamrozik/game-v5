@@ -17,8 +17,8 @@ negative, but funding, the recurring part of income, never falls below zero.
 
 The player spends money in two ways: hiring grows the roster of Agents, and Upgrades improve the Agency permanently.
 Three caps limit what the Agency can do at once: the Agent cap on the Agents it employs, the Transport cap on the Agents
-it has [Deployed](agents-spec.md#assignments), and the Training cap on the Agents on [Training](agents-spec.md#assignments). Each Upgrade either raises one cap or raises the base weapon
-damage of Agents, and it can be bought again at the same price.
+it has [Deployed](agents-spec.md#assignments), and the Training cap on the Agents on [Training](agents-spec.md#assignments). Each Upgrade raises one cap, one value of every Agent, or
+one rate at which every Agent trains or recovers, and it can be bought again at the same price.
 
 Economy and Upgrades builds on [Domain Model](domain-model.md): Domain Model says that the Agency holds money and employs
 Agents, and Economy and Upgrades says how that money is earned and spent.
@@ -29,15 +29,17 @@ These terms are specific to the [Agency](domain-model.md#agency-and-agents)'s ec
 [Domain Model glossary](domain-model.md#glossary); terms about Agents are in the
 [Agents glossary](agents-spec.md#glossary).
 
-| Term                  | Definition                                                                                                                                                                        | Prohibited synonyms                           |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| Acquisitions          | For one [Upgrade](domain-model.md#agency-and-agents), the number of times the Agency has purchased it.                                                                            |                                               |
-| Increment             | How much one acquisition of an Upgrade raises the value it improves: the Upgrade's `increment`.                                                                                   |                                               |
-| Upgrade bonus         | For one effect identifier, what every Upgrade with that effect adds to the starting value of the value they improve: the sum of each such Upgrade's Increment × its Acquisitions. |                                               |
-| Cap Upgrade           | An Upgrade that raises the [Agent cap](domain-model.md#agency-and-agents), the Transport cap, or the Training cap.                                                                | Cap effect                                    |
-| Weapon damage Upgrade | An Upgrade that raises the [base weapon damage](agents-spec.md#combatant-attributes) of Agents.                                                                                   | Base weapon damage effect; Agent value effect |
-| Transport cap         | The most Agents the Agency can have [Deployed](agents-spec.md#assignments) at the same time.                                                                                      |                                               |
-| Training cap          | The most Agents the Agency can have assigned to [Training](agents-spec.md#assignments) at the same time.                                                                          |                                               |
+| Term                  | Definition                                                                                                                                                                                                           | Prohibited synonyms                           |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Acquisitions          | For one [Upgrade](domain-model.md#agency-and-agents), the number of times the Agency has purchased it.                                                                                                               |                                               |
+| Increment             | How much one acquisition of an Upgrade raises the value it improves: the Upgrade's `increment`.                                                                                                                      |                                               |
+| Upgrade bonus         | For one effect identifier, what every Upgrade with that effect adds to the starting value of the value they improve: the sum of each such Upgrade's Increment × its Acquisitions.                                    |                                               |
+| Cap Upgrade           | An Upgrade that raises the [Agent cap](domain-model.md#agency-and-agents), the Transport cap, or the Training cap.                                                                                                   | Cap effect                                    |
+| Weapon damage Upgrade | An Upgrade that raises the [base weapon damage](agents-spec.md#combatant-attributes) of Agents.                                                                                                                      | Base weapon damage effect; Agent value effect |
+| Base health Upgrade   | An Upgrade that raises the [base health](agents-spec.md#combatant-attributes) of Agents.                                                                                                                             | Hit points upgrade                            |
+| Rate Upgrade          | An Upgrade that raises one rate every [Agent](domain-model.md#agency-and-agents) shares: the training skill gain, the [exhaustion](agents-spec.md#combatant-attributes) recovery, or the health recovery percentage. |                                               |
+| Transport cap         | The most Agents the Agency can have [Deployed](agents-spec.md#assignments) at the same time.                                                                                                                         |                                               |
+| Training cap          | The most Agents the Agency can have assigned to [Training](agents-spec.md#assignments) at the same time.                                                                                                             |                                               |
 
 # Economy GDRs
 
@@ -62,12 +64,12 @@ EconomyParameters bundles the scalar values that hiring, upkeep, Agency income, 
 
 Each Upgrade is one GDR of [Type](../foundation/core-concepts.md#data-modeling) Upgrade. The Upgrade GDRs the Game build supplies are the Upgrades the Agency can buy.
 
-| Property    | Meaning                                                                                                                    | Read by                                                   |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `name`      | The display name of the Upgrade.                                                                                           | [Player-visible information](#player-visible-information) |
-| `price`     | The money one acquisition of the Upgrade costs.                                                                            | [Purchasing Upgrades](#purchasing-upgrades)               |
-| `effect`    | The identifier of what the Upgrade improves: one of the four effect identifiers under [Upgrade effects](#upgrade-effects). | [Upgrade effects](#upgrade-effects)                       |
-| `increment` | How much one acquisition of the Upgrade raises the value its `effect` improves.                                            | [Upgrade effects](#upgrade-effects)                       |
+| Property    | Meaning                                                                                                                     | Read by                                                   |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `name`      | The display name of the Upgrade.                                                                                            | [Player-visible information](#player-visible-information) |
+| `price`     | The money one acquisition of the Upgrade costs.                                                                             | [Purchasing Upgrades](#purchasing-upgrades)               |
+| `effect`    | The identifier of what the Upgrade improves: one of the eight effect identifiers under [Upgrade effects](#upgrade-effects). | [Upgrade effects](#upgrade-effects)                       |
+| `increment` | How much one acquisition of the Upgrade raises the value its `effect` improves.                                             | [Upgrade effects](#upgrade-effects)                       |
 
 An Upgrade's effect is decided only by its `effect` property, never by its `id` or `name`, under
 [References](../foundation/campaign-instances.md#references) in Campaign Instances. E.g., the Upgrade whose `id` is `agent_cap`
@@ -97,7 +99,8 @@ no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created fr
 4. **Parameters are valid:** Each of `hire_cost`, `upkeep_per_agent`, `contracting_income_per_agent`,
    `base_agent_cap`, `base_transport_cap`, and `base_training_cap` is a whole number of at least 0.
 5. **Upgrades are valid:** Each Upgrade's `price` and `increment` are whole numbers of at least 0, and its `effect` is
-   exactly one of `agent_cap`, `transport_cap`, `training_cap`, and `agent_weapon_damage`.
+   exactly one of `agent_cap`, `transport_cap`, `training_cap`, `agent_weapon_damage`, `agent_base_health`,
+   `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`.
 6. **Names are present:** The `name` of the AgencyArchetype and of each Upgrade is non-empty text.
 
 The Game build may supply any number of Upgrades, including none, and several Upgrades may share one `effect`; the rules
@@ -462,15 +465,19 @@ Nothing else changes. The price is the GDR's `price` for every acquisition; it d
 
 ## Upgrade effects
 
-**Proposed rule:** Every Upgrade has exactly one effect, named by its `effect` property. The four effect identifiers
-below are exhaustive, and they make an Upgrade one of two kinds.
+**Proposed rule:** Every Upgrade has exactly one effect, named by its `effect` property. The eight effect identifiers
+below are exhaustive, and they make an Upgrade one of four kinds.
 
-| Effect identifier     | Kind                  | What one acquisition does                                                                                                  |
-| --------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `agent_cap`           | Cap Upgrade           | Raises the Agent cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                      |
-| `transport_cap`       | Cap Upgrade           | Raises the Transport cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                  |
-| `training_cap`        | Cap Upgrade           | Raises the Training cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                   |
-| `agent_weapon_damage` | Weapon damage Upgrade | Raises the base weapon damage of Agents by the Upgrade's Increment, under [Weapon damage Upgrade](#weapon-damage-upgrade). |
+| Effect identifier     | Kind                  | What one acquisition does                                                                                                                                                 |
+| --------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agent_cap`           | Cap Upgrade           | Raises the Agent cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                                                                     |
+| `transport_cap`       | Cap Upgrade           | Raises the Transport cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                                                                 |
+| `training_cap`        | Cap Upgrade           | Raises the Training cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades).                                                                                  |
+| `agent_weapon_damage` | Weapon damage Upgrade | Raises the base weapon damage of Agents by the Upgrade's Increment, under [Weapon damage Upgrade](#weapon-damage-upgrade).                                                |
+| `agent_base_health`   | Base health Upgrade   | Raises the base health and [current health](agents-spec.md#combatant-attributes) of Agents by the Upgrade's Increment, under [Base health Upgrade](#base-health-upgrade). |
+| `training_skill_gain` | Rate Upgrade          | Raises the training skill gain by the Upgrade's Increment, under [Rate Upgrades](#rate-upgrades).                                                                         |
+| `exhaustion_recovery` | Rate Upgrade          | Raises the exhaustion recovery by the Upgrade's Increment, under [Rate Upgrades](#rate-upgrades).                                                                         |
+| `health_recovery`     | Rate Upgrade          | Raises the health recovery percentage by the Upgrade's Increment, under [Rate Upgrades](#rate-upgrades).                                                                  |
 
 Acquisitions of every Upgrade stack by addition, without limit, and no effect depends on the order of purchases.
 
@@ -487,8 +494,9 @@ Upgrade bonus  = sum over every Upgrade U whose effect is the effect identifier 
 Inputs: each Increment and each Acquisitions is a whole number of at least 0, and the Acquisitions are those of the
 Committed state in which the value is read or set. The Upgrade bonus of an effect identifier that no Upgrade has is 0.
 No rounding occurs. The starting value and where the upgraded value applies are stated for each kind:
-[Agency caps](#agency-caps) for a Cap Upgrade and [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage
-Upgrade.
+[Agency caps](#agency-caps) for a Cap Upgrade, [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage
+Upgrade, [Base health Upgrade](#base-health-upgrade) for a Base health Upgrade, and [Rate Upgrades](#rate-upgrades) for
+a Rate Upgrade.
 
 ### Cap Upgrades
 
@@ -498,7 +506,7 @@ purchase sees the raised cap. A Cap Upgrade changes no Agent's Assignment.
 
 ### Weapon damage Upgrade
 
-[Base weapon damage](agents-spec.md#combatant-attributes) is the only Agent value an Upgrade may change, under
+[Base weapon damage](agents-spec.md#combatant-attributes) is one of the Agent values an Upgrade may change, under
 [Modifiable values](agents-spec.md#modifiable-values) in Agents. An acquisition of an Upgrade whose `effect` is
 `agent_weapon_damage`, i.e. of a Weapon damage Upgrade, has two results:
 
@@ -522,6 +530,55 @@ with `base_weapon_damage` because the Upgrade bonus is 0 at campaign creation.
 Consequently, every Serving Agent's base weapon damage equals the formula above, whichever Turn the Agent was created in,
 because no other rule changes base weapon damage, under [Changes to attributes](agents-spec.md#changes-to-attributes) in
 Agents. The effect changes no other Agent value, no Weapon GDR, and no [Enemy](domain-model.md#combat).
+
+### Base health Upgrade
+
+An acquisition of an Upgrade whose `effect` is `agent_base_health`, i.e. of a Base health Upgrade, has two results:
+
+1. **Serving Agents:** When the purchase is committed, the [base health](agents-spec.md#combatant-attributes) and the
+   [current health](agents-spec.md#combatant-attributes) of every Serving Agent each rise by that Upgrade's Increment,
+   whatever the Agent's Assignment and Agent status. The current health the Agent has lost is therefore unchanged: an
+   Agent at full current health stays at full current health, and an Agent on Recovery still has the same current
+   health to regain. Killed and Dismissed Agents keep their base health and current health.
+2. **Agents created later:** Every Agent created after the purchase, under
+   [Agent creation](agents-spec.md#agent-creation) in Agents, starts with the initial base health below, and with
+   current health equal to it.
+
+```text
+initial base health = base_health + Upgrade bonus of agent_base_health
+```
+
+Inputs: `base_health` is that of the AgentArchetype, a whole number of at least 1, and is the starting value under
+[Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the Committed state in which the Agent is created. The
+result is a whole number of at least `base_health`, so of at least 1, and [Attribute ranges](agents-spec.md#attribute-ranges)
+hold after every purchase, because base health and current health rise together.
+
+Consequently, every Serving Agent's base health equals the formula above, whichever Turn the Agent was created in,
+because no other rule changes base health, under [Changes to attributes](agents-spec.md#changes-to-attributes) in
+Agents. A higher base health changes no effective skill by itself, because effective skill reads current health
+relative to base health, under [Effective skill](agents-spec.md#effective-skill); it lets an Agent take more harm in a
+[Combat](domain-model.md#combat), and it raises the current health the Agent regains in each Advance turn on Recovery when the rounding of
+[Health recovery](agent-recovery.md#health-recovery) allows. The
+effect changes no other Agent value, no AgentArchetype, and no Enemy.
+
+### Rate Upgrades
+
+A Rate Upgrade changes no stored value beyond the Acquisitions. Each rate it raises is a Derived value, computed by
+[Upgrade bonus](#upgrade-bonus) from the GDR property that is its starting value, and the rule named below reads the
+rate in place of that property:
+
+| Rate                       | Formula                                                                 | Read by                                                      |
+| -------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Training skill gain        | `training_skill_gain_per_turn` + Upgrade bonus of `training_skill_gain` | [Training growth](agents-spec.md#training-growth) in Agents  |
+| Exhaustion recovery        | `exhaustion_recovery_per_turn` + Upgrade bonus of `exhaustion_recovery` | [Exhaustion recovery](agent-recovery.md#exhaustion-recovery) |
+| Health recovery percentage | `health_recovery_pct_per_turn` + Upgrade bonus of `health_recovery`     | [Health recovery](agent-recovery.md#health-recovery)         |
+
+Inputs: `training_skill_gain_per_turn` is that of AgentParameters, and `exhaustion_recovery_per_turn` and
+`health_recovery_pct_per_turn` are those of RecoveryParameters. Each result is a whole number of at least its starting
+value, and the health recovery percentage is a [Percent value](../foundation/numbers.md#glossary). A Turn advancement
+step reads the Acquisitions of the Turn-end state of its Advance turn, because no Player action is made during an
+Advance turn. A purchase therefore takes effect in the next Advance turn, for every Agent the rule applies to, and
+changes no Agent value at once.
 
 # Turn series of money
 
@@ -609,6 +666,7 @@ moment it exists, without a reveal condition. The table is exhaustive.
 | The Agency's funding                                                                                                | Yes                        |
 | The Agency's Acquisitions of each Upgrade                                                                           | Yes                        |
 | The Agent cap, Transport cap, and Training cap, each with its current value                                         | Yes                        |
+| The training skill gain, exhaustion recovery, and health recovery percentage, each with its current value           | Yes                        |
 | The projected income and projected upkeep of the coming Advance turn                                                | Yes                        |
 | Money at the start of turn and Money at the end of turn, in full                                                    | Yes                        |
 | The money change of every item of every Action record in a [History entry](../foundation/world-history.md#glossary) | Yes                        |
@@ -654,10 +712,18 @@ reveals anything hidden.
 - **Unknown Upgrade:** `purchaseUpgrade` with an identifier that names no Upgrade GDR, including one naming a GDR of
   another Type, is rejected ([Purchasing Upgrades](#purchasing-upgrades)).
 - **Base weapon damage of Agents who are not Serving:** A Killed or Dismissed Agent keeps its base weapon damage when a base weapon
-  damage Upgrade is purchased ([Weapon damage Upgrade](#weapon-damage-upgrade)).
-- **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises Acquisitions but no cap or base weapon
-  damage, and a purchase of the second costs no money ([Economy GDR validation](#economy-gdr-validation)).
-- **Large values:** Money, Acquisitions, caps, and base weapon damage have no upper bound, and every computation is exact,
+  damage Upgrade is purchased ([Weapon damage Upgrade](#weapon-damage-upgrade)). Likewise, a Killed or Dismissed Agent
+  keeps its base health and current health when a Base health Upgrade is purchased
+  ([Base health Upgrade](#base-health-upgrade)).
+- **Damaged Agent and a Base health Upgrade:** An Agent on Recovery with current health 20 of 30 has 21 of 31 after a
+  purchase with Increment 1, and stays on Recovery; the purchase never ends Recovery and never puts an Agent below full
+  current health ([Base health Upgrade](#base-health-upgrade)).
+- **Rate Upgrade purchased during a Turn:** The raised rate applies from the next Advance turn and changes no Agent
+  value at once ([Rate Upgrades](#rate-upgrades)).
+- **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises Acquisitions but no value it
+  improves, and a purchase of the second costs no money ([Economy GDR validation](#economy-gdr-validation)).
+- **Large values:** Money, Acquisitions, caps, base weapon damage, base health, and the rates a Rate Upgrade raises
+  have no upper bound, and every computation is exact,
   under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
 - **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a
   second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is
@@ -673,22 +739,29 @@ reveals anything hidden.
 
 All examples use the Bootstrap GDR values from `content/configuration/campaign_configurations.yaml`,
 `content/economy-and-upgrades/economy_parameters.yaml`, `content/economy-and-upgrades/upgrades.yaml`,
-`content/economy-and-upgrades/agency_archetypes.yaml`, `content/agents/agent_parameters.yaml`,
+`content/economy-and-upgrades/agency_archetypes.yaml`, `content/agents/agent_archetypes.yaml`,
+`content/agents/agent_parameters.yaml`, `content/agent-recovery/recovery_parameters.yaml`,
 `content/combat/weapons.yaml`, and `content/factions/faction_operation_levels.yaml`, unless an example states a test
 value. The values they read are:
 
-| GDR                 | Values read                                                                                                                                                 |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `standard`          | `starting_money` 500; `starting_funding` 20                                                                                                                 |
-| `agency`            | `name` The Agency                                                                                                                                           |
-| `economy`           | `hire_cost` 50; `upkeep_per_agent` 10; `contracting_income_per_agent` 30; `base_agent_cap` 20; `base_transport_cap` 4; `base_training_cap` 4                |
-| `agent_cap`         | `price` 200; `effect` `agent_cap`; `increment` 4                                                                                                            |
-| `transport_cap`     | `price` 1000; `effect` `transport_cap`; `increment` 2                                                                                                       |
-| `training_cap`      | `price` 200; `effect` `training_cap`; `increment` 4                                                                                                         |
-| `weapon_damage`     | `price` 500; `effect` `agent_weapon_damage`; `increment` 1                                                                                                  |
-| `agent_parameters`  | `initial_roster_size` 4; `exhaustion_free_points` 30; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_contracting_turn` 1; `exhaustion_work_limit` 70 |
-| `sidearm`           | `base_weapon_damage` 10                                                                                                                                     |
-| `operation_level_2` | `on_win` money 30 and funding 5; `on_ignored_or_lost` funding −1                                                                                            |
+| GDR                   | Values read                                                                                                                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `standard`            | `starting_money` 500; `starting_funding` 20                                                                                                                                                                                     |
+| `agency`              | `name` The Agency                                                                                                                                                                                                               |
+| `economy`             | `hire_cost` 50; `upkeep_per_agent` 10; `contracting_income_per_agent` 30; `base_agent_cap` 20; `base_transport_cap` 4; `base_training_cap` 4                                                                                    |
+| `agent_cap`           | `price` 200; `effect` `agent_cap`; `increment` 4                                                                                                                                                                                |
+| `transport_cap`       | `price` 1000; `effect` `transport_cap`; `increment` 2                                                                                                                                                                           |
+| `training_cap`        | `price` 200; `effect` `training_cap`; `increment` 4                                                                                                                                                                             |
+| `weapon_damage`       | `price` 500; `effect` `agent_weapon_damage`; `increment` 1                                                                                                                                                                      |
+| `base_health`         | `price` 500; `effect` `agent_base_health`; `increment` 1                                                                                                                                                                        |
+| `training_skill_gain` | `price` 5000; `effect` `training_skill_gain`; `increment` 1                                                                                                                                                                     |
+| `exhaustion_recovery` | `price` 1000; `effect` `exhaustion_recovery`; `increment` 1                                                                                                                                                                     |
+| `health_recovery`     | `price` 2500; `effect` `health_recovery`; `increment` 1                                                                                                                                                                         |
+| `field_agent`         | `base_health` 30                                                                                                                                                                                                                |
+| `recovery`            | `health_recovery_pct_per_turn` 2; `exhaustion_recovery_per_turn` 5                                                                                                                                                              |
+| `agent_parameters`    | `initial_roster_size` 4; `exhaustion_free_points` 30; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_contracting_turn` 1; `exhaustion_per_training_turn` 1; `exhaustion_work_limit` 70; `training_skill_gain_per_turn` 1 |
+| `sidearm`             | `base_weapon_damage` 10                                                                                                                                                                                                         |
+| `operation_level_2`   | `on_win` money 30 and funding 5; `on_ignored_or_lost` funding −1                                                                                                                                                                |
 
 "The Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. Unless an
 example states otherwise, no rule of [Missions](missions.md) changes money or funding in the Advance turns it describes,
@@ -910,6 +983,38 @@ Agent a5 is Killed and a6 is Dismissed, each with base weapon damage 10. The act
 Each purchase cost the same 500. A third purchase later raises a1 to a4, a7, and a8 to 13 together, and leaves a5 and
 a6 at 10. The base weapon damage of every Enemy and the `base_weapon_damage` of `sidearm` are unchanged throughout.
 
+## Base health and Rate Upgrades
+
+This example exercises [Base health Upgrade](#base-health-upgrade), [Rate Upgrades](#rate-upgrades), and
+[Purchasing Upgrades](#purchasing-upgrades). During Turn 40 the Agency has money 9050, no Upgrade other than these has
+been acquired, and it has these Agents, each with base skill 100:
+
+| Agent | Assignment and Agent status | Current health of base health | Exhaustion |
+| ----- | --------------------------- | ----------------------------- | ---------- |
+| a1    | Standby, At assignment      | 30 of 30                      | 12         |
+| a2    | Recovery, Recovering        | 20 of 30                      | 8          |
+| a3    | Training, At assignment     | 30 of 30                      | 0          |
+| a4    | None; Killed                | 0 of 30                       | 40         |
+
+The actions are taken in this order:
+
+| Action                                 | Money | Result                                                                                |
+| -------------------------------------- | ----- | ------------------------------------------------------------------------------------- |
+| `purchaseUpgrade(base_health)`         | 8550  | a1 and a3 have 31 of 31 and a2 has 21 of 31, at once; a4 keeps 0 of 30.               |
+| `hireAgent()`                          | 8500  | a5 is created In transit with base health 30 + 1 × 1 = 31 and current health 31.      |
+| `purchaseUpgrade(exhaustion_recovery)` | 7500  | Exhaustion recovery becomes 5 + 1 × 1 = 6. No Agent value changes at once.            |
+| `purchaseUpgrade(health_recovery)`     | 5000  | The health recovery percentage becomes 2 + 1 × 1 = 3. No Agent value changes at once. |
+| `purchaseUpgrade(training_skill_gain)` | 0     | Training skill gain becomes 1 + 1 × 1 = 2. No Agent value changes at once.            |
+
+In the Advance turn ending Turn 40, the raised rates apply:
+
+- **Training step:** a3 has full current health and exhaustion 0, so its Training gain outcome is "gains" with
+  Probability 1, and its base skill rises by 2, to 102. Without the Upgrade it would rise to 101.
+- **Agent recovery step:** a1 on Standby loses 6 exhaustion, to 6, instead of 5. a2 on Recovery loses 6 exhaustion, to
+  2, and regains round up(3 × 31 / 100) = round up(0.93) = 1 current health, to 22 of 31; the third percentage point
+  does not yet raise the current health it regains in each Advance turn, which a fourth would raise to
+  round up(1.24) = 2.
+
 ## Purchase rejections and exact affordability
 
 This example exercises [Purchasing Upgrades](#purchasing-upgrades) and [Adding money](#adding-money). During Turn 4
@@ -918,7 +1023,7 @@ the Agency has money 199. Each call is made on its own from this state:
 | Call                            | Result                                                                |
 | ------------------------------- | --------------------------------------------------------------------- |
 | `purchaseUpgrade(training_cap)` | Rejected: 199 is less than 200. Money and Acquisitions are unchanged. |
-| `purchaseUpgrade(agent_health)` | Rejected: no Upgrade GDR has the identifier `agent_health`.           |
+| `purchaseUpgrade(agent_morale)` | Rejected: no Upgrade GDR has the identifier `agent_morale`.           |
 | `purchaseUpgrade(sidearm)`      | Rejected: `sidearm` is a Weapon GDR, not an Upgrade GDR.              |
 
 After `developer.actions.addMoney(1)`, money is 200 and `purchaseUpgrade(training_cap)` succeeds, leaving money 0 and
@@ -929,20 +1034,16 @@ a Training cap of 8. `addMoney(0)`, `addMoney(-5)`, and `addMoney(2.5)` are each
 This example exercises [Economy GDR validation](#economy-gdr-validation) and
 [Campaign configuration values](#campaign-configuration-values). The Bootstrap GDRs pass every rule: there is exactly
 one AgencyArchetype, `agency`, and exactly one EconomyParameters GDR, `economy`, whose six values are whole numbers of
-at least 0; each of the four Upgrades has exactly `name`, `price`, `effect`, and `increment`, with a whole `price` and
-`increment` of at least 0 and an `effect` among the four effect identifiers; and `standard` supplies whole values of at
+at least 0; each of the eight Upgrades has exactly `name`, `price`, `effect`, and `increment`, with a whole `price` and
+`increment` of at least 0 and an `effect` among the eight effect identifiers; and `standard` supplies whole values of at
 least 0 for `starting_money` and `starting_funding`. Each of the following test changes independently makes the Game
-build defective, so no Campaign is created from it: setting `weapon_damage`'s `effect` to `agent_health`; removing
+build defective, so no Campaign is created from it: setting `weapon_damage`'s `effect` to `agent_morale`; removing
 `transport_cap`'s `increment`; adding a property `max_acquisitions` to `agent_cap`; setting `training_cap`'s `price` to
 −1; setting `economy`'s `hire_cost` to 12.5; adding a second EconomyParameters GDR; and setting `standard`'s
 `starting_money` to −100.
 
 # TODOs
 
-- TODO (later): An Upgrade that raises training skill gain, under [Upgrade effects](#upgrade-effects).
-- TODO (later): An Upgrade that raises [exhaustion](agents-spec.md#combatant-attributes) recovery, under [Upgrade effects](#upgrade-effects).
-- TODO (later): An Upgrade that raises health recovery, under [Upgrade effects](#upgrade-effects).
-- TODO (later): An Upgrade that raises [base health](agents-spec.md#combatant-attributes), under [Upgrade effects](#upgrade-effects).
 - TODO (later): Upgrade prices that rise with each acquisition, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): A limit on the Acquisitions of an Upgrade, under [Purchasing Upgrades](#purchasing-upgrades).
 - TODO (later): Selling an Upgrade, under [Upgrades](#upgrades).

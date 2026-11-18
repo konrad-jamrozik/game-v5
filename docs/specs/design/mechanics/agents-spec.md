@@ -103,22 +103,22 @@ every GDR has.
 AgentParameters bundles the scalar values that the Agent rules read, and the values that [Combat](combat.md) and
 [Missions](missions.md) read about exhaustion. The table below is exhaustive apart from `id` and `type`.
 
-| Property                            | Meaning                                                                                                                                           | Read by                                         |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `initial_roster_size`               | How many Agents the initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains.                                       | [Initial roster](#initial-roster)               |
-| `exhaustion_incapacitation`         | The exhaustion at or above which a Combatant stops fighting in a Combat.                                                                          | [Combat](combat.md), which owns its meaning     |
-| `exhaustion_free_points`            | The exhaustion up to which effective skill is not reduced.                                                                                        | [Effective skill](#effective-skill)             |
-| `skill_penalty_pct_per_exhaustion`  | A [Percent value](../foundation/numbers.md#glossary): the percent of base skill lost for each point of exhaustion above `exhaustion_free_points`. | [Effective skill](#effective-skill)             |
-| `exhaustion_per_attack`             | The exhaustion an attacking Combatant gains.                                                                                                      | [Combat](combat.md), which owns its meaning     |
-| `exhaustion_per_defense`            | The exhaustion a defending Combatant gains.                                                                                                       | [Combat](combat.md), which owns its meaning     |
-| `exhaustion_per_mission`            | The exhaustion every surviving Agent of a Mission gains when the Mission is resolved.                                                             | [Missions](missions.md), which owns its meaning |
-| `exhaustion_per_pct_killed`         | The further exhaustion a surviving Agent of a Mission gains for each percent of its team that was Killed.                                         | [Missions](missions.md), which owns its meaning |
-| `exhaustion_per_contracting_turn`   | The exhaustion an Agent gains in each Advance turn in which it works on Contracting.                                                              | [Work exhaustion](#work-exhaustion)             |
-| `exhaustion_per_training_turn`      | The exhaustion an Agent gains in each Advance turn in which it works on Training.                                                                 | [Work exhaustion](#work-exhaustion)             |
-| `exhaustion_per_investigation_turn` | The exhaustion an Agent gains in each Advance turn in which it works on an Investigation.                                                         | [Work exhaustion](#work-exhaustion)             |
-| `exhaustion_work_start_max`         | The highest exhaustion at which an Agent is Fit for work.                                                                                         | [Start-work gate](#start-work-gate)             |
-| `exhaustion_work_limit`             | The exhaustion at or above which work makes an Agent return to Standby.                                                                           | [Forced return](#forced-return)                 |
-| `training_skill_gain_per_turn`      | The base skill an Agent on Training gains in one Advance turn when its Training gain outcome is "gains".                                          | [Training growth](#training-growth)             |
+| Property                            | Meaning                                                                                                                                                           | Read by                                         |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `initial_roster_size`               | How many Agents the initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains.                                                       | [Initial roster](#initial-roster)               |
+| `exhaustion_incapacitation`         | The exhaustion at or above which a Combatant stops fighting in a Combat.                                                                                          | [Combat](combat.md), which owns its meaning     |
+| `exhaustion_free_points`            | The exhaustion up to which effective skill is not reduced.                                                                                                        | [Effective skill](#effective-skill)             |
+| `skill_penalty_pct_per_exhaustion`  | A [Percent value](../foundation/numbers.md#glossary): the percent of base skill lost for each point of exhaustion above `exhaustion_free_points`.                 | [Effective skill](#effective-skill)             |
+| `exhaustion_per_attack`             | The exhaustion an attacking Combatant gains.                                                                                                                      | [Combat](combat.md), which owns its meaning     |
+| `exhaustion_per_defense`            | The exhaustion a defending Combatant gains.                                                                                                                       | [Combat](combat.md), which owns its meaning     |
+| `exhaustion_per_mission`            | The exhaustion every surviving Agent of a Mission gains when the Mission is resolved.                                                                             | [Missions](missions.md), which owns its meaning |
+| `exhaustion_per_pct_killed`         | The further exhaustion a surviving Agent of a Mission gains for each percent of its team that was Killed.                                                         | [Missions](missions.md), which owns its meaning |
+| `exhaustion_per_contracting_turn`   | The exhaustion an Agent gains in each Advance turn in which it works on Contracting.                                                                              | [Work exhaustion](#work-exhaustion)             |
+| `exhaustion_per_training_turn`      | The exhaustion an Agent gains in each Advance turn in which it works on Training.                                                                                 | [Work exhaustion](#work-exhaustion)             |
+| `exhaustion_per_investigation_turn` | The exhaustion an Agent gains in each Advance turn in which it works on an Investigation.                                                                         | [Work exhaustion](#work-exhaustion)             |
+| `exhaustion_work_start_max`         | The highest exhaustion at which an Agent is Fit for work.                                                                                                         | [Start-work gate](#start-work-gate)             |
+| `exhaustion_work_limit`             | The exhaustion at or above which work makes an Agent return to Standby.                                                                                           | [Forced return](#forced-return)                 |
+| `training_skill_gain_per_turn`      | The base skill an Agent on Training gains in one Advance turn when its Training gain outcome is "gains", before any [Upgrade](domain-model.md#agency-and-agents). | [Training growth](#training-growth)             |
 
 ## Weapon properties this document reads
 
@@ -361,8 +361,8 @@ creation. A rule not listed here changes none of them.
 | Value              | Raised by                                                                                                                                                                                        | Lowered by                          |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
 | Base skill         | [Training growth](#training-growth)                                                                                                                                                              | No rule                             |
-| Current health     | [Agent Recovery](agent-recovery.md)                                                                                                                                                              | [Combat](combat.md), in a Combat    |
-| Base health        | No rule                                                                                                                                                                                          | No rule                             |
+| Current health     | [Agent Recovery](agent-recovery.md); the [Base health Upgrade](economy-and-upgrades.md#base-health-upgrade), under [Modifiable values](#modifiable-values)                                       | [Combat](combat.md), in a Combat    |
+| Base health        | The [Base health Upgrade](economy-and-upgrades.md#base-health-upgrade), under [Modifiable values](#modifiable-values)                                                                            | No rule                             |
 | Exhaustion         | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`; [Mission exhaustion](missions.md#mission-exhaustion) in Missions; [Work exhaustion](#work-exhaustion) | [Agent Recovery](agent-recovery.md) |
 | Base weapon damage | The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade), under [Modifiable values](#modifiable-values)                                                                        | No rule                             |
 
@@ -371,9 +371,14 @@ lowers it on Standby and Recovery. Each specification named in the table applies
 
 # Modifiable values
 
-**Proposed rule:** Base weapon damage is the only Agent value that an [Upgrade](economy-and-upgrades.md#glossary) may change. It is an individual value of each
+**Proposed rule:** Base weapon damage, base health, and current health are the only Agent values that an [Upgrade](economy-and-upgrades.md#glossary) may change. Each is an individual value of each
 Agent, not an Agency value. The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises the
-base weapon damage of Serving Agents and of Agents created later, under [Agent creation](#agent-creation). No [Upgrade](domain-model.md#agency-and-agents) changes base skill, current health, base health, exhaustion, or Weapon.
+base weapon damage of Serving Agents and of Agents created later, and the
+[Base health Upgrade](economy-and-upgrades.md#base-health-upgrade) raises the base health and current health of
+Serving Agents together and the base health of Agents created later, under [Agent creation](#agent-creation). No [Upgrade](domain-model.md#agency-and-agents) changes base skill, exhaustion, or Weapon. An
+Upgrade under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) changes no Agent value at once: it raises the
+training skill gain that [Training growth](#training-growth) reads, or a rate that [Agent Recovery](agent-recovery.md)
+reads.
 
 # Assignments and transit
 
@@ -557,11 +562,13 @@ Probability under [Probabilities](../foundation/numbers.md#probabilities) in Num
 included, because each of its two factors lies from 0 to 1. When the outcome is "gains", the Agent gains base skill:
 
 ```text
-base skill after = base skill before + training_skill_gain_per_turn
+base skill after = base skill before + training skill gain
 ```
 
 Inputs: base skill before is the Agent's base skill at the start of the Training step, a whole number of at least 0;
-`training_skill_gain_per_turn` is the value of AgentParameters, a whole number of at least 0. No rounding occurs,
+training skill gain is `training_skill_gain_per_turn` of AgentParameters plus what every acquired Upgrade with the
+effect `training_skill_gain` adds, under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy and
+Upgrades, a whole number of at least 0. No rounding occurs,
 because every term is a whole number. The result is a whole number of at least base skill before; base skill has no upper bound.
 When the outcome is "does not gain", base skill is unchanged. An Agent whose exhaustion is at most `exhaustion_free_points`
 and whose current health equals its base health has Probability 1, so it always gains; e.g., with the Bootstrap values, an Agent
@@ -655,8 +662,10 @@ Campaign Instances. This table is exhaustive.
 | Turn terminated       | Absent.                                                                                           | This rule.                                                                       |
 | Killed by             | Absent.                                                                                           | This rule.                                                                       |
 
-The table above states the initial base weapon damage before any Upgrade has been acquired; for an Agent created after an
-Upgrade has been acquired, the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises it. The new Agent joins the Agency's roster of Agents. No [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above.
+The table above states the initial base weapon damage, base health, and current health before any Upgrade has been
+acquired; for an Agent created after an Upgrade has been acquired, the
+[Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises its base weapon damage, and the
+[Base health Upgrade](economy-and-upgrades.md#base-health-upgrade) raises its base health and its current health. The new Agent joins the Agency's roster of Agents. No [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above.
 Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
 ## Initial roster
@@ -665,7 +674,7 @@ Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](econ
 AgentParameters, and no other Agent, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model
 requires. Each is created under [Agent creation](#agent-creation) with Agent status At assignment and Turn hired equal to
 the turn number of the Campaign's first Turn. Because no Upgrade has been acquired at campaign creation, each has the
-Weapon `base_weapon_damage` as its base weapon damage. Every Agent of the initial roster can be assigned in the first Turn. An
+Weapon `base_weapon_damage` as its base weapon damage and the AgentArchetype's `base_health` as its base health. Every Agent of the initial roster can be assigned in the first Turn. An
 `initial_roster_size` of 0 is valid and gives an empty roster.
 
 # Assigning Agents

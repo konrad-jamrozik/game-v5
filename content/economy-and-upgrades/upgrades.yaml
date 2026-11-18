@@ -25,3 +25,31 @@ name: Weapon damage
 price: 500
 effect: agent_weapon_damage
 increment: 1
+---
+id: base_health
+type: Upgrade
+name: Base health
+price: 500
+effect: agent_base_health
+increment: 1
+---
+id: training_skill_gain
+type: Upgrade
+name: Training skill gain
+price: 5000
+effect: training_skill_gain
+increment: 1
+---
+id: exhaustion_recovery
+type: Upgrade
+name: Exhaustion recovery
+price: 1000
+effect: exhaustion_recovery
+increment: 1
+---
+id: health_recovery
+type: Upgrade
+name: Health recovery
+price: 2500
+effect: health_recovery
+increment: 1

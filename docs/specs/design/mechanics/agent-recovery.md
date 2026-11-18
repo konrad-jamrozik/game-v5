@@ -17,8 +17,9 @@ Recovery, while work and Missions keep adding to it.
 Recovery is gradual and cannot be rushed. In each Advance turn, a [Recovering](agents-spec.md#agent-statuses) Agent regains a share of its base health, a
 Recovering Agent or an Agent [At assignment](agents-spec.md#agent-statuses) on Standby loses a fixed amount of exhaustion, and an Agent [In
 transit](agents-spec.md#agent-statuses) recovers nothing. Recovery ends by itself the moment current health reaches base health: the Agent becomes
-Standby at once, without transit, and the player cannot end Recovery sooner. Both rates come from one RecoveryParameters
-[Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR).
+Standby at once, without transit, and the player cannot end Recovery sooner. Both rates start from one RecoveryParameters
+[Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR), and the Agency can raise each with an
+[Upgrade](economy-and-upgrades.md#glossary).
 
 Agent Recovery builds on [Agents](agents-spec.md): Agents says what current health and exhaustion are and how they lower
 effective skill, and Agent Recovery says how they return over time.
@@ -40,12 +41,15 @@ YAML files it names.
 RecoveryParameters bundles the two recovery rates. This table is exhaustive apart from the `id` and `type` that every
 GDR has.
 
-| Property                       | Meaning                                                                                                                                           | Read by                                     |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `health_recovery_pct_per_turn` | A [Percent value](../foundation/numbers.md#glossary): the percent of an Agent's base health that its current health rises by in one Advance turn. | [Health recovery](#health-recovery)         |
-| `exhaustion_recovery_per_turn` | The [exhaustion](agents-spec.md#combatant-attributes) an Agent loses in one Advance turn.                                                         | [Exhaustion recovery](#exhaustion-recovery) |
+| Property                       | Meaning                                                                                                                                                                                                    | Read by                                     |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `health_recovery_pct_per_turn` | A [Percent value](../foundation/numbers.md#glossary): the percent of an Agent's base health that its current health rises by in one Advance turn, before any [Upgrade](domain-model.md#agency-and-agents). | [Health recovery](#health-recovery)         |
+| `exhaustion_recovery_per_turn` | The [exhaustion](agents-spec.md#combatant-attributes) an Agent loses in one Advance turn, before any Upgrade.                                                                                              | [Exhaustion recovery](#exhaustion-recovery) |
 
-The Bootstrap GDRs have no [Upgrade](economy-and-upgrades.md#glossary) that changes either recovery rate, so both rates are constants of the Game build.
+Each property is the starting value of a rate that [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy
+and Upgrades raises: `health_recovery_pct_per_turn` of the health recovery percentage, and
+`exhaustion_recovery_per_turn` of the exhaustion recovery. The rules below read those rates, which equal the
+properties while no such [Upgrade](economy-and-upgrades.md#glossary) has been acquired.
 
 ## Recovery GDR validation
 
@@ -116,10 +120,10 @@ Advance turn is rounded up. The Health recovery rate of an Agent is the followin
 Health recovery rate = round up( p × base health / 100 )
 ```
 
-| Symbol      | Meaning                                               | Unit and domain                              |
-| ----------- | ----------------------------------------------------- | -------------------------------------------- |
-| p           | `health_recovery_pct_per_turn` of RecoveryParameters. | Percent value; a whole number of at least 1. |
-| base health | The Agent's base health.                              | Health points; a whole number of at least 1. |
+| Symbol      | Meaning                                                                                                                                                                                                                     | Unit and domain                              |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| p           | The health recovery percentage: `health_recovery_pct_per_turn` of RecoveryParameters plus what every acquired Upgrade with the effect `health_recovery` adds, under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades). | Percent value; a whole number of at least 1. |
+| base health | The Agent's base health.                                                                                                                                                                                                    | Health points; a whole number of at least 1. |
 
 Evaluation and rounding: the expression is evaluated exactly, under [Percent values](../foundation/numbers.md#percent-values)
 and [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers: multiply, then divide by 100, then [Round up](../foundation/numbers.md#glossary)
@@ -164,11 +168,14 @@ nothing, and it adds no [Investigation progress](domain-model.md#leads-investiga
 [Which Agents recover](#which-agents-recover), the Agent recovery step sets
 
 ```text
-exhaustion after = max( 0, exhaustion before − exhaustion_recovery_per_turn )
+exhaustion after = max( 0, exhaustion before − exhaustion recovery )
 ```
 
-where exhaustion before is the Agent's exhaustion at the start of the step and `exhaustion_recovery_per_turn` is that
-property of RecoveryParameters, in exhaustion points, a whole number of at least 0. All values are whole numbers, so no
+where exhaustion before is the Agent's exhaustion at the start of the step and exhaustion recovery is
+`exhaustion_recovery_per_turn` of RecoveryParameters plus what every acquired Upgrade with the effect
+`exhaustion_recovery` adds, under
+[Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy and Upgrades, in exhaustion points, a whole number of
+at least 0. All values are whole numbers, so no
 rounding occurs. The result is a whole number from 0 to exhaustion before, so the clamp under
 [Attribute ranges](agents-spec.md#attribute-ranges) is applied by this rule and exhaustion never falls below 0.
 
@@ -190,7 +197,7 @@ order in which they are applied.
    It does not recover exhaustion a second time as an Agent on Standby in the same step, because the Assignment
    that decides eligibility is the one at the start of the step.
 2. **[Current health](agents-spec.md#combatant-attributes) and exhaustion are independent:** The current health of an Agent on Recovery rises by the Health recovery rate and
-   its exhaustion falls by `exhaustion_recovery_per_turn` in the same step. Neither amount depends on the other, and the
+   its exhaustion falls by the exhaustion recovery in the same step. Neither amount depends on the other, and the
    current health reaching base health does not change how much exhaustion is recovered in that step. An Agent that reaches
    base health in the step may still have exhaustion above 0 when it becomes Standby.
 3. **Combat and recovery never meet in one Advance turn:** Under [Combat timing](combat.md#combat-timing), a Combat
@@ -264,7 +271,7 @@ A reported value of 0 can only occur for an Agent on Recovery with current healt
   Agent has current health after equal to base health and becomes Standby in the same step ([Health recovery](#health-recovery)).
 - **Recovery that would overshoot:** When current health before plus the Health recovery rate exceeds base health, current health after
   is base health, not more ([Health recovery](#health-recovery)).
-- **Exhaustion that would fall below 0:** An Agent with exhaustion below `exhaustion_recovery_per_turn` ends the step
+- **Exhaustion that would fall below 0:** An Agent with exhaustion below the exhaustion recovery ends the step
   with exhaustion 0, not a negative value ([Exhaustion recovery](#exhaustion-recovery)).
 - **Recovery with current health already at base health:** [Missions](missions.md) sends an Agent to Recovery only when its
   current health is below its base health, and nothing raises current health to base health without ending Recovery, so an Agent
@@ -439,4 +446,3 @@ reads the other Agent.
 
 - TODO (later): Recovery that depends on the kind of attack that took an Agent's current health, under
   [Several changes in one Turn](#several-changes-in-one-turn).
-- TODO (later): Faster recovery from an [Upgrade](domain-model.md#agency-and-agents), under [Recovery parameters](#recovery-parameters).
