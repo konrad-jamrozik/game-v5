@@ -46,8 +46,25 @@ designer's personal backup, outside it; its row in the table, and its track reco
 A `.yaml` file with the same name as a track, e.g. `Silent Threat Protocol.yaml`, records how the track was made, so
 that it can be told apart from the others and made again: its original title, source, creation date, the prompt it was
 generated from, and what the source reports about it, e.g. tags, BPM, and length. A track record is not a track. Every
-track from a source that keeps its prompts, e.g. ElevenLabs, has one, including each excluded track, whose record stays
-here after its audio is removed.
+track whose prompt is known has one, including each excluded track, whose record stays here after its audio is
+removed.
+
+A record holds only the keys it has values for:
+
+| Key               | Value                                                                                                                                                                                                                                                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `file`            | The track's file name.                                                                                                                                                                                                                                                                                                         |
+| `source`          | Where the track was made, as in the table.                                                                                                                                                                                                                                                                                     |
+| `original_title`  | The track's title, its file name without the extension.                                                                                                                                                                                                                                                                        |
+| `title_in_source` | The song's title in its source, when it differs from `original_title`, e.g. "UFO 1" in v03ai.                                                                                                                                                                                                                                  |
+| `created`         | When the song was made, as a date, or a date and time when the source showed it.                                                                                                                                                                                                                                               |
+| `description`     | The source's own description of the song.                                                                                                                                                                                                                                                                                      |
+| `tags`            | The source's tags for the song.                                                                                                                                                                                                                                                                                                |
+| `bpm`             | The tempo the source reports.                                                                                                                                                                                                                                                                                                  |
+| `length`          | The song's length as the source reports it.                                                                                                                                                                                                                                                                                    |
+| `prompt_from`     | How the prompt was written with a chatbot: the `tool`, the `conversation_url` and `share_url` of the conversation, the `meta_prompt` the Game designer gave it, and, when the conversation continued from the prompt of another track, that track's file in `continues_from`, so that `meta_prompt` holds only what was added. |
+| `prompt`          | The prompt the song was generated from, word for word.                                                                                                                                                                                                                                                                         |
+| `notes`           | Anything else needed to read the record, e.g. that the prompt given to the source was truncated.                                                                                                                                                                                                                               |
 
 ## Tracks from ElevenLabs
 
@@ -60,9 +77,11 @@ length.
 ## Tracks from Suno v5 via v03ai
 
 The files named `v03AI UFO …` are from Suno v5, made via [v03ai](https://v03ai.com/), which cannot export Ogg Opus.
-Their names are not their titles in v03ai but the names the Game designer gave the downloads: by mistake, the first two
-are both titled "UFO1" in the v03ai interface, and only these names tell them apart. v03ai appends a number to the
-download's file name, e.g. `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`, which is removed.
+Each is named after its song's title in v03ai, except the first two: by mistake, both are titled "UFO 1" in v03ai, so
+they are named `v03AI UFO 1.mp3` and `v03AI UFO 2.mp3` after the names the Game designer gave their downloads. v03ai
+appends a number to the download's file name, e.g. `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`, which is
+removed. Their track records come from the Game designer's notes: the prompt given to v03ai, or, where ChatGPT wrote it,
+the full prompt ChatGPT produced and the conversation it came from.
 
 ## Tracks from Suno v6
 
