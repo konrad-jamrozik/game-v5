@@ -105,6 +105,14 @@ How it is drawn depends on what the Player knows:
   that the gain of that Advance turn, from the [Turn report](../foundation/world-history.md#glossary), is a separate segment, and a mark shows where the
   Investigation completed, labelled with its final Investigation progress.
 
+The scale of a bar never changes, so that every bar of one Lead reads alike. A preview segment, a gain segment, or a
+completion mark that would pass the greatest value of the range ends at the bar's end, while every value written for it
+stays exact, e.g. on a bar from 0 to 15, an Investigation progress of 13 with a projected progress gain of 3.50 has a
+preview segment from 13 to 15 and the caption still gives "+3.50 / turn", and a final Investigation progress of 16.50
+has its completion mark at the bar's end, labelled 16.50. The Investigation progress of an Active Investigation never
+passes the end of the bar, because the Investigation completes once its progress reaches its Actual required progress,
+which lies within the range.
+
 # Progress circle
 
 A Progress circle lets the Player read in one glyph, on a line too short for a [Progress bar](#progress-bar), how far an

@@ -69,6 +69,7 @@ exhaustive.
 | `situation-panel.png`      | Panel  | `SituationPanel.dc.html`     | [Situation Panel](screens/situation-panel.md)   |
 | `turn-summary.png`         | Panel  | `TurnSummary.dc.html`        | [Turn Summary](screens/turn-summary.md)         |
 | `settings-panel.png`       | Panel  | `SettingsPanel.dc.html`      | [Campaign Screen](screens/campaign-screen.md)   |
+| `autopilot-footer.png`     | Panel  | `AutopilotFooter.dc.html`    | [Campaign Screen](screens/campaign-screen.md)   |
 | `missions-view.png`        | Panel  | `MissionsView.dc.html`       | [Missions View](screens/missions-view.md)       |
 | `leads-view.png`           | Panel  | `LeadsView.dc.html`          | [Leads View](screens/leads-view.md)             |
 | `agents-view.png`          | Panel  | `AgentsView.dc.html`         | [Agents View](screens/agents-view.md)           |
@@ -500,7 +501,9 @@ completion nears instead of switching hue. It is 8 px tall in a panel row and 10
   4 px gaps, and an Accent dim stub 12% of its width.
 - **Completed Investigation:** in a dialog, the gain of the last Advance turn is a Positive segment labelled
   with that gain above it in Positive, and the point where the Investigation completed carries a check in a Positive
-  circle 20 px wide, with the check in Background and the final [Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) under it in Positive.
+  circle 20 px wide, with the check in Background and the final [Investigation progress](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) under it in Positive. When the final
+  Investigation progress would overlap the Required progress or the greatest value of the range written under the
+  bar, that value of the range is left out, and the final Investigation progress keeps its place.
 
 ## Progress circles
 

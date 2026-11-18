@@ -22,10 +22,27 @@ with all its Campaign saves, under [Deleting Campaign saves](../../foundation/sa
 Because deleting cannot be undone, the GUI asks the Player to confirm each deletion first, naming the Campaign save or
 the Campaign and how many Campaign saves it removes.
 
+# New Campaign
+
+The New Campaign panel sets up a Campaign and creates it, under [Preset selection and edits](../../foundation/configuration.md#preset-selection-and-edits) in Configuration. It holds,
+from top to bottom:
+
+1. **Preset:** a selector of every [Campaign configuration preset](../../foundation/game-data-records.md#glossary) the [Game build](../../foundation/core-concepts.md#game-build-and-content) supplies, marking the [Game build
+   default preset](../../foundation/configuration.md#glossary) and each preset that has [Preset edits](../../foundation/configuration.md#glossary). Choosing a preset selects it.
+2. **Preset edits:** one field for each [Campaign configuration](../../foundation/campaign-state.md#glossary) value of the selected preset, labelled with the value's
+   name, showing the preset's own value as its placeholder and its Preset edit, if any, as its content. Entering a
+   value sets a Preset edit, and emptying the field removes it. A value the engine rejects changes nothing, and the
+   field shows the reason the engine reports.
+3. **Seed:** an optional [Campaign seed](../../foundation/determinism-and-randomness.md#glossary). When it is left empty, campaign creation receives none and the engine chooses
+   one, under [Campaign seed](../../foundation/determinism-and-randomness.md#campaign-seed) in Determinism and Randomness.
+4. **Start Campaign:** the primary button, which creates the Campaign with `session.campaign.create(options)` and
+   shows the Campaign screen.
+
 # Layout
 
 The layout puts what the Player most often wants, the Campaign saves, in the wider column, and the rarer actions beside
-it.
+it. Everything the Main menu offers is on it at once: resuming, loading, and deleting Campaign saves, creating a
+Campaign, and the [Global configuration](../../foundation/engine-contract.md#persisted-data) settings, so that none waits one step away.
 
 - The Campaign saves fill the left column, one card per Campaign, under
   [Panels and cards](../visual-design.md#panels-and-cards) in Visual Design. The card of the Campaign of the most recent
@@ -57,9 +74,5 @@ it.
 The following appear only on the [Artboard](../visual-design.md#glossary) and must not be implemented, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
-- The sample values, e.g. the Campaign IDs, T16 A3, the Track title GEO-4, and the Music volume 50.
-
-# TODOs
-
-- TODO: State what the Main menu offers by default, e.g. creating a Campaign, loading a Campaign save, and changing
-  [Global configuration](../../foundation/engine-contract.md#persisted-data), and what it keeps one step away.
+- The sample values, e.g. the Campaign IDs, T16 A3, the Track title GEO-4, the Music volume 50, the preset `standard`,
+  and its values 500 and 20.

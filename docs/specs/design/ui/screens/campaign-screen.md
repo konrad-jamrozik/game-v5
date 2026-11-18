@@ -5,7 +5,7 @@
 | Spec ID     | CSCR                                                                                                                                                                             |
 | Family      | UI                                                                                                                                                                               |
 | Audience    | UI designer, Implementer                                                                                                                                                         |
-| Owns        | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views, and its undo and redo controls.                                            |
+| Owns        | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views, its status bar controls, and its Autopilot controls.                       |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -49,7 +49,7 @@ It holds, from top to bottom:
    and selecting the button of the open Detail view closes it.
 2. **[Situation panel](situation-panel.md):** it fills the height that the navigation and the footer leave, and
    scrolls inside when its content is taller.
-3. **Footer:** the [Autopilot](../../foundation/engine-contract.md#autopilot) controls, collapsed to one row until the Player expands them, and, in the bottom row,
+3. **Footer:** the [Autopilot](../../foundation/engine-contract.md#autopilot) controls, collapsed to one row until the Player expands them, under [Autopilot controls](#autopilot-controls), and, in the bottom row,
    the [Music control](../music.md#music-control) with the title of the [Track](../music.md#glossary) that is playing,
    followed at the right end by the Settings button, a square neutral button 36 px wide and tall holding a cogwheel,
    with the accessible name "Settings", which opens the [Settings panel](../gui.md#settings-panel). The bottom right
@@ -77,6 +77,48 @@ views are, in these groups and this order; the list is exhaustive:
   4. [Compendium](compendium-view.md), for reference information about the game.
 
 A Detail view is styled under [Detail views and navigation](../visual-design.md#detail-views-and-navigation) in Visual Design.
+
+# Status bar controls
+
+The status bar's controls follow its values in this order, so that the main action is last, under
+[Status bar](../visual-design.md#status-bar) in Visual Design; the list is exhaustive:
+
+1. **Undo** and **Redo,** under [Undo and redo](#undo-and-redo).
+2. **Save,** a neutral button that writes a [Campaign save](../../foundation/engine-contract.md#persisted-data) of the [Current campaign](../../foundation/core-concepts.md#campaign-and-session) with `session.saves.save()`, under
+   [Saving](../../foundation/saves.md#saving) in Saves.
+3. **[Main menu](../../foundation/campaign-lifecycle.md#glossary),** a neutral button that closes the Current campaign with `session.campaign.close()` and shows the
+   Main menu, under [Campaign selection](../../foundation/campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle. Nothing is lost, because closing writes no Campaign
+   save and the [Current Autosave](../../foundation/saves.md#autosave-kinds) already holds the [Committed state](../../foundation/engine-contract.md#player-actions-and-turns).
+4. **Advance turn,** the primary button, which makes the Advance turn Player action `advanceTurn()`. The N key presses
+   it. While the engine reports Advance turn unavailable, the button is disabled and its tooltip gives the reason the
+   engine reports.
+
+While an [Autopilot engagement](../../foundation/engine-contract.md#autopilot) is active, every status bar control is disabled, because the [Session controller](../../foundation/engine-contract.md#principals-and-access) cannot
+use their operations until disengagement completes, under [Autopilot lifecycle and concurrency](../../foundation/autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot.
+
+# Autopilot controls
+
+The Autopilot controls in the footer of the Side panel let the Player hand play to an [Autopilot AI](../../foundation/engine-contract.md#principals-and-access) for a bounded
+stretch and take it back at any moment, through the operations of [Autopilot](../../foundation/autopilot.md). Collapsed, they are one row: a toggle
+labelled Autopilot that expands them and, while an Autopilot engagement is active, its progress and a Stop button.
+Expanded, the footer grows upward and the Situation panel above it shrinks, and the controls are, from top to bottom:
+
+1. The toggle, which collapses them again.
+2. **Autopilot AI:** a selector of the Autopilot AIs that `session.autopilot.listAutopilotAis()` reports, by name.
+3. **One action** and **Until the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) advances:** neutral buttons that engage the chosen Autopilot AI with
+   `session.autopilot.engage(autopilotAiId, limit)` and the [Autopilot limit](../../foundation/autopilot.md#glossary) `singleAction` or `untilTurnAdvanced`.
+4. **Turns:** a field for a positive whole number of Turns and a neutral Turns button that engages with the Autopilot
+   limit `turnAdvancements` and that number as `count`.
+5. A line in 12 px Body and Text muted saying that the Autopilot AI plays for the Player through the same Player
+   actions the Player has.
+
+The selector and the engaging buttons are disabled, each with the reason as its tooltip, while an Autopilot engagement
+is active, after the Campaign has ended, and when no Autopilot AI is available. While an Autopilot engagement is
+active, its [Autopilot progress](../../foundation/autopilot.md#glossary), in Player actions and Turns advanced as `session.autopilot.getStatus(engagementId)`
+reports them, and a neutral Stop button that calls `session.autopilot.disengage(engagementId)` stand in the collapsed
+row and in place of the line in the expanded controls. When the Autopilot engagement ends, the GUI tells the Player its
+disengagement reason and Autopilot progress, e.g. "Autopilot disengaged because its limit was reached: 14 Player
+actions, 3 Turns advanced".
 
 # Undo and redo
 
@@ -107,17 +149,15 @@ can cross a whole Autopilot engagement. The U and R keys press the Undo and Redo
 
 ![Settings panel Artboard: the Settings dialog that the Settings button opens, with its close control, the Music volume slider, the Sounds toggle and Sounds volume slider, the Autosave limit, and the Keyboard shortcuts and Developer tools buttons](../../../../images/artboards/settings-panel.png)
 
+![Side panel footer Artboard with the Autopilot controls expanded: the Autopilot toggle, the Autopilot AI selector, the One action and Until the Turn advances buttons, the number of Turns with its Turns button, the line on how the Autopilot AI plays, and the Music row with the Settings button](../../../../images/artboards/autopilot-footer.png)
+
 The [Artboards](../visual-design.md#glossary) show the Situation panel and the Agents Detail view as sample content of their regions; each is detailed
 by its own specification and Artboard. The Settings panel Artboard shows the dialog that the Settings button opens,
-under [Settings panel](../gui.md#settings-panel) in the Graphical User Interface. The following appear only on the
+under [Settings panel](../gui.md#settings-panel) in the Graphical User Interface. The Side panel footer Artboard shows the footer with the
+Autopilot controls expanded and no Autopilot engagement active, under [Autopilot controls](#autopilot-controls). The following appear only on the
 Artboards and must not be implemented, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
 - The sample values, e.g. Turn 16, Money 625, the [Agent](../../mechanics/domain-model.md#agency-and-agents) IDs, the Track title GEO-4, the Music volume
-  50, and the Autosave limit 5.
+  50, the Autosave limit 5, the Autopilot AI name, and the number of Turns 10.
 - The drawing of the globe, which stands in for the real one.
-
-# TODOs
-
-- TODO: State how the Campaign screen reaches Advance turn, saving, and
-  [Autopilot](../../foundation/engine-contract.md#autopilot), each through the operations that [API hierarchy](../../foundation/engine-contract.md#api-hierarchy) names.
