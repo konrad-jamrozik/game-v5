@@ -45,7 +45,8 @@ it.
 - The New Campaign and Settings panels are stacked in the right column.
 - The Settings panel opens with the [Music control](../music.md#music-control), labelled Music, above the rows of the
   other [Global configuration](../../foundation/engine-contract.md#persisted-data) settings, so that the music can be silenced or turned down before a
-  Campaign is chosen. Music on and Music volume have no rows of their own.
+  Campaign is chosen. Music on and Music volume have no rows of their own; Sounds on and Sounds volume, under
+  [Sound settings](../sounds.md#sound-settings) in Sounds, do.
 
 # Artboard
 

@@ -12,7 +12,7 @@
 
 An Implementation is derived from the specifications and ships material authored in the
 [Spec repo](implementation-placement.md#glossary), e.g. the [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md#glossary)
-the [Soundtrack](../../design/ui/music.md#glossary), and the
+the [Soundtrack](../../design/ui/music.md#glossary), the [Sound set](../../design/ui/sounds.md#glossary), and the
 [Background artwork](../../design/ui/visual-design.md#glossary). The Spec repo is published under the Game license, so every
 Implementation must be published under the same license, and the game as a whole, its specifications and every
 Implementation of them, is offered on one set of terms.

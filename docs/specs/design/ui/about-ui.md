@@ -42,6 +42,12 @@ exported from.
 order and the fades in which it is played, the two Global configuration settings that turn it off and set its volume,
 and the Music control that the Main Menu and the Campaign Screen both show.
 
+## Sounds
+
+[Sounds](sounds.md) answers _how does the graphical user interface answer the Player's clicks?_ It owns the Sound set,
+which Player inputs play which Sound, from a Main click to a Go back to the news of a Turn summary, and the two Global
+configuration settings that turn Sounds off and set their volume.
+
 ## Screens
 
 The `screens/` directory groups one specification per screen, panel, or dialog of the graphical user interface, so
@@ -64,7 +70,8 @@ lists the screen specifications, which use Domain Model and the Mechanics specif
 shows, and World History for the Turn report. The Situation Panel, the Turn Summary, and every Detail view
 specification are parts of the Campaign Screen. Every screen specification uses Visual Design for its look, and Visual Design names each screen
 specification as the place of its Artboard. Music uses Configuration for its two settings, and the Main Menu and the
-Campaign Screen place its Music control. Headless First in the Guidance family uses both, and Gameplay Dependency
+Campaign Screen place its Music control. Sounds uses Configuration for its two settings and the Turn Summary for the
+moment its news is announced, and shares the loudness curve of Music. Headless First in the Guidance family uses both, and Gameplay Dependency
 Direction uses the Graphical User Interface.
 
 <!-- generated:family-diagram:start -->

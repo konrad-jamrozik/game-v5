@@ -89,6 +89,13 @@ An Implementation that plays it must hold its own copy of every [Track](../../de
 its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/music/` directory of
 the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/music/`.
 
+## Sounds in an Implementation
+
+The [Sound set](../../design/ui/sounds.md#glossary) is authored under the `assets/sounds/` directory of the Spec repo.
+An Implementation that plays it must hold its own copy of every [Sound](../../design/ui/sounds.md#glossary) file inside
+its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/sounds/` directory
+of the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/sounds/`.
+
 ## Artwork in an Implementation
 
 The [Background artwork](../../design/ui/visual-design.md#glossary) is authored under the `assets/images/` directory of

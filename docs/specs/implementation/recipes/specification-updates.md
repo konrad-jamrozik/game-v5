@@ -29,7 +29,9 @@ Specification baseline and `<target>` is the target Specification revision, usua
 cover the files that the Implementation copies: `content` the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files, under
 [Game data in an Implementation](../mandatory/implementation-placement.md#game-data-in-an-implementation); `assets` the
 [Soundtrack](../../design/ui/music.md#glossary), under
-[Music in an Implementation](../mandatory/implementation-placement.md#music-in-an-implementation), and the
+[Music in an Implementation](../mandatory/implementation-placement.md#music-in-an-implementation), the
+[Sound set](../../design/ui/sounds.md#glossary), under
+[Sounds in an Implementation](../mandatory/implementation-placement.md#sounds-in-an-implementation), and the
 [Background artwork](../../design/ui/visual-design.md#glossary), under
 [Artwork in an Implementation](../mandatory/implementation-placement.md#artwork-in-an-implementation); and `LICENSE` the
 license text, under [License files](../mandatory/implementation-license.md#license-files).

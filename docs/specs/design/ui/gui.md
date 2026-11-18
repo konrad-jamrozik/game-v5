@@ -46,7 +46,7 @@ shows, how it is laid out, and how it is illustrated:
   [Charts View](screens/charts-view.md), and [Compendium View](screens/compendium-view.md).
 
 Both screens play the same background music without a break between them, and both offer the Music control, under
-[Music](music.md).
+[Music](music.md). Both answer the Player's clicks with short sounds, under [Sounds](sounds.md).
 
 # Confirming interrupted Assignments
 
