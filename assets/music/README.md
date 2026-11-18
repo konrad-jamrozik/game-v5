@@ -102,3 +102,6 @@ creation time, tags, length, Styles text, Exclude styles text, and sliders.
 To analyze what a track contains, e.g. its instruments, structure, or mood, the
 [NVIDIA Music Flamingo demo](https://nvidia-music-flamingo.hf.space/) is a good tool: it takes an audio file and answers
 questions about it.
+
+Other tools that may serve the same purpose have not been tested yet: [Google AI Studio](https://aistudio.google.com/)
+and the [instrument detection from audio](https://unveilmusic.app/instrument-detection-from-audio) of Unveil Music.
