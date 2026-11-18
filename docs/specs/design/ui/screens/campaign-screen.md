@@ -89,8 +89,9 @@ retraces them one at a time, however many there are.
 A place is what the Detail view area shows: an open Detail view together with what it shows one step away in place of
 its content, e.g. the [Combat report](turn-report-view.md#combat-report) of the Turn Report View or the
 [Agent details](agents-view.md#agent-details) of the Agents View, its selected item, its filters, the lists the Player
-expanded, and its scroll position. The View trail is a stack of places, the most recent last, with no limit on its
-length. It changes only as follows; the list is exhaustive:
+expanded, and its scroll position. The [Turn summary](turn-summary.md) is a place too, together with the place it was
+shown over, so that a [Combat report](../../mechanics/domain-model.md#combat) read from it leads back to it. The View trail is a stack of places, the most recent
+last, with no limit on its length. It changes only as follows; the list is exhaustive:
 
 1. **Follow:** when the Player, from inside the open Detail view, opens another Detail view or opens something one
    step away in place of the Detail view's content, the place they leave is added to the end of the View trail, e.g.
@@ -101,19 +102,25 @@ length. It changes only as follows; the list is exhaustive:
    Player left it, with each part read from the current state. A selected item that is no longer listed, e.g. a
    Mission site that has since Expired, gives way to the item the Detail view selects when it opens. The Escape key
    goes back only when no view is open over the Detail view, e.g. the [Settings panel](../gui.md#settings-panel), which
-   it closes first.
+   it closes first. Going back to the [Turn summary](turn-summary.md#glossary) shows it again, over the place it was shown over.
 3. **Start afresh:** the View trail is emptied when the Player opens a Detail view from outside the open one, i.e.
-   from the Side panel, an item of the [Situation panel](situation-panel.md), or the [Turn summary](turn-summary.md),
-   because the Player has chosen a new direction rather than followed a link.
-4. **Close:** the View trail is emptied when the open Detail view closes, by its close control or the Escape key with
-   an empty View trail, which shows the globe.
-5. **New [Turn](../../foundation/engine-contract.md#player-actions-and-turns):** the View trail is emptied, and the open place stays open, when the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) changes, e.g. on an Advance
+   from the Side panel or an item of the [Situation panel](situation-panel.md), because the Player has chosen a new
+   direction rather than followed a link.
+4. **From the Turn summary:** when the Player opens a Detail view from the Turn summary, i.e. a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) card's Combat
+   report button or the offer to open the full Turn report, the View trail is emptied and then holds the Turn summary
+   as its only place, because the Player means to come back to the rest of the Turn summary.
+5. **Close:** the close control of the open Detail view, or the Escape key with an empty View trail, closes the Detail
+   view, which shows the globe, and empties the View trail. When the first place of the View trail is the Turn summary,
+   closing instead shows the Turn summary again, over the place it was shown over, and empties the View trail, because
+   the Player came to the Detail view from the Turn summary.
+6. **New [Turn](../../foundation/engine-contract.md#player-actions-and-turns):** the View trail is emptied, and the open place stays open, when the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) changes, e.g. on an Advance
    turn or an Undo Turn, because the places on it showed a Turn that has passed. It is also empty whenever the
    Campaign screen is shown anew, e.g. after a [Campaign](../../foundation/core-concepts.md#campaign-and-session) is loaded.
 
 While the View trail is not empty, the open Detail view shows a Back control, a neutral button that does what the
 Escape key does and is labelled "‹" and the name of the place it returns to: the Detail view's name, or the name of
-what that place shows one step away, e.g. "‹ Turn report" or "‹ Combat report". It is styled under
+what that place shows one step away, or "Turn summary", e.g. "‹ Turn report", "‹ Combat report", or
+"‹ Turn summary". It is styled under
 [Detail views and navigation](../visual-design.md#detail-views-and-navigation) in Visual Design.
 
 E.g., the Player opens the Turn Report View from the Side panel and selects its Combat report button: the Combat report
@@ -123,6 +130,12 @@ View opens with that Lead selected and "‹ Turn report". The Player starts an I
 the Turn Report View shows again. The Player presses Escape once more: the View trail is empty, so the Turn Report View
 closes and the globe shows. Had the Player instead selected Missions in the Side panel while in the Leads View, the
 Missions View would have opened with an empty View trail, and Escape would have closed it.
+
+E.g., after an Advance turn with two Missions, the Turn summary shows over the Missions View. The Player selects the
+Combat report button of the first Mission card: the Turn summary closes, and the Turn Report View opens showing that
+Combat report, with "‹ Turn summary". The Player selects the close control: the Turn summary shows again over the
+Missions View, and the Player selects the Combat report button of the second Mission card. After reading it, the Player
+presses Escape: the Turn summary shows again, and dismissing it shows the Missions View.
 
 # Status bar controls
 

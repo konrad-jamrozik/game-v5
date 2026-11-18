@@ -53,8 +53,12 @@ Follow under [View trail](campaign-screen.md#view-trail) in Campaign Screen, so 
 # Combat report
 
 The Combat report of a Mission opens one step away, in place of the sections, as a Follow under
-[View trail](campaign-screen.md#view-trail) in Campaign Screen, so the Escape key and the Back control return to them. It
-shows every fact the Combat report holds, under [Combat report](../../mechanics/combat.md#combat-report) in Combat:
+[View trail](campaign-screen.md#view-trail) in Campaign Screen, so the Escape key and the Back control return to them.
+The [Turn summary](turn-summary.md#glossary) opens it too, from its Mission card, under [Mission cards](turn-summary.md#mission-cards) in Turn
+Summary. It shows every fact the Combat report holds, under [Combat report](../../mechanics/combat.md#combat-report) in
+Combat, naming each [Agent](../../mechanics/domain-model.md#agency-and-agents) by its [Instance ID](../../foundation/campaign-instances.md#glossary) and each [Enemy](../../mechanics/domain-model.md#combat) by its [Enemy label](../gui.md#glossary), under
+[Enemy labels](../gui.md#enemy-labels) in Graphical User Interface, in the participants table and in the [Combat log](../../mechanics/combat.md#combat-rounds-and-results)
+alike:
 
 - The participants of each side, in their fixed order, as a table under [Tables](../visual-design.md#tables) in Visual
   Design, with their starting and final values, [damage dealt](../../mechanics/combat.md#combat-rounds-and-results) and [damage taken](../../mechanics/combat.md#combat-rounds-and-results), and final condition, a Killed [Agent](../../mechanics/domain-model.md#agency-and-agents) in
@@ -82,7 +86,7 @@ that misses an Enemy gives a row with the Agent attack tint and its outcome in T
 
 ![Turn Report View panel Artboard: the Turn the report covers in its heading, and its sections: a Won Mission with its Combat report button, a completed Investigation, Mission sites created, Expired, and Cancelled, and a discovered Lead](../../../../images/artboards/turn-report-view.png)
 
-![Combat report panel Artboard: a Won Mission's Combat report with its return control, the participants table of both sides, the Combat ratings of each side by Combat round, and the expanded Combat log, whose rows are tinted by the attacker's side and whose outcomes are coloured by whom they favour](../../../../images/artboards/combat-report.png)
+![Combat report panel Artboard: a Won Mission's Combat report with its return control, the participants table of both sides, with each Enemy by its Enemy label, the Combat ratings of each side by Combat round, and the expanded Combat log, whose rows are tinted by the attacker's side and whose outcomes are coloured by whom they favour](../../../../images/artboards/combat-report.png)
 
-The sample values, e.g. the Mission site names, the Lead names, the Instance IDs, and the numbers, appear only on the Artboards, under
+The sample values, e.g. the Mission site names, the Lead names, the Instance IDs, the Enemy labels, and the numbers, appear only on the Artboards, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

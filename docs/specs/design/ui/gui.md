@@ -5,7 +5,7 @@
 | Spec ID     | GUI                                                                                                                                                                        |
 | Family      | UI                                                                                                                                                                         |
 | Audience    | UI designer, Implementer                                                                                                                                                   |
-| Owns        | Which screens the graphical user interface has, the progress indicators that several of them show, and the warnings it gives.                                              |
+| Owns        | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, and how it names an Enemy.                       |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -31,8 +31,9 @@ These terms are specific to the Graphical User Interface.
 | Progress bar        | The bar that shows an Investigation's progress against its [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s required progress, under [Progress bar](#progress-bar).                                                                                                                   |
 | Progress circle     | The small circle that shows an Active Investigation's progress as a share of its Lead's [Required progress](../mechanics/leads-and-progression.md#glossary), under [Progress circle](#progress-circle).                                                                                                                     |
 | Settings panel      | The panel, shown on both screens, through which the Player sets [Global configuration](../foundation/engine-contract.md#persisted-data), under [Settings panel](#settings-panel).                                                                                                                                           |
-| View trail          | The places of the Detail view area that the Player came through to reach the one shown, most recent last, which the Escape key retraces, under [View trail](screens/campaign-screen.md#view-trail) in Campaign Screen.                                                                                                      |
+| View trail          | The places that the Player came through to reach the one shown, most recent last, which the Escape key retraces, under [View trail](screens/campaign-screen.md#view-trail) in Campaign Screen.                                                                                                                              |
 | Back control        | The button of the open Detail view that goes back to the last place of the View trail, shown while the View trail is not empty, under [View trail](screens/campaign-screen.md#view-trail) in Campaign Screen.                                                                                                               |
+| Enemy label         | The name by which the GUI shows an [Enemy](../mechanics/domain-model.md#combat): its EnemyArchetype and its number among the Enemies of that EnemyArchetype at its [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), e.g. "initiate-2", under [Enemy labels](#enemy-labels).    |
 
 # Screens
 
@@ -148,3 +149,19 @@ following cases that applies:
    the latest after b = ⌈(M − p) / g⌉ Advance turns, written "ETA a–b T", or "ETA a T" when a equals b, e.g.
    "ETA 3–5 T". Once p has reached R, it is written "ETA ≤ b T", because the Investigation may complete in any Advance
    turn.
+
+# Enemy labels
+
+The Player meets Enemies only a few at a time, at one [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), and tells them apart by what they are, so the GUI
+shows every Enemy by its Enemy label, never by its [Instance ID](../foundation/campaign-instances.md#glossary), which numbers every Enemy of the Campaign and so
+says nothing about the Mission site at hand. The Enemy label is the `name` of the Enemy's EnemyArchetype in lower case,
+with each space replaced by a hyphen, then a hyphen and the Enemy's number: its position, counted from 1, among the
+Enemies of the same EnemyArchetype in its Mission site's list of Enemies, under
+[Fixed order of each side](../mechanics/combat.md#fixed-order-of-each-side) in Combat. Each EnemyArchetype numbers its
+own Enemies, and each Mission site starts again from 1, whatever the Instance IDs and whatever earlier Mission sites
+held. An Enemy label is unique only within its Mission site, so wherever an Enemy is named outside the context of its
+Mission site, e.g. in an Agent's Killed by details, its Mission site is named with it.
+
+E.g., a Mission site whose list of Enemies is three Initiates followed by two Soldiers, with the Instance IDs enemy-19
+to enemy-23, shows them as initiate-1, initiate-2, initiate-3, soldier-1, and soldier-2, even when four Mission sites
+with Initiates came before it. An Enemy of an EnemyArchetype named "Cult leader" is shown as cult-leader-1.

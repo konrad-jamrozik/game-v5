@@ -33,10 +33,11 @@ list is exhaustive.
 
 1. **Missions:** for each [Combat report](../../mechanics/domain-model.md#combat) of the Turn report, its [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) with its
    MissionSiteArchetype's `name`, kind, and target [Faction](../../mechanics/domain-model.md#factions); whether the Mission is Won or Lost, with the
-   [Combat outcome](../../mechanics/combat.md#combat-rounds-and-results); the number of Agents in its Team sent, under [Mission properties](../../mechanics/missions.md#mission-properties) in Missions; the Agents
-   [Killed](../../mechanics/agents-spec.md#agent-statuses); the Agents of its Team sent whose [Assignment](../../mechanics/domain-model.md#agency-and-agents) is now [Recovery](../../mechanics/agents-spec.md#assignments); the [Enemies](../../mechanics/domain-model.md#combat) dead out of the
-   Enemies present; and the [Consequences](../../mechanics/missions.md#consequences) that applied, e.g. money, funding, a [Panic](../../mechanics/domain-model.md#campaign-standing) reduction, and a
-   Faction made [Eliminated](../../mechanics/domain-model.md#factions).
+   [Combat outcome](../../mechanics/combat.md#combat-rounds-and-results); the number of Agents in its Team sent, under [Mission properties](../../mechanics/missions.md#mission-properties) in Missions; the number of
+   Agents [Killed](../../mechanics/agents-spec.md#agent-statuses); the number of Agents of its Team sent whose [Assignment](../../mechanics/domain-model.md#agency-and-agents) is now [Recovery](../../mechanics/agents-spec.md#assignments); the [Enemies](../../mechanics/domain-model.md#combat) dead out of the
+   Enemies present; the [Consequences](../../mechanics/missions.md#consequences) that applied, e.g. money, funding, a [Panic](../../mechanics/domain-model.md#campaign-standing) reduction, and a
+   Faction made [Eliminated](../../mechanics/domain-model.md#factions); and a Combat report button. The card names no [Agent](../../mechanics/domain-model.md#agency-and-agents): the counts are enough to tell how the
+   Mission went, and the Combat report names each participant.
 2. **Investigations completed:** each [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) under [Turn report](../../mechanics/investigations.md#turn-report) in Investigations, with its
    [Lead](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s `name`, the number of [Turns](../../foundation/engine-contract.md#player-actions-and-turns) from its Turn started to the Turn the Advance turn ended, its final [Investigation
    progress](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), its Lead's [Required progress range](../../mechanics/investigations.md#glossary), its [Progress bar](../gui.md#glossary), and the Mission site its completion created, if any.
@@ -54,7 +55,8 @@ list is exhaustive.
 
 # Showing and dismissing
 
-The Player dismisses the Turn summary with one action, and it offers to open the full Turn report. It is not shown
+The Player dismisses the Turn summary with one action, and it offers to open the full Turn report, which, like a
+Combat report button, keeps the Turn summary at the start of the [View trail](campaign-screen.md#view-trail). It is not shown
 after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data), after undo, redo, or other [Timeline](../../foundation/timeline.md) navigation, nor for an Advance turn that
 [Autopilot](../../foundation/engine-contract.md#autopilot) requested, so that a long run of Advance turns does not open one Turn summary for each.
 
@@ -69,15 +71,23 @@ ended.
 Each Mission is a card, so that the outcome of a Mission reads apart from the lists around it. The card is an item that
 takes more than one line, under [Panels and cards](../visual-design.md#panels-and-cards) in Visual Design: its first line
 holds its Mission site's name, kind, and target Faction, with the outcome as its value. Its outcome is in
-Positive for Won or Danger for Lost, its [Killed](../../mechanics/agents-spec.md#agent-statuses) Agents are in Danger, and its Agents sent to [Recovery](../../mechanics/agents-spec.md#assignments) are in Accent
-text.
+Positive for Won or Danger for Lost, its number of [Killed](../../mechanics/agents-spec.md#agent-statuses) Agents is in Danger when above 0, its number of Agents sent to
+[Recovery](../../mechanics/agents-spec.md#assignments) is in Accent text when above 0, and its Consequences are coloured under
+[Consequences](../visual-design.md#consequences) in Visual Design.
+
+The Combat report button, a neutral button at the end of the card, opens the [Turn Report View](turn-report-view.md)
+with that Mission's Combat report shown one step away, under [Combat report](turn-report-view.md#combat-report) in Turn
+Report View, and closes the Turn summary. The Turn summary stays at the start of the
+[View trail](campaign-screen.md#view-trail) in Campaign Screen, so the Escape key, the [Back control](../gui.md#glossary), and the close
+control of the Turn Report View all bring the Turn summary back, and the Player can open the Combat report of the next
+Mission from it.
 
 # Artboard
 
-![Turn summary panel Artboard: the dialog alone, listing a Won Mission with its Killed Agents, Agents sent to Recovery, and Consequences; a completed Investigation with a Progress bar marking the progress before the last Advance turn, the gain that completed it, and a check where it completed; new Mission sites; an Expired Mission site; and a discovered Lead, with Open Turn report and Continue buttons](../../../../images/artboards/turn-summary.png)
+![Turn summary panel Artboard: the dialog alone, listing a Won Mission with its numbers of Killed Agents and Agents sent to Recovery, its Consequences coloured by whom they favour, and its Combat report button; a completed Investigation with a Progress bar marking the progress before the last Advance turn, the gain that completed it, and a check where it completed; new Mission sites; an Expired Mission site; and a discovered Lead, with Open Turn report and Continue buttons](../../../../images/artboards/turn-summary.png)
 
 The following appear only on the [Artboard](../visual-design.md#glossary) and must not be implemented, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
-- The layout inside each Mission card below its first line, and the labels of the buttons, e.g. "Continue" and "Open Turn report".
-- The sample values, e.g. the Mission site names and the Agent IDs.
+- The layout inside each Mission card below its first line, and the labels of the buttons, e.g. "Continue", "Open Turn report", and "Combat report".
+- The sample values, e.g. the Mission site names and the numbers.

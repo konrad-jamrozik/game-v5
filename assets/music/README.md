@@ -40,6 +40,7 @@ source.
 The Game designer excluded these files from the Soundtrack, pending review, so they are kept here but never played:
 
 - `GEO-3.opus`
+- `GEO-14.mp3`
 
 ## Tracks from ElevenLabs
 

@@ -383,6 +383,15 @@ Combat log is the one exception: its colour says whom the attack favours, under
   the colour between them in proportion, mixed in sRGB. E.g., 30 of 30 is in Text, 15 of 30 in Accent text, and 1 of
   30 almost in Danger deep.
 
+## Consequences
+
+Wherever a screen lists the [Consequences](../mechanics/missions.md#consequences) that applied, e.g. on a Mission card of the [Turn summary](screens/turn-summary.md), each Consequence is
+coloured by whether it is good or bad for the Player, so that a costly outcome stands out among the gains. A Consequence
+that gains money or funding, reduces [Panic](../mechanics/domain-model.md#campaign-standing), or makes a [Faction](../mechanics/domain-model.md#factions) [Eliminated](../mechanics/domain-model.md#factions) is in Positive; one that loses funding or increases
+Panic is in Danger. The label before them and the separators between them stay in Text muted. E.g.,
+"Consequences: money +30, funding +5" shows "money +30" and "funding +5" in Positive, while an Expired Mission site's
+"Consequences: Panic +3, funding −2" shows both in Danger.
+
 ## Detail views and navigation
 
 The [Side panel](gui.md#glossary) is the console beside the globe, so it reads as one dark column and the globe as open space.

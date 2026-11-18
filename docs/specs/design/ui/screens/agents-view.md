@@ -138,7 +138,8 @@ columns, in this order, are:
 - **Turns with the Agency,** headed Turns: its Turn terminated minus its Turn hired.
 - **Enemies killed,** headed Kills: its Enemies killed, under [Service record](../../mechanics/agents-spec.md#service-record) in Agents.
 - **Details:** how its service ended. A Killed Agent's details name the [Enemy](../../mechanics/domain-model.md#combat) and the Mission site that its
-  Killed by references, each by its Instance ID and its [Archetype](../../foundation/core-concepts.md#campaign-instances)'s `name`, e.g. "Killed by enemy-7, Initiate, at
+  Killed by references, the Enemy by its [Enemy label](../gui.md#glossary), under [Enemy labels](../gui.md#enemy-labels) in Graphical User
+  Interface, and the Mission site by its Instance ID and its [Archetype](../../foundation/core-concepts.md#campaign-instances)'s `name`, e.g. "Killed by initiate-2 at
   mission-site-5, Apprehend member"; a Dismissed Agent's say "Dismissed".
 
 # Agent details
