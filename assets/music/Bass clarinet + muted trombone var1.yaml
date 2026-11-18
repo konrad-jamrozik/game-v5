@@ -1,0 +1,23 @@
+file: 'Bass clarinet + muted trombone var1.mp3'
+source: Suno v6
+original_title: 'Bass clarinet + muted trombone var1'
+song_url: https://suno.com/song/b6fca565-f6e6-47c9-b03a-3a04ce1f264e
+model: 'v6 (chirp-hawk)'
+created: '2026-11-17 20:45'
+tags: [dark ambient, tactical strategy, minimalist]
+length: '3:09'
+instrumental: true
+prompt: |-
+  Dark, brooding tactical strategy game soundtrack with deep bass drones, low-frequency rumbling, hollow bass clarinet, and ominous muted trombone. Sinister, mysterious, claustrophobic, and deeply unsettling.
+
+  Minimalist arrangement dominated by thick, resonant low-end frequencies, shadowy minor-key harmonies, sparse percussion, and slow hypnotic bass pulses. Breathy, low-register bass clarinet phrases weave through the darkness, accompanied by distant muted trombone notes and restrained brass swells.
+
+  Evoke paranoia, secrecy, isolation, and an unseen, approaching threat. Slowly evolving layers, subtle dissonance, eerie woodwind motifs, and haunting brass resonances. Organic, gritty, oppressive, and grounded rather than futuristic or cosmic.
+
+  Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no dramatic crescendos, no epic orchestration.
+exclude_styles: |-
+  Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, big band, jazz swing
+control_sliders:
+  weirdness_constraint: 0.4
+  style_weight: 0.7
+  aug_creativity: 0

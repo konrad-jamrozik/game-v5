@@ -1,0 +1,17 @@
+file: 'Unseen Approach var1.mp3'
+source: Suno v6
+original_title: 'Unseen Approach var1'
+song_url: https://suno.com/song/d21c736d-38a9-4e91-ad81-502302ff010f
+model: 'v6 (chirp-hawk)'
+created: '2026-11-17 19:35'
+tags: [soundtrack, minimalist, intimate]
+length: '3:29'
+instrumental: true
+prompt: |-
+  Soundtrack; instrumental, intimate and restrained; minimalist, gritty mix with resonant low-end, shadowed minor harmonies, subtle dissonance, and slowly evolving layers; very slow hypnotic pulses with understated intensity; deep bass drones and low rumble beneath isolated muted felt piano, sparse percussion, sustained bowed strings, and mournful restrained cello.
+exclude_styles: |-
+  Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums
+control_sliders:
+  weirdness_constraint: 0.4
+  style_weight: 0.7
+  aug_creativity: 1
