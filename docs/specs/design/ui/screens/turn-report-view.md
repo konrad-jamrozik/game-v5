@@ -62,9 +62,27 @@ shows every fact the Combat report holds, under [Combat report](../../mechanics/
 - The [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) of each side at Combat start and after each Combat round.
 - The [Combat log](../../mechanics/combat.md#combat-rounds-and-results), one row per attack in its order, collapsed until the Player expands it.
 
+## Combat log colours
+
+The colours of the Combat log tell the Player whose attack each row is and whom its outcome favours. Whether a hit or a
+miss is good for the Player depends on who made it, so no colour means "hit" or "damage" by itself:
+
+- **Row:** a row whose attacker is an Agent is filled with the Agent attack tint, and a row whose attacker is an [Enemy](../../mechanics/domain-model.md#combat)
+  with the Enemy attack tint, under [Colours](../visual-design.md#colours) in Visual Design.
+- **Outcome:** the attack's outcome, i.e. its hit outcome, the [health removed](../../mechanics/combat.md#combat-rounds-and-results), the defender's [current health](../../mechanics/agents-spec.md#combatant-attributes) after it,
+  and whether it made a participant dead or [Incapacitated](../../mechanics/combat.md#combatant-condition-in-a-combat), is in Positive when an Agent hit, in Danger when an Enemy
+  hit, and in Text muted when the attack missed, whichever side made it. The other values of the row are in Text.
+- **Decisive attack:** the word that names a participant made dead or Incapacitated is bold, e.g. "hit for 14,
+  health 0, **dead**".
+
+E.g., an Enemy that hits an Agent gives a row with the Enemy attack tint and its outcome in Danger, while an Agent
+that misses an Enemy gives a row with the Agent attack tint and its outcome in Text muted.
+
 # Artboard
 
 ![Turn Report View panel Artboard: the Turn the report covers in its heading, and its sections: a Won Mission with its Combat report button, a completed Investigation, Mission sites created, Expired, and Cancelled, and a discovered Lead](../../../../images/artboards/turn-report-view.png)
 
-The sample values, e.g. the Mission site names, the Lead names, and the numbers, appear only on the Artboard, under
+![Combat report panel Artboard: a Won Mission's Combat report with its return control, the participants table of both sides, the Combat ratings of each side by Combat round, and the expanded Combat log, whose rows are tinted by the attacker's side and whose outcomes are coloured by whom they favour](../../../../images/artboards/combat-report.png)
+
+The sample values, e.g. the Mission site names, the Lead names, the Instance IDs, and the numbers, appear only on the Artboards, under
 [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
