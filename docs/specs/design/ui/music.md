@@ -42,10 +42,8 @@ formats; the list is complete:
 
 - Ogg Opus, with the extension `.opus`, the preferred format because it is the smallest at the same quality.
 - MP3, with the extension `.mp3`, for music whose source cannot export Ogg Opus.
-- WAV, with the extension `.wav`, for music kept as its source exported it, uncompressed, the largest format.
-
-The Soundtrack is every such file, and the Game build supplies every Track unchanged, in its own format. Any other file
-in the directory, e.g. a README, is not a Track.
+  The Soundtrack is every such file, and the Game build supplies every Track unchanged, in its own format. Any other file
+  in the directory, e.g. a README, is not a Track.
 
 The Track title is the file name without its extension, unchanged, so that the title the Player sees is the name of
 the file that holds the Track. E.g., the file `GEO-4.opus` is the Track titled "GEO-4". No two Tracks have the same
