@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "tabWidth": 2,
+  "singleQuote": true,
+  "semi": false,
+  "printWidth": 120,
+  "endOfLine": "lf",
+  "sortPackageJson": false,
+  "ignorePatterns": ["dist/", "coverage/", "package-lock.json", ".claude/worktrees/"],
+  "overrides": [{ "files": ["**/*.md"], "options": { "proseWrap": "never" } }]
+}

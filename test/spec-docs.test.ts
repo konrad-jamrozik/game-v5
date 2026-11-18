@@ -15,7 +15,7 @@ import { FAMILY_KIND } from '../scripts/spec-linter/overviews.ts'
 import type { SourceFile, SpecificationCorpus } from '../scripts/spec-linter/types.ts'
 import { derivedLinkFindings, derivedOutputFindings } from '../scripts/derived-docs.ts'
 
-const PRETTIER_OPTIONS = { printWidth: 120, singleQuote: true, semi: false, tabWidth: 2 }
+const FORMATTER_CONFIG = { printWidth: 120, singleQuote: true, semi: false, tabWidth: 2, proseWrap: 'never' as const }
 
 function sampleCorpus(): SpecificationCorpus {
   return {
@@ -108,7 +108,7 @@ async function currentFiles(): Promise<readonly SourceFile[]> {
 
 describe('derived specification renderer', () => {
   test('renders catalog fields, grouping, sorting, and counts', async () => {
-    const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
+    const outputs = await renderDerivedDocumentation(sampleCorpus(), FORMATTER_CONFIG)
     const catalog = outputs.get('docs/derived/README.md') ?? ''
     expect(catalog).toContain('| Governance         | Conventions   | 2              |')
     expect(catalog).toContain('| AAA | [Alpha "Quoted" & More](../specs/design/foundation/alpha.md) | Alpha rules. |')
@@ -118,7 +118,7 @@ describe('derived specification renderer', () => {
   })
 
   test('sorts glossary terms and preserves formatted definitions with rewritten links', async () => {
-    const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
+    const outputs = await renderDerivedDocumentation(sampleCorpus(), FORMATTER_CONFIG)
     const glossary = outputs.get('docs/derived/glossary.md') ?? ''
     expect(glossary.indexOf('| alpha term')).toBeLessThan(glossary.indexOf('| Zulu term'))
     expect(glossary).toContain('[Conventions](../specs/governance/conventions/spec-conventions.md#glossary)')
@@ -127,7 +127,7 @@ describe('derived specification renderer', () => {
   })
 
   test('collects the Prohibited synonyms of every term in one table', async () => {
-    const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
+    const outputs = await renderDerivedDocumentation(sampleCorpus(), FORMATTER_CONFIG)
     const glossary = outputs.get('docs/derived/glossary.md') ?? ''
     const section = glossary.slice(glossary.indexOf('## Prohibited synonyms'))
     expect(section).toContain('| Beta term; see [Rule](../specs/design/foundation/alpha.md#rule) | alpha term |')
@@ -135,7 +135,7 @@ describe('derived specification renderer', () => {
   })
 
   test('renders the references diagram in its own file and draws each duplicate reference once', async () => {
-    const outputs = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
+    const outputs = await renderDerivedDocumentation(sampleCorpus(), FORMATTER_CONFIG)
     expect([...outputs.keys()]).toEqual([
       'docs/derived/README.md',
       'docs/derived/glossary.md',
@@ -167,7 +167,7 @@ describe('derived specification renderer', () => {
 
   test('notes in the index that no specification links another when there are no references', async () => {
     const corpus: SpecificationCorpus = { ...sampleCorpus(), relationships: [] }
-    const outputs = await renderDerivedDocumentation(corpus, PRETTIER_OPTIONS)
+    const outputs = await renderDerivedDocumentation(corpus, FORMATTER_CONFIG)
     const index = outputs.get('docs/derived/relationships.md') ?? ''
     expect(index).toContain('- References: No specification links another.')
     expect(outputs.has('docs/derived/relationships/references.md')).toBe(false)
@@ -199,7 +199,7 @@ describe('derived specification renderer', () => {
         },
       ],
     }
-    const outputs = await renderDerivedDocumentation(engineCorpus, PRETTIER_OPTIONS)
+    const outputs = await renderDerivedDocumentation(engineCorpus, FORMATTER_CONFIG)
     const diagrams = renderDerivedDiagramFiles(engineCorpus)
     const references = outputs.get('docs/derived/relationships/references.md') ?? ''
     expect(references).not.toContain('## ')
@@ -252,7 +252,7 @@ describe('derived specification renderer', () => {
         },
       ],
     }
-    const outputs = await renderDerivedDocumentation(governanceCorpus, PRETTIER_OPTIONS)
+    const outputs = await renderDerivedDocumentation(governanceCorpus, FORMATTER_CONFIG)
     const diagrams = renderDerivedDiagramFiles(governanceCorpus)
     expect([...diagrams.keys()]).toEqual([
       'docs/images/diagrams/specification-stack.svg',
@@ -284,8 +284,8 @@ describe('derived specification renderer', () => {
   })
 
   test('produces identical output repeatedly', async () => {
-    const first = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
-    const second = await renderDerivedDocumentation(sampleCorpus(), PRETTIER_OPTIONS)
+    const first = await renderDerivedDocumentation(sampleCorpus(), FORMATTER_CONFIG)
+    const second = await renderDerivedDocumentation(sampleCorpus(), FORMATTER_CONFIG)
     expect(outputObject(second)).toEqual(outputObject(first))
   })
 })
@@ -402,7 +402,7 @@ describe('family overview diagrams', () => {
 
   test('replaces only the marked block and is idempotent', async () => {
     const sources = new Map([['docs/specs/design/foundation/about-foundation.md', overview]])
-    const first = await renderFamilyOverviews(sampleCorpus(), sources, PRETTIER_OPTIONS)
+    const first = await renderFamilyOverviews(sampleCorpus(), sources, FORMATTER_CONFIG)
     const output = first.get('docs/specs/design/foundation/about-foundation.md') ?? ''
     expect(output).not.toContain('stale content')
     expect(output).toContain('Prose.')
@@ -413,7 +413,7 @@ describe('family overview diagrams', () => {
     const second = await renderFamilyOverviews(
       sampleCorpus(),
       new Map([['docs/specs/design/foundation/about-foundation.md', output]]),
-      PRETTIER_OPTIONS,
+      FORMATTER_CONFIG,
     )
     expect(second.get('docs/specs/design/foundation/about-foundation.md')).toBe(output)
   })

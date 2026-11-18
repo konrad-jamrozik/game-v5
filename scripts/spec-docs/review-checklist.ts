@@ -1,7 +1,5 @@
 import { relative } from 'node:path/posix'
 
-import { format, type Options } from 'prettier'
-
 import {
   headingsWithSlugs,
   headingText,
@@ -13,6 +11,7 @@ import {
 } from '../spec-linter/markdown.ts'
 import { decodeUrlPart, directoryOf, isExternalUrl, resolvePath, splitUrl } from '../spec-linter/paths.ts'
 import type { SpecificationCorpus } from '../spec-linter/types.ts'
+import { formatMarkdown, type FormatterConfig } from './format-markdown.ts'
 
 export const REVIEW_CHECKLIST_PATH = 'docs/derived/review-checklist.md'
 
@@ -86,7 +85,7 @@ function lintedTargets(path: string, content: string): ReadonlySet<string> {
 export async function renderReviewChecklist(
   corpus: SpecificationCorpus,
   sources: ReadonlyMap<string, string>,
-  prettierOptions: Options = {},
+  formatterConfig: FormatterConfig = {},
 ): Promise<ReadonlyMap<string, string>> {
   const conventions = CHECKLIST_CONVENTIONS.flatMap((entry) => {
     const specification = corpus.specifications.find((candidate) => candidate.id === entry.id)
@@ -122,6 +121,6 @@ export async function renderReviewChecklist(
       ),
     )
   }
-  const formatted = await format(`${lines.join('\n')}\n`, { ...prettierOptions, parser: 'markdown', endOfLine: 'lf' })
+  const formatted = await formatMarkdown(REVIEW_CHECKLIST_PATH, `${lines.join('\n')}\n`, formatterConfig)
   return new Map([[REVIEW_CHECKLIST_PATH, `${formatted.replace(/\r\n?/g, '\n').trimEnd()}\n`]])
 }

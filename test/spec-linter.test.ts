@@ -1261,7 +1261,7 @@ describe('family overviews', () => {
 })
 
 describe('derived documentation on a sample corpus', () => {
-  const prettierOptions = { printWidth: 120, singleQuote: true, semi: false, tabWidth: 2 }
+  const formatterConfig = { printWidth: 120, singleQuote: true, semi: false, tabWidth: 2, proseWrap: 'never' as const }
 
   test('analysis is independent of input ordering and line endings', () => {
     const files = withOverviews(validCorpus())
@@ -1284,7 +1284,7 @@ describe('derived documentation on a sample corpus', () => {
       },
       writeError: (message) => errors.push(message),
     }
-    expect(await runDerivedDocumentation(sources, ['generate'], generateIo, prettierOptions)).toBe(0)
+    expect(await runDerivedDocumentation(sources, ['generate'], generateIo, formatterConfig)).toBe(0)
     expect(errors).toEqual([])
 
     const overviewPaths = sources.map((file) => file.path).filter((path) => /\/about-[^/]*\.md$/.test(path))
@@ -1299,7 +1299,7 @@ describe('derived documentation on a sample corpus', () => {
       },
       writeError: (message) => errors.push(message),
     }
-    expect(await runDerivedDocumentation(fresh, ['check'], checkIo, prettierOptions)).toBe(0)
+    expect(await runDerivedDocumentation(fresh, ['check'], checkIo, formatterConfig)).toBe(0)
     expect(errors).toEqual([])
 
     const stalePath = overviewPaths[0] ?? ''
@@ -1308,7 +1308,7 @@ describe('derived documentation on a sample corpus', () => {
         ? { ...file, content: file.content.replace(FAMILY_DIAGRAM_END, `Stale content.\n\n${FAMILY_DIAGRAM_END}`) }
         : file,
     )
-    expect(await runDerivedDocumentation(stale, ['check'], checkIo, prettierOptions)).toBe(1)
+    expect(await runDerivedDocumentation(stale, ['check'], checkIo, formatterConfig)).toBe(1)
     expect(errors).toEqual([`${stalePath}: generated documentation is stale; run npm run docs:generate.`])
     expect(writes).toBe(0)
   })
@@ -1324,7 +1324,7 @@ describe('derived documentation on a sample corpus', () => {
       },
       writeError: (message) => errors.push(message),
     }
-    expect(await runDerivedDocumentation([], ['generate'], io, prettierOptions)).toBe(1)
+    expect(await runDerivedDocumentation([], ['generate'], io, formatterConfig)).toBe(1)
     expect(writes).toBe(0)
     expect(errors.length).toBeGreaterThan(0)
   })

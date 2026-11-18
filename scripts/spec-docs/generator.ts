@@ -1,11 +1,11 @@
 import { relative } from 'node:path/posix'
 
 import type { Link, Root } from 'mdast'
-import { format, type Options } from 'prettier'
 import { remark } from 'remark'
 import remarkGfm from 'remark-gfm'
 
 import { isLink, visit } from '../spec-linter/markdown.ts'
+import { formatMarkdown, type FormatterConfig } from './format-markdown.ts'
 import {
   FAMILY_DIAGRAM_END,
   FAMILY_DIAGRAM_START,
@@ -658,7 +658,7 @@ function spliceFamilyDiagram(content: string, path: string, diagram: string): st
 export async function renderFamilyOverviews(
   corpus: SpecificationCorpus,
   sources: ReadonlyMap<string, string>,
-  prettierOptions: Options = {},
+  formatterConfig: FormatterConfig = {},
 ): Promise<ReadonlyMap<string, string>> {
   const outputs = new Map<string, string>()
   for (const family of FAMILY_ORDER) {
@@ -666,17 +666,14 @@ export async function renderFamilyOverviews(
     const source = path === undefined ? undefined : sources.get(path)
     if (path === undefined || source === undefined) continue
     const spliced = spliceFamilyDiagram(source, path, renderFamilyDiagram(corpus, family))
-    outputs.set(
-      path,
-      normalizeOutput(await format(spliced, { ...prettierOptions, parser: 'markdown', endOfLine: 'lf' })),
-    )
+    outputs.set(path, normalizeOutput(await formatMarkdown(path, spliced, formatterConfig)))
   }
   return outputs
 }
 
 export async function renderDerivedDocumentation(
   corpus: SpecificationCorpus,
-  prettierOptions: Options = {},
+  formatterConfig: FormatterConfig = {},
 ): Promise<ReadonlyMap<string, string>> {
   const kinds = renderedRelationshipKinds(corpus)
   const unformatted = new Map<string, string>([
@@ -687,10 +684,7 @@ export async function renderDerivedDocumentation(
   ])
   const formatted = new Map<string, string>()
   for (const [path, content] of unformatted) {
-    formatted.set(
-      path,
-      normalizeOutput(await format(content, { ...prettierOptions, parser: 'markdown', endOfLine: 'lf' })),
-    )
+    formatted.set(path, normalizeOutput(await formatMarkdown(path, content, formatterConfig)))
   }
   return formatted
 }

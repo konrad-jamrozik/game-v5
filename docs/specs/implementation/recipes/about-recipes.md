@@ -4,38 +4,25 @@
 
 # What this family is for
 
-Some implementation tasks recur and are easy to get subtly wrong, e.g. publishing an Implementation or bringing it up
-to date with changed specifications. Recipes specifications suggest the steps for carrying out one such task. Like
-Guidance, they bind no Implementation.
+Some implementation tasks recur and are easy to get subtly wrong, e.g. publishing an Implementation or bringing it up to date with changed specifications. Recipes specifications suggest the steps for carrying out one such task. Like Guidance, they bind no Implementation.
 
 # Documents
 
 ## Specification Updates
 
-[Specification Updates](specification-updates.md) answers _how does an implementation catch up with changed
-specifications?_ It steers implementers to apply only the difference since the recorded commit, reaching the affected
-files through the Specification map instead of rebuilding the implementation.
+[Specification Updates](specification-updates.md) answers _how does an implementation catch up with changed specifications?_ It steers implementers to apply only the difference since the recorded commit, reaching the affected files through the Specification map instead of rebuilding the implementation.
 
 ## GitHub Pages Deployment
 
-[GitHub Pages Deployment](github-pages-deployment.md) answers _how does an implementation get published once the
-Engine designer asks for it?_ It takes an implementation whose Game build a browser runs from static files to a public
-GitHub repository, whose CI workflow checks every push and deploys the passing ones to GitHub Pages.
+[GitHub Pages Deployment](github-pages-deployment.md) answers _how does an implementation get published once the Engine designer asks for it?_ It takes an implementation whose Game build a browser runs from static files to a public GitHub repository, whose CI workflow checks every push and deploys the passing ones to GitHub Pages.
 
 ## Globe Integration
 
-[Globe Integration](globe-integration.md) answers _how does an implementation show the rotating Earth that the Spec
-repo keeps?_ It has the implementer copy the reference globe's maps and scene into the Implementation repo and mount
-them as a decoration that reads no game state and costs nothing until the Player opens it.
+[Globe Integration](globe-integration.md) answers _how does an implementation show the rotating Earth that the Spec repo keeps?_ It has the implementer copy the reference globe's maps and scene into the Implementation repo and mount them as a decoration that reads no game state and costs nothing until the Player opens it.
 
 # How they relate
 
-Every Recipes specification carries out a task on files that the Mandatory family constrains. GitHub Pages Deployment
-uses Implementation Placement, because the published repository is the Implementation repo. Specification Updates uses
-all three Mandatory specifications, because an update reads the tracking files and settles feedback entries. Globe
-Integration uses Implementation Placement and Specification Tracking, because the globe is copied into the
-Implementation repo and its files are recorded there; it also uses the other two Recipes specifications, for keeping
-the copy current and for serving the maps once published.
+Every Recipes specification carries out a task on files that the Mandatory family constrains. GitHub Pages Deployment uses Implementation Placement, because the published repository is the Implementation repo. Specification Updates uses all three Mandatory specifications, because an update reads the tracking files and settles feedback entries. Globe Integration uses Implementation Placement and Specification Tracking, because the globe is copied into the Implementation repo and its files are recorded there; it also uses the other two Recipes specifications, for keeping the copy current and for serving the maps once published.
 
 <!-- generated:family-diagram:start -->
 
@@ -53,6 +40,4 @@ No specification of this family links another specification of it.
 
 # Why these boundaries
 
-Specification Tracking and Specification Updates are split for the same reason that Mandatory and Recipes are: the
-files an implementation keeps can be checked in its files, so they are Mandatory, while the way an implementer uses
-them to catch up is advice that an implementation can ignore and still be correct.
+Specification Tracking and Specification Updates are split for the same reason that Mandatory and Recipes are: the files an implementation keeps can be checked in its files, so they are Mandatory, while the way an implementer uses them to catch up is advice that an implementation can ignore and still be correct.
