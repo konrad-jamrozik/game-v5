@@ -14,7 +14,19 @@ prompt_from:
   share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
   continues_from: 'v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3'
   meta_prompt: |-
-    OK now let's do Felt piano + cello
+    OK now let's do
+
+    Felt piano + cello
+
+    Note I am using Suno UI, see screenshots for options
+  produced_prompt: |-
+    Dark, brooding tactical strategy game soundtrack with deep bass drones, low-frequency rumbling, muted felt piano, and mournful cello. Ominous, melancholic, claustrophobic, and deeply unsettling.
+
+    Minimalist arrangement dominated by thick, resonant low-end frequencies, shadowy minor-key harmonies, sparse percussion, and slow hypnotic bass pulses. Soft, isolated felt piano notes echo through the darkness, accompanied by restrained cello melodies and sustained bowed strings.
+
+    Evoke paranoia, secrecy, isolation, and an unseen, approaching threat. Slowly evolving layers, delicate piano motifs, subtle dissonance, and haunting cello passages. Organic, intimate, gritty, and grounded rather than futuristic or cosmic.
+
+    Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no dramatic crescendos, no epic orchestration.
 prompt: |-
   Soundtrack; instrumental, intimate and restrained; minimalist, gritty mix with resonant low-end, shadowed minor harmonies, subtle dissonance, and slowly evolving layers; very slow hypnotic pulses with understated intensity; deep bass drones and low rumble beneath isolated muted felt piano, sparse percussion, sustained bowed strings, and mournful restrained cello.
 exclude_styles: |-
@@ -23,3 +35,5 @@ control_sliders:
   weirdness_constraint: 0.4
   style_weight: 0.7
   aug_creativity: 1
+notes: |-
+  `prompt` is the Styles text Suno stored, not the one pasted in: ChatGPT's `produced_prompt` was pasted into Styles, and Suno's Variety control, which was on (`aug_creativity: 1`), rewrote it, differently for each variation. The `exclude_styles` and the Weirdness and Style influence sliders are those ChatGPT recommended.
