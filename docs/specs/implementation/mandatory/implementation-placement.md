@@ -84,10 +84,10 @@ Implementation repo, and its Game build must read that copy rather than the `con
 
 ## Music in an Implementation
 
-The [Soundtrack](../../design/ui/music.md#glossary) is authored under the `assets/music/` directory of the Spec repo.
-An Implementation that plays it must hold its own copy of every [Track](../../design/ui/music.md#glossary) file inside
-its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/music/` directory of
-the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/music/`.
+The [Soundtrack](../../design/ui/music.md#glossary) is authored under the `assets/music/tracks/` directory of the Spec
+repo. An Implementation that plays it must hold its own copy of every [Track](../../design/ui/music.md#glossary) file
+inside its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/music/tracks/`
+directory of the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/music/`.
 
 ## Sounds in an Implementation
 

@@ -212,9 +212,9 @@ Type owner: [Visual Design](../ui/visual-design.md).
 
 Type owner: [Music](../ui/music.md).
 
-| GDR     | Type            | GDR purpose     | What it supplies                                                                        |
-| ------- | --------------- | --------------- | --------------------------------------------------------------------------------------- |
-| `music` | MusicParameters | Display content | The files of `assets/music/` excluded from the [Soundtrack](../ui/music.md#soundtrack). |
+| GDR     | Type            | GDR purpose     | What it supplies                                                                               |
+| ------- | --------------- | --------------- | ---------------------------------------------------------------------------------------------- |
+| `music` | MusicParameters | Display content | The files of `assets/music/tracks/` excluded from the [Soundtrack](../ui/music.md#soundtrack). |
 
 # Bootstrap GDR files
 

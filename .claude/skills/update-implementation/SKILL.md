@@ -71,7 +71,7 @@ Specification map section for it, and start no subagents.
    - Asset files: copy each added or changed asset to the Implementation's copy unchanged, and delete the copy of each
      deleted one, under the Implementation Placement section for its kind, e.g. Music in an Implementation.
    - Asset READMEs and track records: the Implementation copies no README and no `.yaml` track record in
-     `assets/music/`, so changes to them need nothing. Which music files are excluded comes from the GDR `music`, so
+     `assets/music/yaml/`, so changes to them need nothing; the Track files are those in `assets/music/tracks/`. Which music files are excluded comes from the GDR `music`, so
      a change to it arrives with the GDR files above.
    - Update the record of where the copies came from, e.g. the commit in `content/SOURCE.md`.
 2. Run the Implementation's `fix` script when it has one, then its checks. A test that pins a value the content

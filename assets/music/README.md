@@ -1,8 +1,9 @@
 # Soundtrack
 
 The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification
-describes. Each `.opus` or `.mp3` file is one track, and its title is its file name without the extension, e.g.
-`Silent Threat Protocol.opus` is the track titled "Silent Threat Protocol".
+describes. Each `.opus` or `.mp3` file in [`tracks/`](tracks/) is one track, and its title is its file name without
+the extension, e.g. `tracks/Silent Threat Protocol.opus` is the track titled "Silent Threat Protocol". The record of how
+each track was made is in [`yaml/`](yaml/), as [Track records](#track-records) describes.
 
 A track is named after the title its source gave it, so that the same name finds it in the source, in its track record,
 and in the game, e.g. the ElevenLabs song "Silent Threat Protocol" is `Silent Threat Protocol.opus`. The table lists
@@ -43,9 +44,10 @@ designer's personal backup, outside it; its row in the table, and its track reco
 
 ## Track records
 
-A `.yaml` file with the same name as a track, e.g. `Silent Threat Protocol.yaml`, records how the track was made, so
+A `.yaml` file in `yaml/` with the same name as a track, e.g. `yaml/Silent Threat Protocol.yaml`, records how the
+track was made, so
 that it can be told apart from the others and made again: its original title, source, creation date, the prompt it was
-generated from, and what the source reports about it, e.g. tags, BPM, and length. A track record is not a track. Every
+generated from, and what the source reports about it, e.g. tags, BPM, and length. Every
 track whose prompt is known has one, including each excluded track, whose record stays here after its audio is
 removed.
 
@@ -53,7 +55,7 @@ A record holds only the keys it has values for:
 
 | Key                | Value                                                                                                                                                                                                                                                                                                                          |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `file`             | The track's file name.                                                                                                                                                                                                                                                                                                         |
+| `file`             | The track's file name in `tracks/`.                                                                                                                                                                                                                                                                                            |
 | `source`           | Where the track was made, as in the table.                                                                                                                                                                                                                                                                                     |
 | `original_title`   | The track's title, its file name without the extension.                                                                                                                                                                                                                                                                        |
 | `title_in_source`  | The song's title in its source, when it differs from `original_title`, e.g. "UFO 1" in v03ai.                                                                                                                                                                                                                                  |

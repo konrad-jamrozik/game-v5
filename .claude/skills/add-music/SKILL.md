@@ -1,11 +1,12 @@
 ---
 name: add-music
-description: Add the new music files the Game designer dropped into assets/music/ to the Soundtrack, naming each after the title its source gave it, recording it and its source in the music README, and pushing only that change from the main local clone.
+description: Add the new music files the Game designer dropped into assets/music/tracks/ to the Soundtrack, naming each after the title its source gave it, recording it and its source in the music README, and pushing only that change from the main local clone.
 ---
 
 # Add music
 
-Use this skill when the Game designer has put new music files into `assets/music/` and wants them in the Soundtrack,
+Use this skill when the Game designer has put new music files into `assets/music/tracks/` and wants them in the
+Soundtrack,
 e.g. "I added two more music tracks to slurp up".
 
 The Soundtrack is owned by the [Music](../../../docs/specs/design/ui/music.md#soundtrack) specification, and the file
@@ -24,8 +25,8 @@ that is where the designer drops the files. Other sessions may have uncommitted 
 untouched: it never stages, commits, stashes, resets, restores, or deletes a file it did not create or rename, and
 never runs a command that rewrites files outside `assets/music/`, e.g. `npm run fix` or `npm run format`.
 
-Its own work is exactly these paths: each new music file, the name it is given when that differs, its `.yaml` track
-record when it writes one, and `assets/music/README.md`.
+Its own work is exactly these paths: each new music file in `assets/music/tracks/`, the name it is given when that
+differs, its track record in `assets/music/yaml/` when it writes one, and `assets/music/README.md`.
 
 ## Workflow
 
@@ -40,9 +41,10 @@ record when it writes one, and `assets/music/README.md`.
    the incoming commits change; when the merge refuses, block and name the files Git lists. Record every other
    uncommitted or untracked path outside `assets/music/` for the report.
 
-2. **Find the new files.** The new files are the untracked files directly in `assets/music/`, other than `.yaml`
-   track records. Block when there are none, or when one is in a subdirectory, since a Track is a file directly in
-   the directory.
+2. **Find the new files.** The new files are the untracked files directly in `assets/music/tracks/`. Block when there
+   are none, when one is in a subdirectory of it, since a Track is a file directly in that directory, or when an
+   untracked audio file lies directly in `assets/music/`, since it was dropped in the wrong place; suggest moving it
+   into `tracks/`.
 
 3. **Determine each file's source and original title**, following the README's sections on sources:
    - The source is named by the designer's request, e.g. "made with Suno v6 on suno.com", or follows from the file
@@ -58,7 +60,7 @@ record when it writes one, and `assets/music/README.md`.
    - has an extension that the Soundtrack section of Music does not list. Read the list from the specification, never
      from memory. Suggest exporting the track as MP3, which every music source used so far can produce;
    - is larger than 7 MB (7 × 1024 × 1024 bytes). Suggest MP3, e.g. a 34 MB WAV from Suno is about 4 MB as MP3;
-   - is byte-for-byte identical to a Track already in `assets/music/`, e.g. the same export dropped in twice;
+   - is byte-for-byte identical to a Track already in `assets/music/tracks/`, e.g. the same export dropped in twice;
    - has the same original title as the file name of a row of the README table, without its extension, which also
      lists excluded tracks whose files are gone, or as another new file. Suggest renaming the song in its source, e.g. adding "var2", and downloading it
      again, so that the name stays the same in the source and here.
@@ -69,13 +71,13 @@ record when it writes one, and `assets/music/README.md`.
 5. **Name and record.**
    - Each file's name is its original title plus its extension, e.g. `Silent Threat Protocol.opus`. When the file
      name differs, rename it with a plain move, e.g. `mv`, then confirm that no file under its download name remains
-     in `assets/music/`.
+     in `assets/music/tracks/`.
    - In the README, add one table row per file, with its file name and source, after the other rows of its source in
      natural order of file name, so that, e.g., "var1" comes before "var2" and "track 2" before
      "track 10". Update the section of each source the new files come from when it lists its files. Change nothing
      else in the README.
    - When the designer gives a file's prompt, or its source keeps it, write its track record, the `.yaml` file with
-     the same name, with the fields the existing records use, as the README's Track records section describes; copy
+     the same name in `assets/music/yaml/`, with the fields the existing records use, as the README's Track records section describes; copy
      the prompt word for word.
    - Format only the README, with `npx prettier --write assets/music/README.md`, and review its diff.
 

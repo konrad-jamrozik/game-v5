@@ -37,14 +37,15 @@ Player makes once applies in every later [Session](../foundation/core-concepts.m
 # Soundtrack
 
 The Soundtrack is authored as audio files, so that a composer adds a Track by adding a file and nothing else. Each
-Track is one audio file directly in the `assets/music/` directory at the repository root, in one of the following
+Track is one audio file directly in the `assets/music/tracks/` directory at the repository root, in one of the following
 formats; the list is complete:
 
 - Ogg Opus, with the extension `.opus`, the preferred format because it is the smallest at the same quality.
 - MP3, with the extension `.mp3`, for music whose source cannot export Ogg Opus.
 
 The Soundtrack is every such file except the excluded ones, and the Game build supplies every Track unchanged, in its
-own format. Any other file in the directory, e.g. a README or a `.yaml` record of how a Track was made, is not a Track.
+own format. The directory holds nothing else: the README and the records of how each Track was made lie beside it, in
+`assets/music/`.
 
 Which files are excluded is content rather than design, so it comes from the MusicParameters [GDR](../foundation/core-concepts.md#game-build-and-content) `music` in
 `content/music/music_parameters.yaml`: the Game designer excludes a file, e.g. one pending review, by naming it there
