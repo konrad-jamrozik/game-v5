@@ -173,7 +173,13 @@ exhaustive.
   of one Upgrade card wraps onto a second line, the Buy buttons of all the Upgrade cards still sit on one line.
 - **A note beside a control:** a note about a control, e.g. the money missing for a disabled Buy button, sits on the
   control's row, 8 px after it, and never moves below it; a note longer than the space left beside the control wraps
-  within that space.
+  within that space. The note never sets the row's height: the row is as tall as its controls, and a wrapped note
+  stays centred on their centre line and extends above and below it into the spacing around the row.
+- **Controls stay still:** a control keeps its place and its size whatever changes around it, so that the Player's
+  hand finds it where it was a moment ago. A change of state, e.g. a button turning disabled, gaining focus, or
+  being clicked, a note that appears, wraps, or vanishes, or a count, tally, or label that grows, moves and resizes no
+  control on the screen. Content that changes grows away from the controls, e.g. downward below them, or within space
+  reserved for it.
 
 # Components
 
