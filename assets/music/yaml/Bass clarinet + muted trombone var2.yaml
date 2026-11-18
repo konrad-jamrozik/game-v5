@@ -7,6 +7,14 @@ created: '2026-11-17 20:45'
 tags: [dark ambient, tactical strategy, minimalist]
 length: '3:08'
 instrumental: true
+instruments: [bass clarinet, muted trombone]
+prompt_from:
+  tool: ChatGPT
+  conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
+  share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
+  continues_from: 'Unseen Approach var1.mp3'
+  meta_prompt: |-
+    OK now let's do Bass clarinet + muted trombone
 prompt: |-
   Dark, brooding tactical strategy game soundtrack with deep bass drones, low-frequency rumbling, hollow bass clarinet, and ominous muted trombone. Sinister, mysterious, claustrophobic, and deeply unsettling.
 

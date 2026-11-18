@@ -7,6 +7,12 @@ created: '2026-11-17 19:09'
 tags: [ambient, electronic, sci-fi]
 length: '3:02'
 instrumental: true
+instruments: [synthesizers, synth pads, bass drones, metallic tones, electronic signals]
+prompt_from:
+  tool: ChatGPT
+  conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
+  share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
+  same_prompt_as: 'v03AI UFO 3 - Scanning Protocol.mp3'
 prompt: |-
   Dark sci-fi tactical strategy game ambient soundtrack. Cold, ominous electronic atmosphere with restrained retro-futuristic synthesizers, deep atmospheric drones, subtle sequenced pulses, eerie synthetic textures, sparse metallic tones, and mysterious minor-key motifs.
 
