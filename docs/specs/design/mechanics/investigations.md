@@ -24,6 +24,7 @@ The work accumulates. In every Advance turn, [Investigation progress](domain-mod
 | Actual required progress | The progress points an Investigation must reach to complete, drawn when it starts. It is hidden from the player. |
 | Assessed | Whether an Investigation's progress has ever reached the assessment threshold of its Lead, under [Assessment](#assessment). |
 | Assessed Lead | A Lead with at least one Assessed Investigation. Its Required progress and Required progress range are Player-visible. |
+| Working member | In an Advance turn: a member of an Investigation's [Current team](domain-model.md#leads-investigations-mission-sites-and-missions) that is a [Working Agent](agents-spec.md#assignments), i.e. that was [At assignment](domain-model.md#agency-and-agents) on the Investigation in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns). A member that arrives in the Transit step of that Advance turn is not a Working member in it. |
 
 The [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) states Active, Completed, and Abandoned are defined by the state table under [Investigation lifecycle](#investigation-lifecycle).
 
@@ -269,7 +270,7 @@ Inputs:
 
 | Symbol | Meaning | Unit and domain |
 | --- | --- | --- |
-| working member | A member of the Investigation's Current team that was [At assignment](agents-spec.md#agent-statuses) in the Turn-end state of this Advance turn, i.e. in the Committed state in which this Advance turn began. A member that arrived in the Transit step of this Advance turn is not a working member, under [Transit rule](agents-spec.md#transit-rule) in Agents. | An Agent. |
+| working member | A Working member of the Investigation in this Advance turn, under [Glossary](#glossary). | An Agent. |
 | n | The number of working members. | A whole number of at least 0. |
 | [effective skill](agents-spec.md#combatant-attributes) | A working member's [Effective skill](agents-spec.md#effective-skill), computed from its [Step-start values](turn-advancement.md#glossary) of this step. | Skill points; a whole number of at least 0. |
 | S | The sum of the effective skill of every working member; 0 when n is 0. | Skill points; a whole number of at least 0. |
@@ -404,7 +405,7 @@ The Actual required progress is hidden: the player knows only its Required progr
 - **Adding an Agent already in the Current team:** Rejected by `assignAgentsToInvestigation`, whether the Agent is At assignment or In transit ([Assigning Agents to an Investigation](#assigning-agents-to-an-investigation)).
 - **Mixed valid and invalid Agents:** One invalid Agent rejects the whole action; no Agent and no Investigation changes, and no Required progress outcome is drawn ([Starting an Investigation](#starting-an-investigation)).
 - **Completion and exhaustion:** The working members of an Investigation that completes still gain their work exhaustion in the same step, after the completion, and have no Forced return, because they are already on Standby; they recover no exhaustion in the same Advance turn under [Agent Recovery](agent-recovery.md) ([Investigation progress](#investigation-progress), [Completion](#completion)).
-- **Forced return of a member:** When a working member's exhaustion reaches `exhaustion_work_limit` and the Investigation does not complete in that step, the member goes back to Standby and the Investigation loses progress in proportion to its effective skill. When it was the only member At assignment, the progress becomes 0, and the Investigation becomes Abandoned unless a member In transit to it remains ([Progress loss](#progress-loss), [Abandonment](#abandonment)).
+- **Forced return of a member:** When a working member's exhaustion reaches `exhaustion_work_limit` and the Investigation does not complete in that step, the member goes back to Standby and the Investigation loses progress in proportion to its effective skill. When it was the only working member, the progress becomes 0, even when a member that arrived in the Transit step of this Advance turn remains, and the Investigation becomes Abandoned unless such a member remains in its Current team ([Progress loss](#progress-loss), [Abandonment](#abandonment)).
 - **Tired Agents:** `startInvestigation` and `assignAgentsToInvestigation` reject, as a whole, a list with an Agent that is not Fit for work ([Starting an Investigation](#starting-an-investigation), [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation)).
 - **Lead no longer available:** An Active Investigation continues; its Mission site, when its Faction is [Eliminated](domain-model.md#factions), is Cancelled in the same Advance turn ([Lead no longer available](#lead-no-longer-available)).
 - **Mission site created in the same Advance turn:** The Mission site a completion creates does not count down in Mission site expiration of the same Advance turn, under [Mission site creation](missions.md#mission-site-creation) in Missions.

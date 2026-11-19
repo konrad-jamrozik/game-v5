@@ -46,7 +46,7 @@ The first mention of a term in a specification's Rule text must be a Term link w
 - **Governance terms outside Governance:** a specification outside the Governance specifications follows the conventions without linking the terms they own.
 - **The specification index:** it navigates to every specification and states no rules of its own.
 
-A link to a specification as a whole or to one of its sections is not a Term link, even when its text contains a term, e.g. `[Widget assembly](widget-model.md#widget-assembly)`: it names the document or the section. Such links help a reader navigate and make no Reference.
+A link to a specification as a whole or to one of its sections is not a Term link, even when its text contains a term, because a Term link targets the Glossary group that defines the term and such a link names the document or the section instead. The words of its link text are not mentions: when the link text contains a term, the first mention of that term is the next one in Rule text; e.g., after `[Widget assembly](widget-model.md#widget-assembly)`, a link to a section, the next "Widget" is the first mention of Widget. Such links help a reader navigate and make no Reference.
 
 `npm run docs:link-terms` adds every missing Term link and corrects one that targets the wrong Glossary group, and `npm run terms:report` lists the first mention of every term in every specification.
 

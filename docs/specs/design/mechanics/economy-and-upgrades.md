@@ -197,7 +197,7 @@ Inputs:
 | --- | --- | --- |
 | funding | The Agency's funding, as the [Step-start value](domain-model.md#turn-advancement-steps) of the Agency income step. | Money; a whole number of at least 0. |
 | `contracting_income_per_agent` | The value of EconomyParameters. | Money per Agent; a whole number of at least 0. |
-| C | The Agents that are Serving, whose Assignment is Contracting, and that were [At assignment](domain-model.md#agency-and-agents) in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), under [Transit rule](agents-spec.md#transit-rule) in Agents. | A set of Agents, possibly empty. |
+| C | The Working Agents whose Assignment is Contracting, i.e. the Agents on Contracting that were [At assignment](domain-model.md#agency-and-agents) in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), under [Transit rule](agents-spec.md#transit-rule) in Agents. | A set of Agents, possibly empty. |
 | effective skill | The Agent's [Effective skill](agents-spec.md#effective-skill), from its Step-start values of the Agency income step. | Skill points; a whole number of at least 0. |
 | 100 and 500 | Constants of this rule, not GDR values: effective skill 100 earns exactly `contracting_income_per_agent`, and each 100 points of effective skill above or below it change the contribution by one fifth of it. | Skill points. |
 | money before | The Agency's money as the Step-start value of the Agency income step. | Money; any whole number. |

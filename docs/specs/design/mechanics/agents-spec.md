@@ -55,7 +55,8 @@ The [Assignments](domain-model.md#agency-and-agents) that are neither an [Invest
 | Away Assignment | Contracting or an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions), the Assignments an Agent carries out away from base. Every move to or from them starts [In transit](domain-model.md#agency-and-agents), and an Agent on one can only be recalled to Standby. |  |
 | Work Assignment | Contracting, Training, or an Investigation, the Assignments on which an Agent works and so gains exhaustion, under [Work exhaustion](#work-exhaustion). |  |
 | Fit for work | Of an Agent: whose exhaustion is at most `exhaustion_work_start_max`, so that it may start a Work Assignment, under [Start-work gate](#start-work-gate). |  |
-| Forced return | The move of a working Agent to Standby that an Advance turn makes when its work raises its exhaustion to `exhaustion_work_limit` or more, under [Forced return](#forced-return). |  |
+| Working Agent | In an Advance turn: an Agent whose Assignment is a Work Assignment and that was [At assignment](domain-model.md#agency-and-agents) on it in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), so that it works in that Advance turn, under [Transit rule](#transit-rule). An Agent that arrives in the Transit step of that Advance turn is not a Working Agent in it. |  |
+| Forced return | The move of a Working Agent to Standby that an Advance turn makes when its work raises its exhaustion to `exhaustion_work_limit` or more, under [Forced return](#forced-return). |  |
 
 ## Agent statuses
 
@@ -383,7 +384,7 @@ Wherever the rule of a Turn advancement step after Transit applies to Agents At 
 
 A worn-down Agent learns less, so Training pays off in full only for an Agent whose effective skill is not lowered.
 
-**Proposed rule:** In the Training step of every Advance turn, each Agent that is Serving, whose Assignment is Training, and that was At assignment in the Turn-end state, has one named random outcome, the **Training gain** outcome. Its possible values are "gains" and "does not gain". It takes the value "gains" with the [Probability](../foundation/numbers.md#glossary):
+**Proposed rule:** In the Training step of every Advance turn, each Working Agent whose Assignment is Training has one named random outcome, the **Training gain** outcome. Its possible values are "gains" and "does not gain". It takes the value "gains" with the [Probability](../foundation/numbers.md#glossary):
 
 ```text
 training gain Probability = current health × penalty factor / (base health × 100)
@@ -405,13 +406,13 @@ The outcome of one Agent does not depend on any other Agent, so the result is th
 
 Work wears an Agent down a little in every Advance turn, so an Agent cannot work without end: it must be rotated to Standby to rest.
 
-**Proposed rule:** In each Advance turn, every Agent that works gains exhaustion in the [Turn advancement step](turn-advancement.md#glossary) of its work, after that step has read the Agent's values for the work itself. The following table is exhaustive:
+**Proposed rule:** In each Advance turn, every Working Agent gains exhaustion in the [Turn advancement step](turn-advancement.md#glossary) of its work, after that step has read the Agent's values for the work itself. The following table is exhaustive:
 
-| Work Assignment | The Agents that work | Step and the work read first | Exhaustion gained |
+| Work Assignment | Its Working Agents | Step and the work read first | Exhaustion gained |
 | --- | --- | --- | --- |
 | Contracting | Every Agent counted in the contracting income, under [Agency income](economy-and-upgrades.md#agency-income) in Economy and Upgrades | Agency income, after the Agency's income is added | `exhaustion_per_contracting_turn` |
 | Training | Every Agent that has a Training gain outcome, under [Training growth](#training-growth) | Training, after its Training gain outcome and any gain of base skill | `exhaustion_per_training_turn` |
-| An Investigation | Every working member of an Investigation, under [Progress gain](investigations.md#progress-gain) in Investigations, whether or not that Investigation completes in the step | Investigation progress, after the Investigation's progress gain, Completion check, and any completion, under [Investigation progress](investigations.md#investigation-progress) | `exhaustion_per_investigation_turn` |
+| An Investigation | Every Working Agent in the Current team of an Investigation, under [Progress gain](investigations.md#progress-gain) in Investigations, whether or not that Investigation completes in the step | Investigation progress, after the Investigation's progress gain, Completion check, and any completion, under [Investigation progress](investigations.md#investigation-progress) | `exhaustion_per_investigation_turn` |
 
 ```text
 exhaustion after = exhaustion before + exhaustion gained
