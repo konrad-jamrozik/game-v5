@@ -48,6 +48,7 @@ Each Artboard image comes from exactly one canvas artboard and is shown in exact
 | `turn-summary.png` | Panel | `TurnSummary.dc.html` | [Turn Summary](screens/turn-summary.md) |
 | `settings-panel.png` | Panel | `SettingsPanel.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
 | `autopilot-footer.png` | Panel | `AutopilotFooter.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
+| `keyboard-shortcuts.png` | Panel | `KeyboardShortcuts.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
 | `missions-view.png` | Panel | `MissionsView.dc.html` | [Missions View](screens/missions-view.md) |
 | `missions-view-concluded.png` | Panel | `MissionsViewConcluded.dc.html` | [Missions View](screens/missions-view.md) |
 | `leads-view.png` | Panel | `LeadsView.dc.html` | [Leads View](screens/leads-view.md) |
@@ -95,6 +96,8 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Danger border | `#5E2A26` | The border of a destructive button. |
 | Warning | `#E3C14B` | Values that need watching before they become a problem, e.g. an Agent's exhaustion at which it can no longer start work, under [Agent condition](#agent-condition), and the outline and text of a weighty button. |
 | Danger deep | `#A3271F` | The far end of the [current health](../mechanics/agents-spec.md#combatant-attributes) scale: an [Agent](../mechanics/domain-model.md#agency-and-agents) close to death, under [Agent condition](#agent-condition). |
+| Notice | `#8FB8D6` | Welcome news that asks for no action, milder than a success in Positive, e.g. a discovered Lead among the events of the History View. |
+| Autopilot | `#B4A0E5` | The outline and text of an [Autopilot](../foundation/engine-contract.md#autopilot) button, which acts on what an [Autopilot AI](../foundation/engine-contract.md#principals-and-access) did. |
 | Agent attack tint | `#B7C77A` at 7% opacity | The fill of a [Combat log](../mechanics/combat.md#combat-rounds-and-results) row whose attacker is an Agent, under [Combat log colours](screens/turn-report-view.md#combat-log-colours) in Turn Report View. |
 | Enemy attack tint | `#FF7F78` at 7% opacity | The fill of a Combat log row whose attacker is an [Enemy](../mechanics/domain-model.md#combat). |
 | Limit band | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart. |
@@ -147,12 +150,13 @@ Components are the building blocks every screen reuses. A screen that needs a co
 
 ## Buttons
 
-Buttons come in four kinds so that the Player can tell at a glance what a button will do. This list is exhaustive.
+Buttons come in five kinds so that the Player can tell at a glance what a button will do. This list is exhaustive.
 
 - A neutral button has a Raised fill, a Border outline, and Text-coloured text.
 - A primary button has an Accent fill and On-accent text. A panel has at most one primary button, and it is the action the panel exists for, e.g. Start Campaign or Advance turn.
 - A destructive button has no fill, a Danger border outline, and Danger text, e.g. Delete and Delete campaign.
 - A weighty button has no fill, a Warning outline, and Warning text. It marks a reversible step with a larger reach than its usual form, e.g. Undo Turn in place of Undo Action.
+- An Autopilot button has no fill, an Autopilot outline, and Autopilot text. It marks a reversible step that undoes or redoes a whole [Autopilot engagement](../foundation/engine-contract.md#autopilot) at once, e.g. Undo Autopilot in place of Undo Turn, so that it never passes for a step of the Player's own play.
 
 A button is 36 px tall, 32 px inside a table row, and 44 to 46 px for the main action of a screen. A button's label never wraps onto a second line. Buttons that belong together sit in one row with 8 px between them. A row of buttons that follows content on the same line, e.g. the Load and Delete of a Campaign save, or that ends a panel or dialog, aligns to the right edge of its row or panel. A row of buttons that is a part of its own in a card whose parts are stacked, e.g. the Buy button of an Upgrade card, starts at the card's left content edge, as the card's text does. When a row is too narrow, the whole group wraps below the content, never a single label. A disabled button keeps its kind and is drawn at 60% opacity, so that its label stays readable over a [Background artwork](#background-artwork).
 

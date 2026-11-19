@@ -5,7 +5,7 @@
 | Spec ID | HVIEW |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | What the History View of the Campaign screen shows and in which order: its columns, the events of each Turn, and the list of each Turn's Player actions. |
+| Owns | What the History View of the Campaign screen shows and in which order: its columns, the events of each Turn with the links from its Missions to their Mission sites, and the list of each Turn's Player actions. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -47,14 +47,18 @@ Every column except Events holds numbers, under Tables in Visual Design. The fou
 
 The Events column lists the following labels, in this order, each only when it applies; the list is exhaustive. Each counts or names what the reduced [Turn report](../../foundation/campaign-state.md#glossary) in the [History entry](../../foundation/world-history.md#glossary) holds, under the specification that owns it.
 
-1. **Each [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions):** for each [Combat](../../mechanics/domain-model.md#combat) the Advance turn fought, in the order of its [Combat reports](../../mechanics/domain-model.md#combat), under [Combat report](../../mechanics/combat.md#combat-report) in Combat, its [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s [MissionSiteArchetype](../../mechanics/missions.md#missionsitearchetype) `name` followed by "won" in Positive or "lost" in Danger, and then ", N killed" when N of its Agents were [Killed](../../mechanics/agents-spec.md#agent-statuses); e.g. "Apprehend member won, 1 killed".
+1. **Each [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions):** for each [Combat](../../mechanics/domain-model.md#combat) the Advance turn fought, in the order of its [Combat reports](../../mechanics/domain-model.md#combat), under [Combat report](../../mechanics/combat.md#combat-report) in Combat, its [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s [MissionSiteArchetype](../../mechanics/missions.md#missionsitearchetype) `name` followed by "won" in Positive or "lost" in Danger, and then ", N killed" when N of its Agents were [Killed](../../mechanics/agents-spec.md#agent-statuses); e.g. "Apprehend member won, 1 killed". The label is a link to its Mission site, under [Mission links](#mission-links).
 2. **Investigations completed:** "N Investigations completed", or "1 [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) completed", in Positive, under [Turn report](../../mechanics/investigations.md#turn-report) in Investigations.
-3. **Leads discovered:** "N [Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) discovered", or "1 Lead discovered", in Accent text, under [Turn report](../../mechanics/leads-and-progression.md#turn-report) in Leads and Progression.
+3. **Leads discovered:** "N [Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) discovered", or "1 Lead discovered", in Notice, because a discovered Lead is welcome news that asks for no action, under [Turn report](../../mechanics/leads-and-progression.md#turn-report) in Leads and Progression.
 4. **Mission sites expired:** "N Mission sites expired", or "1 Mission site expired", in Accent text, under [Turn report](../../mechanics/missions.md#turn-report) in Missions.
 5. **Factions escalated:** "N Factions escalated", or "1 [Faction](../../mechanics/domain-model.md#factions) escalated", in Danger, for the Factions whose [Faction activity level](../../mechanics/factions.md#glossary) rose in the Advance turn, under [Factions](../../mechanics/factions.md).
 6. **[Campaign ending](../../mechanics/domain-model.md#campaign-standing):** "Victory" in Positive or "Defeat" in Danger, when the Advance turn gave the [Campaign](../../foundation/core-concepts.md#campaign-and-session) its [Campaign ending](../../mechanics/domain-model.md#campaign-standing), under [Panic and Endings](../../mechanics/panic-and-endings.md).
 
 A Turn with none of these leaves the cell empty. Labels too many for the column's width are cut short with "…" and shown in full while the pointer rests on the cell, under Tables in Visual Design.
+
+## Mission links
+
+The Player who sees that a Mission was won or lost wants to see how, so each Mission label leads to its Mission site in full. Pressing it opens the [Missions View](missions-view.md) with that Mission site selected, which shows it as a [Concluded Mission site](missions-view.md#concluded-mission-site) with its participants and the [Consequences](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that applied. It is a Follow under [View trail](campaign-screen.md#view-trail) in Campaign Screen, so the Escape key and the [Back control](../gui.md#glossary) return to the History View as the Player left it, with its open Player actions lists and its scroll position. The label keeps its colour, and the pointer resting on it underlines it and shows that it can be pressed.
 
 # Player actions list
 
@@ -79,6 +83,6 @@ A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents 
 
 # Artboard
 
-![History View panel Artboard: the Turn by Turn table, newest first, with the current Turn's row marked "now" on top, with Expenditures and upkeep in Danger, income in Positive, a Player actions count on each row with the list of Turn 14 open, and the events of each Turn](../../../../images/artboards/history-view.png)
+![History View panel Artboard: the Turn by Turn table, newest first, with the current Turn's row marked "now" on top, with Expenditures and upkeep in Danger, income in Positive, a Player actions count on each row with the list of Turn 14 open, and the events of each Turn, the won Mission of Turn 14 underlined as the pointer rests on its link, and the discovered Lead of Turn 15 in Notice](../../../../images/artboards/history-view.png)
 
 The sample values, e.g. the Turn numbers, the events of each Turn, and the Player actions, appear only on the Artboard, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

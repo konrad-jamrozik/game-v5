@@ -5,7 +5,7 @@
 | Spec ID | CSCR |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, and its Autopilot controls. |
+| Owns | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, its Autopilot controls, and its keyboard shortcuts view. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -106,14 +106,27 @@ The selector and the engaging buttons are disabled, each with the reason as its 
 
 The Player undoes and redoes with one Undo button and one Redo button in the status bar, and the GUI chooses the [Timeline](../../foundation/engine-contract.md#persisted-data) navigation behind each, within the current [Turn](../../foundation/engine-contract.md#player-actions-and-turns) or across Turns, so that the Player never manages [Campaign saves](../../foundation/engine-contract.md#persisted-data) to go back or forward. Each button names the step it takes:
 
-| Button | Label       | When                                                              | Operation          |
-| ------ | ----------- | ----------------------------------------------------------------- | ------------------ |
-| Undo   | Undo Action | `undoAction()` is available                                       | `undoAction()`     |
-| Undo   | Undo Turn   | `undoAction()` is unavailable and `undoToAutosave()` is available | `undoToAutosave()` |
-| Redo   | Redo Action | `redoAction()` is available                                       | `redoAction()`     |
-| Redo   | Redo Turn   | `redoAction()` is unavailable and `redoToAutosave()` is available | `redoToAutosave()` |
+| Button | Label | When | Operation |
+| --- | --- | --- | --- |
+| Undo | Undo Action | `undoAction()` is available | `undoAction()` |
+| Undo | Undo Autopilot | `undoAction()` is unavailable and `undoToAutosave()` is available and crosses an Autopilot engagement | `undoToAutosave()` |
+| Undo | Undo Turn | `undoAction()` is unavailable and `undoToAutosave()` is available and crosses no Autopilot engagement | `undoToAutosave()` |
+| Redo | Redo Action | `redoAction()` is available | `redoAction()` |
+| Redo | Redo Autopilot | `redoAction()` is unavailable and `redoToAutosave()` is available and crosses an Autopilot engagement | `redoToAutosave()` |
+| Redo | Redo Turn | `redoAction()` is unavailable and `redoToAutosave()` is available and crosses no Autopilot engagement | `redoToAutosave()` |
 
-The operations are those of [Action navigation](../../foundation/timeline.md#action-navigation) and [Autosave navigation](../../foundation/timeline.md#autosave-navigation) in Timeline. A button with no available operation is disabled and keeps its Action label. A button is a neutral button while it takes an Action step and a weighty button while it takes a Turn step, under [Buttons](../visual-design.md#buttons) in Visual Design, and it keeps one width, that of its wider label, so that no control moves when its label changes. A Turn step's tooltip names the Turn and [Autosave](../../foundation/saves.md#autosave-kinds) it loads, as `getAutosaveStatus()` reports them, e.g. "Back to the end of Turn 12", because one step can cross a whole Autopilot engagement. The U and R keys press the Undo and Redo buttons.
+The operations are those of [Action navigation](../../foundation/timeline.md#action-navigation) and [Autosave navigation](../../foundation/timeline.md#autosave-navigation) in Timeline, and whether a step of [Autosave](../../foundation/saves.md#autosave-kinds) navigation crosses an Autopilot engagement is what `getAutosaveStatus()` reports. A button with no available operation is disabled and keeps its Action label. A button is a neutral button while it takes an Action step, a weighty button while it takes a Turn step, and an Autopilot button while it takes an Autopilot step, under [Buttons](../visual-design.md#buttons) in Visual Design, so that the Player sees before pressing it that one press undoes or redoes everything an [Autopilot AI](../../foundation/engine-contract.md#principals-and-access) did. It keeps one width, that of its widest label, so that no control moves when its label changes. A Turn or Autopilot step's tooltip names the Turn and [Autosave](../../foundation/saves.md#autosave-kinds) it loads, as `getAutosaveStatus()` reports them, e.g. "Back to the end of Turn 12" or "Back to Turn 5, before Autopilot was engaged". The U and R keys press the Undo and Redo buttons.
+
+# Keyboard shortcuts
+
+The keyboard shortcuts view, opened from the Settings panel under [Settings panel](../gui.md#settings-panel) in the Graphical User Interface, lets the Player learn every key of the Campaign screen at one glance, so it shows each one whole, without scrolling sideways or cutting a word. It is drawn as a dialog under [Dialogs](../visual-design.md#dialogs) in Visual Design, titled Keyboard shortcuts, with its close control and no buttons at its bottom, like the Settings panel.
+
+It lists every keyboard shortcut of the Campaign screen, those the specifications give, e.g. the N key for Advance turn, and those an Implementation adds, one row each, separated by Raised dividers, with two columns:
+
+- **Keys:** each key in a keycap, a Raised fill with a Border outline and the control corner radius, in the Figure style; keys that share one description are separated by "/", e.g. "U / R". The column is as wide as its widest keys and no wider.
+- **Description:** what the keys do, in Body and Text, in the rest of the dialog's width. A description too long for one line wraps onto further lines and is never cut short, so a row grows downward and its keys stay on its first line, unlike a row of a table under [Tables](../visual-design.md#tables) in Visual Design.
+
+The dialog takes the full width a dialog may have, so that most descriptions fit on one line, and never scrolls sideways. When the list is taller than the window, the dialog scrolls inside under Dialogs.
 
 # Artboards
 
@@ -125,7 +138,10 @@ The operations are those of [Action navigation](../../foundation/timeline.md#act
 
 ![Side panel footer Artboard with the Autopilot controls expanded: the Autopilot toggle, the Autopilot AI selector, the One action and This Turn's actions buttons, the number of Turns with its Turns button, the line on how the Autopilot AI plays, and the Music row with the Settings button](../../../../images/artboards/autopilot-footer.png)
 
-The [Artboards](../visual-design.md#glossary) show the Situation panel and the Agents Detail view as sample content of their regions; each is detailed by its own specification and Artboard. The Settings panel Artboard shows the dialog that the Settings button opens, under [Settings panel](../gui.md#settings-panel) in the Graphical User Interface. The Side panel footer Artboard shows the footer with the Autopilot controls expanded and no Autopilot engagement active, under [Autopilot controls](#autopilot-controls). The following appear only on the Artboards and must not be implemented, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
+![Keyboard shortcuts Artboard: the Keyboard shortcuts dialog with its close control, one row per shortcut with its keys in keycaps and its description, the description of Undo and Redo wrapping onto a second line](../../../../images/artboards/keyboard-shortcuts.png)
+
+The [Artboards](../visual-design.md#glossary) show the Situation panel and the Agents Detail view as sample content of their regions; each is detailed by its own specification and Artboard. The Settings panel Artboard shows the dialog that the Settings button opens, under [Settings panel](../gui.md#settings-panel) in the Graphical User Interface. The Side panel footer Artboard shows the footer with the Autopilot controls expanded and no Autopilot engagement active, under [Autopilot controls](#autopilot-controls). The Keyboard shortcuts Artboard shows the dialog under [Keyboard shortcuts](#keyboard-shortcuts). The following appear only on the Artboards and must not be implemented, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
 - The sample values, e.g. Turn 16, Money 625, Turns since last enemy activity 2, the [Agent](../../mechanics/domain-model.md#agency-and-agents) IDs, the Track title GEO-4, the Music volume 50, the Autosave limit 5, the Autopilot AI name, and the number of Turns 10.
+- The rows of the Keyboard shortcuts Artboard other than those of the N, U, R, and Escape keys, which stand for the keyboard shortcuts an Implementation adds, and the wording of every description.
 - The drawing of the globe, which stands in for the real one.

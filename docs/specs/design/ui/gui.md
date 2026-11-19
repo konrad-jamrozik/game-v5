@@ -49,7 +49,7 @@ The Settings panel is titled Settings and holds these rows from top to bottom, e
 1. **Music volume:** the [Music volume slider](music.md#music-volume-slider).
 2. **Sounds:** the Sounds toggle and the Sounds volume slider, under [Sound settings](sounds.md#sound-settings).
 3. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary), with its input.
-4. **Tools,** on the Campaign Screen only: a neutral button for the keyboard shortcuts and one for the developer tools. Each closes the Settings panel and opens what it names, which the Player closes with its close control or the Escape key, under Close controls.
+4. **Tools,** on the Campaign Screen only: a neutral button for the keyboard shortcuts, under [Keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts) in Campaign Screen, and one for the developer tools. Each closes the Settings panel and opens what it names, which the Player closes with its close control or the Escape key, under Close controls.
 
 Music on and Sounds on have no rows of their own beyond these: Music on is set with the Music control, and Sounds on with the Sounds toggle.
 

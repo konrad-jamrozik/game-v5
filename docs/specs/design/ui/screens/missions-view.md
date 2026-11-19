@@ -23,7 +23,7 @@ A toggle replaces both groups with one group, Finished: the Mission sites in a f
 
 Every item of the list shows its Mission site's [Instance ID](../../foundation/campaign-instances.md#glossary) after the `name`, in Text muted, e.g. "Apprehend member mission-site-12", because several Mission sites often share one MissionSiteArchetype and only the Instance ID tells them apart.
 
-When the Missions View opens, the first Active Mission site is selected, unless the Player opened it from an item of the [Situation Panel](situation-panel.md) or of the [Turn Report View](turn-report-view.md), which selects that item's Mission site.
+When the Missions View opens, the first Active Mission site is selected, unless the Player opened it from an item of the [Situation Panel](situation-panel.md) or of the [Turn Report View](turn-report-view.md), or from a Mission of the [History View](history-view.md), under [Mission links](history-view.md#mission-links) in History View, which selects that item's Mission site. A Mission site so selected that is in a final state opens the View with the toggle on Finished, so that the selected Mission site is in the list.
 
 # Selected Mission site
 
