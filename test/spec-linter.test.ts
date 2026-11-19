@@ -183,8 +183,6 @@ function validCorpus(): SourceFile[] {
         '',
         'Failures are defined.',
         '',
-        '# Acceptance examples',
-        '',
         '[Rule](#rule): the same input has the same result.',
       ]),
     },
@@ -457,8 +455,11 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/design/foundation/alpha.md',
-      '# Edge cases and failure behavior\n\nFailures are defined.',
-      section.startsWith('# Edge') ? section : 'Failures are defined.\n\n' + section,
+      '# Edge cases and failure behavior\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.',
+      section.startsWith('# Edge')
+        ? section
+        : '# Edge cases and failure behavior\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.\n\n' +
+            section,
     )
     expect(diagnosticCodes(files)).toContain('SPEC205')
   })
@@ -473,17 +474,12 @@ describe('specification linter', () => {
     expect(diagnosticCodes(misplaced)).toEqual(['SPEC209'])
   })
 
-  test('accepts Foundation examples embedded beside concepts', () => {
+  test('accepts examples embedded beside concepts', () => {
     const files = mutate(
-      mutate(
-        validCorpus(),
-        'docs/specs/design/foundation/alpha.md',
-        'Contract.',
-        'Contract. For example, [Rule](#rule): the same input has the same result.',
-      ),
+      validCorpus(),
       'docs/specs/design/foundation/alpha.md',
-      '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
-      '',
+      'Contract.',
+      'Contract. For example, [Rule](#rule): the same input has the same result.',
     )
     expect(lintSpecifications({ files })).toEqual([])
   })
@@ -496,32 +492,15 @@ describe('specification linter', () => {
     'UI',
     'Autopilot AIs',
     'Mandatory',
-  ])('allows omitting the separate acceptance section for %s specifications', (family) => {
-    const files = alphaInFamily(family).map((file) => ({
-      ...file,
-      content: file.content.replace(
-        '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
-        '',
-      ),
-    }))
-    expect(diagnosticCodes(files)).toEqual([])
+  ])('accepts the fixture specification in the %s Family', (family) => {
+    expect(diagnosticCodes(alphaInFamily(family))).toEqual([])
   })
 
-  test('rejects a misplaced optional Foundation acceptance section', () => {
+  test('rejects an empty closing section', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/design/foundation/alpha.md',
-      '# Edge cases and failure behavior\n\nFailures are defined.\n\n# Acceptance examples\n\n[Rule](#rule): the same input has the same result.',
-      '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n# Edge cases and failure behavior\n\nFailures are defined.',
-    )
-    expect(diagnosticCodes(files)).toEqual(['SPEC209'])
-  })
-
-  test('rejects an empty optional Foundation acceptance section', () => {
-    const files = mutate(
-      validCorpus(),
-      'docs/specs/design/foundation/alpha.md',
-      '[Rule](#rule): the same input has the same result.',
+      'Failures are defined.\n\n[Rule](#rule): the same input has the same result.',
       '',
     )
     expect(diagnosticCodes(files)).toEqual(['SPEC204'])
@@ -529,14 +508,9 @@ describe('specification linter', () => {
 
   test('allows omitting several sections that do not apply', () => {
     const files = mutate(
-      mutate(
-        validCorpus(),
-        'docs/specs/design/foundation/alpha.md',
-        '# Acceptance examples\n\n[Rule](#rule): the same input has the same result.\n\n',
-        '',
-      ),
+      mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', '# Alpha behavior\n\nContract.\n\n', ''),
       'docs/specs/design/foundation/alpha.md',
-      '# Edge cases and failure behavior\n\nFailures are defined.\n\n',
+      '\n\n# Edge cases and failure behavior\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.',
       '',
     )
     expect(diagnosticCodes(files)).toEqual([])
@@ -782,7 +756,7 @@ describe('specification linter', () => {
     [
       'standard heading order',
       (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/design/foundation/alpha.md', '# Alpha behavior', '# Acceptance examples'),
+        mutate(files, 'docs/specs/design/foundation/alpha.md', '# Alpha behavior', '# Edge cases and failure behavior'),
       'SPEC209',
     ],
     [
@@ -887,10 +861,10 @@ describe('specification linter', () => {
 
   describe('TODOs', () => {
     const alpha = 'docs/specs/design/foundation/alpha.md'
-    const acceptanceEnd = '[Rule](#rule): the same input has the same result.'
+    const alphaEnd = '[Rule](#rule): the same input has the same result.'
 
     function withTodos(items: readonly string[]): SourceFile[] {
-      return mutate(validCorpus(), alpha, acceptanceEnd, lines([acceptanceEnd, '', '# TODOs', '', ...items]))
+      return mutate(validCorpus(), alpha, alphaEnd, lines([alphaEnd, '', '# TODOs', '', ...items]))
     }
 
     test.each([
@@ -934,8 +908,8 @@ describe('specification linter', () => {
       const files = mutate(
         validCorpus(),
         alpha,
-        acceptanceEnd,
-        lines([acceptanceEnd, '', '# Open decisions', '', '- Choose the numeric representation.']),
+        alphaEnd,
+        lines([alphaEnd, '', '# Open decisions', '', '- Choose the numeric representation.']),
       )
       const diagnostics = lintSpecifications({ files })
       expect(diagnostics.map((diagnostic) => diagnostic.code)).toEqual(['SPEC213'])

@@ -49,10 +49,6 @@ Undo and redo of a committed Player cheat action follow [Returning to a World st
 
 Invalid cheat inputs change nothing, under [World state integrity](engine-contract.md#world-state-integrity).
 
-# Acceptance examples
-
-- **Developer isolation:** Enable Dev mode and inspect hidden difficulty H through Developer API. Player API still hides H. Engage Autopilot; its queries and errors hide H and its developer calls fail. Disable Dev mode after disengagement and verify Developer API access is revoked ([Dev mode](#dev-mode), [API hierarchy](engine-contract.md#api-hierarchy), [Information boundary](player-api.md#information-boundary)).
-
 # TODOs
 
 - TODO: Specify, under [Inspection contract](#inspection-contract), the complete detached, read-only Campaign state query schema through `developer.queries.getCampaignState()`. Include complete Campaign state and distinguish full-state inspection from gameplay reveal conditions. Inspection must not expose mutable [Campaign](core-concepts.md#campaign-and-session) references or change any later outcome, under [Derived value consistency](engine-contract.md#derived-value-consistency).
@@ -61,6 +57,5 @@ Invalid cheat inputs change nothing, under [World state integrity](engine-contra
 - TODO: Specify the override operations under [Random outcome overrides](#random-outcome-overrides): how a random outcome is identified, validation that the supplied value is one of its possible values, whether an override applies once or until cleared, what happens to an override whose random outcome is never decided, and whether a pending override is visible through inspection.
 - TODO: Specify authorization failures and access revocation under [Dev mode](#dev-mode).
 - TODO: Specify inspection and cheat errors with Dev mode disabled, during an Autopilot engagement, or with stale access, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior).
-- TODO: Provide scenarios proving separate Developer API access, unchanged [Player API](engine-contract.md#api-surfaces) visibility, Autopilot AI exclusion, and Player cheat action undo/redo and save/load round trips, under [Acceptance examples](#acceptance-examples). Identify the requirement sections each scenario verifies.
 - TODO: Choose full-state result [Types](core-concepts.md#data-modeling).
 - TODO: Choose the identification, lifetime, and validation of random outcome overrides.

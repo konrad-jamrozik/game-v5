@@ -86,12 +86,6 @@ Autopilot disengagement and failure of the Autopilot AI preserve every Player ac
 
 Timeline navigation cannot erase what a human has seen. The information the engine itself supplies to an Autopilot AI nevertheless follows [What an Autopilot AI receives](#what-an-autopilot-ai-receives).
 
-# Acceptance examples
-
-- **Limit accounting:** In `singleAction`, repeated queries and a rejected action do not reach the Autopilot limit; one committed gameplay action does. In `turnAdvancements` with count 2, ordinary actions do not increase Autopilot progress; the second committed Advance turn disengages Autopilot before a third can execute ([Autopilot limits](#autopilot-limits)).
-- **Engagement ends at the first Advance turn:** Engage Autopilot with `turnAdvancements` and count 1. Its first committed Advance turn disengages Autopilot, and a later action through that Autopilot engagement is rejected ([Autopilot limits](#autopilot-limits)).
-- **Disengagement during an action:** Disengage Autopilot during an action. The action either commits completely or fails without effects; earlier Player actions remain ([Autopilot lifecycle and concurrency](#autopilot-lifecycle-and-concurrency)).
-
 # TODOs
 
 - TODO: Choose the exact limits of the finite execution budget of an Autopilot AI.

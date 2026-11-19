@@ -31,7 +31,6 @@ const NON_RULE_HEADINGS: ReadonlySet<string> = new Set([
   'Relationships',
   'Glossary',
   'Edge cases and failure behavior',
-  'Acceptance examples',
   'TODOs',
 ])
 

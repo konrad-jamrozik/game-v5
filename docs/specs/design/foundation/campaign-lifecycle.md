@@ -54,10 +54,3 @@ A failed create or load leaves the Session exactly as it was, including its Curr
 At the Main menu the Session still has to be managed before any Campaign is current, e.g. to load a Campaign save or create a Campaign.
 
 The following [Session API](engine-contract.md#api-surfaces) operations need no Current campaign, and this list is complete: `session.getStatus()`, every `session.globalConfiguration` operation, `session.saves.list()`, `session.saves.load(save)`, `session.saves.delete(save)`, `session.saves.deleteCampaign(campaign)`, `session.campaign.create(options)`, every `session.newCampaignSetup` operation, and `session.autopilot.listAutopilotAis()`. Every other operation that depends on a Campaign fails when no Current campaign exists, and the failure changes nothing, under [World state integrity](engine-contract.md#world-state-integrity).
-
-# Acceptance examples
-
-- **Session without a Campaign:** Start the game before selecting a playthrough. It is a Session at the Main menu with no Current campaign, not an empty Campaign, and a gameplay query fails without mutation ([Operations without a Current campaign](#operations-without-a-current-campaign)).
-- **Session not persisted:** Select a Campaign, save it, exit, and start the game again. The new Session has no Current campaign until the Campaign save is loaded, and loading restores the Campaign's saved data but none of the earlier Session's runtime state ([Session lifecycle](#session-lifecycle), [Campaign selection](#campaign-selection)).
-- **Closing does not save:** Create a Campaign, commit an action, and close it. The only Campaign save of that Campaign is its Current Autosave, which holds the World state after the action, and `session.getStatus()` reports no Current campaign ([Campaign selection](#campaign-selection)).
-- **Failed load keeps the Campaign:** With Campaign A current, load a Campaign save that the Game build cannot load. The load fails and Campaign A is still the Current campaign ([Campaign selection](#campaign-selection)).

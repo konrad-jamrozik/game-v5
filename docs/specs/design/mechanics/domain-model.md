@@ -199,11 +199,3 @@ Participation history describes the same relationship for the past: an Agent's P
 | A Mission retains an Agent in its Participation history after it is Won or Lost | The Agent's Assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams) |
 | The roster is empty, or no Mission sites or Investigations exist | Valid; [Panic and Endings](panic-and-endings.md) owns Defeat conditions |
 | A Faction is [Eliminated](factions.md#glossary) while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-instances.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes |
-
-# Acceptance examples
-
-These are structural fixtures, not playable scenarios or API signatures. Symbolic identifiers are labels, not a chosen identifier format. Numbers below are exact test-only integers, not campaign balance. All other scalar values of Mechanics specifications are assumed valid for these structural checks.
-
-## D. Initial Campaign state
-
-Given a new Campaign created from a Game build that supplies exactly two FactionArchetypes, F1 and F2, the initial Campaign state contains exactly one Agency, exactly two Factions, one with Archetype F1 and one with Archetype F2, and no Mission sites, no Missions, and no Enemies, under [Initial Campaign state](#initial-campaign-state). An initial Campaign state with a second Faction of Archetype F1, with no Faction of Archetype F2, or with any Mission site, is invalid.

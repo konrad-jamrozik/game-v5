@@ -136,22 +136,6 @@ Examples of possible values are enemy count and an investigation difficulty mult
 
 If a value stored in Global configuration is invalid in the current Game build, the Game build default applies and the problem is reported. Starting the game never fails because of an invalid stored value.
 
-# Acceptance examples
-
-These examples use a Game build with two presets: Standard, the Game build default preset, with starting money 100 and investigation difficulty multiplier 1; and Hard, with starting money 60 and investigation difficulty multiplier 2.
-
-- **Values copied at creation:** Select Hard and create Campaign A. Then select Hard, set a Preset edit of starting money 80, and create Campaign B. A records starting money 60 and B records 80; both record multiplier 2. A later Game build changing Hard's starting money to 50 changes neither A nor B, and loading a Campaign save of either restores its own values ([Configuration cascade](#configuration-cascade)).
-- **Edits survive switching presets:** Select Hard and set a Preset edit of starting money 80. Select Standard, then select Hard again. Hard shows starting money 80 and multiplier 2; while Standard was selected it showed starting money 100 and multiplier 1 ([Preset selection and edits](#preset-selection-and-edits)).
-- **Creation discards edits:** Select Hard, set a Preset edit of starting money 80, and create a Campaign. Afterwards the selected preset is Standard, and selecting Hard shows starting money 60 ([Preset selection and edits](#preset-selection-and-edits)).
-- **New Session starts from the default:** Select Hard, set a Preset edit of starting money 80, and end the Session without creating a Campaign. In the next Session the selected preset is Standard, and selecting Hard shows starting money 60 ([Preset selection and edits](#preset-selection-and-edits)).
-- **Invalid edit:** Set a Preset edit of starting money to a value that Campaign configuration value does not permit. The request is rejected, and Hard still shows its previous starting money ([Preset selection and edits](#preset-selection-and-edits)).
-- **Invalid adjustment:** Submit a change containing a value outside its permitted values. The whole request fails, and both Campaign configuration and World state remain unchanged ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
-- **Fixed value:** Submit a change containing a valid value for an adjustable value and a different value for a value that is fixed after creation. The whole request fails, and both Campaign configuration and World state remain unchanged ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
-- **Unset setting follows the Game build:** The player never sets the language. A later Game build changes the Game build default language, and the game starts in the new default ([Global configuration](#global-configuration)).
-- **Changing a setting without a Campaign:** In a Session with no Current campaign, set the volume through `session.globalConfiguration.set`. `get()` reports the new volume as a stored value. End the Session and start a new one: the volume is still the stored value. `reset` it, and `get()` reports the Game build default volume ([Global configuration](#global-configuration)).
-- **Listing presets and their values:** `listPresets()` reports Standard and Hard, with Standard as both the Game build default preset and the selected preset. Set a Preset edit of starting money 80 for Hard. `getPreset` for Hard reports starting money with the preset's own value 60 and the Preset edit 80, and `listPresets()` reports that Hard has Preset edits ([Preset selection and edits](#preset-selection-and-edits)).
-- **Invalid stored value:** Global configuration stores a volume that the current Game build does not allow. The game starts with the Game build default volume and reports the problem ([Edge cases and failure behavior](#edge-cases-and-failure-behavior)).
-
 # TODOs
 
 - TODO: Define the inventory of Campaign configuration values that are adjustable during play, e.g. the values representing difficulty, and the Mechanics specification that introduces each. Only two Campaign configuration values exist so far: starting money and starting funding, under [Campaign configuration values](../mechanics/economy-and-upgrades.md#campaign-configuration-values), which are both fixed after Campaign creation, so neither is adjustable during play.

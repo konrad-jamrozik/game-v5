@@ -265,8 +265,3 @@ Two Campaign states are equal exactly when their [Authoritative values](core-con
 Every World state satisfies every invariant that a specification states. A specification stating an invariant states its condition and its scope; e.g., [References](campaign-instances.md#references) in Campaign Instances states that every reference in every World state resolves. Campaign creation and committed Player actions therefore each produce a World state that satisfies them, and undo, redo, and load only make current a World state that was produced that way.
 
 Rejected requests leave Campaign state unchanged. This covers every rejection, e.g. no Current campaign, an unavailable Timeline navigation target, or an unauthorized call. The values of intermediate processing are not a World state and must never be exposed; e.g., values computed partway through Advance turn are never returned. Returned views are detached: no value returned through any API surface is a mutable reference into Campaign state. Failed Timeline navigation or load preserves the entire prior Session. Broken references or internal invariants are reported as engine/data defects rather than silently repaired into different gameplay outcomes. Exact error representations and asynchronous operation results are the implementer's choice.
-
-# Acceptance examples
-
-- **Defects:** A broken internal reference reports an engine defect without publishing intermediate Campaign state. Returned inspection data cannot mutate the engine ([World state integrity](#world-state-integrity)).
-- **Campaign integrity:** A Player action and its undo and redo preserve declared campaign-data composition and identity, and required historical references remain resolvable ([World state integrity](#world-state-integrity)).

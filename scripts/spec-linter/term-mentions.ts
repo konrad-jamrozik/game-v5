@@ -18,7 +18,7 @@ import type { SpecificationFamily } from './types.ts'
 /**
  * Finds, in each specification's rule text, the first mention of every Glossary term another specification owns. That
  * mention must link to the term's Glossary group in its owning specification, and each such mention makes the
- * specification reference the owner. Rule text excludes the Overview, acceptance examples, sections titled as examples,
+ * specification reference the owner. Rule text excludes the Overview, sections titled as examples,
  * and examples introduced with "e.g.". A term spelled like its owner's title names that specification, e.g.
  * "Bootstrap GDRs", so it points to the specification rather than using a term of it, and does not count.
  */
@@ -57,7 +57,7 @@ export interface TermMention {
 }
 
 /** Top-level sections that are not rule text. */
-const SKIPPED_SECTIONS: ReadonlySet<string> = new Set(['Overview', 'Acceptance examples'])
+const SKIPPED_SECTIONS: ReadonlySet<string> = new Set(['Overview'])
 
 /** Headings of sections that hold only examples. */
 const EXAMPLE_SECTION = /^(?:Examples?|Worked examples?)\b/i

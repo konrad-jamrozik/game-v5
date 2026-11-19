@@ -33,11 +33,10 @@ What a specification is and how it is identified and classified.
 
 What specifications describe and what is built and checked from them.
 
-| Term | Definition | Prohibited synonyms |
-| --- | --- | --- |
-| Artifact | An identified specification, requirement, implementation, test, or other item |  |
-| Implementation | An executable artifact intended to satisfy a specification or requirement |  |
-| Acceptance example | A worked example that identifies the requirements it checks and states testable expected results. |  |
+| Term           | Definition                                                                    | Prohibited synonyms |
+| -------------- | ----------------------------------------------------------------------------- | ------------------- |
+| Artifact       | An identified specification, requirement, implementation, test, or other item |                     |
+| Implementation | An executable artifact intended to satisfy a specification or requirement     |                     |
 
 ## Participants
 
@@ -133,14 +132,13 @@ Readers find their way through many specifications by knowing where everything s
 2. Topic sections: one or more H1 sections, each named after a subject the specification owns; e.g., `# Order cancellation`. Topic sections state the specification's definitions, rules, requirements, and constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
 3. Closing sections:
    1. `# Edge cases and failure behavior`
-   2. `# Acceptance examples`
-   3. `# TODOs`, containing every TODO of the specification under [Kinds of unspecified content](#kinds-of-unspecified-content)
+   2. `# TODOs`, containing every TODO of the specification under [Kinds of unspecified content](#kinds-of-unspecified-content)
 
 Overview is required. Every other section is present only when it applies to the document. Appendices follow the closing sections.
 
 Use a metadata table immediately below the document-title H1. All sections are unnumbered H1 headings. Subsections may nest from H2 through H6 when the hierarchy requires it, without skipping a heading level.
 
-Name a topic section after its subject, never after its role in the document. Generic topic headings, e.g. "Concepts and contract", "Requirements", "Details", or "Specification", are prohibited. State a requirement in the topic it constrains rather than in a separate collection. An example may sit beside the concept it illustrates instead of under Acceptance examples. Do not state a contract twice merely to populate a section. Whether a section applies, and whether embedded examples explain the contracts adequately, are semantic review concerns; the linter checks the order and content of framing and closing sections, not applicability.
+Name a topic section after its subject, never after its role in the document. Generic topic headings, e.g. "Concepts and contract", "Requirements", "Details", or "Specification", are prohibited. State a requirement in the topic it constrains rather than in a separate collection. Do not state a contract twice merely to populate a section. Whether a section applies, and whether examples explain the contracts adequately, are semantic review concerns; the linter checks the order and content of framing and closing sections, not applicability.
 
 ## One subject per specification
 
@@ -176,13 +174,13 @@ Use relative Markdown links between specifications.
 
 ## Marking examples
 
-Introduce every example with "e.g." so a reader never has to infer whether a statement is general or illustrative. This applies to whole example sentences, clauses, inline enumerations, bullet lists, and illustrative tables. Write "E.g., Orders can be redesigned without touching Store Model.", not a bare "Orders can be redesigned without touching Store Model." following a general statement. Do not use "for example" or "for instance" as the marker. "Such as", "including", and "illustrates" alone do not mark an example. A section, table, or list explicitly titled or labeled "Examples", "Acceptance examples", or "Worked example" is already marked, and its items need no further "e.g.". This rule applies to every authored document in the repository, not only specifications.
+Introduce every example with "e.g." so a reader never has to infer whether a statement is general or illustrative. This applies to whole example sentences, clauses, inline enumerations, bullet lists, and illustrative tables. Write "E.g., Orders can be redesigned without touching Store Model.", not a bare "Orders can be redesigned without touching Store Model." following a general statement. Do not use "for example" or "for instance" as the marker. "Such as", "including", and "illustrates" alone do not mark an example. A section, table, or list explicitly titled or labeled "Examples" or "Worked example" is already marked, and its items need no further "e.g.". This rule applies to every authored document in the repository, not only specifications.
 
 ## Illustrative and exhaustive enumerations
 
 Every non-exhaustive enumeration must be marked under [Marking examples](#marking-examples), with "e.g." or an "Examples" label. This applies to inline enumerations, bullet lists, and illustrative tables. Each illustrative list must contain at most three examples. Do not split one list into smaller lists merely to evade this limit. Use the fewest representative examples needed and link to the authoritative enumeration when readers need the full set.
 
-Clearly identify exhaustive enumerations and maintain them in their authoritative owner. Elsewhere, reference that owner rather than copying the list. Do not shorten exhaustive contracts, procedures, or worked acceptance scenarios under the three-example limit, or relabel normative obligations as examples. This distinction prevents illustrative lists from looking like complete sets that must grow whenever a new value is added.
+Clearly identify exhaustive enumerations and maintain them in their authoritative owner. Elsewhere, reference that owner rather than copying the list. Do not shorten exhaustive contracts or procedures under the three-example limit, or relabel normative obligations as examples. This distinction prevents illustrative lists from looking like complete sets that must grow whenever a new value is added.
 
 # Validation and unspecified content
 
@@ -192,7 +190,7 @@ Part of a specification's quality can be checked by a machine and the rest only 
 
 Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, Family directories under [Specification kinds and Families](#specification-kinds-and-families), required layout, local links and anchors, linked first mentions of terms and the absence of cycles among the specifications under [Deterministic validation](artifact-relationships.md#deterministic-validation), links from a Conventions specification to a Design or Implementation specification, the Conventions row under [Following the conventions](#following-the-conventions), Specification kind and Family overview presence, structure, and coverage under [Family overviews](overview-conventions.md#family-overviews), objectively prohibited terminology, the shape of the [Prohibited synonyms column](glossary-conventions.md#prohibited-synonyms-column), prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document), [Specification Overview](overview-conventions.md#specification-overview), and [Glossary groups](glossary-conventions.md#glossary-groups), topic sections and their subsections that open with a list, table, or subsection instead of a lead under [Orientation before detail](#orientation-before-detail), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
 
-A successful deterministic lint means only that every machine-checkable convention passed. It does not establish conceptual synonymy, formula correctness, acceptance-example validity, or gameplay correctness. A review checks every rule of the conventions that a specification follows, under [Following the conventions](#following-the-conventions), including those the linter cannot check.
+A successful deterministic lint means only that every machine-checkable convention passed. It does not establish conceptual synonymy, formula correctness, the agreement of examples with rules, or gameplay correctness. A review checks every rule of the conventions that a specification follows, under [Following the conventions](#following-the-conventions), including those the linter cannot check.
 
 ## Kinds of unspecified content
 

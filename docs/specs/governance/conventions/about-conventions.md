@@ -18,7 +18,7 @@ The specifications are written mostly by LLMs and read by LLMs that implement th
 
 ## Design Specification Conventions
 
-[Design Specification Conventions](design-spec-conventions.md) answers _what does a Design specification state, and how exactly?_ It owns what may be specified about the game, and how rules, formulas, game data, and acceptance examples are written.
+[Design Specification Conventions](design-spec-conventions.md) answers _what does a Design specification state, and how exactly?_ It owns what may be specified about the game, and how rules, formulas, game data, and examples are written.
 
 ## Implementation Specification Conventions
 

@@ -12,7 +12,7 @@
 
 A [Design specification](spec-conventions.md#specifications) is the only durable record of a design decision: an [Implementation](spec-conventions.md#artifacts) is built from it and can be rebuilt from it at any time. So it must say everything that matters to the game and nothing that does not. What matters is what a player, a save, or a replay could notice, together with the game data that the [Game designer](spec-conventions.md#participants) authors; everything else is left to the [Implementer](spec-conventions.md#participants), who decides it differently in every Implementation.
 
-What it says must also be exact enough to test. Every rule names its inputs, its boundaries, and its outcome, and an acceptance example shows it at work. Design Specification Conventions builds on Specification Conventions: Specification Conventions says how any specification is written, and Design Specification Conventions says what a Design specification states and how precisely.
+What it says must also be exact enough to test. Every rule names its inputs, its boundaries, and its outcome, so that a test can check it. Design Specification Conventions builds on Specification Conventions: Specification Conventions says how any specification is written, and Design Specification Conventions says what a Design specification states and how precisely.
 
 # Glossary
 
@@ -98,7 +98,7 @@ Every transition not listed, e.g. from Open directly to Locked, is impossible.
 
 Define every symbol, unit, domain, and referenced parameter. Show evaluation order and rounding points; link common numeric rules rather than assuming real-number arithmetic equals runtime arithmetic.
 
-For random rules, state every random outcome as a distinct, named outcome: what it belongs to, its possible values, and its distribution, including interval boundaries and the success comparison. E.g., "each delivery has one delay outcome, late or on time, and each late delivery has one lateness outcome, a whole number of days from 1 to 10". A reader must be able to tell how many distinct random outcomes a rule has, because a named random outcome is what an acceptance example fixes when it uses fixed injected random outcomes under [Examples, conformance, and evidence](#examples-conformance-and-evidence). Also state which state each random outcome may depend on and which information is hidden. Do not state when or in which order random values are drawn.
+For random rules, state every random outcome as a distinct, named outcome: what it belongs to, its possible values, and its distribution, including interval boundaries and the success comparison. E.g., "each delivery has one delay outcome, late or on time, and each late delivery has one lateness outcome, a whole number of days from 1 to 10". A reader must be able to tell how many distinct random outcomes a rule has, because a named random outcome is what an example or a test fixes when it relies on a random result, under [Examples, conformance, and evidence](#examples-conformance-and-evidence). Also state which state each random outcome may depend on and which information is hidden. Do not state when or in which order random values are drawn.
 
 Distinguish the true probability, conditional probability, cumulative probability, and displayed estimate whenever relevant. Define what information an estimate conditions on, including previous outcomes.
 
@@ -132,13 +132,7 @@ E.g., the section on placing an Order says in one sentence that gift wrapping is
 
 # Examples, conformance, and evidence
 
-An example shows that a rule means what its author intended, and an acceptance example makes that checkable. Every substantial rule must be covered by an acceptance example. Foundation specifications using embedded examples may instead explain their modeling contracts through self-contained illustrations alongside the concepts, linking to the applicable [requirements](spec-conventions.md#specifications). These illustrations introduce no production gameplay rules and need not be organized as test fixtures or command sequences. Every acceptance example must identify all applicable items in this checklist:
-
-- Hyperlinks to the requirement sections exercised and, when needed for reproducibility, the game revision and game data fixture.
-- Initial state and inputs, including fixed injected random outcomes for stochastic results, each identified by the name its rule gives it under [Formulas and uncertainty](#formulas-and-uncertainty); never assert outcomes that depend on a particular seed, and otherwise compare replayed results for equality.
-- The command or event sequence.
-- Expected state, output, visibility, history, and random behavior where relevant.
-- Exact comparisons or explicitly specified numeric tolerances.
+An example shows that a rule means what its author intended; the rule alone decides what is required. Every rule must therefore be exact enough to test on its own: its rule text states its inputs, boundaries, and outcome, and its boundary cases and failures are defined in rule text or under `# Edge cases and failure behavior`. A specification may explain its rules through worked examples alongside the concepts they illustrate, linking to the applicable [requirements](spec-conventions.md#specifications). Worked examples introduce no rules and need not be organized as test fixtures or command sequences. An example that relies on a random result fixes each random outcome it relies on by the name its rule gives it under [Formulas and uncertainty](#formulas-and-uncertainty), and never states a result that depends on a particular seed.
 
 Examples of one specification's rules stay in that specification. An example of an interaction between several game systems belongs to the specification that owns that interaction, e.g. the specification that owns the order of same-turn effects, and links the rules of the other specifications it exercises. How the implementation verifies conformance, e.g. its integration or end-to-end tests, is the implementer's choice.
 
@@ -150,6 +144,6 @@ Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Pro
 
 ## Consistency of rules and examples
 
-A rule and its examples are written together and must stay together. Boundary cases and failures must be defined for every rule, worked examples and acceptance examples must agree with the rules they illustrate, and related contracts and tables of game data must agree with each other.
+A rule and its examples are written together and must stay together. Boundary cases and failures must be defined for every rule, worked examples, where a specification has them, must agree with the rules they illustrate, and related contracts and tables of game data must agree with each other.
 
 When specified behavior changes, link to affected requirement sections by title and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.

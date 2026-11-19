@@ -23,7 +23,7 @@ How one [specification](spec-conventions.md#specifications)'s text comes to rely
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
 | Term owner | The specification whose Glossary defines a term; every term has exactly one |  |
-| Rule text | Every part of a specification that states rules: everything except its title and metadata table, its Overview, its [acceptance examples](design-spec-conventions.md#glossary), its examples, and its passages labeled as informative rationale |  |
+| Rule text | Every part of a specification that states rules: everything except its title and metadata table, its Overview, its examples, and its passages labeled as informative rationale |  |
 | Term link | A link from a mention of a term to the Glossary group that defines the term in its Term owner | Owner link |
 | Reference | The Relationship from a specification to the Term owner of a term its Rule text mentions; the specification references the Term owner | Uses relationship; refines relationship; Relationships section |
 | Relationship | A directional connection from one [artifact](spec-conventions.md#artifacts) to another; between specifications, the only one is a Reference |  |
@@ -54,7 +54,7 @@ A link to a specification as a whole or to one of its sections is not a Term lin
 
 Rule text excludes everything that states no rule, so that what a specification merely illustrates or points to does not tie it to another specification:
 
-- **Overview and acceptance examples:** the sections that orient a reader and that check rules stated elsewhere.
+- **Overview:** the section that orients a reader.
 - **Examples:** a clause introduced with "e.g.", up to the end of its sentence, table cell, paragraph, or list item; a block that opens with "e.g."; the block after a paragraph that opens with "e.g." and ends with a colon; a table column headed "Example"; and a section whose heading starts with "Example" or "Worked example". These are the forms that [Marking examples](spec-conventions.md#marking-examples) requires.
 - **Informative rationale:** a block that opens with the label Informative rationale.
 
@@ -72,7 +72,7 @@ A mention is the term as written, or followed by "s" or "es" for its plural. A t
 
 A specification references the Term owner of every term its Rule text mentions. The References are derived from the text by code and recorded nowhere else: a specification has no section listing what it references or what references it. The derived views and the [Family](spec-conventions.md#specifications) diagrams draw the Reference graph. A specification's Family and folder decide neither what it references nor its Layer.
 
-A test or acceptance example checks rules the specification states; it makes no Reference.
+A test checks rules the specification states; it makes no Reference.
 
 # Reference graph
 
@@ -105,25 +105,3 @@ Only the second and third outcomes remove a Reference, and only because the text
 | The sentence that closes a Cycle only illustrates a general rule | Mark it as an example, under [Real and apparent dependencies](#real-and-apparent-dependencies) |
 | The sentence that closes a Cycle needs the term to state its rule | Keep it and move the term or rule; never reword it to avoid the term |
 | A term moves to another specification | `npm run docs:link-terms` retargets its Term links |
-
-# Acceptance examples
-
-## Term links and References
-
-Given Widget Model owning the term Widget in its Glossary group Parts, and Widget Assembly whose Rule text first mentions Widget:
-
-| Case | Expected |
-| --- | --- |
-| [Term links](#term-links): the first mention is plain text | Lint rejects it; `npm run docs:link-terms` links it to `widget-model.md#parts` |
-| [Term links](#term-links): the first mention links `widget-model.md#widget-model-rules`, a section | No Reference from that link; the next mention in Rule text is the first mention |
-| [Rule text](#rule-text): Widget appears only after "e.g." | No Reference; no link is required |
-| [References](#references): the first mention is linked to `widget-model.md#parts` | Widget Assembly references Widget Model |
-
-## Cycles
-
-Given Widget Assembly referencing Widget Model, and Widget Model's Rule text first mentioning the term Assembly line, which Widget Assembly owns:
-
-| Case | Expected |
-| --- | --- |
-| [Reference graph](#reference-graph): the mention is needed for a rule of Widget Model | Lint rejects the Cycle; Assembly line moves to Widget Model, or the rule to Widget Assembly |
-| [Real and apparent dependencies](#real-and-apparent-dependencies): the sentence restates a rule of Widget Assembly | The sentence is removed from Widget Model |

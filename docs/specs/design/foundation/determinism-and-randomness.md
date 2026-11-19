@@ -43,7 +43,7 @@ Queries, computing [Derived values](core-concepts.md#value-classification), and 
 
 Determinism is required within one implementation and Game build, not across different implementations of the specification or different Game builds. Within one implementation and Game build it is required across machines: no outcome may depend on the machine, operating system, or runtime that executes the Game build.
 
-Consequently, the following are the Implementer's choice, provided the guarantee under [Determinism](#determinism) holds: how random outcomes are derived from the Campaign seed, the order of random draws, the order in which [Campaign instances](core-concepts.md#campaign-instances) are created within one Player action, and the sequence and format of generated Campaign-scoped identifiers. Two implementations may therefore produce different outcomes from the same Campaign seed and Player actions; each must reproduce its own outcomes exactly.
+Consequently, the following are the Implementer's choice, provided the guarantee under [Determinism](#determinism) holds: how random outcomes are derived from the Campaign seed, the order of random draws, the order in which [Campaign instances](core-concepts.md#campaign-instances) are created within one Player action, except where the specification owning the creating behavior fixes it, and the sequence and format of generated Campaign-scoped identifiers. Two implementations may therefore produce different outcomes from the same Campaign seed and Player actions; each must reproduce its own outcomes exactly.
 
 # Campaign seed
 
@@ -76,13 +76,3 @@ Some identifiers name things inside the simulated world and must survive replay;
 | Independent identifier | No | E.g., [Campaign IDs and Campaign save IDs](saves.md#identifiers). |
 
 A Campaign-scoped identifier therefore depends on nothing outside Campaign state, e.g. wall-clock time, in the same way as a random outcome under [Random outcomes](#random-outcomes). The format of every identifier is the Implementer's choice.
-
-# Acceptance examples
-
-- **Equal outcomes:** Starting at Campaign state S, add money through [Developer API](engine-contract.md#api-surfaces), commit ordinary gameplay actions, and Advance turn. Repeat the same Player actions from S with queries and a rejected action interleaved. Complete Campaign state equals the original results ([Determinism](#determinism)).
-- **Same seed, same Campaign:** Create Campaign A supplying Campaign seed K, commit gameplay actions including Advance turn, and record Campaign state after each Player action. End the Session. In a new Session, create Campaign B with the same new-Campaign setup and K, and commit the same Player actions. B equals A at every Player action ([Determinism](#determinism), [Campaign seed](#campaign-seed)).
-- **Same save, another machine:** Save Campaign A on one machine, then commit gameplay actions including Advance turn and record Campaign state after each Player action. On another machine running the same Game build, load that Campaign save and commit the same Player actions. The results equal those recorded on the first machine after every Player action ([Scope of the guarantee](#scope-of-the-guarantee)).
-- **Seed chosen by the engine:** Create Campaign C supplying no Campaign seed. `session.getStatus()` reports its Campaign seed K2, which is 10 printable ASCII characters long. Create Campaign D with the same new-Campaign setup supplying K2, and commit the same Player actions in both. D equals C after every Player action ([Campaign seed](#campaign-seed)).
-- **Seed fixed and hidden:** After Player actions, undo, redo, save, and load, `session.getStatus()` reports the same Campaign seed. No Player API query returns it, with Dev mode enabled or disabled ([Campaign seed](#campaign-seed)).
-- **Identifiers under replay:** Hire an Agent, undo, and redo. The redone Agent has the same Instance ID as before the undo. Save the Campaign, commit an action, and save again; the two Campaign saves have different Campaign save IDs ([Unique identifiers](#unique-identifiers)).
-- **Seed length limits:** Creating a Campaign with a 64-character seed of printable ASCII characters succeeds; creating one with a 65-character seed, an empty seed, or a seed containing `é` fails and leaves the Session as it was ([Campaign seed](#campaign-seed)).

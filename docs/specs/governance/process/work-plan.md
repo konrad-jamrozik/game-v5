@@ -102,7 +102,7 @@ For each authorized batch:
 
 1. Inspect the brief, accepted dependencies, related drafts, and relevant game-ts code where useful.
 2. Draft the contract using the accepted conventions. Clearly distinguish proposed rules from inherited behavior.
-3. Add formulas, boundary cases, worked examples, and relevant updates to GDRs and scenarios.
+3. Add formulas, boundary cases, worked examples, and relevant updates to GDRs.
 4. Check internal consistency and cross-specification references. Identify unresolved dependencies and decisions.
 5. Present a concise review summary: proposed behavior, departures from game-ts, trade-offs, open questions, and affected documents. Set the work state to In review; the specification remains Draft.
 6. Pause before advancing to the next batch so the user can review. Incorporate feedback or follow explicit instructions to continue. Record acceptance only when it is explicitly given.
@@ -117,7 +117,7 @@ Do not treat the completion of a draft or batch as authorization to implement ga
 
 # First implementation milestone assessment
 
-After the batch 4 review, assess whether the accepted contracts support a small headless playable slice. Propose its concrete scope and identify missing contracts, GDRs, or acceptance scenarios before implementation is authorized. Do not assume completing batch 4 guarantees readiness, or that all 25 subject specifications must be accepted before any implementation can begin. If contracts are missing, schedule their resolution before implementing the slice.
+After the batch 4 review, assess whether the accepted contracts support a small headless playable slice. Propose its concrete scope and identify missing contracts or GDRs before implementation is authorized. Do not assume completing batch 4 guarantees readiness, or that all 25 subject specifications must be accepted before any implementation can begin. If contracts are missing, schedule their resolution before implementing the slice.
 
 # Edge cases and failure behavior
 
@@ -134,14 +134,3 @@ If a batch becomes too large to review comfortably, propose a split at a coheren
 If a draft depends on unresolved GDRs or rules, label the dependency and its impact. Explicitly scoped example fixtures can illustrate a proposal, but must not masquerade as the final campaign configuration. An unresolved implementation-affecting dependency prevents acceptance of the affected contract.
 
 If review feedback changes priorities, update the backlog and explain affected dependencies. Existing drafts remain available for revision; a change in order alone does not invalidate their content.
-
-# Acceptance examples
-
-These are workflow checks, not gameplay tests:
-
-- **First review ([Batch sequence](#batch-sequence), [Early information and API boundaries](#early-information-and-api-boundaries), [Batch workflow](#batch-workflow)):** Presenting newly drafted batch 1 material sets that material to Draft and batch 1 to In review; reorganizing an existing Accepted contract preserves its Accepted status. The starter operation inventory and Information boundary in Engine Contract do not imply that the batch 8 contracts are complete. The next batch does not begin without the review opportunity or an explicit instruction to continue.
-- **Requested revision ([Batch workflow](#batch-workflow), [Backlog updates](#backlog-updates)):** Feedback requests a different model for Agents and Current assignments. Batch 1 remains In review while affected notes and examples are updated.
-- **Separate combat/mission checkpoints ([Batch sequence](#batch-sequence), [Oversized batches](#oversized-batches)):** Accepting Combat completes batch 5, not batch 6. The damage-related campaign benefit of a failed mission remains a Missions decision.
-- **Incremental GDRs ([Parallel GDR work](#parallel-gdr-work), [Unresolved dependencies](#unresolved-dependencies)):** Drafting Investigations adds its parameters as GDRs and relevant multi-turn scenarios. This does not mark the entire GDR catalog or scenario suite Accepted.
-- **Later conflict ([Earlier-specification gaps](#earlier-specification-gaps)):** A mission rule conflicts with an Accepted [Timeline](../../design/foundation/engine-contract.md#persisted-data) rule. The discrepancy is documented and a revision is proposed to the owner; neither implementation nor a second specification silently overrides the accepted rule.
-- **Milestone assessment ([Separate implementation authorization](#separate-implementation-authorization), [First implementation milestone assessment](#first-implementation-milestone-assessment)):** After batch 4 is reviewed, assess the accepted contracts for a headless slice. If its required Turn timing or API contract is unresolved, list the gap and propose the necessary specification work; do not invent the missing rule in code or treat the assessment as implementation authorization.

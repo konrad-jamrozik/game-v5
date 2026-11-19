@@ -150,7 +150,7 @@ Every subtraction and assignment above produces a whole number, so no rounding o
 
 **Within one Faction:** The operation part of the rule uses the Faction activity level after the escalation part of the same Faction in the same step, so a Faction that moves to a new level in this step already uses the new level's `operation_level_weights` and `operation_every_turns` for an occurrence in this step. A change of Faction activity level never resets or otherwise changes Turns until the next operation; only the subtraction of one and a Faction operation occurrence change it.
 
-**Several Factions:** Each Faction's rule reads and changes only that Faction's own State, its own random outcomes, and GDRs. No Faction's rule depends on another Faction, so the result of the step is the same whichever order an implementation processes the Factions in, and no order is specified, under [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn Advancement. Each Faction whose Turns until the next operation reaches zero has its own Faction operation occurrence and creates its own Response Mission site; several Factions can therefore create several Response Mission sites in one Advance turn.
+**Several Factions:** Each Faction's rule reads and changes only that Faction's own State, its own random outcomes, and GDRs. No Faction's rule depends on another Faction, so the result of the step is the same whichever order an implementation processes the Factions in, under [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn Advancement. Each Faction whose Turns until the next operation reaches zero has its own Faction operation occurrence and creates its own Response Mission site; several Factions can therefore create several Response Mission sites in one Advance turn. Their Response Mission sites, each with its Enemies, are created in the order of the initiating Factions' Instance IDs, from the lowest number, so the Instance IDs they take under [Campaign instance identity](../foundation/campaign-instances.md#campaign-instance-identity) in Campaign Instances do not depend on that processing order.
 
 Whether this step applies to a Faction is decided by its Eliminated as it is when the step begins, i.e. after the step Mission resolution under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), so a Faction made Eliminated earlier in the same Advance turn neither escalates nor operates in it.
 
@@ -241,101 +241,6 @@ Under [Information boundary](../foundation/player-api.md#information-boundary) i
 - **No FactionArchetype:** A Game build that supplies no FactionArchetype passes [Faction GDR validation](#faction-gdr-validation); the initial Campaign state then contains no Faction and the Faction activity step does nothing. What that means for the [Campaign ending](domain-model.md#campaign-standing) is stated by [Panic and Endings](panic-and-endings.md).
 - **Unknown property, cyclic `next` chain, or unresolved reference:** These cannot occur in a Campaign, because a Game build containing them fails [Faction GDR validation](#faction-gdr-validation) and no Campaign is created from it. A World state violating the range invariant under [Faction State](#faction-state), e.g. a Faction that is not Eliminated with Turns until the next operation of 0, is an internal invariant violation, reported under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 - **Campaign ended:** Once the Campaign has a Campaign ending, Advance turn is rejected under [Panic and Endings](panic-and-endings.md), so no further Faction activity applies.
-
-# Acceptance examples
-
-All examples use the Bootstrap GDR values from `content/factions/faction_archetypes.yaml`, `content/factions/faction_activity_levels.yaml`, and `content/factions/faction_operation_levels.yaml`, unless an example states a test GDR. Each example uses a test Game build that supplies the Bootstrap GDRs without the FactionArchetypes `exalt` and `black_lotus` and their Leads, so that the Campaign has the one Faction Red Dawn, unless the example states other FactionArchetypes. The values they read are:
-
-| GDR | Values read |
-| --- | --- |
-| `red_dawn` | `name` Red Dawn; `initial_activity_level` `faint` |
-| `faint` | `name` Faint; `lasts_turns` [60, 90]; `operation_every_turns` [15, 25]; weights 1: 80, 2: 20; `next` `active` |
-| `active` | `name` Active; `lasts_turns` [60, 90]; `operation_every_turns` [11, 21]; weights 1: 40, 2: 60; `next` `war` |
-| `war` | `name` War; `lasts_turns` null; `operation_every_turns` [8, 18]; weights 1: 20, 2: 80; `next` null |
-| `operation_level_1` | `level` 1; `name` Soft operations |
-| `operation_level_2` | `level` 2; `name` Violent but small-scale |
-
-With the Bootstrap GDRs, under [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) in Missions, an occurrence of Faction operation level 1 creates a Response Mission site from `foil_recruitment_push`, and one of level 2 from `foil_sabotage`. The examples name those Mission sites only to show when they are created. "The Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. In every example, Red Dawn is not Eliminated unless the example says otherwise.
-
-## Campaign creation through the first escalation
-
-This example exercises [Initial Factions](#initial-factions), [Level duration](#level-duration), [Operation interval](#operation-interval), [Operation level](#operation-level), [Faction activity](#faction-activity), [Escalation](#escalation), and [Faction operation occurrence generation](#faction-operation-occurrence-generation).
-
-**Campaign creation.** The test Game build supplies one FactionArchetype, `red_dawn`, so the initial Campaign state contains exactly one Faction, Red Dawn. Injected outcomes: Red Dawn's initial Level duration outcome is 60, a uniform whole-number outcome over 60 to 90 in which each of 31 values has Probability 1 / 31; its initial Operation interval outcome is 15, a uniform whole-number outcome over 15 to 25 in which each of 11 values has Probability 1 / 11.
-
-| Value                          | After campaign creation |
-| ------------------------------ | ----------------------- |
-| Faction activity level         | `faint`                 |
-| Turns until the next level     | 60                      |
-| Turns until the next operation | 15                      |
-| Eliminated                     | No                      |
-| Eliminated turn                | Absent                  |
-
-**Advance turns ending Turns 1 to 14.** Each Advance turn subtracts one from each countdown and neither reaches zero. After the Advance turn ending Turn 14, Turns until the next level is 46 and Turns until the next operation is 1.
-
-**First operation, Advance turn ending Turn 15.** Turns until the next level becomes 45. Turns until the next operation becomes 0, so one Faction operation occurrence happens at `faint`. Injected outcomes: Operation level 1, with Probability 80 / 100; Operation interval 25, with Probability 1 / 11 over 15 to 25. Result: the occurrence has initiating Faction Red Dawn, Faction operation level `operation_level_1`, and turn number 15, and Missions creates one Response Mission site from it, e.g. from `foil_recruitment_push`; Turns until the next operation is 25.
-
-**Second operation, Advance turn ending Turn 40.** The 25 Advance turns ending Turns 16 to 40 bring Turns until the next operation from 25 to 0 and Turns until the next level from 45 to 20. One Faction operation occurrence happens at `faint`. Injected outcomes: Operation level 2, with Probability 20 / 100; Operation interval 20, with Probability 1 / 11. Result: the occurrence has Faction operation level `operation_level_2` and turn number 40, and Missions creates a second Response Mission site from it, e.g. from `foil_sabotage`, whether or not the first one is still Active; Turns until the next operation is 20.
-
-**First escalation and third operation, Advance turn ending Turn 60.** The Advance turns ending Turns 41 to 59 bring Turns until the next level to 1 and Turns until the next operation to 1. In the Advance turn ending Turn 60:
-
-1. Turns until the next level becomes 0, so Red Dawn moves to `faint`'s `next`, `active`. `active`'s `lasts_turns` is not null; injected Level duration outcome 90, with Probability 1 / 31 over 60 to 90. Turns until the next level is 90.
-2. Turns until the next operation becomes 0, so one Faction operation occurrence happens at `active`, the level Red Dawn is now at. Injected outcomes: Operation level 2, with Probability 60 / 100 under `active`'s weights, not 20 / 100 under `faint`'s; Operation interval 11, over `active`'s 11 to 21, with Probability 1 / 11. Missions creates a Response Mission site of Faction operation level `operation_level_2`, e.g. from `foil_sabotage`.
-
-| Value                          | After the Advance turn ending Turn 60 |
-| ------------------------------ | ------------------------------------- |
-| Faction activity level         | `active`                              |
-| Turns until the next level     | 90                                    |
-| Turns until the next operation | 11                                    |
-
-Three Response Mission sites have been created in total, in the Advance turns ending Turns 15, 40, and 60. None of them counted down toward expiration in the Advance turn that created it, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
-
-## A level change does not reset the operation countdown
-
-This example exercises [Faction activity](#faction-activity) and [Escalation](#escalation).
-
-Initial state: Red Dawn is at `active` with Turns until the next level 1 and Turns until the next operation 5. In the next Advance turn, Turns until the next level becomes 0 and Red Dawn moves to `war`. `war`'s `lasts_turns` is null, so no Level duration outcome exists and Turns until the next level becomes absent. Turns until the next operation becomes 4: the move neither resets it nor gives it a new outcome value, and no Faction operation occurrence happens. In each of the next four Advance turns no further escalation happens; in the fourth, Turns until the next operation reaches 0 and the occurrence uses `war`'s weights, so Operation level 1 has Probability 20 / 100 and Operation level 2 has Probability 80 / 100, and its Operation interval outcome is over 8 to 18.
-
-## Operations at the final level
-
-This example exercises [Escalation](#escalation), [Operation level](#operation-level), and [Operation interval](#operation-interval).
-
-Initial state: Red Dawn is at `war`, Turns until the next level is absent, and Turns until the next operation is 1. In the next Advance turn, nothing escalates and an occurrence happens. Injected outcomes: Operation level 1, with Probability 20 / 100; Operation interval 8, the lower bound, with Probability 1 / 11. Result: one occurrence of Faction operation level `operation_level_1`, from which Missions creates one Response Mission site, e.g. from `foil_recruitment_push`; Red Dawn stays at `war`; Turns until the next operation is 8, so the next occurrence happens in the eighth Advance turn after this one. With an injected Operation interval of 18, the upper bound, it would happen in the eighteenth.
-
-## Elimination stops escalation and operations
-
-This example exercises [Elimination](#elimination) and [Faction activity](#faction-activity).
-
-Initial state: during Turn 120, Red Dawn is at `active` with Turns until the next level 1 and Turns until the next operation 1. In the Advance turn ending Turn 120, a Mission site Consequence under [Consequences](missions.md#consequences) makes Red Dawn Eliminated in Mission resolution. Result after that Advance turn: Eliminated is yes; Eliminated turn is 120; Faction activity level is still `active`; Turns until the next level is still 1 and Turns until the next operation is still 1, because Faction activity did not apply to Red Dawn; no Faction operation occurrence happened and no Response Mission site was created. Had the Campaign continued, no later Advance turn would change any of these values. Applying the elimination effect to Red Dawn again would leave Eliminated turn at 120.
-
-## Several Factions
-
-This example exercises [Initial Factions](#initial-factions) and [Faction activity](#faction-activity). It uses a test FactionArchetype `test_faction` with `name` Test Faction and `initial_activity_level` `active`, supplied alongside `red_dawn`.
-
-At campaign creation the initial Campaign state contains exactly two Factions, Red Dawn at `faint` and Test Faction at `active`. Injected outcomes: Red Dawn's initial Level duration 70 and Operation interval 15; Test Faction's initial Level duration 60 and Operation interval 15 over `active`'s 11 to 21. In the Advance turn ending Turn 15, both Factions' Turns until the next operation reach 0, and two Faction operation occurrences happen. Injected outcomes: Red Dawn's Operation level 1 with Probability 80 / 100 and Operation interval 20; Test Faction's Operation level 2 with Probability 60 / 100 and Operation interval 11. Result: two Faction operation occurrences, one of Faction operation level `operation_level_1` with initiating Faction Red Dawn and one of `operation_level_2` with initiating Faction Test Faction, from which Missions creates two Response Mission sites, e.g. from `foil_recruitment_push` and from `foil_sabotage`; Red Dawn's Turns until the next operation is 20 and Test Faction's is 11. Processing Test Faction before Red Dawn gives the same World state.
-
-## Player-visible information
-
-This example exercises [Player-visible information](#player-visible-information).
-
-In the World state after the Advance turn ending Turn 15 in [Campaign creation through the first escalation](#campaign-creation-through-the-first-escalation), a Player API query of Factions returns, for Red Dawn: its Instance ID; FactionArchetype `red_dawn` with name Red Dawn; Faction activity level `faint` with name Faint, `lasts_turns` [60, 90], `operation_every_turns` [15, 25], weights 1: 80 and 2: 20, and `next` `active`; Eliminated no; and Eliminated turn absent. It returns no property for Turns until the next level, 45, or Turns until the next operation, 25, and the result is the same for the [Session controller](../foundation/engine-contract.md#principals-and-access) and an [Autopilot AI](../foundation/engine-contract.md#principals-and-access). After Red Dawn reaches `war`, the query shows `next` null, from which the player knows that Red Dawn will not escalate further, while the absent Turns until the next level is still not returned.
-
-## GDR validation
-
-This example exercises [Faction GDR validation](#faction-gdr-validation). Each row independently changes the Bootstrap GDRs; the result is that the Game build is defective and no Campaign is created from it.
-
-| Change                                                                    | Rule violated          |
-| ------------------------------------------------------------------------- | ---------------------- |
-| `war`'s `next` is `faint`, and its `lasts_turns` is [60, 90]              | The chain ends         |
-| `faint`'s `operation_level_weights` gains the key 3 with weight 5         | Weights are valid      |
-| `active`'s `lasts_turns` is null while its `next` is `war`                | Final levels agree     |
-| `faint`'s `operation_every_turns` is [0, 25]                              | Ranges are valid       |
-| `red_dawn`'s `initial_activity_level` is `dormant`, which is not supplied | Initial level resolves |
-| `faint`'s weight for key 2 is 0                                           | Weights are valid      |
-| `red_dawn` has a property `description`                                   | Known properties       |
-| `war` has no `next` property                                              | Known properties       |
-
-The unchanged Bootstrap GDRs satisfy every rule: every GDR has exactly the properties its table lists; the chain `faint`, `active`, `war` ends at `war`; levels 1 and 2 each have one FactionOperationLevel; and every range has `lo` of at least 1. Whether every Faction operation level has a MissionSiteArchetype to create a Response Mission site from is checked by [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions.
 
 # TODOs
 

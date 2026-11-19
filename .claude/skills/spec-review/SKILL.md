@@ -65,7 +65,7 @@ These are semantic checks the linter deliberately cannot prove:
 - each section, rule, and term sits in the specification that should own it, and a topic that has outgrown its specification is split;
 - each Glossary group's name and description cover its terms;
 - every example is introduced with "e.g." or sits under an explicit Examples label, and every illustrative enumeration has at most three items;
-- formulas are precise and correct, and acceptance examples prove the intended behavior.
+- formulas are precise and correct, every rule is exact enough to test on its own, and worked examples agree with the rules they illustrate.
 
 ## Severity
 
