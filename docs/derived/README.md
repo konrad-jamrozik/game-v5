@@ -67,7 +67,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| AGENT | [Agents](../specs/design/mechanics/agents-spec.md) | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
+| AGENT | [Agents](../specs/design/mechanics/agents-spec.md) | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
 | COMBAT | [Combat](../specs/design/mechanics/combat.md) | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating, Combat outcomes, and the Combat report. |
 | COMP | [Compendium](../specs/design/mechanics/compendium.md) | The EncyclopediaArticle GDR, and when an Encyclopedia article is Player-visible. |
 | DOM | [Domain Model](../specs/design/mechanics/domain-model.md) | Game concepts, how they relate, and the structural invariants that span several concepts. |

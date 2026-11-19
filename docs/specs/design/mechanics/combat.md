@@ -89,13 +89,17 @@ CombatParameters bundles the scalar values that Combats read. The table below is
 
 ## AgentParameters values this document reads
 
-Combats read three values of [AgentParameters](agents-spec.md#agentparameters), and read exhaustion's effect on effective skill only through [Effective skill](agents-spec.md#effective-skill):
+Combats read seven values of [AgentParameters](agents-spec.md#agentparameters), and read exhaustion's effect on effective skill only through [Effective skill](agents-spec.md#effective-skill):
 
 | Property | Meaning and use | Read by |
 | --- | --- | --- |
 | `exhaustion_per_attack` | The exhaustion an attacking Combatant gains from each of its attacks, hit or miss. | [Effects of an attack](#effects-of-an-attack) |
 | `exhaustion_per_defense` | The exhaustion a defending Combatant gains from each attack made on it, hit or miss. | [Effects of an attack](#effects-of-an-attack) |
 | `exhaustion_incapacitation` | The exhaustion at or above which a Combatant meets the incapacitation condition. | [Incapacitation condition](#incapacitation-condition); [Termination](#termination) |
+| `skill_gain_per_attack_hit` | The [combat skill gain](agents-spec.md#growth) an attacking Agent earns from each of its attacks that hits. | [Combat skill gain](#combat-skill-gain) |
+| `skill_gain_per_attack_miss` | The combat skill gain an attacking Agent earns from each of its attacks that misses. | [Combat skill gain](#combat-skill-gain) |
+| `skill_gain_per_defense_hit` | The combat skill gain a defending Agent earns from each attack on it that hits. | [Combat skill gain](#combat-skill-gain) |
+| `skill_gain_per_defense_miss` | The combat skill gain a defending Agent earns from each attack on it that misses. | [Combat skill gain](#combat-skill-gain) |
 
 ## Combat GDR validation
 
@@ -173,12 +177,12 @@ A Combat turns a deployment into a result without any choice from the player. Th
 1. **The Agents' side:** a list of one or more distinct Agents, each [Serving](agents-spec.md#agent-statuses). This is the [Mission](domain-model.md#leads-investigations-mission-sites-and-missions)'s [Current team](domain-model.md#leads-investigations-mission-sites-and-missions).
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
 3. **Current values:** the base skill, current health, base health, exhaustion, and base weapon damage of every Combatant in the two lists, as they are when the Combat begins.
-4. **GDR values:** the four values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`, `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, and `exhaustion_per_defense` of AgentParameters.
+4. **GDR values:** the four values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`, `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, `skill_gain_per_attack_hit`, `skill_gain_per_attack_miss`, `skill_gain_per_defense_hit`, and `skill_gain_per_defense_miss` of AgentParameters.
 5. **Random outcomes:** the named random outcomes of its attacks, under [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome).
 
 The order of each list is the fixed order of its side, under [Fixed order of each side](#fixed-order-of-each-side). Nothing else influences a Combat; e.g., the turn number, the Mission site's kind, and any other Agent or Enemy have no effect. Its outputs are exhaustive too:
 
-1. The Combat report, under [Combat report](#combat-report).
+1. The Combat report, under [Combat report](#combat-report), which also holds the combat skill gain of every Agent, under [Combat skill gain](#combat-skill-gain).
 2. The changed current health and exhaustion of the Combatants of both lists, and the [Agent status](domain-model.md#agency-and-agents) [Killed](agents-spec.md#agent-statuses) of every Agent whose current health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
 
 An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side that contains an Enemy twice, are internal invariant violations under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract, not expected cases. [Missions](missions.md) guarantees valid lists when it has a Combat fought.
@@ -312,6 +316,23 @@ Each bound is evaluated exactly and rounded once, with [Round up](../foundation/
 
 The order of steps 3 and 4 affects no result, because nothing reads the values between them. No other value changes; in particular base skill, base health, and base weapon damage are unchanged, and no Combatant other than the attacker and the defender is affected.
 
+## Combat skill gain
+
+Every attack an Agent makes or takes teaches it something, a hit more than a miss when it attacks and a miss more than a hit when it defends, but the Agent keeps the lesson only if it lives through the Mission.
+
+**Proposed rule:** Every Agent of the Agents' side has a combat skill gain in each Combat: the sum, over every attack of the Combat log in which it is the attacker or the defender, of the amount in this table. The table is exhaustive.
+
+| The Agent's part in the attack | Hit outcome | Amount                        |
+| ------------------------------ | ----------- | ----------------------------- |
+| Attacker                       | Hit         | `skill_gain_per_attack_hit`   |
+| Attacker                       | Miss        | `skill_gain_per_attack_miss`  |
+| Defender                       | Hit         | `skill_gain_per_defense_hit`  |
+| Defender                       | Miss        | `skill_gain_per_defense_miss` |
+
+Each amount is a whole number of at least 0 of AgentParameters, so the combat skill gain is a whole number of at least 0, and 0 for an Agent that neither attacked nor was attacked. It counts every attack whatever the health removed, the damage outcome, or whether the attack made someone dead, and an attack that made the Agent dead counts too. An Enemy has no combat skill gain. A Combat changes no base skill, under [Effects of an attack](#effects-of-an-attack), so a combat skill gain earned early in a Combat does not strengthen the Agent later in the same Combat: the Combat reports it, and [Mission growth](agents-spec.md#mission-growth) in Agents adds it to a survivor's base skill after the Combat.
+
+**Inherited behavior:** The four amounts and the rule that only survivors keep them are taken from game-ts.
+
 ## Killed and Incapacitated
 
 **Proposed rule:** Each evaluation of a Combatant under [Effects of an attack](#effects-of-an-attack) applies the first of these that holds:
@@ -381,7 +402,7 @@ By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is n
 3. **Participants:** the Agents' side and the Enemies' side, each as the list of Instance IDs in its fixed order.
 4. **Starting values:** for each participant, its base skill, current health, base health, exhaustion, base weapon damage, effective skill, and Incapacitated value when the Combat began, after [Combat start](#combat-start) step 1.
 5. **Final values:** for each participant, its current health, exhaustion, and effective skill when the Combat ended, and its final condition: able to fight, Incapacitated, or dead. A dead Agent is Killed.
-6. **Damage dealt and damage taken:** for each participant, its damage dealt, i.e. the sum of the health removed by its attacks, and its damage taken, i.e. the sum of the health removed by attacks on it.
+6. **Damage dealt and damage taken:** for each participant, its damage dealt, i.e. the sum of the health removed by its attacks, and its damage taken, i.e. the sum of the health removed by attacks on it; and for each Agent, its combat skill gain, under [Combat skill gain](#combat-skill-gain).
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
 8. **Combat log:** every attack, in the order in which it was made, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the damage outcome when there is one, the health removed, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
 9. **Mission:** the Instance ID of the Mission whose Combat it records, which [Missions](missions.md) supplies when it has the Combat fought. It influences nothing in the Combat.
@@ -400,7 +421,7 @@ The Combat report is an Authoritative value. It is part of the [Turn report](../
 | An Enemy's base skill, current health, base health, exhaustion, Weapon, and base weapon damage | Yes |
 | An Enemy's effective skill and Combat rating, and the Combat rating of any side, e.g. of a Mission site's Enemies | Yes |
 | Every fact of a Combat report, including every random outcome it records | Yes |
-| Every property of each EnemyArchetype, Weapon, and CombatParameters GDR, and the meaning of `exhaustion_per_attack` and `exhaustion_per_defense` | Yes |
+| Every property of each EnemyArchetype, Weapon, and CombatParameters GDR, and the meaning of `exhaustion_per_attack`, `exhaustion_per_defense`, and the four combat skill gain amounts of AgentParameters | Yes |
 
 Incapacitated and a Combat in progress never exist in a World state, under [Combat timing](#combat-timing), so the player observes them only through the Combat report. **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. A damage outcome is absent, not zero, for an attack whose hit outcome is a miss; its health removed is 0. A Turn report holds a Combat report only for each Combat its Advance turn fought; a Mission whose Combat has not been fought has no Combat report anywhere.
 
@@ -412,7 +433,8 @@ Incapacitated and a Combat in progress never exist in a World state, under [Comb
 - **Agent with lost current health or with exhaustion at Combat start:** The Combat starts from the Agent's current health and exhaustion. Its effective skill and the starting Combat rating reflect them, and it is Incapacitated from the start if it meets the incapacitation condition ([Combat start](#combat-start), [Combat rating](#combat-rating)).
 - **Enemy with effective skill 0:** An alive Enemy whose effective skill is 0, e.g. one with base skill 0, meets the incapacitation condition, so it is Incapacitated from Combat start, never attacks, and is never a target ([Incapacitation condition](#incapacitation-condition)).
 - **Enemy already dead at Combat start:** An Enemy with current health 0 is dead, not able to fight, and not Incapacitated ([Combat start](#combat-start)).
-- **Attacker with no target:** An attacker able to fight with no opponent able to fight does nothing on its Combat turn and gains no exhaustion ([Combat rounds](#combat-rounds)).
+- **Attacker with no target:** An attacker able to fight with no opponent able to fight does nothing on its Combat turn and gains no exhaustion and no combat skill gain ([Combat rounds](#combat-rounds), [Combat skill gain](#combat-skill-gain)).
+- **Combat skill gain of a Killed Agent:** The Combat report records it like any other Agent's, but it is never added to base skill ([Combat skill gain](#combat-skill-gain)).
 - **Zero divisor:** The hit Probability's divisor is at least 2, because both effective skills are at least 1 ([Hit outcome](#hit-outcome)).
 - **Damage outcome above remaining current health:** Current health falls to 0, not below; the health removed is the defender's remaining current health ([Effects of an attack](#effects-of-an-attack)).
 - **Damage outcome of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no current health but still raises exhaustion ([Damage outcome](#damage-outcome)).
@@ -514,7 +536,7 @@ End-of-Combat-round checks:
 
 In Combat round 2, e1 is dead before the Enemies' phase, so it does not attack. In Combat round 2 the damage outcome 9 exceeds e1's remaining current health 8, so e1's current health is 0 and the health removed is 8. In Combat round 3, a2's Combat turn comes after e2 is dead; with no opponent able to fight, a2 does nothing and gains no exhaustion, and the Enemies' phase has no attack.
 
-The Combat report holds: Combat outcome Prevailed; 3 Combat rounds; participants [a1, a2] and [e1, e2]; the starting values above; final values a1 current health 23, exhaustion 5, effective skill 76, able to fight; a2 current health 30, exhaustion 3, effective skill 100, able to fight; e1 current health 0, exhaustion 3, dead; e2 current health 0, exhaustion 5, dead; damage dealt a1 25, a2 15, e1 0, e2 7, and damage taken a1 7, a2 0, e1 20, e2 20; the Combat ratings in the table; and the 8 attacks above with their outcomes. a1 and a2 are both still Serving.
+The Combat report holds: Combat outcome Prevailed; 3 Combat rounds; participants [a1, a2] and [e1, e2]; the starting values above; final values a1 current health 23, exhaustion 5, effective skill 76, able to fight; a2 current health 30, exhaustion 3, effective skill 100, able to fight; e1 current health 0, exhaustion 3, dead; e2 current health 0, exhaustion 5, dead; damage dealt a1 25, a2 15, e1 0, e2 7, and damage taken a1 7, a2 0, e1 20, e2 20; combat skill gain a1 `4 + 2 + 1 + 4 + 4 = 15`, from its three hits, the miss and the hit it took, and a2 `4 + 2 + 2 = 8`, from its hit, its miss, and the miss it took; the Combat ratings in the table; and the 8 attacks above with their outcomes. a1 and a2 are both still Serving, and their base skill is still 100: [Missions](missions.md) adds each combat skill gain only after the Combat, under [Mission growth](agents-spec.md#mission-growth) in Agents.
 
 ## Retreated
 
@@ -614,6 +636,5 @@ Each of the following test changes independently makes the Game build defective,
 
 # TODOs
 
-- TODO (later): Skill or experience gained by attacking and defending, under [Effects of an attack](#effects-of-an-attack).
 - TODO (later): Morale.
 - TODO (later): Target selection that matches attackers to defenders by base skill, under [Target selection](#target-selection).

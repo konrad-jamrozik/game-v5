@@ -30,7 +30,9 @@ title: Missions
 body: >-
   A Mission site is a place where Enemies wait, and it expires after a number of turns. Deploy a team to it and the
   Combat is fought when the turn advances. A won Mission brings its rewards; a lost or ignored one can raise Panic.
-  Tired Agents fight worse, so check exhaustion before you deploy.
+  Tired Agents fight worse, so check exhaustion before you deploy. Agents who survive a Mission, won or lost, gain skill
+  from every attack they made or took and more for surviving, most of all in their first Missions; a killed Agent's
+  experience is lost with it.
 ---
 id: guide_panic
 type: EncyclopediaArticle
@@ -52,7 +54,7 @@ type: EncyclopediaArticle
 title: Field agent
 body: >-
   The backbone of the Agency: a trained operative who can investigate, earn money on contract, train, or fight. Every
-  Agent you hire starts as a Field agent and grows through training.
+  Agent you hire starts as a Field agent and grows through training and the Missions it survives.
 subject: field_agent
 ---
 id: initiate_article
