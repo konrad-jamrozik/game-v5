@@ -1,0 +1,35 @@
+# DRAFT: TODO values are filled in from the source after generation.
+file: 'S6 XCOM+AllowEpic+NoSynth+ModMil.mp3'
+source: Suno v6
+original_title: 'S6 XCOM+AllowEpic+NoSynth+ModMil'
+song_url: TODO
+model: TODO
+created: TODO
+tags: TODO
+length: TODO
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
+  adjustments:
+    - 'allow epic styles: choir, synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles'
+    - 'no synth sounds or drones'
+    - 'modern military; no 1990s aesthetic'
+prompt_from:
+  tool: Claude Code
+  continues_from: 'S6 XCOM+NoMIDI+NoDrones+AllowEpic.mp3'
+  meta_prompt: |-
+    Could you rewrite this to ditch synth sounds and 1990 aesthetic and make it more modern military?
+prompt: |-
+  Dark, atmospheric modern military science-fiction tactical strategy game soundtrack, a contemporary reimagining of X-COM: UFO Defense. Orchestral and percussive: low staccato strings, deep cello and double bass ostinatos, muted brass swells, tight military snare rolls, distant taiko hits, and sparse metallic percussion. Haunting minor-key melodies and unsettling dissonant string clusters.
+
+  Create an atmosphere of paranoia, isolation, mystery, and constant extraterrestrial threat. Disciplined, cold, tense, and deeply unsettling, like a covert command center on high alert, with restrained melodic development and an unpredictable sense of danger. Slow to moderate tempo, sparse arrangement, deliberate silences.
+
+  Emphasize psychological tension and the fear of the unknown rather than action or heroism.
+exclude_styles: |-
+  Vocals, singing, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, synthesizer, electronic, chiptune, 8-bit, retro, lo-fi
+control_sliders:
+  suno_weirdness: 0.5
+  suno_style_influence: 0.7
+  suno_variety: '0 - Off / Exact style'
+notes: |-
+  Claude Code rewrote the prompt of S6 XCOM+NoMIDI+NoDrones+AllowEpic on the request in `meta_prompt`. NoSynth replaced its synth chords, alien electronic textures, and pulsing bass sequences with orchestral strings and brass and military percussion; it supersedes NoMIDI and NoDrones, which are therefore not listed. ModMil replaced the 1990s framing with a modern military one. Claude Code added synthesizer, electronic, chiptune, 8-bit, retro, and lo-fi to the Exclude styles for NoSynth and ModMil; the rest of the Exclude styles and the sliders are those of S6 XCOM+NoMIDI+NoDrones+AllowEpic.

@@ -1,0 +1,35 @@
+# DRAFT: TODO values are filled in from the source after generation.
+file: 'S6 XCOM+NoMIDI+NoDrones+AllowEpic.mp3'
+source: Suno v6
+original_title: 'S6 XCOM+NoMIDI+NoDrones+AllowEpic'
+song_url: TODO
+model: TODO
+created: TODO
+tags: TODO
+length: TODO
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
+  adjustments:
+    - 'no retro MIDI or Amiga-era synth sound'
+    - 'no ambient drones or eerie high electronic tones'
+    - 'allow epic styles: choir, synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles'
+prompt_from:
+  tool: ChatGPT
+  continues_from: 'EL-M2 XCOM.opus'
+  meta_prompt: |-
+    I removed bunch of stuff from the prompt
+prompt: |-
+  Dark, atmospheric 1990s science-fiction tactical strategy game soundtrack, inspired by the original X-COM: UFO Defense (1994). Haunting minor-key melodies, sparse metallic percussion, unsettling dissonant synth chords, strange alien electronic textures, and subtle pulsing bass sequences.
+
+  Create an atmosphere of paranoia, isolation, mystery, and constant extraterrestrial threat. Minimalist, cold, hypnotic, and deeply unsettling, with restrained melodic development and an unpredictable sense of danger. Slow to moderate tempo, sparse arrangement, deliberate silences.
+
+  Emphasize psychological tension and the fear of the unknown rather than action or heroism.
+exclude_styles: |-
+  Vocals, singing, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing
+control_sliders:
+  suno_weirdness: 0.5
+  suno_style_influence: 0.7
+  suno_variety: '2 - High / Distinct Styles'
+notes: |-
+  The prompt is that of EL-M2 XCOM, which ChatGPT wrote, cut down by hand by the Game designer; `meta_prompt` is the Game designer's description of that edit, as no chatbot wrote it. The cuts are "Authentic retro MIDI and Amiga-era synthesizer sound" and "Vintage 1990s PC game synthesizer aesthetic, slightly lo-fi digital" (NoMIDI), and "eerie ambient electronic music, ominous low-frequency drones" and "occasional eerie high-pitched electronic tones" (NoDrones); the rest is word for word. The Game designer also edited Claude Code's draft Exclude styles, taking out choir, synthwave, epic orchestral, aggressive drums, and heroic brass, and named these removals as one adjustment, AllowEpic.
