@@ -185,6 +185,7 @@ The following invariants hold in every [Committed state](../foundation/engine-co
 - A Serving Agent has exactly one Assignment. A Terminated Agent has none and belongs to no Current team. Killed and Dismissed are Agent statuses, not Assignments.
 - An Agent is Recovering exactly when its Assignment is Recovery and it is not In transit. A Deployed Agent is At assignment.
 - Within [Attribute ranges](#attribute-ranges), a Serving Agent has positive current health, a Killed Agent has zero current health, and a Dismissed Agent has positive current health.
+- A Serving Agent whose Assignment is not Recovery has current health equal to its base health: only a Combat lowers current health, and under [Assignment changes](#assignment-changes) a survivor below its base health goes to Recovery and leaves it only when its current health reaches its base health; e.g., current health never lowers the effective skill of an Investigation member.
 
 When an Agent becomes Killed or Dismissed, its Assignment is removed in the same Player action, the Investigation or Mission it belonged to, if any, is recorded under [Participation history records](#participation-history-records), and its Turn terminated, and for a Killed Agent its Killed by, are set under [Service record](#service-record).
 
