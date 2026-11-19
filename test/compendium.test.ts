@@ -24,7 +24,7 @@ const PARAMETERS: SourceFile = {
     'id: agent_parameters',
     'type: AgentParameters',
     'exhaustion_per_mission: 5',
-    'skill_gain_per_mission_survived: [30, 25]',
+    'experience_per_mission_survived: [30, 25]',
   ].join('\n'),
 }
 
@@ -60,7 +60,7 @@ const COVERING = mechanics('mechanics_exhaustion', 'Exhaustion', [
   '  - label: Each Mission survived',
   "    text: '+{agent_parameters.exhaustion_per_mission}'",
   '  - label: First Mission',
-  "    text: '+{agent_parameters.skill_gain_per_mission_survived.1}'",
+  "    text: '+{agent_parameters.experience_per_mission_survived.1}'",
 ])
 
 function findingsOf(files: readonly SourceFile[]): readonly string[] {
@@ -152,8 +152,8 @@ describe('Compendium article GDR validation', () => {
       ['{agent_parameters.missing}', 'names no property of agent_parameters'],
       ['{subject.name}', 'has no subject'],
       ['{lead_1.name}', 'only {subject.property} may name'],
-      ['{agent_parameters.skill_gain_per_mission_survived}', 'needs an index'],
-      ['{agent_parameters.skill_gain_per_mission_survived.3}', 'beyond the 2 entries'],
+      ['{agent_parameters.experience_per_mission_survived}', 'needs an index'],
+      ['{agent_parameters.experience_per_mission_survived.3}', 'beyond the 2 entries'],
       ['{agent_parameters.exhaustion_per_mission.1}', 'not a list'],
     ]
     for (const [placeholder, message] of cases) {
@@ -250,7 +250,7 @@ describe('Compendium coverage', () => {
     '',
     '| GDR | Property | Why it is exempt |',
     '| --- | --- | --- |',
-    '| `agent_parameters` | `skill_gain_per_mission_survived` | A reason. |',
+    '| `agent_parameters` | `experience_per_mission_survived` | A reason. |',
     '',
     '# Victory path',
     '',
@@ -258,14 +258,14 @@ describe('Compendium coverage', () => {
   ].join('\n')
 
   test('reads the exemption table of the section only', () => {
-    expect(coverageExemptions(bootstrap)).toEqual(['agent_parameters.skill_gain_per_mission_survived'])
+    expect(coverageExemptions(bootstrap)).toEqual(['agent_parameters.experience_per_mission_survived'])
   })
 
   test('reports an uncovered property, a covered exemption, and an exemption that names nothing', () => {
     const uncovered = loadGameData([...GAME, mechanics('mechanics_x', 'X', ['body: Text.'])])
     expect(coverageFindings(uncovered, loadCompendium(uncovered), [])).toEqual([
       expect.stringContaining('no Compendium article names agent_parameters.exhaustion_per_mission'),
-      expect.stringContaining('no Compendium article names agent_parameters.skill_gain_per_mission_survived'),
+      expect.stringContaining('no Compendium article names agent_parameters.experience_per_mission_survived'),
     ])
     const covered = loadGameData([...GAME, COVERING])
     expect(coverageFindings(covered, loadCompendium(covered), [])).toEqual([])

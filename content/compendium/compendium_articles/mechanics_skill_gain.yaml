@@ -2,32 +2,13 @@ id: mechanics_skill_gain
 type: CompendiumArticle
 category: mechanics
 title: Skill gain
-terms: [skill gain, experience]
+terms: [skill gain]
 body: >-
-  Agents get better by Training and by living through Missions. In a Combat an Agent learns from every attack it makes
-  and from every attack made on it, and it learns more for surviving the Mission, most of all the first few times. An
-  Agent killed in the Combat keeps nothing.
+  An Agent's skill rises in two ways: by Training, and by the Experience it gains from the Missions it survives. Every
+  point of Experience becomes one point of skill.
 formulas:
   - label: 'Each turn of Training'
     text: '+{agent_parameters.training_skill_gain_per_turn}, plus Upgrades'
-  - label: 'Each attack made that hits'
-    text: '+{agent_parameters.skill_gain_per_attack_hit}'
-  - label: 'Each attack made that misses'
-    text: '+{agent_parameters.skill_gain_per_attack_miss}'
-  - label: 'Each time the Agent is hit'
-    text: '+{agent_parameters.skill_gain_per_defense_hit}'
-  - label: 'Each time the Agent is missed'
-    text: '+{agent_parameters.skill_gain_per_defense_miss}'
-  - label: 'First Mission survived'
-    text: '+{agent_parameters.skill_gain_per_mission_survived.1}'
-  - label: 'Second Mission survived'
-    text: '+{agent_parameters.skill_gain_per_mission_survived.2}'
-  - label: 'Third Mission survived'
-    text: '+{agent_parameters.skill_gain_per_mission_survived.3}'
-  - label: 'Every later Mission survived'
-    text: '+{agent_parameters.skill_gain_per_mission_survived.4}'
-  - label: 'Won or lost'
-    text: 'Survivors gain the same either way'
-  - label: 'When it counts'
-    text: 'The gain is added after the Combat, so it helps from the next job on'
-see_also: [mechanics_skill, mechanics_training, mechanics_missions, training_skill_gain_article]
+  - label: 'Each point of Experience'
+    text: '+1'
+see_also: [mechanics_skill, mechanics_training, mechanics_experience, training_skill_gain_article]

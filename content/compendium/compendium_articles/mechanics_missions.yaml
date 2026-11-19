@@ -20,4 +20,4 @@ formulas:
     text: '+{agent_parameters.exhaustion_per_mission}, and +{agent_parameters.exhaustion_per_pct_killed} for each 1% of the team that was killed, rounded up'
   - label: 'After the Combat'
     text: 'Survivors below max health go to Recovery, the others to Standby; all are in transit for a turn'
-see_also: [mechanics_mission_sites, mechanics_combat, mechanics_retreat, mechanics_skill_gain, transport_cap_article]
+see_also: [mechanics_mission_sites, mechanics_combat, mechanics_retreat, mechanics_experience, transport_cap_article]

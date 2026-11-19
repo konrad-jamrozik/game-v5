@@ -161,6 +161,28 @@ Exhaustion measures how tired an [Agent](#agents) is. Work and fighting raise it
 
 See also: [Recovery](#recovery) · [Skill](#skill) · [Assignments](#assignments) · [Exhaustion recovery](#exhaustion-recovery)
 
+### Experience
+
+Source: `content/compendium/compendium_articles/mechanics_experience.yaml`
+
+[Agents](#agents) gain Experience by living through [Missions](#missions). In a [Combat](#combat) an Agent earns Experience from every attack it makes and from every attack made on it, and it earns more for surviving the Mission, most of all the first few times. An Agent killed in the Combat keeps nothing. Every point of Experience an Agent gains raises its [skill](#skill) by one point; see [Skill gain](#skill-gain).
+
+| Formulas                      |                                                                        |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| Each attack made that hits    | +4                                                                     |
+| Each attack made that misses  | +2                                                                     |
+| Each time the Agent is hit    | +1                                                                     |
+| Each time the Agent is missed | +2                                                                     |
+| First Mission survived        | +30                                                                    |
+| Second Mission survived       | +25                                                                    |
+| Third Mission survived        | +20                                                                    |
+| Every later Mission survived  | +15                                                                    |
+| Won or lost                   | Survivors gain the same either way                                     |
+| Skill gained                  | +1 skill for each point of Experience                                  |
+| When it counts                | Experience is added after the Combat, so it helps from the next job on |
+
+See also: [Skill gain](#skill-gain) · [Missions](#missions) · [Combat](#combat)
+
 ### Faction operations
 
 Source: `content/compendium/compendium_articles/mechanics_faction_operations.yaml`
@@ -295,7 +317,7 @@ A Mission is your team's one attempt at a [Mission site](#mission-sites). You de
 | Exhaustion of survivors | +5, and +1 for each 1% of the team that was killed, rounded up |
 | After the Combat | Survivors below [max health](#health) go to [Recovery](#recovery), the others to Standby; all are [in transit](#transit) for a turn |
 
-See also: [Mission sites](#mission-sites) · [Combat](#combat) · [Retreat](#retreat) · [Skill gain](#skill-gain) · [Transport cap](#transport-cap)
+See also: [Mission sites](#mission-sites) · [Combat](#combat) · [Retreat](#retreat) · [Experience](#experience) · [Transport cap](#transport-cap)
 
 ### Money and funding
 
@@ -379,23 +401,14 @@ See also: [Skill gain](#skill-gain) · [Health](#health) · [Exhaustion](#exhaus
 
 Source: `content/compendium/compendium_articles/mechanics_skill_gain.yaml`
 
-[Agents](#agents) get better by [Training](#training) and by living through [Missions](#missions). In a [Combat](#combat) an Agent learns from every attack it makes and from every attack made on it, and it learns more for surviving the Mission, most of all the first few times. An Agent killed in the Combat keeps nothing.
+An [Agent](#agents)'s [skill](#skill) rises in two ways: by [Training](#training), and by the [Experience](#experience) it gains from the [Missions](#missions) it survives. Every point of Experience becomes one point of skill.
 
-| Formulas                        |                                                                      |
-| ------------------------------- | -------------------------------------------------------------------- |
-| Each [turn](#turns) of Training | +1, plus [Upgrades](#upgrades)                                       |
-| Each attack made that hits      | +4                                                                   |
-| Each attack made that misses    | +2                                                                   |
-| Each time the Agent is hit      | +1                                                                   |
-| Each time the Agent is missed   | +2                                                                   |
-| First Mission survived          | +30                                                                  |
-| Second Mission survived         | +25                                                                  |
-| Third Mission survived          | +20                                                                  |
-| Every later Mission survived    | +15                                                                  |
-| Won or lost                     | Survivors gain the same either way                                   |
-| When it counts                  | The gain is added after the Combat, so it helps from the next job on |
+| Formulas                        |                                |
+| ------------------------------- | ------------------------------ |
+| Each [turn](#turns) of Training | +1, plus [Upgrades](#upgrades) |
+| Each point of Experience        | +1                             |
 
-See also: [Skill](#skill) · [Training](#training) · [Missions](#missions) · [Training skill gain](#training-skill-gain)
+See also: [Skill](#skill) · [Training](#training) · [Experience](#experience) · [Training skill gain](#training-skill-gain)
 
 ### Training
 

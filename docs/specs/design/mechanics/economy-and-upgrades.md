@@ -28,7 +28,7 @@ These terms are specific to the [Agency](domain-model.md#agency-and-agents)'s ec
 | Cap Upgrade | An Upgrade that raises the [Agent cap](domain-model.md#agency-and-agents), the Transport cap, or the Training cap. | Cap effect |
 | Weapon damage Upgrade | An Upgrade that raises the [effective weapon damage](agents-spec.md#combatant-attributes) of [Serving](agents-spec.md#agent-statuses) Agents. | Base weapon damage effect; Agent value effect |
 | Max health Upgrade | An Upgrade that raises the [effective max health](agents-spec.md#combatant-attributes) of Serving Agents. | Hit points upgrade |
-| Rate Upgrade | An Upgrade that raises one rate every [Agent](domain-model.md#agency-and-agents) shares: the training skill gain, the [exhaustion](agents-spec.md#combatant-attributes) recovery, or the health recovery percentage. |  |
+| Rate Upgrade | An Upgrade that raises one rate every [Agent](domain-model.md#agency-and-agents) shares: the [training skill gain](agents-spec.md#growth), the [exhaustion](agents-spec.md#combatant-attributes) recovery, or the health recovery percentage. |  |
 | Transport cap | The most Agents the Agency can have [Deployed](agents-spec.md#assignments) at the same time. |  |
 | Training cap | The most Agents the Agency can have assigned to [Training](agents-spec.md#assignments) at the same time. |  |
 

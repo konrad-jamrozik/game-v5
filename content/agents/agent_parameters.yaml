@@ -14,8 +14,8 @@ exhaustion_per_investigation_turn: 1
 exhaustion_work_start_max: 30
 exhaustion_work_limit: 70
 training_skill_gain_per_turn: 1
-skill_gain_per_attack_hit: 4
-skill_gain_per_attack_miss: 2
-skill_gain_per_defense_hit: 1
-skill_gain_per_defense_miss: 2
-skill_gain_per_mission_survived: [30, 25, 20, 15] # first, second, third, and every later Mission survived
+experience_per_attack_hit: 4
+experience_per_attack_miss: 2
+experience_per_defense_hit: 1
+experience_per_defense_miss: 2
+experience_per_mission_survived: [30, 25, 20, 15] # first, second, third, and every later Mission survived

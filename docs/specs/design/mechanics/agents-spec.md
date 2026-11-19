@@ -76,14 +76,16 @@ Where an Agent stands toward its Assignment, whether it is in the Agency's base,
 
 ## Growth
 
-How an Agent's base skill grows beyond Training.
+How an Agent's base skill grows. Skill gain and Experience are separate ideas: an Agent gains skill from Training and from Experience, and it gains Experience only from the Missions it survives.
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Survival skill gain | The base skill an Agent gains for surviving a Mission, which falls with the number of Missions it has survived, under [Mission growth](#mission-growth). | Survival bonus |
-| Combat skill gain | The base skill one Agent earns in one Combat from the attacks it made and the attacks made on it, under [Combat skill gain](combat.md#combat-skill-gain) in Combat. It is added to its base skill only if it survives the Mission, under [Mission growth](#mission-growth). | Combat experience |
-| Mission skill gain | The base skill an Agent gains from one Mission it survives: its combat skill gain in the Mission's Combat plus its survival skill gain, under [Mission growth](#mission-growth). |  |
-| Experience | The base skill an Agent has gained from Missions: the sum of every Mission skill gain it has received. Base skill gained in Training is not part of it. | XP; experience points |
+| Skill gain | Base skill an Agent gains. It has exactly two sources: its training skill gain, under [Training growth](#training-growth), and its Experience, of which every point it gains gives it exactly one point of base skill, under [Mission growth](#mission-growth). |  |
+| Training skill gain | The base skill an Agent on Training gains in one Advance turn whose Training gain outcome is "gains": `training_skill_gain_per_turn` plus what the acquired Upgrades add, under [Training growth](#training-growth). It is not Experience. |  |
+| Experience | What an Agent learns from the Missions it survives, counted in whole points, which it gains as Mission experience under [Mission growth](#mission-growth). An Agent's Experience is the sum of every Mission experience it has gained. Every point of Experience an Agent gains is also a skill gain of exactly one point of base skill; this conversion is fixed by the rules and is no GDR value. | XP; experience points |
+| Combat experience | The Experience one Agent earns in one Combat from the attacks it made and the attacks made on it, under [Combat experience](combat.md#combat-experience) in Combat. The Agent gains it only if it survives the Mission, under [Mission growth](#mission-growth). | Combat skill gain |
+| Survival experience | The Experience an Agent earns for surviving a Mission, which falls with the number of Missions it has survived, under [Mission growth](#mission-growth). | Survival bonus; survival skill gain |
+| Mission experience | The Experience an Agent gains from one Mission it survives: its combat experience in the Mission's Combat plus its survival experience, under [Mission growth](#mission-growth). | Mission skill gain |
 
 # Agent GDRs
 
@@ -102,7 +104,7 @@ An AgentArchetype is the [Archetype](../foundation/core-concepts.md#campaign-ins
 
 ## AgentParameters
 
-AgentParameters bundles the values that the Agent rules read, and the values that [Combat](combat.md) and [Missions](missions.md) read about exhaustion and about the base skill an Agent gains in a Combat. The table below is exhaustive apart from `id` and `type`.
+AgentParameters bundles the values that the Agent rules read, and the values that [Combat](combat.md) and [Missions](missions.md) read about exhaustion and about the Experience an Agent earns in a Combat. The table below is exhaustive apart from `id` and `type`.
 
 | Property | Meaning | Read by |
 | --- | --- | --- |
@@ -120,11 +122,11 @@ AgentParameters bundles the values that the Agent rules read, and the values tha
 | `exhaustion_work_start_max` | The highest exhaustion at which an Agent is Fit for work. | [Start-work gate](#start-work-gate) |
 | `exhaustion_work_limit` | The exhaustion at or above which work makes an Agent return to Standby. | [Forced return](#forced-return) |
 | `training_skill_gain_per_turn` | The base skill an Agent on Training gains in one Advance turn when its Training gain outcome is "gains", before any [Upgrade](domain-model.md#agency-and-agents). It is a [Decimal quantity](../foundation/numbers.md#glossary). | [Training growth](#training-growth) |
-| `skill_gain_per_attack_hit` | The combat skill gain an attacking Agent earns from each of its attacks that hits. | [Combat](combat.md), which owns its meaning |
-| `skill_gain_per_attack_miss` | The combat skill gain an attacking Agent earns from each of its attacks that misses. | [Combat](combat.md), which owns its meaning |
-| `skill_gain_per_defense_hit` | The combat skill gain a defending Agent earns from each attack on it that hits. | [Combat](combat.md), which owns its meaning |
-| `skill_gain_per_defense_miss` | The combat skill gain a defending Agent earns from each attack on it that misses. | [Combat](combat.md), which owns its meaning |
-| `skill_gain_per_mission_survived` | The survival skill gain of an Agent's first, second, and each later Mission survived, as a list whose last entry applies to every Mission beyond the list. | [Mission growth](#mission-growth) |
+| `experience_per_attack_hit` | The combat experience an attacking Agent earns from each of its attacks that hits. | [Combat](combat.md), which owns its meaning |
+| `experience_per_attack_miss` | The combat experience an attacking Agent earns from each of its attacks that misses. | [Combat](combat.md), which owns its meaning |
+| `experience_per_defense_hit` | The combat experience a defending Agent earns from each attack on it that hits. | [Combat](combat.md), which owns its meaning |
+| `experience_per_defense_miss` | The combat experience a defending Agent earns from each attack on it that misses. | [Combat](combat.md), which owns its meaning |
+| `experience_per_mission_survived` | The survival experience of an Agent's first, second, and each later Mission survived, as a list whose last entry applies to every Mission beyond the list. | [Mission growth](#mission-growth) |
 
 ## Weapon properties this document reads
 
@@ -138,7 +140,7 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 2. **One AgentParameters:** The Game build supplies exactly one AgentParameters GDR.
 3. **Exact properties:** The AgentArchetype and the AgentParameters GDR each have exactly the properties their table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
 4. **Archetype values are valid:** The AgentArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a whole number of at least 1, and its `weapon` references a Weapon GDR the Game build supplies.
-5. **Parameters are valid:** `training_skill_gain_per_turn` is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. `skill_gain_per_mission_survived` is a list of one or more entries, each a whole number of at least 0. Every other property of AgentParameters is a whole number of at least 0.
+5. **Parameters are valid:** `training_skill_gain_per_turn` is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. `experience_per_mission_survived` is a list of one or more entries, each a whole number of at least 0. Every other property of AgentParameters is a whole number of at least 0.
 6. **Exhaustion thresholds are ordered:** `exhaustion_work_start_max` is less than `exhaustion_work_limit`, and `exhaustion_work_limit` is at most `exhaustion_incapacitation`. An Agent that is Fit for work therefore starts below the exhaustion that ends its work, and work ends no later than at the exhaustion at which the Agent would stop fighting in a Combat.
 
 [Combat GDR validation](combat.md#combat-gdr-validation) adds further rules, e.g. that the Weapon `base_weapon_damage` is a whole number of at least 1. These rules guarantee that every newly created Agent satisfies [Attribute ranges](#attribute-ranges) and that the effective skill formula never divides by zero.
@@ -464,30 +466,32 @@ The outcome of one Agent does not depend on any other Agent, so the result is th
 
 An Agent learns most from the Missions it lives through: every attack it makes or takes teaches it something, and surviving the Mission teaches it more, most of all in its first Missions. A Killed Agent takes what it learned with it, so deploying a veteran improves the odds of a Mission but risks losing its Experience.
 
-**Proposed rule:** Under step 7 of [Resolving one Mission](missions.md#resolving-one-mission) in Missions, every survivor of Mission M gains base skill and Experience, whether M is Won or Lost:
+**Proposed rule:** Under step 7 of [Resolving one Mission](missions.md#resolving-one-mission) in Missions, every survivor of Mission M gains Experience, whether M is Won or Lost, and every point of it gives the survivor one point of base skill:
 
 ```text
-survival skill gain = entry n of skill_gain_per_mission_survived, or its last entry when n exceeds the number of entries
-mission skill gain  = combat skill gain + survival skill gain
-base skill after    = base skill before + mission skill gain
-Experience after    = Experience before + mission skill gain
+survival experience = entry n of experience_per_mission_survived, or its last entry when n exceeds the number of entries
+mission experience  = combat experience + survival experience
+Experience after    = Experience before + mission experience
+base skill after    = base skill before + mission experience
 ```
+
+The skill gain of exactly one point of base skill for each point of Experience is fixed by this rule: no GDR holds it, so no Game build can change it.
 
 Inputs:
 
 | Symbol | Meaning | Unit and domain |
 | --- | --- | --- |
-| combat skill gain | The survivor's combat skill gain in M's Combat, as M's Combat report records it, under [Combat skill gain](combat.md#combat-skill-gain) in Combat. | Skill points; a whole number of at least 0. |
+| combat experience | The survivor's combat experience in M's Combat, as M's Combat report records it, under [Combat experience](combat.md#combat-experience) in Combat. | Experience; a whole number of at least 0. |
 | n | The number of Missions in the survivor's Participation history, M included, which step 5 of Resolving one Mission has recorded. | Missions; a whole number of at least 1. |
-| `skill_gain_per_mission_survived` | The list of AgentParameters, its entries numbered from 1. | Skill points; each entry a whole number of at least 0. |
+| `experience_per_mission_survived` | The list of AgentParameters, its entries numbered from 1. | Experience; each entry a whole number of at least 0. |
+| Experience before | The survivor's Experience after M's Combat. | Experience; a whole number of at least 0. |
 | base skill before | The survivor's base skill after M's Combat, which never changes base skill. | Skill points; a Decimal quantity of at least 0. |
-| Experience before | The survivor's Experience after M's Combat. | Skill points; a whole number of at least 0. |
 
-Evaluation: every gain is a whole number, so the sums are exact and no rounding occurs, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. Base skill and Experience have no upper bound, and both rise by the same amount, so Experience never exceeds the base skill gained since the Agent was created. Every Mission in a Serving Agent's Participation history is one it survived, because a Killed Agent takes part in no later Mission, so n is the number of Missions the survivor has survived, M included. A Killed Agent gains nothing: its combat skill gain stays in M's Combat report and is never added to any value. Whether M is Won or Lost does not matter: the survivors of a Lost Mission gain as those of a Won one do. M's Combat reads the base skill before the gain, so the gain first counts in the survivor's next work or Combat. The gain of one survivor reads no other Agent, so the result does not depend on the order in which an implementation processes the survivors.
+Evaluation: every amount of Experience is a whole number, so the sums are exact and no rounding occurs, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. Base skill and Experience have no upper bound, and both rise by the same amount, so Experience never exceeds the base skill gained since the Agent was created. Every Mission in a Serving Agent's Participation history is one it survived, because a Killed Agent takes part in no later Mission, so n is the number of Missions the survivor has survived, M included. A Killed Agent gains nothing: its combat experience stays in M's Combat report and is never added to any value. Whether M is Won or Lost does not matter: the survivors of a Lost Mission gain as those of a Won one do. M's Combat reads the base skill before the gain, so the gain first counts in the survivor's next work or Combat. The gain of one survivor reads no other Agent, so the result does not depend on the order in which an implementation processes the survivors.
 
-E.g., with the Bootstrap values, a survivor of its first Mission that hit with two attacks, missed with one, was hit once, and was missed once has the combat skill gain `4 + 4 + 2 + 1 + 2 = 13`, the survival skill gain 30, and the Mission skill gain 43; its second, third, and fourth Missions survived give survival skill gains of 25, 20, and 15, and every later one 15.
+E.g., with the Bootstrap values, a survivor of its first Mission that hit with two attacks, missed with one, was hit once, and was missed once has the combat experience `4 + 4 + 2 + 1 + 2 = 13`, the survival experience 30, and the Mission experience 43, so its Experience and its base skill each rise by 43; its second, third, and fourth Missions survived give survival experience of 25, 20, and 15, and every later one 15.
 
-**Informative rationale:** The gains are the game-ts values. game-ts indexed the survival gain by the Missions an Agent had been deployed on, which equals the Missions a survivor has survived. It showed an Agent's experience as its skill less the skill gained in Training, which also counted the starting skill; Experience counts only what Missions added.
+**Informative rationale:** The gains are the game-ts values. game-ts indexed the survival gain by the Missions an Agent had been deployed on, which equals the Missions a survivor has survived. It showed an Agent's experience as its skill less the skill gained in Training, which also counted the starting skill; Experience counts only what Missions added. game-ts named the amounts skill gains; they are named Experience here so that the Compendium can explain where Experience comes from apart from what it gives, and the conversion of one point of base skill for each point of Experience is fixed rather than a GDR value so that the Compendium can state it in words that no Game build can make false.
 
 # Work exhaustion
 
@@ -629,8 +633,8 @@ Each lists its Agents by Instance ID, in the order of the Agents in Campaign sta
 
 # Edge cases and failure behavior
 
-- **Growth from a Lost Mission:** The survivors of a Lost Mission gain the same Mission skill gain as they would after a Won one, whatever their condition at the end of its Combat ([Mission growth](#mission-growth)).
-- **A long career:** Once an Agent has survived more Missions than `skill_gain_per_mission_survived` has entries, every further Mission survived gives the last entry, with no cap on base skill or Experience ([Mission growth](#mission-growth)).
+- **Growth from a Lost Mission:** The survivors of a Lost Mission gain the same Mission experience as they would after a Won one, whatever their condition at the end of its Combat ([Mission growth](#mission-growth)).
+- **A long career:** Once an Agent has survived more Missions than `experience_per_mission_survived` has entries, every further Mission survived gives the last entry, with no cap on base skill or Experience ([Mission growth](#mission-growth)).
 - **Exhaustion at the free amount:** An exhaustion exactly equal to `exhaustion_free_points` gives a penalty factor of 100; the first point above it lowers the penalty factor by `skill_penalty_pct_per_exhaustion` ([Effective skill](#effective-skill)).
 - **Penalty below zero:** When `skill_penalty_pct_per_exhaustion × (exhaustion − exhaustion_free_points)` exceeds 100, the penalty factor is 0 and effective skill is 0; the Combatant is still alive and keeps its base skill ([Effective skill](#effective-skill)).
 - **Very high exhaustion:** Exhaustion has no upper bound and may exceed `exhaustion_incapacitation`, e.g. after a costly Mission under [Mission exhaustion](missions.md#mission-exhaustion) in Missions; the penalty factor is 0 once `skill_penalty_pct_per_exhaustion × (exhaustion − exhaustion_free_points)` reaches 100, and the Agent needs a longer rest before it is Fit for work ([Attribute ranges](#attribute-ranges), [Start-work gate](#start-work-gate)).

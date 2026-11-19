@@ -1,0 +1,34 @@
+id: mechanics_experience
+type: CompendiumArticle
+category: mechanics
+title: Experience
+terms: [Experience]
+body: >-
+  Agents gain Experience by living through Missions. In a Combat an Agent earns Experience from every attack it makes
+  and from every attack made on it, and it earns more for surviving the Mission, most of all the first few times. An
+  Agent killed in the Combat keeps nothing. Every point of Experience an Agent gains raises its skill by one point; see
+  Skill gain.
+formulas:
+  - label: 'Each attack made that hits'
+    text: '+{agent_parameters.experience_per_attack_hit}'
+  - label: 'Each attack made that misses'
+    text: '+{agent_parameters.experience_per_attack_miss}'
+  - label: 'Each time the Agent is hit'
+    text: '+{agent_parameters.experience_per_defense_hit}'
+  - label: 'Each time the Agent is missed'
+    text: '+{agent_parameters.experience_per_defense_miss}'
+  - label: 'First Mission survived'
+    text: '+{agent_parameters.experience_per_mission_survived.1}'
+  - label: 'Second Mission survived'
+    text: '+{agent_parameters.experience_per_mission_survived.2}'
+  - label: 'Third Mission survived'
+    text: '+{agent_parameters.experience_per_mission_survived.3}'
+  - label: 'Every later Mission survived'
+    text: '+{agent_parameters.experience_per_mission_survived.4}'
+  - label: 'Won or lost'
+    text: 'Survivors gain the same either way'
+  - label: 'Skill gained'
+    text: '+1 skill for each point of Experience'
+  - label: 'When it counts'
+    text: 'Experience is added after the Combat, so it helps from the next job on'
+see_also: [mechanics_skill_gain, mechanics_missions, mechanics_combat]
