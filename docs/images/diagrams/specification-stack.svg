@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="996" viewBox="0 0 1000 996" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Agent Recovery, Combat, Economy and Upgrades, Factions; Agents, Compendium, Panic and Endings; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records; Campaign State, Effect Lists, Player API; Engine Contract; Core Concepts.">
-  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Agent Recovery, Combat, Economy and Upgrades, Factions; Agents, Compendium, Panic and Endings; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records; Campaign State, Effect Lists, Player API; Engine Contract; Core Concepts.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="996" viewBox="0 0 1000 996" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Agent Recovery, Combat, Economy and Upgrades, Factions; Agents, Compendium, Panic and Endings; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records; Campaign State, Conditions, Effect Lists, Player API; Engine Contract; Core Concepts.">
+  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Agent Recovery, Combat, Economy and Upgrades, Factions; Agents, Compendium, Panic and Endings; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records; Campaign State, Conditions, Effect Lists, Player API; Engine Contract; Core Concepts.</title>
   <style>
     :root { --bg: #ffffff; --muted: #5b6676; --frame: #c3c9d4; --frame-fill: #f8f9fb;
       --r0-bg: #e9ebef; --r0-fg: #3d4452;
@@ -140,12 +140,14 @@
   <text class="chip-text ink-r3" x="615.8" y="749">Game Data Records</text>
   <rect class="fill-r2" x="40" y="771" width="920" height="42" rx="7"/>
   <text class="row-label ink-r2" x="50" y="796">LAYER 3</text>
-  <rect class="chip stroke-r2" x="316.2" y="778" width="132.4" height="28" rx="14"/>
-  <text class="chip-text ink-r2" x="382.4" y="797">Campaign State</text>
-  <rect class="chip stroke-r2" x="456.6" y="778" width="117.2" height="28" rx="14"/>
-  <text class="chip-text ink-r2" x="515.2" y="797">Effect Lists</text>
-  <rect class="chip stroke-r2" x="581.8" y="778" width="102" height="28" rx="14"/>
-  <text class="chip-text ink-r2" x="632.8" y="797">Player API</text>
+  <rect class="chip stroke-r2" x="261.2" y="778" width="132.4" height="28" rx="14"/>
+  <text class="chip-text ink-r2" x="327.4" y="797">Campaign State</text>
+  <rect class="chip stroke-r2" x="401.6" y="778" width="102" height="28" rx="14"/>
+  <text class="chip-text ink-r2" x="452.6" y="797">Conditions</text>
+  <rect class="chip stroke-r2" x="511.6" y="778" width="117.2" height="28" rx="14"/>
+  <text class="chip-text ink-r2" x="570.2" y="797">Effect Lists</text>
+  <rect class="chip stroke-r2" x="636.8" y="778" width="102" height="28" rx="14"/>
+  <text class="chip-text ink-r2" x="687.8" y="797">Player API</text>
   <rect class="fill-r1" x="40" y="819" width="920" height="42" rx="7"/>
   <text class="row-label ink-r1" x="50" y="844">LAYER 2</text>
   <rect class="chip stroke-r1" x="430" y="826" width="140" height="28" rx="14"/>

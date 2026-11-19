@@ -185,6 +185,20 @@ The following GDR properties hold an Effect list, and the specification named fo
 | `on_win` of a FactionOperationLevel | A Mission at a Response Mission site is Won. | [Consequences](missions.md#consequences) in Missions |
 | `on_ignored_or_lost` of a FactionOperationLevel | A Mission at a Response Mission site is Lost, or the Response Mission site is Expired. | [Consequences](missions.md#consequences) in Missions |
 
+Game data also asks questions about a Campaign through [Conditions](../foundation/conditions.md#glossary), and each [Condition kind](../foundation/conditions.md#glossary) is defined once in the same way. The game has the following Condition kinds. This table is exhaustive.
+
+| Condition kind | What a Condition of it asks | Defined under |
+| --- | --- | --- |
+| `mission_won` | Whether a Mission at a Mission site of one kind, targeting one Faction, has been Won. | [Mission won Condition kind](missions.md#mission-won-condition-kind) in Missions |
+| `lead_completed` | Whether an Investigation of one Lead has been Completed. | [Lead completed Condition kind](leads-and-progression.md#lead-completed-condition-kind) in Leads and Progression |
+
+The following GDR properties hold a [Condition](../foundation/conditions.md#glossary). This table is exhaustive.
+
+| GDR property | What the Condition decides | Stated under |
+| --- | --- | --- |
+| `discovered_when` of a Lead | When the Lead becomes discovered. | [Lead discovery](leads-and-progression.md#lead-discovery) in Leads and Progression |
+| `can_exist_when` of a MissionSiteArchetype | Whether an Initiative Mission site of that kind can exist. | [Whether a Mission site can exist](missions.md#whether-a-mission-site-can-exist) in Missions |
+
 # Campaign and Agency
 
 A Campaign contains one Agency, the current [Turn](../foundation/engine-contract.md#player-actions-and-turns), Panic and the Campaign ending, Agents, Factions, Investigations, Mission sites, and Missions. Campaign-wide properties, e.g. the current Turn and Panic, belong directly to Campaign state, not to the Agency.

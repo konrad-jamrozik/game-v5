@@ -76,7 +76,3 @@ Applying an Effect list has these complete results:
 - **Order independence:** The result does not depend on the order of the Effects in the list, nor on the order in which an implementation applies several Effect lists whose combined result their Effect kinds define.
 
 A GDR whose Effect list violates [Effect list format](#effect-list-format), holds an Effect of a kind its property does not permit, or holds an Effect whose value is outside the permitted range makes the Game build defective: no [Campaign](core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](engine-contract.md#world-state-integrity) in Engine Contract.
-
-# TODOs
-
-- TODO (later): Conditions that game data declares, i.e. yes-or-no questions about a Campaign that combine with "and", "or", and "not".

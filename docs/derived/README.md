@@ -13,7 +13,7 @@ These informative views are derived from the registered Markdown specifications.
 | ------------------ | ------------- | -------------- |
 | Governance         | Conventions   | 8              |
 | Governance         | Process       | 3              |
-| Design             | Foundation    | 16             |
+| Design             | Foundation    | 17             |
 | Design             | Mechanics     | 12             |
 | Design             | Content       | 1              |
 | Design             | UI            | 17             |
@@ -49,6 +49,7 @@ These informative views are derived from the registered Markdown specifications.
 | --- | --- | --- |
 | AUTO | [Autopilot](../specs/design/foundation/autopilot.md) | Autopilot limits, what an Autopilot AI receives, and Autopilot engagement lifecycle. |
 | CINST | [Campaign Instances](../specs/design/foundation/campaign-instances.md) | How every thing in a Campaign's world is modeled as a Campaign instance. |
+| COND | [Conditions](../specs/design/foundation/conditions.md) | How game data declares a yes-or-no question about a Campaign: Conditions, Condition kinds, and how Conditions combine. |
 | CONFIG | [Configuration](../specs/design/foundation/configuration.md) | Kinds of setting, Global configuration, and the configuration cascade. |
 | CORE | [Core Concepts](../specs/design/foundation/core-concepts.md) | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build. |
 | CSTATE | [Campaign State](../specs/design/foundation/campaign-state.md) | What Campaign state is made of, what the Game rules read of it, and how Campaign initialization produces it. |
@@ -76,7 +77,7 @@ These informative views are derived from the registered Markdown specifications.
 | ENDING | [Panic and Endings](../specs/design/mechanics/panic-and-endings.md) | Panic and how this Turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending. |
 | FACTION | [Factions](../specs/design/mechanics/factions.md) | What a Faction has, its creation, its escalation through Faction activity levels, Faction operation occurrence generation, and elimination. |
 | INVSTG | [Investigations](../specs/design/mechanics/investigations.md) | What an Investigation has, the InvestigationArchetype and InvestigationParameters GDRs, the Investigation lifecycle, the startInvestigation and assignAgentsToInvestigation actions, leaving, Progress loss, and abandonment, Investigation progress, Assessment, completion, and the Team progress estimate query. |
-| LEAD | [Leads and Progression](../specs/design/mechanics/leads-and-progression.md) | What a Lead GDR describes, Lead prerequisites, Lead discovery, Lead availability, Lead status, and the effect of completing a Lead. |
+| LEAD | [Leads and Progression](../specs/design/mechanics/leads-and-progression.md) | What a Lead GDR describes, Lead discovery, Lead availability, Lead status, and the effect of completing a Lead. |
 | MISSION | [Missions](../specs/design/mechanics/missions.md) | What a Mission site and a Mission have, Mission site creation, the Mission site and Mission lifecycles, the deployAgents action, Mission resolution, expiration, and the Consequences for the Campaign. |
 | RECOVER | [Agent Recovery](../specs/design/mechanics/agent-recovery.md) | Health recovery and exhaustion recovery of Agents, the RecoveryParameters GDR, and the result when several rules change one of those values in the same Turn. |
 | TURN | [Turn Advancement](../specs/design/mechanics/turn-advancement.md) | The canonical order of Turn advancement steps and which values each step uses. |

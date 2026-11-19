@@ -1,6 +1,6 @@
 # Lead repeatability
 
-These are the Game designer's working notes on which Leads can be investigated again, recorded on 2026-11-16 to inform a later specification change. They set no rule: the specifications in `docs/specs/` own every rule, and today they specify no Lead repeatability beyond what [Lead availability](../specs/design/mechanics/leads-and-progression.md#lead-availability) already allows.
+These are the Game designer's working notes on which Leads can be investigated again, recorded on 2026-11-16 to inform a later specification change. They set no rule: the specifications in `docs/specs/` own every rule. Since 2026-11-19 the specifications state the parts of these notes about `investigate_again`, the Condition for whether a Mission site can exist, stored discovery, and hidden conditions, under [Lead availability](../specs/design/mechanics/leads-and-progression.md#lead-availability) in Leads and Progression; where the two differ, the specifications apply.
 
 ## Terms in use and still open
 

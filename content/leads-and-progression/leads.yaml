@@ -4,7 +4,6 @@ name: Locate Red Dawn member
 description: Track down a Red Dawn member for apprehension.
 faction: red_dawn
 required_progress: 3
-requires: []
 on_completion:
   - create_mission_site: apprehend_member
 ---
@@ -14,8 +13,8 @@ name: Locate Red Dawn safehouse
 description: The captured member revealed a Red Dawn safehouse.
 faction: red_dawn
 required_progress: 6
-requires:
-  - mission_won: apprehend_member
+discovered_when:
+  mission_won: apprehend_member
 on_completion:
   - create_mission_site: raid_safehouse
 ---
@@ -25,8 +24,8 @@ name: Locate Red Dawn HQ
 description: Intelligence from the safehouse points to the Red Dawn headquarters.
 faction: red_dawn
 required_progress: 10 # game-ts: 25
-requires:
-  - mission_won: raid_safehouse
+discovered_when:
+  mission_won: raid_safehouse
 on_completion:
   - create_mission_site: raid_hq
 ---
@@ -36,7 +35,6 @@ name: Locate Exalt member
 description: Track down an Exalt member for apprehension.
 faction: exalt
 required_progress: 3
-requires: []
 on_completion:
   - create_mission_site: apprehend_member
 ---
@@ -46,8 +44,8 @@ name: Locate Exalt safehouse
 description: The captured member revealed an Exalt safehouse.
 faction: exalt
 required_progress: 6
-requires:
-  - mission_won: apprehend_member
+discovered_when:
+  mission_won: apprehend_member
 on_completion:
   - create_mission_site: raid_safehouse
 ---
@@ -57,8 +55,8 @@ name: Locate Exalt HQ
 description: Intelligence from the safehouse points to the Exalt headquarters.
 faction: exalt
 required_progress: 10 # game-ts: 25
-requires:
-  - mission_won: raid_safehouse
+discovered_when:
+  mission_won: raid_safehouse
 on_completion:
   - create_mission_site: raid_hq
 ---
@@ -68,7 +66,6 @@ name: Locate Black Lotus member
 description: Track down a Black Lotus member for apprehension.
 faction: black_lotus
 required_progress: 3
-requires: []
 on_completion:
   - create_mission_site: apprehend_member
 ---
@@ -78,8 +75,8 @@ name: Locate Black Lotus safehouse
 description: The captured member revealed a Black Lotus safehouse.
 faction: black_lotus
 required_progress: 6
-requires:
-  - mission_won: apprehend_member
+discovered_when:
+  mission_won: apprehend_member
 on_completion:
   - create_mission_site: raid_safehouse
 ---
@@ -89,7 +86,7 @@ name: Locate Black Lotus HQ
 description: Intelligence from the safehouse points to the Black Lotus headquarters.
 faction: black_lotus
 required_progress: 10 # game-ts: 25
-requires:
-  - mission_won: raid_safehouse
+discovered_when:
+  mission_won: raid_safehouse
 on_completion:
   - create_mission_site: raid_hq
