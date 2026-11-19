@@ -50,7 +50,7 @@ Mechanics specifications own the player-facing game systems: their rules, transi
 
 ## Compendium
 
-[Compendium](compendium.md) answers _what can the player look up about the game?_ It owns the EncyclopediaArticle GDR, written by the Game designer as Display content that no rule reads, and when an Encyclopedia article is Player-visible: always for a Guide article, and otherwise exactly when its subject is.
+[Compendium](compendium.md) answers _what can the player look up about the game?_ It owns the CompendiumArticle GDR, written by the Game designer as Display content that no rule reads; how an article takes its numbers from the game data through Placeholders and gains its Article links by rule; and when a Compendium article is Player-visible: always for a Guide article or a Mechanics article, and for a Subject article exactly when its subject is.
 
 ## Turn Advancement
 

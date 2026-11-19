@@ -1,0 +1,29 @@
+id: mechanics_investigations
+type: CompendiumArticle
+category: mechanics
+title: Investigations
+terms: [Investigation, Investigations]
+body: >-
+  An Investigation is a team of Agents following a Lead. Each turn the team adds progress from its skill, and when the
+  progress reaches a hidden target the Investigation completes and reveals a Mission site. Pulling Agents out loses
+  progress, and pulling them all out abandons the Investigation.
+formulas:
+  - label: 'Progress each turn'
+    text: '(Effective skill of the whole team ÷ 100) × team efficiency, rounded down to hundredths'
+  - label: 'Team efficiency'
+    text: 'n^{investigation_parameters.team_efficiency_exponent} ÷ n for n Agents at work: 1 for one Agent, and less for each Agent as the team grows'
+  - label: 'Target'
+    text: 'From the required progress of the Lead up to {investigation_parameters.required_progress_max_pct}% of it, set at the start and hidden'
+  - label: 'Assessment'
+    text: 'At {investigation_parameters.assessment_threshold_pct}% of the required progress you learn the required progress and the range of the target'
+  - label: 'Removing Agents'
+    text: 'Progress × (effective skill that stays ÷ effective skill before), rounded down'
+  - label: 'Removing every Agent'
+    text: 'The Investigation is abandoned; a new one starts from zero'
+  - label: 'Completion'
+    text: 'A Mission site appears, and the team goes to Standby, in transit'
+  - label: 'Exhaustion'
+    text: '+{agent_parameters.exhaustion_per_investigation_turn} for each Agent each turn of work'
+  - label: 'Joining'
+    text: 'Agents are in transit for a turn before they add progress'
+see_also: [mechanics_leads, mechanics_mission_sites, mechanics_exhaustion, guide_investigations]

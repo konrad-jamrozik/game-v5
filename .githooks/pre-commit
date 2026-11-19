@@ -3,6 +3,7 @@
 set -e
 
 node scripts/lint-specs.ts
+node scripts/compendium-check.ts
 node scripts/derived-docs.ts check
 node node_modules/oxfmt/bin/oxfmt . --check
 node node_modules/oxlint/bin/oxlint . --type-aware --max-warnings 0 --report-unused-disable-directives

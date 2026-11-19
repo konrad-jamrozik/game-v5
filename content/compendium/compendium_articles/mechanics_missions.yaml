@@ -1,0 +1,23 @@
+id: mechanics_missions
+type: CompendiumArticle
+category: mechanics
+title: Missions
+terms: [Mission, Missions, deploy, deployed, Transport cap]
+body: >-
+  A Mission is your team's one attempt at a Mission site. You deploy Agents from base, the Combat is fought when the
+  turn advances, and the Mission is won if no Enemy is left able to fight. Win or lose, the survivors come home tired
+  and a little more skilled.
+formulas:
+  - label: 'Who can deploy'
+    text: 'Agents on Standby or Training, whatever their exhaustion'
+  - label: 'Transport cap'
+    text: '{economy.base_transport_cap} Agents deployed at one time, over all Missions, plus Upgrades'
+  - label: 'Won'
+    text: 'No Enemy is able to fight; the rewards of the Mission site apply'
+  - label: 'Lost'
+    text: 'The team retreats, or no Agent is able to fight; no reward, and a Faction operation that was not stopped applies its penalty'
+  - label: 'Exhaustion of survivors'
+    text: '+{agent_parameters.exhaustion_per_mission}, and +{agent_parameters.exhaustion_per_pct_killed} for each 1% of the team that was killed, rounded up'
+  - label: 'After the Combat'
+    text: 'Survivors below max health go to Recovery, the others to Standby; all are in transit for a turn'
+see_also: [mechanics_mission_sites, mechanics_combat, mechanics_retreat, mechanics_skill_gain, transport_cap_article]

@@ -1,0 +1,33 @@
+id: mechanics_turns
+type: CompendiumArticle
+category: mechanics
+title: Turns
+terms: [turn, turns]
+body: >-
+  The game is played in turns. During a turn you give orders, and each takes effect at once. When you advance the turn,
+  the game works through everything that happens in a fixed order, so that, e.g., this turn's income arrives before
+  upkeep is paid.
+formulas:
+  - label: '1. Income'
+    text: 'Funding and Contracting income are added to your money'
+  - label: '2. Upkeep'
+    text: 'Upkeep is paid for every Agent'
+  - label: '3. Training'
+    text: 'Agents on Training gain skill'
+  - label: '4. Investigations'
+    text: 'Investigations gain progress, and those that reach their target complete'
+  - label: '5. Missions'
+    text: 'Every Combat is fought, and the rewards and penalties of each Mission apply'
+  - label: '6. Mission sites'
+    text: 'Open Mission sites count down, and those out of time expire'
+  - label: '7. Factions'
+    text: 'Factions grow more active and carry out operations'
+  - label: '8. Rest'
+    text: 'Agents on Recovery heal, and Agents on Standby or Recovery lose exhaustion'
+  - label: '9. Arrivals'
+    text: 'Agents that were in transit when the turn was advanced arrive'
+  - label: '10. Panic'
+    text: 'Every change to Panic of this turn is applied at once'
+  - label: '11. Ending'
+    text: 'Victory and defeat are checked'
+see_also: [guide_agency, mechanics_winning_and_losing]

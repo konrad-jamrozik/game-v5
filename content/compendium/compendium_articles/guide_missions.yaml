@@ -1,0 +1,10 @@
+id: guide_missions
+type: CompendiumArticle
+category: guide
+title: Fighting Missions
+body: >-
+  A Mission site is a place where Enemies wait, and it expires after a few turns. Deploy a team to it and the Combat is
+  fought when the turn advances. A won Mission brings its rewards; a lost or ignored one can raise Panic. Tired Agents
+  fight worse, so check exhaustion before you deploy, and compare your team's Combat rating with the Enemies'. Agents
+  who survive a Mission gain skill, win or lose.
+see_also: [mechanics_mission_sites, mechanics_missions, mechanics_combat, mechanics_retreat]

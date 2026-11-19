@@ -1,0 +1,21 @@
+id: mechanics_money_and_funding
+type: CompendiumArticle
+category: mechanics
+title: Money and funding
+terms: [money, funding, income]
+body: >-
+  Money pays for hiring, upkeep, and Upgrades. Each turn you receive your funding and what your Agents earn by
+  Contracting, and then pay upkeep. Won Missions add money and can raise funding, and Faction operations you fail to
+  stop can cut it. If your money is below zero when a turn ends, the Campaign is lost.
+formulas:
+  - label: 'Income each turn'
+    text: 'Funding + Contracting income'
+  - label: 'Upkeep each turn'
+    text: 'Paid in full after income, even when it takes money below zero'
+  - label: 'Hiring and Upgrades'
+    text: 'Need the whole price in hand'
+  - label: 'Funding'
+    text: "Never below 0; a change counts from the next turn's income"
+  - label: 'Money below zero when a turn ends'
+    text: 'Defeat; exactly 0 is safe'
+see_also: [mechanics_contracting, mechanics_hiring_and_upkeep, mechanics_upgrades, mechanics_winning_and_losing]

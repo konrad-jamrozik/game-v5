@@ -93,7 +93,15 @@ function rewriteInlineLinks(markdown: string, sourcePath: string, outputPath: st
   return processor.stringify(tree).trim()
 }
 
-function renderCatalog(corpus: SpecificationCorpus): string {
+/** A derived view that is not rendered from the specifications, which the catalog links beside its own views. */
+export interface FurtherView {
+  readonly path: string
+  /** The catalog's list item for the view, without its leading "- ", as Markdown that links the view's file name. */
+  readonly catalogEntry: string
+  readonly content: string
+}
+
+function renderCatalog(corpus: SpecificationCorpus, furtherViews: readonly FurtherView[] = []): string {
   const outputPath = DERIVED_BASE_OUTPUT_PATHS[0]
   const specifications = corpus.specifications.toSorted((left, right) => compareText(left.id, right.id))
   const lines = [
@@ -105,6 +113,7 @@ function renderCatalog(corpus: SpecificationCorpus): string {
     '',
     '- [Alphabetical glossary](glossary.md)',
     '- [Specification relationship graphs](relationships.md)',
+    ...furtherViews.map((view) => `- ${view.catalogEntry}`),
     '',
     '## Counts by family',
     '',
@@ -674,10 +683,12 @@ export async function renderFamilyOverviews(
 export async function renderDerivedDocumentation(
   corpus: SpecificationCorpus,
   formatterConfig: FormatterConfig = {},
+  furtherViews: readonly FurtherView[] = [],
 ): Promise<ReadonlyMap<string, string>> {
   const kinds = renderedRelationshipKinds(corpus)
   const unformatted = new Map<string, string>([
-    [DERIVED_BASE_OUTPUT_PATHS[0], renderCatalog(corpus)],
+    ...furtherViews.map((view) => [view.path, view.content] as const),
+    [DERIVED_BASE_OUTPUT_PATHS[0], renderCatalog(corpus, furtherViews)],
     [DERIVED_BASE_OUTPUT_PATHS[1], renderGlossary(corpus)],
     [DERIVED_BASE_OUTPUT_PATHS[2], renderRelationshipsIndex(corpus)],
     ...kinds.map((kind) => [relationshipOutputPath(kind), renderRelationshipKind(corpus, kind)] as const),

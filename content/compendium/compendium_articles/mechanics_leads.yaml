@@ -1,0 +1,22 @@
+id: mechanics_leads
+type: CompendiumArticle
+category: mechanics
+title: Leads
+terms: [Lead, Leads]
+body: >-
+  A Lead is a trail your Agents can follow. An Investigation that follows it to the end reveals a Mission site, and
+  winning the Mission there can uncover the next Lead. You see only the Leads you have discovered.
+formulas:
+  - label: 'Discovery'
+    text: 'A Lead appears when its hidden condition is met, e.g. by a won Mission, and stays known'
+  - label: 'Available'
+    text: 'Can be investigated now'
+  - label: 'Inactive'
+    text: 'Cannot be investigated now, e.g. while the Mission site it revealed is still open'
+  - label: 'Archived'
+    text: 'Can never be investigated again, e.g. once its Faction is eliminated'
+  - label: 'Required progress'
+    text: 'Hidden until an Investigation reaches {investigation_parameters.assessment_threshold_pct}% of it'
+  - label: 'One at a time'
+    text: 'A Lead has at most one Investigation under way'
+see_also: [mechanics_investigations, mechanics_mission_sites, guide_investigations]

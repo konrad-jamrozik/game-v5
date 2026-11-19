@@ -1,0 +1,20 @@
+id: mechanics_panic
+type: CompendiumArticle
+category: mechanics
+title: Panic
+terms: [Panic]
+body: >-
+  Panic measures how frightened the world is, from 0% to 100%. Faction operations you fail to stop raise it, and some
+  won Missions lower it. If Panic reaches its limit, the Campaign is lost.
+formulas:
+  - label: 'At the start'
+    text: '0%'
+  - label: 'Defeat at'
+    text: '{endings.defeat_at_panic_pct}% or more'
+  - label: 'Raised by'
+    text: 'A lost Mission against a Faction operation, or its Mission site expiring'
+  - label: 'Lowered by'
+    text: 'Winning a Mission whose reward lowers Panic'
+  - label: 'Changes'
+    text: 'Counted in percentage points, added up once each turn, and kept between 0% and 100%'
+see_also: [mechanics_faction_operations, mechanics_winning_and_losing, guide_panic]

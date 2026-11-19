@@ -14,6 +14,7 @@
     "typecheck": "tsc --build",
     "lint:code": "oxlint . --type-aware --max-warnings 0 --report-unused-disable-directives",
     "lint:specs": "node scripts/lint-specs.ts",
+    "compendium:check": "node scripts/compendium-check.ts",
     "docs:generate": "node scripts/derived-docs.ts generate",
     "docs:check": "node scripts/derived-docs.ts check",
     "terms:report": "node scripts/terms-report.ts",
@@ -30,8 +31,8 @@
     "test:coverage": "vitest run --coverage",
     "hooks:install": "git config core.hooksPath .githooks",
     "fix": "npm run docs:link-terms && npm run docs:generate && npm run format && npm run lint:code -- --fix",
-    "check:commit": "npm run lint:specs && npm run docs:check && npm run format:check && npm run lint:code",
-    "check": "npm run lint:specs && npm run docs:check && npm run format:check && npm run lint:code && npm run test && npm run typecheck"
+    "check:commit": "npm run lint:specs && npm run compendium:check && npm run docs:check && npm run format:check && npm run lint:code",
+    "check": "npm run lint:specs && npm run compendium:check && npm run docs:check && npm run format:check && npm run lint:code && npm run test && npm run typecheck"
   },
   "devDependencies": {
     "@types/node": "26.6.6",
@@ -46,6 +47,7 @@
     "remark-gfm": "4.0.1",
     "typescript": "7.0.2",
     "vite": "8.3.0",
-    "vitest": "5.0.0"
+    "vitest": "5.0.0",
+    "yaml": "2.9.1"
   }
 }

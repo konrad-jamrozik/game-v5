@@ -1,0 +1,21 @@
+id: mechanics_hiring_and_upkeep
+type: CompendiumArticle
+category: mechanics
+title: Hiring and upkeep
+terms: [hire, hires, hired, hiring, upkeep, Agent cap, dismiss, dismissed]
+body: >-
+  Hiring adds an Agent to your Agency for a one-time cost, and every Agent you keep costs upkeep each turn, whatever it
+  is doing. The Agent cap limits how many Agents you can have. Dismissing an Agent ends its upkeep and frees its place,
+  with no refund.
+formulas:
+  - label: 'Hire cost'
+    text: '{economy.hire_cost} money'
+  - label: 'Upkeep'
+    text: '{economy.upkeep_per_agent} money for each Agent each turn, including Agents in transit, deployed, or on Recovery'
+  - label: 'Agent cap'
+    text: '{economy.base_agent_cap} Agents, plus Upgrades'
+  - label: 'A hired Agent'
+    text: 'Counts toward the cap and upkeep at once, and arrives on Standby next turn'
+  - label: 'Dismissing'
+    text: 'Only an Agent on Standby that is not in transit; it never returns'
+see_also: [mechanics_agents, mechanics_money_and_funding, agent_cap_article]

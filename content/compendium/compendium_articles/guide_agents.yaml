@@ -1,0 +1,10 @@
+id: guide_agents
+type: CompendiumArticle
+category: guide
+title: Putting Agents to work
+body: >-
+  Every Agent has one Assignment at a time. On Standby it rests and waits for orders, Contracting earns money, Training
+  raises skill, an Investigation follows a Lead, and a Mission fights at a Mission site. Wounded Agents go to Recovery
+  until they have healed. Sending an Agent away from base or calling it back costs a turn in transit, so change
+  Assignments with care, and let Agents rest before their exhaustion builds up.
+see_also: [mechanics_assignments, mechanics_transit, mechanics_exhaustion]

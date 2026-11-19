@@ -1,0 +1,19 @@
+id: mechanics_retreat
+type: CompendiumArticle
+category: mechanics
+title: Retreat
+terms: [retreat, retreats, retreated]
+body: >-
+  Your team does not fight to the last Agent. After each round of a Combat it weighs how the fight is going, and it
+  retreats when it has lost much of its strength while the Enemies keep enough of theirs. A retreat loses the Mission
+  but saves the survivors.
+formulas:
+  - label: 'The team retreats when both hold'
+    text: 'Its Combat rating is below {combat_parameters.retreat_below_agent_rating_fraction} × what it was at the start, and the Combat rating of the Enemies is at least {combat_parameters.retreat_at_enemy_to_agent_rating} × that of the team now'
+  - label: 'Checked'
+    text: 'After each round, once both sides have attacked'
+  - label: 'Result'
+    text: 'The Mission is lost'
+  - label: 'Exhaustion'
+    text: 'Survivors gain as much as after any other Mission'
+see_also: [mechanics_combat, mechanics_missions]

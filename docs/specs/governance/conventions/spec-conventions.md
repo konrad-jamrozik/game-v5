@@ -100,7 +100,7 @@ The following table is the exhaustive set of Personas. The last column names the
 | --- | --- | --- | --- |
 | Game designer | Human | Does all the design of the game, encompassing the Engine designer, Content designer, UI designer, and AI designer Personas, and decides how much of that work to delegate to LLMs. | All Families |
 | Engine designer | Human | Designs the engine and the rules of the game, decides which inputs to those rules game data supplies and so become content, and establishes these specification conventions. | Conventions, Foundation, Mechanics |
-| Content designer | Human or LLM | Authors game data, including the initial content and in-game encyclopedia articles, within the structures the Engine designer exposes for content. | Foundation, Mechanics |
+| Content designer | Human or LLM | Authors game data, including the initial content and the articles of the in-game reference, within the structures the Engine designer exposes for content. | Foundation, Mechanics |
 | UI designer | Human or LLM | Designs player-facing interfaces over the shared engine API. | UI, Foundation |
 | AI designer | Human or LLM | Designs an AI that plays the game. | Autopilot AIs, Foundation |
 | Implementer | LLM | Implements specifications as code and tests. | Foundation, Mechanics, UI, Autopilot AIs, Mandatory, Guidance, Recipes |

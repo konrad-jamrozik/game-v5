@@ -1,0 +1,24 @@
+id: mechanics_mission_sites
+type: CompendiumArticle
+category: mechanics
+title: Mission sites
+terms: [Mission site, Mission sites]
+body: >-
+  A Mission site is a place where Enemies wait for a fight. Some appear when an Investigation completes, others when a
+  Faction carries out an operation. Each stays open for a limited number of turns, and you get one attempt at it.
+formulas:
+  - label: 'Time limit'
+    text: 'Each kind of Mission site stays open for its own number of turns, then expires'
+  - label: 'Last turn'
+    text: 'A team deployed on the last turn still fights'
+  - label: 'One attempt'
+    text: 'Once a team is deployed, no other team can be sent, and the team cannot be called back'
+  - label: 'Expired, from an Investigation'
+    text: 'No penalty'
+  - label: 'Expired, from a Faction operation'
+    text: 'The same penalty as a lost Mission'
+  - label: 'Faction eliminated'
+    text: 'Its open Mission sites are cancelled, with no reward and no penalty'
+  - label: 'Enemies'
+    text: 'Listed at the Mission site before you deploy, with their Combat rating'
+see_also: [mechanics_missions, mechanics_faction_operations, mechanics_leads]

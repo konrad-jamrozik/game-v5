@@ -10,7 +10,7 @@
 
 # Overview
 
-A [Game build](core-concepts.md#game-build-and-content) carries a large body of fixed game data, e.g. how much health a Thug starts with, or what the encyclopedia says about it. Each piece of it is a [Game Data Record](core-concepts.md#game-build-and-content) (GDR), authored as YAML, conforming to a declared [Type](core-concepts.md#data-modeling), and never changed during play. Whatever changes belongs to [Campaign state](core-concepts.md#campaign-and-session) instead, as [Campaign State](campaign-state.md) describes it, so one GDR serves every [Campaign](core-concepts.md#campaign-and-session) at once.
+A [Game build](core-concepts.md#game-build-and-content) carries a large body of fixed game data, e.g. how much health a Thug starts with, or what the Compendium says about it. Each piece of it is a [Game Data Record](core-concepts.md#game-build-and-content) (GDR), authored as YAML, conforming to a declared [Type](core-concepts.md#data-modeling), and never changed during play. Whatever changes belongs to [Campaign state](core-concepts.md#campaign-and-session) instead, as [Campaign State](campaign-state.md) describes it, so one GDR serves every [Campaign](core-concepts.md#campaign-and-session) at once.
 
 Because a GDR never changes, what sets one use of it apart from another is how the Game rules and Campaign state relate to it. A GDR can supply starting values when a Campaign or a [Campaign instance](core-concepts.md#campaign-instances) is created, be read by the Game rules whenever a calculation needs it, or be referenced from Campaign state, which may then key its own facts by that GDR's identity. A GDR that the Game rules never read exists only for the player to see. One GDR may serve several purposes at once, e.g. the Thug GDR is the [Archetype](core-concepts.md#campaign-instances) of an [Enemy](../mechanics/domain-model.md#combat) and also supplies its display name.
 
@@ -34,7 +34,7 @@ GDRs can serve the following seven purposes. The purposes can overlap; they do n
 | Archetype | A Campaign instance references the GDR as its [Archetype](core-concepts.md#campaign-instances); the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-instances.md#campaign-instance-creation). | A newly created [Enemy](../mechanics/domain-model.md#combat) whose Archetype is Thug has [current health](../mechanics/agents-spec.md#combatant-attributes) 10 and a fresh [Instance ID](campaign-instances.md#glossary). |
 | Referenced GDR | A Campaign instance holds a reference to a GDR other than its Archetype. | An [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) holds a reference to the [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) GDR it pursues. |
 | Key for campaign facts | [Campaign state](core-concepts.md#campaign-and-session) holds facts keyed by a GDR’s identity while the GDR remains immutable. | The engine records completions against a Lead GDR’s identity. |
-| Display content | The [Game rules](core-concepts.md#game-build-and-content) never read the GDR's value; the engine exposes it to the player through [Player API](engine-contract.md#api-surfaces), subject to [Player-visible information](engine-contract.md#api-surfaces) boundaries. | The Thug GDR's display name and description appear in the enemy list and the encyclopedia. |
+| Display content | The [Game rules](core-concepts.md#game-build-and-content) never read the GDR's value; the engine exposes it to the player through [Player API](engine-contract.md#api-surfaces), subject to [Player-visible information](engine-contract.md#api-surfaces) boundaries. | The Thug GDR's display name and description appear in the enemy list and the Compendium. |
 
 # GDR authoring format
 
@@ -48,12 +48,13 @@ Each of the following GDR purpose sections shows one GDR of its worked example a
 
 GDR files are authored under the `content/` directory at the repository root. The layout of the files follows these rules:
 
-- **One file per Type:** each file holds every GDR of one Type and no GDR of another Type. The order of the GDRs in a file, as authored, is significant: it is preserved when the file is read, and a specification may rely on it, e.g. to fix the order in which Campaign instances are created from them.
+- **One file per Type:** each file holds every GDR of one Type and no GDR of another Type, unless the Type has a directory of one file per GDR, as the last rule states. The order of the GDRs in a file, as authored, is significant: it is preserved when the file is read, and a specification may rely on it, e.g. to fix the order in which Campaign instances are created from them.
 - **Directory of the Type owner:** the file lies in the directory named after the file name of the specification that owns its Type, without the `.md` extension or a `-spec` suffix, e.g. `content/combat/` for Combat.
 - **File named after the Type:** the file name is the Type's name in lowercase words joined by underscores, in the plural, e.g. `faction_activity_levels.yaml` for FactionActivityLevel.
 - **One YAML document per GDR:** documents are separated by `---`, and each states its GDR as the snippets of the GDR purpose sections show, including its identifier and its Type.
+- **Directory of one file per GDR:** a Type with many GDRs, or with GDRs too long to read together in one file, may have a directory in place of its file. The directory lies where the file would lie and is named as the file would be, without the `.yaml` extension, e.g. `content/compendium/compendium_articles/` for CompendiumArticle. It holds one file for each GDR of the Type and nothing else. Each file holds exactly one YAML document and is named after the identifier of its GDR, followed by `.yaml`, e.g. `mechanics_combat.yaml`, so that a GDR is found by its identifier. A Type has either a file or a directory, never both. The order of the GDRs of such a Type is the ascending order of their identifiers, compared character by character by Unicode code point; a specification whose rules need another order states it by a property instead.
 
-A GDR added later goes into the file of its Type, and a file is added only for a new Type.
+A GDR added later goes into the file of its Type, or into the directory of its Type as a file of its own, and a file or directory is added only for a new Type.
 
 # GDR purpose: campaign instance initialization
 
@@ -321,42 +322,42 @@ flowchart LR
 
 # GDR purpose: display content
 
-When serving the Display content purpose, a GDR supplies values that exist only for the player to see, e.g. names, descriptions, in-game encyclopedia articles, and references to images or other media.
+When serving the Display content purpose, a GDR supplies values that exist only for the player to see, e.g. names, descriptions, the articles of the Compendium, and references to images or other media.
 
 ## Worked example: display content
 
-E.g., an illustrative Thug enemy and its encyclopedia article:
+E.g., an illustrative Thug enemy and its Compendium article:
 
 | Element | Modeling role | Meaning in this example |
 | --- | --- | --- |
 | EnemyArchetype | Type | Describes the shared enemy characteristics and initial values, including a display name and a description. |
 | Thug | GDR serving the Archetype and Display content purposes | Has Type EnemyArchetype, [base health](../mechanics/agents-spec.md#combatant-attributes) 10, display name "Thug", and a one-sentence description. |
-| EncyclopediaArticle | Type | Describes an encyclopedia article: a title, body text, and a reference to its subject GDR. |
-| Thug article | GDR serving the Display content purpose | Has Type EncyclopediaArticle, title "Thug", body text, and a reference to the Thug GDR. |
+| CompendiumArticle | Type | Describes a Compendium article: its text and, for an article about one GDR, a reference to that GDR, its subject. |
+| Thug article | GDR serving the Display content purpose | Has Type CompendiumArticle, body text, and a reference to the Thug GDR, whose display name it is shown under. |
 
 E.g., the Thug article as YAML. It identifies its subject by the identifier of the Thug GDR:
 
 ```yaml
 id: thug_article
-type: EncyclopediaArticle
-title: Thug
-body: A hired street enforcer with little training and less loyalty.
+type: CompendiumArticle
+category: subject
 subject: thug
+body: A hired street enforcer with little training and less loyalty.
 ```
 
-The [Combat](../mechanics/domain-model.md#combat) specification reads Thug's base health 10 as its Archetype initial value; the Game rules never read its display name, its description, or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the encyclopedia once the player is entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.
+The [Combat](../mechanics/domain-model.md#combat) specification reads Thug's base health 10 as its Archetype initial value; the Game rules never read its display name, its description, or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the Compendium once the player is entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.
 
 Display content follows these requirements:
 
 - **No gameplay dependence:** The Game rules never read a value that serves the Display content purpose. Changing Display content in a Game build changes only what the player sees; equal initial Campaign state and the same ordered committed [Player actions](engine-contract.md#player-actions-and-turns) still produce equal Campaign state.
 - **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing something hidden from the player stays hidden until it becomes Player-visible. The value described states when it becomes Player-visible, under [Player-visible information](player-api.md#player-visible-information) in Player API.
-- **No inference:** Relationships and gameplay facts are never inferred from Display content, extending the rule under [References](campaign-instances.md#references). The Thug article identifies its subject through its reference to the Thug GDR, not through its title.
+- **No inference:** Relationships and gameplay facts are never inferred from Display content, extending the rule under [References](campaign-instances.md#references). The Thug article identifies its subject through its reference to the Thug GDR, not through its identifier or its text.
 - **Media:** A reference to an image or other media is a value in the GDR; the referenced media is part of the Game build. Media formats and loading are left to the implementation.
 
 ```mermaid
 flowchart LR
     Thug["GDR: Thug<br/>base health 10<br/>display name and description"]
-    Article["GDR: Thug article<br/>title, body text"]
+    Article["GDR: Thug article<br/>body text"]
     Article -->|subject reference| Thug
     Thug -->|base health 10| Combat["Game rules: Enemy creation and Combat"]
     Thug -->|display name and description| PlayerAPI["Player API:<br/>Player-visible information"]
@@ -366,6 +367,5 @@ flowchart LR
 
 # TODOs
 
-- TODO: State when encyclopedia articles become Player-visible information, under [GDR purpose: display content](#gdr-purpose-display-content).
 - TODO: Decide the GDR identifier format: the permitted characters and casing of a GDR identifier, and the scope within which it is unique. Affects [GDR authoring format](#gdr-authoring-format) and every reference to a GDR.
 - TODO: Decide the YAML property naming: how a GDR states its identifier and its Type, and the casing of property names. Affects [GDR authoring format](#gdr-authoring-format) and the snippets in every GDR purpose section.

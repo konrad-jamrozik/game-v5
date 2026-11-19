@@ -1,0 +1,20 @@
+id: mechanics_factions
+type: CompendiumArticle
+category: mechanics
+title: Factions
+terms: [Faction, Factions]
+body: >-
+  Factions are the hostile groups you are fighting. Each acts on its own, grows more active the longer it survives, and
+  carries out operations that raise Panic if you do not stop them. Eliminate every Faction to win the Campaign.
+formulas:
+  - label: 'Activity level'
+    text: 'Sets how often a Faction carries out operations and how severe they are; it rises over time and never falls'
+  - label: 'Timing'
+    text: 'When a Faction will next grow more active or carry out an operation is hidden'
+  - label: 'Eliminating a Faction'
+    text: 'Win a Mission whose reward is the end of the Faction, e.g. the raid on its headquarters'
+  - label: 'Once eliminated'
+    text: 'No more operations; its open Mission sites are cancelled and its Leads are archived'
+  - label: 'Slowing a Faction'
+    text: 'Nothing slows a Faction except eliminating it'
+see_also: [mechanics_faction_operations, mechanics_panic, mechanics_winning_and_losing]

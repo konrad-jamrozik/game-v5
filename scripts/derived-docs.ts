@@ -2,6 +2,13 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { collectContentFiles } from './compendium-check.ts'
+import {
+  COMPENDIUM_PREVIEW_PATH,
+  loadCompendium,
+  loadGameData,
+  renderCompendiumPreview,
+} from './compendium/compendium.ts'
 import { collectMarkdownFiles } from './lint-specs.ts'
 import {
   isGeneratedDiagramFilePath,
@@ -9,6 +16,7 @@ import {
   renderDerivedDocumentation,
   renderFamilyDiagramFiles,
   renderFamilyOverviews,
+  type FurtherView,
 } from './spec-docs/generator.ts'
 import { loadFormatterConfig, type FormatterConfig } from './spec-docs/format-markdown.ts'
 import { renderReviewChecklist } from './spec-docs/review-checklist.ts'
@@ -112,18 +120,42 @@ export interface DerivedOutputs {
   readonly sources: ReadonlyMap<string, string>
 }
 
-/** Renders every derived output, or returns the findings that prevent rendering a consistent set. */
+/** The Compendium preview of the game data in `contentFiles`, or the findings that prevent rendering it. */
+export function compendiumPreviewView(
+  contentFiles: readonly SourceFile[],
+): FurtherView | { readonly findings: readonly string[] } {
+  const gameData = loadGameData(contentFiles)
+  const compendium = loadCompendium(gameData)
+  if (compendium.findings.length > 0) return { findings: compendium.findings }
+  return {
+    path: COMPENDIUM_PREVIEW_PATH,
+    catalogEntry: '[Compendium preview](compendium.md), derived from the game data under `content/`',
+    content: renderCompendiumPreview(compendium, gameData.gdrs),
+  }
+}
+
+/**
+ * Renders every derived output, or returns the findings that prevent rendering a consistent set. The Compendium
+ * preview is rendered only when `contentFiles`, the YAML files under `content/`, is given.
+ */
 export async function renderDerivedOutputs(
   files: readonly SourceFile[],
   formatterConfig: FormatterConfig = {},
+  contentFiles?: readonly SourceFile[],
 ): Promise<DerivedOutputs | { readonly findings: readonly string[] }> {
   const analysis = analyzeSpecifications({ files })
   if (analysis.diagnostics.length > 0) return { findings: analysis.diagnostics.map(formatDiagnostic) }
+  const furtherViews: FurtherView[] = []
+  if (contentFiles) {
+    const preview = compendiumPreviewView(contentFiles)
+    if ('findings' in preview) return preview
+    furtherViews.push(preview)
+  }
   const sources = new Map(files.map((file) => [file.path.replace(/\\/g, '/'), file.content]))
   const overviews = await renderFamilyOverviews(analysis.corpus, sources, formatterConfig)
   const checklist = await renderReviewChecklist(analysis.corpus, sources, formatterConfig)
   const expectedMarkdown = new Map([
-    ...(await renderDerivedDocumentation(analysis.corpus, formatterConfig)),
+    ...(await renderDerivedDocumentation(analysis.corpus, formatterConfig, furtherViews)),
     ...overviews,
     ...checklist,
   ])
@@ -178,6 +210,7 @@ export async function runDerivedDocumentation(
   arguments_: readonly string[],
   io: DerivedDocsIO,
   formatterConfig: FormatterConfig = {},
+  contentFiles?: readonly SourceFile[],
 ): Promise<0 | 1 | 2> {
   const mode = arguments_[0]
   if (arguments_.length !== 1 || (mode !== 'generate' && mode !== 'check')) {
@@ -185,7 +218,7 @@ export async function runDerivedDocumentation(
     return 2
   }
   try {
-    const rendered = await renderDerivedOutputs(files, formatterConfig)
+    const rendered = await renderDerivedOutputs(files, formatterConfig, contentFiles)
     if ('findings' in rendered) {
       for (const finding of rendered.findings) io.writeError(finding)
       return 1
@@ -238,8 +271,9 @@ async function main(): Promise<void> {
   const root = process.cwd()
   const docsDirectory = resolve(root, 'docs')
   const outputDirectory = resolve(root, 'docs', 'derived')
-  const [files, derivedOutputs, diagramOutputs, formatterConfig] = await Promise.all([
+  const [files, contentFiles, derivedOutputs, diagramOutputs, formatterConfig] = await Promise.all([
     collectMarkdownFiles(root, docsDirectory),
+    collectContentFiles(root),
     collectOutputFiles(root, outputDirectory),
     collectOutputFiles(root, resolve(docsDirectory, 'images', 'diagrams'), isGeneratedDiagramFilePath),
     loadFormatterConfig(root),
@@ -263,6 +297,7 @@ async function main(): Promise<void> {
       writeError: console.error,
     },
     formatterConfig,
+    contentFiles,
   )
 }
 

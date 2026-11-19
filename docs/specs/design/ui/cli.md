@@ -25,7 +25,7 @@ The CLI reports the result of each operation in two forms, each complete on its 
 - **Readable output:** text that a human can read in a terminal.
 - **Structured output:** a machine-readable form of the same result, for a script or an LLM-based agent.
 
-Both forms carry exactly what the engine API returns, so a caller never needs the other form to learn more, under [Information boundary](../foundation/player-api.md#information-boundary) in Player API.
+Both forms carry exactly what the engine API returns, so a caller never needs the other form to learn more, under [Information boundary](../foundation/player-api.md#information-boundary) in Player API. E.g., a Compendium article is reported in its resolved form, under [Article resolution](../mechanics/compendium.md#article-resolution) in Compendium, so both forms give the text, the inserted values, and the Article links that the graphical user interface shows.
 
 # TODOs
 

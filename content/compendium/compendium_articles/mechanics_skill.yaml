@@ -1,0 +1,19 @@
+id: mechanics_skill
+type: CompendiumArticle
+category: mechanics
+title: Skill
+terms: [skill, effective skill]
+body: >-
+  Skill is how good an Agent is at everything it does: earning money, investigating, and fighting. Training and
+  Missions raise it for good, and nothing lowers it. Lost health and exhaustion reduce how much of its skill an Agent
+  can use, until it has healed and rested; what is left is its effective skill.
+formulas:
+  - label: 'Effective skill'
+    text: 'Skill × (health ÷ max health) × exhaustion factor, rounded down'
+  - label: 'Exhaustion factor'
+    text: '100% up to {agent_parameters.exhaustion_free_points} exhaustion, then {agent_parameters.skill_penalty_pct_per_exhaustion}% less for each point above it, down to 0%'
+  - label: 'Used for'
+    text: 'Contracting income, Investigation progress, and every attack and defense in a Combat'
+  - label: 'Enemies'
+    text: 'The same rule applies to every Enemy'
+see_also: [mechanics_skill_gain, mechanics_health, mechanics_exhaustion]

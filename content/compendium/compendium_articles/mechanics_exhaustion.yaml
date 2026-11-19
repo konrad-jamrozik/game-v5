@@ -1,0 +1,35 @@
+id: mechanics_exhaustion
+type: CompendiumArticle
+category: mechanics
+title: Exhaustion
+terms: [exhaustion, exhausted, tired]
+body: >-
+  Exhaustion measures how tired an Agent is. Work and fighting raise it, and only rest on Standby or Recovery lowers
+  it. A tired Agent works and fights worse, one that is too tired cannot start new work, and one that works on
+  regardless is sent back to rest.
+formulas:
+  - label: 'Each turn of Contracting'
+    text: '+{agent_parameters.exhaustion_per_contracting_turn}'
+  - label: 'Each turn of Training'
+    text: '+{agent_parameters.exhaustion_per_training_turn}'
+  - label: 'Each turn on an Investigation'
+    text: '+{agent_parameters.exhaustion_per_investigation_turn}'
+  - label: 'Each attack made in a Combat'
+    text: '+{agent_parameters.exhaustion_per_attack}, hit or miss'
+  - label: 'Each attack defended against'
+    text: '+{agent_parameters.exhaustion_per_defense}, hit or miss'
+  - label: 'Each Mission survived'
+    text: '+{agent_parameters.exhaustion_per_mission}, and +{agent_parameters.exhaustion_per_pct_killed} for each 1% of the team that was killed, rounded up'
+  - label: 'Each turn on Standby or Recovery'
+    text: '−{recovery.exhaustion_recovery_per_turn}, plus Upgrades, never below 0'
+  - label: 'In transit or deployed'
+    text: 'No rest'
+  - label: 'Skill penalty'
+    text: '−{agent_parameters.skill_penalty_pct_per_exhaustion}% of skill for each point above {agent_parameters.exhaustion_free_points}'
+  - label: 'New work can start at most at'
+    text: '{agent_parameters.exhaustion_work_start_max}; deploying to a Mission site has no such limit'
+  - label: 'Work ends at'
+    text: "{agent_parameters.exhaustion_work_limit} or more: after that turn's work the Agent is sent to Standby"
+  - label: 'Unable to fight at'
+    text: '{agent_parameters.exhaustion_incapacitation} or more'
+see_also: [mechanics_recovery, mechanics_skill, mechanics_assignments, exhaustion_recovery_article]

@@ -1,0 +1,9 @@
+id: guide_panic
+type: CompendiumArticle
+category: guide
+title: Keeping Panic down
+body: >-
+  Panic measures how frightened the world is. Faction operations left unanswered raise it, and some won Missions bring
+  it down. If Panic reaches its limit, the Campaign is lost, so answer the operations you can win. Eliminate every
+  Faction to win.
+see_also: [mechanics_panic, mechanics_faction_operations, mechanics_winning_and_losing]

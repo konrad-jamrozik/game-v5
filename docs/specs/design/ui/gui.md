@@ -100,6 +100,8 @@ Only these values are shown with two decimals, exactly and never rounded, becaus
 
 A value that is a whole number by its rule is shown as it is, e.g. effective skill, effective max health, money, and an Enemy's current health.
 
+A value that a Compendium article inserts for a [Placeholder](../mechanics/compendium.md#glossary) is text that [Player API](../foundation/engine-contract.md#api-surfaces) reports already formatted, under [Value formatting](../mechanics/compendium.md#value-formatting) in Compendium, and the GUI shows it as reported and never rounds it, e.g. a multiplier that reads "0.5".
+
 A Decimal quantity is turned into its text from its whole number of hundredths, without a binary floating-point number, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers.
 
 # Enemy labels

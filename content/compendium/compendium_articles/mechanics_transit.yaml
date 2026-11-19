@@ -1,0 +1,24 @@
+id: mechanics_transit
+type: CompendiumArticle
+category: mechanics
+title: Transit
+terms: [transit, in transit]
+body: >-
+  Agents need time to travel. An Agent sent away from base, recalled to it, newly hired, or returning from a Mission is
+  in transit for one turn. In transit it does nothing and cannot be given orders, but it still costs upkeep.
+formulas:
+  - label: 'Length'
+    text: 'Always one turn'
+  - label: 'To or from Contracting or an Investigation'
+    text: 'In transit'
+  - label: 'Between Standby and Training'
+    text: 'No transit'
+  - label: 'Deploying to a Mission site'
+    text: 'No transit on the way there; survivors are in transit on the way back'
+  - label: 'A hired Agent'
+    text: 'In transit to Standby'
+  - label: 'Leaving Recovery'
+    text: 'No transit'
+  - label: 'While in transit'
+    text: 'No income, no skill gain, no progress, no healing, and no rest'
+see_also: [mechanics_assignments]

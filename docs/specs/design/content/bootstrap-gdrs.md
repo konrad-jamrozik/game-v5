@@ -38,10 +38,10 @@ The Bootstrap GDRs keep every kind of GDR the [Game concepts](../mechanics/domai
 | Economy and upgrades | One parameter GDR and eight [Upgrades](../mechanics/economy-and-upgrades.md#glossary) | 9 |
 | Faction | Three FactionArchetypes, three [Faction activity levels](../mechanics/factions.md#glossary), and two [Faction operation levels](../mechanics/factions.md#glossary) | 8 |
 | Panic and endings | One parameter GDR | 1 |
-| [Encyclopedia article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary) and one article about each of 32 other Bootstrap GDRs | 38 |
+| [Compendium article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary), 25 [Mechanics articles](../mechanics/compendium.md#glossary), and one [Subject article](../mechanics/compendium.md#glossary) about each of 32 other Bootstrap GDRs | 63 |
 | [Background artwork](../ui/visual-design.md#glossary) | Three BackgroundArtworks | 3 |
 | [Soundtrack](../ui/music.md#glossary) | One parameter GDR | 1 |
-| **Total** |  | 90 |
+| **Total** |  | 115 |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
 
@@ -179,10 +179,11 @@ Type owner: [Compendium](../mechanics/compendium.md).
 
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
-| `guide_agency`, `guide_agents`, `guide_investigations`, `guide_missions`, `guide_panic`, `guide_upgrades` | EncyclopediaArticle | Display content | The six Guide articles, each explaining one part of the game in general. |
-| One `<subject>_article` for each of `field_agent`, `initiate`, `soldier`, `cult_leader`, `sidearm`, `rifle`, `heavy_rifle`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `max_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | EncyclopediaArticle | Display content | An article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
+| `guide_agency`, `guide_agents`, `guide_investigations`, `guide_missions`, `guide_panic`, `guide_upgrades` | CompendiumArticle | Display content | The six Guide articles, each a short orientation on one part of playing the game. |
+| `mechanics_turns`, `mechanics_agents`, `mechanics_skill`, `mechanics_skill_gain`, `mechanics_health`, `mechanics_recovery`, `mechanics_exhaustion`, `mechanics_assignments`, `mechanics_contracting`, `mechanics_training`, `mechanics_transit`, `mechanics_hiring_and_upkeep`, `mechanics_money_and_funding`, `mechanics_leads`, `mechanics_investigations`, `mechanics_mission_sites`, `mechanics_missions`, `mechanics_combat`, `mechanics_damage`, `mechanics_retreat`, `mechanics_factions`, `mechanics_faction_operations`, `mechanics_panic`, `mechanics_upgrades`, `mechanics_winning_and_losing` | CompendiumArticle | Display content | The 25 Mechanics articles, one for each mechanic the Player meets, each with the formulas of that mechanic. |
+| One `<subject>_article` for each of `field_agent`, `initiate`, `soldier`, `cult_leader`, `sidearm`, `rifle`, `heavy_rifle`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `max_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | CompendiumArticle | Display content | A Subject article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
 
-Every Bootstrap GDR with a `name` that the Player can see has an article, except the AgencyArchetype `agency` and the MissionArchetype `standard_mission`, which only name the Player's own Agency and every Mission.
+Every AgentArchetype, EnemyArchetype, Weapon, Upgrade, FactionArchetype, Lead, and MissionSiteArchetype of the Bootstrap GDRs has a Subject article. The identifier of a Guide article starts with `guide_`, that of a Mechanics article with `mechanics_`, and that of a Subject article is the identifier of its subject followed by `_article`, so that no article's identifier equals that of another GDR; the identifiers carry no meaning beyond that, under [References](../foundation/campaign-instances.md#references) in Campaign Instances. Every value of a GDR that an article states is a [Placeholder](../mechanics/compendium.md#glossary), and only a number that is part of a rule itself is written out, e.g. the 100 and 500 of the contracting income formula; [Compendium coverage](#compendium-coverage) states which GDR values the articles must cover.
 
 ## Visual Design GDRs
 
@@ -206,7 +207,7 @@ Type owner: [Music](../ui/music.md).
 
 The Bootstrap GDRs are authored in YAML files under the `content/` directory at the repository root. The YAML file of a GDR is the only place its values are recorded. The layout of the files follows [GDR file layout](../foundation/game-data-records.md#gdr-file-layout) in Game Data Records.
 
-The following table is exhaustive: it lists every Bootstrap GDR file.
+The following table is exhaustive: it lists every Bootstrap GDR file, and the one directory that holds one file per GDR.
 
 | File | Type | GDRs |
 | --- | --- | --- |
@@ -230,9 +231,22 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 | `content/factions/faction_activity_levels.yaml` | FactionActivityLevel | `faint`, `active`, `war` |
 | `content/factions/faction_operation_levels.yaml` | FactionOperationLevel | `operation_level_1`, `operation_level_2` |
 | `content/panic-and-endings/ending_parameters.yaml` | EndingParameters | `endings` |
-| `content/compendium/encyclopedia_articles.yaml` | EncyclopediaArticle | The 38 GDRs under [Compendium GDRs](#compendium-gdrs) |
+| `content/compendium/compendium_articles/<id>.yaml` | CompendiumArticle | The 63 GDRs under [Compendium GDRs](#compendium-gdrs), each in a file named after its identifier, e.g. `content/compendium/compendium_articles/mechanics_combat.yaml` |
 | `content/visual-design/background_artworks.yaml` | BackgroundArtwork | `missions_view_artwork`, `agents_view_artwork`, `leads_view_artwork` |
 | `content/music/music_parameters.yaml` | MusicParameters | `music` |
+
+# Compendium coverage
+
+The Compendium is a complete reference only if every number behind a mechanic can be looked up in it, so the Compendium articles must keep up with the parameter GDRs as mechanics are added.
+
+**Proposed rule:** Every property, other than `id` and `type`, of every parameter GDR of the Bootstrap GDRs, i.e. of every GDR whose Type name ends in "Parameters", is named by a [Placeholder](../mechanics/compendium.md#glossary) of at least one Compendium article of the Bootstrap GDRs, as [Coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-parameter-gdrs) in Compendium requires. A Placeholder with an index names the list property it indexes. The following properties are exempt, because none of them is part of a mechanic the Player plays with. The table is exhaustive, and a Placeholder must not name an exempt property.
+
+| GDR | Property | Why it is exempt |
+| --- | --- | --- |
+| `configuration_parameters` | `default_preset` | It names the preset that campaign creation starts from, which the Player sees while creating a Campaign. |
+| `music` | `excluded_tracks` | It lists the music files left out of the [Soundtrack](../ui/music.md#glossary). |
+
+The repository check `npm run compendium:check` enforces this rule, together with [Compendium article GDR validation](../mechanics/compendium.md#compendium-article-gdr-validation), and reads the exemptions from the table above. Adding a property to a parameter GDR therefore fails the check until an article explains the property or the table exempts it.
 
 # Victory path
 

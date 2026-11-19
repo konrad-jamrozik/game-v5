@@ -1,0 +1,9 @@
+id: guide_agency
+type: CompendiumArticle
+category: guide
+title: A turn at the Agency
+body: >-
+  You run a covert Agency that hunts the Factions threatening the world. Each turn you hire and assign Agents, follow
+  Leads, deploy teams to Mission sites, and buy Upgrades, then advance the turn to see what your orders achieved.
+  Funding and Contracting pay for it all, and every Agent you keep costs upkeep.
+see_also: [mechanics_turns, mechanics_money_and_funding, mechanics_winning_and_losing]

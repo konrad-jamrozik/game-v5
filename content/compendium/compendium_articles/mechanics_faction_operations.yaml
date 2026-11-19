@@ -1,0 +1,18 @@
+id: mechanics_faction_operations
+type: CompendiumArticle
+category: mechanics
+title: Faction operations
+terms: [Faction operation, Faction operations, operation, operations]
+body: >-
+  From time to time a Faction carries out an operation. Each operation opens a Mission site where you can stop it, for
+  a few turns only. Stop it and you are rewarded; lose the Mission or let the Mission site expire and Panic rises.
+formulas:
+  - label: 'Level'
+    text: 'Each operation has a level, which sets the reward for stopping it and the penalty for failing'
+  - label: 'Stopped: the Mission is won'
+    text: 'The reward of the level, e.g. money or funding'
+  - label: 'Not stopped: the Mission is lost or the Mission site expires'
+    text: 'The penalty of the level, e.g. more Panic or less funding'
+  - label: 'Several at once'
+    text: 'A new operation can begin while the Mission site of an earlier one is still open'
+see_also: [mechanics_factions, mechanics_mission_sites, mechanics_panic]

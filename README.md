@@ -50,6 +50,7 @@ When agents run in [T3 Code](https://github.com/pingdotgg/t3code), the skills th
 | `npm run typecheck`        | Check tests and tooling                                       |
 | `npm run lint:code`        | Run type-aware Oxlint; warnings fail                          |
 | `npm run lint:specs`       | Deterministically lint registered specifications              |
+| `npm run compendium:check` | Check the Compendium articles against the game data           |
 | `npm run docs:generate`    | Update views derived from registered specifications           |
 | `npm run docs:check`       | Check that derived specification views are current            |
 | `npm run docs:link-terms`  | Link the first mention of every term to its definition        |
@@ -75,7 +76,7 @@ The [verification guide](docs/verification.md) explains which checks to run for 
 
 ## Derived specification views
 
-The [derived specification catalog](docs/derived/README.md) links an alphabetical glossary and specification relationship graphs. These informative Markdown files are generated from the registered specifications; the source specifications remain authoritative. Each spec Family directory also has an `about-<family>.md` overview whose relationship diagrams the same command regenerates between marker comments. After changing a specification, run `npm run docs:generate`. The command also writes the diagrams of each family overview as SVG files in `docs/images/diagrams/`, e.g. `docs/images/diagrams/mechanics-family-within.svg`; do not edit them by hand. Hand-made diagrams also live in `docs/images/diagrams/`, and images of UI Artboards in `docs/images/artboards/`. Commit the resulting files. `npm run docs:check` reports missing, stale, or unexpected files without modifying them, and runs as part of commit and CI checks.
+The [derived specification catalog](docs/derived/README.md) links an alphabetical glossary, specification relationship graphs, and a preview of the Compendium, i.e. of every in-game reference article with its values and links filled in. These informative Markdown files are generated from the registered specifications, and the Compendium preview from the game data under `content/`; the source specifications and game data remain authoritative. Each spec Family directory also has an `about-<family>.md` overview whose relationship diagrams the same command regenerates between marker comments. After changing a specification, run `npm run docs:generate`. The command also writes the diagrams of each family overview as SVG files in `docs/images/diagrams/`, e.g. `docs/images/diagrams/mechanics-family-within.svg`; do not edit them by hand. Hand-made diagrams also live in `docs/images/diagrams/`, and images of UI Artboards in `docs/images/artboards/`. Commit the resulting files. `npm run docs:check` reports missing, stale, or unexpected files without modifying them, and runs as part of commit and CI checks.
 
 ## Strictness and tests
 
@@ -95,11 +96,11 @@ Enable the repository's tracked hooks once per checkout or worktree:
 npm run hooks:install
 ```
 
-The pre-commit hook runs specification linting first, followed by the derived-view check, formatting, and code linting. The pre-push hook runs the same validation pipeline as `npm run check` and CI: specification linting, formatting, code linting, tests, and type checking. The hooks invoke the installed project tools directly so Git clients and agents do not depend on shell-specific npm initialization. A failing command aborts the Git operation. Git's `--no-verify` option can bypass client-side hooks, so CI remains authoritative.
+The pre-commit hook runs specification linting first, followed by the Compendium check, the derived-view check, formatting, and code linting. The pre-push hook runs the same validation pipeline as `npm run check` and CI: specification linting, the Compendium check, the derived-view check, formatting, code linting, tests, and type checking. The hooks invoke the installed project tools directly so Git clients and agents do not depend on shell-specific npm initialization. A failing command aborts the Git operation. Git's `--no-verify` option can bypass client-side hooks, so CI remains authoritative.
 
 ## CI and updates
 
-Pull requests and pushes to `main` run specification linting, the derived-view check, formatting, code linting, tests, and type checking. The workflow also supports manual dispatch. Nothing is deployed.
+Pull requests and pushes to `main` run specification linting, the Compendium check, the derived-view check, formatting, code linting, tests, and type checking. The workflow also supports manual dispatch. Nothing is deployed.
 
 Dependencies are pinned and installed reproducibly with `npm ci`. Dependabot opens grouped weekly updates for npm and GitHub Actions; updates require review and are not automatically merged.
 

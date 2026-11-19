@@ -61,6 +61,7 @@ Each Artboard image comes from exactly one canvas artboard and is shown in exact
 | `history-view.png` | Panel | `HistoryView.dc.html` | [History View](screens/history-view.md) |
 | `charts-view.png` | Panel | `ChartsView.dc.html` | [Charts View](screens/charts-view.md) |
 | `compendium-view.png` | Panel | `CompendiumView.dc.html` | [Compendium View](screens/compendium-view.md) |
+| `compendium-view-subject.png` | Panel | `CompendiumViewSubject.dc.html` | [Compendium View](screens/compendium-view.md) |
 
 # Reading Artboards
 

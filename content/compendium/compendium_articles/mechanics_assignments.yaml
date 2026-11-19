@@ -1,0 +1,31 @@
+id: mechanics_assignments
+type: CompendiumArticle
+category: mechanics
+title: Assignments
+terms: [Assignment, Assignments, Standby]
+body: >-
+  Every Agent has exactly one Assignment: Standby, Contracting, Training, an Investigation, a Mission, or Recovery.
+  Standby and Training happen at your base; Contracting and Investigations happen away from it. Moving an Agent away
+  from base or back costs a turn in transit, so plan changes ahead.
+formulas:
+  - label: 'Standby'
+    text: 'The Agent rests and waits for orders'
+  - label: 'From Standby or Training'
+    text: 'Switch to the other at once, go to Contracting or an Investigation, or deploy to a Mission site'
+  - label: 'From Contracting or an Investigation'
+    text: 'Can only be recalled to Standby'
+  - label: 'In transit, deployed, or on Recovery'
+    text: 'Cannot be given orders'
+  - label: 'Starting Contracting, Training, or an Investigation'
+    text: 'Needs exhaustion of at most {agent_parameters.exhaustion_work_start_max}'
+  - label: 'Dismissing'
+    text: 'Only an Agent on Standby that is not in transit'
+see_also:
+  [
+    mechanics_contracting,
+    mechanics_training,
+    mechanics_investigations,
+    mechanics_missions,
+    mechanics_recovery,
+    mechanics_transit,
+  ]

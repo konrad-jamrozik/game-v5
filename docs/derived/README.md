@@ -6,6 +6,7 @@ These informative views are derived from the registered Markdown specifications.
 
 - [Alphabetical glossary](glossary.md)
 - [Specification relationship graphs](relationships.md)
+- [Compendium preview](compendium.md), derived from the game data under `content/`
 
 ## Counts by family
 
@@ -71,7 +72,7 @@ These informative views are derived from the registered Markdown specifications.
 | --- | --- | --- |
 | AGENT | [Agents](../specs/design/mechanics/agents-spec.md) | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
 | COMBAT | [Combat](../specs/design/mechanics/combat.md) | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating, Combat outcomes, and the Combat report. |
-| COMP | [Compendium](../specs/design/mechanics/compendium.md) | The EncyclopediaArticle GDR, and when an Encyclopedia article is Player-visible. |
+| COMP | [Compendium](../specs/design/mechanics/compendium.md) | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, and what Player API reports of it. |
 | DOM | [Domain Model](../specs/design/mechanics/domain-model.md) | Game concepts, how they relate, and the structural invariants that span several concepts. |
 | ECON | [Economy and Upgrades](../specs/design/mechanics/economy-and-upgrades.md) | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, the money change in each Action record, and the hireAgent, dismissAgents, purchaseUpgrade, and addMoney actions. |
 | ENDING | [Panic and Endings](../specs/design/mechanics/panic-and-endings.md) | Panic and how this Turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending. |
@@ -94,7 +95,7 @@ These informative views are derived from the registered Markdown specifications.
 | --- | --- | --- |
 | AVIEW | [Agents View](../specs/design/ui/screens/agents-view.md) | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents. |
 | CLI | [Command-Line Interface](../specs/design/ui/cli.md) | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal. |
-| COMPV | [Compendium View](../specs/design/ui/screens/compendium-view.md) | What the Compendium View of the Campaign screen shows and how the Player finds an article in it. |
+| COMPV | [Compendium View](../specs/design/ui/screens/compendium-view.md) | What the Compendium View of the Campaign screen shows of a Compendium article, the data sheet of each kind of subject, and how the Player finds an article and follows the links between articles. |
 | CSCR | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md) | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, its Autopilot controls, and its keyboard shortcuts view. |
 | CVIEW | [Charts View](../specs/design/ui/screens/charts-view.md) | Which charts the Charts View of the Campaign screen shows, what each Faction chart counts, and in which order. |
 | GUI | [Graphical User Interface](../specs/design/ui/gui.md) | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, and how it names an Enemy. |
