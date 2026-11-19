@@ -192,6 +192,7 @@ From time to time a [Faction](#factions) carries out an operation. Each operatio
 | Level | Each operation has a level, which sets the reward for stopping it and the penalty for failing |
 | Stopped: the Mission is won | The reward of the level, e.g. [money](#money-and-funding) or funding |
 | Not stopped: the Mission is lost or the Mission site expires | The penalty of the level, e.g. more Panic or less funding |
+| Never twice in a row | A Faction does not repeat its previous operation when its level offers another |
 | Several at once | A new operation can begin while the Mission site of an earlier one is still open |
 
 See also: [Factions](#factions) · [Mission sites](#mission-sites) · [Panic](#panic)

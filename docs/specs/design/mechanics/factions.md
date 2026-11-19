@@ -183,9 +183,9 @@ A Faction at a final level, i.e. one whose `next` is `null`, has no Turns until 
 
 A Faction operation occurrence is not a separate Campaign instance, and its Response Mission site retains these facts, under [Game concepts](domain-model.md#game-concepts) in Domain Model. A Response Mission site created in this step does not count down toward expiration in the same Advance turn, because [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) expiration precedes Faction activity under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
-A Faction operation occurrence does not depend on any existing Mission site. In particular, an Active Response Mission site of the same Faction, including one of the same Faction operation level, neither prevents nor delays a new occurrence, and consecutive occurrences may have the same Faction operation level.
+A Faction operation occurrence does not depend on any existing Mission site. In particular, an Active Response Mission site of the same Faction, including one of the same Faction operation level, neither prevents nor delays a new occurrence, and consecutive occurrences may have the same Faction operation level. Which MissionSiteArchetype the Response Mission site has does depend on the Response Mission site of the same Faction's previous occurrence, under [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) in Missions.
 
-**Informative rationale:** game-ts also escalated Factions through activity levels and drew operations from per-level frequencies and severity weights. Factions keep that structure, as a Proposed rule; game-ts's avoidance of repeated operations is not carried over.
+**Informative rationale:** game-ts also escalated Factions through activity levels and drew operations from per-level frequencies and severity weights. Factions keep that structure, as a Proposed rule.
 
 # Elimination
 
@@ -262,4 +262,3 @@ Under [Information boundary](../foundation/player-api.md#information-boundary) i
 
 - TODO (later): Faction suppression, under [Faction activity](#faction-activity).
 - TODO (later): Faction discovery, under [Player-visible information](#player-visible-information).
-- TODO (later): Avoiding a repeat of a Faction's previous operation, under [Faction operation occurrence generation](#faction-operation-occurrence-generation).

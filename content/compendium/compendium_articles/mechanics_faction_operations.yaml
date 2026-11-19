@@ -13,6 +13,8 @@ formulas:
     text: 'The reward of the level, e.g. money or funding'
   - label: 'Not stopped: the Mission is lost or the Mission site expires'
     text: 'The penalty of the level, e.g. more Panic or less funding'
+  - label: 'Never twice in a row'
+    text: 'A Faction does not repeat its previous operation when its level offers another'
   - label: 'Several at once'
     text: 'A new operation can begin while the Mission site of an earlier one is still open'
 see_also: [mechanics_factions, mechanics_mission_sites, mechanics_panic]
