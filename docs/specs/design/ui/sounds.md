@@ -10,7 +10,7 @@
 
 # Overview
 
-The GUI answers the Player's clicks with short sounds, so that the command console feels like a responsive instrument and the Player hears that an order was taken without looking for its effect. Each Sound has one meaning: one Sound answers a Main click, which does something, another answers a Go back, which leaves or cancels something, and a third announces that an Advance turn brought news worth a Turn summary. Changing a selection makes no sound.
+The GUI answers the Player's clicks with short sounds, so that the command console feels like a responsive instrument and the Player hears that an order was taken without looking for its effect. Each Sound has one meaning: one Sound answers a Main click, which does something, another answers a Select click, which only chooses what to look at or act on, a third answers a Go back, which leaves or cancels something, and a fourth announces that an Advance turn brought news worth a Turn summary.
 
 Sounds belong to the [Graphical User Interface](gui.md) alone, like the [Music](music.md) they play over. They read no game state beyond what the GUI already shows, change no [Campaign state](../foundation/core-concepts.md#campaign-and-session), and draw no random outcome of a [Campaign](../foundation/core-concepts.md#campaign-and-session); the [Command-Line Interface](cli.md) plays no sounds. Their two settings are part of [Global configuration](../foundation/engine-contract.md#persisted-data), so a choice the Player makes once applies in every later [Session](../foundation/core-concepts.md#campaign-and-session).
 
@@ -22,6 +22,7 @@ Sounds belong to the [Graphical User Interface](gui.md) alone, like the [Music](
 | Sound name | The name of a Sound, which is the name of its file without the extension, e.g. `main-click`. |
 | Sound set | The Sounds that the [Game build](../foundation/core-concepts.md#game-build-and-content) supplies for the GUI to play, under [Sound set](#sound-set). |
 | Main click | A Player input that does something, e.g. opens a Detail view, advances the Turn, or hires Agents, under [Main click](#main-click). |
+| Select click | A Player input that selects or clears an item without doing anything else, e.g. checking the selection checkbox of an Agent or selecting a Lead in the Leads View, under [Select click](#select-click). |
 | Go back | A Player input that leaves what the Player is looking at or cancels what they were about to do, without doing anything else, e.g. the Escape key, under [Go back](#go-back). |
 | Sounds on | The [Global configuration](../foundation/engine-contract.md#persisted-data) setting that says whether the GUI plays Sounds, under [Sound settings](#sound-settings). |
 | Sounds volume | The Global configuration setting that says how loud the GUI plays Sounds, under [Sound settings](#sound-settings). |
@@ -30,7 +31,7 @@ Sounds belong to the [Graphical User Interface](gui.md) alone, like the [Music](
 
 The Sound set is authored as audio files, so that a sound designer replaces a Sound by replacing its file and nothing else. Each Sound is one audio file directly in the `assets/sounds/` directory at the repository root, in one of the following formats; the list is complete:
 
-- WAV, with the extension `.wav`, the format in which the Sounds are authored.
+- WAV, with the extension `.wav`.
 - Ogg Opus, with the extension `.opus`.
 - MP3, with the extension `.mp3`.
 
@@ -41,23 +42,36 @@ The GUI plays the following Sounds, each at the moments the linked section state
 | Sound name | Plays |
 | --- | --- |
 | `main-click` | On every Main click, under [Main click](#main-click), and on releasing the Sounds volume slider, under [Sound settings](#sound-settings). |
+| `select-click` | On every Select click, under [Select click](#select-click). |
 | `go-back-click` | On every Go back, under [Go back](#go-back). |
 | `interesting-turn-summary` | When the [Turn summary](screens/turn-summary.md#glossary) appears after an Advance turn, under [Turn summary](#turn-summary). |
 
 # When Sounds play
 
-Every Sound answers one input of the Player, so the Player hears a Sound only for what they did, never for what the game does on its own, e.g. an [Advance turn](../foundation/engine-contract.md#player-actions-and-turns) that [Autopilot](../foundation/engine-contract.md#autopilot) requests plays no Sound. The Player's inputs fall into three kinds: a Main click, a Go back, and every other input, which plays no Sound. A key that does what a button does, e.g. a keyboard shortcut, plays the Sound that the button plays.
+Every Sound answers one input of the Player, so the Player hears a Sound only for what they did, never for what the game does on its own, e.g. an [Advance turn](../foundation/engine-contract.md#player-actions-and-turns) that [Autopilot](../foundation/engine-contract.md#autopilot) requests plays no Sound. The Player's inputs fall into four kinds: a Main click, a Select click, a Go back, and every other input, which plays no Sound. A key that does what a button does, e.g. a keyboard shortcut, plays the Sound that the button plays.
 
 ## Main click
 
-A Main click is the Player selecting a button that does something: it opens a view or a dialog, asks the engine for a [Player action](../foundation/engine-contract.md#player-actions-and-turns), confirms a choice, starts, loads, or saves a [Campaign](../foundation/core-concepts.md#campaign-and-session), or changes a setting of Global configuration. E.g., each of these is a Main click: opening a Detail view from the [Side panel](gui.md#glossary), opening the [Settings panel](gui.md#settings-panel), Advance turn, Hire, assigning Agents, deploying Agents, confirming a deployment under [Warning on deploying tired Agents](gui.md#warning-on-deploying-tired-agents), Load on a Campaign save, opening the Turn Report View from the Turn summary, selecting a category, an article, an Article link, or a button of the Article history in the [Compendium View](screens/compendium-view.md), which opens an article to be read, and the Music toggle of the [Music control](music.md#music-control), whichever way it turns the music. The GUI plays `main-click` when the Player selects the button, before the engine answers, so the Sound does not wait for a long Player action. Advance turn is the one exception: its Sound waits for the Advance turn to end, under [Turn summary](#turn-summary). The Sounds toggle under [Sound settings](#sound-settings) plays `main-click` when it turns Sounds on and no Sound when it turns them off.
+A Main click is the Player selecting a button that does something: it opens a view or a dialog, asks the engine for a [Player action](../foundation/engine-contract.md#player-actions-and-turns), confirms a choice, starts, loads, or saves a [Campaign](../foundation/core-concepts.md#campaign-and-session), or changes a setting of Global configuration. E.g., each of these is a Main click: opening a Detail view from the [Side panel](gui.md#glossary), opening the [Settings panel](gui.md#settings-panel), Advance turn, Hire, assigning Agents, deploying Agents, confirming a deployment under [Warning on deploying tired Agents](gui.md#warning-on-deploying-tired-agents), Load on a Campaign save, opening the Turn Report View from the Turn summary, selecting an Article link or a button of the Article history in the [Compendium View](screens/compendium-view.md), which follows a reference to another article, and the Music toggle of the [Music control](music.md#music-control), whichever way it turns the music. The GUI plays `main-click` when the Player selects the button, before the engine answers, so the Sound does not wait for a long Player action. Advance turn is the one exception: its Sound waits for the Advance turn to end, under [Turn summary](#turn-summary). The Sounds toggle under [Sound settings](#sound-settings) plays `main-click` when it turns Sounds on and no Sound when it turns them off.
 
-The following inputs are not Main clicks and play no Sound, because they only choose what a later Main click acts on or change how something is shown; the list is complete:
+The following inputs are not Main clicks; the list is complete:
 
-- Selecting or clearing an item, e.g. checking the selection checkbox of an Agent, selecting rows of a table by pressing or dragging, or checking Select all. Selecting an entry of the Compendium View is a Main click, as above.
+- A Select click, which plays its own Sound.
 - Changing a toggle that is not a setting of Global configuration, or a filter, sort, or tab, e.g. an [Assignment filter](screens/agents-view.md#glossary) of the Agents View.
 - Dragging a slider, typing text, hovering, and scrolling. Releasing the Sounds volume slider plays `main-click` under [Sound settings](#sound-settings), and releasing any other slider plays no Sound.
 - A Go back, which plays its own Sound.
+
+Each input of the list other than a Select click and a Go back plays no Sound, because it only changes how something is shown or prepares a later input.
+
+## Select click
+
+A Select click is the Player selecting or clearing an item, which chooses what they look at or what a later Main click acts on, without doing anything else. It is one of the following; the list is complete:
+
+- **Selection checkbox:** clicking, Shift-clicking, or dragging over the rows of a table with selection checkboxes, under [Tables](visual-design.md#tables), e.g. checking the selection checkbox of an Agent in the [Agents View](screens/agents-view.md) or in the deployment pane of the [Missions View](screens/missions-view.md).
+- **Select all:** checking or unchecking the Select all checkbox of such a table.
+- **List item:** selecting an item of a list in a pane of a [Detail view](gui.md#glossary), which shows that item in the pane beside it, e.g. a [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) in the [Leads View](screens/leads-view.md), a Mission site in the Missions View, or a category or an article in the Compendium View.
+
+The GUI plays `select-click` once for each Select click when the Player presses, also when the item already had the state the Select click gives it, so the Player hears every selection answered. A drag over several rows is one Select click, and plays `select-click` once, when the Player presses on its first row. An item that the GUI selects on its own, e.g. the first item that the Leads View selects when it opens, plays no Sound.
 
 ## Go back
 
