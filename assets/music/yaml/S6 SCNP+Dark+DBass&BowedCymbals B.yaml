@@ -1,0 +1,37 @@
+file: 'S6 SCNP+Dark+DBass&BowedCymbals B.mp3'
+source: Suno v6
+original_title: 'S6 SCNP+Dark+DBass&BowedCymbals B'
+song_url: https://suno.com/song/f6f12491-aecd-41cb-ac57-53966a3e3f8b
+model: 'v6 (chirp-hawk)'
+created: '2026-11-18 18:04:06'
+variation_of: 'S6 SCNP+Dark+DBass&BowedCymbals A.mp3'
+
+tags: ['dark', 'brooding', 'minimalist']
+length: '2:57'
+instrumental: true
+instruments: ['bowed double bass', 'bowed cymbals']
+meta_prompt_taxonomy:
+  stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'
+  adjustments:
+    - 'darker and bassier; less electronic and spacey'
+    - 'instruments: double bass + bowed cymbals'
+    - 'Suno v6 settings: Instrumental, Weirdness 40%, Style influence 70%, Variety off, Max Mode off, Personalize off, Duration Auto; Exclude styles as below'
+prompt_from:
+  tool: ChatGPT
+  same_prompt_as: 'S6 SCNP+Dark+DBass&BowedCymbals A.mp3'
+prompt: |-
+  Dark, brooding tactical strategy game soundtrack with deep bowed double bass and sparse bowed cymbal resonances. Subterranean, oppressive, ominous, and deeply unsettling.
+
+    Minimalist arrangement dominated by low contrabass drones, slow dissonant string vibrations, and ample negative space. Barely audible bowed cymbals add distant metallic groans and soft, dark resonances. Bow the cymbals rather than striking them: no crashes, rhythmic cymbal patterns, or bright shimmering washes.
+
+    Evoke clandestine surveillance, isolation, and something dangerous moving beyond sight. Organic, gritty, grounded acoustic textures; minimal melody, subtle harmonic shifts, and slowly evolving tension.
+
+    Very slow pacing, restrained dynamics, and consistent low intensity. Unobtrusive background music suitable for prolonged strategy gameplay and looping. No driving beat, dramatic builds, climaxes, jump scares, or abrupt ending.
+exclude_styles: |-
+  Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, cymbal crashes, drum kit, industrial beats, risers, impacts
+control_sliders:
+  suno_weirdness: 0.4
+  suno_style_influence: 0.7
+  suno_variety: 0
+notes: |-
+  Generated from the specification proposed in the Codex chat "Find untried instrument combinations"; the Game designer confirmed following those instructions. The song page supplies the current source title, model, creation time, display tags, duration, Styles text, Exclude styles, Instrumental setting, and sliders. The source titles already match the repository names; earlier source titles are not known. `created` is the Suno generation time converted to Pacific time, not the later download time. `prompt` preserves the Styles text stored by Suno, including its paragraph indentation. Max Mode off, Personalize off, Duration Auto, and empty Lyrics were instructed; those three UI controls are not exposed in the retrieved song metadata.

@@ -34,8 +34,8 @@ prompt: |-
 exclude_styles: |-
   Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, big band, jazz swing
 control_sliders:
-  weirdness_constraint: 0.4
-  style_weight: 0.7
-  aug_creativity: 0
+  suno_weirdness: 0.4
+  suno_style_influence: 0.7
+  suno_variety: 0
 notes: |-
-  `prompt` is the Styles text ChatGPT produced, word for word: Suno's Variety control was Off (`aug_creativity: 0`), as ChatGPT recommended, so Suno stored the text as pasted. The `exclude_styles` and the Weirdness and Style influence sliders are also those ChatGPT recommended; it added heroic brass, big band, and jazz swing to the Exclude styles of S6 SCNP+Dark+Piano&Cello to keep the brass and woodwind from pulling the song toward jazz or orchestral brass.
+  `prompt` is the Styles text ChatGPT produced, word for word: Suno's Variety control was Off (`suno_variety: 0`), as ChatGPT recommended, so Suno stored the text as pasted. The `exclude_styles` and the Weirdness and Style influence sliders are also those ChatGPT recommended; it added heroic brass, big band, and jazz swing to the Exclude styles of S6 SCNP+Dark+Piano&Cello to keep the brass and woodwind from pulling the song toward jazz or orchestral brass.

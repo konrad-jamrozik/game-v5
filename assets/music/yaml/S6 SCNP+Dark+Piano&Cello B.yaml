@@ -13,7 +13,7 @@ meta_prompt_taxonomy:
   adjustments:
     - 'darker and bassier; less electronic and spacey'
     - 'instruments: felt piano + cello'
-    - 'Suno v6 settings: Exclude styles, Weirdness 40%, Style influence 70%, Variety on'
+    - 'Suno v6 settings: Exclude styles, Weirdness 40%, Style influence 70%, Variety Normal'
 prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
@@ -38,8 +38,8 @@ prompt: |-
 exclude_styles: |-
   Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums
 control_sliders:
-  weirdness_constraint: 0.4
-  style_weight: 0.7
-  aug_creativity: 1
+  suno_weirdness: 0.4
+  suno_style_influence: 0.7
+  suno_variety: 1
 notes: |-
-  `prompt` is the Styles text Suno stored, not the one pasted in: ChatGPT's `produced_prompt` was pasted into Styles, and Suno's Variety control, which was on (`aug_creativity: 1`), rewrote it, differently for each variation. The `exclude_styles` and the Weirdness and Style influence sliders are those ChatGPT recommended.
+  `prompt` is the Styles text Suno stored, not the one pasted in: ChatGPT's `produced_prompt` was pasted into Styles, and Suno's Variety control, which was at Normal (`suno_variety: 1`), rewrote it, differently for each variation. The `exclude_styles` and the Weirdness and Style influence sliders are those ChatGPT recommended.

@@ -25,6 +25,10 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 | `S6 SCNP B.mp3` | Signal Intercept var2 | Suno v6 |  |
 | `S6 SCNP+Dark+BClar&Trombone A.mp3` | Bass clarinet + muted trombone var1 | Suno v6 |  |
 | `S6 SCNP+Dark+BClar&Trombone B.mp3` | Bass clarinet + muted trombone var2 | Suno v6 |  |
+| `S6 SCNP+Dark+Cello&DBass A.mp3` | S6 SCNP+Dark+Cello&DBass A | Suno v6 |  |
+| `S6 SCNP+Dark+Cello&DBass B.mp3` | S6 SCNP+Dark+Cello&DBass B | Suno v6 |  |
+| `S6 SCNP+Dark+DBass&BowedCymbals A.mp3` | S6 SCNP+Dark+DBass&BowedCymbals A | Suno v6 |  |
+| `S6 SCNP+Dark+DBass&BowedCymbals B.mp3` | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |  |
 | `S6 SCNP+Dark+Piano&Cello A.mp3` | Unseen Approach var1 | Suno v6 |  |
 | `S6 SCNP+Dark+Piano&Cello B.mp3` | Unseen Approach var2 | Suno v6 |  |
 | `V3A-S5 SCNP.mp3` | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |  |
@@ -66,22 +70,24 @@ The codes are these lists; a new source, model, stem, or adjustment adds its cod
 | `XCOM` | Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths |
 | `SCNP` | Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST) |
 
-| Adjustment       | `meta_prompt_taxonomy.adjustments` entry                       |
-| ---------------- | -------------------------------------------------------------- |
-| `Var`            | more variety, less monotonous                                  |
-| `TFTD`           | a tint of Cthulhu and X-COM: Terror from the Deep              |
-| `NoPulse`        | no repeated "bum bum bum" pulse; more variety and flair        |
-| `Geo`            | Geoscape: a global defense command screen                      |
-| `Ominous`        | more serious, ominous, dangerous; not relaxing, cozy, or lo-fi |
-| `Bare`           | simplified to a bare-bones prompt                              |
-| `Slow`           | slower (55–65 BPM), darker, less intense; never cheery         |
-| `Sections`       | song-structure tags: [Intro], [Verse], [Bridge], [Outro]       |
-| `Loop`           | steady, seamlessly loopable pacing; no builds or climaxes      |
-| `Dark`           | darker and bassier; less electronic and spacey                 |
-| `Violin`         | instruments: violins, keeping the prompt length                |
-| `Cello&BClar`    | instruments: cello + bass clarinet                             |
-| `Piano&Cello`    | instruments: felt piano + cello                                |
-| `BClar&Trombone` | instruments: bass clarinet + muted trombone                    |
+| Adjustment           | `meta_prompt_taxonomy.adjustments` entry                       |
+| -------------------- | -------------------------------------------------------------- |
+| `Var`                | more variety, less monotonous                                  |
+| `TFTD`               | a tint of Cthulhu and X-COM: Terror from the Deep              |
+| `NoPulse`            | no repeated "bum bum bum" pulse; more variety and flair        |
+| `Geo`                | Geoscape: a global defense command screen                      |
+| `Ominous`            | more serious, ominous, dangerous; not relaxing, cozy, or lo-fi |
+| `Bare`               | simplified to a bare-bones prompt                              |
+| `Slow`               | slower (55–65 BPM), darker, less intense; never cheery         |
+| `Sections`           | song-structure tags: [Intro], [Verse], [Bridge], [Outro]       |
+| `Loop`               | steady, seamlessly loopable pacing; no builds or climaxes      |
+| `Dark`               | darker and bassier; less electronic and spacey                 |
+| `Violin`             | instruments: violins, keeping the prompt length                |
+| `Cello&BClar`        | instruments: cello + bass clarinet                             |
+| `Piano&Cello`        | instruments: felt piano + cello                                |
+| `BClar&Trombone`     | instruments: bass clarinet + muted trombone                    |
+| `Cello&DBass`        | instruments: cello + double bass                               |
+| `DBass&BowedCymbals` | instruments: double bass + bowed cymbals                       |
 
 ## Track records
 
@@ -120,10 +126,10 @@ The following table lists every key a record may hold; the list is exhaustive. A
 | `prompt_from.produced_prompt` |  | The prompt the chatbot produced and the Game designer pasted in, word for word, when the source changed it before storing it as `prompt`, e.g. Suno's Variety rewriting the Styles text. |
 | `prompt` | Yes | The prompt the song was generated from, word for word, as the source stores it; for Suno, its Styles text. |
 | `exclude_styles` |  | Suno's Exclude styles text, word for word: what the song must not sound like. |
-| `control_sliders` |  | Suno's advanced sliders, as Suno stores them, each from 0 to 1. |
-| `control_sliders.weirdness_constraint` |  | Suno's Weirdness, e.g. Weirdness 40% is `0.4`. |
-| `control_sliders.style_weight` |  | Suno's Style influence, e.g. Style influence 70% is `0.7`. |
-| `control_sliders.aug_creativity` |  | Suno's Variety: `0` is Off, which keeps the Styles text as written; above 0, Suno may rewrite it. |
+| `control_sliders` |  | Suno's advanced sliders, each named after its label in the Suno UI with the prefix `suno_`. |
+| `control_sliders.suno_weirdness` |  | Suno's Weirdness, from 0 to 1, e.g. Weirdness 40% is `0.4`. |
+| `control_sliders.suno_style_influence` |  | Suno's Style influence, from 0 to 1, e.g. Style influence 70% is `0.7`. |
+| `control_sliders.suno_variety` |  | Suno's Variety, as one of the numbers `0` to `4`, each a slider setting: `0` Off (Exact style), `1` Normal (Balanced variety), `2` High (Distinct styles), `3` Extra (Bold exploration), `4` Max (Unreasonably varied). At `0`, Suno keeps the Styles text as written; above `0`, it may rewrite it. |
 | `notes` |  | Anything else needed to read the record, e.g. that the prompt given to the source was truncated. |
 
 ## Tracks from ElevenLabs
