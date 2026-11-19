@@ -18,7 +18,7 @@ Campaign state is composed of:
 
 Because Campaign state now includes the Timeline, which the Game rules never read, Campaign state can no longer be defined as "what the Game rules read". The Game rules read only the current world state, the History, and the Campaign configuration.
 
-A Committed state is the world state the pointer is on, not the whole Campaign state.
+The Current world state is the world state the pointer is on, not the whole Campaign state.
 
 ## World state
 

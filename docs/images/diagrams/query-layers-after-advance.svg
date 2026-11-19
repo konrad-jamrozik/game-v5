@@ -61,7 +61,7 @@
   <!-- Turn 9 -->
   <circle class="ring" cx="700" cy="125" r="15"/>
   <polygon class="start" points="700,114 711,125 700,136 689,125"/>
-  <text class="b" x="724" y="158">current Committed state:</text><text class="b" x="724" y="174">the Turn-start state of Turn 9</text>
+  <text class="b" x="724" y="158">Current world state:</text><text class="b" x="724" y="174">the Turn-start state of Turn 9</text>
 
   <!-- Lanes -->
   <path class="lane" d="M 24 182 H 976 M 24 238 H 976 M 24 294 H 976 M 24 350 H 976"/>
@@ -108,5 +108,5 @@
   <text x="54" y="460">getCurrentState() returns the Turn-start state of Turn 9.</text>
   <circle class="badge" cx="34" cy="482" r="10"/><text class="b mid" x="34" y="486.5">5</text>
   <text x="54" y="486">getHistory() ends with the Open History entry of Turn 9, whose Action record is empty.</text>
-  <text class="m" x="24" y="508">Each change happens in the same Advance turn, so no Committed state shows one without the others.</text>
+  <text class="m" x="24" y="508">Each change happens in the same Advance turn, so no World state shows one without the others.</text>
 </svg>

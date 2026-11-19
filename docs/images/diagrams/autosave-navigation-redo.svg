@@ -35,7 +35,7 @@
   </defs>
   <rect class="bg" x="0" y="0" width="1000" height="330"/>
   <text class="title" x="24" y="32">Autosave navigation going forward: redoToAutosave() called four times after going back</text>
-  <text class="b mid" x="130" y="78">current Committed state</text>
+  <text class="b mid" x="130" y="78">Current world state</text>
   <text class="ta mid" x="490" y="78">Engagement Autosave</text>
   <text class="b endt" x="985" y="78">Furthest progress Autosave</text>
   <text class="b mid" x="70" y="110">Turn 3</text>

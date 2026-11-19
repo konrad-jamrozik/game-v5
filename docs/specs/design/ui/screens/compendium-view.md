@@ -20,7 +20,7 @@ The three panes narrow the Compendium from a category to one article, left to ri
 2. **Articles:** the `title` of each Player-visible article of the selected category, sorted by title.
 3. **Article:** the selected article's `title` and `body`. For an article with a subject, the subject's Player-visible properties follow the body as a table of property and value, under the [Player-visible information](../../foundation/engine-contract.md#api-surfaces) of the specification that owns the subject's Type, e.g. an Enemy's base skill, base health, and Weapon.
 
-When the Compendium View opens, the Guide category and its first article are selected. A search field above the panes filters the articles of every category to those whose `title` contains the search text, ignoring case; while it holds text, the categories show the numbers of matching articles, and a category with none is left out. An article that a newly committed state makes Player-visible appears without reopening the Compendium View.
+When the Compendium View opens, the Guide category and its first article are selected. A search field above the panes filters the articles of every category to those whose `title` contains the search text, ignoring case; while it holds text, the categories show the numbers of matching articles, and a category with none is left out. An article that a new [World state](../../foundation/engine-contract.md#player-actions-and-turns) makes Player-visible appears without reopening the Compendium View.
 
 # Artboard
 

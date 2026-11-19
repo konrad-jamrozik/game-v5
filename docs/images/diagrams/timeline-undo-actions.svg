@@ -35,7 +35,7 @@
   <text class="mid" x="250" y="112">Hire an Agent</text>
   <text class="mid" x="410" y="112">Assign Agents</text>
   <text class="mid" x="570" y="112">Purchase an upgrade</text>
-  <text class="b mid" x="730" y="96">current Committed state</text>
+  <text class="b mid" x="730" y="96">Current world state</text>
   <text class="mid" x="730" y="112">Assign Agents</text>
   <text class="b mid" x="870" y="80">Turn-end Autosave</text>
   <text class="m mid" x="870" y="96">written on Advance turn</text>

@@ -5,14 +5,14 @@
 | Spec ID | TIMELINE |
 | Family | Foundation |
 | Audience | Engine designer, UI designer, Implementer |
-| Owns | The structure of the Timeline, undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what returning to a Committed state guarantees. |
+| Owns | The structure of the Timeline, undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what returning to a World state guarantees. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
-Undo lets the player take back a decision and try another. The [Timeline](engine-contract.md#persisted-data) of a [Campaign](core-concepts.md#campaign-and-session) makes this possible: it keeps the [Committed state](engine-contract.md#player-actions-and-turns) the current [Turn](engine-contract.md#player-actions-and-turns) started in and, for each [Player action](engine-contract.md#player-actions-and-turns) since, a Timeline entry holding the action and the Committed state it produced. Undo and redo then only move the [Timeline pointer](engine-contract.md#persisted-data) between them, at no gameplay cost. The Game rules never read the Timeline beyond its current Committed state.
+Undo lets the player take back a decision and try another. The [Timeline](engine-contract.md#persisted-data) of a [Campaign](core-concepts.md#campaign-and-session) makes this possible: it keeps the [World state](engine-contract.md#player-actions-and-turns) the current [Turn](engine-contract.md#player-actions-and-turns) started in and, for each [Player action](engine-contract.md#player-actions-and-turns) since, a Timeline entry holding the action and the World state it produced. Undo and redo then only move the [Timeline pointer](engine-contract.md#persisted-data) between them, at no gameplay cost. The Game rules never read the Timeline beyond its Current world state.
 
-The Turn divides undo and redo into two forms. [Action navigation](#action-navigation) moves the Timeline pointer within the current Turn and never leaves it. [Autosave navigation](#autosave-navigation) goes back and forward across Turns by loading the [Autosaves](saves.md#autosaves) of [Saves](saves.md). Either way, the current Committed state becomes exactly the one the Campaign first reached, so play continued from there unfolds as if nothing had been undone, as long as the Campaign's settings stay unchanged.
+The Turn divides undo and redo into two forms. [Action navigation](#action-navigation) moves the Timeline pointer within the current Turn and never leaves it. [Autosave navigation](#autosave-navigation) goes back and forward across Turns by loading the [Autosaves](saves.md#autosaves) of [Saves](saves.md). Either way, the Current world state becomes exactly the one the Campaign first reached, so play continued from there unfolds as if nothing had been undone, as long as the Campaign's settings stay unchanged.
 
 # Glossary
 
@@ -20,15 +20,15 @@ General terms are in the [Engine Contract glossary](engine-contract.md#glossary)
 
 | Term | Definition |
 | --- | --- |
-| Timeline entry | One [Player action](engine-contract.md#player-actions-and-turns) of the current [Turn](engine-contract.md#player-actions-and-turns), other than Advance turn, together with the [Committed state](engine-contract.md#player-actions-and-turns) it produced, as the [Timeline](engine-contract.md#persisted-data) holds them after its [Turn-start state](engine-contract.md#player-actions-and-turns). |
+| Timeline entry | One [Player action](engine-contract.md#player-actions-and-turns) of the current [Turn](engine-contract.md#player-actions-and-turns), other than Advance turn, together with the [World state](engine-contract.md#player-actions-and-turns) it produced, as the [Timeline](engine-contract.md#persisted-data) holds them after its [Turn-start state](engine-contract.md#player-actions-and-turns). |
 | Undone action | A Timeline entry after the [Timeline pointer](engine-contract.md#persisted-data), which redo can reach again. The Undone actions are always the last Timeline entries of the Timeline, and committing a new action removes all of them. |
-| Furthest progress Autosave | The Autosave holding the furthest [Committed state](engine-contract.md#player-actions-and-turns) of the current line of play, which the [Session controller](engine-contract.md#principals-and-access) left by going back through [Autosave navigation](#autosave-navigation), so redo can return to it, e.g. to a Turn the player has not ended and that therefore has no Turn-end Autosave. |
+| Furthest progress Autosave | The Autosave holding the furthest [World state](engine-contract.md#player-actions-and-turns) of the current line of play, which the [Session controller](engine-contract.md#principals-and-access) left by going back through [Autosave navigation](#autosave-navigation), so redo can return to it, e.g. to a Turn the player has not ended and that therefore has no Turn-end Autosave. |
 
 # Timeline structure
 
-The Timeline holds the [Turn-start state](engine-contract.md#player-actions-and-turns) of the current Turn, followed by that Turn's Timeline entries in the order they were committed. The Timeline pointer is always on the Turn-start state or on one Timeline entry, and the current Committed state is the Turn-start state or the Committed state of that Timeline entry. The Player actions of the current Turn that are not undone are read off the Timeline, from its start up to the Timeline pointer; nothing else stores them.
+The Timeline holds the [Turn-start state](engine-contract.md#player-actions-and-turns) of the current Turn, followed by that Turn's Timeline entries in the order they were committed. The Timeline pointer is always on the Turn-start state or on one Timeline entry, and the [Current world state](engine-contract.md#player-actions-and-turns) is the Turn-start state or the World state of that Timeline entry. The Player actions of the current Turn that are not undone are read off the Timeline, from its start up to the Timeline pointer; nothing else stores them.
 
-When the player commits a Player action other than Advance turn, the Timeline changes in exactly this way: every Undone action is removed for good, a Timeline entry holding the Player action and the Committed state it produced is added at the end, and the Timeline pointer moves to that Timeline entry.
+When the player commits a Player action other than Advance turn, the Timeline changes in exactly this way: every Undone action is removed for good, a Timeline entry holding the Player action and the World state it produced is added at the end, and the Timeline pointer moves to that Timeline entry.
 
 The following two hand-kept diagrams show one example Turn with four Timeline entries. They illustrate the terms of the [Glossary](#glossary) and the rules of the sections below, and they add no rule of their own.
 
@@ -43,11 +43,11 @@ The second diagram starts where the first one ends, at the Turn-start state, and
 The diagrams read as follows:
 
 - **The horizontal line:** the line is one Turn. It begins at the Turn-start state and ends where the player advances the Turn.
-- **Circles:** each circle is one Timeline entry. An arrow ending at a circle means the Timeline pointer moves to that Timeline entry, so its Committed state becomes the current Committed state.
+- **Circles:** each circle is one Timeline entry. An arrow ending at a circle means the Timeline pointer moves to that Timeline entry, so its World state becomes the Current world state.
 - **The diamond on the left:** this is the Turn-start state, in which no Timeline entry has been committed. The Timeline itself holds it, so undo reaches it whether or not any [Campaign save](engine-contract.md#persisted-data) exists.
-- **The diamond on the right:** this is the [Turn-end Autosave](saves.md#autosave-kinds), under [Autosaves](saves.md#autosaves). It holds the [Campaign state](core-concepts.md#campaign-and-session) with the [Turn-end state](engine-contract.md#player-actions-and-turns) as its current Committed state: the Committed state just before the player ends the Turn, and the one that is current when that Campaign save is loaded.
+- **The diamond on the right:** this is the [Turn-end Autosave](saves.md#autosave-kinds), under [Autosaves](saves.md#autosaves). It holds the [Campaign state](core-concepts.md#campaign-and-session) with the [Turn-end state](engine-contract.md#player-actions-and-turns) as its Current world state: the World state just before the player ends the Turn, and the one that is current when that Campaign save is loaded.
 - **Dashed circles:** these are Undone actions.
-- **Advance turn:** the rectangle is the engine applying Turn advancement. Advance turn is not a Timeline entry, and no Committed state lies inside it.
+- **Advance turn:** the rectangle is the engine applying Turn advancement. Advance turn is not a Timeline entry, and no World state lies inside it.
 
 # History, Timeline, and Campaign save
 
@@ -56,7 +56,7 @@ Three things keep a [Campaign](core-concepts.md#campaign-and-session)'s past, fo
 | Kept past | What it records | Read by the Game rules | Effect of undo within a Turn | Stated in |
 | --- | --- | --- | --- | --- |
 | [History](campaign-state.md#glossary) | What the end of each Turn writes, from the start of the Campaign | Yes | None | [World state and History](campaign-state.md#world-state-and-history) |
-| Timeline | The Turn-start state and the Timeline entries of the current Turn | Only its current Committed state | Moves the Timeline pointer back by one | [Timeline structure](#timeline-structure) |
+| Timeline | The Turn-start state and the Timeline entries of the current Turn | Only its Current world state | Moves the Timeline pointer back by one | [Timeline structure](#timeline-structure) |
 | Campaign save | A persisted copy of the Campaign state | Never | None, except that the [Current Autosave](saves.md#autosave-kinds) is replaced to match | [Saves](saves.md) |
 
 The History and the Timeline are independent. A game without undo would have no Timeline entries to navigate and would still need the History; e.g., a chart of money over past Turns reads a Turn series in the History. Starting a new Timeline, as Advance turn does under [Timeline entries](#timeline-entries), never removes anything from the History.
@@ -94,22 +94,22 @@ Action navigation never leaves the current Turn: undo stops at the Turn-start st
 
 Autosave navigation is undo and redo across Turns. It moves the [Current campaign](core-concepts.md#campaign-and-session) between Autosaves and never applies or reverses a Player action itself. The Turn-end Autosave, the [Engagement Autosave](saves.md#autosave-kinds), and the [Disengagement Autosave](saves.md#autosave-kinds) are written under [Autosaves](saves.md#autosaves); this section adds the Furthest progress Autosave.
 
-The targets of Autosave navigation are the Turn-end Autosaves, the Engagement Autosave, the Disengagement Autosave, and the Furthest progress Autosave of the Current campaign, limited to those whose saved Committed state is earlier or later than the current Committed state. The Current Autosave is never a target: it holds the current Committed state.
+The targets of Autosave navigation are the Turn-end Autosaves, the Engagement Autosave, the Disengagement Autosave, and the Furthest progress Autosave of the Current campaign, limited to those whose saved World state is earlier or later than the Current world state. The Current Autosave is never a target: it holds the Current world state.
 
 The following list of operations is complete.
 
 | Operation | Effect |
 | --- | --- |
-| `session.timeline.undoToAutosave()` | Writes the Furthest progress Autosave when the rules below require it, then loads the target holding the latest Committed state that is earlier than the current Committed state. |
-| `session.timeline.redoToAutosave()` | Loads the target holding the earliest Committed state that is later than the current Committed state. |
+| `session.timeline.undoToAutosave()` | Writes the Furthest progress Autosave when the rules below require it, then loads the target holding the latest World state that is earlier than the Current world state. |
+| `session.timeline.redoToAutosave()` | Loads the target holding the earliest World state that is later than the Current world state. |
 | `session.timeline.getAutosaveStatus()` | Reports, for each of the two operations above, whether it is available and which Autosave and Turn it loads. |
 
 The following rules are complete.
 
-- **Earlier and later:** A Committed state is later than another Committed state of the same Campaign when one or more Player actions lead from the other to it, and the other is then earlier. Committed states that neither of these relates belong to different lines of play; e.g., two Committed states reached by different actions after the same undo.
-- **Equal targets:** When two targets hold equal Committed states, the operation loads the Furthest progress Autosave if it is one of them; e.g., the Disengagement Autosave can hold the Committed state that the Furthest progress Autosave holds. Between two other targets holding equal Committed states, which one is loaded is the Implementer's choice.
-- **Furthest progress Autosave:** `undoToAutosave()` writes the Furthest progress Autosave, holding the current Campaign state, before going back, unless the Campaign has a Furthest progress Autosave holding a later Committed state than the current one. A Campaign has at most one Furthest progress Autosave. Loading the Furthest progress Autosave through `redoToAutosave()` removes it.
-- **A new action removes Autosaves of abandoned play:** When a Player action commits, every Autosave of the Campaign is removed unless its saved Committed state is the Committed state in which that action began or an earlier Committed state. The removal happens before any Autosave that the action itself causes is written.
+- **Earlier and later:** A World state is later than another World state of the same Campaign when one or more Player actions lead from the other to it, and the other is then earlier. World states that neither of these relates belong to different lines of play; e.g., two World states reached by different actions after the same undo.
+- **Equal targets:** When two targets hold equal World states, the operation loads the Furthest progress Autosave if it is one of them; e.g., the Disengagement Autosave can hold the World state that the Furthest progress Autosave holds. Between two other targets holding equal World states, which one is loaded is the Implementer's choice.
+- **Furthest progress Autosave:** `undoToAutosave()` writes the Furthest progress Autosave, holding the current Campaign state, before going back, unless the Campaign has a Furthest progress Autosave holding a later World state than the current one. A Campaign has at most one Furthest progress Autosave. Loading the Furthest progress Autosave through `redoToAutosave()` removes it.
+- **A new action removes Autosaves of abandoned play:** When a Player action commits, every Autosave of the Campaign is removed unless its saved World state is the World state in which that action began or an earlier World state. The removal happens before any Autosave that the action itself causes is written.
 - **Loading a target:** Loading a target makes the Campaign state it holds current, as [Loading](saves.md#loading) in Saves states, with two differences. [Dev mode](engine-contract.md#principals-and-access) stays unchanged. The [Campaign configuration](campaign-state.md#glossary) stays that of the Current campaign, whatever Campaign configuration the target holds, because the Campaign configuration in the [Session](core-concepts.md#campaign-and-session) always takes precedence over that of an Autosave. Every Campaign save of one Campaign holds the same values fixed after creation, so only values adjustable during play can differ.
 - **Never a side effect:** Autosave navigation is never a side effect of another operation. In particular, `undoAction()` at a Turn-start state is rejected and does not load an Autosave, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). An interface may offer one undo control and one redo control for both forms, provided each control names the form it takes before it is used, because one call of Autosave navigation can cross many Turns; e.g., the GUI labels its undo control Undo Action or Undo Turn.
 
@@ -136,21 +136,21 @@ The diagrams read as follows:
 - **The Furthest progress Autosave:** the first `undoToAutosave()` writes it in Turn 10, and the fourth `redoToAutosave()` loads it.
 - **After a call:** the loaded Autosave holds its own Turn's Timeline, so the player can then undo that Turn's Timeline entries one by one.
 
-# Returning to a Committed state
+# Returning to a World state
 
-After Action navigation, the current Committed state is exactly the Committed state the Campaign reached when it first got there, because undo and redo change nothing but the Timeline pointer. After Autosave navigation, it is exactly the saved Committed state of the loaded target. Neither form changes the Campaign configuration: a change made after that Committed state was first reached stays in force, under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play) in Configuration.
+After Action navigation, the Current world state is exactly the World state the Campaign reached when it first got there, because undo and redo change nothing but the Timeline pointer. After Autosave navigation, it is exactly the saved World state of the loaded target. Neither form changes the Campaign configuration: a change made after that World state was first reached stays in force, under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play) in Configuration.
 
-Play continued from the current Committed state produces the outcomes of uninterrupted play as long as the Campaign configuration is unchanged, under [Determinism](determinism-and-randomness.md#determinism). Redo reproduces the Player action exactly:
+Play continued from the Current world state produces the outcomes of uninterrupted play as long as the Campaign configuration is unchanged, under [Determinism](determinism-and-randomness.md#determinism). Redo reproduces the Player action exactly:
 
-- Redo moves the Timeline pointer onto the Committed state the Player action produced when it was committed, even when the Campaign configuration has changed since.
+- Redo moves the Timeline pointer onto the World state the Player action produced when it was committed, even when the Campaign configuration has changed since.
 - Redoing an action that an Autopilot AI chose does not ask any Autopilot AI to choose again.
 - A Player cheat action is undone and redone whether or not Dev mode is enabled, and doing so grants no [Developer API](engine-contract.md#api-surfaces) access.
 
-Navigation leaves Dev mode unchanged. Navigation preserves [Campaign instance identity](campaign-instances.md#campaign-instance-identity): a Committed state reached by undo may lack a [Campaign instance](core-concepts.md#campaign-instances) or hold its earlier [State](core-concepts.md#campaign-instances), and redo returns to the same [Instance ID](campaign-instances.md#glossary), [Archetype](core-concepts.md#campaign-instances), and [Constants](core-concepts.md#campaign-instances). Returning to a Committed state is not creation of a new Campaign instance.
+Navigation leaves Dev mode unchanged. Navigation preserves [Campaign instance identity](campaign-instances.md#campaign-instance-identity): a World state reached by undo may lack a [Campaign instance](core-concepts.md#campaign-instances) or hold its earlier [State](core-concepts.md#campaign-instances), and redo returns to the same [Instance ID](campaign-instances.md#glossary), [Archetype](core-concepts.md#campaign-instances), and [Constants](core-concepts.md#campaign-instances). Returning to a World state is not creation of a new Campaign instance.
 
 # Edge cases and failure behavior
 
-A navigation operation with no target is rejected and changes nothing, under [Committed state integrity](engine-contract.md#committed-state-integrity); e.g., `undoAction()` at the Turn-start state, or `redoAction()` when the Timeline has no Undone action.
+A navigation operation with no target is rejected and changes nothing, under [World state integrity](engine-contract.md#world-state-integrity); e.g., `undoAction()` at the Turn-start state, or `redoAction()` when the Timeline has no Undone action.
 
 Undo never continues into the previous Turn. At the Turn-start state, `undoAction()` and `undoAllActions()` are unavailable, including when an earlier Turn can be reached through [Autosave navigation](#autosave-navigation).
 
@@ -162,17 +162,17 @@ Autosave navigation fails for the reasons listed under [Edge cases and failure b
 - **A target that cannot be loaded:** `undoToAutosave()` or `redoToAutosave()` fails with the Load reason and leaves the entire prior [Session](core-concepts.md#campaign-and-session) unchanged. A Furthest progress Autosave written by that call stays.
 - **A missing Autosave:** An Autosave that could not be written is not a target; e.g., when the Turn-end Autosave of Turn 3 is missing, `undoToAutosave()` from Turn 4 loads the Turn-end Autosave of Turn 2.
 
-After a Campaign save that is not an Autosave is loaded, Autosaves whose saved Committed state belongs to a different line of play are not targets. They stay in [Game storage](engine-contract.md#persisted-data) until a new action removes them.
+After a Campaign save that is not an Autosave is loaded, Autosaves whose saved World state belongs to a different line of play are not targets. They stay in [Game storage](engine-contract.md#persisted-data) until a new action removes them.
 
 # Acceptance examples
 
-- **Action undo and redo:** At a Turn-start state, add money through Developer API and commit two ordinary gameplay actions. Undo each action and redo it with Dev mode disabled. Complete Campaign state equals the original results after each step, and queries between actions do not change those results ([Action navigation](#action-navigation), [Returning to a Committed state](#returning-to-a-committed-state)).
+- **Action undo and redo:** At a Turn-start state, add money through Developer API and commit two ordinary gameplay actions. Undo each action and redo it with Dev mode disabled. Complete Campaign state equals the original results after each step, and queries between actions do not change those results ([Action navigation](#action-navigation), [Returning to a World state](#returning-to-a-world-state)).
 - **Undo stops at the Turn-start state:** Commit two actions, Advance turn, and commit one action. One `undoAction()` restores the Turn-start state of the new Turn. A second `undoAction()` is rejected and changes nothing ([Timeline entries](#timeline-entries), [Edge cases and failure behavior](#edge-cases-and-failure-behavior)).
-- **All actions at once:** Commit four actions in one Turn. `undoAllActions()` restores the Turn-start state and leaves four Undone actions. `redoAllActions()` restores the Committed state after the fourth action. Both results equal those of four `undoAction()` calls and four `redoAction()` calls ([Action navigation](#action-navigation)).
+- **All actions at once:** Commit four actions in one Turn. `undoAllActions()` restores the Turn-start state and leaves four Undone actions. `redoAllActions()` restores the World state after the fourth action. Both results equal those of four `undoAction()` calls and four `redoAction()` calls ([Action navigation](#action-navigation)).
 - **A new action discards the Undone actions:** Undo one action, then commit a different action. The undone action cannot be redone ([Action navigation](#action-navigation)).
 - **Undo needs no Campaign save:** Create a Campaign and never save it, with an Autosave limit of 0. Commit two actions and Advance turn. No Turn-end Autosave is written and `undoToAutosave()` is rejected. In the new Turn, commit three actions. Three `undoAction()` calls restore the Turn-start state ([Timeline entries](#timeline-entries), [Autosave navigation](#autosave-navigation)).
 - **A Campaign save holds one Turn of Timeline:** Commit two actions, Advance turn, commit one action, and save. Load that Campaign save. One `undoAction()` restores the Turn-start state, and a second is rejected ([Timeline entries](#timeline-entries)).
-- **Keeping a line of play:** Commit three actions and save, creating Campaign save S1. Undo two actions, commit a different action, and save, creating S2, because its Committed state differs from that of S1. Loading S1 restores the three original actions; loading S2 restores the new line of play ([Action navigation](#action-navigation)).
+- **Keeping a line of play:** Commit three actions and save, creating Campaign save S1. Undo two actions, commit a different action, and save, creating S2, because its World state differs from that of S1. Loading S1 restores the three original actions; loading S2 restores the new line of play ([Action navigation](#action-navigation)).
 - **Autopilot actions are separate Timeline entries:** An Autopilot AI commits three actions in one Autopilot engagement without ending the Turn. After disengagement, three `undoAction()` calls are needed to reverse them ([Timeline entries](#timeline-entries)).
 - **Going back and forward across Turns:** With the Autosave limit 5, commit actions and Advance turn in Turn 1, Turn 2, and Turn 3, then commit two actions in Turn 4. Three `undoToAutosave()` calls load the Turn-end Autosaves of Turn 3, Turn 2, and Turn 1 in that order. One `redoToAutosave()` then loads the Turn-end Autosave of Turn 2, the same result as two `undoToAutosave()` calls. Two more `redoToAutosave()` calls restore Turn 4 with its two Timeline entries ([Autosave navigation](#autosave-navigation)).
 - **Undo within a loaded Turn:** After `undoToAutosave()` loads the Turn-end Autosave of a Turn with three Timeline entries, three `undoAction()` calls restore that Turn's Turn-start state. `redoToAutosave()` then loads the same Turn-end Autosave again ([Autosave navigation](#autosave-navigation)).

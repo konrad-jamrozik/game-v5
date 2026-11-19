@@ -58,7 +58,7 @@ Investigations read exactly one property of the Lead GDR: `required_progress`, t
 
 ## Investigation GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the InvestigationArchetype and InvestigationParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the InvestigationArchetype and InvestigationParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One InvestigationArchetype:** The Game build supplies exactly one InvestigationArchetype. Every Investigation has it as its Archetype, so no rule selects among InvestigationArchetypes.
 2. **Known properties:** The InvestigationArchetype has `name`, and no property other than `name`, `id`, and `type`. Its `name` is non-empty text.
@@ -87,7 +87,7 @@ An Investigation is the [Campaign instance](../foundation/core-concepts.md#campa
 
 An Investigation also has one [Derived value](../foundation/core-concepts.md#value-classification), which is never stored: its projected progress gain, under [Projected progress gain](#projected-progress-gain). The Agents who took part in an Investigation remain recorded after they leave its Current team, in each [Agent](domain-model.md#agency-and-agents)'s [Participation history](domain-model.md#agency-and-agents), under [Participation history records](agents-spec.md#participation-history-records) in Agents; the past participants of an Investigation are that same relationship seen from the Investigation's side, not a separate fact. An Investigation has no [Turn series](../foundation/world-history.md#glossary).
 
-**Invariants:** In every [Committed state](../foundation/engine-contract.md#player-actions-and-turns), every Investigation satisfies all of the following. A Committed state that violates one is an internal invariant violation, reported under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+**Invariants:** In every [World state](../foundation/engine-contract.md#player-actions-and-turns), every Investigation satisfies all of the following. A World state that violates one is an internal invariant violation, reported under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. Its Current team is non-empty exactly when its lifecycle state is Active.
 2. When it is Active, its Investigation progress is less than its Actual required progress multiplied by 100. This holds because reaching it always completes the Investigation, under [Completion check](#completion-check), and [Progress loss](#progress-loss) never raises progress.
@@ -141,7 +141,7 @@ Every transition not listed is impossible; e.g., an Abandoned Investigation neve
 | `lead`    | A GDR identifier, meant to identify one Lead GDR the Game build supplies. |
 | `agents`  | A list of Instance IDs, each meant to identify one Agent of the Campaign. |
 
-Preconditions: every precondition is evaluated in the Committed state in which the action is requested, before any of its changes. The action is rejected, as a whole, when any of the following holds:
+Preconditions: every precondition is evaluated in the World state in which the action is requested, before any of its changes. The action is rejected, as a whole, when any of the following holds:
 
 1. `lead` identifies no discovered Lead, under [Lead discovery](leads-and-progression.md#lead-discovery) in Leads and Progression, i.e. it identifies no Lead GDR the Game build supplies, or a Lead that is not discovered. Both are rejected with the same error, so the rejection does not reveal whether an undiscovered Lead exists.
 2. The Lead is not available, under [Lead availability](leads-and-progression.md#lead-availability) in Leads and Progression.
@@ -155,7 +155,7 @@ Preconditions: every precondition is evaluated in the Committed state in which t
 
 Other preconditions apply to every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), under [Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md).
 
-Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract. Because every value of an Investigation is [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Player-visible information](#player-visible-information), the error reveals nothing hidden.
+Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract. Because every value of an Investigation is [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Player-visible information](#player-visible-information), the error reveals nothing hidden.
 
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same Turn:
 
@@ -166,12 +166,12 @@ Nothing else changes; e.g., no money is spent, and the Agents' base skill, curre
 
 ## One Active Investigation per Lead
 
-**Proposed rule:** `startInvestigation` starts an Investigation of a Lead L only when both of the following hold, in the Committed state in which the action is requested, before any of its changes; the list is exhaustive for the Lead:
+**Proposed rule:** `startInvestigation` starts an Investigation of a Lead L only when both of the following hold, in the World state in which the action is requested, before any of its changes; the list is exhaustive for the Lead:
 
 1. L is available under [Lead availability](leads-and-progression.md#lead-availability) in Leads and Progression.
 2. No Investigation of L is Active.
 
-Condition 1 is precondition 2 and condition 2 is precondition 3 of [Starting an Investigation](#starting-an-investigation). Condition 2 is not part of [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions), because it reads the Investigation lifecycle. Together they make at most one Investigation of a Lead Active in every Committed state. Condition 2 holds again as soon as the Active Investigation of L becomes Completed or Abandoned. **Whether a Lead can be investigated now** is a Derived value of each Lead, never stored: yes exactly when both conditions hold, and otherwise no, with every condition that does not hold. It is Player-visible under [Player-visible information](#player-visible-information).
+Condition 1 is precondition 2 and condition 2 is precondition 3 of [Starting an Investigation](#starting-an-investigation). Condition 2 is not part of [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions), because it reads the Investigation lifecycle. Together they make at most one Investigation of a Lead Active in every World state. Condition 2 holds again as soon as the Active Investigation of L becomes Completed or Abandoned. **Whether a Lead can be investigated now** is a Derived value of each Lead, never stored: yes exactly when both conditions hold, and otherwise no, with every condition that does not hold. It is Player-visible under [Player-visible information](#player-visible-information).
 
 # Assigning Agents to an Investigation
 
@@ -182,7 +182,7 @@ Condition 1 is precondition 2 and condition 2 is precondition 3 of [Starting an 
 | `investigation` | An Instance ID, meant to identify one Investigation of the Campaign.      |
 | `agents`        | A list of Instance IDs, each meant to identify one Agent of the Campaign. |
 
-Preconditions: every precondition is evaluated in the Committed state in which the action is requested, before any of its changes. The action is rejected, as a whole, when any of the following holds:
+Preconditions: every precondition is evaluated in the World state in which the action is requested, before any of its changes. The action is rejected, as a whole, when any of the following holds:
 
 1. `investigation` identifies no Investigation of the Campaign.
 2. The Investigation is not Active, i.e. it is Completed or Abandoned.
@@ -227,8 +227,8 @@ Inputs:
 
 | Symbol | Meaning | Unit and domain |
 | --- | --- | --- |
-| Investigation progress before | For a Player action, the Investigation's Investigation progress in the Committed state in which the action is requested; for Forced returns, its Investigation progress after this step's [Progress gain](#progress-gain). | Hundredths of a progress point; a whole number of at least 0. |
-| S_before | For a Player action, the sum of the current [Effective skill](agents-spec.md#effective-skill) of every member of the Current team whose Agent status is [At assignment](agents-spec.md#agent-statuses), in the Committed state in which the action is requested. For Forced returns, the sum of the effective skill of every working member of this step, as [Progress gain](#progress-gain) read it. | Skill points; a whole number of at least 0. |
+| Investigation progress before | For a Player action, the Investigation's Investigation progress in the World state in which the action is requested; for Forced returns, its Investigation progress after this step's [Progress gain](#progress-gain). | Hundredths of a progress point; a whole number of at least 0. |
+| S_before | For a Player action, the sum of the current [Effective skill](agents-spec.md#effective-skill) of every member of the Current team whose Agent status is [At assignment](agents-spec.md#agent-statuses), in the World state in which the action is requested. For Forced returns, the sum of the effective skill of every working member of this step, as [Progress gain](#progress-gain) read it. | Skill points; a whole number of at least 0. |
 | S_after | The same sum over the members of that set that are still members of the Current team after all of the Player action's changes, or after every Forced return of the step. | Skill points; a whole number from 0 to S_before. |
 
 Evaluation: the product is formed before the division, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, and rounded down once. When S_before is 0, the divisor would be zero, and the Investigation progress is unchanged instead. A member In transit adds nothing to either sum: the progress it will add has not started, and it cannot be assigned elsewhere until it arrives, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents. The result lies from 0 to Investigation progress before, so Progress loss never raises progress. When the action leaves the Current team without a member [At assignment](domain-model.md#agency-and-agents), S_after is 0 and the Investigation progress becomes 0.
@@ -239,7 +239,7 @@ Progress loss leaves Assessed unchanged: an Investigation that was Assessed stay
 
 ## Abandonment
 
-**Proposed rule:** When a Player action, or the Forced returns of one Investigation progress step, leave an Active Investigation with an empty Current team, the Investigation becomes Abandoned in that same Player action or step, after all of its other changes. No Committed state therefore contains an Active Investigation with an empty Current team.
+**Proposed rule:** When a Player action, or the Forced returns of one Investigation progress step, leave an Active Investigation with an empty Current team, the Investigation becomes Abandoned in that same Player action or step, after all of its other changes. No World state therefore contains an Active Investigation with an empty Current team.
 
 Every member of the Current team counts, whatever its Agent status. A member In transit toward the Investigation belongs to its Current team, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model, and does not work, so it has no Forced return, and it cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents, so it stays in the Current team at least until it arrives. An Investigation becomes Abandoned exactly when a Player action assigns elsewhere, or Forced returns send back, every member that remains in its Current team.
 
@@ -336,15 +336,15 @@ Every rule of this step uses [Step-start values](domain-model.md#turn-advancemen
 
 **Proposed rule:** Lead availability is checked only by precondition 2 of [Starting an Investigation](#starting-an-investigation). Once an Investigation is Active, a later change to whether its Lead would be available, e.g. its [Faction](domain-model.md#factions) becoming [Eliminated](factions.md#glossary) under [Elimination](factions.md#elimination) in Factions, does not change the Investigation: it stays Active, keeps its Current team and Investigation progress, still accepts Agents under [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation), still gains progress, and can still complete and apply its Lead's completion effect.
 
-A Mission site created that way targets a [Faction](domain-model.md#factions) that is already [Eliminated](factions.md#glossary). It is created Active in Investigation progress and becomes Cancelled in the Cancellation part of [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) resolution of the same Advance turn, under [Cancellation](missions.md#cancellation) in Missions, so no Committed state shows it Active. The player can instead end such an Investigation by assigning its members elsewhere, which makes it Abandoned under [Abandonment](#abandonment).
+A Mission site created that way targets a [Faction](domain-model.md#factions) that is already [Eliminated](factions.md#glossary). It is created Active in Investigation progress and becomes Cancelled in the Cancellation part of [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) resolution of the same Advance turn, under [Cancellation](missions.md#cancellation) in Missions, so no World state shows it Active. The player can instead end such an Investigation by assigning its members elsewhere, which makes it Abandoned under [Abandonment](#abandonment).
 
 **Informative rationale:** Ending such an Investigation automatically would add a second trigger of Abandoned, and a transition during Advance turn, for a case with no gameplay effect: its Mission site is Cancelled either way.
 
 # Projected progress gain
 
-**Proposed rule:** Every Active Investigation has, in every Committed state, a Derived value: the gain its [Progress gain](#progress-gain) would add in the next Advance turn if no Player action changed the Investigation or its members before that Advance turn. It is computed by the formula of [Progress gain](#progress-gain), with n and S taken over the members of the Current team whose Agent status is At assignment in this Committed state, and each member's current [Effective skill](agents-spec.md#effective-skill). A member In transit counts in neither n nor S. The value is a whole number of hundredths of a progress point, never stored.
+**Proposed rule:** Every Active Investigation has, in every World state, a Derived value: the gain its [Progress gain](#progress-gain) would add in the next Advance turn if no Player action changed the Investigation or its members before that Advance turn. It is computed by the formula of [Progress gain](#progress-gain), with n and S taken over the members of the Current team whose Agent status is At assignment in this World state, and each member's current [Effective skill](agents-spec.md#effective-skill). A member In transit counts in neither n nor S. The value is a whole number of hundredths of a progress point, never stored.
 
-When no Player action changes the Investigation or its members before the next Advance turn, the projected progress gain equals that Advance turn's gain exactly. The members At assignment in this Committed state are exactly the working members of that Advance turn, because this Committed state is then its Turn-end state, and their effective skill does not change in the Turn advancement steps before Investigation progress, because none of those steps changes the [base skill](agents-spec.md#combatant-attributes), current health, or exhaustion of an Agent on an Investigation. The projected progress gain changes at once whenever a Player action changes its inputs, under [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. A Completed or Abandoned Investigation has no projected progress gain.
+When no Player action changes the Investigation or its members before the next Advance turn, the projected progress gain equals that Advance turn's gain exactly. The members At assignment in this World state are exactly the working members of that Advance turn, because this World state is then its Turn-end state, and their effective skill does not change in the Turn advancement steps before Investigation progress, because none of those steps changes the [base skill](agents-spec.md#combatant-attributes), current health, or exhaustion of an Agent on an Investigation. The projected progress gain changes at once whenever a Player action changes its inputs, under [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. A Completed or Abandoned Investigation has no projected progress gain.
 
 No Derived value states whether the next Advance turn completes an Investigation, because that depends on the hidden Actual required progress.
 
@@ -393,7 +393,7 @@ The Actual required progress is hidden: the player knows only its Required progr
 
 - **Team entirely In transit in its first Advance turn:** Every member of a new Investigation is In transit in the Turn-end state of the first Advance turn after `startInvestigation`, so n and S are 0, the gain is 0, and Investigation progress stays 0 ([Progress gain](#progress-gain)).
 - **No working member but earlier progress:** An Active Investigation whose every remaining member is In transit, e.g. after its only working member was recalled to Standby while a newly added Agent travels to it, lost all its progress when that member left and gains none in the next Advance turn ([Progress loss](#progress-loss), [Progress gain](#progress-gain)).
-- **Progress reaching or exceeding the Actual required progress:** The Investigation completes in that step; its final Investigation progress may exceed its Actual required progress × 100. No Committed state contains an Active Investigation with Investigation progress of at least its Actual required progress × 100 ([Completion check](#completion-check), [Investigation properties](#investigation-properties)).
+- **Progress reaching or exceeding the Actual required progress:** The Investigation completes in that step; its final Investigation progress may exceed its Actual required progress × 100. No World state contains an Active Investigation with Investigation progress of at least its Actual required progress × 100 ([Completion check](#completion-check), [Investigation properties](#investigation-properties)).
 - **Larger team, less per member:** Adding a working member always raises S, and never lowers the gain, but each member adds less, e.g. two members of effective skill 100 gain 174, not 200 ([Progress gain](#progress-gain)).
 - **Members of effective skill 0:** Working members whose effective skill is 0 count in n but add nothing to S, so they lower the gain of the others. When every member At assignment has effective skill 0, assigning members elsewhere costs no progress, because S_before is 0 ([Progress gain](#progress-gain), [Progress loss](#progress-loss)).
 - **Assessed, then losing progress:** An Assessed Investigation that falls below the assessment threshold through [Progress loss](#progress-loss) stays Assessed, and its Lead stays an Assessed Lead ([Assessment](#assessment)).
@@ -409,7 +409,7 @@ The Actual required progress is hidden: the player knows only its Required progr
 - **Tired Agents:** `startInvestigation` and `assignAgentsToInvestigation` reject, as a whole, a list with an Agent that is not Fit for work ([Starting an Investigation](#starting-an-investigation), [Assigning Agents to an Investigation](#assigning-agents-to-an-investigation)).
 - **Lead no longer available:** An Active Investigation continues; its Mission site, when its Faction is [Eliminated](domain-model.md#factions), is Cancelled in the same Advance turn ([Lead no longer available](#lead-no-longer-available)).
 - **Mission site created in the same Advance turn:** The Mission site a completion creates does not count down in Mission site expiration of the same Advance turn, under [Mission site creation](missions.md#mission-site-creation) in Missions.
-- **Invalid GDRs:** A Game build with no InvestigationArchetype, two InvestigationArchetypes, an InvestigationArchetype without `name`, no InvestigationParameters, or an InvestigationParameters value out of range fails [Investigation GDR validation](#investigation-gdr-validation), and no Campaign is created from it. A Committed state violating an invariant under [Investigation properties](#investigation-properties), e.g. an Active Investigation with an empty Current team, is an internal invariant violation.
+- **Invalid GDRs:** A Game build with no InvestigationArchetype, two InvestigationArchetypes, an InvestigationArchetype without `name`, no InvestigationParameters, or an InvestigationParameters value out of range fails [Investigation GDR validation](#investigation-gdr-validation), and no Campaign is created from it. A World state violating an invariant under [Investigation properties](#investigation-properties), e.g. an Active Investigation with an empty Current team, is an internal invariant violation.
 - **Campaign ended:** Once the Campaign has a [Campaign ending](domain-model.md#campaign-standing), `startInvestigation`, `assignAgentsToInvestigation`, and Advance turn are rejected under [Panic and Endings](panic-and-endings.md).
 
 # Acceptance examples
@@ -489,7 +489,7 @@ This example exercises [Progress loss](#progress-loss), [Abandonment](#abandonme
 | `assignAgentsToInvestigation(i1, [a2])` | Rejected: i1 is not Active. |
 | `startInvestigation(locate_red_dawn_member, [a2])` | Succeeds: the Lead is available and no Investigation of it is Active any more. Investigation i5 is created with a new Instance ID, Turn started 7, its own Actual required progress, Investigation progress 0, and Assessed no; i1's progress is not resumed. |
 
-No Committed state of Turn 7 contains i1 Active with an empty Current team. The Lead stays an Assessed Lead throughout, because i1 is Assessed, so its range 3 to 4 stays visible while i5 has no progress yet.
+No World state of Turn 7 contains i1 Active with an empty Current team. The Lead stays an Assessed Lead throughout, because i1 is Assessed, so its range 3 to 4 stays visible while i5 has no progress yet.
 
 ## Moving a member to another Investigation
 
@@ -504,7 +504,7 @@ This example exercises [Starting an Investigation](#starting-an-investigation), 
 
 ## Two Investigations in one step
 
-This example exercises [Independence within the step](#independence-within-the-step). It uses the test Leads L1 and L2 above. When the Advance turn ending Turn 40 begins, Investigation i8 of L1 has Actual required progress 2, Investigation progress 100, and working member a1 (effective skill 100), and Investigation i9 of L2 has Actual required progress 5, Investigation progress 100, and working member a2 (effective skill 100). In Investigation progress, i8 reaches 200, which is at least 200, and completes; i9 reaches 200, which is less than 500, and stays Active. Both are Assessed, because 200 is at least 25 × 2 = 50 and 25 × 4 = 100. i8 is Completed, a1 is on Standby, In transit, and L1's completion effect applies; i9 stays Active with a2 and Investigation progress 200. Processing i9 before i8 gives the same Committed state.
+This example exercises [Independence within the step](#independence-within-the-step). It uses the test Leads L1 and L2 above. When the Advance turn ending Turn 40 begins, Investigation i8 of L1 has Actual required progress 2, Investigation progress 100, and working member a1 (effective skill 100), and Investigation i9 of L2 has Actual required progress 5, Investigation progress 100, and working member a2 (effective skill 100). In Investigation progress, i8 reaches 200, which is at least 200, and completes; i9 reaches 200, which is less than 500, and stays Active. Both are Assessed, because 200 is at least 25 × 2 = 50 and 25 × 4 = 100. i8 is Completed, a1 is on Standby, In transit, and L1's completion effect applies; i9 stays Active with a2 and Investigation progress 200. Processing i9 before i8 gives the same World state.
 
 ## An Investigation whose Faction is Eliminated
 
@@ -512,7 +512,7 @@ This example exercises [Lead no longer available](#lead-no-longer-available). It
 
 - Advance turn ending Turn 50: in Investigation progress, i10 reaches 300, less than 400, and stays Active. In Mission resolution, a Won Mission makes F1 Eliminated, under [Missions](missions.md). The Campaign does not end, because F2 is not Eliminated.
 - Turn 51: i10 is still Active, with Current team {a1} and projected progress gain 100. A `startInvestigation(L3, [a2])` is rejected, because L3 is not available, its Faction being Eliminated, and also because i10 is an Active Investigation of L3; the error identifies at least one of the two failed preconditions.
-- Advance turn ending Turn 51: i10 reaches 400, at least 400, and is Completed; a1 is on Standby, In transit, and Mission site s3 from m3 is created Active with target Faction F1. In the Cancellation part of Mission resolution of the same Advance turn, s3 becomes Cancelled under [Cancellation](missions.md#cancellation); no Committed state shows s3 Active.
+- Advance turn ending Turn 51: i10 reaches 400, at least 400, and is Completed; a1 is on Standby, In transit, and Mission site s3 from m3 is created Active with target Faction F1. In the Cancellation part of Mission resolution of the same Advance turn, s3 becomes Cancelled under [Cancellation](missions.md#cancellation); no World state shows s3 Active.
 
 ## Rejections
 

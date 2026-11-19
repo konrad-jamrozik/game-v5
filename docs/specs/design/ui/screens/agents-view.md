@@ -58,7 +58,7 @@ While an Assignment filter is on, the table keeps showing every Agent its row fi
 
 While no Assignment filter is on, every shown Serving Agent can be selected, and each button is enabled or disabled by the whole selection, under [Header](#header). E.g., selecting an Agent on Contracting disables Contracting and Training, and selecting an Agent In transit disables every button of Assign to and Dismiss.
 
-Whenever the Assignment filter, the row filter, or the [Committed state](../../foundation/engine-contract.md#player-actions-and-turns) changes, every selected Agent that can no longer be selected, or is no longer shown, is no longer selected. A row does not leave the table because its Agent was just assigned: e.g., after assigning the selected Agents to Contracting with the Contracting Assignment filter on, their rows stay, muted, with "In transit" as their Blocked by.
+Whenever the Assignment filter, the row filter, or the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns) changes, every selected Agent that can no longer be selected, or is no longer shown, is no longer selected. A row does not leave the table because its Agent was just assigned: e.g., after assigning the selected Agents to Contracting with the Contracting Assignment filter on, their rows stay, muted, with "In transit" as their Blocked by.
 
 # Agent table
 

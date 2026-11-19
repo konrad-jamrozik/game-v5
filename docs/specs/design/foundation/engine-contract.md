@@ -68,22 +68,23 @@ The data that survives the end of a Session. [Data ownership](#data-ownership) s
 | Game storage | The persisted root of all data that survives the end of a Session: one Global configuration and zero or more Campaign saves. |  |
 | Global configuration | The one persisted set of application-wide settings, shared by all Campaigns and available before any Campaign is selected. It never contains Campaign state. |  |
 | Game build default | The value the [Game build](core-concepts.md#game-build-and-content) supplies for a Global configuration setting when nothing overrides it. |  |
-| Campaign save | A persisted copy of the [Campaign state](core-concepts.md#campaign-and-session) of one Campaign as it was when the Campaign save was written, together with the Campaign save's own bookkeeping, e.g. when it was written. Its saved Committed state is the current Committed state of that copy. One Campaign may have several Campaign saves. |  |
-| Timeline | The undo and redo record of the current Turn of one Campaign, part of its Campaign state: the Committed state the Turn started in, followed by each Player action committed since together with the Committed state it produced, some of which may be undone. The [Game rules](core-concepts.md#game-build-and-content) never read it, apart from its current Committed state. [Timeline](timeline.md) owns its structure and navigation. | Action history; history navigation, for which say Timeline navigation |
-| Timeline pointer | The part of Campaign state that marks which of the Committed states the Timeline holds is the current Committed state. Undo and redo within a Turn move only the Timeline pointer. | Timeline cursor; current position |
+| Campaign save | A persisted copy of the [Campaign state](core-concepts.md#campaign-and-session) of one Campaign as it was when the Campaign save was written, together with the Campaign save's own bookkeeping, e.g. when it was written. Its saved World state is the Current world state of that copy. One Campaign may have several Campaign saves. |  |
+| Timeline | The undo and redo record of the current Turn of one Campaign, part of its Campaign state: the World state the Turn started in, followed by each Player action committed since together with the World state it produced, some of which may be undone. The [Game rules](core-concepts.md#game-build-and-content) never read it, apart from its Current world state. [Timeline](timeline.md) owns its structure and navigation. | Action history; history navigation, for which say Timeline navigation |
+| Timeline pointer | The part of Campaign state that marks one of the World states the Timeline holds as the Current world state. Undo and redo within a Turn move only the Timeline pointer. | Timeline cursor; current position |
 
 ## Player actions and Turns
 
-How a Campaign moves forward: the Player actions that change it, the Committed states between them, and the Turns they group into.
+How a Campaign moves forward: the Player actions that change it, the World states between them, and the Turns they group into.
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Player action | One successful state-changing action made through Player API or Developer API, whichever Principal makes it; e.g., an Autopilot AI assigning Agents, or the Session controller adding money through Developer API. It takes the Campaign from one Committed state to the next. A rejected action, an action with no effect, a query, and a change under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play) are not Player actions. | Committed action; Developer action; command |
+| Player action | One successful state-changing action made through Player API or Developer API, whichever Principal makes it; e.g., an Autopilot AI assigning Agents, or the Session controller adding money through Developer API. It takes the Campaign from one World state to the next. A rejected action, an action with no effect, a query, and a change under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play) are not Player actions. | Committed action; Developer action; command |
 | Player cheat action | A Player action made through Developer API that changes Campaign state in a way ordinary play does not allow; e.g., the Session controller adding money. Its rules are under [Player cheat actions](developer-access.md#player-cheat-actions). | Cheat operation; cheat action; cheat command; Developer API action |
-| Committed state | The Campaign's simulated world, complete, as it is before or after a Player action rather than during the processing of one. It describes completeness and timing; the data describing one is stated under [Campaign state composition](campaign-state.md#campaign-state-composition) in Campaign State. The Timeline holds the Committed states of the current Turn, and the current Committed state is the one the Timeline pointer is on. | History position; history cursor |
-| Turn | The part of a Campaign from one Turn-start state up to the next committed Advance turn. Every Committed state belongs to exactly one Turn, and Advance turn ends it. |  |
-| Turn-start state | The Committed state immediately after campaign creation or immediately after a committed Advance turn. No other Player action of its Turn has happened yet. | Turn-start checkpoint. Review checkpoints in the work plan remain valid. |
-| Turn-end state | The Committed state in which a committed Advance turn began. |  |
+| World state | The Campaign's simulated world as it is before or after a Player action: always complete, and always between Player actions. The values the world passes through while a Player action is being processed, e.g. inside Advance turn between Turn advancement steps, are never a World state. The data describing one is stated under [Campaign state composition](campaign-state.md#campaign-state-composition) in Campaign State. The Timeline holds the World states of the current Turn. | Committed state; History position; history cursor |
+| Current world state | The World state the Timeline pointer is on. A Campaign state has exactly one. | current Committed state |
+| Turn | The part of a Campaign from one Turn-start state up to the next committed Advance turn. Every World state belongs to exactly one Turn, and Advance turn ends it. |  |
+| Turn-start state | The World state immediately after campaign creation or immediately after a committed Advance turn. No other Player action of its Turn has happened yet. | Turn-start checkpoint. Review checkpoints in the work plan remain valid. |
+| Turn-end state | The World state in which a committed Advance turn began. |  |
 
 # API hierarchy
 
@@ -221,7 +222,7 @@ Session (runtime)
 | Active Autopilot engagement | [What an Autopilot engagement holds](autopilot.md#what-an-autopilot-engagement-holds) in Autopilot |
 | New-Campaign setup | [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration |
 
-Campaign state holds everything the Game rules read, e.g. the [Campaign seed](determinism-and-randomness.md#campaign-seed), under [Campaign seed](determinism-and-randomness.md#campaign-seed) in Determinism and Randomness, and the Timeline, which continuing to control a Campaign needs although the Game rules read only its current Committed state. It excludes everything else a Session holds, e.g. Dev mode, and Global configuration, e.g. interface preferences.
+Campaign state holds everything the Game rules read, e.g. the [Campaign seed](determinism-and-randomness.md#campaign-seed), under [Campaign seed](determinism-and-randomness.md#campaign-seed) in Determinism and Randomness, and the Timeline, which continuing to control a Campaign needs although the Game rules read only its Current world state. It excludes everything else a Session holds, e.g. Dev mode, and Global configuration, e.g. interface preferences.
 
 The two halves of the hierarchy hold the same data of a Campaign: its Campaign state. The Session holds the one working copy, that of the Current campaign, and every Player action, undo, redo, and change under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play) changes that copy. A Campaign save is a persisted copy of the Campaign state as it was when the Campaign save was written: saving copies it from the Session into Game storage, under [Saving](saves.md#saving) in Saves, and loading copies it from a Campaign save into the Session as its Current campaign, under [Loading](saves.md#loading) in Saves, except for the part that [Autosave navigation](timeline.md#autosave-navigation) in Timeline keeps from the Session. Neither changes the copy it reads.
 
@@ -234,7 +235,7 @@ Each Engine subsystem has exactly one owning specification, and each of those sp
 | Engine subsystem | Kind | Owner | What it provides |
 | --- | --- | --- | --- |
 | Campaign lifecycle | API subsystem | [Campaign Lifecycle](campaign-lifecycle.md) | Starting and ending a Session, and creating, loading, selecting, and closing the Current campaign. |
-| Saves | API subsystem | [Saves](saves.md) | Saving a Campaign and loading it back at its saved Committed state, including the Campaign saves the engine writes itself. |
+| Saves | API subsystem | [Saves](saves.md) | Saving a Campaign and loading it back at its saved World state, including the Campaign saves the engine writes itself. |
 | Timeline | API subsystem | [Timeline](timeline.md) | Undo and redo of the Player actions of the current Turn, and undo and redo across Turns. |
 | Configuration | API subsystem | [Configuration](configuration.md) | Global configuration, the new-Campaign setup a new Campaign starts from, and adjusting the Current campaign under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play). |
 | Autopilot | API subsystem | [Autopilot](autopilot.md) | Bounded play by an Autopilot AI. |
@@ -249,7 +250,7 @@ The game is single-player; multiplayer in any form is out of scope. A Campaign h
 
 # Player actions
 
-A player may commit any sequence of eligible Player API actions during a Turn. Each successful state-changing Player API action is one Player action; a rejected action or an action with no effect is not a Player action and changes nothing, under [Committed state integrity](#committed-state-integrity).
+A player may commit any sequence of eligible Player API actions during a Turn. Each successful state-changing Player API action is one Player action; a rejected action or an action with no effect is not a Player action and changes nothing, under [World state integrity](#world-state-integrity).
 
 `player.actions.advanceTurn()` is itself one Player action, applied atomically: no intermediate result is separately committed. [Turn Advancement](../mechanics/turn-advancement.md) owns what it applies and in which order. [Timeline entries](timeline.md#timeline-entries) in Timeline states which Player actions the Timeline records; Advance turn is a Player action that the Timeline does not record.
 
@@ -259,13 +260,13 @@ After any action, undo, redo, or load, every query result and all other Player-v
 
 Two Campaign states are equal exactly when their [Authoritative values](core-concepts.md#value-classification) are equal, under [Authoritative and Derived values](core-concepts.md#authoritative-and-derived-values) in Core Concepts. Equal Campaign states under the same Game build therefore have equal [Derived values](core-concepts.md#value-classification).
 
-# Committed state integrity
+# World state integrity
 
-Every Committed state satisfies every invariant that a specification states. A specification stating an invariant states its condition and its scope; e.g., [References](campaign-instances.md#references) in Campaign Instances states that every reference in Committed state resolves. Campaign creation and committed Player actions therefore each produce a Committed state that satisfies them, and undo, redo, and load only make current a Committed state that was produced that way.
+Every World state satisfies every invariant that a specification states. A specification stating an invariant states its condition and its scope; e.g., [References](campaign-instances.md#references) in Campaign Instances states that every reference in every World state resolves. Campaign creation and committed Player actions therefore each produce a World state that satisfies them, and undo, redo, and load only make current a World state that was produced that way.
 
-Rejected requests leave Campaign state unchanged. This covers every rejection, e.g. no Current campaign, an unavailable Timeline navigation target, or an unauthorized call. Intermediate processing must not be exposed as Committed state; e.g., values computed partway through Advance turn are never returned. Returned views are detached: no value returned through any API surface is a mutable reference into Campaign state. Failed Timeline navigation or load preserves the entire prior Session. Broken references or internal invariants are reported as engine/data defects rather than silently repaired into different gameplay outcomes. Exact error representations and asynchronous operation results are the implementer's choice.
+Rejected requests leave Campaign state unchanged. This covers every rejection, e.g. no Current campaign, an unavailable Timeline navigation target, or an unauthorized call. The values of intermediate processing are not a World state and must never be exposed; e.g., values computed partway through Advance turn are never returned. Returned views are detached: no value returned through any API surface is a mutable reference into Campaign state. Failed Timeline navigation or load preserves the entire prior Session. Broken references or internal invariants are reported as engine/data defects rather than silently repaired into different gameplay outcomes. Exact error representations and asynchronous operation results are the implementer's choice.
 
 # Acceptance examples
 
-- **Defects:** A broken internal reference reports an engine defect without publishing intermediate Campaign state. Returned inspection data cannot mutate the engine ([Committed state integrity](#committed-state-integrity)).
-- **Campaign integrity:** A Player action and its undo and redo preserve declared campaign-data composition and identity, and required historical references remain resolvable ([Committed state integrity](#committed-state-integrity)).
+- **Defects:** A broken internal reference reports an engine defect without publishing intermediate Campaign state. Returned inspection data cannot mutate the engine ([World state integrity](#world-state-integrity)).
+- **Campaign integrity:** A Player action and its undo and redo preserve declared campaign-data composition and identity, and required historical references remain resolvable ([World state integrity](#world-state-integrity)).

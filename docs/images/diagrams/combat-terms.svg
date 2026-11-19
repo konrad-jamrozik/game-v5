@@ -52,7 +52,7 @@
   <text class="lane" x="24" y="196">ADVANCE TURN ENDING TURN t: MISSION RESOLUTION</text>
   <rect class="transient" x="24" y="206" width="656" height="300" rx="10"/>
   <text class="b" x="40" y="232">Combat</text>
-  <text class="m" x="96" y="232">exists only within the step; never part of a Committed state</text>
+  <text class="m" x="96" y="232">exists only within the step; never part of a World state</text>
 
   <rect class="inner" x="44" y="246" width="616" height="34" rx="6"/>
   <text x="58" y="268"><tspan class="b">Combat start</tspan>: starting values and Combat ratings recorded</text>

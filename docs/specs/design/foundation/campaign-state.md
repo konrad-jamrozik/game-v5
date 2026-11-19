@@ -20,10 +20,9 @@ These terms are specific to Campaign State. General terms are in the [Core Conce
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| World state | The data describing the [Campaign](core-concepts.md#campaign-and-session)'s simulated world at one [Committed state](engine-contract.md#player-actions-and-turns): its Live world state and its Retired world state. The [Timeline](engine-contract.md#persisted-data) holds one World state for each Committed state it holds. |  |
-| Live world state | The part of a World state other than its Retired world state: every [Campaign instance](core-concepts.md#campaign-instances) still in play, and every other value of the world, e.g. the turn number. | Active world state |
+| Live world state | The part of a [World state](engine-contract.md#player-actions-and-turns) other than its Retired world state: every [Campaign instance](core-concepts.md#campaign-instances) still in play, and every other value of the world, e.g. the turn number. | Active world state |
 | Retired world state | The part of a World state holding every Campaign instance that has left play, e.g. a Killed Agent or an Expired Mission site, each with every property at its final value. | Archived; archival; became historical; deconstructed; destroyed. Legitimate destruction mechanics remain valid, and leaving play does not replace named lifecycle states, e.g. Killed and Completed. |
-| History | The component of [Campaign state](core-concepts.md#campaign-and-session) that keeps the ended [Turns](engine-contract.md#player-actions-and-turns) of the Campaign, from its start: a record of each ended Turn and the past values that charts show. | World history. Participation history and Git history remain valid. |
+| History | The component of [Campaign state](core-concepts.md#campaign-and-session) that keeps the ended [Turns](engine-contract.md#player-actions-and-turns) of the [Campaign](core-concepts.md#campaign-and-session), from its start: a record of each ended Turn and the past values that charts show. | World history. Participation history and Git history remain valid. |
 | Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that the [Game rules](core-concepts.md#game-build-and-content) read to select or adjust how the game plays. Each parameter is either adjustable during play, under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play) in Configuration, or fixed after creation. | Scenario, naming campaign setup; scenario GDR; scenario setup. Unrelated uses of "configuration" remain valid. |
 | Turn report | The component of Campaign state describing what the most recent committed Advance turn did, i.e. the Turn advancement from the previous Turn to the current one, e.g. each Combat it fought and how that Combat went. The first Turn of a Campaign has no Turn report. |  |
 
@@ -55,7 +54,7 @@ The following table states where each component is specified. It is complete.
 
 | Component | Specified in |
 | --- | --- |
-| Timeline and [Timeline pointer](engine-contract.md#persisted-data) | [Timeline structure](timeline.md#timeline-structure) and [Action navigation](timeline.md#action-navigation) in Timeline |
+| Timeline and [Timeline pointer](engine-contract.md#persisted-data) | [Timeline structure](timeline.md#timeline-structure) and [Action navigation](timeline.md#action-navigation) in [Timeline](engine-contract.md#persisted-data) |
 | History | [Turn series](world-history.md#turn-series) and [Turn report and history](world-history.md#turn-report-and-history) in History and Turn Report |
 | Campaign configuration | [Configuration](configuration.md) |
 | Turn report | [Turn report and history](world-history.md#turn-report-and-history) in History and Turn Report |
@@ -64,7 +63,7 @@ Every Campaign instance is part of a World state, never of the History or of Cam
 
 # What the Game rules read
 
-Every outcome of the Game rules, i.e. whether a [Player action](engine-contract.md#player-actions-and-turns) is permitted, what it changes, and what Advance turn does, depends only on the current Committed state, the History, the Campaign configuration, and the [GDRs](core-concepts.md#game-build-and-content) of the [Game build](core-concepts.md#game-build-and-content). The Game rules read no other World state the Timeline holds, and neither the Timeline pointer nor the Turn report affects an outcome. Queries read the same data, and also report the Turn report and what the Timeline holds of the current Turn, under [Current state, Turn report, and history](world-history.md#current-state-turn-report-and-history) in History and Turn Report.
+Every outcome of the Game rules, i.e. whether a [Player action](engine-contract.md#player-actions-and-turns) is permitted, what it changes, and what Advance turn does, depends only on the [Current world state](engine-contract.md#player-actions-and-turns), the History, the Campaign configuration, and the [GDRs](core-concepts.md#game-build-and-content) of the [Game build](core-concepts.md#game-build-and-content). The Game rules read no other World state the Timeline holds, and neither the Timeline pointer nor the Turn report affects an outcome. Queries read the same data, and also report the Turn report and what the Timeline holds of the current Turn, under [Current state, Turn report, and history](world-history.md#current-state-turn-report-and-history) in History and Turn Report.
 
 # World state and History
 

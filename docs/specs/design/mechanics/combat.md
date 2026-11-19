@@ -99,7 +99,7 @@ Combats read three values of [AgentParameters](agents-spec.md#agentparameters), 
 
 ## Combat GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EnemyArchetype, Weapon, CombatParameters, `exhaustion_per_attack`, and `exhaustion_per_defense`, and it adds to [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EnemyArchetype, Weapon, CombatParameters, `exhaustion_per_attack`, and `exhaustion_per_defense`, and it adds to [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One CombatParameters:** The Game build supplies exactly one CombatParameters GDR.
 2. **EnemyArchetype values are valid:** Each EnemyArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a whole number of at least 1, and its `weapon` references a Weapon GDR the Game build supplies.
@@ -181,7 +181,7 @@ The order of each list is the fixed order of its side, under [Fixed order of eac
 1. The Combat report, under [Combat report](#combat-report).
 2. The changed current health and exhaustion of the Combatants of both lists, and the [Agent status](domain-model.md#agency-and-agents) [Killed](agents-spec.md#agent-statuses) of every Agent whose current health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
 
-An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side that contains an Enemy twice, are internal invariant violations under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract, not expected cases. [Missions](missions.md) guarantees valid lists when it has a Combat fought.
+An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side that contains an Enemy twice, are internal invariant violations under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract, not expected cases. [Missions](missions.md) guarantees valid lists when it has a Combat fought.
 
 ## Combat-only properties
 
@@ -212,7 +212,7 @@ Outside a Combat, a Combatant is able to fight exactly when its current health i
 
 ## Combat timing
 
-**Proposed rule:** A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. No [Committed state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part of Committed state.
+**Proposed rule:** A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part of a World state.
 
 # Combat rating
 
@@ -402,7 +402,7 @@ The Combat report is an Authoritative value. It is part of the [Turn report](../
 | Every fact of a Combat report, including every random outcome it records | Yes |
 | Every property of each EnemyArchetype, Weapon, and CombatParameters GDR, and the meaning of `exhaustion_per_attack` and `exhaustion_per_defense` | Yes |
 
-Incapacitated and a Combat in progress never exist in a Committed state, under [Combat timing](#combat-timing), so the player observes them only through the Combat report. **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. A damage outcome is absent, not zero, for an attack whose hit outcome is a miss; its health removed is 0. A Turn report holds a Combat report only for each Combat its Advance turn fought; a Mission whose Combat has not been fought has no Combat report anywhere.
+Incapacitated and a Combat in progress never exist in a World state, under [Combat timing](#combat-timing), so the player observes them only through the Combat report. **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. A damage outcome is absent, not zero, for an attack whose hit outcome is a miss; its health removed is 0. A Turn report holds a Combat report only for each Combat its Advance turn fought; a Mission whose Combat has not been fought has no Combat report anywhere.
 
 # Edge cases and failure behavior
 

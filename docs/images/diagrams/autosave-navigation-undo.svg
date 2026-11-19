@@ -36,7 +36,7 @@
   <rect class="bg" x="0" y="0" width="1000" height="330"/>
   <text class="title" x="24" y="32">Autosave navigation going back: undoToAutosave() called four times from Turn 10</text>
   <text class="ta mid" x="490" y="78">Engagement Autosave</text>
-  <text class="b endt" x="985" y="78">current Committed state</text>
+  <text class="b endt" x="985" y="78">Current world state</text>
   <text class="b mid" x="80" y="110">Turn 3</text>
   <text class="b mid" x="277" y="110">Turn 4</text>
   <text class="b mid" x="447" y="110">Turn 5</text>
@@ -79,5 +79,5 @@
   <circle class="entry" cx="414" cy="268" r="5"/>
   <text class="m" x="428" y="272">Timeline entry</text>
   <circle class="badge" cx="34" cy="298" r="9"/><text class="b mid" x="34" y="302.5">1</text>
-  <text class="m" x="52" y="302">to 4: successive undoToAutosave() calls. Call 1 first writes the Furthest progress Autosave from the current Committed state.</text>
+  <text class="m" x="52" y="302">to 4: successive undoToAutosave() calls. Call 1 first writes the Furthest progress Autosave from the Current world state.</text>
 </svg>

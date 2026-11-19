@@ -114,7 +114,7 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 
 ## Agent GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for AgentArchetype and AgentParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for AgentArchetype and AgentParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One AgentArchetype:** The Game build supplies exactly one AgentArchetype. Every Agent has it as its Archetype, so no rule selects among AgentArchetypes.
 2. **One AgentParameters:** The Game build supplies exactly one AgentParameters GDR.
@@ -181,7 +181,7 @@ While an Agent is Serving, its Agent status moves between At assignment, In tran
 
 Every transition not listed is impossible; e.g., a Killed Agent never becomes Serving again, and a Dismissed Agent cannot be Killed. Killed and Dismissed are final.
 
-The following invariants hold in every [Committed state](../foundation/engine-contract.md#player-actions-and-turns):
+The following invariants hold in every [World state](../foundation/engine-contract.md#player-actions-and-turns):
 
 - A Serving Agent has exactly one Assignment. A Terminated Agent has none and belongs to no Current team. Killed and Dismissed are Agent statuses, not Assignments.
 - An Agent is Recovering exactly when its Assignment is Recovery and it is not In transit. A Deployed Agent is At assignment.
@@ -208,7 +208,7 @@ The Combatant Role Type is not a Campaign instance Type, so a Combatant is never
 
 ## Attribute ranges
 
-**Proposed rule:** In every Committed state, every Combatant, i.e. every Agent and every Enemy, satisfies these ranges:
+**Proposed rule:** In every World state, every Combatant, i.e. every Agent and every Enemy, satisfies these ranges:
 
 - Base skill is at least 0. An Agent's is a [Decimal quantity](../foundation/numbers.md#glossary); an Enemy's is a whole number.
 - Base health is a whole number of at least 1.
@@ -303,7 +303,7 @@ An Agent's Assignment says what it is doing, and transit is the price of changin
 
 Recovery is an Assignment like the others, except that the player can neither assign an Agent to it nor assign a Recovering Agent elsewhere: only the rules under [Assignment changes](#assignment-changes) move an Agent onto or off Recovery. An Agent belongs to the Current team of an Investigation or of a Mission exactly as [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model states, including while In transit.
 
-A Deployed Agent is always At assignment, because deployment has no transit under [Transit rule](#transit-rule). In every Committed state, the Mission that a Deployed Agent's Assignment references is Deployed, and its Current team contains that Agent. A Mission is Deployed, under [Mission lifecycle](missions.md#mission-lifecycle), exactly when the Agents of its Current team are Deployed on it.
+A Deployed Agent is always At assignment, because deployment has no transit under [Transit rule](#transit-rule). In every World state, the Mission that a Deployed Agent's Assignment references is Deployed, and its Current team contains that Agent. A Mission is Deployed, under [Mission lifecycle](missions.md#mission-lifecycle), exactly when the Agents of its Current team are Deployed on it.
 
 ## Agents that can be assigned
 
@@ -365,8 +365,8 @@ A Serving Agent's Assignment also ends, without a replacement, when it becomes T
 **Proposed rule:** This rule decides when an Agent with a new Assignment starts working. Every [Turn advancement step](domain-model.md#turn-advancement-steps) under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) applies it. The following statements are complete:
 
 1. **Starting In transit:** Every new Assignment starts In transit, with four exceptions: an Agent becomes Deployed At assignment at once; an Agent At assignment moved from one [Base Assignment](#assignments) to the other is At assignment at once; a Recovering Agent whose current health reaches base health becomes Standby At assignment at once; and an Agent of the [Initial roster](#initial-roster) starts At assignment.
-2. **Arrival:** An Agent that is In transit in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) of an Advance turn, i.e. in the Committed state in which that Advance turn began, becomes At assignment in the Transit step of that Advance turn, or Recovering when its Assignment is Recovery. Completing its transit is all that happens to it in that Advance turn: it earns no income, trains nothing, adds no Investigation progress, fights in no Combat, and recovers neither current health nor exhaustion.
-3. **Departure:** An Agent that becomes In transit during an Advance turn is still In transit in the Committed state after that Advance turn. The Transit step applies only to Agents that were In transit in the Turn-end state.
+2. **Arrival:** An Agent that is In transit in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) of an Advance turn, i.e. in the World state in which that Advance turn began, becomes At assignment in the Transit step of that Advance turn, or Recovering when its Assignment is Recovery. Completing its transit is all that happens to it in that Advance turn: it earns no income, trains nothing, adds no Investigation progress, fights in no Combat, and recovers neither current health nor exhaustion.
+3. **Departure:** An Agent that becomes In transit during an Advance turn is still In transit in the World state after that Advance turn. The Transit step applies only to Agents that were In transit in the Turn-end state.
 4. **No orders in transit:** An Agent In transit cannot be assigned or deployed, under [Agents that can be assigned](#agents-that-can-be-assigned), or dismissed, under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents), so its destination and its arrival are fixed when its transit starts.
 
 Wherever the rule of a Turn advancement step after Transit applies to Agents At assignment or Recovering, it means Agents that already had that Agent status in the Turn-end state and that still have it when the step begins. There are two exceptions to statement 2:
@@ -485,7 +485,7 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 
 One further precondition, on assigning Agents to Training, is stated under [Training cap on assigning Agents](economy-and-upgrades.md#training-cap-on-assigning-agents). Other preconditions apply to every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), under [Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md).
 
-Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract. Because every value under [Player-visible information](#player-visible-information) is Player-visible, the error reveals nothing hidden.
+Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract. Because every value under [Player-visible information](#player-visible-information) is Player-visible, the error reveals nothing hidden.
 
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same Turn, to every Agent in `agents`:
 
@@ -548,7 +548,7 @@ Each lists its Agents by Instance ID, in the order of the Agents in Campaign sta
 - **Assigning a tired Agent:** `assignAgents` to Contracting or Training, `startInvestigation`, and `assignAgentsToInvestigation` reject, as a whole, a list with an Agent that is not Fit for work; assigning it to Standby or deploying it is accepted ([Start-work gate](#start-work-gate)).
 - **Forced return from Training:** The Agent is on Standby, At assignment, at once, so it recovers exhaustion in the Agent recovery step of the same Advance turn, under [Which Agents recover](agent-recovery.md#which-agents-recover) in Agent Recovery ([Forced return](#forced-return)).
 - **Forced return of the last member of an Investigation:** The Investigation loses all its progress under Progress loss, although this turn's progress was added first, and becomes Abandoned ([Forced return](#forced-return)).
-- **Zero current health:** A Serving Agent never has zero current health in a Committed state: the Combat that brings its current health to zero makes it Killed ([Agent status](#agent-status)). An Enemy with zero current health has an effective skill of 0 ([Effective skill](#effective-skill)).
+- **Zero current health:** A Serving Agent never has zero current health in a World state: the Combat that brings its current health to zero makes it Killed ([Agent status](#agent-status)). An Enemy with zero current health has an effective skill of 0 ([Effective skill](#effective-skill)).
 - **Recovery completion:** An Agent on Recovery whose current health reaches base health under [Agent Recovery](agent-recovery.md) becomes Standby, At assignment, at once, without transit, under [Assignment changes](#assignment-changes).
 - **Moving within base:** An Agent moved between Standby and Training is At assignment at once, so it can be assigned again in the same Turn, e.g. from Training to Standby and then to Contracting, or dismissed from Standby ([Transit rule](#transit-rule)).
 - **Moving an Agent that is away:** An Agent on Contracting or an Investigation cannot be deployed or given other work, e.g. moved from Contracting to an Investigation or to Training; it must first be recalled to Standby, which costs an Advance turn of transit ([Agents that can be assigned](#agents-that-can-be-assigned)).
@@ -560,7 +560,7 @@ Each lists its Agents by Instance ID, in the order of the Agents in Campaign sta
 - **Mixed valid and invalid Agents:** One invalid Agent rejects the whole `assignAgents` call; no listed Agent changes ([Assigning Agents](#assigning-agents)).
 - **Deployed Agents:** A Deployed Agent is At assignment but cannot be assigned, cannot be dismissed, and is not recalled by any Player action ([Agents that can be assigned](#agents-that-can-be-assigned)).
 - **Empty roster:** A Campaign with no Serving Agent is valid; `assignAgents` then has no Agent it can order. Whether the Campaign ends is decided under [Defeat](panic-and-endings.md#defeat).
-- **Invalid GDRs:** A Game build with no AgentArchetype, two AgentArchetypes, an AgentArchetype `base_health` of 0, a missing or extra property, or an unresolved `weapon` fails [Agent GDR validation](#agent-gdr-validation), and no Campaign is created from it. A Committed state violating an Agent invariant, e.g. a Serving Agent with no Assignment, is an internal invariant violation, reported under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+- **Invalid GDRs:** A Game build with no AgentArchetype, two AgentArchetypes, an AgentArchetype `base_health` of 0, a missing or extra property, or an unresolved `weapon` fails [Agent GDR validation](#agent-gdr-validation), and no Campaign is created from it. A World state violating an Agent invariant, e.g. a Serving Agent with no Assignment, is an internal invariant violation, reported under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 - **Campaign ended:** Once the Campaign has a [Campaign ending](domain-model.md#campaign-standing), `assignAgents`, `addAgents`, and Advance turn are rejected, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
 
 # Acceptance examples

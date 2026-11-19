@@ -70,7 +70,7 @@ E.g., an illustrative creation of an Agent hired during play:
 | Agent hiring | [Campaign instance creation](campaign-instances.md#campaign-instance-creation) | Hiring creates one Agent Campaign instance with a fresh Instance ID and base skill in [State](core-concepts.md#campaign-instances) equal to the new-base-Agent-skill GDR value. |
 | Agent | Campaign instance | The newly created Agent Campaign instance, with base skill 100 in State. |
 | Agent base skill | [Authoritative value](core-concepts.md#value-classification) | Initially 100 in the Agent Campaign instance’s State. |
-| New [Committed state](engine-contract.md#player-actions-and-turns) | Committed state | Contains the Agent Campaign instance when the hiring action completes. |
+| New [World state](engine-contract.md#player-actions-and-turns) | World state | Contains the Agent Campaign instance when the hiring action completes. |
 
 E.g., the new-base-Agent-skill GDR as YAML:
 
@@ -82,7 +82,7 @@ value: 100
 
 New base [Agent](../mechanics/domain-model.md#agency-and-agents) skill is a Campaign instance initialization GDR distinct from the Agent's Archetype so that one value applies to newly hired Agents of every Archetype without being repeated in each Archetype.
 
-The example shows only the [base skill](../mechanics/agents-spec.md#combatant-attributes) initial value; Agent hiring also sets the Agent's other initial values. When the hiring action completes, the new [Committed state](engine-contract.md#player-actions-and-turns) contains an Agent Campaign instance with a fresh [Instance ID](campaign-instances.md#glossary) and base skill 100 in [State](core-concepts.md#campaign-instances), the value of the new-base-Agent-skill GDR.
+The example shows only the [base skill](../mechanics/agents-spec.md#combatant-attributes) initial value; Agent hiring also sets the Agent's other initial values. When the hiring action completes, the new [World state](engine-contract.md#player-actions-and-turns) contains an Agent Campaign instance with a fresh [Instance ID](campaign-instances.md#glossary) and base skill 100 in [State](core-concepts.md#campaign-instances), the value of the new-base-Agent-skill GDR.
 
 ```mermaid
 flowchart LR
@@ -90,7 +90,7 @@ flowchart LR
     Creation["Agent hiring<br/>base skill starts at the new-base-Agent-skill value"] -->|specifies| Agent["Agent Campaign instance<br/>fresh Instance ID"]
     GDR -->|initial base skill 100| Agent
     Agent -->|State contains| Skill["Authoritative value:<br/>base skill 100"]
-    Agent -->|included in| State["New Committed state"]
+    Agent -->|included in| State["New World state"]
 ```
 
 If training later raises the Agent's base skill to 110, the engine reads 110 from the Agent Campaign instance’s State. The new-base-Agent-skill GDR still contains the initial value of 100.
@@ -165,7 +165,7 @@ type: ContractingRate
 value: 2 # money per point of base skill per Turn
 ```
 
-During "Advance turn" computation, the engine reads the rate of 2 from the Standard contracting GDR, which conforms to Type ContractingRate, and the Agent's base skill of 100, an Authoritative value in Campaign state. The engine applies the contracting income formula to these inputs, producing contracting income of 200, a Derived value. Applying the contracting payment, the engine adds 200 to the campaign's current money; the updated money becomes part of the new Committed state, which is the result of Turn advancement completion.
+During "Advance turn" computation, the engine reads the rate of 2 from the Standard contracting GDR, which conforms to Type ContractingRate, and the Agent's base skill of 100, an Authoritative value in Campaign state. The engine applies the contracting income formula to these inputs, producing contracting income of 200, a Derived value. Applying the contracting payment, the engine adds 200 to the campaign's current money; the updated money becomes part of the new World state, which is the result of Turn advancement completion.
 
 ```mermaid
 flowchart LR
@@ -176,7 +176,7 @@ flowchart LR
     Engine -->|calculates| Total["Derived value: contracting income 200"]
     Total -->|amount to add| Update["Engine updates campaign money"]
     State -->|current money| Update
-    Update -->|included when Turn advancement completes| Committed["New Committed state"]
+    Update -->|included when Turn advancement completes| Committed["New World state"]
 ```
 
 # GDR purpose: archetype

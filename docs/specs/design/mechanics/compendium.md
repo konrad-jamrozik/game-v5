@@ -41,7 +41,7 @@ An article identifies its subject only through `subject`, never through its `tit
 
 ## Encyclopedia article GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EncyclopediaArticle GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different content, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EncyclopediaArticle GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different content, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **Exact properties:** Each EncyclopediaArticle has `title` and `body` and may have `subject`, apart from `id` and `type`; no other property is present.
 2. **Text is present:** The `title` and the `body` are each non-empty text.
@@ -53,22 +53,22 @@ The Game build may supply any number of EncyclopediaArticles, including none, an
 
 # Article visibility
 
-**Proposed rule:** In each [Committed state](../foundation/engine-contract.md#player-actions-and-turns), an Encyclopedia article is Player-visible exactly when one of the following holds:
+**Proposed rule:** In each [World state](../foundation/engine-contract.md#player-actions-and-turns), an Encyclopedia article is Player-visible exactly when one of the following holds:
 
 1. It is a Guide article.
-2. Its subject is Player-visible in that Committed state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that Committed state, a value that includes the subject GDR.
+2. Its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR.
 
-Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the Committed state in which it is read; it is never stored. It changes only when the visibility of its subject changes, so an article becomes Player-visible in the same Committed state as its subject, e.g. in the Committed state of the Mission resolution step that discovers its Lead.
+Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the World state in which it is read; it is never stored. It changes only when the visibility of its subject changes, so an article becomes Player-visible in the same World state as its subject, e.g. in the World state after the Advance turn whose Mission resolution step discovers its Lead.
 
 The following table restates, for the Types the [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) supply articles for, when the specification that owns each Type makes one of its GDRs Player-visible. It is informative; each owning specification's Player-visible information section governs.
 
 | Subject Type | Owning specification | The subject is Player-visible |
 | --- | --- | --- |
-| AgentArchetype | [Player-visible information](agents-spec.md#player-visible-information) in Agents | In every Committed state. |
-| EnemyArchetype | [Player-visible information](combat.md#player-visible-information) in [Combat](domain-model.md#combat) | In every Committed state. |
-| Weapon | [Player-visible information](combat.md#player-visible-information) in Combat | In every Committed state. |
-| Upgrade | [Player-visible information](economy-and-upgrades.md#player-visible-information) in Economy and Upgrades | In every Committed state. |
-| FactionArchetype | [Player-visible information](factions.md#player-visible-information) in Factions | While a [Faction](domain-model.md#factions) whose [Archetype](../foundation/core-concepts.md#campaign-instances) it is exists, i.e. in every Committed state for an initial Faction's Archetype. |
+| AgentArchetype | [Player-visible information](agents-spec.md#player-visible-information) in Agents | In every World state. |
+| EnemyArchetype | [Player-visible information](combat.md#player-visible-information) in [Combat](domain-model.md#combat) | In every World state. |
+| Weapon | [Player-visible information](combat.md#player-visible-information) in Combat | In every World state. |
+| Upgrade | [Player-visible information](economy-and-upgrades.md#player-visible-information) in Economy and Upgrades | In every World state. |
+| FactionArchetype | [Player-visible information](factions.md#player-visible-information) in Factions | While a [Faction](domain-model.md#factions) whose [Archetype](../foundation/core-concepts.md#campaign-instances) it is exists, i.e. in every World state for an initial Faction's Archetype. |
 | Lead | [Player-visible information](leads-and-progression.md#player-visible-information) in Leads and Progression | Once the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) is discovered, which is permanent, under [Lead discovery](leads-and-progression.md#lead-discovery). |
 | MissionSiteArchetype | [Player-visible information](missions.md#player-visible-information) in Missions | While a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) whose Archetype it is exists, or a discovered Lead creates a Mission site from it. |
 
@@ -78,14 +78,14 @@ The following table restates, for the Types the [Bootstrap GDRs](../content/boot
 
 | Value | Player-visible information |
 | --- | --- |
-| An Encyclopedia article's identifier, `title`, `body`, and `subject` | Yes, in each Committed state in which the article is Player-visible, under [Article visibility](#article-visibility) |
+| An Encyclopedia article's identifier, `title`, `body`, and `subject` | Yes, in each World state in which the article is Player-visible, under [Article visibility](#article-visibility) |
 
 **Unknown versus absent:** An Encyclopedia article that is not Player-visible is absent: Player API leaves it out of every result and never reports it as unknown, so the Player cannot learn that it exists. A Guide article is reported without a subject, not with an unknown one.
 
 # Edge cases and failure behavior
 
 - **Subject that is never Player-visible:** An article whose subject no specification ever declares Player-visible, e.g. an article about an undiscovered Lead in a Campaign that never discovers it, is never Player-visible. This is not a defect ([Article visibility](#article-visibility)).
-- **Subject visible, then hidden:** An article follows its subject in every Committed state, so it is no longer Player-visible after undo, redo, or load restores a Committed state in which its subject is not Player-visible ([Article visibility](#article-visibility)).
+- **Subject visible, then hidden:** An article follows its subject in every World state, so it is no longer Player-visible after undo, redo, or load restores a World state in which its subject is not Player-visible ([Article visibility](#article-visibility)).
 - **Article about another article:** A `subject` that identifies an EncyclopediaArticle fails [Encyclopedia article GDR validation](#encyclopedia-article-gdr-validation), so visibility never depends on another article.
 - **Missing or duplicate data:** A `subject` that identifies no GDR, two articles with one `title`, two articles with one `subject`, an empty `title` or `body`, or an extra property fails [Encyclopedia article GDR validation](#encyclopedia-article-gdr-validation), and no Campaign is created.
 - **No gameplay effect:** No rule reads an Encyclopedia article, so equal initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) and the same ordered committed [Player actions](../foundation/engine-contract.md#player-actions-and-turns) produce equal Campaign state with any set of articles, or none.
@@ -117,13 +117,13 @@ A Player-visible query of the Encyclopedia articles returns the visible articles
 
 This example exercises [Article visibility](#article-visibility).
 
-During Turn t, a Mission at an `apprehend_member` Mission site is Won in the Mission resolution step of the Advance turn ending Turn t, which discovers `locate_red_dawn_safehouse`, under [The first Mission Won](leads-and-progression.md#the-first-mission-won) in Leads and Progression. In the Committed state that Advance turn commits, `locate_red_dawn_safehouse_article` and `raid_safehouse_article` are Player-visible, because the Lead is discovered and creates `raid_safehouse` Mission sites. `locate_red_dawn_hq_article` and `raid_hq_article` stay absent. After undo to the autosave before that Advance turn, the two articles are absent again.
+During Turn t, a Mission at an `apprehend_member` Mission site is Won in the Mission resolution step of the Advance turn ending Turn t, which discovers `locate_red_dawn_safehouse`, under [The first Mission Won](leads-and-progression.md#the-first-mission-won) in Leads and Progression. In the World state that Advance turn commits, `locate_red_dawn_safehouse_article` and `raid_safehouse_article` are Player-visible, because the Lead is discovered and creates `raid_safehouse` Mission sites. `locate_red_dawn_hq_article` and `raid_hq_article` stay absent. After undo to the autosave before that Advance turn, the two articles are absent again.
 
 ## A Response Mission site
 
 This example exercises [Article visibility](#article-visibility).
 
-The first Faction operation occurrence of Red Dawn at Faction operation level 2 creates a `foil_sabotage` Mission site. In the Committed state in which that Mission site exists, `foil_sabotage_article` is Player-visible. `foil_recruitment_push_article` stays absent while no `foil_recruitment_push` Mission site exists.
+The first Faction operation occurrence of Red Dawn at Faction operation level 2 creates a `foil_sabotage` Mission site. In the World state in which that Mission site exists, `foil_sabotage_article` is Player-visible. `foil_recruitment_push_article` stays absent while no `foil_recruitment_push` Mission site exists.
 
 ## GDR validation
 

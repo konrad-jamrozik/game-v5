@@ -72,7 +72,7 @@ An AgencyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-in
 
 ## Economy GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EconomyParameters, Upgrade, and AgencyArchetype GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EconomyParameters, Upgrade, and AgencyArchetype GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One AgencyArchetype:** The Game build supplies exactly one AgencyArchetype, so no rule selects among AgencyArchetypes.
 2. **One EconomyParameters:** The Game build supplies exactly one EconomyParameters GDR.
@@ -120,7 +120,7 @@ The following table is the exhaustive list of rules that change the Agency's Sta
 
 A rule of another specification that changes money adds a whole amount to it, positive or negative, and the result is never clamped.
 
-**Proposed rule:** In every [Committed state](../foundation/engine-contract.md#player-actions-and-turns) of a Campaign that has no [Campaign ending](domain-model.md#campaign-standing), money is at least 0. No [Player action](../foundation/engine-contract.md#player-actions-and-turns) takes money below 0: `hireAgent` and `purchaseUpgrade` require money of at least their cost, and `addMoney` is rejected when it would, under [Adding money](#adding-money). An Advance turn that leaves money below 0 records a Campaign ending, under [Upkeep](#upkeep). Money is therefore negative only within an Advance turn and in a Campaign that has a Campaign ending.
+**Proposed rule:** In every [World state](../foundation/engine-contract.md#player-actions-and-turns) of a Campaign that has no [Campaign ending](domain-model.md#campaign-standing), money is at least 0. No [Player action](../foundation/engine-contract.md#player-actions-and-turns) takes money below 0: `hireAgent` and `purchaseUpgrade` require money of at least their cost, and `addMoney` is rejected when it would, under [Adding money](#adding-money). An Advance turn that leaves money below 0 records a Campaign ending, under [Upkeep](#upkeep). Money is therefore negative only within an Advance turn and in a Campaign that has a Campaign ending.
 
 The Agency is [retained](../foundation/world-history.md#glossary) for the whole Campaign and never removed.
 
@@ -231,16 +231,16 @@ S counts every Serving Agent, including one that is [In transit](domain-model.md
 
 ## Projected income and upkeep
 
-**Proposed rule:** The Agency has two Derived values that state what the next Advance turn will add and charge if it is committed from the current [Committed state](../foundation/engine-contract.md#player-actions-and-turns):
+**Proposed rule:** The Agency has two Derived values that state what the next Advance turn will add and charge if it is committed from the [Current world state](../foundation/engine-contract.md#player-actions-and-turns):
 
 ```text
 projected income = funding + round down( sum of the contributions of the Agents in C' )
 projected upkeep = upkeep_per_agent × S'
 ```
 
-where funding is the Agency's funding in the current Committed state; C' is the Agents that are Serving, whose Assignment is Contracting, and whose Agent status is At assignment in the current Committed state; the contribution of each is computed as under [Agency income](#agency-income), from its effective skill in the current Committed state; and S' is the number of Serving Agents in the current Committed state. Each is a whole number of money of at least 0, evaluated and rounded as under [Agency income](#agency-income).
+where funding is the Agency's funding in the Current world state; C' is the Agents that are Serving, whose Assignment is Contracting, and whose Agent status is At assignment in the Current world state; the contribution of each is computed as under [Agency income](#agency-income), from its effective skill in the Current world state; and S' is the number of Serving Agents in the Current world state. Each is a whole number of money of at least 0, evaluated and rounded as under [Agency income](#agency-income).
 
-When Advance turn is committed from the current Committed state, that state becomes the Turn-end state, so the Agency income step adds exactly the projected income and the Upkeep step charges exactly the projected upkeep. The Agency's money after the Upkeep step is therefore money + projected income − projected upkeep. Later steps of the same Advance turn, e.g. the consequences of a Mission site, may change money further; the projections do not include them. Both values follow every Player action at once; e.g., hiring raises projected upkeep by `upkeep_per_agent`, and assigning an Agent with effective skill 100 from Contracting to Standby lowers projected income by `contracting_income_per_agent`.
+When Advance turn is committed from the Current world state, that state becomes the Turn-end state, so the Agency income step adds exactly the projected income and the Upkeep step charges exactly the projected upkeep. The Agency's money after the Upkeep step is therefore money + projected income − projected upkeep. Later steps of the same Advance turn, e.g. the consequences of a Mission site, may change money further; the projections do not include them. Both values follow every Player action at once; e.g., hiring raises projected upkeep by `upkeep_per_agent`, and assigning an Agent with effective skill 100 from Contracting to Standby lowers projected income by `contracting_income_per_agent`.
 
 # Hiring Agents
 
@@ -253,7 +253,7 @@ Preconditions: the action is rejected when either of the following holds:
 
 Other preconditions apply to every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) and [Engine Contract](../foundation/engine-contract.md).
 
-Rejection: when a precondition fails, the action is rejected with an error that identifies at least one failed precondition; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+Rejection: when a precondition fails, the action is rejected with an error that identifies at least one failed precondition; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 State changes: when both preconditions hold, the action is one Player action that applies at once, within the same Turn:
 
@@ -281,7 +281,7 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 
 Together, conditions 4 to 6 mean that every listed Agent must be Serving, At assignment, and on Standby. An Agent on Contracting, Training, Recovery, or an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions), and a Deployed Agent, must first reach Standby, At assignment. Other preconditions apply to every Player action, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) and [Engine Contract](../foundation/engine-contract.md).
 
-Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same Turn, to every Agent in `agents`: the Agent becomes Dismissed under [Agent status](agents-spec.md#agent-status) in Agents, which removes its Assignment and Agent status and sets its Turn terminated to the current turn number, under [Service record](agents-spec.md#service-record). No money is refunded or spent, and nothing else changes. A Dismissed Agent stops counting toward the Agent cap and in projected upkeep at once, and is not counted in any later Upkeep step. It stays in the Agency's roster and is kept in the [Retired world state](../foundation/campaign-state.md#glossary) with its final values.
 
@@ -293,7 +293,7 @@ State changes: when every precondition holds, the action is one Player action th
 T + number of Agents in agents  >  Training cap
 ```
 
-where T is the number of Serving Agents whose Assignment is Training, whatever their Agent status, in the Committed state in which the action is requested, and the Training cap is under [Agency caps](#agency-caps). Every Agent in `agents` adds one, because the preconditions under [Assigning Agents](agents-spec.md#assigning-agents) already reject an Agent whose Assignment is Training. The action is accepted when the sum is equal to or less than the Training cap.
+where T is the number of Serving Agents whose Assignment is Training, whatever their Agent status, in the World state in which the action is requested, and the Training cap is under [Agency caps](#agency-caps). Every Agent in `agents` adds one, because the preconditions under [Assigning Agents](agents-spec.md#assigning-agents) already reject an Agent whose Assignment is Training. The action is accepted when the sum is equal to or less than the Training cap.
 
 The rejection follows the rejection behavior of `assignAgents` in Agents: the whole action is rejected, no listed Agent changes, and the error identifies this precondition. This precondition does not apply when `assignment` is `Standby` or `Contracting`, even when T exceeds the Training cap, under [Counts above a cap](#counts-above-a-cap). Assigning an Agent away from Training frees its place at once, within the same Turn.
 
@@ -316,7 +316,7 @@ Preconditions: the action is rejected when either of the following holds:
 
 Other preconditions apply to every Player action, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) and [Engine Contract](../foundation/engine-contract.md). No limit applies to how many times an Upgrade is purchased, in one Turn or in the whole Campaign.
 
-Rejection: when a precondition fails, the action is rejected with an error that identifies at least one failed precondition; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+Rejection: when a precondition fails, the action is rejected with an error that identifies at least one failed precondition; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 State changes: when both preconditions hold, the action is one Player action that applies at once, within the same Turn:
 
@@ -352,7 +352,7 @@ upgraded value = starting value + Upgrade bonus
 Upgrade bonus  = sum over every Upgrade U whose effect is the effect identifier of ( Increment of U × Acquisitions of U )
 ```
 
-Inputs: each Acquisitions is a whole number of at least 0, each Increment is a whole number of at least 0 or, for a Rate Upgrade, a [Decimal quantity](../foundation/numbers.md#glossary) of at least 0, and the Acquisitions are those of the Committed state in which the value is read or set. The Upgrade bonus of an effect identifier that no Upgrade has is 0. No rounding occurs, because the product of a Decimal quantity and a whole number is a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. The starting value and where the upgraded value applies are stated for each kind: [Agency caps](#agency-caps) for a Cap Upgrade, [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage Upgrade, [Base health Upgrade](#base-health-upgrade) for a Base health Upgrade, and [Rate Upgrades](#rate-upgrades) for a Rate Upgrade.
+Inputs: each Acquisitions is a whole number of at least 0, each Increment is a whole number of at least 0 or, for a Rate Upgrade, a [Decimal quantity](../foundation/numbers.md#glossary) of at least 0, and the Acquisitions are those of the World state in which the value is read or set. The Upgrade bonus of an effect identifier that no Upgrade has is 0. No rounding occurs, because the product of a Decimal quantity and a whole number is a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. The starting value and where the upgraded value applies are stated for each kind: [Agency caps](#agency-caps) for a Cap Upgrade, [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage Upgrade, [Base health Upgrade](#base-health-upgrade) for a Base health Upgrade, and [Rate Upgrades](#rate-upgrades) for a Rate Upgrade.
 
 ### Cap Upgrades
 
@@ -369,7 +369,7 @@ A Cap Upgrade changes no stored value beyond the Acquisitions: the cap it raises
 initial base weapon damage = base_weapon_damage + Upgrade bonus of agent_weapon_damage
 ```
 
-Inputs: `base_weapon_damage` is that of the Weapon GDR that the AgentArchetype's `weapon` references, a whole number of at least 1, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the Committed state in which the Agent is created. The result is a whole number of at least `base_weapon_damage`, so of at least 1. This formula applies to every Agent creation: hiring, `addAgents`, and the initial roster, whose Agents start with `base_weapon_damage` because the Upgrade bonus is 0 at campaign creation.
+Inputs: `base_weapon_damage` is that of the Weapon GDR that the AgentArchetype's `weapon` references, a whole number of at least 1, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the World state in which the Agent is created. The result is a whole number of at least `base_weapon_damage`, so of at least 1. This formula applies to every Agent creation: hiring, `addAgents`, and the initial roster, whose Agents start with `base_weapon_damage` because the Upgrade bonus is 0 at campaign creation.
 
 Consequently, every Serving Agent's base weapon damage equals the formula above, whichever Turn the Agent was created in, because no other rule changes base weapon damage, under [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents. The effect changes no other Agent value, no Weapon GDR, and no [Enemy](domain-model.md#combat).
 
@@ -384,7 +384,7 @@ An acquisition of an Upgrade whose `effect` is `agent_base_health`, i.e. of a Ba
 initial base health = base_health + Upgrade bonus of agent_base_health
 ```
 
-Inputs: `base_health` is that of the AgentArchetype, a whole number of at least 1, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the Committed state in which the Agent is created. The result is a whole number of at least `base_health`, so of at least 1, and [Attribute ranges](agents-spec.md#attribute-ranges) hold after every purchase, because base health and current health rise together.
+Inputs: `base_health` is that of the AgentArchetype, a whole number of at least 1, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the World state in which the Agent is created. The result is a whole number of at least `base_health`, so of at least 1, and [Attribute ranges](agents-spec.md#attribute-ranges) hold after every purchase, because base health and current health rise together.
 
 Consequently, every Serving Agent's base health equals the formula above, whichever Turn the Agent was created in, because no other rule changes base health, under [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents. A higher base health changes no effective skill by itself, because effective skill reads current health relative to base health, under [Effective skill](agents-spec.md#effective-skill); it lets an Agent take more harm in a [Combat](domain-model.md#combat), and it raises the current health the Agent regains in each Advance turn on Recovery when the rounding of [Health recovery](agent-recovery.md#health-recovery) allows. The effect changes no other Agent value, no AgentArchetype, and no Enemy.
 
@@ -406,8 +406,8 @@ Inputs: `training_skill_gain_per_turn` is that of AgentParameters, and `exhausti
 
 | Turn series | Recorded moment of each Turn |
 | --- | --- |
-| Money at the start of turn | The [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) of the Turn: the Committed state in which the Turn starts, before any action of it. |
-| Money at the end of turn | The Turn-end state of the Turn: the Committed state in which the Advance turn that ends the Turn begins. |
+| Money at the start of turn | The [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) of the Turn: the World state in which the Turn starts, before any action of it. |
+| Money at the end of turn | The Turn-end state of the Turn: the World state in which the Advance turn that ends the Turn begins. |
 
 The values are recorded as follows:
 
@@ -488,7 +488,7 @@ The [History entry](../foundation/world-history.md#glossary) of the Turn the Adv
 - **Rate Upgrade purchased during a Turn:** The raised rate applies from the next Advance turn and changes no Agent value at once ([Rate Upgrades](#rate-upgrades)).
 - **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises Acquisitions but no value it improves, and a purchase of the second costs no money ([Economy GDR validation](#economy-gdr-validation)).
 - **Large values:** Money, Acquisitions, caps, base weapon damage, base health, and the rates a Rate Upgrade raises have no upper bound, and every computation is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
-- **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is created from it ([Economy GDR validation](#economy-gdr-validation), [Campaign configuration values](#campaign-configuration-values)). A Committed state violating an invariant of the Agency, e.g. negative funding, is an internal invariant violation, reported under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+- **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is created from it ([Economy GDR validation](#economy-gdr-validation), [Campaign configuration values](#campaign-configuration-values)). A World state violating an invariant of the Agency, e.g. negative funding, is an internal invariant violation, reported under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 - **Campaign ended:** Once the Campaign has a Campaign ending, `hireAgent`, `dismissAgents`, `purchaseUpgrade`, `addMoney`, and Advance turn are rejected, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
 
 # Acceptance examples

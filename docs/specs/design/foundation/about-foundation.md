@@ -16,7 +16,7 @@ The family reads from abstract to concrete: words, then engine promises, then da
 
 ## Engine Contract
 
-[Engine Contract](engine-contract.md) answers _what is true of the engine as a whole?_ It owns how the engine divides, into engine subsystems, API operations, and data, which callers may use which operations, and the guarantees every engine subsystem keeps, e.g. Committed state integrity. It owns no engine subsystem: it names the one owner of each, without stating that subsystem's behavior.
+[Engine Contract](engine-contract.md) answers _what is true of the engine as a whole?_ It owns how the engine divides, into engine subsystems, API operations, and data, which callers may use which operations, and the guarantees every engine subsystem keeps, e.g. World state integrity. It owns no engine subsystem: it names the one owner of each, without stating that subsystem's behavior.
 
 ## Player API
 
@@ -56,7 +56,7 @@ The family reads from abstract to concrete: words, then engine promises, then da
 
 ## Timeline
 
-[Timeline](timeline.md) answers _how does the player go back and forward, within a Turn and across Turns?_ It owns the structure of the Timeline, undo and redo of the Player actions of the current Turn by moving the Timeline pointer, undo and redo across Turns by Autosave navigation, and what returning to a Committed state guarantees.
+[Timeline](timeline.md) answers _how does the player go back and forward, within a Turn and across Turns?_ It owns the structure of the Timeline, undo and redo of the Player actions of the current Turn by moving the Timeline pointer, undo and redo across Turns by Autosave navigation, and what returning to a World state guarantees.
 
 ## Configuration
 
@@ -96,7 +96,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 - **Engine Contract versus Player API:** the shape of the engine changes when a part or a kind of caller is added; what the player may see changes with every mechanic. Mechanics specifications rely mostly on the second, so it has its own document.
 - **Campaign State, Campaign Instances, and History and Turn Report:** what a Campaign's data is made of, how one thing in it is modeled, and what it remembers of its past change for different reasons, so each has its own document. E.g., a new Turn series changes only History and Turn Report, and a change to how a Role Type is declared changes only Campaign Instances.
 - **Campaign State versus Game Data Records:** the first holds the rules for data that changes during a Campaign; the second holds the uses of data that never changes during one.
-- **Engine Contract versus the engine subsystem specifications:** Engine Contract holds only what is true across all engine subsystems, and each engine subsystem has exactly one owning specification, which owns no other. E.g., the rule for which Committed state `undoAction()` makes current is stated once, in Timeline.
+- **Engine Contract versus the engine subsystem specifications:** Engine Contract holds only what is true across all engine subsystems, and each engine subsystem has exactly one owning specification, which owns no other. E.g., the rule for which World state `undoAction()` makes current is stated once, in Timeline.
 - **Saves versus Timeline:** Saves holds what most games have: saving, loading, and the Autosaves the engine writes. It needs nothing from Timeline. Timeline holds all undo and redo and builds on Saves. Undo and redo within a Turn work without any Campaign save; undo and redo across Turns load Autosaves, so Timeline uses Saves rather than the reverse.
 - **Numbers:** several Mechanics documents depend on the same arithmetic, e.g. the same rounding operations, so it does not belong inside a single mechanic.
 - **Determinism and Randomness versus Engine Contract:** determinism, the Campaign seed, random outcomes, and unique identifiers share one test, whether replay must reproduce a result, and change together, so one document holds them in detail. Each Mechanics document owns the distributions of its own random outcomes, and how a random rule is written is owned by Specification Conventions.

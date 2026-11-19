@@ -28,7 +28,7 @@
   </defs>
   <rect class="bg" x="0" y="0" width="1000" height="380"/>
   <text class="title" x="24" y="32">Redo within one Turn, starting at the Turn-start state with four Undone actions</text>
-  <text class="b mid" x="100" y="80">current Committed state</text>
+  <text class="b mid" x="100" y="80">Current world state</text>
   <text class="b mid" x="100" y="96">Turn-start state</text>
   <text class="m mid" x="100" y="112">no Timeline entry</text>
   <text class="m mid" x="250" y="112">Hire an Agent</text>

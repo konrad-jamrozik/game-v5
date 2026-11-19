@@ -31,13 +31,13 @@ The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn
 | Player actions | The number of items in the Action record of Turn t, which opens the list under [Player actions list](#player-actions-list). | A number after "▸", or "▾" while its list is open; "0" in Text muted, with no marker. |
 | Events | What the Advance turn ending Turn t did, under [Events](#events). | Short labels side by side. |
 
-The current Turn's row shows each column as if the Advance turn ending it were committed at the current [Committed state](../../foundation/engine-contract.md#player-actions-and-turns), as far as that is known before it is committed:
+The current Turn's row shows each column as if the Advance turn ending it were committed at the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns), as far as that is known before it is committed:
 
 - **Turn:** t, followed by "now" in Text muted.
-- **Money end:** the Agency's money in the current Committed state.
+- **Money end:** the Agency's money in the Current world state.
 - **Income and Upkeep:** the projected income and projected upkeep, under [Projected income and upkeep](../../mechanics/economy-and-upgrades.md#projected-income-and-upkeep) in Economy and Upgrades, which that Advance turn would add and charge exactly.
-- **Panic:** Panic in the current Committed state, since what that Advance turn would change depends on events not yet resolved.
-- **Agents:** the number of Serving Agents in the current Committed state.
+- **Panic:** Panic in the Current world state, since what that Advance turn would change depends on events not yet resolved.
+- **Agents:** the number of Serving Agents in the Current world state.
 - **Events:** empty, since no Advance turn has ended the Turn.
 - **Money start, Expenditures, and Player actions:** as for an ended Turn, from the [Open History entry](../../foundation/world-history.md#glossary).
 

@@ -31,7 +31,7 @@ Full Campaign state inspection presents each [Campaign instance](core-concepts.m
 A Player cheat action changes Campaign state in a way ordinary play does not allow. Each concrete Player cheat action, e.g. its inputs, validation, and effects, is specified in the Mechanics specification of the value it changes. The following rules of every Player cheat action are complete:
 
 - **Who and when:** Only the Session controller can call a Player cheat action, only with Dev mode enabled, under [Dev mode](#dev-mode). An Autopilot AI never can.
-- **Validated:** A Player cheat action rejects invalid inputs and then changes nothing, under [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract.
+- **Validated:** A Player cheat action rejects invalid inputs and then changes nothing, under [World state integrity](engine-contract.md#world-state-integrity) in Engine Contract.
 - **Recorded:** Each successful Player cheat action is one atomic [Player action](engine-contract.md#player-actions-and-turns), recorded as one [Timeline entry](timeline.md#glossary).
 - **Invariants kept:** A Player cheat action preserves every invariant that a specification states. One whose effect would leave the [Campaign](core-concepts.md#campaign-and-session) in a state that violates an invariant is rejected and changes nothing, and its error identifies the invariant; e.g., `addMoney` with an amount that would leave negative money is rejected, because money is at least 0 in every Campaign without a Campaign ending. A Player cheat action therefore never ends a Campaign.
 
@@ -43,11 +43,11 @@ An override is a Player cheat action under [Player cheat actions](#player-cheat-
 
 # Isolation and Timeline navigation
 
-Undo and redo of a committed Player cheat action follow [Returning to a Committed state](timeline.md#returning-to-a-committed-state): they do not require Dev mode and give an Autopilot AI no way to commit a Player cheat action.
+Undo and redo of a committed Player cheat action follow [Returning to a World state](timeline.md#returning-to-a-world-state): they do not require Dev mode and give an Autopilot AI no way to commit a Player cheat action.
 
 # Edge cases and failure behavior
 
-Invalid cheat inputs change nothing, under [Committed state integrity](engine-contract.md#committed-state-integrity).
+Invalid cheat inputs change nothing, under [World state integrity](engine-contract.md#world-state-integrity).
 
 # Acceptance examples
 

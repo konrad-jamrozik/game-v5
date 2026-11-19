@@ -40,7 +40,7 @@ Each property is the starting value of a rate that [Rate Upgrades](economy-and-u
 
 ## Recovery GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for RecoveryParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
+**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for RecoveryParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One RecoveryParameters:** The Game build supplies exactly one RecoveryParameters GDR.
 2. **Exact properties:** The RecoveryParameters GDR has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
@@ -52,7 +52,7 @@ Each property is the starting value of a rate that [Rate Upgrades](economy-and-u
 **Proposed rule:** In the Agent recovery step of every Advance turn, the recovery rules below apply to an Agent exactly when all of the following hold:
 
 1. It is [Serving](agents-spec.md#agent-statuses).
-2. It is not [In transit](agents-spec.md#agent-statuses) in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), i.e. in the [Committed state](../foundation/engine-contract.md#player-actions-and-turns) in which this Advance turn began: its [Agent status](domain-model.md#agency-and-agents) there is [At assignment](agents-spec.md#agent-statuses) or Recovering.
+2. It is not [In transit](agents-spec.md#agent-statuses) in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns), i.e. in the [World state](../foundation/engine-contract.md#player-actions-and-turns) in which this Advance turn began: its [Agent status](domain-model.md#agency-and-agents) there is [At assignment](agents-spec.md#agent-statuses) or Recovering.
 3. It is not [In transit](domain-model.md#agency-and-agents) at the start of the Agent recovery step.
 4. Its [Assignment](domain-model.md#agency-and-agents) at the start of the Agent recovery step is the Assignment the rule names.
 

@@ -147,7 +147,7 @@ Arrows show the labelled relationships, not inheritance.
 
 ## How concepts relate
 
-Campaign instances reference each other as follows. Every row holds in every [Committed state](../foundation/engine-contract.md#player-actions-and-turns). Each concept has further references, listed with its properties.
+Campaign instances reference each other as follows. Every row holds in every [World state](../foundation/engine-contract.md#player-actions-and-turns). Each concept has further references, listed with its properties.
 
 | From | To | How many | Reference |
 | --- | --- | --- | --- |
@@ -184,7 +184,7 @@ Agency, Agent, Investigation, Mission site, Mission, Enemy, and Faction share on
 
 # Current versus historical teams
 
-The Current team of an Investigation or Mission must agree with Assignments: an Agent whose Assignment references Investigation I belongs to the Current team of I, and an Agent whose Assignment references Mission M belongs to the Current team of M. An Agent cannot belong to more than one Current team. In Committed state, the Agent-side and team-side views of Current team membership agree, and no Assignment references an Investigation that is no longer Active or a Mission that is Won or Lost.
+The Current team of an Investigation or Mission must agree with Assignments: an Agent whose Assignment references Investigation I belongs to the Current team of I, and an Agent whose Assignment references Mission M belongs to the Current team of M. An Agent cannot belong to more than one Current team. In every World state, the Agent-side and team-side views of Current team membership agree, and no Assignment references an Investigation that is no longer Active or a Mission that is Won or Lost.
 
 Participation history describes the same relationship for the past: an Agent's Participation history and the past participants of an Investigation or Mission are one relationship seen from opposite sides. Agents recorded in Participation history are not members of the Current team, and Participation history neither assigns nor reserves an Agent; e.g., a Won Mission retains an Agent's Participation history after that Agent is assigned elsewhere.
 
@@ -193,7 +193,7 @@ Participation history describes the same relationship for the past: an Agent's P
 | Case | Result and owner |
 | --- | --- |
 | An Agent is In transit to an Investigation | The Agent belongs to its Current team; arrival and progress timing belong to Agents and Investigations |
-| An Investigation concludes while members of its Current team are In transit | In the next Committed state no Assignment references it; the replacement Assignments belong to Agents and Investigations |
+| An Investigation concludes while members of its Current team are In transit | In the next World state no Assignment references it; the replacement Assignments belong to Agents and Investigations |
 | The player deploys Agents to a Mission site | A new Mission at that Mission site comes into existence, whose Current team is those Agents, and each of them has an Assignment that references the Mission, under [Current versus historical teams](#current-versus-historical-teams); preconditions, rejection, and transit belong to Missions and Agents |
 | A team is to be deployed to a Mission site that already has a Mission | Never valid: a Mission site has at most one Mission, under [How concepts relate](#how-concepts-relate); Missions owns the rejection |
 | A Mission retains an Agent in its Participation history after it is Won or Lost | The Agent's Assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams) |

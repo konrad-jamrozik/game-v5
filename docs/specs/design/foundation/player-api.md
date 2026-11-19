@@ -22,7 +22,7 @@ A player knows only what the game chooses to show, and acts only through the mov
 
 # Gameplay actions
 
-The mechanics specification owning each gameplay action, e.g. `assignAgents(...)` or `purchaseUpgrade(...)`, states the action's preconditions, what the player observes when a precondition fails, and the action's state changes: when they apply, which values change, and by how much. A rejected action changes nothing, under [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract, and a successful one is one [Player action](engine-contract.md#player-actions-and-turns), under [Player actions](engine-contract.md#player-actions) in Engine Contract.
+The mechanics specification owning each gameplay action, e.g. `assignAgents(...)` or `purchaseUpgrade(...)`, states the action's preconditions, what the player observes when a precondition fails, and the action's state changes: when they apply, which values change, and by how much. A rejected action changes nothing, under [World state integrity](engine-contract.md#world-state-integrity) in Engine Contract, and a successful one is one [Player action](engine-contract.md#player-actions-and-turns), under [Player actions](engine-contract.md#player-actions) in Engine Contract.
 
 The gameplay action inventory is extensible; future gameplay actions follow the same atomicity, visibility, and replay contract.
 

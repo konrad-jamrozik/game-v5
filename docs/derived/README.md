@@ -60,7 +60,7 @@ These informative views are derived from the registered Markdown specifications.
 | NUMBERS | [Numbers](../specs/design/foundation/numbers.md) | That every stored quantity is held as a whole number, of units or of hundredths, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
 | PAPI | [Player API](../specs/design/foundation/player-api.md) | What the player can see of a Campaign, and how gameplay actions change it. |
 | SAVES | [Saves](../specs/design/foundation/saves.md) | Campaign save contents, saving, loading, Autosaves, deleting Campaign saves, the Save size limit, and Game build compatibility. |
-| TIMELINE | [Timeline](../specs/design/foundation/timeline.md) | The structure of the Timeline, undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what returning to a Committed state guarantees. |
+| TIMELINE | [Timeline](../specs/design/foundation/timeline.md) | The structure of the Timeline, undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what returning to a World state guarantees. |
 | WHIST | [History and Turn Report](../specs/design/foundation/world-history.md) | What a Campaign remembers about its past, and for how long, including the Turn report and what Player API returns of the past. |
 
 ## Mechanics
