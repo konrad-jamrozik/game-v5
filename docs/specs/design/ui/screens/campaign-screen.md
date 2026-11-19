@@ -12,8 +12,6 @@
 
 While a [Campaign](../../foundation/core-concepts.md#campaign-and-session) is current, the GUI shows the Campaign screen. Its idea is a command console over a view of the Earth: a globe fills most of the screen, and everything the Player reads or decides sits beside it or opens over it. The screen therefore shows little by default and keeps the detail one step away. A side panel keeps the Player aware, without searching, of what is under way and what waits for a decision, through the compact [Situation panel](situation-panel.md); every detail and every decision is in a Detail view that the side panel opens. The [Turn summary](turn-summary.md), shown once after an Advance turn, completes what the Situation panel keeps in view.
 
-Where the Turn summary or a Detail view shows [Investigation progress](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) or a gain of it in [progress points](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), it shows them with two decimals, e.g. 7.02 for a stored 702.
-
 The Campaign screen is one of the screens that the [Graphical User Interface](../gui.md) lists, and it is drawn with the Design tokens and components of [Visual Design](../visual-design.md).
 
 # Regions
