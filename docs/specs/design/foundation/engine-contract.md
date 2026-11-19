@@ -200,8 +200,12 @@ Game storage (persisted)
         ├── Autopilot memory
         └── Time it was last written
 
-Session (runtime, never persisted)
-├── Current campaign selection
+Session (runtime)
+├── Current campaign (at most one; the working copy that play changes)
+│   ├── Campaign ID
+│   ├── Campaign state (the current Committed state)
+│   ├── Timeline (of the current Turn)
+│   └── Autopilot memory
 ├── Dev mode
 ├── Active Autopilot engagement (at most one)
 │   ├── Autopilot engagement ID
@@ -221,13 +225,16 @@ Session (runtime, never persisted)
 | Timeline | [Timeline](timeline.md) |
 | Autopilot memory | [Autopilot memory](autopilot.md#autopilot-memory) in Autopilot |
 | Session | [Session lifecycle](campaign-lifecycle.md#session-lifecycle) in Campaign Lifecycle |
+| Current campaign | [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle |
 | Dev mode | [Dev mode](developer-access.md#dev-mode) in Developer Access |
 | Active Autopilot engagement | [What an Autopilot engagement holds](autopilot.md#what-an-autopilot-engagement-holds) in Autopilot |
 | New-Campaign setup | [Preset selection and edits](configuration.md#preset-selection-and-edits) in Configuration |
 
-Campaign state holds everything game behavior consults and nothing else, e.g. the [Campaign seed](determinism-and-randomness.md#campaign-seed), under [Campaign seed](determinism-and-randomness.md#campaign-seed) in Determinism and Randomness. It excludes everything a Session holds, e.g. Dev mode; Global configuration, e.g. interface preferences; and the Timeline and Autopilot memory, which a Campaign save keeps beside Campaign state because continuing to control a Campaign needs them although game behavior never consults them.
+Campaign state holds everything game behavior consults and nothing else, e.g. the [Campaign seed](determinism-and-randomness.md#campaign-seed), under [Campaign seed](determinism-and-randomness.md#campaign-seed) in Determinism and Randomness. It excludes everything else a Session holds, e.g. Dev mode; Global configuration, e.g. interface preferences; and the Timeline and Autopilot memory, which a Campaign save keeps beside Campaign state because continuing to control a Campaign needs them although game behavior never consults them.
 
-Nothing a Session holds is persisted, and loading a Campaign save never restores a Session.
+The two halves of the hierarchy hold the same three parts of a Campaign: its Campaign state, its Timeline, and its Autopilot memory. The Session holds the one working copy, that of the Current campaign, and every Player action, undo, redo, and Autopilot memory write changes that copy. A Campaign save is a persisted copy of those three parts as they were at one Committed state: saving copies them from the Session into Game storage, under [Saving](saves.md#saving) in Saves, and loading copies them from a Campaign save into the Session as its Current campaign, under [Loading](saves.md#loading) in Saves. Neither changes the copy it reads.
+
+Nothing else a Session holds is persisted, e.g. Dev mode and an active Autopilot engagement, and loading a Campaign save never restores it.
 
 # Engine subsystems
 

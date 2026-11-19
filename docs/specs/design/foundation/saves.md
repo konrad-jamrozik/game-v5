@@ -58,7 +58,7 @@ A Campaign save holds, as shown under [Data ownership](engine-contract.md#data-o
 - the [Autopilot memory](engine-contract.md#persisted-data) of the Campaign;
 - the time it was last written, which is not Campaign state, so gameplay never consults it.
 
-A Campaign save holds nothing a Session holds and no Global configuration. It holds no Timeline of an earlier Turn. How a Campaign save is encoded and stored is the Implementer's choice.
+A Campaign save holds nothing else a Session holds, e.g. no Dev mode and no Autopilot engagement, and no Global configuration. It holds no Timeline of an earlier Turn. How a Campaign save is encoded and stored is the Implementer's choice.
 
 One Campaign may have several Campaign saves, which share its Campaign ID and have distinct Campaign save IDs. E.g., a player may keep a Campaign save from before a risky decision and another from after it. Two Campaigns created with equal creation inputs, including the same [Campaign seed](determinism-and-randomness.md#campaign-seed), and given equal [Player actions](engine-contract.md#player-actions-and-turns) have equal Campaign state but distinct Campaign IDs. Because the [Campaign seed](determinism-and-randomness.md#glossary) is Campaign state, under [Campaign seed](determinism-and-randomness.md#campaign-seed), every Campaign save holds it.
 
