@@ -5,7 +5,7 @@
 | Spec ID | CVIEW |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | Which charts the Charts View of the Campaign screen shows and in which order. |
+| Owns | Which charts the Charts View of the Campaign screen shows, what each Faction chart counts, and in which order. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -24,8 +24,12 @@ Three smaller charts show the resources the agency runs on. They sit side by sid
 2. The number of [Serving](../../mechanics/agents-spec.md#agent-statuses) [Agents](../../mechanics/domain-model.md#agency-and-agents).
 3. Funding.
 
+# Faction charts
+
+One chart for each [Faction](../../mechanics/domain-model.md#factions) shows how much that Faction has pressed the [Agency](../../mechanics/domain-model.md#agency-and-agents), so that the Player can tell which Faction has been the most active and whether one has fallen quiet. The Faction charts sit below the trend charts, three side by side to a row, in the order of the Factions in [Campaign state](../../foundation/core-concepts.md#campaign-and-session), and each is the size of a trend chart. Each is titled with the Faction's name and "response sites", e.g. "Red Dawn · response sites", and its series is, for each Turn, the number of [Response Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) whose target Faction is that Faction and whose Turn created is less than that Turn, i.e. the total the Faction has produced by the start of that Turn, under [Mission site properties](../../mechanics/missions.md#mission-site-properties) in Missions. Its current value is that total in the current Turn. Every [Response Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) counts, whatever its lifecycle state. A Faction that is [Eliminated](../../mechanics/domain-model.md#factions) keeps its chart, whose series stays level from then on.
+
 # Artboard
 
-![Charts View panel Artboard: a full-width Panic chart with its loss limit above three smaller charts for Money at start, Serving Agents and Funding](../../../../images/artboards/charts-view.png)
+![Charts View panel Artboard: a full-width Panic chart with its loss limit above three smaller charts for Money at start, Serving Agents and Funding, and below them one chart of response sites for each of Red Dawn, Exalt, and Black Lotus](../../../../images/artboards/charts-view.png)
 
 The sample values, e.g. the Turn numbers and the values of each series, appear only on the Artboard, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.

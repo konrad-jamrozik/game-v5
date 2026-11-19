@@ -29,3 +29,67 @@ requires:
   - mission_won: raid_safehouse
 on_completion:
   create_mission_site: raid_hq
+---
+id: locate_exalt_member
+type: Lead
+name: Locate Exalt member
+description: Track down an Exalt member for apprehension.
+faction: exalt
+required_progress: 3
+requires: []
+on_completion:
+  create_mission_site: apprehend_member
+---
+id: locate_exalt_safehouse
+type: Lead
+name: Locate Exalt safehouse
+description: The captured member revealed an Exalt safehouse.
+faction: exalt
+required_progress: 6
+requires:
+  - mission_won: apprehend_member
+on_completion:
+  create_mission_site: raid_safehouse
+---
+id: locate_exalt_hq
+type: Lead
+name: Locate Exalt HQ
+description: Intelligence from the safehouse points to the Exalt headquarters.
+faction: exalt
+required_progress: 10 # game-ts: 25
+requires:
+  - mission_won: raid_safehouse
+on_completion:
+  create_mission_site: raid_hq
+---
+id: locate_black_lotus_member
+type: Lead
+name: Locate Black Lotus member
+description: Track down a Black Lotus member for apprehension.
+faction: black_lotus
+required_progress: 3
+requires: []
+on_completion:
+  create_mission_site: apprehend_member
+---
+id: locate_black_lotus_safehouse
+type: Lead
+name: Locate Black Lotus safehouse
+description: The captured member revealed a Black Lotus safehouse.
+faction: black_lotus
+required_progress: 6
+requires:
+  - mission_won: apprehend_member
+on_completion:
+  create_mission_site: raid_safehouse
+---
+id: locate_black_lotus_hq
+type: Lead
+name: Locate Black Lotus HQ
+description: Intelligence from the safehouse points to the Black Lotus headquarters.
+faction: black_lotus
+required_progress: 10 # game-ts: 25
+requires:
+  - mission_won: raid_safehouse
+on_completion:
+  create_mission_site: raid_hq

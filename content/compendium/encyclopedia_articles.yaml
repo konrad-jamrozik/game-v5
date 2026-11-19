@@ -75,7 +75,7 @@ id: cult_leader_article
 type: EncyclopediaArticle
 title: Cult leader
 body: >-
-  The heart of Red Dawn, guarded in its headquarters and armed with a heavy rifle. Only a strong, rested team should
+  The heart of a cult, guarded in its headquarters and armed with a heavy rifle. Only a strong, rested team should
   face the Cult leader.
 subject: cult_leader
 ---
@@ -90,7 +90,7 @@ subject: sidearm
 id: rifle_article
 type: EncyclopediaArticle
 title: Rifle
-body: A reliable long gun issued to Red Dawn Soldiers.
+body: A reliable long gun issued to cult Soldiers.
 subject: rifle
 ---
 id: heavy_rifle_article
@@ -174,32 +174,86 @@ title: Locate Red Dawn HQ
 body: Documents seized at the safehouse point to the headquarters of Red Dawn itself.
 subject: locate_red_dawn_hq
 ---
+id: exalt_article
+type: EncyclopediaArticle
+title: Exalt
+body: >-
+  A secretive cult that hides behind charity and patronage while it buys influence. Follow its members back to its
+  safehouse and its headquarters, and a won raid on the headquarters ends Exalt for good.
+subject: exalt
+---
+id: locate_exalt_member_article
+type: EncyclopediaArticle
+title: Locate Exalt member
+body: >-
+  The first thread to pull: find an Exalt member who can be brought in for questioning.
+subject: locate_exalt_member
+---
+id: locate_exalt_safehouse_article
+type: EncyclopediaArticle
+title: Locate Exalt safehouse
+body: The captured member has talked. Somewhere in the city, Exalt keeps a safehouse.
+subject: locate_exalt_safehouse
+---
+id: locate_exalt_hq_article
+type: EncyclopediaArticle
+title: Locate Exalt HQ
+body: Documents seized at the safehouse point to the headquarters of Exalt itself.
+subject: locate_exalt_hq
+---
+id: black_lotus_article
+type: EncyclopediaArticle
+title: Black Lotus
+body: >-
+  A ruthless cult that trades in fear and silence. Follow its members back to its safehouse and its headquarters, and a
+  won raid on the headquarters ends Black Lotus for good.
+subject: black_lotus
+---
+id: locate_black_lotus_member_article
+type: EncyclopediaArticle
+title: Locate Black Lotus member
+body: >-
+  The first thread to pull: find a Black Lotus member who can be brought in for questioning.
+subject: locate_black_lotus_member
+---
+id: locate_black_lotus_safehouse_article
+type: EncyclopediaArticle
+title: Locate Black Lotus safehouse
+body: The captured member has talked. Somewhere in the city, Black Lotus keeps a safehouse.
+subject: locate_black_lotus_safehouse
+---
+id: locate_black_lotus_hq_article
+type: EncyclopediaArticle
+title: Locate Black Lotus HQ
+body: Documents seized at the safehouse point to the headquarters of Black Lotus itself.
+subject: locate_black_lotus_hq
+---
 id: apprehend_member_article
 type: EncyclopediaArticle
 title: Apprehend member
-body: A Red Dawn member has been found, guarded by a few Initiates. Bring the member in.
+body: A cult member has been found, guarded by a few Initiates. Bring the member in.
 subject: apprehend_member
 ---
 id: raid_safehouse_article
 type: EncyclopediaArticle
 title: Raid safehouse
-body: Storm the Red Dawn safehouse. Expect many Initiates and a Soldier in charge.
+body: Storm the cult's safehouse. Expect many Initiates and a Soldier in charge.
 subject: raid_safehouse
 ---
 id: raid_hq_article
 type: EncyclopediaArticle
 title: Raid HQ
-body: The final assault on Red Dawn. Winning it eliminates the cult.
+body: The final assault on a cult's headquarters. Winning it eliminates the cult.
 subject: raid_hq
 ---
 id: foil_recruitment_push_article
 type: EncyclopediaArticle
 title: Foil recruitment push
-body: Red Dawn is recruiting openly. Break up the rally before the cult grows.
+body: A cult is recruiting openly. Break up the rally before the cult grows.
 subject: foil_recruitment_push
 ---
 id: foil_sabotage_article
 type: EncyclopediaArticle
 title: Foil sabotage
-body: Red Dawn plans to strike critical infrastructure. Stop the saboteurs before the blast.
+body: A cult plans to strike critical infrastructure. Stop the saboteurs before the blast.
 subject: foil_sabotage

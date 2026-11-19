@@ -5,7 +5,7 @@
 | Spec ID | CSCR |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar controls, and its Autopilot controls. |
+| Owns | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, and its Autopilot controls. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -70,6 +70,17 @@ E.g., the Player opens the Turn Report View from the Side panel and selects its 
 
 E.g., after an Advance turn with two Missions, the Turn summary shows over the Missions View. The Player selects the Combat report button of the first Mission card: the Turn summary closes, and the Turn Report View opens showing that Combat report, with "‹ Turn summary". The Player selects the close control: the Turn summary shows again over the Missions View, and the Player selects the Combat report button of the second Mission card. After reading it, the Player presses Escape: the Turn summary shows again, and dismissing it shows the Missions View.
 
+# Status bar values
+
+The status bar keeps in view the values that decide whether the Campaign is going well, and leaves every [Faction](../../mechanics/domain-model.md#factions)'s details to the Detail views. Its values are, in this order; the list is exhaustive:
+
+1. **Turn:** the current [Turn](../../foundation/engine-contract.md#player-actions-and-turns) number.
+2. **Money:** the [Agency](../../mechanics/domain-model.md#agency-and-agents)'s money, followed by its projected income in Positive and its projected upkeep in Danger, under [Status bar](../visual-design.md#status-bar) in Visual Design.
+3. **Funding:** the Agency's funding.
+4. **Agents:** the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents and the [Agent cap](../../mechanics/economy-and-upgrades.md#glossary), e.g. "10/20".
+5. **Panic:** [Panic](../../mechanics/domain-model.md#campaign-standing) as a meter against the [Panic limit](../../mechanics/panic-and-endings.md#glossary), under [Meters](../visual-design.md#meters) in Visual Design.
+6. **Turns since last faction activity:** the number of Turns since a [Response Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) last appeared, so that the Player senses how long the [Factions](../../mechanics/domain-model.md#factions) have been quiet without the status bar naming any of them. It is the current Turn number minus 1 minus the greatest Turn created of any Response Mission site, under [Mission site properties](../../mechanics/missions.md#mission-site-properties) in Missions, whatever its lifecycle state, so it is 0 in the Turn after the Advance turn that created a Response Mission site, and it grows by 1 with each Advance turn that creates none. Before any Response Mission site exists, it is the current Turn number minus 1. Its label may wrap onto two lines, so that the status bar keeps its controls in one row at a window 1280 px wide.
+
 # Status bar controls
 
 The status bar's controls follow its values in this order, so that the main action is last, under [Status bar](../visual-design.md#status-bar) in Visual Design; the list is exhaustive:
@@ -108,7 +119,7 @@ The operations are those of [Action navigation](../../foundation/timeline.md#act
 
 # Artboards
 
-![Campaign screen Artboard: a status bar with Turn, Money, Funding, Agents, a segmented Panic meter and the Faction; the globe centred in the Globe stage on the left; the Side panel on the right with the Operations and Records navigation buttons, the compact Situation panel, and the Autopilot footer](../../../../images/artboards/campaign-screen.png)
+![Campaign screen Artboard: a status bar with Turn, Money, Funding, Agents, a segmented Panic meter and Turns since last faction activity; the globe centred in the Globe stage on the left; the Side panel on the right with the Operations and Records navigation buttons, the compact Situation panel, and the Autopilot footer](../../../../images/artboards/campaign-screen.png)
 
 ![Campaign screen Artboard with the Agents Detail view open over the Globe stage: the Agents button of the Side panel marked as open, the Situation panel still in view, and a sample Agents table in the Detail view](../../../../images/artboards/campaign-screen-view.png)
 
@@ -118,5 +129,5 @@ The operations are those of [Action navigation](../../foundation/timeline.md#act
 
 The [Artboards](../visual-design.md#glossary) show the Situation panel and the Agents Detail view as sample content of their regions; each is detailed by its own specification and Artboard. The Settings panel Artboard shows the dialog that the Settings button opens, under [Settings panel](../gui.md#settings-panel) in the Graphical User Interface. The Side panel footer Artboard shows the footer with the Autopilot controls expanded and no Autopilot engagement active, under [Autopilot controls](#autopilot-controls). The following appear only on the Artboards and must not be implemented, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
-- The sample values, e.g. Turn 16, Money 625, the [Agent](../../mechanics/domain-model.md#agency-and-agents) IDs, the Track title GEO-4, the Music volume 50, the Autosave limit 5, the Autopilot AI name, and the number of Turns 10.
+- The sample values, e.g. Turn 16, Money 625, Turns since last faction activity 2, the [Agent](../../mechanics/domain-model.md#agency-and-agents) IDs, the Track title GEO-4, the Music volume 50, the Autosave limit 5, the Autopilot AI name, and the number of Turns 10.
 - The drawing of the globe, which stands in for the real one.

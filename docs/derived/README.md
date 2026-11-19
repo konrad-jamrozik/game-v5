@@ -93,8 +93,8 @@ These informative views are derived from the registered Markdown specifications.
 | AVIEW | [Agents View](../specs/design/ui/screens/agents-view.md) | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents. |
 | CLI | [Command-Line Interface](../specs/design/ui/cli.md) | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal. |
 | COMPV | [Compendium View](../specs/design/ui/screens/compendium-view.md) | What the Compendium View of the Campaign screen shows and how the Player finds an article in it. |
-| CSCR | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md) | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar controls, and its Autopilot controls. |
-| CVIEW | [Charts View](../specs/design/ui/screens/charts-view.md) | Which charts the Charts View of the Campaign screen shows and in which order. |
+| CSCR | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md) | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, and its Autopilot controls. |
+| CVIEW | [Charts View](../specs/design/ui/screens/charts-view.md) | Which charts the Charts View of the Campaign screen shows, what each Faction chart counts, and in which order. |
 | GUI | [Graphical User Interface](../specs/design/ui/gui.md) | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, and how it names an Enemy. |
 | HVIEW | [History View](../specs/design/ui/screens/history-view.md) | What the History View of the Campaign screen shows and in which order: its columns, the events of each Turn, and the list of each Turn's Player actions. |
 | LVIEW | [Leads View](../specs/design/ui/screens/leads-view.md) | What the Leads View of the Campaign screen shows, how its panes are arranged, and how it starts and staffs Investigations. |

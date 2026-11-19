@@ -12,7 +12,7 @@
 
 A [Campaign](../foundation/core-concepts.md#campaign-and-session) cannot be played without content, e.g. Agents to hire and a [Faction](../mechanics/domain-model.md#factions) to fight. The Bootstrap GDRs are the smallest set of Game Data Records ([GDRs](../foundation/core-concepts.md#game-build-and-content)) that a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies so that a first playable Campaign can be created and played to an ending. They keep every kind of GDR that the [Domain Model](../mechanics/domain-model.md) requires and supply as few of each as will do; most values are copied from game-ts.
 
-The content is shaped around one way to win and one way to lose. The only Faction, Red Dawn, has three [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), each creating one [Initiative Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions); together they form the Victory path, and winning the last of them eliminates Red Dawn and wins the Campaign. Meanwhile, Red Dawn's activity creates [Response Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). One that is Expired, or whose [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is Lost, raises [Panic](../mechanics/domain-model.md#campaign-standing), and enough Panic loses the Campaign.
+The content is shaped around one way to win and one way to lose. Each of the three Factions, Red Dawn, Exalt, and Black Lotus, has three [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), each creating one [Initiative Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions); together they form that Faction's Victory path, and winning the last of them eliminates that Faction. Eliminating all three wins the Campaign. Meanwhile, the activity of every Faction not yet eliminated creates [Response Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). One that is Expired, or whose [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is Lost, raises [Panic](../mechanics/domain-model.md#campaign-standing), and enough Panic loses the Campaign.
 
 # Glossary
 
@@ -30,18 +30,18 @@ The Bootstrap GDRs keep every kind of GDR the [Game concepts](../mechanics/domai
 | [Campaign configuration](../foundation/campaign-state.md#glossary) | One [Campaign configuration preset](../foundation/configuration.md#glossary) and one parameter GDR naming it as the default | 2 |
 | Agency | One AgencyArchetype | 1 |
 | Agent | One AgentArchetype and one parameter GDR | 2 |
-| Lead and [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Three Leads of one Faction, one InvestigationArchetype, and one parameter GDR | 5 |
+| Lead and [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Nine Leads, three of each Faction, one InvestigationArchetype, and one parameter GDR | 11 |
 | [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Three MissionSiteArchetypes of kind initiative and two of kind response | 5 |
 | Mission | One MissionArchetype | 1 |
 | Enemy and [Combat](../mechanics/domain-model.md#combat) | Three EnemyArchetypes, three Weapons, and one parameter GDR | 7 |
 | Agent recovery | One parameter GDR | 1 |
 | Economy and upgrades | One parameter GDR and eight [Upgrades](../mechanics/economy-and-upgrades.md#glossary) | 9 |
-| Faction | One FactionArchetype, three [Faction activity levels](../mechanics/factions.md#glossary), and two [Faction operation levels](../mechanics/factions.md#glossary) | 6 |
+| Faction | Three FactionArchetypes, three [Faction activity levels](../mechanics/factions.md#glossary), and two [Faction operation levels](../mechanics/factions.md#glossary) | 8 |
 | Panic and endings | One parameter GDR | 1 |
-| [Encyclopedia article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary) and one article about each of 24 other Bootstrap GDRs | 30 |
+| [Encyclopedia article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary) and one article about each of 32 other Bootstrap GDRs | 38 |
 | [Background artwork](../ui/visual-design.md#glossary) | Three BackgroundArtworks | 3 |
 | [Soundtrack](../ui/music.md#glossary) | One parameter GDR | 1 |
-| **Total** |  | 74 |
+| **Total** |  | 90 |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
 
@@ -95,8 +95,10 @@ Type owner: [Leads and Progression](../mechanics/leads-and-progression.md).
 | `locate_red_dawn_member` | Lead | Referenced GDR, Key for campaign facts | The first Lead of the Victory path; it has no prerequisites and creates `apprehend_member`. |
 | `locate_red_dawn_safehouse` | Lead | Referenced GDR, Key for campaign facts | Requires a Won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) from `locate_red_dawn_member`; creates `raid_safehouse`. |
 | `locate_red_dawn_hq` | Lead | Referenced GDR, Key for campaign facts | Requires a Won Mission from `locate_red_dawn_safehouse`; creates `raid_hq`. |
+| `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq` | Lead | Referenced GDR, Key for campaign facts | The Victory path of Exalt: as the three Leads of Red Dawn, with the same `required_progress`, prerequisites, and MissionSiteArchetypes. |
+| `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq` | Lead | Referenced GDR, Key for campaign facts | The Victory path of Black Lotus: as the three Leads of Red Dawn, with the same `required_progress`, prerequisites, and MissionSiteArchetypes. |
 
-Each Lead references its Faction, `red_dawn`, explicitly through its `faction` property, and names its prerequisite Leads and the MissionSiteArchetype it creates by GDR identifier, so no relationship is inferred from identifier text under [References](../foundation/campaign-instances.md#references) in Campaign Instances.
+Each Lead references its Faction, e.g. `red_dawn`, explicitly through its `faction` property, and names its prerequisite Leads and the MissionSiteArchetype it creates by GDR identifier, so no relationship is inferred from identifier text under [References](../foundation/campaign-instances.md#references) in Campaign Instances.
 
 ## Investigations GDRs
 
@@ -122,7 +124,7 @@ Type owner: [Missions](../mechanics/missions.md).
 | `foil_sabotage` | MissionSiteArchetype | Archetype | A Response Mission site of Faction operation level 2: its `expires_in_turns` and its Enemies by EnemyArchetype and count. |
 | `standard_mission` | MissionArchetype | Archetype | The Archetype of every Mission. |
 
-No MissionSiteArchetype references a Faction. A Mission site's target Faction is a value in its [Constants](../foundation/core-concepts.md#campaign-instances): for an Initiative Mission site it is the Faction whose Archetype is the creating Lead's `faction`, and for a Response Mission site it is the initiating Faction. Another Faction can therefore reuse every MissionSiteArchetype by supplying only its own Leads.
+No MissionSiteArchetype references a Faction. A Mission site's target Faction is a value in its [Constants](../foundation/core-concepts.md#campaign-instances): for an Initiative Mission site it is the Faction whose Archetype is the creating Lead's `faction`, and for a Response Mission site it is the initiating Faction. The three Factions therefore share every MissionSiteArchetype, and each supplies only its own Leads. A prerequisite holds only for a Won Mission targeting the Lead's own Faction, under [Prerequisites](../mechanics/leads-and-progression.md#prerequisites) in Leads and Progression, so a win against one Faction never advances the Victory path of another.
 
 ## Combat GDRs
 
@@ -152,7 +154,9 @@ Type owner: [Factions](../mechanics/factions.md).
 
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
-| `red_dawn` | FactionArchetype | Archetype | The only Faction: its name and its initial Faction activity level, `faint`. |
+| `red_dawn` | FactionArchetype | Archetype | The Faction Red Dawn: its name and its initial Faction activity level, `faint`. |
+| `exalt` | FactionArchetype | Archetype | The Faction Exalt: its name and its initial Faction activity level, `faint`. |
+| `black_lotus` | FactionArchetype | Archetype | The Faction Black Lotus: its name and its initial Faction activity level, `faint`. |
 | `faint` | FactionActivityLevel | Calculation parameter | How long the level lasts, how often an operation occurs, the weight of each Faction operation level, and the next level, `active`. |
 | `active` | FactionActivityLevel | Calculation parameter | As `faint`; the next level is `war`. |
 | `war` | FactionActivityLevel | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level. |
@@ -176,7 +180,7 @@ Type owner: [Compendium](../mechanics/compendium.md).
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
 | `guide_agency`, `guide_agents`, `guide_investigations`, `guide_missions`, `guide_panic`, `guide_upgrades` | EncyclopediaArticle | Display content | The six Guide articles, each explaining one part of the game in general. |
-| One `<subject>_article` for each of `field_agent`, `initiate`, `soldier`, `cult_leader`, `sidearm`, `rifle`, `heavy_rifle`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `base_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | EncyclopediaArticle | Display content | An article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
+| One `<subject>_article` for each of `field_agent`, `initiate`, `soldier`, `cult_leader`, `sidearm`, `rifle`, `heavy_rifle`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `base_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | EncyclopediaArticle | Display content | An article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
 
 Every Bootstrap GDR with a `name` that the Player can see has an article, except the AgencyArchetype `agency` and the MissionArchetype `standard_mission`, which only name the Player's own Agency and every Mission.
 
@@ -213,7 +217,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 | `content/economy-and-upgrades/agency_archetypes.yaml` | AgencyArchetype | `agency` |
 | `content/economy-and-upgrades/economy_parameters.yaml` | EconomyParameters | `economy` |
 | `content/economy-and-upgrades/upgrades.yaml` | Upgrade | `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `base_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery` |
-| `content/leads-and-progression/leads.yaml` | Lead | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq` |
+| `content/leads-and-progression/leads.yaml` | Lead | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq` |
 | `content/investigations/investigation_archetypes.yaml` | InvestigationArchetype | `standard_investigation` |
 | `content/investigations/investigation_parameters.yaml` | InvestigationParameters | `investigation_parameters` |
 | `content/missions/mission_site_archetypes.yaml` | MissionSiteArchetype | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage` |
@@ -222,19 +226,19 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 | `content/combat/weapons.yaml` | Weapon | `sidearm`, `rifle`, `heavy_rifle` |
 | `content/combat/combat_parameters.yaml` | CombatParameters | `combat_parameters` |
 | `content/agent-recovery/recovery_parameters.yaml` | RecoveryParameters | `recovery` |
-| `content/factions/faction_archetypes.yaml` | FactionArchetype | `red_dawn` |
+| `content/factions/faction_archetypes.yaml` | FactionArchetype | `red_dawn`, `exalt`, `black_lotus` |
 | `content/factions/faction_activity_levels.yaml` | FactionActivityLevel | `faint`, `active`, `war` |
 | `content/factions/faction_operation_levels.yaml` | FactionOperationLevel | `operation_level_1`, `operation_level_2` |
 | `content/panic-and-endings/ending_parameters.yaml` | EndingParameters | `endings` |
-| `content/compendium/encyclopedia_articles.yaml` | EncyclopediaArticle | The 30 GDRs under [Compendium GDRs](#compendium-gdrs) |
+| `content/compendium/encyclopedia_articles.yaml` | EncyclopediaArticle | The 38 GDRs under [Compendium GDRs](#compendium-gdrs) |
 | `content/visual-design/background_artworks.yaml` | BackgroundArtwork | `missions_view_artwork`, `agents_view_artwork`, `leads_view_artwork` |
 | `content/music/music_parameters.yaml` | MusicParameters | `music` |
 
 # Victory path
 
-The Victory path consists of three Leads, each creating one Initiative Mission site. A Won Mission there makes the next Lead available, and winning `raid_hq` eliminates Red Dawn. With Red Dawn eliminated, every Faction is eliminated, which wins the Campaign. Throughout the Campaign, Red Dawn's activity creates [Faction operation occurrences](../mechanics/domain-model.md#factions), each with one Response Mission site; a Response Mission site that is Expired, or whose Mission is Lost, raises Panic, and enough Panic loses the Campaign.
+Each Faction has a Victory path of its own, and the three are alike: three Leads of that Faction, each creating one Initiative Mission site. A Won Mission there makes the next Lead of the same Faction available, and winning `raid_hq` eliminates that Faction. The Agency can pursue the three Victory paths in any order and at once. With the last of the three Factions eliminated, every Faction is eliminated, which wins the Campaign. Throughout the Campaign, the activity of each Faction not yet eliminated creates [Faction operation occurrences](../mechanics/domain-model.md#factions), each with one Response Mission site; a Response Mission site that is Expired, or whose Mission is Lost, raises Panic, and enough Panic loses the Campaign.
 
-![Victory path of the Bootstrap GDRs: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq eliminates Red Dawn and wins the Campaign; throughout the Campaign, Red Dawn activity creates Response Mission sites whose expiration or loss raises Panic until the Campaign is lost](../../../images/diagrams/bootstrap-victory-path.svg)
+![Victory path of one Faction of the Bootstrap GDRs, e.g. Red Dawn: three Leads each create one Initiative Mission site, a Won Mission there makes the next Lead available, and winning raid_hq eliminates the Faction, which wins the Campaign once every Faction is eliminated; throughout the Campaign, the Faction's activity creates Response Mission sites whose expiration or loss raises Panic until the Campaign is lost](../../../images/diagrams/bootstrap-victory-path.svg)
 
 An Initiative Mission site that is Expired, or whose Mission is Lost, records no win, so its Lead becomes available again and the Agency can obtain a new Mission site from it. A Mission site cannot be attempted twice. Every Lead of the Victory path therefore remains available until a Mission at a Mission site it created is Won.
 
@@ -263,7 +267,6 @@ The Turn and Panic start from values that no GDR supplies: the Turn under [Turn 
 
 # TODOs
 
-- TODO (later): The Factions Exalt and Black Lotus, each with its own Leads reusing the existing MissionSiteArchetypes, under [Factions GDRs](#factions-gdrs).
 - TODO (later): Faction suppression after a Won Mission, under [Factions GDRs](#factions-gdrs).
 - TODO (later): [Base skill](../mechanics/agents-spec.md#combatant-attributes) gained by surviving a Mission and by attacking and defending in a Combat, under [Agents GDRs](#agents-gdrs).
 - TODO (later): Initiative Mission sites of game-ts levels 3 to 7, and the interrogation Leads between them, under [Missions GDRs](#missions-gdrs).
@@ -291,6 +294,7 @@ Most Bootstrap GDR values are copied from game-ts. The following table is exhaus
 | Starting training cap | 0 | Above zero, raised by `training_cap` | Training is available from the first Turn. |
 | Panic change of `operation_level_1` and `operation_level_2` | 0.02% and 0.1% when ignored or lost | 3% and 8% when ignored or lost | At the game-ts scale, Panic cannot end a Campaign as short as the Victory path. |
 | Panic reduction of Initiative Mission site wins | 0.05% and 0.1% | 1% and 2% | Keeps wins and losses on the same scale. |
+| Initial Faction activity level of `exalt` and `black_lotus` | Dormant, from which a faction carries out no operations | `faint`, as `red_dawn` | The Bootstrap GDRs supply no level without operations, under [TODOs](../mechanics/factions.md#todos) in Factions; every Faction therefore operates from the first Turn. |
 | Victory | Completing the Lead Peace on Earth | Every Faction eliminated | One Lead fewer, and the condition does not depend on a specially named GDR. |
 | Faction discovery | Through a profile Lead | Every Faction is known from the start | Removes the profile and interrogation Leads. |
 | `exhaustion_free_points` | 5 | 30 | Work now raises exhaustion every Turn, so a longer free amount lets an Agent work for many Turns before it weakens. |

@@ -209,7 +209,7 @@ The player can therefore see why a discovered Lead is not available: every Block
 
 # Acceptance examples
 
-All examples use the Bootstrap GDR values from `content/leads-and-progression/leads.yaml` and `content/missions/mission_site_archetypes.yaml`, and the Campaign has the one Faction Red Dawn, from `red_dawn`, unless an example states a test GDR. The values they read are:
+All examples use the Bootstrap GDR values from `content/leads-and-progression/leads.yaml` and `content/missions/mission_site_archetypes.yaml`, and a test Game build that supplies the Bootstrap GDRs without the FactionArchetypes `exalt` and `black_lotus` and their Leads, so that the Campaign has the one Faction Red Dawn, from `red_dawn`, unless an example states a test GDR. The values they read are:
 
 | GDR | Values read |
 | --- | --- |

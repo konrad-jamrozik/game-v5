@@ -244,7 +244,7 @@ Under [Information boundary](../foundation/player-api.md#information-boundary) i
 
 # Acceptance examples
 
-All examples use the Bootstrap GDR values from `content/factions/faction_archetypes.yaml`, `content/factions/faction_activity_levels.yaml`, and `content/factions/faction_operation_levels.yaml`, unless an example states a test GDR. The values they read are:
+All examples use the Bootstrap GDR values from `content/factions/faction_archetypes.yaml`, `content/factions/faction_activity_levels.yaml`, and `content/factions/faction_operation_levels.yaml`, unless an example states a test GDR. Each example uses a test Game build that supplies the Bootstrap GDRs without the FactionArchetypes `exalt` and `black_lotus` and their Leads, so that the Campaign has the one Faction Red Dawn, unless the example states other FactionArchetypes. The values they read are:
 
 | GDR | Values read |
 | --- | --- |
@@ -261,7 +261,7 @@ With the Bootstrap GDRs, under [MissionSiteArchetype selection](missions.md#miss
 
 This example exercises [Initial Factions](#initial-factions), [Level duration](#level-duration), [Operation interval](#operation-interval), [Operation level](#operation-level), [Faction activity](#faction-activity), [Escalation](#escalation), and [Faction operation occurrence generation](#faction-operation-occurrence-generation).
 
-**Campaign creation.** The Game build supplies one FactionArchetype, `red_dawn`, so the initial Campaign state contains exactly one Faction, Red Dawn. Injected outcomes: Red Dawn's initial Level duration outcome is 60, a uniform whole-number outcome over 60 to 90 in which each of 31 values has Probability 1 / 31; its initial Operation interval outcome is 15, a uniform whole-number outcome over 15 to 25 in which each of 11 values has Probability 1 / 11.
+**Campaign creation.** The test Game build supplies one FactionArchetype, `red_dawn`, so the initial Campaign state contains exactly one Faction, Red Dawn. Injected outcomes: Red Dawn's initial Level duration outcome is 60, a uniform whole-number outcome over 60 to 90 in which each of 31 values has Probability 1 / 31; its initial Operation interval outcome is 15, a uniform whole-number outcome over 15 to 25 in which each of 11 values has Probability 1 / 11.
 
 | Value                          | After campaign creation |
 | ------------------------------ | ----------------------- |

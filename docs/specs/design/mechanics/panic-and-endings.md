@@ -229,7 +229,7 @@ All examples use the Bootstrap GDR values from `content/panic-and-endings/ending
 | `apprehend_member`  | Panic reduction when Won: 1           |
 | `raid_safehouse`    | Panic reduction when Won: 2           |
 
-Where an example says a Panic increase or reduction is added, the rule of [Missions](missions.md) that adds it is assumed. In every example the Campaign has one Faction, Red Dawn, which is not Eliminated unless the example says otherwise, and the Agency's money is 500 unless the example says otherwise. "The Advance turn ending Turn t" is the Advance turn committed during Turn t.
+Where an example says a Panic increase or reduction is added, the rule of [Missions](missions.md) that adds it is assumed. Every example uses a test Game build that supplies the Bootstrap GDRs without the FactionArchetypes `exalt` and `black_lotus` and their Leads, so that the Campaign has one Faction, Red Dawn, which is not Eliminated unless the example says otherwise, and the Agency's money is 500 unless the example says otherwise. "The Advance turn ending Turn t" is the Advance turn committed during Turn t.
 
 ## Panic is summed, clamped, and reaches Defeat
 
