@@ -844,6 +844,20 @@ A cult is massing to overrun one of your facilities. Hold it against a force man
 | `expires_in_turns` | `5` |
 | `enemies` | `{"initiate":16,"operative":12,"soldier":12,"elite":2,"handler":6,"lieutenant":3,"commander":1}` |
 
+### Defend against HQ assault
+
+Source: `content/compendium/compendium_articles/defend_against_hq_assault_article.yaml`
+
+A cult has found your headquarters and is coming with everything it has. If the headquarters falls, the Campaign is lost.
+
+| `defend_against_hq_assault` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Defend against HQ assault` |
+| `operation_level` | `6` |
+| `expires_in_turns` | `8` |
+| `enemies` | `{"initiate":40,"operative":40,"soldier":40,"elite":10,"handler":10,"lieutenant":10,"commander":4,"high_commander":1}` |
+
 ### Defend against office raid
 
 Source: `content/compendium/compendium_articles/defend_against_office_raid_article.yaml`

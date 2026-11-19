@@ -237,3 +237,19 @@ enemies:
   lieutenant: 6
   commander: 3
   high_commander: 1
+---
+id: defend_against_hq_assault
+type: MissionSiteArchetype
+kind: response
+name: Defend against HQ assault
+operation_level: 6
+expires_in_turns: 8
+enemies:
+  initiate: 40
+  operative: 40
+  soldier: 40
+  elite: 10
+  handler: 10
+  lieutenant: 10
+  commander: 4
+  high_commander: 1

@@ -50,3 +50,11 @@ on_win:
 on_ignored_or_lost:
   - panic: 15 # game-ts: 3
   - funding: -16
+---
+id: operation_level_6
+type: FactionOperationLevel
+level: 6
+name: Existential
+on_win: []
+on_ignored_or_lost:
+  - panic: 100 # takes Panic to its limit, which loses the Campaign

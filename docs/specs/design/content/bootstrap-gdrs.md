@@ -31,17 +31,17 @@ The Bootstrap GDRs keep every kind of GDR the [Game concepts](../mechanics/domai
 | Agency | One AgencyArchetype | 1 |
 | Agent | One AgentArchetype and one parameter GDR | 2 |
 | Lead and [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Nine Leads, three of each Faction, one InvestigationArchetype, and one parameter GDR | 11 |
-| [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Three MissionSiteArchetypes of kind initiative and 15 of kind response | 18 |
+| [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Three MissionSiteArchetypes of kind initiative and 16 of kind response | 19 |
 | Mission | One MissionArchetype | 1 |
 | Enemy and [Combat](../mechanics/domain-model.md#combat) | Nine EnemyArchetypes, seven Weapons, and one parameter GDR | 17 |
 | Agent recovery | One parameter GDR | 1 |
 | Economy and upgrades | One parameter GDR and eight [Upgrades](../mechanics/economy-and-upgrades.md#glossary) | 9 |
-| Faction | Three FactionArchetypes, seven [Faction activity levels](../mechanics/factions.md#glossary), and five [Faction operation levels](../mechanics/factions.md#glossary) | 15 |
+| Faction | Three FactionArchetypes, seven [Faction activity levels](../mechanics/factions.md#glossary), and six [Faction operation levels](../mechanics/factions.md#glossary) | 16 |
 | Panic and endings | One parameter GDR | 1 |
-| [Compendium article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary), 25 [Mechanics articles](../mechanics/compendium.md#glossary), and one [Subject article](../mechanics/compendium.md#glossary) about each of 55 other Bootstrap GDRs | 86 |
+| [Compendium article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary), 25 [Mechanics articles](../mechanics/compendium.md#glossary), and one [Subject article](../mechanics/compendium.md#glossary) about each of 56 other Bootstrap GDRs | 87 |
 | [Background artwork](../ui/visual-design.md#glossary) | Three BackgroundArtworks | 3 |
 | [Soundtrack](../ui/music.md#glossary) | One parameter GDR | 1 |
-| **Total** |  | 168 |
+| **Total** |  | 171 |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
 
@@ -127,6 +127,7 @@ Type owner: [Missions](../mechanics/missions.md).
 | `foil_financial_heist`, `intercept_arms_deal`, `defend_against_facility_raid` | MissionSiteArchetype | Archetype | Further Response Mission sites of Faction operation level 3: each its `expires_in_turns` and its Enemies by EnemyArchetype and count. |
 | `counter_civilian_terror`, `defend_against_city_government_assault`, `defend_against_retaliation_strike` | MissionSiteArchetype | Archetype | Further Response Mission sites of Faction operation level 4: each its `expires_in_turns` and its Enemies by EnemyArchetype and count. |
 | `foil_coup_attempt`, `foil_nuclear_plant_bombing`, `defend_military_installation` | MissionSiteArchetype | Archetype | Further Response Mission sites of Faction operation level 5: each its `expires_in_turns` and its Enemies by EnemyArchetype and count. |
+| `defend_against_hq_assault` | MissionSiteArchetype | Archetype | The one Response Mission site of Faction operation level 6: its `expires_in_turns` and its Enemies by EnemyArchetype and count. |
 | `standard_mission` | MissionArchetype | Archetype | The Archetype of every Mission. |
 
 No MissionSiteArchetype references a Faction. A Mission site's target Faction is a value in its [Constants](../foundation/core-concepts.md#campaign-instances): for an Initiative Mission site it is the Faction whose Archetype is the creating Lead's `faction`, and for a Response Mission site it is the initiating Faction. The three Factions therefore share every MissionSiteArchetype, and each supplies only its own Leads. A `mission_won` [Condition](../foundation/conditions.md#glossary) of a Lead holds only for a Won Mission targeting the Lead's own Faction, under [Lead discovery](../mechanics/leads-and-progression.md#lead-discovery) in Leads and Progression, so a win against one Faction never advances the Victory path of another.
@@ -177,8 +178,9 @@ Type owner: [Factions](../mechanics/factions.md).
 | `total_war` | FactionActivityLevel | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level. |
 | `operation_level_1` | FactionOperationLevel | Calculation parameter | The money and funding gained when the Mission at a Response Mission site of level 1 is Won, and the [Panic](../mechanics/domain-model.md#campaign-standing) and funding change when the site is Expired or its Mission Lost. |
 | `operation_level_2`, `operation_level_3`, `operation_level_4`, `operation_level_5` | FactionOperationLevel | Calculation parameter | As `operation_level_1`, for levels 2 to 5. |
+| `operation_level_6` | FactionOperationLevel | Calculation parameter | No gain when the Mission at a Response Mission site of level 6 is Won, and a Panic increase of 100 when the site is Expired or its Mission Lost, which takes Panic to the limit at which the Campaign is lost. |
 
-Each MissionSiteArchetype of kind response states its Faction operation level. A Faction selects a level by weight, and [MissionSiteArchetype selection](../mechanics/missions.md#missionsitearchetype-selection) in Missions then selects a MissionSiteArchetype of kind response with that level. The Bootstrap GDRs supply three MissionSiteArchetypes of kind response for each of the five levels.
+Each MissionSiteArchetype of kind response states its Faction operation level. A Faction selects a level by weight, and [MissionSiteArchetype selection](../mechanics/missions.md#missionsitearchetype-selection) in Missions then selects a MissionSiteArchetype of kind response with that level. The Bootstrap GDRs supply three MissionSiteArchetypes of kind response for each of levels 1 to 5, and one for level 6.
 
 ## Panic and Endings GDRs
 
@@ -196,7 +198,7 @@ Type owner: [Compendium](../mechanics/compendium.md).
 | --- | --- | --- | --- |
 | `guide_agency`, `guide_agents`, `guide_investigations`, `guide_missions`, `guide_panic`, `guide_upgrades` | CompendiumArticle | Display content | The six Guide articles, each a short orientation on one part of playing the game. |
 | `mechanics_turns`, `mechanics_agents`, `mechanics_skill`, `mechanics_skill_gain`, `mechanics_health`, `mechanics_recovery`, `mechanics_exhaustion`, `mechanics_assignments`, `mechanics_contracting`, `mechanics_training`, `mechanics_transit`, `mechanics_hiring_and_upkeep`, `mechanics_money_and_funding`, `mechanics_leads`, `mechanics_investigations`, `mechanics_mission_sites`, `mechanics_missions`, `mechanics_combat`, `mechanics_damage`, `mechanics_retreat`, `mechanics_factions`, `mechanics_faction_operations`, `mechanics_panic`, `mechanics_upgrades`, `mechanics_winning_and_losing` | CompendiumArticle | Display content | The 25 Mechanics articles, one for each mechanic the Player meets, each with the formulas of that mechanic. |
-| One `<subject>_article` for each of `field_agent`, `initiate`, `operative`, `handler`, `soldier`, `lieutenant`, `elite`, `commander`, `high_commander`, `cult_leader`, `pistol`, `sidearm`, `rifle`, `battle_rifle`, `assault_rifle`, `heavy_rifle`, `machine_gun`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `max_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage`, `foil_supply_theft`, `foil_business_extortion`, `foil_vip_assassination`, `defend_against_office_raid`, `foil_financial_heist`, `intercept_arms_deal`, `defend_against_facility_raid`, `counter_civilian_terror`, `defend_against_city_government_assault`, `defend_against_retaliation_strike`, `foil_coup_attempt`, `foil_nuclear_plant_bombing`, and `defend_military_installation` | CompendiumArticle | Display content | A Subject article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
+| One `<subject>_article` for each of `field_agent`, `initiate`, `operative`, `handler`, `soldier`, `lieutenant`, `elite`, `commander`, `high_commander`, `cult_leader`, `pistol`, `sidearm`, `rifle`, `battle_rifle`, `assault_rifle`, `heavy_rifle`, `machine_gun`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `max_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage`, `foil_supply_theft`, `foil_business_extortion`, `foil_vip_assassination`, `defend_against_office_raid`, `foil_financial_heist`, `intercept_arms_deal`, `defend_against_facility_raid`, `counter_civilian_terror`, `defend_against_city_government_assault`, `defend_against_retaliation_strike`, `foil_coup_attempt`, `foil_nuclear_plant_bombing`, `defend_military_installation`, and `defend_against_hq_assault` | CompendiumArticle | Display content | A Subject article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
 
 Every AgentArchetype, EnemyArchetype, Weapon, Upgrade, FactionArchetype, Lead, and MissionSiteArchetype of the Bootstrap GDRs has a Subject article. The identifier of a Guide article starts with `guide_`, that of a Mechanics article with `mechanics_`, and that of a Subject article is the identifier of its subject followed by `_article`, so that no article's identifier equals that of another GDR; the identifiers carry no meaning beyond that, under [References](../foundation/campaign-instances.md#references) in Campaign Instances. Every value of a GDR that an article states is a [Placeholder](../mechanics/compendium.md#glossary), and only a number that is part of a rule itself is written out, e.g. the 100 and 500 of the contracting income formula; [Compendium coverage](#compendium-coverage) states which GDR values the articles must cover.
 
@@ -236,7 +238,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file, and the on
 | `content/leads-and-progression/leads.yaml` | Lead | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq` |
 | `content/investigations/investigation_archetypes.yaml` | InvestigationArchetype | `standard_investigation` |
 | `content/investigations/investigation_parameters.yaml` | InvestigationParameters | `investigation_parameters` |
-| `content/missions/mission_site_archetypes.yaml` | MissionSiteArchetype | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage`, `foil_supply_theft`, `foil_business_extortion`, `foil_vip_assassination`, `defend_against_office_raid`, `foil_financial_heist`, `intercept_arms_deal`, `defend_against_facility_raid`, `counter_civilian_terror`, `defend_against_city_government_assault`, `defend_against_retaliation_strike`, `foil_coup_attempt`, `foil_nuclear_plant_bombing`, `defend_military_installation` |
+| `content/missions/mission_site_archetypes.yaml` | MissionSiteArchetype | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage`, `foil_supply_theft`, `foil_business_extortion`, `foil_vip_assassination`, `defend_against_office_raid`, `foil_financial_heist`, `intercept_arms_deal`, `defend_against_facility_raid`, `counter_civilian_terror`, `defend_against_city_government_assault`, `defend_against_retaliation_strike`, `foil_coup_attempt`, `foil_nuclear_plant_bombing`, `defend_military_installation`, `defend_against_hq_assault` |
 | `content/missions/mission_archetypes.yaml` | MissionArchetype | `standard_mission` |
 | `content/combat/enemy_archetypes.yaml` | EnemyArchetype | `initiate`, `operative`, `handler`, `soldier`, `lieutenant`, `elite`, `commander`, `high_commander`, `cult_leader` |
 | `content/combat/weapons.yaml` | Weapon | `pistol`, `sidearm`, `rifle`, `battle_rifle`, `assault_rifle`, `heavy_rifle`, `machine_gun` |
@@ -244,9 +246,9 @@ The following table is exhaustive: it lists every Bootstrap GDR file, and the on
 | `content/agent-recovery/recovery_parameters.yaml` | RecoveryParameters | `recovery` |
 | `content/factions/faction_archetypes.yaml` | FactionArchetype | `red_dawn`, `exalt`, `black_lotus` |
 | `content/factions/faction_activity_levels.yaml` | FactionActivityLevel | `faint`, `emerging`, `active`, `expanding`, `escalating`, `war`, `total_war` |
-| `content/factions/faction_operation_levels.yaml` | FactionOperationLevel | `operation_level_1`, `operation_level_2`, `operation_level_3`, `operation_level_4`, `operation_level_5` |
+| `content/factions/faction_operation_levels.yaml` | FactionOperationLevel | `operation_level_1`, `operation_level_2`, `operation_level_3`, `operation_level_4`, `operation_level_5`, `operation_level_6` |
 | `content/panic-and-endings/ending_parameters.yaml` | EndingParameters | `endings` |
-| `content/compendium/compendium_articles/<id>.yaml` | CompendiumArticle | The 86 GDRs under [Compendium GDRs](#compendium-gdrs), each in a file named after its identifier, e.g. `content/compendium/compendium_articles/mechanics_combat.yaml` |
+| `content/compendium/compendium_articles/<id>.yaml` | CompendiumArticle | The 87 GDRs under [Compendium GDRs](#compendium-gdrs), each in a file named after its identifier, e.g. `content/compendium/compendium_articles/mechanics_combat.yaml` |
 | `content/visual-design/background_artworks.yaml` | BackgroundArtwork | `missions_view_artwork`, `agents_view_artwork`, `leads_view_artwork` |
 | `content/music/music_parameters.yaml` | MusicParameters | `music` |
 
@@ -298,7 +300,6 @@ The Turn and Panic start from values that no GDR supplies: the Turn under [Turn 
 
 - TODO (later): Faction suppression after a Won Mission, under [Factions GDRs](#factions-gdrs).
 - TODO (later): Initiative Mission sites of game-ts levels 3 to 7, and the interrogation Leads between them, under [Missions GDRs](#missions-gdrs).
-- TODO (later): Faction operation level 6, whose loss ends the Campaign, its Response Mission site, and its weights at the Faction activity levels `war` and `total_war`, under [Factions GDRs](#factions-gdrs).
 - TODO (later): The Faction activity level Dormant, under [Factions GDRs](#factions-gdrs).
 - TODO (later): Partial success of a Lost Mission, under [Consequences](../mechanics/missions.md#consequences) in Missions.
 - TODO (later): The Leads Criminal organizations, Deep state, and Peace on Earth, and Faction discovery through a profile Lead, under [Leads and Progression GDRs](#leads-and-progression-gdrs).
@@ -320,8 +321,8 @@ Most Bootstrap GDR values are copied from game-ts. The following table is exhaus
 | `raid_hq` expiration and Enemies | Expires in 40 Turns; 111 Enemies | Shorter; ten Enemies | Winnable by about eight trained Agents, i.e. after two purchases of the Transport cap Upgrade; a starting-size team does not win. |
 | Starting transport cap | 6 | Lower, raised by `transport_cap` | Transport capacity becomes something the Agency invests in. |
 | Starting training cap | 0 | Above zero, raised by `training_cap` | Training is available from the first Turn. |
-| Panic change of the five Faction operation levels | 0.02%, 0.1%, 0.3%, 1%, and 3% when ignored or lost | 1, 2, 4, 8, and 15 percentage points when ignored or lost | Panic is a whole number of percentage points, and at the game-ts scale it could not end a Campaign. |
-| `operation_level_weights` of `war` and `total_war` | Level 6 with weights 5 and 10 | No level 6 | The Bootstrap GDRs supply no Faction operation level 6, under [TODOs](#todos). |
+| Panic change of Faction operation levels 1 to 5 | 0.02%, 0.1%, 0.3%, 1%, and 3% when ignored or lost | 1, 2, 4, 8, and 15 percentage points when ignored or lost | Panic is a whole number of percentage points, and at the game-ts scale it could not end a Campaign. |
+| `operation_level_6` when ignored or lost | Panic is set to 100% | A Panic increase of 100 percentage points | The same result through the ordinary Panic rule; a Panic reduction of the same Advance turn is subtracted from it, so a Campaign at Panic 0 that also wins a Panic reduction in that Advance turn survives. |
 | Panic reduction of Initiative Mission site wins | 0.05% and 0.1% | None for `apprehend_member` and 1 percentage point for `raid_safehouse` | Keeps wins and losses on the same scale. |
 | Initial Faction activity level of `exalt` and `black_lotus` | Dormant, from which a faction carries out no operations | `faint`, as `red_dawn` | The Bootstrap GDRs supply no level without operations, under [TODOs](../mechanics/factions.md#todos) in Factions; every Faction therefore operates from the first Turn. |
 | Victory | Completing the Lead Peace on Earth | Every Faction eliminated | One Lead fewer, and the condition does not depend on a specially named GDR. |

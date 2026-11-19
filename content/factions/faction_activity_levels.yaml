@@ -61,12 +61,13 @@ type: FactionActivityLevel
 name: War
 lasts_turns: [60, 90]
 operation_every_turns: [8, 18]
-operation_level_weights: # game-ts: also level 6 with weight 5
+operation_level_weights:
   1: 15
   2: 20
   3: 30
   4: 20
   5: 10
+  6: 5
 next: total_war
 ---
 id: total_war
@@ -74,10 +75,11 @@ type: FactionActivityLevel
 name: Total war
 lasts_turns: null # final level
 operation_every_turns: [7, 17]
-operation_level_weights: # game-ts: also level 6 with weight 10
+operation_level_weights:
   1: 10
   2: 15
   3: 25
   4: 25
   5: 15
+  6: 10
 next: null
