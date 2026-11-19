@@ -142,7 +142,7 @@ The files named `V3A-S5 …` are from Suno v5, made via [v03ai](https://v03ai.co
 
 ## Tracks from Suno v6
 
-The files named `S6 …` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders.
+The files named `S6 …` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
 
 ## Analyzing track contents
 
