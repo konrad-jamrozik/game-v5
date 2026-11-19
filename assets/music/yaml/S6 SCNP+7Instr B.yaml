@@ -1,0 +1,29 @@
+file: 'S6 SCNP+7Instr B.mp3'
+source: Suno v6
+original_title: 'S6 SCNP+7Instr B'
+song_url: https://suno.com/song/0802b4c8-ef9f-4c93-8827-541ae9bc9e89
+model: 'v6 (chirp-hawk)'
+created: '2026-11-18 18:37:59'
+variation_of: 'S6 SCNP+7Instr A.mp3'
+tags: [ambient, retro-futuristic, instrumental]
+length: '3:39'
+instrumental: true
+instruments: [felt piano, violins, cello, bowed double bass, bass clarinet, muted trombone, bowed cymbals]
+meta_prompt_taxonomy:
+  stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'
+  adjustments:
+    - 'instruments: felt piano + violins + cello + double bass + bass clarinet + muted trombone + bowed cymbals'
+    - 'Suno v6 settings: Instrumental, Weirdness 40%, Style influence 70%, Variety High, Max Mode off, Personalize off, Duration Auto; Exclude styles as below'
+prompt_from:
+  tool: Claude Code
+  same_prompt_as: 'S6 SCNP+7Instr A.mp3'
+prompt: |-
+  Ambient soundtrack, understated seamless-loop production with subtle dissonance and wide negative space; retro-futuristic synth drones and faint electronic signals beneath low bowed double bass and muted trombone, sparse felt piano and bass clarinet answering, cello and distant violins drifting, bowed cymbals swelling in brief metallic traces; instrumental; slow pulse-free ambient drift.
+exclude_styles: |-
+  Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, jazz swing
+control_sliders:
+  suno_weirdness: 0.4
+  suno_style_influence: 0.7
+  suno_variety: '2 - High / Distinct styles'
+notes: |-
+  `prompt` is the Styles text Suno stored for this variation; the pasted text is the `produced_prompt` of S6 SCNP+7Instr A, which Suno's Variety at High rewrote differently for each variation. Suno's UI shows the rewritten Styles text followed by the Exclude styles, each prefixed with a non-breaking hyphen; the stored Styles text ends before them. `created`, `length`, `model`, and the sliders come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time.

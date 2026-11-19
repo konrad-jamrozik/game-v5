@@ -1,0 +1,41 @@
+file: 'S6 SCNP+7Instr A.mp3'
+source: Suno v6
+original_title: 'S6 SCNP+7Instr A'
+song_url: https://suno.com/song/fee835a7-513a-4f47-bc06-311dd16052ca
+model: 'v6 (chirp-hawk)'
+created: '2026-11-18 18:37:59'
+tags: [ambient, retro-futuristic, instrumental]
+length: '3:39'
+instrumental: true
+instruments: [felt piano, violins, cello, bowed double bass, bass clarinet, muted trombone, bowed cymbals]
+meta_prompt_taxonomy:
+  stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'
+  adjustments:
+    - 'instruments: felt piano + violins + cello + double bass + bass clarinet + muted trombone + bowed cymbals'
+    - 'Suno v6 settings: Instrumental, Weirdness 40%, Style influence 70%, Variety High, Max Mode off, Personalize off, Duration Auto; Exclude styles as below'
+prompt_from:
+  tool: Claude Code
+  meta_prompt: |-
+    take the stem "stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'" And propose the various instruments as seen in other yaml, like Piano, Cello, Bass, etc. But skip the "Dark" adjustment. Just the baseline + the instruments. And set higher variety.
+
+    No, I meant - just one yaml file, that will have all the instruments piled together on the baseline.
+
+    Prompt has to be 1000 or less, this is Suno limitation. Mention this in readme too.
+  produced_prompt: |-
+    Sci-fi tactical strategy game ambient soundtrack. Cold, mysterious retro-futuristic synths, atmospheric drones, subtle sequenced pulses, and faint electronic signals, layered with a small chamber ensemble: felt piano, violins, cello, bowed double bass, bass clarinet, muted trombone, bowed cymbals.
+
+    Slow, minimal percussion, no driving beats. Hypnotic, cerebral, quietly suspenseful. Evoke military surveillance, alien signal analysis, an unseen threat.
+
+    Double bass and trombone sit low under the drones; sparse piano and bass clarinet answer the pulses; cello and distant violins drift over the pads; bowed cymbals swell like metallic signals. Instruments enter and fade one at a time, never all at once. Subtle dissonance, plenty of negative space.
+
+    Understated, seamlessly loopable background music. No vocals, no epic orchestration, no crescendos, no cheerful melodies, no EDM drops.
+prompt: |-
+  Ambient soundtrack, instrumental; understated, seamlessly loopable mix with wide negative space and subtle dissonance; cold retro-futuristic synths and drones, low bowed double bass and muted trombone, sparse felt piano and bass clarinet answering faint pulses, cello and distant violins drifting over pads, bowed cymbal swells and faint electronic signals; unhurried suspended half-time feel, minimal percussion, each instrument entering and fading in turn.
+exclude_styles: |-
+  Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, jazz swing
+control_sliders:
+  suno_weirdness: 0.4
+  suno_style_influence: 0.7
+  suno_variety: '2 - High / Distinct styles'
+notes: |-
+  `prompt` is the Styles text Suno stored, not the one pasted in: Claude Code's `produced_prompt` was pasted into Styles, and Suno's Variety at High (`suno_variety: '2 - High / Distinct styles'`, stored by Suno as `aug_creativity: 2`) rewrote it, differently for each variation. Suno's UI shows the rewritten Styles text followed by the Exclude styles, each prefixed with a non-breaking hyphen, e.g. `‑Vocals`; the stored Styles text ends before them. `created`, `length`, `model`, and the sliders come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time.

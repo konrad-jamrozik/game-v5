@@ -23,6 +23,8 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 | `EL-M2.5 XCOM+Var+Bare+Slow B.opus` | Silent Threat Protocol | ElevenLabs |  |
 | `S6 SCNP A.mp3` | Signal Intercept var1 | Suno v6 |  |
 | `S6 SCNP B.mp3` | Signal Intercept var2 | Suno v6 |  |
+| `S6 SCNP+7Instr A.mp3` | S6 SCNP+7Instr A | Suno v6 |  |
+| `S6 SCNP+7Instr B.mp3` | S6 SCNP+7Instr B | Suno v6 |  |
 | `S6 SCNP+Dark+BClar&Trombone A.mp3` | Bass clarinet + muted trombone var1 | Suno v6 |  |
 | `S6 SCNP+Dark+BClar&Trombone B.mp3` | Bass clarinet + muted trombone var2 | Suno v6 |  |
 | `S6 SCNP+Dark+Cello&DBass A.mp3` | S6 SCNP+Dark+Cello&DBass A | Suno v6 |  |
@@ -50,7 +52,7 @@ e.g. `EL-M2.5 XCOM+TFTD+NoPulse B` is the second track that ElevenLabs Music v2.
 
 - **Source and model:** where the song was generated and, joined by a hyphen, the model, from `source` and `model`. A source with no recorded model is its code alone, e.g. `EL`.
 - **Stem:** the code of `meta_prompt_taxonomy.stem`.
-- **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`. An adjustment that only limits the prompt's length, e.g. "kept short" or "fit within v03ai's 1,000 characters", has no code, since it says nothing about the music; neither has a source setting, e.g. Suno's sliders or Exclude styles, since it is not a request to the chatbot. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`. A code appears once even when two adjustments share it.
+- **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`. An adjustment that only limits the prompt's length, e.g. "kept short" or "fit within v03ai's 1,000 characters", has no code, since it says nothing about the music; neither has a source setting, e.g. Suno's sliders or Exclude styles, since it is not a request to the chatbot. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`; when they are too many to join readably, the code is their count instead, e.g. `7Instr`. A code appears once even when two adjustments share it.
 - **Take:** tells apart the tracks that would otherwise get the same name, e.g. the two variations of one generation, or two generations of the same prompt with different lengths, in the order of `created`. The tracks kept in the Soundtrack are lettered `A`, `B`, `C` and on, so the Player only ever sees an unbroken run of letters; a kept track that no other kept track shares its name with gets no letter. The excluded tracks are numbered apart, `X1`, `X2`, `X3` and on, even when alone, e.g. `EL-M2.5 XCOM+Var X1`.
 - **Renaming on exclusion:** excluding a track renames it and re-letters the kept tracks of its name. E.g., of tracks `A` to `F`, excluding `C` and `E` makes them `X1` and `X2`, and `D` and `F` become `C` and `D`. Nothing keeps an old name, so every mention of a renamed track changes with it: its file and record, the `file`, `variation_of`, `same_prompt_as`, and `continues_from` of every record, the notes, the GDR `music`, and this README.
 
@@ -70,24 +72,25 @@ The codes are these lists; a new source, model, stem, or adjustment adds its cod
 | `XCOM` | Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths |
 | `SCNP` | Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST) |
 
-| Adjustment           | `meta_prompt_taxonomy.adjustments` entry                       |
-| -------------------- | -------------------------------------------------------------- |
-| `Var`                | more variety, less monotonous                                  |
-| `TFTD`               | a tint of Cthulhu and X-COM: Terror from the Deep              |
-| `NoPulse`            | no repeated "bum bum bum" pulse; more variety and flair        |
-| `Geo`                | Geoscape: a global defense command screen                      |
-| `Ominous`            | more serious, ominous, dangerous; not relaxing, cozy, or lo-fi |
-| `Bare`               | simplified to a bare-bones prompt                              |
-| `Slow`               | slower (55–65 BPM), darker, less intense; never cheery         |
-| `Sections`           | song-structure tags: [Intro], [Verse], [Bridge], [Outro]       |
-| `Loop`               | steady, seamlessly loopable pacing; no builds or climaxes      |
-| `Dark`               | darker and bassier; less electronic and spacey                 |
-| `Violin`             | instruments: violins, keeping the prompt length                |
-| `Cello&BClar`        | instruments: cello + bass clarinet                             |
-| `Piano&Cello`        | instruments: felt piano + cello                                |
-| `BClar&Trombone`     | instruments: bass clarinet + muted trombone                    |
-| `Cello&DBass`        | instruments: cello + double bass                               |
-| `DBass&BowedCymbals` | instruments: double bass + bowed cymbals                       |
+| Adjustment | `meta_prompt_taxonomy.adjustments` entry |
+| --- | --- |
+| `Var` | more variety, less monotonous |
+| `TFTD` | a tint of Cthulhu and X-COM: Terror from the Deep |
+| `NoPulse` | no repeated "bum bum bum" pulse; more variety and flair |
+| `Geo` | Geoscape: a global defense command screen |
+| `Ominous` | more serious, ominous, dangerous; not relaxing, cozy, or lo-fi |
+| `Bare` | simplified to a bare-bones prompt |
+| `Slow` | slower (55–65 BPM), darker, less intense; never cheery |
+| `Sections` | song-structure tags: [Intro], [Verse], [Bridge], [Outro] |
+| `Loop` | steady, seamlessly loopable pacing; no builds or climaxes |
+| `Dark` | darker and bassier; less electronic and spacey |
+| `Violin` | instruments: violins, keeping the prompt length |
+| `Cello&BClar` | instruments: cello + bass clarinet |
+| `Piano&Cello` | instruments: felt piano + cello |
+| `BClar&Trombone` | instruments: bass clarinet + muted trombone |
+| `Cello&DBass` | instruments: cello + double bass |
+| `DBass&BowedCymbals` | instruments: double bass + bowed cymbals |
+| `7Instr` | instruments: felt piano + violins + cello + double bass + bass clarinet + muted trombone + bowed cymbals |
 
 ## Track records
 
