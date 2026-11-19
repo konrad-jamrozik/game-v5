@@ -174,6 +174,7 @@ The game has the following Effect kinds. This table is exhaustive.
 | `funding` | The Agency's funding. | [Money and funding Effect kinds](economy-and-upgrades.md#money-and-funding-effect-kinds) in Economy and Upgrades |
 | `panic` | Panic. | [Panic Effect kind](panic-and-endings.md#panic-effect-kind) in Panic and Endings |
 | `eliminate_faction` | Whether a Faction is Eliminated. | [Elimination](factions.md#elimination) in Factions |
+| `defeat` | Whether the Campaign is lost in this Advance turn. | [Defeat Effect kind](panic-and-endings.md#defeat-effect-kind) in Panic and Endings |
 | `create_mission_site` | It creates one Initiative Mission site. | [Mission site Effect kind](missions.md#mission-site-effect-kind) in Missions |
 
 The following GDR properties hold an Effect list, and the specification named for each says when it is applied and which Effect kinds it may hold. This table is exhaustive.

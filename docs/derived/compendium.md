@@ -94,14 +94,12 @@ See also: [Contracting](#contracting) · [Training](#training) · [Investigation
 
 Source: `content/compendium/compendium_articles/mechanics_combat.yaml`
 
-A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once. Attackers spread out over their opponents, and each prefers an opponent it clearly outclasses. The Combat ends when one side can no longer fight or your team [retreats](#retreat).
+A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, and each attacker goes for the most skilled opponent. The Combat ends when one side can no longer fight or your team [retreats](#retreat).
 
 | Formulas |  |
 | --- | --- |
 | Chance to hit | A² ÷ (A² + D²), where A is the [effective skill](#skill) of the attacker and D that of the defender |
-| Target | Among the opponents attacked least often this round, the one whose effective skill is nearest to 0.5 × that of the attacker, counting only those from 0.2 × to 0.8 × of it; effective skill is taken as it was when the round began |
-| No such opponent | The opponent attacked least often this round |
-| Taking cover | A [wounded](#recovery) opponent may stay out of reach of one attacker; the chance is the share of its [health](#health) it has lost |
+| Target | The opponent with the highest effective skill that is able to fight |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +1 for the defender, hit or miss |
 | Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
 | Combat rating | The effective skill of everyone on a side who is able to fight, added up |
@@ -347,7 +345,7 @@ Panic measures how frightened the world is, from 0% to 100%. [Faction operations
 | [Defeat](#winning-and-losing) at | 100% or more |
 | Raised by | A lost Mission against a Faction operation, or its [Mission site](#mission-sites) expiring |
 | Lowered by | Winning a Mission whose reward lowers Panic |
-| Changes | Counted in percentage points, added up once each [turn](#turns), and kept between 0% and 100% |
+| Changes | Counted in hundredths of a percentage point, added up once each [turn](#turns), and kept between 0% and 100% |
 
 See also: [Faction operations](#faction-operations) · [Winning and losing](#winning-and-losing) · [Keeping Panic down](#keeping-panic-down)
 
@@ -486,14 +484,15 @@ See also: [Agent cap](#agent-cap) · [Transport cap](#transport-cap) · [Trainin
 
 Source: `content/compendium/compendium_articles/mechanics_winning_and_losing.yaml`
 
-You win the Campaign by eliminating every [Faction](#factions). You lose it if [Panic](#panic) reaches its limit or your [money](#money-and-funding) falls below zero. Both are checked at the end of every [turn](#turns), and a win counts first.
+You win the Campaign by eliminating every [Faction](#factions). You lose it if [Panic](#panic) reaches its limit, your [money](#money-and-funding) falls below zero, or you fail to stop an existential [Faction operation](#faction-operations). All are checked at the end of every [turn](#turns), and a win counts first.
 
-| Formulas              |                                |
-| --------------------- | ------------------------------ |
-| Victory               | Every Faction is eliminated    |
-| Defeat by Panic       | Panic of 100% or more          |
-| Defeat by money       | Money below 0 when a turn ends |
-| Both in the same turn | Victory                        |
+| Formulas |  |
+| --- | --- |
+| Victory | Every Faction is eliminated |
+| Defeat by Panic | Panic of 100% or more |
+| Defeat by money | Money below 0 when a turn ends |
+| Defeat by an existential operation | A Faction operation of the highest level is not stopped; Panic plays no part and does not change |
+| Victory and defeat in the same turn | Victory |
 
 See also: [Factions](#factions) · [Panic](#panic) · [Money and funding](#money-and-funding)
 
@@ -808,13 +807,13 @@ Source: `content/compendium/compendium_articles/apprehend_member_article.yaml`
 
 A cult member has been found, lightly guarded. Bring the member in before the trail goes cold.
 
-| `apprehend_member` | MissionSiteArchetype           |
-| ------------------ | ------------------------------ |
-| `kind`             | `initiative`                   |
-| `name`             | `Apprehend member`             |
-| `expires_in_turns` | `5`                            |
-| `enemies`          | `{"initiate":2,"operative":1}` |
-| `on_win`           | `[{"money":5}]`                |
+| `apprehend_member` | MissionSiteArchetype            |
+| ------------------ | ------------------------------- |
+| `kind`             | `initiative`                    |
+| `name`             | `Apprehend member`              |
+| `expires_in_turns` | `5`                             |
+| `enemies`          | `{"initiate":2,"operative":1}`  |
+| `on_win`           | `[{"money":5},{"panic":-0.05}]` |
 
 ### Counter civilian terror
 
@@ -1060,13 +1059,13 @@ Source: `content/compendium/compendium_articles/raid_safehouse_article.yaml`
 
 Storm the safehouse of a cult before it is moved. Expect it to be well guarded.
 
-| `raid_safehouse`   | MissionSiteArchetype                         |
-| ------------------ | -------------------------------------------- |
-| `kind`             | `initiative`                                 |
-| `name`             | `Raid safehouse`                             |
-| `expires_in_turns` | `8`                                          |
-| `enemies`          | `{"initiate":4,"operative":4,"handler":1}`   |
-| `on_win`           | `[{"money":100},{"funding":5},{"panic":-1}]` |
+| `raid_safehouse`   | MissionSiteArchetype                           |
+| ------------------ | ---------------------------------------------- |
+| `kind`             | `initiative`                                   |
+| `name`             | `Raid safehouse`                               |
+| `expires_in_turns` | `8`                                            |
+| `enemies`          | `{"initiate":4,"operative":4,"handler":1}`     |
+| `on_win`           | `[{"money":100},{"funding":5},{"panic":-0.1}]` |
 
 ## Subject articles: Upgrade
 

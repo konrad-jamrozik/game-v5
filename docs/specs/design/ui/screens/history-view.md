@@ -26,7 +26,7 @@ The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn
 | Money end | Money at the end of turn for Turn t, under [Turn series](../../foundation/world-history.md#glossary) of money. | A number. |
 | Income | The income that the [Agency](../../mechanics/domain-model.md#agency-and-agents) income step of the Advance turn ending Turn t added, under [Agency income](../../mechanics/economy-and-upgrades.md#agency-income) in Economy and Upgrades. | "+" and the amount in Positive. |
 | Upkeep | The upkeep that the Upkeep step of that Advance turn charged, under [Upkeep](../../mechanics/economy-and-upgrades.md#upkeep) in Economy and Upgrades. | "−" and the amount in Danger. |
-| Panic | [Panic](../../mechanics/domain-model.md#campaign-standing) after that Advance turn. | A percentage. |
+| Panic | [Panic](../../mechanics/domain-model.md#campaign-standing) after that Advance turn. | A percentage with two decimals. |
 | Agents | The number of [Serving](../../mechanics/agents-spec.md#agent-statuses) [Agents](../../mechanics/domain-model.md#agency-and-agents) in the [Turn-end state](../../foundation/engine-contract.md#player-actions-and-turns) of Turn t. | A number. |
 | Player actions | The number of items in the Action record of Turn t, which opens the list under [Player actions list](#player-actions-list). | A number after "▸", or "▾" while its list is open; "0" in Text muted, with no marker. |
 | Events | What the Advance turn ending Turn t did, under [Events](#events). | Short labels side by side. |

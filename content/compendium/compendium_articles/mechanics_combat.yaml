@@ -5,17 +5,13 @@ title: Combat
 terms: [Combat, Combats, Combat rating, incapacitated]
 body: >-
   A Combat is fought in rounds. In each round every Agent attacks once, then every Enemy still able to fight attacks
-  once. Attackers spread out over their opponents, and each prefers an opponent it clearly outclasses. The Combat ends
-  when one side can no longer fight or your team retreats.
+  once, and each attacker goes for the most skilled opponent. The Combat ends when one side can no longer fight or your
+  team retreats.
 formulas:
   - label: 'Chance to hit'
     text: 'A² ÷ (A² + D²), where A is the effective skill of the attacker and D that of the defender'
   - label: 'Target'
-    text: 'Among the opponents attacked least often this round, the one whose effective skill is nearest to {combat_parameters.target_skill_preferred_fraction} × that of the attacker, counting only those from {combat_parameters.target_skill_min_fraction} × to {combat_parameters.target_skill_max_fraction} × of it; effective skill is taken as it was when the round began'
-  - label: 'No such opponent'
-    text: 'The opponent attacked least often this round'
-  - label: 'Taking cover'
-    text: 'A wounded opponent may stay out of reach of one attacker; the chance is the share of its health it has lost'
+    text: 'The opponent with the highest effective skill that is able to fight'
   - label: 'Each attack'
     text: '+{agent_parameters.exhaustion_per_attack} exhaustion for the attacker and +{agent_parameters.exhaustion_per_defense} for the defender, hit or miss'
   - label: 'Incapacitated'

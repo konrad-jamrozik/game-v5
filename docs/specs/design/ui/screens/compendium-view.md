@@ -183,8 +183,9 @@ An Effect of a Data sheet is worded so that the Player reads at once whether it 
 | --- | --- | --- |
 | `money` | The value with a plus or minus sign, followed by "money". | "+100 money" |
 | `funding` | The value with a plus or minus sign, followed by "funding". | "−1 funding" |
-| `panic` | The value with a plus or minus sign and a percent sign, followed by "[Panic](../../mechanics/domain-model.md#campaign-standing)". | "−2% Panic" |
+| `panic` | The value with two decimals, a plus or minus sign, and a percent sign, followed by "[Panic](../../mechanics/domain-model.md#campaign-standing)". | "−0.10% Panic" |
 | `eliminate_faction` | "Eliminates the Faction". | "Eliminates the Faction" |
+| `defeat` | "Loses the [Campaign](../../foundation/core-concepts.md#campaign-and-session)". | "Loses the Campaign" |
 
 The minus sign is "−" (U+2212). A gain for the Player, i.e. positive money or funding, a negative `panic` value, and `eliminate_faction`, is in Positive, and a loss is in Danger.
 

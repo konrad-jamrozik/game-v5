@@ -5,7 +5,7 @@ name: Soft operations
 on_win:
   - money: 10
 on_ignored_or_lost:
-  - panic: 1 # game-ts: 0.02
+  - panic: 0.02
 ---
 id: operation_level_2
 type: FactionOperationLevel
@@ -15,7 +15,7 @@ on_win:
   - money: 30
   - funding: 5
 on_ignored_or_lost:
-  - panic: 2 # game-ts: 0.1
+  - panic: 0.1
   - funding: -1
 ---
 id: operation_level_3
@@ -26,7 +26,7 @@ on_win:
   - money: 100
   - funding: 20
 on_ignored_or_lost:
-  - panic: 4 # game-ts: 0.3
+  - panic: 0.3
   - funding: -4
 ---
 id: operation_level_4
@@ -37,7 +37,7 @@ on_win:
   - money: 300
   - funding: 40
 on_ignored_or_lost:
-  - panic: 8 # game-ts: 1
+  - panic: 1
   - funding: -8
 ---
 id: operation_level_5
@@ -48,7 +48,7 @@ on_win:
   - money: 1000
   - funding: 80
 on_ignored_or_lost:
-  - panic: 15 # game-ts: 3
+  - panic: 3
   - funding: -16
 ---
 id: operation_level_6
@@ -57,4 +57,4 @@ level: 6
 name: Existential
 on_win: []
 on_ignored_or_lost:
-  - panic: 100 # takes Panic to its limit, which loses the Campaign
+  - defeat: true # game-ts: Panic set to 100%

@@ -4,8 +4,9 @@ category: mechanics
 title: Winning and losing
 terms: [victory, defeat]
 body: >-
-  You win the Campaign by eliminating every Faction. You lose it if Panic reaches its limit or your money falls below
-  zero. Both are checked at the end of every turn, and a win counts first.
+  You win the Campaign by eliminating every Faction. You lose it if Panic reaches its limit, your money falls below
+  zero, or you fail to stop an existential Faction operation. All are checked at the end of every turn, and a win counts
+  first.
 formulas:
   - label: 'Victory'
     text: 'Every Faction is eliminated'
@@ -13,6 +14,8 @@ formulas:
     text: 'Panic of {endings.defeat_at_panic_pct}% or more'
   - label: 'Defeat by money'
     text: 'Money below 0 when a turn ends'
-  - label: 'Both in the same turn'
+  - label: 'Defeat by an existential operation'
+    text: 'A Faction operation of the highest level is not stopped; Panic plays no part and does not change'
+  - label: 'Victory and defeat in the same turn'
     text: 'Victory'
 see_also: [mechanics_factions, mechanics_panic, mechanics_money_and_funding]

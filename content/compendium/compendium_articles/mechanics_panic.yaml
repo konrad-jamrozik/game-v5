@@ -16,5 +16,5 @@ formulas:
   - label: 'Lowered by'
     text: 'Winning a Mission whose reward lowers Panic'
   - label: 'Changes'
-    text: 'Counted in percentage points, added up once each turn, and kept between 0% and 100%'
+    text: 'Counted in hundredths of a percentage point, added up once each turn, and kept between 0% and 100%'
 see_also: [mechanics_faction_operations, mechanics_winning_and_losing, guide_panic]

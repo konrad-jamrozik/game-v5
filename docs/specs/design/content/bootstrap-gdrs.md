@@ -154,7 +154,7 @@ Type owner: [Combat](../mechanics/combat.md).
 | `assault_rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `elite`. |
 | `heavy_rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `commander` and of `cult_leader`. |
 | `machine_gun` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `high_commander`. |
-| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, the incapacitation threshold, and the three fractions of an attacker's [effective skill](../mechanics/agents-spec.md#combatant-attributes) that target selection prefers. |
+| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, and the incapacitation threshold. |
 
 ## Agent Recovery GDRs
 
@@ -179,7 +179,7 @@ Type owner: [Factions](../mechanics/factions.md).
 | `total_war` | FactionActivityLevel | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level. |
 | `operation_level_1` | FactionOperationLevel | Calculation parameter | The money and funding gained when the Mission at a Response Mission site of level 1 is Won, and the [Panic](../mechanics/domain-model.md#campaign-standing) and funding change when the site is Expired or its Mission Lost. |
 | `operation_level_2`, `operation_level_3`, `operation_level_4`, `operation_level_5` | FactionOperationLevel | Calculation parameter | As `operation_level_1`, for levels 2 to 5. |
-| `operation_level_6` | FactionOperationLevel | Calculation parameter | No gain when the Mission at a Response Mission site of level 6 is Won, and a Panic increase of 100 when the site is Expired or its Mission Lost, which takes Panic to the limit at which the Campaign is lost. |
+| `operation_level_6` | FactionOperationLevel | Calculation parameter | No gain when the Mission at a Response Mission site of level 6 is Won, and the Campaign lost, with Panic unchanged, when the site is Expired or its Mission Lost. |
 
 Each MissionSiteArchetype of kind response states its Faction operation level. A Faction selects a level by weight, and [MissionSiteArchetype selection](../mechanics/missions.md#missionsitearchetype-selection) in Missions then selects a MissionSiteArchetype of kind response with that level. The Bootstrap GDRs supply three MissionSiteArchetypes of kind response for each of levels 1 to 5, and one for level 6.
 
@@ -316,14 +316,12 @@ Most Bootstrap GDR values are copied from game-ts. The following table is exhaus
 | --- | --- | --- | --- |
 | Weapons | A weapon damage number on each enemy kind, with no weapon of its own | Seven Weapons, each shared by the EnemyArchetypes of equal base weapon damage | A Combatant's base weapon damage comes from a Weapon GDR. |
 | `cult_leader` base skill, base health, and Weapon | Cult leader: base skill 800, base health 80, weapon damage 32 | The values and the Weapon of `commander` | An 800-skill Enemy cannot be beaten after a three-step Victory path. |
-| Target selection where no opponent is preferred | A random choice among the opponents attacked least often | The earliest of them in the fixed order | The cover outcomes stay the only chance in target selection. |
+| Target selection | Attacks spread over the opponents attacked least often, each attacker preferring an opponent near half its [effective skill](../mechanics/agents-spec.md#combatant-attributes), with wounded opponents dropping out at random | The opponent with the highest effective skill | The simpler rule stays until target selection is redesigned. |
 | `locate_red_dawn_hq` `required_progress` | 25 | Lower | The HQ is the third step of three, not the eighth of eight. |
-| `raid_hq` expiration and Enemies | Expires in 40 Turns; 111 Enemies | Shorter; ten Enemies | Winnable by about eight trained Agents, i.e. after two purchases of the Transport cap Upgrade; a starting-size team does not win. |
+| `raid_hq` expiration and Enemies | Expires in 40 Turns; 111 Enemies | Shorter; ten Enemies | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |
 | Starting transport cap | 6 | Lower, raised by `transport_cap` | Transport capacity becomes something the Agency invests in. |
 | Starting training cap | 0 | Above zero, raised by `training_cap` | Training is available from the first Turn. |
-| Panic change of Faction operation levels 1 to 5 | 0.02%, 0.1%, 0.3%, 1%, and 3% when ignored or lost | 1, 2, 4, 8, and 15 percentage points when ignored or lost | Panic is a whole number of percentage points, and at the game-ts scale it could not end a Campaign. |
-| `operation_level_6` when ignored or lost | Panic is set to 100% | A Panic increase of 100 percentage points | The same result through the ordinary Panic rule; a Panic reduction of the same Advance turn is subtracted from it, so a Campaign at Panic 0 that also wins a Panic reduction in that Advance turn survives. |
-| Panic reduction of Initiative Mission site wins | 0.05% and 0.1% | None for `apprehend_member` and 1 percentage point for `raid_safehouse` | Keeps wins and losses on the same scale. |
+| `operation_level_6` when ignored or lost | Panic is set to 100% | A `defeat` [Effect](../foundation/effect-lists.md#glossary), which loses the Campaign and leaves Panic unchanged | The Campaign ends with the Panic it had, and no Panic reduction of the same Advance turn can undo the loss. |
 | First operation of a Faction that leaves `dormant` | Its countdown starts in the turn it wakes and is counted down in that same turn | Its countdown starts in the Advance turn it wakes and is first counted down in the next | An operation never happens in the Advance turn that sets its countdown. |
 | Victory | Completing the Lead Peace on Earth | Every Faction eliminated | One Lead fewer, and the condition does not depend on a specially named GDR. |
 | Faction discovery | Through a profile Lead | Every Faction is known from the start | Removes the profile and interrogation Leads. |

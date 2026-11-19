@@ -291,7 +291,7 @@ The status bar keeps the agency's vital values in view on every Campaign screen.
 
 ## Meters
 
-A meter shows a value against its limit, e.g. Panic against the Panic limit. It is a row of 10 equal segments, 8 px tall with 3 px gaps. Each full tenth of the limit fills one segment in Accent, a remaining part of a tenth fills the next segment in Accent dim, and the other segments are Divider. The value and the limit are written above the meter's right end in Accent text, e.g. "24 / 100%".
+A meter shows a value against its limit, e.g. Panic against the Panic limit. It is a row of 10 equal segments, 8 px tall with 3 px gaps. Each full tenth of the limit fills one segment in Accent, a remaining part of a tenth fills the next segment in Accent dim, and the other segments are Divider. The value and the limit are written above the meter's right end in Accent text, e.g. "24.35 / 100%".
 
 ## Cap bars
 

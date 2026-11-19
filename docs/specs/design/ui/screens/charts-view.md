@@ -14,7 +14,7 @@ The Charts View lets the Player read how the [Campaign](../../foundation/core-co
 
 # Panic chart
 
-The Charts View leads with [Panic](../../mechanics/domain-model.md#campaign-standing), because Panic is how a [Campaign](../../foundation/core-concepts.md#campaign-and-session) is lost. The Panic chart spans the full width of the [Detail view](../gui.md#glossary) above the other charts, is at least 180 px tall at a window 1280 px wide, and draws its series in Accent with a 14% Accent fill below the line. Its current value uses a 30 px Figure style in Accent text. The [Panic limit](../../mechanics/panic-and-endings.md#glossary) is a 1.5 px Danger line at the limit value with a Limit band below it, labelled "LOSS AT" and the limit, e.g. "LOSS AT 100%".
+The Charts View leads with [Panic](../../mechanics/domain-model.md#campaign-standing), because Panic is how a [Campaign](../../foundation/core-concepts.md#campaign-and-session) is lost. The Panic chart spans the full width of the [Detail view](../gui.md#glossary) above the other charts, is at least 180 px tall at a window 1280 px wide, and draws its series in Accent with a 14% Accent fill below the line. Its current value uses a 30 px Figure style in Accent text and is written with two decimals, e.g. "24.35%". The [Panic limit](../../mechanics/panic-and-endings.md#glossary) is a 1.5 px Danger line at the limit value with a Limit band below it, labelled "LOSS AT" and the limit, e.g. "LOSS AT 100%".
 
 # Trend charts
 
