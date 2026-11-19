@@ -14,7 +14,7 @@ Some implementation tasks recur and are easy to get subtly wrong, e.g. publishin
 
 ## GitHub Pages Deployment
 
-[GitHub Pages Deployment](github-pages-deployment.md) answers _how does an implementation get published once the Engine designer asks for it?_ It takes an implementation whose Game build a browser runs from static files to a public GitHub repository, whose CI workflow checks every push and deploys the passing ones to GitHub Pages.
+[GitHub Pages Deployment](github-pages-deployment.md) answers _how does an implementation get published once the Engine designer asks for it?_ It takes an implementation whose Game build a browser runs from static files to a public GitHub repository, whose CI workflows deploy every push to GitHub Pages and run every check once a day.
 
 ## Globe Integration
 
@@ -22,7 +22,7 @@ Some implementation tasks recur and are easy to get subtly wrong, e.g. publishin
 
 # How they relate
 
-Every Recipes specification carries out a task on files that the Mandatory family constrains. GitHub Pages Deployment uses Implementation Placement, because the published repository is the Implementation repo. Specification Updates uses all three Mandatory specifications, because an update reads the tracking files and settles feedback entries. Globe Integration uses Implementation Placement and Specification Tracking, because the globe is copied into the Implementation repo and its files are recorded there; it also uses the other two Recipes specifications, for keeping the copy current and for serving the maps once published.
+Every Recipes specification carries out a task on files that the Mandatory family constrains. GitHub Pages Deployment uses Implementation Placement, because the published repository is the Implementation repo; it also points to Tech Stack Suggestion of the Guidance family, for a toolchain that keeps the checks fast. Specification Updates uses all three Mandatory specifications, because an update reads the tracking files and settles feedback entries. Globe Integration uses Implementation Placement and Specification Tracking, because the globe is copied into the Implementation repo and its files are recorded there; it also uses the other two Recipes specifications, for keeping the copy current and for serving the maps once published.
 
 <!-- generated:family-diagram:start -->
 
