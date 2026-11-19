@@ -2,67 +2,128 @@
 
 The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification describes. Each `.opus` or `.mp3` file in [`tracks/`](tracks/) is one track, and its title is its file name without the extension, e.g. `tracks/Silent Threat Protocol.opus` is the track titled "Silent Threat Protocol". The record of how each track was made is in [`yaml/`](yaml/), as [Track records](#track-records) describes.
 
-A track is named after the title its source gave it, so that the same name finds it in the source, in its track record, and in the game, e.g. the ElevenLabs song "Silent Threat Protocol" is `Silent Threat Protocol.opus`. The table lists each track with its source and whether it is excluded from the Soundtrack.
+The table lists each track with its name under the [Naming scheme](#naming-scheme), its source, and whether it is excluded from the Soundtrack. The files do not carry those names yet: each is still named after the title its source gave it, as the source sections below describe, until the tracks are renamed.
 
-The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yaml`](../../content/music/music_parameters.yaml) decides which tracks are excluded, and the Excluded column mirrors it. An excluded track's audio file is not kept in this repository but in the Game designer's personal backup, outside it; its row in the table, and its track record where it has one, stay here.
+The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yaml`](../../content/music/music_parameters.yaml) decides which tracks are excluded, and the Excluded column mirrors it. An excluded track's audio file is not kept in this repository but in the Game designer's personal backup, outside it; its row in the table, and its track record, stay here.
 
-| File                                                          | Source            | Excluded |
-| ------------------------------------------------------------- | ----------------- | -------- |
-| `Abyss Protocol.opus`                                         | ElevenLabs        |          |
-| `Abyssal Tactical Drift.opus`                                 | ElevenLabs        |          |
-| `Beneath the Grid.opus`                                       | ElevenLabs        | Yes      |
-| `Black Orbit Watch.opus`                                      | ElevenLabs        |          |
-| `Depth Signal.opus`                                           | ElevenLabs        |          |
-| `Silent Contact.opus`                                         | ElevenLabs        |          |
-| `Silent Contact Protocol.opus`                                | ElevenLabs        |          |
-| `Silent Hostile Sector.opus`                                  | ElevenLabs        |          |
-| `Silent Threat Protocol.opus`                                 | ElevenLabs        |          |
-| `Subsurface Directive.opus`                                   | ElevenLabs        | Yes      |
-| `Unknown Contact.opus`                                        | ElevenLabs        |          |
-| `Unseen Sector.opus`                                          | ElevenLabs        | Yes      |
-| `Unseen Threat Protocol.opus`                                 | ElevenLabs        | Yes      |
-| `v03AI UFO 1.mp3`                                             | Suno v5 via v03ai | Yes      |
-| `v03AI UFO 2.mp3`                                             | Suno v5 via v03ai | Yes      |
-| `v03AI UFO 3 - Scanning Protocol.mp3`                         | Suno v5 via v03ai |          |
-| `v03AI UFO 4 - Scanning Protocol - Dark.mp3`                  | Suno v5 via v03ai |          |
-| `v03AI UFO 5 - Scanning Protocol - Dark Violin.mp3`           | Suno v5 via v03ai |          |
-| `v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3` | Suno v5 via v03ai |          |
-| `Bass clarinet + muted trombone var1.mp3`                     | Suno v6           |          |
-| `Bass clarinet + muted trombone var2.mp3`                     | Suno v6           |          |
-| `Signal Intercept var1.mp3`                                   | Suno v6           |          |
-| `Signal Intercept var2.mp3`                                   | Suno v6           |          |
-| `Unseen Approach var1.mp3`                                    | Suno v6           |          |
-| `Unseen Approach var2.mp3`                                    | Suno v6           |          |
+| File | Name under the naming scheme | Source | Excluded |
+| --- | --- | --- | --- |
+| `Abyss Protocol.opus` | `EL-M2 XCOM+TFTD B` | ElevenLabs |  |
+| `Abyssal Tactical Drift.opus` | `EL-M2.5 XCOM+TFTD+NoPulse B` | ElevenLabs |  |
+| `Beneath the Grid.opus` | `EL-M2.5 XCOM+Var B` | ElevenLabs | Yes |
+| `Black Orbit Watch.opus` | `EL-M2.5 XCOM+NoPulse+Geo+Ominous` | ElevenLabs |  |
+| `Depth Signal.opus` | `EL-M2.5 XCOM+TFTD+NoPulse A` | ElevenLabs |  |
+| `Silent Contact.opus` | `EL-M2.5 XCOM+Var C` | ElevenLabs |  |
+| `Silent Contact Protocol.opus` | `EL-M2 XCOM` | ElevenLabs |  |
+| `Silent Hostile Sector.opus` | `EL-M2.5 XCOM+Var+Bare+Slow A` | ElevenLabs |  |
+| `Silent Threat Protocol.opus` | `EL-M2.5 XCOM+Var+Bare+Slow B` | ElevenLabs |  |
+| `Subsurface Directive.opus` | `EL-M2 XCOM+TFTD A` | ElevenLabs | Yes |
+| `Unknown Contact.opus` | `EL-M2.5 XCOM+Var A` | ElevenLabs |  |
+| `Unseen Sector.opus` | `EL-M2.5 XCOM A` | ElevenLabs | Yes |
+| `Unseen Threat Protocol.opus` | `EL-M2.5 XCOM B` | ElevenLabs | Yes |
+| `v03AI UFO 1.mp3` | `V3A-S5 XCOM+Var` | Suno v5 via v03ai | Yes |
+| `v03AI UFO 2.mp3` | `V3A-S5 XCOM+Sections+Loop` | Suno v5 via v03ai | Yes |
+| `v03AI UFO 3 - Scanning Protocol.mp3` | `V3A-S5 SCNP` | Suno v5 via v03ai |  |
+| `v03AI UFO 4 - Scanning Protocol - Dark.mp3` | `V3A-S5 SCNP+Dark` | Suno v5 via v03ai |  |
+| `v03AI UFO 5 - Scanning Protocol - Dark Violin.mp3` | `V3A-S5 SCNP+Dark+Violin` | Suno v5 via v03ai |  |
+| `v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3` | `V3A-S5 SCNP+Dark+Cello&BClar` | Suno v5 via v03ai |  |
+| `Bass clarinet + muted trombone var1.mp3` | `S6 SCNP+Dark+BClar&Trombone A` | Suno v6 |  |
+| `Bass clarinet + muted trombone var2.mp3` | `S6 SCNP+Dark+BClar&Trombone B` | Suno v6 |  |
+| `Signal Intercept var1.mp3` | `S6 SCNP A` | Suno v6 |  |
+| `Signal Intercept var2.mp3` | `S6 SCNP B` | Suno v6 |  |
+| `Unseen Approach var1.mp3` | `S6 SCNP+Dark+Piano&Cello A` | Suno v6 |  |
+| `Unseen Approach var2.mp3` | `S6 SCNP+Dark+Piano&Cello B` | Suno v6 |  |
+
+## Naming scheme
+
+A track's name tells, at a glance, how it came to be: where and with which model it was generated, which prompt stem it grew from, and each adjustment the Game designer asked for on the way to its prompt. It is built from the track's record:
+
+```text
+Source[-Model] Stem[+Adjustment…] [Take]
+```
+
+e.g. `EL-M2.5 XCOM+TFTD+NoPulse B` is the second track that ElevenLabs Music v2.5 made from the X-COM stem with a Terror from the Deep tint and the repeated pulse removed.
+
+- **Source and model:** where the song was generated and, joined by a hyphen, the model, from `source` and `model`. A source with no recorded model is its code alone, e.g. `EL`.
+- **Stem:** the code of `meta_prompt_taxonomy.stem`.
+- **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`. An adjustment that only limits the prompt's length, e.g. "kept short" or "fit within v03ai's 1,000 characters", has no code, since it says nothing about the music; neither has a source setting, e.g. Suno's sliders or Exclude styles, since it is not a request to the chatbot. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`. A code appears once even when two adjustments share it.
+- **Take:** when two or more tracks would get the same name, a letter tells them apart, `A`, `B`, `C` and on in the order of `created`, e.g. the two variations of one generation, or two generations of the same prompt with different lengths. A track whose name no other track shares gets no letter.
+
+A name is a file name, so it must be valid on Windows: no code may contain any of `\ / : * ? " < > |`, and a name must not end in a space or a period. The codes use only letters, digits, and `-`, `.`, `&`, with `+` and spaces between them, e.g. a model is `M2.5`, never `M2:5`.
+
+The codes are these lists; a new source, model, stem, or adjustment adds its code here, short and in CamelCase or capitals like the rest:
+
+| Source and model | Meaning |
+| --- | --- |
+| `EL-M2` | ElevenLabs, Music v2 |
+| `EL-M2.5` | ElevenLabs, Music v2.5 |
+| `V3A-S5` | v03ai, running Suno v5 |
+| `S6` | suno.com, running Suno v6; a bare model code means the song was made directly on the model's own site |
+
+| Stem | `meta_prompt_taxonomy.stem` |
+| --- | --- |
+| `XCOM` | Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths |
+| `SCNP` | Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST) |
+
+| Adjustment       | `meta_prompt_taxonomy.adjustments` entry                       |
+| ---------------- | -------------------------------------------------------------- |
+| `Var`            | more variety, less monotonous                                  |
+| `TFTD`           | a tint of Cthulhu and X-COM: Terror from the Deep              |
+| `NoPulse`        | no repeated "bum bum bum" pulse; more variety and flair        |
+| `Geo`            | Geoscape: a global defense command screen                      |
+| `Ominous`        | more serious, ominous, dangerous; not relaxing, cozy, or lo-fi |
+| `Bare`           | simplified to a bare-bones prompt                              |
+| `Slow`           | slower (55–65 BPM), darker, less intense; never cheery         |
+| `Sections`       | song-structure tags: [Intro], [Verse], [Bridge], [Outro]       |
+| `Loop`           | steady, seamlessly loopable pacing; no builds or climaxes      |
+| `Dark`           | darker and bassier; less electronic and spacey                 |
+| `Violin`         | instruments: violins, keeping the prompt length                |
+| `Cello&BClar`    | instruments: cello + bass clarinet                             |
+| `Piano&Cello`    | instruments: felt piano + cello                                |
+| `BClar&Trombone` | instruments: bass clarinet + muted trombone                    |
 
 ## Track records
 
-A `.yaml` file in `yaml/` with the same name as a track, e.g. `yaml/Silent Threat Protocol.yaml`, records how the track was made, so that it can be told apart from the others and made again: its original title, source, creation date, the prompt it was generated from, and what the source reports about it, e.g. tags, BPM, and length. Every track whose prompt is known has one, including each excluded track, whose record stays here after its audio is removed.
+A `.yaml` file in `yaml/` with the same name as a track, e.g. `yaml/Silent Threat Protocol.yaml`, records how the track was made, so that it can be told apart from the others and made again: its source and model, when it was made, the prompt it was generated from and how that prompt was written, and what the source reports about it, e.g. tags, BPM, and length. Every track has one, including each excluded track, whose record stays here after its audio is removed.
 
-A record holds only the keys it has values for:
+The following table lists every key a record may hold; the list is exhaustive. A record holds only the keys it has values for, except the required ones, which every record holds. Keys nested in another key are written with a dot, e.g. `prompt_from.tool` is the `tool` key inside `prompt_from`. Every `prompt_from` holds exactly one of `meta_prompt` and `same_prompt_as`, so that each record either quotes the request that produced its prompt or points to the track that does.
 
-| Key | Value |
-| --- | --- |
-| `file` | The track's file name in `tracks/`. |
-| `source` | Where the track was made, as in the table. |
-| `original_title` | The track's title, its file name without the extension. |
-| `title_in_source` | The song's title in its source, when it differs from `original_title`, e.g. "UFO 1" in v03ai. |
-| `song_url` | The song's page in its source, e.g. `https://suno.com/song/<id>`. |
-| `model` | The source's model that made the song, as the source labels it, e.g. `Music v2.5` for ElevenLabs, from the label beside the song in the ElevenLabs Music history, or `v6 (chirp-hawk)` for Suno: the version Suno shows, then its internal model name. |
-| `created` | When the song was made, as a date, or a date and time in Pacific time: the time the source keeps, e.g. the exact Added time of an ElevenLabs song in the Assets page, to the second, which orders songs made in the same minute; or, where the source shows none, e.g. for most v03ai songs, the time its download was saved. |
-| `variation_of` | The file of the track generated in the same run from the same prompt, e.g. one of the two variations ElevenLabs makes per generation: the two have an identical prompt and length and were added seconds apart. It names the track that holds the prompt's provenance, or the earlier-added one; when the other variation was not kept as a track, it names that song's title in its source, e.g. `'Containment Protocol'`. |
-| `description` | The source's own description of the song. |
-| `human_assessment` | The Game designer's verdict on the song after listening to it, e.g. `rejected`, optionally followed by why, e.g. `rejected, too irritating MIDI sounds`. Every excluded track's record has one. |
-| `tags` | The source's tags for the song; for v03ai, the comma-separated words of the "Style:" line the prompt was written with, which is not part of `prompt`. |
-| `bpm` | The tempo the source reports. |
-| `length` | The song's length as the source reports it. |
-| `meta_prompt_taxonomy` | The key decisions behind the prompt, at a glance: the `stem`, the idea the prompt grew from, which tracks of one conversation share, and the `adjustments` that shaped it from there, in the order the Game designer asked for them, each in a few words. It lists only what is in effect in the prompt, e.g. not an instrument that a later adjustment replaced, nor a tint added and dropped again. `prompt_from` keeps the Game designer's own words. |
-| `prompt_from` | How the prompt was written with a chatbot: the `tool`, the `conversation_url` and `share_url` of the conversation, or its `conversation_title` when no link is recorded, the `meta_prompt` the Game designer gave it, and, when the conversation continued from the prompt of another track, that track's file in `continues_from`, so that `meta_prompt` holds only what was added. When the prompt was reused unchanged from another track, `same_prompt_as` names that track's file instead of a `meta_prompt`. When the source changed the prompt before storing it, e.g. Suno's Variety rewriting the Styles text, `produced_prompt` holds the text the chatbot produced and pasted in, word for word. |
-| `instruments` | The instruments the prompt was written around, as the Game designer chose them, e.g. `[bass clarinet, muted trombone]`. |
-| `instrumental` | `true` when the song was generated as an instrumental, with no lyrics, e.g. Suno's Instrumental switch. |
-| `prompt` | The prompt the song was generated from, word for word; for Suno, its Styles text. |
-| `exclude_styles` | Suno's Exclude styles text, word for word: what the song must not sound like. |
-| `control_sliders` | Suno's advanced sliders, as Suno stores them: `weirdness_constraint` for Weirdness, `style_weight` for Style influence, and `aug_creativity` for Variety, each from 0 to 1, e.g. Weirdness 40% is `0.4`. Variety `0` is Off, which keeps the Styles text as written; above 0, Suno may rewrite it. |
-| `notes` | Anything else needed to read the record, e.g. that the prompt given to the source was truncated. |
+| Key | Required | Value |
+| --- | --- | --- |
+| `file` | Yes | The track's file name in `tracks/`. |
+| `source` | Yes | Where the track was made, as in the table, e.g. `ElevenLabs Music`, `Suno v5 via v03ai`, or `Suno v6`. |
+| `original_title` | Yes | The track's title before any renaming: its title in its source, or the name the Game designer gave its download. |
+| `title_in_source` |  | The song's title in its source, when it differs from `original_title`, e.g. "UFO 1" in v03ai. |
+| `song_url` |  | The song's page in its source, e.g. `https://suno.com/song/<id>`. |
+| `model` |  | The source's model that made the song, as the source labels it, e.g. `Music v2.5` for ElevenLabs, from the label beside the song in the ElevenLabs Music history, or `v6 (chirp-hawk)` for Suno: the version Suno shows, then its internal model name. |
+| `created` | Yes | When the song was made, as a date, or a date and time in Pacific time: the time the source keeps, e.g. the exact Added time of an ElevenLabs song in the Assets page, to the second, which orders songs made in the same minute; or, where the source shows none, e.g. for most v03ai songs, the time its download was saved. |
+| `variation_of` |  | The file of the track generated in the same run from the same prompt, e.g. one of the two variations ElevenLabs makes per generation: the two have an identical prompt and length and were added seconds apart. It names the track that holds the prompt's provenance, or the earlier-added one; when the other variation was not kept as a track, it names that song's title in its source, e.g. `'Containment Protocol'`. |
+| `description` |  | The source's own description of the song. |
+| `human_assessment` |  | The Game designer's verdict on the song after listening to it, e.g. `rejected`, optionally followed by why, e.g. `rejected, too irritating MIDI sounds`. Every excluded track's record has one. |
+| `tags` | Yes | The source's tags for the song, as a list; for v03ai, the comma-separated words of the "Style:" line the prompt was written with, which is not part of `prompt`. |
+| `bpm` |  | The tempo the source reports. |
+| `length` |  | The song's length as the source reports it, as `m:ss`. |
+| `instrumental` |  | `true` when the song was generated as an instrumental, with no lyrics, e.g. Suno's Instrumental switch. |
+| `instruments` |  | The instruments the prompt was written around, as the Game designer chose them, as a list, e.g. `[bass clarinet, muted trombone]`. |
+| `meta_prompt_taxonomy` | Yes | The key decisions behind the prompt, at a glance, from which the track's name is built under [Naming scheme](#naming-scheme). It lists only what is in effect in the prompt, e.g. not an instrument that a later adjustment replaced, nor a tint added and dropped again; `prompt_from` keeps the Game designer's own words. |
+| `meta_prompt_taxonomy.stem` | Yes | The idea the prompt grew from, which every track of one line of prompts shares, e.g. `Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST)`. |
+| `meta_prompt_taxonomy.adjustments` | Yes | The adjustments that shaped the prompt from the stem, in the order the Game designer asked for them, each in a few words, as a list; `[]` when the prompt is the stem itself. |
+| `prompt_from` | Yes | How the prompt was written with a chatbot. |
+| `prompt_from.tool` | Yes | The chatbot, e.g. `ChatGPT`. |
+| `prompt_from.conversation_url` |  | The link to the conversation. |
+| `prompt_from.share_url` |  | The shared link to the conversation, which opens for anyone. |
+| `prompt_from.conversation_title` |  | The conversation's title, when no link to it is recorded, e.g. `'Shorten Suno Prompt'`. |
+| `prompt_from.continues_from` |  | The file of the track whose prompt the conversation continued from, so that `meta_prompt` holds only what was added. |
+| `prompt_from.meta_prompt` |  | The Game designer's request that produced the prompt, word for word; with `continues_from`, only the request added after that track's prompt. |
+| `prompt_from.same_prompt_as` |  | The file of the track whose prompt this track reused unchanged, in place of a `meta_prompt`. |
+| `prompt_from.produced_prompt` |  | The prompt the chatbot produced and the Game designer pasted in, word for word, when the source changed it before storing it as `prompt`, e.g. Suno's Variety rewriting the Styles text. |
+| `prompt` | Yes | The prompt the song was generated from, word for word, as the source stores it; for Suno, its Styles text. |
+| `exclude_styles` |  | Suno's Exclude styles text, word for word: what the song must not sound like. |
+| `control_sliders` |  | Suno's advanced sliders, as Suno stores them, each from 0 to 1. |
+| `control_sliders.weirdness_constraint` |  | Suno's Weirdness, e.g. Weirdness 40% is `0.4`. |
+| `control_sliders.style_weight` |  | Suno's Style influence, e.g. Style influence 70% is `0.7`. |
+| `control_sliders.aug_creativity` |  | Suno's Variety: `0` is Off, which keeps the Styles text as written; above 0, Suno may rewrite it. |
+| `notes` |  | Anything else needed to read the record, e.g. that the prompt given to the source was truncated. |
 
 ## Tracks from ElevenLabs
 
