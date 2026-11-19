@@ -39,25 +39,26 @@ To change an Artboard, edit its canvas artboard, then export the image of that a
 
 Each Artboard image comes from exactly one canvas artboard and is shown in exactly one specification. This table is exhaustive.
 
-| Image                      | Kind   | Canvas artboard              | Shown in                                        |
-| -------------------------- | ------ | ---------------------------- | ----------------------------------------------- |
-| `main-menu.png`            | Screen | `Main.dc.html`               | [Main Menu](screens/main-menu.md)               |
-| `campaign-screen.png`      | Screen | `CampaignScreen.dc.html`     | [Campaign Screen](screens/campaign-screen.md)   |
-| `campaign-screen-view.png` | Screen | `CampaignScreenView.dc.html` | [Campaign Screen](screens/campaign-screen.md)   |
-| `situation-panel.png`      | Panel  | `SituationPanel.dc.html`     | [Situation Panel](screens/situation-panel.md)   |
-| `turn-summary.png`         | Panel  | `TurnSummary.dc.html`        | [Turn Summary](screens/turn-summary.md)         |
-| `settings-panel.png`       | Panel  | `SettingsPanel.dc.html`      | [Campaign Screen](screens/campaign-screen.md)   |
-| `autopilot-footer.png`     | Panel  | `AutopilotFooter.dc.html`    | [Campaign Screen](screens/campaign-screen.md)   |
-| `missions-view.png`        | Panel  | `MissionsView.dc.html`       | [Missions View](screens/missions-view.md)       |
-| `leads-view.png`           | Panel  | `LeadsView.dc.html`          | [Leads View](screens/leads-view.md)             |
-| `agents-view.png`          | Panel  | `AgentsView.dc.html`         | [Agents View](screens/agents-view.md)           |
-| `agents-memorial.png`      | Panel  | `AgentsMemorial.dc.html`     | [Agents View](screens/agents-view.md)           |
-| `upgrades-view.png`        | Panel  | `UpgradesView.dc.html`       | [Upgrades View](screens/upgrades-view.md)       |
-| `turn-report-view.png`     | Panel  | `TurnReportView.dc.html`     | [Turn Report View](screens/turn-report-view.md) |
-| `combat-report.png`        | Panel  | `CombatReport.dc.html`       | [Turn Report View](screens/turn-report-view.md) |
-| `history-view.png`         | Panel  | `HistoryView.dc.html`        | [History View](screens/history-view.md)         |
-| `charts-view.png`          | Panel  | `ChartsView.dc.html`         | [Charts View](screens/charts-view.md)           |
-| `compendium-view.png`      | Panel  | `CompendiumView.dc.html`     | [Compendium View](screens/compendium-view.md)   |
+| Image | Kind | Canvas artboard | Shown in |
+| --- | --- | --- | --- |
+| `main-menu.png` | Screen | `Main.dc.html` | [Main Menu](screens/main-menu.md) |
+| `campaign-screen.png` | Screen | `CampaignScreen.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
+| `campaign-screen-view.png` | Screen | `CampaignScreenView.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
+| `situation-panel.png` | Panel | `SituationPanel.dc.html` | [Situation Panel](screens/situation-panel.md) |
+| `turn-summary.png` | Panel | `TurnSummary.dc.html` | [Turn Summary](screens/turn-summary.md) |
+| `settings-panel.png` | Panel | `SettingsPanel.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
+| `autopilot-footer.png` | Panel | `AutopilotFooter.dc.html` | [Campaign Screen](screens/campaign-screen.md) |
+| `missions-view.png` | Panel | `MissionsView.dc.html` | [Missions View](screens/missions-view.md) |
+| `missions-view-concluded.png` | Panel | `MissionsViewConcluded.dc.html` | [Missions View](screens/missions-view.md) |
+| `leads-view.png` | Panel | `LeadsView.dc.html` | [Leads View](screens/leads-view.md) |
+| `agents-view.png` | Panel | `AgentsView.dc.html` | [Agents View](screens/agents-view.md) |
+| `agents-memorial.png` | Panel | `AgentsMemorial.dc.html` | [Agents View](screens/agents-view.md) |
+| `upgrades-view.png` | Panel | `UpgradesView.dc.html` | [Upgrades View](screens/upgrades-view.md) |
+| `turn-report-view.png` | Panel | `TurnReportView.dc.html` | [Turn Report View](screens/turn-report-view.md) |
+| `combat-report.png` | Panel | `CombatReport.dc.html` | [Turn Report View](screens/turn-report-view.md) |
+| `history-view.png` | Panel | `HistoryView.dc.html` | [History View](screens/history-view.md) |
+| `charts-view.png` | Panel | `ChartsView.dc.html` | [Charts View](screens/charts-view.md) |
+| `compendium-view.png` | Panel | `CompendiumView.dc.html` | [Compendium View](screens/compendium-view.md) |
 
 # Reading Artboards
 
