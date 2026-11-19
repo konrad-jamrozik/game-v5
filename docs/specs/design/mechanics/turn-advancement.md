@@ -177,31 +177,6 @@ All examples use the Bootstrap [GDR](../foundation/core-concepts.md#game-build-a
 
 The examples use a test Game build that supplies the Bootstrap GDRs without the FactionArchetypes `exalt` and `black_lotus` and their Leads, so that the Campaign has the one Faction Red Dawn, from `red_dawn`. "The Advance turn ending Turn t" is the Advance turn committed during Turn t; the Campaign starts in Turn 1. Every Agent is a `field_agent`, and no [Upgrade](economy-and-upgrades.md#glossary) has been acquired unless an example says so. Every Agent on Contracting has effective skill 100 unless an example says otherwise, so it contributes exactly 30 to Agency income. The injected named random outcomes are named as their rules name them: the Training gain outcome under [Training growth](agents-spec.md#training-growth), which needs no injection at Probability 1, the Required progress outcome under [Required progress range and outcome](investigations.md#required-progress-range-and-outcome), the Level duration, Operation interval, and Operation level outcomes under [Faction random outcomes](factions.md#faction-random-outcomes), the MissionSiteArchetype selection outcome under [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection), and the hit and damage outcomes of each Combat under [Hit outcome](combat.md#hit-outcome) and [Damage outcome](combat.md#damage-outcome). Where an example states a [Combat outcome](combat.md#combat-rounds-and-results) and the values a Combat leaves, the hit and damage outcomes are injected so that Combat's rules produce exactly those results, and the example does not repeat the Combat trace.
 
-## The first two Advance turns of a Campaign
-
-This example exercises [Turn advancement steps](#turn-advancement-steps), [Transit across the steps](#transit-across-the-steps), and [Values a step uses](#values-a-step-uses), with [Agency income](economy-and-upgrades.md#agency-income), [Upkeep](economy-and-upgrades.md#upkeep), [Training growth](agents-spec.md#training-growth), [Investigation progress](investigations.md#investigation-progress), [Faction activity](factions.md#faction-activity), [Panic step](panic-and-endings.md#panic-step), [Ending check step](panic-and-endings.md#ending-check-step), and [Turn series of money](economy-and-upgrades.md#turn-series-of-money).
-
-**Initial state:** A new Campaign from the preset `standard`: money 500, funding 20, Panic 0, Agents a1 to a4 on Standby, At assignment, each with base skill 100, current health 30 of 30, and exhaustion 0. Red Dawn is at `faint`, with the injected initial Level duration outcome 60 and Operation interval outcome 15. There is no Investigation and no Mission site.
-
-**Turn 1:** The player calls `assignAgents([a1, a2], Contracting)`, `assignAgents([a3], Training)`, and `startInvestigation(locate_red_dawn_member, [a4])`, which creates Investigation i1 with Investigation progress 0 and, from the injected Required progress outcome 3, Actual required progress 3. a1 to a4 are In transit. Money is 500 when the player ends the Turn.
-
-| Step | Advance turn ending Turn 1 | Money after | Advance turn ending Turn 2 | Money after |
-| --- | --- | --- | --- | --- |
-| 1. Transit | a1, a2, a3, and a4 arrive and are At assignment. | 500 | No Agent is In transit; nothing changes. | 480 |
-| 2. Agency income | No Agent on Contracting was At assignment in the Turn-end state: 20 + 30 × 0 = 20. | 520 | a1 and a2 count, each with effective skill 100: 20 + 30 × 2 = 80. Then a1 and a2 each gain 1 exhaustion, to 1. | 560 |
-| 3. Upkeep | All 4 Serving Agents count, including the four that have just arrived: 10 × 4 = 40. | 480 | 10 × 4 = 40. | 520 |
-| 4. Training | a3 arrived in step 1 and has no Training gain outcome; base skill 100. | 480 | a3's Training gain Probability is 1, so it gains 1, to base skill 101, and then 1 exhaustion, to 1. | 520 |
-| 5. Investigation progress | i1 has no working member, because a4 arrived in step 1: progress 0, below 3 × 100. i1 stays Active. | 480 | a4 works alone with effective skill 100: gain 100, progress 100. i1 becomes Assessed, because 100 ≥ 25 × 3 = 75, and stays Active, because 100 < 300. a4 then gains 1 exhaustion, to 1. | 520 |
-| 6. Mission resolution | No Mission site exists; nothing changes. | 480 | Nothing changes. | 520 |
-| 7. Mission site expiration | Nothing changes. | 480 | Nothing changes. | 520 |
-| 8. Faction activity | Red Dawn: Turns until the next level 60 → 59; Turns until the next operation 15 → 14; no operation. | 480 | 59 → 58; 14 → 13; no operation. | 520 |
-| 9. Agent recovery | a1 to a4 were In transit in the Turn-end state; none recovers. | 480 | None is on Standby or Recovery; none recovers. | 520 |
-| 10. Panic | The Pending panic change is 0; Panic stays 0. | 480 | Panic stays 0. | 520 |
-| 11. Ending check | Red Dawn is not Eliminated, Panic 0 is below 100, and money 480 is not below 0: the Campaign continues. | 480 | The Campaign continues. | 520 |
-| 12. Turn close | Money at the end of turn for Turn 1 is 500; Money at the start of turn for Turn 2 is 480; the turn number becomes 2. | 480 | Money at the end of turn for Turn 2 is 480; Money at the start of turn for Turn 3 is 520; the turn number becomes 3. | 520 |
-
-The Advance turn ending Turn 1 does nothing but complete the four transits, apart from Agency income from funding, Upkeep, and Faction activity, which do not depend on the Agents' work. The player makes no Player action in Turn 2; in Turn 2 the projected income is 80, the projected upkeep is 40, and i1's projected progress gain is 100, each equal to what the Advance turn ending Turn 2 then applies. Both countdowns of Red Dawn are hidden from the player.
-
 ## Deployment, Combat, return, and recovery
 
 This example exercises [Transit across the steps](#transit-across-the-steps) and [Same-turn interactions](#same-turn-interactions), with [Deploying Agents](missions.md#deploying-agents), [Mission resolution](missions.md#mission-resolution), [Upkeep](economy-and-upgrades.md#upkeep), and [Which Agents recover](agent-recovery.md#which-agents-recover).

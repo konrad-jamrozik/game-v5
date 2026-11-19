@@ -427,22 +427,6 @@ All examples use the Bootstrap GDR values from `content/investigations/investiga
 
 So the Required progress ranges are 3 to 4, 6 to 9, and 10 to 15, and the assessment thresholds are 75, 150, and 250. "The Advance turn ending Turn t" is the Advance turn committed during Turn t. Unless stated otherwise, every Agent is a `field_agent` with base skill 100, current health 30 of 30, exhaustion 0, and effective skill 100, on Standby, At assignment, the Lead named is available under [Leads and Progression](leads-and-progression.md), and no earlier Investigation of it exists. The injected named random outcome is each new Investigation's Required progress outcome, under [Required progress range and outcome](#required-progress-range-and-outcome). Progress is given in hundredths of a progress point. Effects that other rules apply, e.g. the Mission site created, are named only to show when they apply.
 
-## One Agent on the member Lead
-
-This example exercises [Starting an Investigation](#starting-an-investigation), [Investigation creation](#investigation-creation), [Progress gain](#progress-gain), [Assessment](#assessment), [Completion check](#completion-check), [Completion](#completion), and [Projected progress gain](#projected-progress-gain). During Turn 1 the player calls `startInvestigation(locate_red_dawn_member, [a1])`, with the injected Required progress outcome 4, which has Probability 1/2. Investigation i1 is created with Archetype `standard_investigation`, Lead `locate_red_dawn_member`, Turn started 1, Actual required progress 4, lifecycle Active, Investigation progress 0, Assessed no, and Current team {a1}; a1 is on i1, In transit.
-
-| Moment | Working members | Gain | Investigation progress | Assessed | Lead's Required progress shown | Result |
-| --- | --- | --- | --- | --- | --- | --- |
-| Turn 1, after the action |  |  | 0 | No | Unknown | Projected progress gain 0: a1 is In transit. |
-| Advance turn ending Turn 1 | None | 0 | 0 | No | Unknown | a1 arrives in Transit and adds nothing. 0 < 400, so i1 stays Active. |
-| Turn 2 |  |  | 0 | No | Unknown | Projected progress gain 100. |
-| Advance turn ending Turn 2 | a1 | 100 | 100 | Yes | 3, range 3 to 4 | 100 ≥ 75, so i1 is Assessed and the Lead is an Assessed Lead. i1 stays Active. |
-| Advance turn ending Turn 3 | a1 | 100 | 200 | Yes | 3, range 3 to 4 | i1 stays Active. |
-| Advance turn ending Turn 4 | a1 | 100 | 300 | Yes | 3, range 3 to 4 | 300 < 400, so i1 stays Active. |
-| Advance turn ending Turn 5 | a1 | 100 | 400 | Yes | 3, range 3 to 4 | 400 ≥ 400: i1 is Completed. Mission site from `apprehend_member` created; a1 on Standby, In transit. |
-
-After the Advance turn ending Turn 5, i1 has an empty Current team and Investigation progress 400, a1 has i1 in its Participation history, and `locate_red_dawn_member` is a [Completed Lead](leads-and-progression.md#glossary). The Turn report of the Advance turn ending Turn 5 lists i1 with the gain 100, under [Turn report](#turn-report), so the progress before that Advance turn was 300; the Turn reports of the Advance turns ending Turns 1 to 4 list no Investigation. Had the injected outcome been 3, i1 would have been Completed in the Advance turn ending Turn 4. The player never sees the Actual required progress 4. If the Mission site later becomes Expired and the player starts Investigation i2 of the same Lead, i2 has Assessed no and its own Required progress outcome, but the range 3 to 4 is shown from the moment i2 is created, because i1 is Assessed. a1's exhaustion rises by 1 in each of the four Advance turns in which it works, ending Turns 2 to 5, including the one in which i1 completes, so it returns with exhaustion 4; it stays below 30, so its effective skill stays 100.
-
 ## Five trained Agents on a Required progress of 30
 
 This example exercises [Progress gain](#progress-gain) with team efficiency, [Assessment](#assessment), and [Completion check](#completion-check). It uses a test Lead L4 with `required_progress` 30, so its Required progress range is 30 to 45 and its assessment threshold is 25 × 30 = 750. Investigation i3 of L4 has Actual required progress 37, from the injected Required progress outcome, Investigation progress 0, and five working members after [Training](agents-spec.md#assignments) with effective skill 140, 130, 120, 120, and 110, so n is 5 and S is 620. The gain is 449 in every Advance turn of work, because 449^5 × 5 ≤ 620^5 < 450^5 × 5; that is round down(620 × 5^0.8 / 5) = round down(449.36…).

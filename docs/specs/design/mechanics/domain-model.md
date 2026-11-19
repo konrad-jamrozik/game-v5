@@ -204,66 +204,6 @@ Participation history describes the same relationship for the past: an Agent's P
 
 These are structural fixtures, not playable scenarios or API signatures. Symbolic identifiers are labels, not a chosen identifier format. Numbers below are exact test-only integers, not campaign balance. All other scalar values of Mechanics specifications are assumed valid for these structural checks.
 
-## A. Valid relationships
-
-Given Turn 3 and:
-
-- Campaign state c1 with its single Agency ag1.
-- Archetypes supplied by the current Game build: G1 (Agency), A1 (Agent), I1 (Investigation), S1 (Mission site), M1 (Mission), F1 (Faction), and E1 (Enemy), plus the GDRs L1 and L2 (Leads) and W1 (weapon). These are test GDRs with no other required properties in this fixture.
-- Faction f1 with Archetype F1.
-- Agent a1 whose Assignment references Investigation i1, In transit.
-- Agent a2, Deployed on Mission m1, so that its Assignment references m1, At assignment.
-- Investigation i0 referring to L2, no longer Active, with an empty Current team.
-- Active Investigation i1 referring to L1, Current team {a1}.
-- Initiative Mission site s1 with Archetype S1, originating from Investigation i0 of L2, targeting f1, Deployed.
-- Mission m1 with Archetype M1 at Mission site s1, deployed in Turn 3, Deployed, with Current team {a2}.
-- Enemy e1 owned by s1, with Archetype E1.
-- Each Agent and Enemy has base skill 100, current health 10 of base health 10, exhaustion 0, and equipped values referring to W1.
-- Other collections empty.
-
-Each Campaign instance has the following allocation of the properties named in the sections above; the properties that Mechanics specifications add are assumed valid:
-
-| Campaign instance | Instance ID | Archetype | Constants | State |
-| --- | --- | --- | --- | --- |
-| ag1 | ag1 | G1 | Empty | Resources, upgrades, roster {a1, a2} |
-| a1, a2 | a1, a2 respectively | A1 | Agency ag1 | Assignment, Agent status, the properties the Combatant Role Type requires, and Participation history |
-| i0 | i0 | I1 | Lead L2 | Not Active, empty Current team, Participation history |
-| i1 | i1 | I1 | Lead L1 | Active, Current team {a1}, Participation history |
-| s1 | s1 | S1 | Initiative kind; origin Investigation i0 of Lead L2; target Faction f1 | Deployed, Enemies {e1} |
-| m1 | m1 | M1 | Mission site s1; Turn deployed 3; team sent {a2} | Deployed, Current team {a2} |
-| e1 | e1 | E1 | Mission site s1 | The properties the Combatant Role Type requires |
-| f1 | f1 | F1 | Empty | The values under [Faction State](factions.md#faction-state) |
-
-Campaign state c1 holds Turn 3 and collections containing Agency ag1, Agents a1 and a2, Investigations i0 and i1, Mission site s1, Mission m1, and Faction f1; e1 is reached through s1, and the Mission of s1 is m1, the Mission whose Mission site reference identifies s1. Required references resolve in c1. Immutable affiliation, origin, and target references are assumptions of this fixture, not lifecycle rules.
-
-These relationships satisfy [Agency per Campaign](#agency-per-campaign), [Campaign instance identity scope](#campaign-instance-identity-scope), [Current versus historical teams](#current-versus-historical-teams), and [How concepts relate](#how-concepts-relate). Current team membership does not assert that a1 makes progress while In transit. The rules of a single concept are checked against this fixture by the Mechanics specification that details it; e.g., [Acceptance examples](agents-spec.md#acceptance-examples) in Agents checks Agent status.
-
-## B. Invalid variants
-
-Each row independently changes fixture A and describes an invalid state.
-
-| Change | Violation |
-| --- | --- |
-| Give e1 the same Instance ID as a1 | [Campaign instance identity scope](#campaign-instance-identity-scope) |
-| Give m1 the same Instance ID as s1 | [Campaign instance identity scope](#campaign-instance-identity-scope) |
-| Add a second Agency | [Agency per Campaign](#agency-per-campaign) |
-| List a1 in the Current team of m1 while a1 is assigned to i1 | [Current versus historical teams](#current-versus-historical-teams) |
-| Make m1 Won while the Assignment of a2 still references m1 | [Current versus historical teams](#current-versus-historical-teams) |
-| Mark s1 as a Response Mission site without a Faction operation occurrence origin | [How concepts relate](#how-concepts-relate) |
-| Add a second Mission whose Mission site reference identifies s1 | [How concepts relate](#how-concepts-relate) |
-| Remove the Mission site reference of m1 | [How concepts relate](#how-concepts-relate) |
-| Assign e1 a second owning Mission site | [How concepts relate](#how-concepts-relate) |
-
-## C. Completion and later Participation history
-
-Given i1 is Completed and the Combat of m1 is fought and m1 becomes Won, a valid resulting state has:
-
-- i1 no longer Active, with an empty Current team, and a1 retained in its Participation history.
-- s1 Concluded, and m1 still its Mission; m1 now has an empty Current team, and a2 has m1 in its Participation history; the Turn report holds the Combat report of m1's Combat; no Assignment of a2 references m1.
-- a1 and a2 each with an Assignment that references neither i1 nor m1.
-
-This satisfies [Current versus historical teams](#current-versus-historical-teams) and [How concepts relate](#how-concepts-relate). Assigning a1 to another Investigation does not rewrite the Participation history of i1, and assigning a2 elsewhere does not rewrite the Participation history of m1. A later Investigation of L1 has a new Instance ID ([Campaign instance identity scope](#campaign-instance-identity-scope)). This fixture does not choose the replacement Assignments or Turn timing.
-
 ## D. Initial Campaign state
 
 Given a new Campaign created from a Game build that supplies exactly two FactionArchetypes, F1 and F2, the initial Campaign state contains exactly one Agency, exactly two Factions, one with Archetype F1 and one with Archetype F2, and no Mission sites, no Missions, and no Enemies, under [Initial Campaign state](#initial-campaign-state). An initial Campaign state with a second Faction of Archetype F1, with no Faction of Archetype F2, or with any Mission site, is invalid.

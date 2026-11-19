@@ -722,9 +722,9 @@ This example exercises [Adding Agents](#adding-agents). During Turn 3, with Dev 
 
 ## Agent status and Assignment structure
 
-This example exercises [Agent status](#agent-status) and [Assignment and Agent status](#assignment-and-agent-status). Given the fixture of [A. Valid relationships](domain-model.md#a-valid-relationships) in Domain Model, with a1 and a2 both Serving, the fixture satisfies both sections: each Agent has exactly one Assignment, an Investigation for a1 and Deployed on m1 for a2, and one Agent status, In transit for a1 and At assignment for a2, and each has positive current health.
+This example exercises [Agent status](#agent-status) and [Assignment and Agent status](#assignment-and-agent-status). Given Serving Agents a1, whose Assignment is Active Investigation i1 with Current team {a1}, In transit, and a2, Deployed on Mission m1 with Current team {a2}, At assignment, each with current health 10 of base health 10 and exhaustion 0, this state satisfies both sections: each Agent has exactly one Assignment and one Agent status, and each has positive current health.
 
-Each row independently changes that fixture and describes an invalid state.
+Each row independently changes that state and describes an invalid state.
 
 | Change | Violation |
 | --- | --- |
@@ -734,8 +734,6 @@ Each row independently changes that fixture and describes an invalid state.
 | Make a2 Deployed on m1 and In transit |
 | Make a1 Recovering while its Assignment is an Investigation | [Agent status](#agent-status) | [Assignment and Agent status](#assignment-and-agent-status) |
 | Set the exhaustion of a1 to −1 | [Attribute ranges](#attribute-ranges) |
-
-After [C. Completion and later Participation history](domain-model.md#c-completion-and-later-participation-history) in Domain Model, a1 and a2 are still Serving, each with one new valid Assignment and Agent status, which satisfies [Agent status](#agent-status).
 
 ## GDR validation
 

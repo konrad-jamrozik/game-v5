@@ -534,40 +534,6 @@ This example exercises [Agency creation](#agency-creation), [Campaign configurat
 
 Campaign configuration holds Starting money 500 and Starting funding 20 for the whole Campaign. A Campaign created with a Preset edit of Starting money 800 starts with money 800 instead; a Preset edit of Starting money −1 or 2.5 is rejected and changes nothing.
 
-## The first three Advance turns
-
-This example exercises [Agency income](#agency-income), [Upkeep](#upkeep), [Hiring Agents](#hiring-agents), [Projected income and upkeep](#projected-income-and-upkeep), and [Turn series of money](#turn-series-of-money). It starts from the Campaign under [Campaign creation](#campaign-creation), with Agents a1, a2, a3, and a4.
-
-**Turn 1:** The player calls `assignAgents([a1, a2], Contracting)` and `assignAgents([a3], Training)`; a4 stays on Standby. a1, a2, and a3 are In transit, so projected income stays 20 + 30 × 0 = 20 and projected upkeep stays 10 × 4 = 40. Money is 500 when the player ends the Turn.
-
-| Step of the Advance turn ending Turn 1 | What happens | Money |
-| --- | --- | --- |
-| Transit | a1, a2, and a3 arrive. | 500 |
-| Agency income | C = 0, because a1 and a2 were In transit in the Turn-end state: 20 + 30 × 0 = 20. | 520 |
-| Upkeep | S = 4: 10 × 4 = 40. | 480 |
-| Turn close | Money at the end of turn for Turn 1 is 500; Money at the start of turn for Turn 2 is 480. | 480 |
-
-**Turn 2:** The player calls `hireAgent()`: money 480 is at least 50 and 4 Serving Agents are fewer than the Agent cap 20, so money becomes 430 and Agent a5 is created on Standby, In transit. Projected income is 20 + 30 × 2 = 80, from a1 and a2, and projected upkeep is 10 × 5 = 50.
-
-| Step of the Advance turn ending Turn 2 | What happens | Money |
-| --- | --- | --- |
-| Transit | a5 arrives. | 430 |
-| Agency income | C = 2: 20 + 30 × 2 = 80. | 510 |
-| Upkeep | S = 5, including a5, which arrived in this Advance turn: 10 × 5 = 50. | 460 |
-| Training | a3 gains base skill, under [Training growth](agents-spec.md#training-growth); money is unaffected. | 460 |
-| Turn close | Money at the end of turn for Turn 2 is 430; Money at the start of turn for Turn 3 is 460. | 460 |
-
-**Turn 3:** The player calls `assignAgents([a5], Contracting)` and `assignAgents([a1], Standby)`. Only a2 is on Contracting, At assignment, so projected income is 20 + 30 × 1 = 50; projected upkeep is 10 × 5 = 50.
-
-| Step of the Advance turn ending Turn 3 | What happens | Money |
-| --- | --- | --- |
-| Transit | a1 and a5 arrive. | 460 |
-| Agency income | C = 1, a2 only, because a5 has just arrived and a1 is no longer on Contracting: 20 + 30 × 1 = 50. | 510 |
-| Upkeep | S = 5: 10 × 5 = 50. | 460 |
-| Turn close | Money at the end of turn for Turn 3 is 460; Money at the start of turn for Turn 4 is 460. | 460 |
-
-In Turn 4, Money at the start of turn holds 500, 480, 460, and 460 for Turns 1 to 4, and Money at the end of turn holds 500, 430, and 460 for Turns 1 to 3. Projected income in Turn 4 is 20 + 30 × 2 = 80, from a2 and a5. In every Advance turn above, the Agency income and Upkeep steps applied exactly the projected income and projected upkeep of the Turn-end state.
-
 ## Contracting income and effective skill
 
 This example exercises [Agency income](#agency-income) and [Projected income and upkeep](#projected-income-and-upkeep), with [Work exhaustion](agents-spec.md#work-exhaustion) and [Forced return](agents-spec.md#forced-return) in Agents. The Turn-end state has funding 20 and three Agents on Contracting, At assignment, each with current health 30 of 30: c1 with base skill 100 and exhaustion 10; c2 with base skill 100 and exhaustion 47; and c3 with base skill 150 and exhaustion 69.

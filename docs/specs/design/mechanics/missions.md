@@ -591,7 +591,7 @@ This example exercises [Order independence](#order-independence) and [Consequenc
 
 ## Structure of a Deployed Mission site and its Mission
 
-This example exercises [Mission site properties](#mission-site-properties) and [Mission properties](#mission-properties). The fixture of [A. Valid relationships](domain-model.md#a-valid-relationships) in Domain Model, in which Mission site s1 and its Mission m1 are Deployed, m1 with the Team sent and Current team {a2}, satisfies every invariant under [Mission site properties](#mission-site-properties) and [Mission properties](#mission-properties). Each row independently changes that fixture and describes an invalid state.
+This example exercises [Mission site properties](#mission-site-properties) and [Mission properties](#mission-properties). A state in which Initiative Mission site s1 and its Mission m1 are Deployed, m1 with the Team sent {a2} and Current team {a2}, and Agent a2 is Deployed on m1, satisfies every invariant under [Mission site properties](#mission-site-properties) and [Mission properties](#mission-properties). Each row independently changes that state and describes an invalid state.
 
 | Change | Invariant violated |
 | --- | --- |

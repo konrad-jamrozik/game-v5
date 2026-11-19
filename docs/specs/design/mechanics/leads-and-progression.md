@@ -299,12 +299,6 @@ Initial state: Turn 60. A Mission site s6 from `raid_hq`, created by an Investig
 
 Result: `test_lead` has no Won Mission, no Active Mission site, and no Deployed Mission. It is not available, because condition 4 does not hold; its only Blocking condition is 4. No Committed state shows s7 Active after that Advance turn.
 
-## Two Leads requiring the same MissionSiteArchetype
-
-This example exercises [Prerequisites](#prerequisites) and [What changes availability](#what-changes-availability). It uses two test Leads `test_lead_a` and `test_lead_b`, each with `faction` `red_dawn`, `required_progress` 1, `requires` `mission_won` `apprehend_member`, and `on_completion` `create_mission_site` `apprehend_member`.
-
-Initial state: the initial Campaign state. Both test Leads are blocked by condition 1 only. When the Advance turn in which m1, the Mission at s1 from member, becomes Won ends, both prerequisites hold in that same Committed state, because s1 is from `apprehend_member` and targets Red Dawn. Both test Leads, and safehouse, are discovered and available at once, and the Turn report of that Advance turn lists all three and can have Active Investigations at the same time. An Investigation of `test_lead_a` that is Active does not change any condition of `test_lead_b`.
-
 ## GDR validation
 
 This example exercises [Lead GDR validation](#lead-gdr-validation). Each row independently changes the Bootstrap GDRs; the result is that the Game build is defective and no Campaign is created from it.
