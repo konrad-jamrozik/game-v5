@@ -17,6 +17,15 @@ These are the Game designer's working notes on which Leads can be investigated a
   - **Until the Lead's Faction is Eliminated**, when the resulting Mission is repeatable: the Lead stays repeatable after a Won Mission.
 - More advanced constraints may follow, e.g. the Mission stops being available for some other reason.
 
+## What decides whether the Mission site can exist
+
+Recorded on 2026-11-18.
+
+- Whether a Lead's Mission site can be brought into existence at all may depend on arbitrarily complex conditions on the Campaign, combined with "and", "or", and "not", e.g. the Agency possesses some artifact and it was not stolen, or the Agency got some secret information from somewhere.
+- While the Mission site can be brought into existence, the Lead leading to it must be repeatable until the resulting Mission is Won.
+- The exception is a very special Mission that the player gets only one attempt at: its Lead is not repeatable after the first Mission site, whatever becomes of that Mission site.
+- Quite complex logic is therefore expected around Lead repeatability, more than the fixed conditions of today's [Lead availability](../specs/design/mechanics/leads-and-progression.md#lead-availability).
+
 ## Leads that can be Completed at most once
 
 - Such a Lead can be investigated until it is Completed, and then never again.
