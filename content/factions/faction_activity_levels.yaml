@@ -1,3 +1,11 @@
+id: dormant
+type: FactionActivityLevel
+name: Dormant
+lasts_turns: [15, 30]
+operation_every_turns: null # no operations
+operation_level_weights: {}
+next: faint
+---
 id: faint
 type: FactionActivityLevel
 name: Faint

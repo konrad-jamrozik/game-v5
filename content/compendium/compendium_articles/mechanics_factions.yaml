@@ -9,6 +9,8 @@ body: >-
 formulas:
   - label: 'Activity level'
     text: 'Sets how often a Faction carries out operations and how severe they are; it rises over time and never falls'
+  - label: 'Dormant'
+    text: 'A Faction at a level without operations carries out none until it grows more active'
   - label: 'Timing'
     text: 'When a Faction will next grow more active or carry out an operation is hidden'
   - label: 'Eliminating a Faction'

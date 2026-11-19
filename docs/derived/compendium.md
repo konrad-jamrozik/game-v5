@@ -185,6 +185,7 @@ Factions are the hostile groups you are fighting. Each acts on its own, grows mo
 | Formulas |  |
 | --- | --- |
 | Activity level | Sets how often a Faction carries out operations and how severe they are; it rises over time and never falls |
+| Dormant | A Faction at a level without operations carries out none until it grows more active |
 | Timing | When a Faction will next grow more active or carry out an operation is hidden |
 | Eliminating a Faction | Win a [Mission](#missions) whose reward is the end of the Faction, e.g. the raid on its headquarters |
 | Once eliminated | No more operations; its open [Mission sites](#mission-sites) are cancelled and its [Leads](#leads) are archived |
@@ -628,7 +629,7 @@ A ruthless cult that trades in fear and silence. Follow its members back to its 
 | `black_lotus`            | FactionArchetype |
 | ------------------------ | ---------------- |
 | `name`                   | `Black Lotus`    |
-| `initial_activity_level` | `faint`          |
+| `initial_activity_level` | `dormant`        |
 
 ### Exalt
 
@@ -639,7 +640,7 @@ A secretive cult that hides behind charity and patronage while it buys influence
 | `exalt`                  | FactionArchetype |
 | ------------------------ | ---------------- |
 | `name`                   | `Exalt`          |
-| `initial_activity_level` | `faint`          |
+| `initial_activity_level` | `dormant`        |
 
 ### Red Dawn
 

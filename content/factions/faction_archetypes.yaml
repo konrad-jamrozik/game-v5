@@ -6,9 +6,9 @@ initial_activity_level: faint
 id: exalt
 type: FactionArchetype
 name: Exalt
-initial_activity_level: faint # game-ts: Dormant
+initial_activity_level: dormant
 ---
 id: black_lotus
 type: FactionArchetype
 name: Black Lotus
-initial_activity_level: faint # game-ts: Dormant
+initial_activity_level: dormant

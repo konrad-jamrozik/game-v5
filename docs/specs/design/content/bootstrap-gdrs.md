@@ -36,12 +36,12 @@ The Bootstrap GDRs keep every kind of GDR the [Game concepts](../mechanics/domai
 | Enemy and [Combat](../mechanics/domain-model.md#combat) | Nine EnemyArchetypes, seven Weapons, and one parameter GDR | 17 |
 | Agent recovery | One parameter GDR | 1 |
 | Economy and upgrades | One parameter GDR and eight [Upgrades](../mechanics/economy-and-upgrades.md#glossary) | 9 |
-| Faction | Three FactionArchetypes, seven [Faction activity levels](../mechanics/factions.md#glossary), and six [Faction operation levels](../mechanics/factions.md#glossary) | 16 |
+| Faction | Three FactionArchetypes, eight [Faction activity levels](../mechanics/factions.md#glossary), and six [Faction operation levels](../mechanics/factions.md#glossary) | 17 |
 | Panic and endings | One parameter GDR | 1 |
 | [Compendium article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary), 25 [Mechanics articles](../mechanics/compendium.md#glossary), and one [Subject article](../mechanics/compendium.md#glossary) about each of 56 other Bootstrap GDRs | 87 |
 | [Background artwork](../ui/visual-design.md#glossary) | Three BackgroundArtworks | 3 |
 | [Soundtrack](../ui/music.md#glossary) | One parameter GDR | 1 |
-| **Total** |  | 171 |
+| **Total** |  | 172 |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
 
@@ -171,8 +171,9 @@ Type owner: [Factions](../mechanics/factions.md).
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
 | `red_dawn` | FactionArchetype | Archetype | The Faction Red Dawn: its name and its initial Faction activity level, `faint`. |
-| `exalt` | FactionArchetype | Archetype | The Faction Exalt: its name and its initial Faction activity level, `faint`. |
-| `black_lotus` | FactionArchetype | Archetype | The Faction Black Lotus: its name and its initial Faction activity level, `faint`. |
+| `exalt` | FactionArchetype | Archetype | The Faction Exalt: its name and its initial Faction activity level, `dormant`. |
+| `black_lotus` | FactionArchetype | Archetype | The Faction Black Lotus: its name and its initial Faction activity level, `dormant`. |
+| `dormant` | FactionActivityLevel | Calculation parameter | A level without operations: how long it lasts and the next level, `faint`. |
 | `faint` | FactionActivityLevel | Calculation parameter | How long the level lasts, how often an operation occurs, the weight of each Faction operation level, and the next level, `emerging`. |
 | `emerging`, `active`, `expanding`, `escalating`, `war` | FactionActivityLevel | Calculation parameter | As `faint`; each is the next level of the one before it, and the next level of `war` is `total_war`. |
 | `total_war` | FactionActivityLevel | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level. |
@@ -245,7 +246,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file, and the on
 | `content/combat/combat_parameters.yaml` | CombatParameters | `combat_parameters` |
 | `content/agent-recovery/recovery_parameters.yaml` | RecoveryParameters | `recovery` |
 | `content/factions/faction_archetypes.yaml` | FactionArchetype | `red_dawn`, `exalt`, `black_lotus` |
-| `content/factions/faction_activity_levels.yaml` | FactionActivityLevel | `faint`, `emerging`, `active`, `expanding`, `escalating`, `war`, `total_war` |
+| `content/factions/faction_activity_levels.yaml` | FactionActivityLevel | `dormant`, `faint`, `emerging`, `active`, `expanding`, `escalating`, `war`, `total_war` |
 | `content/factions/faction_operation_levels.yaml` | FactionOperationLevel | `operation_level_1`, `operation_level_2`, `operation_level_3`, `operation_level_4`, `operation_level_5`, `operation_level_6` |
 | `content/panic-and-endings/ending_parameters.yaml` | EndingParameters | `endings` |
 | `content/compendium/compendium_articles/<id>.yaml` | CompendiumArticle | The 87 GDRs under [Compendium GDRs](#compendium-gdrs), each in a file named after its identifier, e.g. `content/compendium/compendium_articles/mechanics_combat.yaml` |
@@ -300,7 +301,6 @@ The Turn and Panic start from values that no GDR supplies: the Turn under [Turn 
 
 - TODO (later): Faction suppression after a Won Mission, under [Factions GDRs](#factions-gdrs).
 - TODO (later): Initiative Mission sites of game-ts levels 3 to 7, and the interrogation Leads between them, under [Missions GDRs](#missions-gdrs).
-- TODO (later): The Faction activity level Dormant, under [Factions GDRs](#factions-gdrs).
 - TODO (later): Partial success of a Lost Mission, under [Consequences](../mechanics/missions.md#consequences) in Missions.
 - TODO (later): The Leads Criminal organizations, Deep state, and Peace on Earth, and Faction discovery through a profile Lead, under [Leads and Progression GDRs](#leads-and-progression-gdrs).
 
@@ -324,7 +324,7 @@ Most Bootstrap GDR values are copied from game-ts. The following table is exhaus
 | Panic change of Faction operation levels 1 to 5 | 0.02%, 0.1%, 0.3%, 1%, and 3% when ignored or lost | 1, 2, 4, 8, and 15 percentage points when ignored or lost | Panic is a whole number of percentage points, and at the game-ts scale it could not end a Campaign. |
 | `operation_level_6` when ignored or lost | Panic is set to 100% | A Panic increase of 100 percentage points | The same result through the ordinary Panic rule; a Panic reduction of the same Advance turn is subtracted from it, so a Campaign at Panic 0 that also wins a Panic reduction in that Advance turn survives. |
 | Panic reduction of Initiative Mission site wins | 0.05% and 0.1% | None for `apprehend_member` and 1 percentage point for `raid_safehouse` | Keeps wins and losses on the same scale. |
-| Initial Faction activity level of `exalt` and `black_lotus` | Dormant, from which a faction carries out no operations | `faint`, as `red_dawn` | The Bootstrap GDRs supply no level without operations, under [TODOs](../mechanics/factions.md#todos) in Factions; every Faction therefore operates from the first Turn. |
+| First operation of a Faction that leaves `dormant` | Its countdown starts in the turn it wakes and is counted down in that same turn | Its countdown starts in the Advance turn it wakes and is first counted down in the next | An operation never happens in the Advance turn that sets its countdown. |
 | Victory | Completing the Lead Peace on Earth | Every Faction eliminated | One Lead fewer, and the condition does not depend on a specially named GDR. |
 | Faction discovery | Through a profile Lead | Every Faction is known from the start | Removes the profile and interrogation Leads. |
 | `exhaustion_free_points` | 5 | 30 | Work now raises exhaustion every Turn, so a longer free amount lets an Agent work for many Turns before it weakens. |
