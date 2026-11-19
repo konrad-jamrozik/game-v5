@@ -33,6 +33,8 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 | `S6 SCNP+Dark+DBass&BowedCymbals B.mp3` | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |  |
 | `S6 SCNP+Dark+Piano&Cello A.mp3` | Unseen Approach var1 | Suno v6 |  |
 | `S6 SCNP+Dark+Piano&Cello B.mp3` | Unseen Approach var2 | Suno v6 |  |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |  |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |  |
 | `V3A-S5 SCNP.mp3` | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |  |
 | `V3A-S5 SCNP+Dark.mp3` | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |  |
 | `V3A-S5 SCNP+Dark+Cello&BClar.mp3` | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |  |
@@ -52,7 +54,7 @@ e.g. `EL-M2.5 XCOM+TFTD+NoPulse B` is the second track that ElevenLabs Music v2.
 
 - **Source and model:** where the song was generated and, joined by a hyphen, the model, from `source` and `model`. A source with no recorded model is its code alone, e.g. `EL`.
 - **Stem:** the code of `meta_prompt_taxonomy.stem`.
-- **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`. An adjustment that only limits the prompt's length, e.g. "kept short" or "fit within v03ai's 1,000 characters", has no code, since it says nothing about the music; neither has a source setting, e.g. Suno's sliders or Exclude styles, since it is not a request to the chatbot. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`; when they are too many to join readably, the code is their count instead, e.g. `7Instr`. A code appears once even when two adjustments share it.
+- **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`. An adjustment that only limits the prompt's length, e.g. "kept short" or "fit within v03ai's 1,000 characters", has no code, since it says nothing about the music; neither has a source setting, e.g. Suno's sliders or Exclude styles, since it is not a request to the chatbot, unless the Game designer names it as an adjustment, e.g. `AllowHeroAggr` for styles taken out of the Exclude styles. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`; when they are too many to join readably, the code is their count instead, e.g. `7Instr`. A code appears once even when two adjustments share it.
 - **Take:** tells apart the tracks that would otherwise get the same name, e.g. the two variations of one generation, or two generations of the same prompt with different lengths, in the order of `created`. The tracks kept in the Soundtrack are lettered `A`, `B`, `C` and on, so the Player only ever sees an unbroken run of letters; a kept track that no other kept track shares its name with gets no letter. The excluded tracks are numbered apart, `X1`, `X2`, `X3` and on, even when alone, e.g. `EL-M2.5 XCOM+Var X1`.
 - **Renaming on exclusion:** excluding a track renames it and re-letters the kept tracks of its name. E.g., of tracks `A` to `F`, excluding `C` and `E` makes them `X1` and `X2`, and `D` and `F` become `C` and `D`. Nothing keeps an old name, so every mention of a renamed track changes with it: its file and record, the `file`, `variation_of`, `same_prompt_as`, and `continues_from` of every record, the notes, the GDR `music`, and this README.
 
@@ -91,6 +93,8 @@ The codes are these lists; a new source, model, stem, or adjustment adds its cod
 | `Cello&DBass` | instruments: cello + double bass |
 | `DBass&BowedCymbals` | instruments: double bass + bowed cymbals |
 | `7Instr` | instruments: felt piano + violins + cello + double bass + bass clarinet + muted trombone + bowed cymbals |
+| `NoMIDI` | no retro MIDI or Amiga-era synth sound |
+| `AllowHeroAggr` | allow heroic and aggressive styles: synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles |
 
 ## Track records
 
@@ -146,6 +150,26 @@ The files named `V3A-S5 …` are from Suno v5, made via [v03ai](https://v03ai.co
 ## Tracks from Suno v6
 
 The files named `S6 …` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
+
+### Reading Suno song data
+
+A Suno song page, e.g. `https://suno.com/song/<id>`, renders its data in the browser, so a web fetch of the page shows none of it. Its data is instead the clip's JSON from `https://studio-api.prod.suno.com/api/clip/<id>`, which needs no sign-in, e.g. `curl -s -o clip.json "https://studio-api.prod.suno.com/api/clip/<id>"`. A record takes from it:
+
+| Clip JSON field | Record key |
+| --- | --- |
+| `title` | `original_title`, which must match the take's name |
+| `major_model_version` and `model_name`, e.g. `v6` and `chirp-hawk` | `model`, e.g. `v6 (chirp-hawk)` |
+| `created_at`, in UTC | `created`, converted to Pacific time |
+| `display_tags`, comma-separated | `tags`, as a list |
+| `metadata.duration`, in seconds | `length`, as `m:ss` |
+| `metadata.tags` | `prompt`: the final Styles text, as Suno stored it |
+| `metadata.negative_tags` | `exclude_styles`, without its leading spaces |
+| `metadata.make_instrumental` | `instrumental` |
+| `metadata.control_sliders.style_weight` | `control_sliders.suno_style_influence` |
+| `metadata.control_sliders.aug_creativity` | `control_sliders.suno_variety`, by its number |
+| `metadata.control_sliders.weirdness_constraint` | `control_sliders.suno_weirdness`; Suno omits it at the default of 50%, i.e. `0.5` |
+
+`batch_index` gives each song's place in its generation, `0` for the first, which takes the earlier letter.
 
 ## Analyzing track contents
 

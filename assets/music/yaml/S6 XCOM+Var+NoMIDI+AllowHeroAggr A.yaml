@@ -1,0 +1,47 @@
+file: 'S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3'
+source: Suno v6
+original_title: 'S6 XCOM+Var+NoMIDI+AllowHeroAggr A'
+song_url: https://suno.com/song/af9ac107-bfa1-47d7-817a-88e7f3336a87
+model: 'v6 (chirp-hawk)'
+created: '2026-11-18 19:26:39'
+tags: [electronic, ambient, science-fiction]
+length: '3:09'
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
+  adjustments:
+    - 'more variety, less monotonous'
+    - 'no retro MIDI or Amiga-era synth sound'
+    - 'allow heroic and aggressive styles: synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles'
+prompt_from:
+  tool: Claude Code
+  continues_from: 'EL-M2.5 XCOM+Var+Bare+Slow B.opus'
+  meta_prompt: |-
+    Take the prompt for "EL-M2.5 XCOM+Var+Bare+Slow B" and shorten it to Suno 1000 char limit and propose other Suno settings.
+
+    Also update the prompt so it doesn't have these adjustments
+
+        - 'slower (55–65 BPM), darker, less intense; never cheery'
+        - 'kept short'
+    Also remov
+     Authentic retro MIDI and Amiga-era synthesizer sound.
+  produced_prompt: |-
+    Dark, ominous, atmospheric 1990s science-fiction strategy game soundtrack, inspired by the original X-COM: UFO Defense (1994).
+
+    Eerie electronic music with haunting minor-key melodies, deep ominous harmonies, unsettling dissonance, and mysterious alien textures.
+
+    Cold, sinister, hypnotic, and deeply unsettling. Evoke paranoia, isolation, dread, and the constant threat of an unknown extraterrestrial enemy.
+
+    Gradual melodic and atmospheric evolution, with subtle musical variety and an unpredictable sense of danger.
+
+    Instrumental background music for extended strategic gameplay. Vintage 1990s PC game aesthetic, emphasizing psychological tension and fear of the unknown rather than action, heroism, or excitement.
+prompt: |-
+  1990s science-fiction strategy game soundtrack, instrumental; vintage PC-era electronic production with cold, grainy textures; uneven measured ostinato, slow and hypnotic; minor-key analog synth pulses, deep dissonant drones, sparse haunting motifs, and shifting alien tonal textures that evolve gradually.
+exclude_styles: |-
+  Vocals, singing, choir, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, chiptune, 8-bit
+control_sliders:
+  suno_weirdness: 0.5
+  suno_style_influence: 0.7
+  suno_variety: '2 - High / Distinct styles'
+notes: |-
+  `produced_prompt` is the prompt of EL-M2.5 XCOM+Var+Bare+Slow B without what its Slow adjustment added, i.e. the slow-tempo paragraph and "Serious and threatening, never cheerful, uplifting, or comforting.", and without the sentence "Authentic retro MIDI and Amiga-era synthesizer sound."; the rest is word for word. `prompt` is the Styles text Suno stored, not the one pasted in: Suno's Variety at High (`suno_variety: '2 - High / Distinct styles'`, stored by Suno as `aug_creativity: 2`) rewrote it, differently for each variation. The Game designer edited Claude Code's draft before generating: from the draft's Weirdness 40% to 50% and Variety Off to High, and taking synthwave, epic orchestral, aggressive drums, and heroic brass out of the Exclude styles of S6 SCNP+7Instr plus chiptune and 8-bit, which the AllowHeroAggr adjustment names; the Game designer also dropped the Bare adjustment from the track's name. Suno's clip data holds no Weirdness value, as it omits the default of 50%; `suno_weirdness` is the value the Game designer set. `created`, `length`, `model`, `tags`, Style influence, and Variety come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time.
