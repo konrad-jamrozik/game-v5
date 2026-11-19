@@ -1,0 +1,30 @@
+file: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3'
+source: Suno v6
+original_title: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space B'
+song_url: https://suno.com/song/d08a8576-3b68-456a-8547-2e775decb863
+model: 'v6 (chirp-hawk)'
+created: '2026-11-19 00:48:51'
+variation_of: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3'
+tags: [science-fiction, instrumental, cinematic]
+length: '2:37'
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
+  adjustments:
+    - 'allow epic styles: choir, synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles'
+    - 'no synth sounds or drones'
+    - 'slower (55–65 BPM), darker, less intense; never cheery'
+    - 'a modern, cold space and high-tech atmosphere instead of military'
+prompt_from:
+  tool: Claude Code
+  same_prompt_as: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3'
+prompt: |-
+  Contemporary science-fiction game soundtrack, instrumental; slow, restrained 65 BPM pulse, sparse and wide with deep reverberation and deliberate silences; glassy string harmonics, dissonant clusters, bowed metal, low cello and double bass sustains, muted brass swells, sonar-like pings, faint radio static, precise ticking percussion and distant sparse military snare.
+exclude_styles: |-
+  Vocals, singing, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, synthesizer, chiptune, 8-bit, retro, lo-fi, military march, fast tempo
+control_sliders:
+  suno_weirdness: 0.5
+  suno_style_influence: 0.7
+  suno_variety: '2 - High / Distinct styles'
+notes: |-
+  `prompt` is the Styles text Suno stored for this variation, which Suno's Variety at High rewrote from the prompt pasted in, as S6 XCOM+AllowEpic+NoSynth+Slow+Space A records in `prompt_from.produced_prompt`. `created`, `length`, `model`, `tags`, Style influence, and Variety come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time. `suno_weirdness` is the value the Game designer set, which Suno's clip data omits at its default of 50%.

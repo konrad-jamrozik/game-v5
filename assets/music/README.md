@@ -33,6 +33,8 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 | `S6 SCNP+Dark+DBass&BowedCymbals B.mp3` | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |  |
 | `S6 SCNP+Dark+Piano&Cello A.mp3` | Unseen Approach var1 | Suno v6 |  |
 | `S6 SCNP+Dark+Piano&Cello B.mp3` | Unseen Approach var2 | Suno v6 |  |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | S6 XCOM+AllowEpic+NoSynth+Slow+Space A | Suno v6 |  |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |  |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |  |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |  |
 | `V3A-S5 SCNP.mp3` | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |  |
@@ -95,6 +97,9 @@ The codes are these lists; a new source, model, stem, or adjustment adds its cod
 | `7Instr` | instruments: felt piano + violins + cello + double bass + bass clarinet + muted trombone + bowed cymbals |
 | `NoMIDI` | no retro MIDI or Amiga-era synth sound |
 | `AllowHeroAggr` | allow heroic and aggressive styles: synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles |
+| `AllowEpic` | allow epic styles: choir, synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles |
+| `NoSynth` | no synth sounds or drones |
+| `Space` | a modern, cold space and high-tech atmosphere instead of military |
 
 ## Track records
 

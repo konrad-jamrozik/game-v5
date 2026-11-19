@@ -1,0 +1,41 @@
+file: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3'
+source: Suno v6
+original_title: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space A'
+song_url: https://suno.com/song/b69361c4-340c-4e8a-91cf-17c72f44b11d
+model: 'v6 (chirp-hawk)'
+created: '2026-11-19 00:48:51'
+tags: [soundtrack, atmospheric, science-fiction]
+length: '2:24'
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
+  adjustments:
+    - 'allow epic styles: choir, synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles'
+    - 'no synth sounds or drones'
+    - 'slower (55–65 BPM), darker, less intense; never cheery'
+    - 'a modern, cold space and high-tech atmosphere instead of military'
+prompt_from:
+  tool: Claude Code
+  continues_from: 'S6 XCOM+AllowEpic+NoSynth+ModMil.mp3'
+  meta_prompt: |-
+    So the tracks from
+
+    S6 XCOM+NoDrones+AllowEpic+NoSynth+ModMil
+
+    Ended up being too fast and little bit too generic military. I want to slow down a bit and refocus on the space / techno atmoshphere. Propose another yaml
+  produced_prompt: |-
+    Dark, atmospheric modern science-fiction tactical strategy game soundtrack, a contemporary reimagining of X-COM: UFO Defense, set in a high-tech orbital command center tracking alien craft in deep space. Cold, vast, and technological: glassy string harmonics, bowed metal, low cello and double bass sustains, muted brass swells, sonar-like pings, faint radio static, and precise ticking percussion like instruments on a console. Military snare only distant and sparse. Haunting minor-key melodies and unsettling dissonant string clusters.
+
+    Create an atmosphere of paranoia, isolation, mystery, and constant extraterrestrial threat. Disciplined, cold, weightless, and deeply unsettling, with restrained melodic development and an unpredictable sense of danger. Slow tempo, around 65 BPM, sparse arrangement, wide reverberant space, deliberate silences.
+
+    Emphasize psychological tension and the fear of the unknown rather than action or heroism.
+prompt: |-
+  Dark, atmospheric modern science-fiction tactical strategy game soundtrack; glassy string harmonics drift between sonar-like pings, with bowed metal, low cello and double bass sustains, muted brass swells, faint radio static, precise ticking percussion and distant, sparse military snare. Around 65 BPM, haunting minor-key melodies develop slowly beneath unsettling dissonant string clusters. A sparse, disciplined arrangement leaves deliberate silences in wide reverberant space; restrained melodic turns heighten paranoia, isolation and mystery. Instrumental.
+exclude_styles: |-
+  Vocals, singing, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, synthesizer, chiptune, 8-bit, retro, lo-fi, military march, fast tempo
+control_sliders:
+  suno_weirdness: 0.5
+  suno_style_influence: 0.7
+  suno_variety: '2 - High / Distinct styles'
+notes: |-
+  Claude Code rewrote the prompt of S6 XCOM+AllowEpic+NoSynth+ModMil on the request in `meta_prompt`, as the Game designer found its songs too fast and too generic military; the request names that track by its earlier draft name, S6 XCOM+NoDrones+AllowEpic+NoSynth+ModMil. Slow set the tempo to around 65 BPM instead of "slow to moderate". Space set the scene in an orbital command center and replaced the staccato string ostinatos, tight snare rolls, and taiko hits with glassy string harmonics, bowed metal, sonar-like pings, radio static, and console-like ticking, keeping the snare only distant and sparse; Space supersedes ModMil, which is therefore not listed. In the Exclude styles, Claude Code took out electronic, so that the high-tech textures can sound, keeping synthesizer for NoSynth, and added military march and fast tempo. The Game designer edited Claude Code's draft before generating: from the draft's Variety Off to High, and dropping the take letter from the draft's name. `prompt` is the Styles text Suno stored, not the one pasted in: Suno's Variety at High (`suno_variety: '2 - High / Distinct styles'`, stored by Suno as `aug_creativity: 2`) rewrote it, differently for each variation. Suno's clip data holds no Weirdness value, as it omits the default of 50%; `suno_weirdness` is the value the Game designer set. `created`, `length`, `model`, `tags`, Style influence, and Variety come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time.
