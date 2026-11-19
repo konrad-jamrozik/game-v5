@@ -19,6 +19,8 @@ The skill works directly in the main local clone of the Spec repo, e.g. `repos/g
 
 Its own work is exactly these paths: each draft record it writes in `assets/music/yaml/` and the music file of the same name in `assets/music/tracks/`, `assets/music/README.md`, and, for an existing track that gains a take letter, its file, its record, every record that names it, and `content/music/music_parameters.yaml` when it names it.
 
+Outside the repository, the skill also keeps the Game designer's personal music backup, `C:\Users\spawa\OneDrive\personal\projects\ufo_game\music\`, which holds a copy of every track's audio, kept and excluded. Its own `README.md` gives its layout, e.g. one folder per source, such as `suno/` for Suno v6; read it before copying into the backup. The skill only adds and renames files there, never deletes one.
+
 ## Phase 1: Draft
 
 1. **Check the clone.** In the main local clone, run `git fetch origin`, `git branch --show-current`, and `git status --porcelain --untracked-files=all`. Block when:
@@ -50,7 +52,7 @@ Its own work is exactly these paths: each draft record it writes in `assets/musi
    - the prompt and the Exclude styles text, each in its own code block, ready to paste;
    - how many generations to run, and which song to give which title, e.g. the first song `S6 SCNP+Dark+Cello&DBass A`, the second `… B`;
    - to download each song in the format of its `file` and save it under exactly that file name directly in `assets/music/tracks/`;
-   - what to send back: each song's page URL, e.g. its Suno song link, and, for a source whose song page the skill cannot read, the values its README section says come from the source, e.g. the tags, BPM, and length from the ElevenLabs Assets page.
+   - what to send back: each song's page URL, e.g. its Suno song link; each song's final prompt as the source shows it after generation, copied word for word, e.g. the Styles text Suno stored, which Variety may have rewritten differently for each song; and, for a source whose song page the skill cannot read, the values its README section says come from the source, e.g. the tags, BPM, and length from the ElevenLabs Assets page.
 
    End the reply with ⌛ asking the designer to say when the files are in place. When the designer drops a take instead, e.g. a song they do not want to keep, delete its draft record, and re-letter the remaining drafts.
 
@@ -68,7 +70,7 @@ Its own work is exactly these paths: each draft record it writes in `assets/musi
 
    When any file blocks, change nothing, not even for the files that pass, so that the designer fixes the set and confirms again.
 
-4. **Complete the records.** Fill each `TODO` from the source: read each song page the designer sent, e.g. with a web fetch of a Suno song link, and take the rest from what the designer sent; ask for any value still missing. Where the source stored a prompt other than the one pasted in, e.g. Suno's Variety rewrote the Styles text, the stored text becomes `prompt` and the pasted one `prompt_from.produced_prompt`. Correct a drafted setting the designer reports having changed, e.g. a different slider value, and say so in `notes`. Remove the `# DRAFT` line. No `TODO` may remain.
+4. **Complete the records.** Fill each `TODO` from the source: read each song page the designer sent, e.g. with a web fetch of a Suno song link, and take the rest from what the designer sent; ask for any value still missing. Always ask the designer for each song's final prompt as the source shows it, unless they already sent it, and never assume the source kept the pasted prompt unchanged. Where the final prompt differs from the one pasted in, e.g. Suno's Variety rewrote the Styles text, the final text becomes `prompt` and the pasted one `prompt_from.produced_prompt`. Correct a drafted setting the designer reports having changed, e.g. a different slider value, and say so in `notes`. Remove the `# DRAFT` line. No `TODO` may remain.
 
 5. **Record the tracks in the README.**
    - Add one table row per file, with its file name, original title, and source, keeping the table in order of file name.
@@ -77,12 +79,14 @@ Its own work is exactly these paths: each draft record it writes in `assets/musi
    - Change nothing else in the README.
    - Format only the README, with `npx oxfmt --write assets/music/README.md`, and review its diff.
 
-6. **Check.** Run `npm run check`. When it fails only in files the skill did not touch, e.g. another session's half-finished specification, record that for the report and continue. When it fails in the skill's files, fix it. The Git hooks check the whole working tree, so another session's work can still make the commit or push fail in step 7 or 8. Never bypass them with `--no-verify`; when a hook fails, stop and report, leaving the files and README in place and any commit unpushed.
+6. **Back up the audio.** Copy each new file into the music backup, into the folder its README gives for the file's source, e.g. `suno/` for Suno v6, and confirm that each copy is byte-for-byte identical to the file in `assets/music/tracks/`, e.g. by comparing SHA-256 hashes. A source with no folder yet gets one, added to the backup README's Layout. For an existing track that gained or changed its take letter in step 5, rename its file in the backup to match. When the backup folder cannot be reached, e.g. OneDrive is not present on this machine, stop and report before committing anything.
 
-7. **Commit only this work.** Stage exactly the skill's paths: `git add -- <each new file and track record, and each path of a renamed existing track> assets/music/README.md`. Commit with those paths as the pathspec, `git commit -m "<message>" -- <the same paths>`, so that nothing another session staged is committed. The message names the new tracks, e.g. "Add Suno v6 tracks S6 SCNP+Dark+Cello&DBass A and B", and ends with the attribution lines the session requires. Then run `git show --stat HEAD` and confirm that the commit holds only those paths.
+7. **Check.** Run `npm run check`. When it fails only in files the skill did not touch, e.g. another session's half-finished specification, record that for the report and continue. When it fails in the skill's files, fix it. The Git hooks check the whole working tree, so another session's work can still make the commit or push fail in step 8 or 9. Never bypass them with `--no-verify`; when a hook fails, stop and report, leaving the files and README in place and any commit unpushed.
 
-8. **Push** with `git push origin main`. When it is rejected because `origin/main` moved, run `git fetch origin`, and:
-   - when `git status --porcelain --untracked-files=no` prints nothing, run `git rebase origin/main`, rerun step 6, and push again;
+8. **Commit only this work.** Stage exactly the skill's paths: `git add -- <each new file and track record, and each path of a renamed existing track> assets/music/README.md`. Commit with those paths as the pathspec, `git commit -m "<message>" -- <the same paths>`, so that nothing another session staged is committed. The message names the new tracks, e.g. "Add Suno v6 tracks S6 SCNP+Dark+Cello&DBass A and B", and ends with the attribution lines the session requires. Then run `git show --stat HEAD` and confirm that the commit holds only those paths.
+
+9. **Push** with `git push origin main`. When it is rejected because `origin/main` moved, run `git fetch origin`, and:
+   - when `git status --porcelain --untracked-files=no` prints nothing, run `git rebase origin/main`, rerun step 7, and push again;
    - otherwise another session's uncommitted changes stop a rebase; never stash or autostash them. Stop and report that the commit is made but not pushed, and why, and skip Phase 3.
 
    After a push, confirm with `git fetch origin` and `git merge-base --is-ancestor HEAD origin/main`.
@@ -106,6 +110,7 @@ After Phases 2 and 3, tell the designer:
 
 - each new track's file name, with its source and original title, and each file renamed from its download name;
 - each existing track that gained a take letter, with its old and new name, and each new naming code;
+- each file copied into the music backup, with its folder there;
 - the Spec repo commit link, in the form `https://github.com/konrad-jamrozik/game-v5/commit/<full-sha>`, or why the work was not committed or pushed;
 - the Implementation commit link and its old and new Specification baseline, or why the Implementation was not refreshed and the next step for it;
 - every uncommitted or untracked path outside the skill's work that was observed and left untouched, grouped by directory, or that there was none;
