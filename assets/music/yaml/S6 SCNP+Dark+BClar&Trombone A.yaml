@@ -1,4 +1,4 @@
-file: 'Bass clarinet + muted trombone var1.mp3'
+file: 'S6 SCNP+Dark+BClar&Trombone A.mp3'
 source: Suno v6
 original_title: 'Bass clarinet + muted trombone var1'
 song_url: https://suno.com/song/b6fca565-f6e6-47c9-b03a-3a04ce1f264e
@@ -18,7 +18,7 @@ prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
   share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
-  continues_from: 'Unseen Approach var1.mp3'
+  continues_from: 'S6 SCNP+Dark+Piano&Cello A.mp3'
   meta_prompt: |-
     Let's now try, using the same Suno v6 interface
 
@@ -38,4 +38,4 @@ control_sliders:
   style_weight: 0.7
   aug_creativity: 0
 notes: |-
-  `prompt` is the Styles text ChatGPT produced, word for word: Suno's Variety control was Off (`aug_creativity: 0`), as ChatGPT recommended, so Suno stored the text as pasted. The `exclude_styles` and the Weirdness and Style influence sliders are also those ChatGPT recommended; it added heroic brass, big band, and jazz swing to the Exclude styles of Unseen Approach to keep the brass and woodwind from pulling the song toward jazz or orchestral brass.
+  `prompt` is the Styles text ChatGPT produced, word for word: Suno's Variety control was Off (`aug_creativity: 0`), as ChatGPT recommended, so Suno stored the text as pasted. The `exclude_styles` and the Weirdness and Style influence sliders are also those ChatGPT recommended; it added heroic brass, big band, and jazz swing to the Exclude styles of S6 SCNP+Dark+Piano&Cello to keep the brass and woodwind from pulling the song toward jazz or orchestral brass.

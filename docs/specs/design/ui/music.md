@@ -39,9 +39,9 @@ Which files are excluded is content rather than design, so it comes from the Mus
 
 | Property | Meaning |
 | --- | --- |
-| `excluded_tracks` | The files that are not Tracks, each by its file name with its extension, e.g. `Beneath the Grid.opus`. A file it names is never played. A name that matches no file in the directory is allowed, since the Game designer may keep an excluded file's audio elsewhere. |
+| `excluded_tracks` | The files that are not Tracks, each by its file name with its extension, e.g. `EL-M2.5 XCOM+Var B.opus`. A file it names is never played. A name that matches no file in the directory is allowed, since the Game designer may keep an excluded file's audio elsewhere. |
 
-The Track title is the file name without its extension, unchanged, so that the title the Player sees is the name of the file that holds the Track. E.g., the file `Silent Threat Protocol.opus` is the Track titled "Silent Threat Protocol". No two Tracks have the same Track title.
+The Track title is the file name without its extension, unchanged, so that the title the Player sees is the name of the file that holds the Track. E.g., the file `EL-M2.5 XCOM+Var+Bare+Slow B.opus` is the Track titled "EL-M2.5 XCOM+Var+Bare+Slow B". No two Tracks have the same Track title.
 
 # Music settings
 

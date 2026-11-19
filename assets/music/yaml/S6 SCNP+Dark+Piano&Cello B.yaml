@@ -1,11 +1,11 @@
-file: 'Unseen Approach var1.mp3'
+file: 'S6 SCNP+Dark+Piano&Cello B.mp3'
 source: Suno v6
-original_title: 'Unseen Approach var1'
-song_url: https://suno.com/song/d21c736d-38a9-4e91-ad81-502302ff010f
+original_title: 'Unseen Approach var2'
+song_url: https://suno.com/song/3afb7b9b-ff21-4b88-9c8c-d9aa646f3299
 model: 'v6 (chirp-hawk)'
 created: '2026-11-17 19:35'
-tags: [soundtrack, minimalist, intimate]
-length: '3:29'
+tags: [soundtrack, minimalist, hypnotic]
+length: '2:59'
 instrumental: true
 instruments: [muted felt piano, cello, bowed strings]
 meta_prompt_taxonomy:
@@ -18,7 +18,7 @@ prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
   share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
-  continues_from: 'v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3'
+  continues_from: 'V3A-S5 SCNP+Dark+Cello&BClar.mp3'
   meta_prompt: |-
     OK now let's do
 
@@ -34,7 +34,7 @@ prompt_from:
 
     Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no dramatic crescendos, no epic orchestration.
 prompt: |-
-  Soundtrack; instrumental, intimate and restrained; minimalist, gritty mix with resonant low-end, shadowed minor harmonies, subtle dissonance, and slowly evolving layers; very slow hypnotic pulses with understated intensity; deep bass drones and low rumble beneath isolated muted felt piano, sparse percussion, sustained bowed strings, and mournful restrained cello.
+  Soundtrack, instrumental, very slow hypnotic pulse; intimate, gritty, minimalist production with thick resonant low-end, shadowy minor harmonies, subtle dissonance, and slowly evolving layers. Deep bass drones and rumbling underpin sparse percussion, isolated muted felt piano notes, restrained mournful cello, and sustained bowed strings; understated and seamlessly loopable.
 exclude_styles: |-
   Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums
 control_sliders:

@@ -1,9 +1,9 @@
-file: 'Silent Hostile Sector.opus'
+file: 'EL-M2.5 XCOM+Var+Bare+Slow A.opus'
 source: ElevenLabs Music
 original_title: 'Silent Hostile Sector'
 model: 'Music v2.5'
 created: '2026-11-17 00:00:51'
-variation_of: 'Silent Threat Protocol.opus'
+variation_of: 'EL-M2.5 XCOM+Var+Bare+Slow B.opus'
 tags: [electronic, ambient]
 bpm: 119
 length: '4:00'
@@ -20,7 +20,7 @@ prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afb9ab3-67b0-83e8-87db-9d7bf6ab3333
   share_url: https://chatgpt.com/share/6afe2395-cf20-83e8-95e4-6a466299dbfd
-  same_prompt_as: 'Silent Threat Protocol.opus'
+  same_prompt_as: 'EL-M2.5 XCOM+Var+Bare+Slow B.opus'
 prompt: |-
   Dark, ominous, atmospheric 1990s science-fiction strategy game soundtrack, inspired by the original X-COM: UFO Defense (1994).
 
@@ -32,4 +32,4 @@ prompt: |-
 
   Instrumental background music for extended strategic gameplay. Vintage 1990s PC game aesthetic, emphasizing psychological tension and fear of the unknown rather than action, heroism, or excitement.
 notes: |-
-  The generation prompt matches ChatGPT's response exactly. The original response and request are preserved in the track record for Silent Threat Protocol.
+  The generation prompt matches ChatGPT's response exactly. The original response and request are preserved in the track record of EL-M2.5 XCOM+Var+Bare+Slow B.

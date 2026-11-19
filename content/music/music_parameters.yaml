@@ -1,9 +1,9 @@
 id: music
 type: MusicParameters
 excluded_tracks:
-  - Beneath the Grid.opus
-  - Subsurface Directive.opus
-  - Unseen Sector.opus
-  - Unseen Threat Protocol.opus
-  - v03AI UFO 1.mp3
-  - v03AI UFO 2.mp3
+  - EL-M2.5 XCOM+Var B.opus
+  - EL-M2 XCOM+TFTD A.opus
+  - EL-M2.5 XCOM A.opus
+  - EL-M2.5 XCOM B.opus
+  - V3A-S5 XCOM+Var.mp3
+  - V3A-S5 XCOM+Sections+Loop.mp3

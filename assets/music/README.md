@@ -1,38 +1,38 @@
 # Soundtrack
 
-The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification describes. Each `.opus` or `.mp3` file in [`tracks/`](tracks/) is one track, and its title is its file name without the extension, e.g. `tracks/Silent Threat Protocol.opus` is the track titled "Silent Threat Protocol". The record of how each track was made is in [`yaml/`](yaml/), as [Track records](#track-records) describes.
+The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification describes. Each `.opus` or `.mp3` file in [`tracks/`](tracks/) is one track, and its title is its file name without the extension, e.g. `tracks/EL-M2.5 XCOM+Var+Bare+Slow B.opus` is the track titled "EL-M2.5 XCOM+Var+Bare+Slow B". The record of how each track was made is in [`yaml/`](yaml/), as [Track records](#track-records) describes.
 
-The table lists each track with its name under the [Naming scheme](#naming-scheme), its source, and whether it is excluded from the Soundtrack. The files do not carry those names yet: each is still named after the title its source gave it, as the source sections below describe, until the tracks are renamed.
+Every track is named under the [Naming scheme](#naming-scheme), so that its name tells how it was made. The table lists each track with its original title, the title its source gave it, which finds the song in the source; its source; and whether it is excluded from the Soundtrack.
 
 The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yaml`](../../content/music/music_parameters.yaml) decides which tracks are excluded, and the Excluded column mirrors it. An excluded track's audio file is not kept in this repository but in the Game designer's personal backup, outside it; its row in the table, and its track record, stay here.
 
-| File | Name under the naming scheme | Source | Excluded |
+| File | Original title | Source | Excluded |
 | --- | --- | --- | --- |
-| `Abyss Protocol.opus` | `EL-M2 XCOM+TFTD B` | ElevenLabs |  |
-| `Abyssal Tactical Drift.opus` | `EL-M2.5 XCOM+TFTD+NoPulse B` | ElevenLabs |  |
-| `Beneath the Grid.opus` | `EL-M2.5 XCOM+Var B` | ElevenLabs | Yes |
-| `Black Orbit Watch.opus` | `EL-M2.5 XCOM+NoPulse+Geo+Ominous` | ElevenLabs |  |
-| `Depth Signal.opus` | `EL-M2.5 XCOM+TFTD+NoPulse A` | ElevenLabs |  |
-| `Silent Contact.opus` | `EL-M2.5 XCOM+Var C` | ElevenLabs |  |
-| `Silent Contact Protocol.opus` | `EL-M2 XCOM` | ElevenLabs |  |
-| `Silent Hostile Sector.opus` | `EL-M2.5 XCOM+Var+Bare+Slow A` | ElevenLabs |  |
-| `Silent Threat Protocol.opus` | `EL-M2.5 XCOM+Var+Bare+Slow B` | ElevenLabs |  |
-| `Subsurface Directive.opus` | `EL-M2 XCOM+TFTD A` | ElevenLabs | Yes |
-| `Unknown Contact.opus` | `EL-M2.5 XCOM+Var A` | ElevenLabs |  |
-| `Unseen Sector.opus` | `EL-M2.5 XCOM A` | ElevenLabs | Yes |
-| `Unseen Threat Protocol.opus` | `EL-M2.5 XCOM B` | ElevenLabs | Yes |
-| `v03AI UFO 1.mp3` | `V3A-S5 XCOM+Var` | Suno v5 via v03ai | Yes |
-| `v03AI UFO 2.mp3` | `V3A-S5 XCOM+Sections+Loop` | Suno v5 via v03ai | Yes |
-| `v03AI UFO 3 - Scanning Protocol.mp3` | `V3A-S5 SCNP` | Suno v5 via v03ai |  |
-| `v03AI UFO 4 - Scanning Protocol - Dark.mp3` | `V3A-S5 SCNP+Dark` | Suno v5 via v03ai |  |
-| `v03AI UFO 5 - Scanning Protocol - Dark Violin.mp3` | `V3A-S5 SCNP+Dark+Violin` | Suno v5 via v03ai |  |
-| `v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet.mp3` | `V3A-S5 SCNP+Dark+Cello&BClar` | Suno v5 via v03ai |  |
-| `Bass clarinet + muted trombone var1.mp3` | `S6 SCNP+Dark+BClar&Trombone A` | Suno v6 |  |
-| `Bass clarinet + muted trombone var2.mp3` | `S6 SCNP+Dark+BClar&Trombone B` | Suno v6 |  |
-| `Signal Intercept var1.mp3` | `S6 SCNP A` | Suno v6 |  |
-| `Signal Intercept var2.mp3` | `S6 SCNP B` | Suno v6 |  |
-| `Unseen Approach var1.mp3` | `S6 SCNP+Dark+Piano&Cello A` | Suno v6 |  |
-| `Unseen Approach var2.mp3` | `S6 SCNP+Dark+Piano&Cello B` | Suno v6 |  |
+| `EL-M2 XCOM.opus` | Silent Contact Protocol | ElevenLabs |  |
+| `EL-M2 XCOM+TFTD A.opus` | Subsurface Directive | ElevenLabs | Yes |
+| `EL-M2 XCOM+TFTD B.opus` | Abyss Protocol | ElevenLabs |  |
+| `EL-M2.5 XCOM A.opus` | Unseen Sector | ElevenLabs | Yes |
+| `EL-M2.5 XCOM B.opus` | Unseen Threat Protocol | ElevenLabs | Yes |
+| `EL-M2.5 XCOM+NoPulse+Geo+Ominous.opus` | Black Orbit Watch | ElevenLabs |  |
+| `EL-M2.5 XCOM+TFTD+NoPulse A.opus` | Depth Signal | ElevenLabs |  |
+| `EL-M2.5 XCOM+TFTD+NoPulse B.opus` | Abyssal Tactical Drift | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var A.opus` | Unknown Contact | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var B.opus` | Beneath the Grid | ElevenLabs | Yes |
+| `EL-M2.5 XCOM+Var C.opus` | Silent Contact | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var+Bare+Slow A.opus` | Silent Hostile Sector | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var+Bare+Slow B.opus` | Silent Threat Protocol | ElevenLabs |  |
+| `S6 SCNP A.mp3` | Signal Intercept var1 | Suno v6 |  |
+| `S6 SCNP B.mp3` | Signal Intercept var2 | Suno v6 |  |
+| `S6 SCNP+Dark+BClar&Trombone A.mp3` | Bass clarinet + muted trombone var1 | Suno v6 |  |
+| `S6 SCNP+Dark+BClar&Trombone B.mp3` | Bass clarinet + muted trombone var2 | Suno v6 |  |
+| `S6 SCNP+Dark+Piano&Cello A.mp3` | Unseen Approach var1 | Suno v6 |  |
+| `S6 SCNP+Dark+Piano&Cello B.mp3` | Unseen Approach var2 | Suno v6 |  |
+| `V3A-S5 SCNP.mp3` | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |  |
+| `V3A-S5 SCNP+Dark.mp3` | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |  |
+| `V3A-S5 SCNP+Dark+Cello&BClar.mp3` | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |  |
+| `V3A-S5 SCNP+Dark+Violin.mp3` | v03AI UFO 5 - Scanning Protocol - Dark Violin | Suno v5 via v03ai |  |
+| `V3A-S5 XCOM+Sections+Loop.mp3` | v03AI UFO 2 | Suno v5 via v03ai | Yes |
+| `V3A-S5 XCOM+Var.mp3` | v03AI UFO 1 | Suno v5 via v03ai | Yes |
 
 ## Naming scheme
 
@@ -84,7 +84,7 @@ The codes are these lists; a new source, model, stem, or adjustment adds its cod
 
 ## Track records
 
-A `.yaml` file in `yaml/` with the same name as a track, e.g. `yaml/Silent Threat Protocol.yaml`, records how the track was made, so that it can be told apart from the others and made again: its source and model, when it was made, the prompt it was generated from and how that prompt was written, and what the source reports about it, e.g. tags, BPM, and length. Every track has one, including each excluded track, whose record stays here after its audio is removed.
+A `.yaml` file in `yaml/` with the same name as a track, e.g. `yaml/EL-M2.5 XCOM+Var+Bare+Slow B.yaml`, records how the track was made, so that it can be told apart from the others and made again: its source and model, when it was made, the prompt it was generated from and how that prompt was written, and what the source reports about it, e.g. tags, BPM, and length. Every track has one, including each excluded track, whose record stays here after its audio is removed.
 
 The following table lists every key a record may hold; the list is exhaustive. A record holds only the keys it has values for, except the required ones, which every record holds. Keys nested in another key are written with a dot, e.g. `prompt_from.tool` is the `tool` key inside `prompt_from`. Every `prompt_from` holds exactly one of `meta_prompt` and `same_prompt_as`, so that each record either quotes the request that produced its prompt or points to the track that does.
 
@@ -127,15 +127,15 @@ The following table lists every key a record may hold; the list is exhaustive. A
 
 ## Tracks from ElevenLabs
 
-All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/) Music. Each is named after its song's title in ElevenLabs, with the spaces kept, although ElevenLabs downloads it with underscores for spaces, e.g. the download `Silent_Threat_Protocol.opus` is saved as `Silent Threat Protocol.opus`. Their track records hold what the song's details panel in the ElevenLabs Assets page shows: the description and prompt, word for word, and the tags, BPM, and length; their `model` comes from the ElevenLabs Music history, which labels each song with the model that made it.
+All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/) Music, named `EL-…` under the naming scheme. A song's title in ElevenLabs is its record's `original_title`; ElevenLabs downloads it under that title with underscores for spaces, e.g. `Silent_Threat_Protocol.opus` for the song "Silent Threat Protocol", saved here as `EL-M2.5 XCOM+Var+Bare+Slow B.opus`. Their track records hold what the song's details panel in the ElevenLabs Assets page shows: the description and prompt, word for word, and the tags, BPM, and length; their `model` comes from the ElevenLabs Music history, which labels each song with the model that made it.
 
 ## Tracks from Suno v5 via v03ai
 
-The files named `v03AI UFO …` are from Suno v5, made via [v03ai](https://v03ai.com/), which cannot export Ogg Opus. Each is named after its song's title in v03ai, except the first two: by mistake, both are titled "UFO 1" in v03ai, so they are named `v03AI UFO 1.mp3` and `v03AI UFO 2.mp3` after the names the Game designer gave their downloads. v03ai appends a number to the download's file name, e.g. `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`, which is removed. Their track records come from the Game designer's notes: the prompt given to v03ai, or, where ChatGPT wrote it, the full prompt ChatGPT produced and the conversation it came from. v03ai caps a Suno v5 prompt at 1,000 characters, so a longer prompt was given to it truncated.
+The files named `V3A-S5 …` are from Suno v5, made via [v03ai](https://v03ai.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in v03ai, except for the first two songs: by mistake, both are titled "UFO 1" in v03ai, so their `original_title` is the name the Game designer gave their downloads, "v03AI UFO 1" and "v03AI UFO 2", and `title_in_source` holds "UFO 1". v03ai appends a number to the download's file name, e.g. `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`, which is not part of the title. Their track records come from the Game designer's notes: the prompt given to v03ai, or, where ChatGPT wrote it, the full prompt ChatGPT produced and the conversation it came from. v03ai caps a Suno v5 prompt at 1,000 characters, so a longer prompt was given to it truncated.
 
 ## Tracks from Suno v6
 
-The other `.mp3` files are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. Each is named after its song's title in Suno, e.g. `Signal Intercept var1.mp3`; a Suno song with another title, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders.
+The files named `S6 …` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders.
 
 ## Analyzing track contents
 

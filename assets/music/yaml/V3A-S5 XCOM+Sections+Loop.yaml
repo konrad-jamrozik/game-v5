@@ -1,4 +1,4 @@
-file: 'v03AI UFO 2.mp3'
+file: 'V3A-S5 XCOM+Sections+Loop.mp3'
 source: Suno v5 via v03ai
 original_title: 'v03AI UFO 2'
 title_in_source: 'UFO 1'
@@ -30,4 +30,4 @@ prompt: |-
 
   Instrumental only. No vocals, cheerful melodies, energetic beats, orchestral swells, or
 notes: |-
-  The prompt ends mid-sentence: it was given to v03ai exactly so, cut at v03ai's cap of 1,000 characters for a Suno v5 prompt. Its title in v03ai is "UFO 1", the same as that of v03AI UFO 1.mp3, by mistake. The prompt is the final answer of the ChatGPT conversation "Shorten Suno Prompt"; the prompt given to v03ai omits that answer's final words, "cinematic crescendos." `meta_prompt` holds the Game designer's last request in that conversation; `meta_prompt_taxonomy` sums up the earlier ones.
+  The prompt ends mid-sentence: it was given to v03ai exactly so, cut at v03ai's cap of 1,000 characters for a Suno v5 prompt. Its title in v03ai is "UFO 1", the same as that of V3A-S5 XCOM+Var.mp3, by mistake. The prompt is the final answer of the ChatGPT conversation "Shorten Suno Prompt"; the prompt given to v03ai omits that answer's final words, "cinematic crescendos." `meta_prompt` holds the Game designer's last request in that conversation; `meta_prompt_taxonomy` sums up the earlier ones.
