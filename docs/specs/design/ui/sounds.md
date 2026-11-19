@@ -58,7 +58,7 @@ The following inputs are not Main clicks; the list is complete:
 
 - A Select click, which plays its own Sound.
 - Changing a toggle that is neither a setting of Global configuration nor a filter, or a sort or tab, e.g. expanding the Autopilot controls or sorting a table by a column.
-- Dragging a slider, typing text, hovering, and scrolling. Releasing the Sounds volume slider plays `main-click` under [Sound settings](#sound-settings), and releasing any other slider plays no Sound.
+- Dragging a slider, typing text, giving a text field the keyboard focus, e.g. with the S key in the Compendium View, hovering, and scrolling. Releasing the Sounds volume slider plays `main-click` under [Sound settings](#sound-settings), and releasing any other slider plays no Sound.
 - A Go back, which plays its own Sound.
 
 Each input of the list other than a Select click and a Go back plays no Sound, because it only changes how something is shown or prepares a later input.
@@ -72,6 +72,7 @@ A Select click is the Player selecting or clearing an item, or choosing which it
 - **List item:** selecting an item of a list in a pane of a [Detail view](gui.md#glossary), which shows that item in the pane beside it, e.g. a [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) in the [Leads View](screens/leads-view.md), a Mission site in the Missions View, or a category or an article in the Compendium View.
 - **[Article link](../mechanics/compendium.md#glossary):** selecting an Article link in the [Compendium View](screens/compendium-view.md), whether in a resolved text, in a See also entry, or in a [Data sheet](screens/compendium-view.md#glossary), which selects the article it links to, as selecting it in the Articles pane does.
 - **[Article history](screens/compendium-view.md#glossary):** selecting the Previous article or Next article button of the Article history in the Compendium View, which selects another article of the list the Player already passed through.
+- **Search:** pressing the Enter key in the search field of the Compendium View when an article matches, which selects the first matching article, under [Panes](screens/compendium-view.md#panes). The Enter key when no article matches plays no Sound, because it does nothing.
 - **Filter:** turning on or off a filter, which chooses the items a list or table shows or lets be selected, e.g. a filter of [Row filters](screens/agents-view.md#row-filters) in the Agents View, an [Assignment filter](screens/agents-view.md#glossary), or the toggle of the Missions View that shows the Mission sites in a final state.
 
 The GUI plays `select-click` once for each Select click when the Player presses, also when the item already had the state the Select click gives it, so the Player hears every selection answered. A drag over several rows is one Select click, and plays `select-click` once, when the Player presses on its first row. An item that the GUI selects on its own, e.g. the first item that the Leads View selects when it opens, plays no Sound.
