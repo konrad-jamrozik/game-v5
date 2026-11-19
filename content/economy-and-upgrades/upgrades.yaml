@@ -26,11 +26,11 @@ price: 500
 effect: agent_weapon_damage
 increment: 1
 ---
-id: base_health
+id: max_health
 type: Upgrade
-name: Base health
+name: Max health
 price: 500
-effect: agent_base_health
+effect: agent_max_health
 increment: 1
 ---
 id: training_skill_gain

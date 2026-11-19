@@ -2,5 +2,5 @@ id: field_agent
 type: AgentArchetype
 name: Field agent
 base_skill: 100
-base_health: 30 # sets both the Agent's base health and its current health
+base_health: 30 # the Agent's base health; a new Agent has no health lost
 weapon: sidearm

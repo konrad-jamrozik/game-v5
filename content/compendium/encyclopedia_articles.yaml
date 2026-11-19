@@ -125,11 +125,11 @@ title: Weapon damage
 body: Better ammunition and gunsmithing make the weapons of every Agent hit harder.
 subject: weapon_damage
 ---
-id: base_health_article
+id: max_health_article
 type: EncyclopediaArticle
-title: Base health
+title: Max health
 body: Body armor and field medicine let every Agent take more harm before going down.
-subject: base_health
+subject: max_health
 ---
 id: training_skill_gain_article
 type: EncyclopediaArticle

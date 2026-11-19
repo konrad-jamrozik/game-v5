@@ -64,7 +64,7 @@ Type owner: [Agents](../mechanics/agents-spec.md).
 
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
-| `field_agent` | AgentArchetype | Archetype | Every [Agent](../mechanics/domain-model.md#agency-and-agents)'s [base skill](../mechanics/agents-spec.md#combatant-attributes), Weapon, and `base_health` when created. An Agent starts with both its [base health](../mechanics/agents-spec.md#combatant-attributes) and its [current health](../mechanics/agents-spec.md#combatant-attributes) equal to `base_health`. |
+| `field_agent` | AgentArchetype | Archetype | Every [Agent](../mechanics/domain-model.md#agency-and-agents)'s [base skill](../mechanics/agents-spec.md#combatant-attributes), Weapon, and `base_health` when created. An Agent's [base health](../mechanics/agents-spec.md#combatant-attributes) equals `base_health`, and a new Agent has no [health lost](../mechanics/agents-spec.md#combatant-attributes). |
 | `agent_parameters` | AgentParameters | [Campaign instance](../foundation/core-concepts.md#campaign-instances) initialization, Calculation parameter | The size of the initial roster; the [exhaustion](../mechanics/agents-spec.md#combatant-attributes) at which a [Combatant](../mechanics/domain-model.md#combat) is [Incapacitated](../mechanics/combat.md#combatant-condition-in-a-combat), the exhaustion without effect, and the base skill lost per further point; exhaustion per attack and per defense, per [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and per percent of a team [Killed](../mechanics/agents-spec.md#agent-statuses), and per [Turn](../foundation/engine-contract.md#player-actions-and-turns) of [Contracting](../mechanics/agents-spec.md#assignments), [Training](../mechanics/agents-spec.md#assignments), and investigating; the most exhaustion at which an Agent can start work and the exhaustion that ends its work; base skill gained per Turn of Training, per attack made or taken in a Combat, by hit or miss, and per Mission survived. |
 
 ## Economy and Upgrades GDRs
@@ -79,10 +79,10 @@ Type owner: [Economy and Upgrades](../mechanics/economy-and-upgrades.md).
 | `transport_cap` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the Transport cap. |
 | `training_cap` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the Training cap. |
 | `weapon_damage` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the [effective weapon damage](../mechanics/agents-spec.md#combatant-attributes) of every [Serving](../mechanics/agents-spec.md#agent-statuses) Agent. |
-| `base_health` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the [base health](../mechanics/agents-spec.md#combatant-attributes) and current health of every Agent. |
+| `max_health` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the [effective max health](../mechanics/agents-spec.md#combatant-attributes) and [current health](../mechanics/agents-spec.md#combatant-attributes) of every Serving Agent. |
 | `training_skill_gain` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the base skill every Agent on Training gains. |
 | `exhaustion_recovery` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the exhaustion every resting Agent loses. |
-| `health_recovery` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the percentage of base health every Agent on [Recovery](../mechanics/agents-spec.md#assignments) regains. |
+| `health_recovery` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the percentage of effective max health every Agent on [Recovery](../mechanics/agents-spec.md#assignments) regains. |
 
 Three Upgrades raise an Agency-wide cap, two change a value of every Agent, and three raise a rate every Agent shares, so Economy and Upgrades must specify each kind of Upgrade effect.
 
@@ -146,7 +146,7 @@ Type owner: [Agent Recovery](../mechanics/agent-recovery.md).
 
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
-| `recovery` | RecoveryParameters | Calculation parameter | Health recovered per Turn, as a percentage of the Agent's base health, and exhaustion recovered per Turn. |
+| `recovery` | RecoveryParameters | Calculation parameter | Health recovered per Turn, as a percentage of the Agent's effective max health, and exhaustion recovered per Turn. |
 
 ## Factions GDRs
 
@@ -180,7 +180,7 @@ Type owner: [Compendium](../mechanics/compendium.md).
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
 | `guide_agency`, `guide_agents`, `guide_investigations`, `guide_missions`, `guide_panic`, `guide_upgrades` | EncyclopediaArticle | Display content | The six Guide articles, each explaining one part of the game in general. |
-| One `<subject>_article` for each of `field_agent`, `initiate`, `soldier`, `cult_leader`, `sidearm`, `rifle`, `heavy_rifle`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `base_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | EncyclopediaArticle | Display content | An article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
+| One `<subject>_article` for each of `field_agent`, `initiate`, `soldier`, `cult_leader`, `sidearm`, `rifle`, `heavy_rifle`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `max_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | EncyclopediaArticle | Display content | An article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
 
 Every Bootstrap GDR with a `name` that the Player can see has an article, except the AgencyArchetype `agency` and the MissionArchetype `standard_mission`, which only name the Player's own Agency and every Mission.
 
@@ -216,7 +216,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file.
 | `content/agents/agent_parameters.yaml` | AgentParameters | `agent_parameters` |
 | `content/economy-and-upgrades/agency_archetypes.yaml` | AgencyArchetype | `agency` |
 | `content/economy-and-upgrades/economy_parameters.yaml` | EconomyParameters | `economy` |
-| `content/economy-and-upgrades/upgrades.yaml` | Upgrade | `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `base_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery` |
+| `content/economy-and-upgrades/upgrades.yaml` | Upgrade | `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `max_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery` |
 | `content/leads-and-progression/leads.yaml` | Lead | `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq` |
 | `content/investigations/investigation_archetypes.yaml` | InvestigationArchetype | `standard_investigation` |
 | `content/investigations/investigation_parameters.yaml` | InvestigationParameters | `investigation_parameters` |
