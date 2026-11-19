@@ -26,17 +26,34 @@ Recorded on 2026-11-18.
 - The exception is a very special Mission that the player gets only one attempt at: its Lead is not repeatable after the first Mission site, whatever becomes of that Mission site.
 - Quite complex logic is therefore expected around Lead repeatability, more than the fixed conditions of today's [Lead availability](../specs/design/mechanics/leads-and-progression.md#lead-availability).
 
-## Working name for how long a Lead keeps creating Mission sites
+## Working name for whether a Lead can be investigated again
 
-Recorded on 2026-11-18. "Repeatable" is too ambiguous as the name of this setting, so its working name is `stops_after`, a property of the MissionSiteArchetype whose values each name the event after which the Lead creates no further Mission site of it:
+Recorded on 2026-11-18. "Repeatable" is too ambiguous as the name of this setting, so its working name is `investigate_again`, a property of the Lead. It answers one question: after an Investigation of the Lead is Completed, can the Lead be investigated again? The table gives the answer by what became of the Mission site that the completion created:
 
-| Value | Meaning |
-| --- | --- |
-| `first_mission_site` | The Lead creates one Mission site ever, whatever becomes of it. This is the very special Mission that the player gets only one attempt at. |
-| `first_win` | The Lead creates a new Mission site after each one whose Mission is Lost or that Expired, until one Mission is Won. This is the default. |
-| `never` | The Lead keeps creating Mission sites even after a Won Mission, so the Mission can be Won any number of times. |
+| `investigate_again` | Mission site Expired | Mission Lost | Mission Won |
+| ------------------- | -------------------- | ------------ | ----------- |
+| `never`             | No                   | No           | No          |
+| `until_mission_won` | Yes                  | Yes          | No          |
+| `always`            | Yes                  | Yes          | Yes         |
 
-The value `never` means only that this setting never stops the Lead. The conditions that decide whether the Mission site can exist still can, e.g. when the Lead's Faction is Eliminated.
+- `never` is the very special Mission that the player gets only one attempt at: one Completed Investigation and one Mission site, whatever becomes of it.
+- `until_mission_won` is the default, and is today's behaviour.
+- `always` lets the Mission be Won any number of times.
+- A Lead whose completion creates no Mission site allows only `never`, i.e. it can be Completed at most once, and `always`.
+
+Whatever the value, a Lead is also unavailable while a Mission site it created is unfinished, and while that Mission site cannot exist.
+
+## Where each condition lives
+
+Recorded on 2026-11-18. Each condition is a property of the thing whose life it governs, so that a Lead never repeats the condition of its Mission site:
+
+- **When the player learns of the Lead** is a property of the Lead, as today's `requires` is.
+- **Whether a Mission site can exist** is a property of its MissionSiteArchetype, with the working name `can_exist_when`. It decides both whether one may be created and when an Active one is cancelled. Two Leads that create the same kind of Mission site share it.
+- **Whether the Lead can be investigated again** is the Lead's `investigate_again`.
+
+One rule then covers every Lead: a discovered Lead is available when `investigate_again` still allows it and everything its completion would do is currently possible. Creating a Mission site is possible when that Mission site can exist and no Mission site from the Lead is unfinished; giving money, funding, or a Panic change is always possible.
+
+A Lead is Archived exactly when `investigate_again` no longer allows it or its Faction is Eliminated, and Inactive whenever it is unavailable for any other reason, even one that in practice never ends.
 
 ## Decisions on conditions that can stop holding
 
