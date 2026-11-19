@@ -12,11 +12,11 @@
 
 The History View lets the Player find the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) in which something changed in the [Campaign](../../foundation/core-concepts.md#campaign-and-session), and see what the player did in that Turn and what came of it. It is one of the Records [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md); the trends over the same Turns are in the [Charts View](charts-view.md).
 
-Everything it shows comes from `getHistory()`, one row for each [History entry](../../foundation/world-history.md#glossary), under [Current state, Turn report, and history](../../foundation/world-history.md#current-state-turn-report-and-history) in World History, so the current Turn, which has no History entry yet, has no row. Before the first committed Advance turn of a Campaign, the View says that no Turn has ended yet.
+It shows one row for each [History entry](../../foundation/world-history.md#glossary) that `getHistory()` returns, under [Current state, Turn report, and history](../../foundation/world-history.md#current-state-turn-report-and-history) in World History, and one row for the current Turn from its [Open History entry](../../foundation/world-history.md#glossary), so that the Player sees this Turn's decisions so far beside earlier Turns, as if the Turn ended now. The current Turn's row follows every Player action, undo, and redo, e.g. an undone `hireAgent` leaves its list and its Agent leaves its Agents count, and a redo puts both back.
 
 # Turn by Turn table
 
-The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn table lists one row per ended Turn, newest first, under [Tables](../visual-design.md#tables) in Visual Design. Its columns are the following, in this order; the list is exhaustive.
+The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn table lists one row per ended Turn and one row for the current Turn, newest first, so the current Turn's row is at the top, under [Tables](../visual-design.md#tables) in Visual Design. Once the [Campaign](../../foundation/core-concepts.md#campaign-and-session) has a [Campaign ending](../../mechanics/domain-model.md#campaign-standing), no [Player action](../../foundation/engine-contract.md#player-actions-and-turns) can follow, so the table has no row for the current Turn. Before the first committed Advance turn of a Campaign, the current Turn's row is the only one. Its columns are the following, in this order; the list is exhaustive.
 
 | Column | What it shows for Turn t | Form |
 | --- | --- | --- |
@@ -30,6 +30,16 @@ The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn
 | Agents | The number of [Serving](../../mechanics/agents-spec.md#agent-statuses) [Agents](../../mechanics/domain-model.md#agency-and-agents) in the [Turn-end state](../../foundation/engine-contract.md#player-actions-and-turns) of Turn t. | A number. |
 | Player actions | The number of items in the Action record of Turn t, which opens the list under [Player actions list](#player-actions-list). | A number after "▸", or "▾" while its list is open; "0" in Text muted, with no marker. |
 | Events | What the Advance turn ending Turn t did, under [Events](#events). | Short labels side by side. |
+
+The current Turn's row shows each column as if the Advance turn ending it were committed at the current [Committed state](../../foundation/engine-contract.md#player-actions-and-turns), as far as that is known before it is committed:
+
+- **Turn:** t, followed by "now" in Text muted.
+- **Money end:** the Agency's money in the current Committed state.
+- **Income and Upkeep:** the projected income and projected upkeep, under [Projected income and upkeep](../../mechanics/economy-and-upgrades.md#projected-income-and-upkeep) in Economy and Upgrades, which that Advance turn would add and charge exactly.
+- **Panic:** Panic in the current Committed state, since what that Advance turn would change depends on events not yet resolved.
+- **Agents:** the number of Serving Agents in the current Committed state.
+- **Events:** empty, since no Advance turn has ended the Turn.
+- **Money start, Expenditures, and Player actions:** as for an ended Turn, from the [Open History entry](../../foundation/world-history.md#glossary).
 
 Every column except Events holds numbers, under Tables in Visual Design. The four money columns read from left to right as the Turn's money flow: Money start less Expenditures is Money end, unless a [Player cheat action](../../foundation/engine-contract.md#player-actions-and-turns) added money, and Money end plus Income less Upkeep is the next Turn's Money start, unless the Turn's events changed money too, e.g. the Consequences of a Mission.
 
@@ -48,7 +58,7 @@ A Turn with none of these leaves the cell empty. Labels too many for the column'
 
 # Player actions list
 
-Pressing the Player actions cell of a Turn whose Action record is not empty opens, directly under that Turn's row, a list of what the player did in that Turn, and pressing it again closes the list; the Player can open the lists of several Turns at once. Like the [Combat log](../../mechanics/combat.md#combat-rounds-and-results) of a [Combat report](turn-report-view.md#combat-report), every list is closed when the View opens. The list spans the width of the table and shows one line for each item of the Action record, in its order, so the Turn's row stays one line tall.
+Pressing the Player actions cell of a Turn whose Action record is not empty opens, directly under that Turn's row, a list of what the player did in that Turn, and pressing it again closes the list; the Player can open the lists of several Turns at once. Like the [Combat log](../../mechanics/combat.md#combat-rounds-and-results) of a [Combat report](turn-report-view.md#combat-report), every list is closed when the View opens. The current Turn's list stays open while its Action record changes, and closes when an undo empties it; the list of a Turn stays open when Advance turn ends that Turn. The list spans the width of the table and shows one line for each item of the Action record, in its order, so the Turn's row stays one line tall.
 
 Each line starts with the number of the Player action in the Turn, from 1, in the Figure style and Text muted, followed by what that Player action did, under the following table, and ends with its money change in the Figure style, "−" and the amount in Danger or "+" and the amount in Positive, or nothing when it is 0. Consecutive items that name the same operation with the same arguments are one line, numbered with the first and last of their numbers, e.g. "1–4", whose count and money change are their totals. E.g., four `hireAgent` actions followed by three `purchaseUpgrade` of the Agent cap Upgrade are the two lines "1–4 Hired 4 Agents" and "5–7 Bought 3 Agent cap Upgrades". The table is exhaustive.
 
@@ -69,6 +79,6 @@ A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents 
 
 # Artboard
 
-![History View panel Artboard: the Turn by Turn table, newest first, with Expenditures and upkeep in Danger, income in Positive, a Player actions count on each row with the list of Turn 14 open, and the events of each Turn](../../../../images/artboards/history-view.png)
+![History View panel Artboard: the Turn by Turn table, newest first, with the current Turn's row marked "now" on top, with Expenditures and upkeep in Danger, income in Positive, a Player actions count on each row with the list of Turn 14 open, and the events of each Turn](../../../../images/artboards/history-view.png)
 
 The sample values, e.g. the Turn numbers, the events of each Turn, and the Player actions, appear only on the Artboard, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
