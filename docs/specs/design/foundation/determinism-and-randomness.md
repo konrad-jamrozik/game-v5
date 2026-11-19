@@ -43,7 +43,7 @@ Queries, computing [Derived values](core-concepts.md#value-classification), and 
 
 Determinism is required within one implementation and Game build, not across different implementations of the specification or different Game builds. Within one implementation and Game build it is required across machines: no outcome may depend on the machine, operating system, or runtime that executes the Game build.
 
-Consequently, the following are the Implementer's choice, provided the guarantee under [Determinism](#determinism) holds: how random outcomes are derived from the Campaign seed, the order of random draws, the order in which [Campaign instances](core-concepts.md#campaign-instances) are created within one Player action, except where the specification owning the creating behavior fixes it, and the sequence and format of generated Campaign-scoped identifiers. Two implementations may therefore produce different outcomes from the same Campaign seed and Player actions; each must reproduce its own outcomes exactly.
+Consequently, the following are the Implementer's choice, provided the guarantee under [Determinism](#determinism) holds: how random outcomes are derived from the Campaign seed, the order of random draws, and the order in which [Campaign instances](core-concepts.md#campaign-instances) are created within one Player action, except where the specification owning the creating behavior fixes it. Two implementations may therefore produce different outcomes from the same Campaign seed and Player actions; each must reproduce its own outcomes exactly.
 
 # Campaign seed
 
@@ -75,4 +75,4 @@ Some identifiers name things inside the simulated world and must survive replay;
 | Campaign-scoped identifier | Yes | E.g., [Instance IDs](campaign-instances.md#glossary). |
 | Independent identifier | No | E.g., [Campaign IDs and Campaign save IDs](saves.md#identifiers). |
 
-A Campaign-scoped identifier therefore depends on nothing outside Campaign state, e.g. wall-clock time, in the same way as a random outcome under [Random outcomes](#random-outcomes). The format of every identifier is the Implementer's choice.
+A Campaign-scoped identifier therefore depends on nothing outside Campaign state, e.g. wall-clock time, in the same way as a random outcome under [Random outcomes](#random-outcomes). The format of an Independent identifier, e.g. a Campaign save ID, is the Implementer's choice. The specification that introduces a Campaign-scoped identifier states its format and its sequence; e.g., [Campaign instance identity](campaign-instances.md#campaign-instance-identity) in Campaign Instances does so for an Instance ID.

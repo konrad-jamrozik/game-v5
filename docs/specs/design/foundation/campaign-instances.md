@@ -33,7 +33,7 @@ How full [Campaign state](core-concepts.md#campaign-and-session) inspection pres
 
 # Campaign instance creation
 
-The specification that owns a creating behavior, at Campaign initialization or during play, states when a Campaign instance is created, its Type, and the initial value of its Archetype reference, its Constants and its State, with the source of each. E.g., a source can be its Archetype, another GDR, or a value of Campaign state. Every new Campaign instance gets a fresh Instance ID under [Campaign instance identity](#campaign-instance-identity). Which code creates it is the Implementer's choice.
+The specification that owns a creating behavior, at Campaign initialization or during play, states when a Campaign instance is created, its Type, and the initial value of its Archetype reference, its Constants and its State, with the source of each. When one behavior creates several Campaign instances of one Type at once, that specification also states the order in which they are created, because the order decides their Instance IDs under [Campaign instance identity](#campaign-instance-identity). E.g., a source can be its Archetype, another GDR, or a value of Campaign state. Every new Campaign instance gets a fresh Instance ID under [Campaign instance identity](#campaign-instance-identity). Which code creates it is the Implementer's choice.
 
 # Campaign instance identity
 

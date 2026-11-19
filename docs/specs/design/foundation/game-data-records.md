@@ -48,7 +48,7 @@ Each of the following GDR purpose sections shows one GDR of its worked example a
 
 GDR files are authored under the `content/` directory at the repository root. The layout of the files follows these rules:
 
-- **One file per Type:** each file holds every GDR of one Type and no GDR of another Type.
+- **One file per Type:** each file holds every GDR of one Type and no GDR of another Type. The order of the GDRs in a file, as authored, is significant: it is preserved when the file is read, and a specification may rely on it, e.g. to fix the order in which Campaign instances are created from them.
 - **Directory of the Type owner:** the file lies in the directory named after the file name of the specification that owns its Type, without the `.md` extension or a `-spec` suffix, e.g. `content/combat/` for Combat.
 - **File named after the Type:** the file name is the Type's name in lowercase words joined by underscores, in the plural, e.g. `faction_activity_levels.yaml` for FactionActivityLevel.
 - **One YAML document per GDR:** documents are separated by `---`, and each states its GDR as the snippets of the GDR purpose sections show, including its identifier and its Type.
