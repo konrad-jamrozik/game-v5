@@ -800,7 +800,147 @@ A cult member has been found, lightly guarded. Bring the member in before the tr
 | `name`             | `Apprehend member`             |
 | `expires_in_turns` | `5`                            |
 | `enemies`          | `{"initiate":2,"operative":1}` |
-| `on_win`           | `[{"money":5},{"panic":-1}]`   |
+| `on_win`           | `[{"money":5}]`                |
+
+### Counter civilian terror
+
+Source: `content/compendium/compendium_articles/counter_civilian_terror_article.yaml`
+
+A cult is bringing terror to the streets of a city. End it before the city breaks.
+
+| `counter_civilian_terror` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Counter civilian terror` |
+| `operation_level` | `4` |
+| `expires_in_turns` | `6` |
+| `enemies` | `{"initiate":30,"operative":24,"soldier":15,"elite":4,"handler":10,"lieutenant":3,"commander":1}` |
+
+### Defend against city government assault
+
+Source: `content/compendium/compendium_articles/defend_against_city_government_assault_article.yaml`
+
+A cult is moving to seize the government of a city by force. Stop it at the doors.
+
+| `defend_against_city_government_assault` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Defend against city government assault` |
+| `operation_level` | `4` |
+| `expires_in_turns` | `6` |
+| `enemies` | `{"initiate":24,"operative":24,"soldier":20,"elite":8,"handler":6,"lieutenant":4,"commander":2}` |
+
+### Defend against facility raid
+
+Source: `content/compendium/compendium_articles/defend_against_facility_raid_article.yaml`
+
+A cult is massing to overrun one of your facilities. Hold it against a force many times the size of a team.
+
+| `defend_against_facility_raid` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Defend against facility raid` |
+| `operation_level` | `3` |
+| `expires_in_turns` | `5` |
+| `enemies` | `{"initiate":16,"operative":12,"soldier":12,"elite":2,"handler":6,"lieutenant":3,"commander":1}` |
+
+### Defend against office raid
+
+Source: `content/compendium/compendium_articles/defend_against_office_raid_article.yaml`
+
+A cult is about to storm one of your field offices. Hold it.
+
+| `defend_against_office_raid` | MissionSiteArchetype                                                  |
+| ---------------------------- | --------------------------------------------------------------------- |
+| `kind`                       | `response`                                                            |
+| `name`                       | `Defend against office raid`                                          |
+| `operation_level`            | `2`                                                                   |
+| `expires_in_turns`           | `4`                                                                   |
+| `enemies`                    | `{"initiate":4,"operative":4,"soldier":4,"handler":1,"lieutenant":1}` |
+
+### Defend against retaliation strike
+
+Source: `content/compendium/compendium_articles/defend_against_retaliation_strike_article.yaml`
+
+A cult is striking back at you with its best fighters. Break the strike before it lands.
+
+| `defend_against_retaliation_strike` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Defend against retaliation strike` |
+| `operation_level` | `4` |
+| `expires_in_turns` | `6` |
+| `enemies` | `{"initiate":24,"operative":8,"soldier":24,"elite":8,"handler":4,"lieutenant":6,"commander":3}` |
+
+### Defend military installation
+
+Source: `content/compendium/compendium_articles/defend_military_installation_article.yaml`
+
+A cult is assaulting a military installation for the weapons inside. Do not let it fall.
+
+| `defend_military_installation` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Defend military installation` |
+| `operation_level` | `5` |
+| `expires_in_turns` | `7` |
+| `enemies` | `{"initiate":20,"operative":30,"soldier":24,"elite":12,"handler":7,"lieutenant":6,"commander":3,"high_commander":1}` |
+
+### Foil business extortion
+
+Source: `content/compendium/compendium_articles/foil_business_extortion_article.yaml`
+
+A cult is squeezing local businesses for [money](#money-and-funding). Break the racket before the owners pay.
+
+| `foil_business_extortion` | MissionSiteArchetype                       |
+| ------------------------- | ------------------------------------------ |
+| `kind`                    | `response`                                 |
+| `name`                    | `Foil business extortion`                  |
+| `operation_level`         | `1`                                        |
+| `expires_in_turns`        | `3`                                        |
+| `enemies`                 | `{"initiate":6,"operative":2,"handler":1}` |
+
+### Foil coup attempt
+
+Source: `content/compendium/compendium_articles/foil_coup_attempt_article.yaml`
+
+A cult is about to take a whole country. Its finest [lead](#leads) the coup, and only your finest can stop it.
+
+| `foil_coup_attempt` | MissionSiteArchetype                                                                       |
+| ------------------- | ------------------------------------------------------------------------------------------ |
+| `kind`              | `response`                                                                                 |
+| `name`              | `Foil coup attempt`                                                                        |
+| `operation_level`   | `5`                                                                                        |
+| `expires_in_turns`  | `7`                                                                                        |
+| `enemies`           | `{"operative":20,"soldier":20,"elite":20,"lieutenant":5,"commander":5,"high_commander":1}` |
+
+### Foil financial heist
+
+Source: `content/compendium/compendium_articles/foil_financial_heist_article.yaml`
+
+A cult is after a fortune that would fund it for years. Stop the heist before the [money](#money-and-funding) is gone.
+
+| `foil_financial_heist` | MissionSiteArchetype                                                    |
+| ---------------------- | ----------------------------------------------------------------------- |
+| `kind`                 | `response`                                                              |
+| `name`                 | `Foil financial heist`                                                  |
+| `operation_level`      | `3`                                                                     |
+| `expires_in_turns`     | `5`                                                                     |
+| `enemies`              | `{"initiate":10,"operative":10,"soldier":8,"handler":4,"lieutenant":2}` |
+
+### Foil nuclear plant bombing
+
+Source: `content/compendium/compendium_articles/foil_nuclear_plant_bombing_article.yaml`
+
+A cult means to blow up a nuclear plant. Nothing a cult has tried before comes close.
+
+| `foil_nuclear_plant_bombing` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Foil nuclear plant bombing` |
+| `operation_level` | `5` |
+| `expires_in_turns` | `7` |
+| `enemies` | `{"initiate":28,"operative":24,"soldier":20,"elite":12,"handler":10,"lieutenant":5,"commander":3,"high_commander":1}` |
 
 ### Foil recruitment push
 
@@ -830,6 +970,48 @@ A cult plans to strike critical infrastructure. Stop the saboteurs before the bl
 | `expires_in_turns` | `4`                                                                   |
 | `enemies`          | `{"initiate":2,"operative":2,"soldier":2,"handler":1,"lieutenant":1}` |
 
+### Foil supply theft
+
+Source: `content/compendium/compendium_articles/foil_supply_theft_article.yaml`
+
+A cult is stealing supplies to arm its members. Catch the thieves before the goods disappear.
+
+| `foil_supply_theft` | MissionSiteArchetype           |
+| ------------------- | ------------------------------ |
+| `kind`              | `response`                     |
+| `name`              | `Foil supply theft`            |
+| `operation_level`   | `1`                            |
+| `expires_in_turns`  | `3`                            |
+| `enemies`           | `{"initiate":4,"operative":3}` |
+
+### Foil VIP assassination
+
+Source: `content/compendium/compendium_articles/foil_vip_assassination_article.yaml`
+
+A cult has marked a public figure for death. Reach the killers before they reach their mark.
+
+| `foil_vip_assassination` | MissionSiteArchetype                                   |
+| ------------------------ | ------------------------------------------------------ |
+| `kind`                   | `response`                                             |
+| `name`                   | `Foil VIP assassination`                               |
+| `operation_level`        | `2`                                                    |
+| `expires_in_turns`       | `4`                                                    |
+| `enemies`                | `{"initiate":4,"operative":4,"soldier":2,"handler":1}` |
+
+### Intercept arms deal
+
+Source: `content/compendium/compendium_articles/intercept_arms_deal_article.yaml`
+
+A cult is buying military weapons. Hit the exchange before the shipment changes hands.
+
+| `intercept_arms_deal` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Intercept arms deal` |
+| `operation_level` | `3` |
+| `expires_in_turns` | `5` |
+| `enemies` | `{"initiate":12,"operative":12,"soldier":10,"elite":2,"handler":4,"lieutenant":2,"commander":1}` |
+
 ### Raid HQ
 
 Source: `content/compendium/compendium_articles/raid_hq_article.yaml`
@@ -856,7 +1038,7 @@ Storm the safehouse of a cult before it is moved. Expect it to be well guarded.
 | `name`             | `Raid safehouse`                             |
 | `expires_in_turns` | `8`                                          |
 | `enemies`          | `{"initiate":4,"operative":4,"handler":1}`   |
-| `on_win`           | `[{"money":100},{"funding":5},{"panic":-2}]` |
+| `on_win`           | `[{"money":100},{"funding":5},{"panic":-1}]` |
 
 ## Subject articles: Upgrade
 

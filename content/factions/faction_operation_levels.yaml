@@ -5,7 +5,7 @@ name: Soft operations
 on_win:
   - money: 10
 on_ignored_or_lost:
-  - panic: 3 # game-ts: 0.02
+  - panic: 1 # game-ts: 0.02
 ---
 id: operation_level_2
 type: FactionOperationLevel
@@ -15,5 +15,38 @@ on_win:
   - money: 30
   - funding: 5
 on_ignored_or_lost:
-  - panic: 8 # game-ts: 0.1
+  - panic: 2 # game-ts: 0.1
   - funding: -1
+---
+id: operation_level_3
+type: FactionOperationLevel
+level: 3
+name: Strategic threats
+on_win:
+  - money: 100
+  - funding: 20
+on_ignored_or_lost:
+  - panic: 4 # game-ts: 0.3
+  - funding: -4
+---
+id: operation_level_4
+type: FactionOperationLevel
+level: 4
+name: Regional destabilization
+on_win:
+  - money: 300
+  - funding: 40
+on_ignored_or_lost:
+  - panic: 8 # game-ts: 1
+  - funding: -8
+---
+id: operation_level_5
+type: FactionOperationLevel
+level: 5
+name: Global conflict
+on_win:
+  - money: 1000
+  - funding: 80
+on_ignored_or_lost:
+  - panic: 15 # game-ts: 3
+  - funding: -16

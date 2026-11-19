@@ -7,8 +7,7 @@ enemies:
   initiate: 2
   operative: 1
 on_win:
-  - money: 5
-  - panic: -1
+  - money: 5 # game-ts: also a Panic reduction of 0.05
 ---
 id: raid_safehouse
 type: MissionSiteArchetype
@@ -22,7 +21,7 @@ enemies:
 on_win:
   - money: 100
   - funding: 5
-  - panic: -2
+  - panic: -1 # game-ts: 0.1
 ---
 id: raid_hq
 type: MissionSiteArchetype
@@ -58,3 +57,183 @@ enemies:
   soldier: 2
   handler: 1
   lieutenant: 1
+---
+id: foil_supply_theft
+type: MissionSiteArchetype
+kind: response
+name: Foil supply theft
+operation_level: 1
+expires_in_turns: 3
+enemies:
+  initiate: 4
+  operative: 3
+---
+id: foil_business_extortion
+type: MissionSiteArchetype
+kind: response
+name: Foil business extortion
+operation_level: 1
+expires_in_turns: 3
+enemies:
+  initiate: 6
+  operative: 2
+  handler: 1
+---
+id: foil_vip_assassination
+type: MissionSiteArchetype
+kind: response
+name: Foil VIP assassination
+operation_level: 2
+expires_in_turns: 4
+enemies:
+  initiate: 4
+  operative: 4
+  soldier: 2
+  handler: 1
+---
+id: defend_against_office_raid
+type: MissionSiteArchetype
+kind: response
+name: Defend against office raid
+operation_level: 2
+expires_in_turns: 4
+enemies:
+  initiate: 4
+  operative: 4
+  soldier: 4
+  handler: 1
+  lieutenant: 1
+---
+id: foil_financial_heist
+type: MissionSiteArchetype
+kind: response
+name: Foil financial heist
+operation_level: 3
+expires_in_turns: 5
+enemies:
+  initiate: 10
+  operative: 10
+  soldier: 8
+  handler: 4
+  lieutenant: 2
+---
+id: intercept_arms_deal
+type: MissionSiteArchetype
+kind: response
+name: Intercept arms deal
+operation_level: 3
+expires_in_turns: 5
+enemies:
+  initiate: 12
+  operative: 12
+  soldier: 10
+  elite: 2
+  handler: 4
+  lieutenant: 2
+  commander: 1
+---
+id: defend_against_facility_raid
+type: MissionSiteArchetype
+kind: response
+name: Defend against facility raid
+operation_level: 3
+expires_in_turns: 5
+enemies:
+  initiate: 16
+  operative: 12
+  soldier: 12
+  elite: 2
+  handler: 6
+  lieutenant: 3
+  commander: 1
+---
+id: counter_civilian_terror
+type: MissionSiteArchetype
+kind: response
+name: Counter civilian terror
+operation_level: 4
+expires_in_turns: 6
+enemies:
+  initiate: 30
+  operative: 24
+  soldier: 15
+  elite: 4
+  handler: 10
+  lieutenant: 3
+  commander: 1
+---
+id: defend_against_city_government_assault
+type: MissionSiteArchetype
+kind: response
+name: Defend against city government assault
+operation_level: 4
+expires_in_turns: 6
+enemies:
+  initiate: 24
+  operative: 24
+  soldier: 20
+  elite: 8
+  handler: 6
+  lieutenant: 4
+  commander: 2
+---
+id: defend_against_retaliation_strike
+type: MissionSiteArchetype
+kind: response
+name: Defend against retaliation strike
+operation_level: 4
+expires_in_turns: 6
+enemies:
+  initiate: 24
+  operative: 8
+  soldier: 24
+  elite: 8
+  handler: 4
+  lieutenant: 6
+  commander: 3
+---
+id: foil_coup_attempt
+type: MissionSiteArchetype
+kind: response
+name: Foil coup attempt
+operation_level: 5
+expires_in_turns: 7
+enemies:
+  operative: 20
+  soldier: 20
+  elite: 20
+  lieutenant: 5
+  commander: 5
+  high_commander: 1
+---
+id: foil_nuclear_plant_bombing
+type: MissionSiteArchetype
+kind: response
+name: Foil nuclear plant bombing
+operation_level: 5
+expires_in_turns: 7
+enemies:
+  initiate: 28
+  operative: 24
+  soldier: 20
+  elite: 12
+  handler: 10
+  lieutenant: 5
+  commander: 3
+  high_commander: 1
+---
+id: defend_military_installation
+type: MissionSiteArchetype
+kind: response
+name: Defend military installation
+operation_level: 5
+expires_in_turns: 7
+enemies:
+  initiate: 20
+  operative: 30
+  soldier: 24
+  elite: 12
+  handler: 7
+  lieutenant: 6
+  commander: 3
+  high_commander: 1

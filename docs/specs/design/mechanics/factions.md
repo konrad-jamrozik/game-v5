@@ -178,7 +178,7 @@ A Faction operation occurrence is not a separate Campaign instance, and its Resp
 
 A Faction operation occurrence does not depend on any existing Mission site. In particular, an Active Response Mission site of the same Faction, including one of the same Faction operation level, neither prevents nor delays a new occurrence, and consecutive occurrences may have the same Faction operation level.
 
-**Informative rationale:** game-ts also escalated Factions through activity levels and drew operations from per-level frequencies and severity weights. Factions keep that structure in a reduced form, as a Proposed rule; the game-ts values and its avoidance of repeated operations are not carried over.
+**Informative rationale:** game-ts also escalated Factions through activity levels and drew operations from per-level frequencies and severity weights. Factions keep that structure, as a Proposed rule; game-ts's avoidance of repeated operations is not carried over.
 
 # Elimination
 

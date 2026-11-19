@@ -6,6 +6,17 @@ operation_every_turns: [15, 25]
 operation_level_weights:
   1: 80
   2: 20
+next: emerging
+---
+id: emerging
+type: FactionActivityLevel
+name: Emerging
+lasts_turns: [60, 90]
+operation_every_turns: [13, 23]
+operation_level_weights:
+  1: 60
+  2: 30
+  3: 10
 next: active
 ---
 id: active
@@ -15,15 +26,58 @@ lasts_turns: [60, 90]
 operation_every_turns: [11, 21]
 operation_level_weights:
   1: 40
-  2: 60
+  2: 40
+  3: 15
+  4: 5
+next: expanding
+---
+id: expanding
+type: FactionActivityLevel
+name: Expanding
+lasts_turns: [60, 90]
+operation_every_turns: [10, 20]
+operation_level_weights:
+  1: 30
+  2: 30
+  3: 30
+  4: 10
+next: escalating
+---
+id: escalating
+type: FactionActivityLevel
+name: Escalating
+lasts_turns: [60, 90]
+operation_every_turns: [9, 19]
+operation_level_weights:
+  1: 20
+  2: 25
+  3: 35
+  4: 15
+  5: 5
 next: war
 ---
 id: war
 type: FactionActivityLevel
 name: War
-lasts_turns: null # final level
+lasts_turns: [60, 90]
 operation_every_turns: [8, 18]
-operation_level_weights:
-  1: 20
-  2: 80
+operation_level_weights: # game-ts: also level 6 with weight 5
+  1: 15
+  2: 20
+  3: 30
+  4: 20
+  5: 10
+next: total_war
+---
+id: total_war
+type: FactionActivityLevel
+name: Total war
+lasts_turns: null # final level
+operation_every_turns: [7, 17]
+operation_level_weights: # game-ts: also level 6 with weight 10
+  1: 10
+  2: 15
+  3: 25
+  4: 25
+  5: 15
 next: null
