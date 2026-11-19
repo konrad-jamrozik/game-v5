@@ -57,7 +57,7 @@ These informative views are derived from the registered Markdown specifications.
 | ENG | [Engine Contract](../specs/design/foundation/engine-contract.md) | The engine as a whole: how it divides, who may call what, and the guarantees every engine subsystem keeps. |
 | GDR | [Game Data Records](../specs/design/foundation/game-data-records.md) | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each. |
 | LIFE | [Campaign Lifecycle](../specs/design/foundation/campaign-lifecycle.md) | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status. |
-| NUMBERS | [Numbers](../specs/design/foundation/numbers.md) | That every stored quantity is a whole number, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
+| NUMBERS | [Numbers](../specs/design/foundation/numbers.md) | That every stored quantity is held as a whole number, of units or of hundredths, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
 | PAPI | [Player API](../specs/design/foundation/player-api.md) | What the player can see of a Campaign, and how gameplay actions change it. |
 | SAVES | [Saves](../specs/design/foundation/saves.md) | Campaign save contents, saving, loading, Autosaves, deleting Campaign saves, the Save size limit, and Game build compatibility. |
 | TIMELINE | [Timeline](../specs/design/foundation/timeline.md) | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees. |

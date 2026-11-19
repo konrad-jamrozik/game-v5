@@ -215,13 +215,13 @@ This example exercises [Transit across the steps](#transit-across-the-steps) and
 | Turn 6 | Standby, In transit; cannot be assigned | Recovery, In transit; cannot be assigned |
 | Advance turn ending Turn 6 | Arrives in step 1; recovers nothing in step 9, because it was In transit in the Turn-end state | Arrives in step 1; recovers nothing |
 | Turn 7 | Standby, At assignment; can be assigned | Recovery, Recovering; cannot be assigned |
-| Advance turn ending Turn 7 | If still on Standby: exhaustion 9 → 9 − 5 = 4 | [Current health](agents-spec.md#combatant-attributes) 18 + round up(2 × 30 / 100) = 19; exhaustion 12 → 7 |
-| Advance turn ending Turn 8 | Exhaustion 4 → max(0, 4 − 5) = 0 | Current health 20; exhaustion 7 → 2 |
-| Advance turn ending Turn 9 | Exhaustion stays 0 | Current health 21; exhaustion 2 → 0 |
-| Advance turn ending Turn 18 | Unaffected | Current health 30, its base health; becomes Standby, At assignment, at once, in step 9 |
-| Turn 19 | Unaffected | Standby, At assignment; can be assigned |
+| Advance turn ending Turn 7 | If still on Standby: exhaustion 9 → 9 − 5 = 4 | [Current health](agents-spec.md#combatant-attributes) 18 + round up to hundredths(2 × 30 / 100) = 18.60; exhaustion 12 → 7 |
+| Advance turn ending Turn 8 | Exhaustion 4 → max(0, 4 − 5) = 0 | Current health 19.20; exhaustion 7 → 2 |
+| Advance turn ending Turn 9 | Exhaustion stays 0 | Current health 19.80; exhaustion 2 → 0 |
+| Advance turn ending Turn 26 | Unaffected | Current health 29.40 + 0.60 = 30, its base health; becomes Standby, At assignment, at once, in step 9 |
+| Turn 27 | Unaffected | Standby, At assignment; can be assigned |
 
-In the Advance turn ending Turn 5, m1's Consequences add 5 to money and a Panic reduction of 1 to the Pending panic change, and s1 is not Active in step 7, so it does not count down. a2 regains 1 health in each of the 12 Advance turns ending Turns 7 to 18, which equals its [Recovery turns remaining](agent-recovery.md#glossary) of round up((30 − 18) / 1) = 12. Each Agent was counted in Upkeep of every one of these Advance turns, because it stayed Serving.
+In the Advance turn ending Turn 5, m1's Consequences add 5 to money and a Panic reduction of 1 to the Pending panic change, and s1 is not Active in step 7, so it does not count down. a2 regains 0.60 health in each of the 20 Advance turns ending Turns 7 to 26, which equals its [Recovery turns remaining](agent-recovery.md#glossary) of round up((30 − 18) / 0.60) = 20. Each Agent was counted in Upkeep of every one of these Advance turns, because it stayed Serving.
 
 ## The last Faction Eliminated while Panic reaches the limit
 

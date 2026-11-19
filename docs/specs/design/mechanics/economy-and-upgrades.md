@@ -78,7 +78,7 @@ An AgencyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-in
 2. **One EconomyParameters:** The Game build supplies exactly one EconomyParameters GDR.
 3. **Exact properties:** Each GDR of the three Types has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
 4. **Parameters are valid:** Each of `hire_cost`, `upkeep_per_agent`, `contracting_income_per_agent`, `base_agent_cap`, `base_transport_cap`, and `base_training_cap` is a whole number of at least 0.
-5. **Upgrades are valid:** Each Upgrade's `price` and `increment` are whole numbers of at least 0, and its `effect` is exactly one of `agent_cap`, `transport_cap`, `training_cap`, `agent_weapon_damage`, `agent_base_health`, `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`.
+5. **Upgrades are valid:** Each Upgrade's `price` is a whole number of at least 0. Its `increment` is a whole number of at least 0, except that the `increment` of a Rate Upgrade is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. Its `effect` is exactly one of `agent_cap`, `transport_cap`, `training_cap`, `agent_weapon_damage`, `agent_base_health`, `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`.
 6. **Names are present:** The `name` of the AgencyArchetype and of each Upgrade is non-empty text.
 
 The Game build may supply any number of Upgrades, including none, and several Upgrades may share one `effect`; the rules under [Upgrade bonus](#upgrade-bonus) add up the contributions of every Upgrade with the same `effect`.
@@ -348,7 +348,7 @@ upgraded value = starting value + Upgrade bonus
 Upgrade bonus  = sum over every Upgrade U whose effect is the effect identifier of ( Increment of U × Acquisitions of U )
 ```
 
-Inputs: each Increment and each Acquisitions is a whole number of at least 0, and the Acquisitions are those of the Committed state in which the value is read or set. The Upgrade bonus of an effect identifier that no Upgrade has is 0. No rounding occurs. The starting value and where the upgraded value applies are stated for each kind: [Agency caps](#agency-caps) for a Cap Upgrade, [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage Upgrade, [Base health Upgrade](#base-health-upgrade) for a Base health Upgrade, and [Rate Upgrades](#rate-upgrades) for a Rate Upgrade.
+Inputs: each Acquisitions is a whole number of at least 0, each Increment is a whole number of at least 0 or, for a Rate Upgrade, a [Decimal quantity](../foundation/numbers.md#glossary) of at least 0, and the Acquisitions are those of the Committed state in which the value is read or set. The Upgrade bonus of an effect identifier that no Upgrade has is 0. No rounding occurs, because the product of a Decimal quantity and a whole number is a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. The starting value and where the upgraded value applies are stated for each kind: [Agency caps](#agency-caps) for a Cap Upgrade, [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage Upgrade, [Base health Upgrade](#base-health-upgrade) for a Base health Upgrade, and [Rate Upgrades](#rate-upgrades) for a Rate Upgrade.
 
 ### Cap Upgrades
 
@@ -394,7 +394,7 @@ A Rate Upgrade changes no stored value beyond the Acquisitions. Each rate it rai
 | Exhaustion recovery | `exhaustion_recovery_per_turn` + Upgrade bonus of `exhaustion_recovery` | [Exhaustion recovery](agent-recovery.md#exhaustion-recovery) |
 | Health recovery percentage | `health_recovery_pct_per_turn` + Upgrade bonus of `health_recovery` | [Health recovery](agent-recovery.md#health-recovery) |
 
-Inputs: `training_skill_gain_per_turn` is that of AgentParameters, and `exhaustion_recovery_per_turn` and `health_recovery_pct_per_turn` are those of RecoveryParameters. Each result is a whole number of at least its starting value, and the health recovery percentage is a [Percent value](../foundation/numbers.md#glossary). A Turn advancement step reads the Acquisitions of the Turn-end state of its Advance turn, because no Player action is made during an Advance turn. A purchase therefore takes effect in the next Advance turn, for every Agent the rule applies to, and changes no Agent value at once.
+Inputs: `training_skill_gain_per_turn` is that of AgentParameters, and `exhaustion_recovery_per_turn` and `health_recovery_pct_per_turn` are those of RecoveryParameters. Each result is a Decimal quantity of at least its starting value, and the health recovery percentage is a [Percent value](../foundation/numbers.md#glossary). E.g., three Acquisitions of an Upgrade with Increment 0.2 raise a health recovery percentage of 2 to exactly 2.60. A Turn advancement step reads the Acquisitions of the Turn-end state of its Advance turn, because no Player action is made during an Advance turn. A purchase therefore takes effect in the next Advance turn, for every Agent the rule applies to, and changes no Agent value at once.
 
 # Turn series of money
 
@@ -501,9 +501,9 @@ All examples use the Bootstrap GDR values from `content/configuration/campaign_c
 | `training_cap` | `price` 200; `effect` `training_cap`; `increment` 4 |
 | `weapon_damage` | `price` 500; `effect` `agent_weapon_damage`; `increment` 1 |
 | `base_health` | `price` 500; `effect` `agent_base_health`; `increment` 1 |
-| `training_skill_gain` | `price` 5000; `effect` `training_skill_gain`; `increment` 1 |
-| `exhaustion_recovery` | `price` 1000; `effect` `exhaustion_recovery`; `increment` 1 |
-| `health_recovery` | `price` 2500; `effect` `health_recovery`; `increment` 1 |
+| `training_skill_gain` | `price` 500; `effect` `training_skill_gain`; `increment` 0.1 |
+| `exhaustion_recovery` | `price` 500; `effect` `exhaustion_recovery`; `increment` 0.5 |
+| `health_recovery` | `price` 500; `effect` `health_recovery`; `increment` 0.2 |
 | `field_agent` | `base_health` 30 |
 | `recovery` | `health_recovery_pct_per_turn` 2; `exhaustion_recovery_per_turn` 5 |
 | `agent_parameters` | `initial_roster_size` 4; `exhaustion_free_points` 30; `skill_penalty_pct_per_exhaustion` 1; `exhaustion_per_contracting_turn` 1; `exhaustion_per_training_turn` 1; `exhaustion_work_limit` 70; `training_skill_gain_per_turn` 1 |
@@ -659,7 +659,7 @@ Each purchase cost the same 500. A third purchase later raises a1 to a4, a7, and
 
 ## Base health and Rate Upgrades
 
-This example exercises [Base health Upgrade](#base-health-upgrade), [Rate Upgrades](#rate-upgrades), and [Purchasing Upgrades](#purchasing-upgrades). During Turn 40 the Agency has money 9050, no Upgrade other than these has been acquired, and it has these Agents, each with base skill 100:
+This example exercises [Base health Upgrade](#base-health-upgrade), [Rate Upgrades](#rate-upgrades), and [Purchasing Upgrades](#purchasing-upgrades). During Turn 40 the Agency has money 2050, no Upgrade other than these has been acquired, and it has these Agents, each with base skill 100:
 
 | Agent | Assignment and Agent status | Current health of base health | Exhaustion |
 | ----- | --------------------------- | ----------------------------- | ---------- |
@@ -672,16 +672,16 @@ The actions are taken in this order:
 
 | Action | Money | Result |
 | --- | --- | --- |
-| `purchaseUpgrade(base_health)` | 8550 | a1 and a3 have 31 of 31 and a2 has 21 of 31, at once; a4 keeps 0 of 30. |
-| `hireAgent()` | 8500 | a5 is created In transit with base health 30 + 1 × 1 = 31 and current health 31. |
-| `purchaseUpgrade(exhaustion_recovery)` | 7500 | Exhaustion recovery becomes 5 + 1 × 1 = 6. No Agent value changes at once. |
-| `purchaseUpgrade(health_recovery)` | 5000 | The health recovery percentage becomes 2 + 1 × 1 = 3. No Agent value changes at once. |
-| `purchaseUpgrade(training_skill_gain)` | 0 | Training skill gain becomes 1 + 1 × 1 = 2. No Agent value changes at once. |
+| `purchaseUpgrade(base_health)` | 1550 | a1 and a3 have 31 of 31 and a2 has 21 of 31, at once; a4 keeps 0 of 30. |
+| `hireAgent()` | 1500 | a5 is created In transit with base health 30 + 1 × 1 = 31 and current health 31. |
+| `purchaseUpgrade(exhaustion_recovery)` | 1000 | Exhaustion recovery becomes 5 + 0.5 × 1 = 5.50. No Agent value changes at once. |
+| `purchaseUpgrade(health_recovery)` | 500 | The health recovery percentage becomes 2 + 0.2 × 1 = 2.20. No Agent value changes at once. |
+| `purchaseUpgrade(training_skill_gain)` | 0 | Training skill gain becomes 1 + 0.1 × 1 = 1.10. No Agent value changes at once. |
 
 In the Advance turn ending Turn 40, the raised rates apply:
 
-- **Training step:** a3 has full current health and exhaustion 0, so its Training gain outcome is "gains" with Probability 1, and its base skill rises by 2, to 102. Without the Upgrade it would rise to 101.
-- **Agent recovery step:** a1 on Standby loses 6 exhaustion, to 6, instead of 5. a2 on Recovery loses 6 exhaustion, to 2, and regains round up(3 × 31 / 100) = round up(0.93) = 1 current health, to 22 of 31; the third percentage point does not yet raise the current health it regains in each Advance turn, which a fourth would raise to round up(1.24) = 2.
+- **Training step:** a3 has full current health and exhaustion 0, so its Training gain outcome is "gains" with Probability 1, and its base skill rises by 1.10, to 101.10. Without the Upgrade it would rise to 101.
+- **Agent recovery step:** a1 on Standby loses 5.50 [Exact exhaustion](agents-spec.md#combatant-attributes), to 6.50, so its exhaustion is 7; in the next Advance turn it falls to 1, where without the Upgrade it would be 7 and then 2. a2 on Recovery loses 5.50, to Exact exhaustion 2.50 and exhaustion 3, and regains round up to hundredths(2.2 × 31 / 100) = round up to hundredths(0.682) = 0.69 current health, to 21.69 of 31; without the Upgrade it would regain 0.62.
 
 ## Purchase rejections and exact affordability
 
@@ -697,7 +697,7 @@ After `developer.actions.addMoney(1)`, money is 200 and `purchaseUpgrade(trainin
 
 ## GDR validation
 
-This example exercises [Economy GDR validation](#economy-gdr-validation) and [Campaign configuration values](#campaign-configuration-values). The Bootstrap GDRs pass every rule: there is exactly one AgencyArchetype, `agency`, and exactly one EconomyParameters GDR, `economy`, whose six values are whole numbers of at least 0; each of the eight Upgrades has exactly `name`, `price`, `effect`, and `increment`, with a whole `price` and `increment` of at least 0 and an `effect` among the eight effect identifiers; and `standard` supplies whole values of at least 0 for `starting_money` and `starting_funding`. Each of the following test changes independently makes the Game build defective, so no Campaign is created from it: setting `weapon_damage`'s `effect` to `agent_morale`; removing `transport_cap`'s `increment`; adding a property `max_acquisitions` to `agent_cap`; setting `training_cap`'s `price` to −1; setting `economy`'s `hire_cost` to 12.5; adding a second EconomyParameters GDR; and setting `standard`'s `starting_money` to −100.
+This example exercises [Economy GDR validation](#economy-gdr-validation) and [Campaign configuration values](#campaign-configuration-values). The Bootstrap GDRs pass every rule: there is exactly one AgencyArchetype, `agency`, and exactly one EconomyParameters GDR, `economy`, whose six values are whole numbers of at least 0; each of the eight Upgrades has exactly `name`, `price`, `effect`, and `increment`, with a whole `price` of at least 0, an `increment` of at least 0 that is whole or, for the three Rate Upgrades, has at most two digits after the decimal point, and an `effect` among the eight effect identifiers; and `standard` supplies whole values of at least 0 for `starting_money` and `starting_funding`. Each of the following test changes independently makes the Game build defective, so no Campaign is created from it: setting `weapon_damage`'s `effect` to `agent_morale`; removing `transport_cap`'s `increment`; adding a property `max_acquisitions` to `agent_cap`; setting `training_cap`'s `price` to −1; setting `training_cap`'s `increment` to 0.5; setting `health_recovery`'s `increment` to 0.125; setting `economy`'s `hire_cost` to 12.5; adding a second EconomyParameters GDR; and setting `standard`'s `starting_money` to −100.
 
 # TODOs
 

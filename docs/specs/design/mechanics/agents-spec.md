@@ -31,11 +31,12 @@ What makes an [Agent](domain-model.md#agency-and-agents) or an [Enemy](domain-mo
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Base skill | How capable a [Combatant](domain-model.md#combat) is at its work and in a Combat, as a whole number, before its lost current health and its exhaustion reduce it. | Skill, naming the stored value |
+| Base skill | How capable a [Combatant](domain-model.md#combat) is at its work and in a Combat, before its lost current health and its exhaustion reduce it. An Agent's base skill is a [Decimal quantity](../foundation/numbers.md#glossary), so Training can raise it by less than one point. | Skill, naming the stored value |
 | Effective skill | A Combatant's base skill as reduced by its lost current health and its exhaustion; the value every rule uses when a Combatant works or fights. |  |
 | Base health | The highest current health a Combatant can have. | Maximum health; max health; full health |
 | Current health | How much more harm a Combatant can take now, from zero up to its base health under [Attribute ranges](#attribute-ranges); an Agent whose current health reaches zero is dead. | Hit points; hit-point; health, naming a Combatant value. Unqualified health remains valid in its general sense, e.g. Health recovery. |
-| Exhaustion | How worn down a Combatant is, as a whole number of at least zero with no upper bound; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. | Fatigue |
+| Exhaustion | How worn down a Combatant is, as a whole number of at least zero with no upper bound; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. An Agent's exhaustion is its Exact exhaustion rounded up. | Fatigue |
+| Exact exhaustion | The stored value behind an Agent's exhaustion: a [Decimal quantity](../foundation/numbers.md#glossary) of at least zero, so that rest can lower it by less than one point, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion). |  |
 | Base weapon damage | The typical current health a Combatant's hit removes, as a stored whole number, before any adjustment for the situation and before the random spread. | Weapon damage, naming the stored value |
 | Effective weapon damage | A Combatant's base weapon damage as adjusted for the situation; the value around which a Combat rolls the damage outcome. It equals base weapon damage, because no rule adjusts it yet. |  |
 
@@ -104,7 +105,7 @@ AgentParameters bundles the scalar values that the Agent rules read, and the val
 | `exhaustion_per_investigation_turn` | The exhaustion an Agent gains in each Advance turn in which it works on an Investigation. | [Work exhaustion](#work-exhaustion) |
 | `exhaustion_work_start_max` | The highest exhaustion at which an Agent is Fit for work. | [Start-work gate](#start-work-gate) |
 | `exhaustion_work_limit` | The exhaustion at or above which work makes an Agent return to Standby. | [Forced return](#forced-return) |
-| `training_skill_gain_per_turn` | The base skill an Agent on Training gains in one Advance turn when its Training gain outcome is "gains", before any [Upgrade](domain-model.md#agency-and-agents). | [Training growth](#training-growth) |
+| `training_skill_gain_per_turn` | The base skill an Agent on Training gains in one Advance turn when its Training gain outcome is "gains", before any [Upgrade](domain-model.md#agency-and-agents). It is a [Decimal quantity](../foundation/numbers.md#glossary). | [Training growth](#training-growth) |
 
 ## Weapon properties this document reads
 
@@ -118,7 +119,7 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 2. **One AgentParameters:** The Game build supplies exactly one AgentParameters GDR.
 3. **Exact properties:** The AgentArchetype and the AgentParameters GDR each have exactly the properties their table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
 4. **Archetype values are valid:** The AgentArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a whole number of at least 1, and its `weapon` references a Weapon GDR the Game build supplies.
-5. **Parameters are valid:** Each property of AgentParameters is a whole number of at least 0.
+5. **Parameters are valid:** `training_skill_gain_per_turn` is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. Every other property of AgentParameters is a whole number of at least 0.
 6. **Exhaustion thresholds are ordered:** `exhaustion_work_start_max` is less than `exhaustion_work_limit`, and `exhaustion_work_limit` is at most `exhaustion_incapacitation`. An Agent that is Fit for work therefore starts below the exhaustion that ends its work, and work ends no later than at the exhaustion at which the Agent would stop fighting in a Combat.
 
 [Combat GDR validation](combat.md#combat-gdr-validation) adds further rules, e.g. that the Weapon `base_weapon_damage` is a whole number of at least 1. These rules guarantee that every newly created Agent satisfies [Attribute ranges](#attribute-ranges) and that the effective skill formula never divides by zero.
@@ -131,10 +132,10 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 | --- | --- | --- | --- |
 | Agency | Constants | An Immutable reference to the Agency that employs the Agent. | [Authoritative value](../foundation/core-concepts.md#value-classification). Always the Campaign's one Agency. |
 | Turn hired | Constants | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) in which the Agent was created. | Authoritative value. A whole number of at least 1. |
-| Base skill | State | The Agent's base skill. | Authoritative value. A whole number of at least 0, with no upper bound, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities). |
-| Current health | State | The Agent's current health. | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges). |
+| Base skill | State | The Agent's base skill. | Authoritative value. A Decimal quantity of at least 0, with no upper bound, under [Decimal quantities](../foundation/numbers.md#decimal-quantities). |
+| Current health | State | The Agent's current health. | Authoritative value. A Decimal quantity under [Attribute ranges](#attribute-ranges). |
 | Base health | State | The Agent's base health. | Authoritative value. A whole number of at least 1. No rule in scope changes it after creation. |
-| Exhaustion | State | The Agent's exhaustion. | Authoritative value. A whole number under [Attribute ranges](#attribute-ranges). |
+| Exact exhaustion | State | The Agent's Exact exhaustion. | Authoritative value. A Decimal quantity of at least 0, with no upper bound, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion). |
 | Weapon | State | A reference to the Weapon GDR the Agent is equipped with. | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule in scope changes it after creation. |
 | Base weapon damage | State | The Agent's base weapon damage. | Authoritative value. A whole number of at least 1. Only the rules under [Modifiable values](#modifiable-values) change it. |
 | Assignment | State | Present exactly when the Agent is Serving: one of Standby, Contracting, Training, Recovery, an Investigation with a Mutable reference to it, or Deployed with a Mutable reference to the Mission. | Authoritative value, under [Assignment and Agent status](#assignment-and-agent-status). |
@@ -144,7 +145,7 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 | Turn terminated | State | Present exactly when the Agent is Terminated: the turn number of the Turn in which it became Terminated. | Authoritative value. A whole number of at least its Turn hired, under [Service record](#service-record). |
 | Killed by | State | Present exactly when the Agent is Killed: an Immutable reference to the Enemy whose attack made it dead, and an Immutable reference to that Enemy's [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions). | Authoritative value, under [Service record](#service-record). |
 
-Base skill, current health, base health, exhaustion, Weapon, and base weapon damage are the properties the [Combatant Role Type](#combatant-role-type) requires; Weapon and base weapon damage together are the equipped weapon values. An Agent also has three [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its effective skill, under [Effective skill](#effective-skill); whether it can be assigned, under [Agents that can be assigned](#agents-that-can-be-assigned); and whether it is Fit for work, under [Start-work gate](#start-work-gate). An Agent has no [Turn series](../foundation/world-history.md#glossary).
+Base skill, current health, base health, exhaustion, Weapon, and base weapon damage are the properties the [Combatant Role Type](#combatant-role-type) requires; Weapon and base weapon damage together are the equipped weapon values. An Agent holds its exhaustion as its Exact exhaustion. An Agent also has four [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its exhaustion, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion); its effective skill, under [Effective skill](#effective-skill); whether it can be assigned, under [Agents that can be assigned](#agents-that-can-be-assigned); and whether it is Fit for work, under [Start-work gate](#start-work-gate). An Agent has no [Turn series](../foundation/world-history.md#glossary).
 
 **Retention:** An Agent keeps every property above for the whole Campaign, whatever its Agent status, so that every reference to it resolves, e.g. from a [Combat report](domain-model.md#combat) or a Participation history. An Agent becomes [Retired](../foundation/world-history.md#glossary) when it becomes Terminated, and is kept in [World history](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No Agent is ever removed.
 
@@ -195,7 +196,7 @@ An Agent's attributes say how capable it is and how worn down it is, and togethe
 
 The [Combatant Role Type](domain-model.md#combat) is a [Role Type](../foundation/campaign-instances.md#glossary) under [Role Types](../foundation/campaign-instances.md#role-types) in Campaign Instances. It states what a Campaign instance [Type](../foundation/core-concepts.md#data-modeling) must have for its Campaign instances to be Combatants, and what a Combatant gains while a Combat lasts.
 
-- **Adoption condition:** a Campaign instance Type can adopt the Combatant Role Type if the State of its Campaign instances has all of the following properties: base skill, current health, base health, exhaustion, and equipped weapon values. This set is exhaustive.
+- **Adoption condition:** a Campaign instance Type can adopt the Combatant Role Type if the State of its Campaign instances has all of the following properties: base skill, current health, base health, exhaustion, and equipped weapon values. This set is exhaustive. A Type may hold its exhaustion as a stored value from which the exhaustion derives, as Agent does with Exact exhaustion.
 - **Adopters:** Agent and Enemy adopt the Combatant Role Type. This set is exhaustive.
 - **Gained properties:** every Combatant taking part in a Combat gains properties that mean something only while that Combat lasts, e.g. whether it is [Incapacitated](combat.md#glossary). It gains them when the Combat begins and loses them when the Combat ends. The exhaustive set of gained properties is under [Combat-only properties](combat.md#combat-only-properties) in Combat.
 
@@ -207,14 +208,36 @@ The Combatant Role Type is not a Campaign instance Type, so a Combatant is never
 
 **Proposed rule:** In every Committed state, every Combatant, i.e. every Agent and every Enemy, satisfies these ranges:
 
-- Base skill is a whole number of at least 0.
+- Base skill is at least 0. An Agent's is a [Decimal quantity](../foundation/numbers.md#glossary); an Enemy's is a whole number.
 - Base health is a whole number of at least 1.
-- Exhaustion is a whole number of at least 0, with no upper bound.
-- Current health is a whole number from 0 to base health, both included.
+- Exhaustion is a whole number of at least 0, with no upper bound. An Agent's Exact exhaustion is a Decimal quantity of at least 0, with no upper bound.
+- Current health is from 0 to base health, both included. An Agent's is a Decimal quantity; an Enemy's is a whole number.
+
+Each comparison of these values is exact, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. E.g., an Agent with current health 29.99 of 30 has not reached its base health, and one with current health 0.67 is alive.
 
 Any rule of any specification that would lower exhaustion below 0 lowers it to exactly 0 instead; no rule clamps exhaustion from above. Any rule that would lower current health below 0 lowers it to exactly 0 instead, and any rule that would raise current health above base health raises it to exactly base health instead. The rule that changes the value applies these clamps as part of its own change. E.g., a Combatant with exhaustion 99 that gains 3 exhaustion has exhaustion 102, and an Agent with exhaustion 3 that recovers 5 has exhaustion 0.
 
 **Informative rationale:** Exhaustion above `exhaustion_incapacitation` has no further effect in a Combat, where the Combatant has already stopped fighting, but it lengthens the rest the Agent needs before it is Fit for work again.
+
+## Exhaustion and Exact exhaustion
+
+**Proposed rule:** An Agent stores its Exact exhaustion, and its exhaustion is the following Derived value:
+
+```text
+exhaustion = round up( Exact exhaustion )
+```
+
+Exact exhaustion is a Decimal quantity of at least 0, and [Round up](../foundation/numbers.md#glossary) is applied once, so exhaustion is a whole number of at least 0 and equals Exact exhaustion whenever that is whole. The following statements are complete.
+
+1. **Every rule reads exhaustion:** Every rule of every specification that reads an Agent's exhaustion reads this whole number, e.g. [Effective skill](#effective-skill), the [Start-work gate](#start-work-gate), [Forced return](#forced-return), and the incapacitation condition of [Combat](combat.md). Whatever is shown to the player as an Agent's exhaustion is this whole number too. Only [Exhaustion recovery](agent-recovery.md#exhaustion-recovery) in Agent Recovery reads Exact exhaustion.
+2. **A rule that changes exhaustion changes Exact exhaustion:** A rule that raises an Agent's exhaustion by a whole number of points raises its Exact exhaustion by that number, so its exhaustion rises by exactly that number. A rule that sets an Agent's exhaustion sets its Exact exhaustion to the same value. Exhaustion recovery lowers Exact exhaustion by an amount that need not be whole.
+3. **Clamp:** The clamp of exhaustion at 0 above applies to Exact exhaustion.
+
+An [Enemy](domain-model.md#combat) stores its exhaustion itself, as a whole number, because no rule lowers it.
+
+E.g., with a test exhaustion recovery of 1.6, an Agent on Standby with Exact exhaustion 5 has exhaustion 5; after one Agent recovery step, under [Exhaustion recovery](agent-recovery.md#exhaustion-recovery) in Agent Recovery, its Exact exhaustion is 3.40 and its exhaustion 4; and after the next it is 1.80 and its exhaustion 2. An attack that then raises its exhaustion by 1 gives Exact exhaustion 2.80 and exhaustion 3.
+
+**Informative rationale:** Rest that lowers exhaustion by less than a whole point in each Turn lets an Upgrade improve it in small steps. Rounding up means an Agent counts as rested only once the whole point is gone, and keeps every threshold and every formula that reads exhaustion in whole numbers.
 
 ## Effective skill
 
@@ -229,10 +252,10 @@ Inputs:
 
 | Symbol | Meaning | Unit and domain |
 | --- | --- | --- |
-| base skill | The Combatant's base skill. | Skill points; a whole number of at least 0. |
-| current health | The Combatant's current health. | Health points; a whole number from 0 to base health. |
+| base skill | The Combatant's base skill. | Skill points; at least 0, a Decimal quantity for an Agent. |
+| current health | The Combatant's current health. | Health points; from 0 to base health, a Decimal quantity for an Agent. |
 | base health | The Combatant's base health. | Health points; a whole number of at least 1. |
-| exhaustion | The Combatant's exhaustion. | Exhaustion points; a whole number of at least 0. |
+| exhaustion | The Combatant's exhaustion, for an Agent under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion). | Exhaustion points; a whole number of at least 0. |
 | p | `skill_penalty_pct_per_exhaustion` of AgentParameters. | Percent value per exhaustion point; a whole number of at least 0. |
 | f | `exhaustion_free_points` of AgentParameters. | Exhaustion points; a whole number of at least 0. |
 
@@ -240,7 +263,7 @@ Evaluation and rounding: the formula is evaluated exactly, under [Exact evaluati
 
 Penalty clamp: when `p × max(0, exhaustion − f)` exceeds 100, the penalty factor is 0, not negative, and the effective skill is 0. With an exhaustion at most `f`, the penalty factor is exactly 100 and exhaustion has no effect.
 
-Range: the result is a whole number from 0 to base skill, both included, because current health divided by base health and the penalty factor divided by 100 each lie from 0 to 1. A Combatant whose current health equals its base health and whose exhaustion is at most `f` has an effective skill equal to its base skill. A Combatant with zero current health, e.g. a Killed Agent, has an effective skill of 0.
+Range: the result is a whole number from 0 to base skill, both included, because current health divided by base health and the penalty factor divided by 100 each lie from 0 to 1. A Combatant whose current health equals its base health and whose exhaustion is at most `f` has an effective skill equal to its base skill rounded down, e.g. 102 for a base skill of 102.75. A Combatant with zero current health, e.g. a Killed Agent, has an effective skill of 0.
 
 Effective skill is never stored. Whenever a rule reads it, it is computed from the Combatant's values at that moment, so it follows every change of base skill, current health, or exhaustion at once, under [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. Which moment's values a [Turn advancement step](turn-advancement.md#glossary) reads is stated under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
@@ -371,11 +394,11 @@ where current health, base health, and the penalty factor are those of [Effectiv
 base skill after = base skill before + training skill gain
 ```
 
-Inputs: base skill before is the Agent's base skill at the start of the Training step, a whole number of at least 0; training skill gain is `training_skill_gain_per_turn` of AgentParameters plus what every acquired Upgrade with the effect `training_skill_gain` adds, under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy and Upgrades, a whole number of at least 0. No rounding occurs, because every term is a whole number. The result is a whole number of at least base skill before; base skill has no upper bound. When the outcome is "does not gain", base skill is unchanged. An Agent whose exhaustion is at most `exhaustion_free_points` and whose current health equals its base health has Probability 1, so it always gains; e.g., with the Bootstrap values, an Agent with exhaustion 50 gains with Probability 80 / 100. An Agent that arrived at Training in the Transit step of the same Advance turn has no Training gain outcome and gains nothing, under [Transit rule](#transit-rule). Training also raises the Agent's exhaustion, under [Work exhaustion](#work-exhaustion), and changes no other value of the Agent.
+Inputs: base skill before is the Agent's base skill at the start of the Training step, a Decimal quantity of at least 0; training skill gain is `training_skill_gain_per_turn` of AgentParameters plus what every acquired Upgrade with the effect `training_skill_gain` adds, under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy and Upgrades, a Decimal quantity of at least 0. No rounding occurs, because the sum of two Decimal quantities is a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. The result is a Decimal quantity of at least base skill before; base skill has no upper bound. E.g., a base skill of 101.65 and a training skill gain of 1.10 give 102.75. When the outcome is "does not gain", base skill is unchanged. An Agent whose exhaustion is at most `exhaustion_free_points` and whose current health equals its base health has Probability 1, so it always gains; e.g., with the Bootstrap values, an Agent with exhaustion 50 gains with Probability 80 / 100. An Agent that arrived at Training in the Transit step of the same Advance turn has no Training gain outcome and gains nothing, under [Transit rule](#transit-rule). Training also raises the Agent's exhaustion, under [Work exhaustion](#work-exhaustion), and changes no other value of the Agent.
 
 The outcome of one Agent does not depend on any other Agent, so the result is the same whatever order an implementation processes the Agents in.
 
-**Informative rationale:** A Probability rather than a scaled gain keeps base skill a whole number: the Bootstrap gain of 1, scaled by 0.83 and rounded down, would be 0, so a slightly tired Agent would never learn. With the Probability, the expected gain is exactly the gain scaled by effective skill relative to base skill.
+**Informative rationale:** With the Probability, the expected gain is exactly the training skill gain scaled by effective skill relative to base skill, and every gain an Agent does receive is the whole training skill gain the Agency has.
 
 # Work exhaustion
 
@@ -393,7 +416,7 @@ Work wears an Agent down a little in every Advance turn, so an Agent cannot work
 exhaustion after = exhaustion before + exhaustion gained
 ```
 
-Exhaustion before is the Agent's exhaustion at the start of the step and exhaustion gained the value of AgentParameters in the table, each a whole number of at least 0; no rounding occurs and no upper clamp applies, under [Attribute ranges](#attribute-ranges). Because the work is read first, the exhaustion an Agent gains from a work turn never lowers what that turn's work achieves: e.g., an Agent on Contracting with exhaustion 30 earns its full income in the Agency income step and then has exhaustion 31. An Agent that arrived in the Transit step of the same Advance turn does not work, under [Transit rule](#transit-rule), and gains no exhaustion. The gain of one Agent reads no other Agent, so the result does not depend on the order an implementation processes the Agents in.
+Exhaustion before is the Agent's exhaustion at the start of the step and exhaustion gained the value of AgentParameters in the table, each a whole number of at least 0; no rounding occurs and no upper clamp applies, under [Attribute ranges](#attribute-ranges). The Agent's Exact exhaustion rises by the same amount, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion). Because the work is read first, the exhaustion an Agent gains from a work turn never lowers what that turn's work achieves: e.g., an Agent on Contracting with exhaustion 30 earns its full income in the Agency income step and then has exhaustion 31. An Agent that arrived in the Transit step of the same Advance turn does not work, under [Transit rule](#transit-rule), and gains no exhaustion. The gain of one Agent reads no other Agent, so the result does not depend on the order an implementation processes the Agents in.
 
 ## Forced return
 
@@ -502,7 +525,7 @@ Each lists its Agents by Instance ID, in the order of the Agents in Campaign sta
 | Value | Player-visible information |
 | --- | --- |
 | An Agent's Instance ID, its AgentArchetype including the AgentArchetype's `name`, its Agency, and its Turn hired | Yes |
-| An Agent's base skill, current health, base health, exhaustion, Weapon, and base weapon damage | Yes |
+| An Agent's base skill, current health, base health, exhaustion, Exact exhaustion, Weapon, and base weapon damage | Yes |
 | An Agent's effective skill | Yes |
 | An Agent's Agent status, and its Assignment, including the Investigation or Mission it references | Yes |
 | Whether an Agent can be assigned, whether it is Fit for work, and whether it is In base or Away | Yes |
@@ -517,6 +540,8 @@ Each lists its Agents by Instance ID, in the order of the Agents in Campaign sta
 - **Exhaustion at the free amount:** An exhaustion exactly equal to `exhaustion_free_points` gives a penalty factor of 100; the first point above it lowers the penalty factor by `skill_penalty_pct_per_exhaustion` ([Effective skill](#effective-skill)).
 - **Penalty below zero:** When `skill_penalty_pct_per_exhaustion × (exhaustion − exhaustion_free_points)` exceeds 100, the penalty factor is 0 and effective skill is 0; the Combatant is still alive and keeps its base skill ([Effective skill](#effective-skill)).
 - **Very high exhaustion:** Exhaustion has no upper bound and may exceed `exhaustion_incapacitation`, e.g. after a costly Mission under [Mission exhaustion](missions.md#mission-exhaustion) in Missions; the penalty factor is 0 once `skill_penalty_pct_per_exhaustion × (exhaustion − exhaustion_free_points)` reaches 100, and the Agent needs a longer rest before it is Fit for work ([Attribute ranges](#attribute-ranges), [Start-work gate](#start-work-gate)).
+- **Exact exhaustion just above a threshold:** An Agent with Exact exhaustion 30.40 has exhaustion 31, so with `exhaustion_work_start_max` 30 it is not Fit for work; with Exact exhaustion 30 it is ([Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion), [Start-work gate](#start-work-gate)).
+- **Current health just below base health:** An Agent with current health 29.99 of 30 has an effective skill below its base skill wherever the exact value falls below the next whole number, e.g. `round down(100 × 29.99 × 100 / 3000) = round down(99.96…) = 99` ([Effective skill](#effective-skill)).
 - **Exhaustion exactly at a threshold:** An Agent with exhaustion equal to `exhaustion_work_start_max` is Fit for work, and an Agent whose work brings its exhaustion exactly to `exhaustion_work_limit` has a Forced return ([Start-work gate](#start-work-gate), [Forced return](#forced-return)).
 - **Assigning a tired Agent:** `assignAgents` to Contracting or Training, `startInvestigation`, and `assignAgentsToInvestigation` reject, as a whole, a list with an Agent that is not Fit for work; assigning it to Standby or deploying it is accepted ([Start-work gate](#start-work-gate)).
 - **Forced return from Training:** The Agent is on Standby, At assignment, at once, so it recovers exhaustion in the Agent recovery step of the same Advance turn, under [Which Agents recover](agent-recovery.md#which-agents-recover) in Agent Recovery ([Forced return](#forced-return)).
@@ -569,6 +594,8 @@ This example exercises [Effective skill](#effective-skill) and [Attribute ranges
 | 100 | 30 of 30 | 85 | max(0, 100 − 2 × 55) = max(0, −10) = 0 | round down(0) | 0 |
 
 The second row is the rounding-once rule at work: the exact value 100 × 15/30 × 80/100 is 40. In the fifth and sixth rows, rounding happens only at the end; rounding 29/30 or 65/100 first would be a violation of [Exact evaluation](../foundation/numbers.md#exact-evaluation). The third and fourth rows are the boundary at `exhaustion_free_points`. The seventh row is the 1% multiplicative penalty: 17 points above the free amount leave 83% of the skill. The row with exhaustion 130 and the last row show the penalty clamp: the penalty factor is 0, never negative. Every result lies from 0 to the Combatant's base skill.
+
+An Agent's base skill and current health may have decimal places, and the same single rounding applies. An Agent with base skill 102.75, current health 28.67 of 30, and exhaustion 0 has effective skill `round down(102.75 × 28.67 × 100 / 3000) = round down(98.19…) = 98`. An Agent with base skill 102.75, current health 30 of 30, and Exact exhaustion 30.40, so exhaustion 31, has penalty factor 99 and effective skill `round down(102.75 × 30 × 99 / 3000) = round down(101.72…) = 101`.
 
 ## Exhaustion and current health clamps
 
@@ -653,6 +680,8 @@ Moving from Standby to Training takes no transit, so a1 is At assignment in the 
 
 Separately, Agent a2 on Training, At assignment, with base skill 100, current health 30 of 30, and exhaustion 50 has the Training gain Probability `30 × 80 / (30 × 100) = 80 / 100`. With the injected outcome "does not gain", its base skill stays 100; with "gains", it becomes 101. Either way its exhaustion becomes 51.
 
+With the test value `training_skill_gain_per_turn` 1.1, a1 would have base skill 101.10 after the Advance turn ending Turn 5 and 102.20 after the one ending Turn 6, with effective skill 101 and 102.
+
 ## Start-work gate and Forced return
 
 This example exercises [Start-work gate](#start-work-gate), [Work exhaustion](#work-exhaustion), [Forced return](#forced-return), and [Assigning Agents](#assigning-agents). During Turn 20: a1 is on Contracting, At assignment, with exhaustion 68; a2 is on Training, At assignment, with exhaustion 69; a3 is on Standby, At assignment, with exhaustion 31; a4 is on Standby, At assignment, with exhaustion 30. Every Agent has base skill 100 and current health 30 of 30.
@@ -710,7 +739,7 @@ After [C. Completion and later Participation history](domain-model.md#c-completi
 
 ## GDR validation
 
-This example exercises [Agent GDR validation](#agent-gdr-validation). The Bootstrap GDRs pass every rule: there is exactly one AgentArchetype, `field_agent`, with `base_skill` 100, `base_health` 30, and `weapon` `sidearm`, which the Game build supplies, and exactly one AgentParameters GDR, whose fourteen values are whole numbers of at least 0, with `exhaustion_work_start_max` 30 below `exhaustion_work_limit` 70, which is at most `exhaustion_incapacitation` 100. Each of the following test changes independently makes the Game build defective, so no Campaign is created from it: adding a second AgentArchetype; setting `field_agent`'s `base_health` to 0; setting its `weapon` to an identifier that no Weapon GDR has; adding a property `rank` to `field_agent`; setting `training_skill_gain_per_turn` to 0.5; setting `exhaustion_work_start_max` to 70, which is not below `exhaustion_work_limit`; and setting `exhaustion_work_limit` to 120, which is above `exhaustion_incapacitation`.
+This example exercises [Agent GDR validation](#agent-gdr-validation). The Bootstrap GDRs pass every rule: there is exactly one AgentArchetype, `field_agent`, with `base_skill` 100, `base_health` 30, and `weapon` `sidearm`, which the Game build supplies, and exactly one AgentParameters GDR, whose fourteen values are whole numbers of at least 0, `training_skill_gain_per_turn` being a Decimal quantity whose Bootstrap value is whole, with `exhaustion_work_start_max` 30 below `exhaustion_work_limit` 70, which is at most `exhaustion_incapacitation` 100. Each of the following test changes independently makes the Game build defective, so no Campaign is created from it: adding a second AgentArchetype; setting `field_agent`'s `base_health` to 0; setting its `weapon` to an identifier that no Weapon GDR has; adding a property `rank` to `field_agent`; setting `training_skill_gain_per_turn` to 0.125, which has more than two digits after the decimal point; setting `exhaustion_per_attack` to 0.5; setting `exhaustion_work_start_max` to 70, which is not below `exhaustion_work_limit`; and setting `exhaustion_work_limit` to 120, which is above `exhaustion_incapacitation`.
 
 # TODOs
 

@@ -5,14 +5,14 @@
 | Spec ID | NUMBERS |
 | Family | Foundation |
 | Audience | Engine designer, Implementer |
-| Owns | That every stored quantity is a whole number, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
+| Owns | That every stored quantity is held as a whole number, of units or of hundredths, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
 Every number in the game must come out exactly the same everywhere, e.g. on every machine and in every acceptance example. Nothing may depend on how a computer happens to approximate a fraction.
 
-The guiding principle is that fractions never last. Every stored quantity is a whole number, e.g. an amount of money or a count. A fraction may appear only inside one formula, which is evaluated exactly and names where it applies Round down or Round up, the only two rounding operations. A percentage is a Percent value, a whole number of percent.
+The guiding principle is that only whole numbers last. Every stored quantity is held as a whole number: a Whole quantity counts units, e.g. an amount of money or a count, and a Decimal quantity counts hundredths of a unit, e.g. 1.33 health points held as 133, so that a quantity can grow by less than one unit without any number being approximated. Any finer fraction may appear only inside one formula, which is evaluated exactly and names where it applies Round down or Round up, the only two rounding operations, and whether to a whole number or to hundredths. A percentage is a Percent value, a number of percent.
 
 A Probability is kept exact instead: it is a ratio of two whole numbers, never stored and never rounded, so whether a random outcome takes a stated value is decided identically on every machine. How random outcomes are drawn is stated in [Determinism and Randomness](determinism-and-randomness.md).
 
@@ -22,22 +22,38 @@ These terms are specific to numbers. General terms are in the [Core Concepts glo
 
 | Term | Definition |
 | --- | --- |
-| Round down | The operation that turns a number into the greatest whole number that is less than or equal to it. A number that is already whole is unchanged. It moves toward lower numbers, not toward zero. |
-| Round up | The operation that turns a number into the least whole number that is greater than or equal to it. A number that is already whole is unchanged. It moves toward higher numbers, not away from zero. |
-| Percent value | A number of percent, i.e. hundredths, expressed as a whole number. A Percent value of 40 stands for 40 hundredths. |
+| Whole quantity | A stored quantity that is a whole number of its unit, e.g. an amount of money or a count. Every stored quantity is one unless the specification that defines it names it a Decimal quantity. |
+| Decimal quantity | A stored quantity with exactly two decimal places, i.e. a whole multiple of 0.01 of its unit, held as its whole number of hundredths. E.g., 1.33 health points are held as 133. |
+| Round down | The operation that turns a number into the greatest whole number that is less than or equal to it. A number that is already whole is unchanged. It moves toward lower numbers, not toward zero. Round down to hundredths gives the greatest whole multiple of 0.01 instead. |
+| Round up | The operation that turns a number into the least whole number that is greater than or equal to it. A number that is already whole is unchanged. It moves toward higher numbers, not away from zero. Round up to hundredths gives the least whole multiple of 0.01 instead. |
+| Percent value | A number of percent, i.e. hundredths, expressed as a whole number unless the specification that defines it names it a Decimal quantity. A Percent value of 40 stands for 40 hundredths. |
 | Probability | The chance that a random outcome takes a stated value, expressed as an exact ratio of two whole numbers whose divisor is greater than zero. It is never stored and never rounded. |
 
 # Whole-number quantities
 
-**v5 requirement:** Every stored quantity is a whole number, with no exception. A stored quantity is any value that [Campaign state](core-concepts.md#campaign-and-session) holds or that a [Campaign save](engine-contract.md#persisted-data) keeps, whatever it measures, e.g. an amount of money, a count, or a number of percent. E.g., a stored quantity of 12 percent is stored as the whole number 12, never as 0.12 or 12.0 with a fractional part. A whole number is an integer: it has no fractional part, and its size is limited only by a range stated for its quantity.
+**v5 requirement:** Every stored quantity is held as a whole number, with no exception. A stored quantity is any value that [Campaign state](core-concepts.md#campaign-and-session) holds or that a [Campaign save](engine-contract.md#persisted-data) keeps, whatever it measures, e.g. an amount of money, a count, or a number of percent. It is one of two kinds: a Whole quantity, whose whole number counts its units, or a Decimal quantity, whose whole number counts hundredths of a unit, under [Decimal quantities](#decimal-quantities). The specification that defines a quantity names it a Decimal quantity where it is one; every other stored quantity is a Whole quantity. E.g., a Whole quantity of 12 percent is stored as the whole number 12, never as 0.12 or 12.0 with a fractional part. A whole number is an integer: it has no fractional part, and its size is limited only by a range stated for its quantity.
 
-**Informative rationale:** The inherited game stored some quantities as fixed-point decimals and rounded at several different places. v5 replaces that with the single scheme of whole numbers, named rounding, and exact evaluation, so that every acceptance example is exact.
+**Informative rationale:** The inherited game stored some quantities as numbers of differing precision and rounded at several different places. v5 replaces that with a single scheme: whole numbers that count either units or hundredths, named rounding, and exact evaluation, so that every acceptance example is exact. Whole quantities alone proved too coarse: a rate rounded to a whole unit in every Turn cannot rise by less than one unit, e.g. a health recovery of 0.6 and one of 0.9 both became 1, so an Upgrade between them changed nothing.
 
-No Campaign state, Campaign save, or engine API value that represents a stored quantity may hold a fractional part, and no implementation may hold one in an unrounded form between [Player actions](engine-contract.md#player-actions-and-turns). A value that is not stored may have a fractional part only as an intermediate result inside a single formula, under [Exact evaluation](#exact-evaluation).
+No Campaign state, Campaign save, or engine API value that represents a stored quantity may hold a fractional part, and no implementation may hold a stored quantity in an unrounded form between [Player actions](engine-contract.md#player-actions-and-turns). A value that is not stored may have a fractional part that is not a whole number of hundredths only as an intermediate result inside a single formula, under [Exact evaluation](#exact-evaluation).
 
-**Ranges.** Unless the Mechanics specification that defines a quantity states otherwise, a stored quantity is a nonnegative whole number. A Mechanics specification that allows a quantity to be negative, or bounds it above, states so where it defines the quantity. E.g., one quantity may be allowed to be negative, another may be capped at 100, and another may count from 1. Arithmetic that would take a stored quantity outside its stated range is handled by a rule of the specification that defines the quantity, e.g. by clamping or by rejecting a Player action; it is never silently clamped.
+**Ranges.** Unless the Mechanics specification that defines a quantity states otherwise, a stored quantity is nonnegative. A Mechanics specification that allows a quantity to be negative, or bounds it above, states so where it defines the quantity. E.g., one quantity may be allowed to be negative, another may be capped at 100, and another may count from 1. Arithmetic that would take a stored quantity outside its stated range is handled by a rule of the specification that defines the quantity, e.g. by clamping or by rejecting a Player action; it is never silently clamped.
 
 **Fractional [GDR](core-concepts.md#game-build-and-content) values.** A Game Data Record (GDR) value that is a ratio rather than a quantity, e.g. a damage range of 0.5, is not a stored quantity. It is read as the exact decimal number it is written as, i.e. as the ratio of whole numbers it denotes (0.5 is 1 over 2), never as a binary floating-point approximation. **Proposed rule:** a formula that reads such a value computes with it exactly, under [Exact evaluation](#exact-evaluation).
+
+# Decimal quantities
+
+**v5 requirement:** A Decimal quantity is a number with exactly two decimal places, i.e. a whole multiple of 0.01 of its unit. Two decimal places is the only precision: no quantity has one, three, or more. The following rules are complete.
+
+- **Held as hundredths:** Campaign state, a Campaign save, and every engine API value hold a Decimal quantity as its whole number of hundredths, e.g. 1.33 as 133, 2.75 as 275, and 30 as 3000. No binary floating-point number ever represents one.
+- **Written in units:** A specification writes a Decimal quantity in its unit, with a decimal point where it has a fractional part, e.g. 1.33 health points; 30 and 30.00 are the same Decimal quantity. A specification that states a value in hundredths says so.
+- **Exact operations:** The sum, the difference, the minimum, and the maximum of Decimal quantities and Whole quantities, and the product of a Decimal quantity and a whole number, are whole multiples of 0.01. A formula made only of these operations states that no rounding occurs.
+- **Operations that round:** Every other operation can give more than two decimal places, e.g. a division, a percent of a Decimal quantity, or the product of two Decimal quantities. A formula that stores such a result as a Decimal quantity names Round down to hundredths or Round up to hundredths, under [Rounding](#rounding), and one that stores it as a Whole quantity names Round down or Round up.
+- **Exact comparison:** Two quantities are compared by their exact values, with no tolerance. A Decimal quantity equals a whole number exactly when its hundredths equal 100 times that number. E.g., 29.99 is less than 30, 30.00 equals 30, and 0.10 + 0.20 equals 0.30. A rule that applies when a Decimal quantity reaches a threshold therefore applies at exactly that value and never one hundredth earlier or later.
+- **One rounding for what is shown and what is applied:** A [Derived value](core-concepts.md#value-classification) that a rule adds repeatedly, e.g. an amount regained in every Turn, is rounded once into a Decimal quantity, and that Decimal quantity is both what the engine API reports and what each application adds. E.g., a rate of 2 / 3 rounded up to hundredths is 0.67, and three applications add exactly 2.01, not 2.
+- **Decimal GDR values:** A GDR value that is a Decimal quantity is written with at most two digits after the decimal point, e.g. `0.1`, `2.75`, or `3`, and is read as the exact decimal number it is written as. The specification that owns the GDR's [Type](core-concepts.md#data-modeling) makes a value with more digits a data defect; it is never rounded into a valid value.
+
+**Informative rationale:** Because every stored value is a whole number of hundredths and every formula is evaluated exactly, no value can differ from the intended one by a rounding error, e.g. be 0.99999 where 1 is meant, so a threshold is never missed by an error of representation. More decimal places are not needed for that: an intermediate result keeps unlimited precision under [Exact evaluation](#exact-evaluation), and only the stored result is rounded, once, by less than 0.01.
 
 # Rounding
 
@@ -50,9 +66,16 @@ Exactly two rounding operations exist: Round down and Round up. They are defined
 
 Both operations leave an exact whole value unchanged: Round down of 2 is 2, and Round up of 2 is 2. Neither operation rounds toward zero, to the nearest whole number, or to even; a value exactly halfway between two whole numbers has no special case, because each operation is defined by direction alone. E.g., Round down of 7.5 is 7 and Round up of 7.5 is 8.
 
+**Rounding to hundredths.** Each operation also has a form that gives a whole multiple of 0.01, for a result that is a [Decimal quantity](#glossary): Round down to hundredths of x is `round down(x × 100) / 100`, and Round up to hundredths of x is `round up(x × 100) / 100`. Each is defined by direction alone, as above, and leaves a whole multiple of 0.01 unchanged. No operation rounds to the nearest hundredth.
+
+| Operation                | e.g. x = 2 / 3 | e.g. x = 1.3299 | e.g. x = 0.6 | e.g. x = 2 | e.g. x = -0.005 |
+| ------------------------ | -------------- | --------------- | ------------ | ---------- | --------------- |
+| Round down to hundredths | 0.66           | 1.32            | 0.60         | 2.00       | -0.01           |
+| Round up to hundredths   | 0.67           | 1.33            | 0.60         | 2.00       | 0.00            |
+
 **Every formula names its rounding.** **v5 requirement:** A formula that can produce a fraction must state which operation it applies and at which point of the expression. A formula that omits the rounding of a possible fraction is incomplete and must not be implemented by guessing. A formula whose every possible result is a whole number states that no rounding occurs. E.g., `round down((8 × 2) / 3)` is 5, but rounding 8 / 3 first and then multiplying by 2 gives 4, so the formula's own wording decides where rounding occurs.
 
-In every specification, the notation `round down( … )` and `round up( … )` names these operations, and the rounding is applied exactly once at the point where the notation encloses the expression, to the exact value of that expression.
+In every specification, the notation `round down( … )` and `round up( … )` names these operations, `round down to hundredths( … )` and `round up to hundredths( … )` name their forms for hundredths, and the rounding is applied exactly once at the point where the notation encloses the expression, to the exact value of that expression.
 
 # Exact evaluation
 
@@ -65,9 +88,9 @@ In every specification, the notation `round down( … )` and `round up( … )` n
 
 # Percent values
 
-**v5 requirement:** A percentage is a Percent value: a whole number of percent. A fraction of percent does not exist. A Percent value may exceed 100 or be negative only where the specification that defines it states so.
+**v5 requirement:** A percentage is a Percent value: a whole number of percent, or a [Decimal quantity](#glossary) of percent where the specification that defines it names it one, e.g. 2.20 percent. No finer fraction of percent exists. A Percent value may exceed 100 or be negative only where the specification that defines it states so.
 
-**p percent of x** means `(p × x) / 100`, evaluated exactly: multiply first, then divide by 100, then apply the rounding the formula names. E.g., 2 percent of 30 is `(2 × 30) / 100 = 0.6`; with Round up it is 1, and with Round down it is 0. When x is itself a whole number the exact result is a fraction with at most two decimal digits, so rounding is the only source of imprecision.
+**p percent of x** means `(p × x) / 100`, evaluated exactly: multiply first, then divide by 100, then apply the rounding the formula names. E.g., 2 percent of 30 is `(2 × 30) / 100 = 0.6`; with Round up it is 1, and with Round down it is 0. When p and x are both whole numbers the exact result has at most two decimal digits, so it is a whole multiple of 0.01; in every case the named rounding is the only source of imprecision.
 
 **A Percent value is not always a multiplier.** "p percent of x" is multiplicative: the Percent value p scales another quantity x. A quantity that is itself measured in percentage points is different: it is a whole number of percentage points, and a rule changes it by adding or subtracting a whole number of percentage points, never by multiplying it. E.g., a quantity from 0 to 100 that rises by 3 goes from 40 to 43, and does not become 3 percent of 40. A GDR property that holds percentage points is a Percent value only in this additive sense, and the rule that reads it states which of the two meanings it has.
 
@@ -77,6 +100,7 @@ A formula never divides by 100 first and rounds the result before multiplying, u
 
 **v5 requirement:** A Probability is an exact ratio `n / d` of two whole numbers with `d` greater than zero, as the glossary defines. The following rules are complete:
 
+- **Whole numbers throughout:** A formula that forms a Probability from [Decimal quantities](#decimal-quantities) is evaluated exactly, so the Probability is the ratio of two whole numbers that the exact value denotes, e.g. 28.67 / 30 is 2867 / 3000. No Probability depends on a rounded Decimal quantity unless its formula names that rounding.
 - **Never stored:** A Probability is a [Derived value](core-concepts.md#value-classification) computed when needed. No Campaign state, Campaign save, or engine API value holds a Probability as a stored quantity; where the engine API reports one, e.g. in a query, it reports the pair `n` and `d` of whole numbers, not a rounded decimal. A Mechanics specification that shows a Probability to the player states its presentation under its [Player-visible information](engine-contract.md#api-surfaces).
 - **Never rounded:** No rounding is applied to a Probability, neither Round down nor Round up, unless a formula states a rounding explicitly for a displayed value. Two ratios are the same Probability when their cross products are equal; e.g., 10000 / 11600 and 25 / 29 are the same Probability.
 - **Clamping:** A Probability must lie from 0 to 1 inclusive. A formula whose ratio can fall outside that range states a clamp, i.e. a minimum with 1 or a maximum with 0, and clamping is exact. E.g., a ratio of 12 / 10 that is clamped to at most 1 is 1, and a ratio of -3 / 10 that is clamped to at least 0 is 0. A ratio outside 0 to 1 that no formula clamps is an internal invariant violation.
@@ -106,6 +130,8 @@ A specification that derives the bounds from a formula applies the rounding the 
 - **Probability outside 0 to 1:** Handled by a clamp that the formula states; otherwise an internal invariant violation.
 - **Degenerate range:** A uniform whole-number outcome with `lo` equal to `hi` is valid and has one possible value.
 - **Large values:** Results larger than a machine word are valid. Wrapping, saturating, or approximating them is a violation of [Exact evaluation](#exact-evaluation).
+- **Decimal quantity at a threshold:** A Decimal quantity is compared exactly, so it reaches a threshold exactly when its value is at least the threshold. E.g., 29.99 has not reached 30, and 29.40 + 0.60 has.
+- **Decimal GDR value with too many digits:** A GDR value that is a Decimal quantity and is written with more than two digits after the decimal point, e.g. `0.125`, is a data defect under the validation of the specification that owns its Type; it is not rounded.
 - **Floating-point drift:** An implementation whose outcome differs from the exact result because of binary floating-point arithmetic does not conform, even when the difference is only visible for some inputs.
 
 # Acceptance examples
@@ -122,4 +148,9 @@ A specification that derives the bounds from a formula applies the rounding the 
 - **Clamping:** A ratio of 6 / 5 that a formula clamps to at most 1 is exactly 1, and a ratio of 2 / 5 under the same clamp stays 2 / 5. A ratio of -3 / 10 that a formula clamps to at least 0 is 0 ([Probabilities](#probabilities)).
 - **Rounding point:** `round down((8 × 2) / 3)` is `round down(5.333…) = 5`, whereas rounding 8 / 3 down to 2 first and then multiplying by 2 gives 4. The formula's own wording decides, so a formula states its rounding point ([Rounding](#rounding), [Exact evaluation](#exact-evaluation)).
 - **Percentage points are added, not multiplied:** A quantity of 40 percentage points that a rule raises by 3 is 43, whereas 3 percent of 40 is `(3 × 40) / 100 = 1.2`, a different meaning that applies only where a rule says "percent of" ([Percent values](#percent-values)).
-- **Whole-number storage:** After adding 1 to a stored quantity of 7, the stored quantity is 8 in Campaign state, in the Campaign save, and in every engine API result, with no fractional part ([Whole-number quantities](#whole-number-quantities)).
+- **Whole-number storage:** After adding 1 to a stored Whole quantity of 7, the stored quantity is 8 in Campaign state, in the Campaign save, and in every engine API result, with no fractional part ([Whole-number quantities](#whole-number-quantities)).
+- **Decimal quantity storage:** A Decimal quantity of 1.33 is held as the whole number 133 in Campaign state, in the Campaign save, and in every engine API result. After 0.60 is added to it, it is 1.93, held as 193 ([Decimal quantities](#decimal-quantities)).
+- **Exact sums:** Fifty additions of 0.60 to a Decimal quantity of 0 give exactly 30.00, which equals 30, so a rule that applies when the quantity reaches 30 applies after the fiftieth addition and not before: after the forty-ninth the quantity is 29.40. Likewise 0.10 + 0.20 equals 0.30 ([Decimal quantities](#decimal-quantities)).
+- **Rounding to hundredths:** 2.2 percent of 31 is `(2.2 × 31) / 100 = 0.682`; rounded up to hundredths it is 0.69, and rounded down to hundredths it is 0.68. 2 percent of 30 is exactly 0.60, which either operation leaves unchanged ([Rounding](#rounding), [Percent values](#percent-values)).
+- **Shown rate equals applied rate:** A rate of `round up to hundredths(2 / 3) = 0.67` added in each of three Turns adds 2.01 in total, because each Turn adds the rounded 0.67 and never the unrounded 2 / 3 ([Decimal quantities](#decimal-quantities)).
+- **Whole value from a Decimal quantity:** A Decimal quantity of 3.40 read through `round up( … )` is 4, and one of 3.00 is 3 ([Rounding](#rounding)).

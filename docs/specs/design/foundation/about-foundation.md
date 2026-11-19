@@ -68,7 +68,7 @@ The family reads from abstract to concrete: words, then engine promises, then da
 
 ## Numbers
 
-[Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns that every stored quantity is a whole number, the two rounding operations, how percentages and probabilities are computed, and exact evaluation. It owns nothing about randomness: Determinism and Randomness owns [Determinism](determinism-and-randomness.md#determinism) and the [Campaign seed](determinism-and-randomness.md#campaign-seed), and each Mechanics specification owns the distributions of its own random outcomes.
+[Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns that every stored quantity is held as a whole number, of units or of hundredths, the two rounding operations, how percentages and probabilities are computed, and exact evaluation. It owns nothing about randomness: Determinism and Randomness owns [Determinism](determinism-and-randomness.md#determinism) and the [Campaign seed](determinism-and-randomness.md#campaign-seed), and each Mechanics specification owns the distributions of its own random outcomes.
 
 # How they relate
 
