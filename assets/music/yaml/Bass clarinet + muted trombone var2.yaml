@@ -13,7 +13,6 @@ meta_prompt_taxonomy:
   adjustments:
     - 'darker and bassier; less electronic and spacey'
     - 'instruments: bass clarinet + muted trombone'
-    - 'sinister and clandestine rather than melancholic and intimate'
     - 'Suno v6 settings: Exclude styles, Weirdness 40%, Style influence 70%, Variety off; also exclude heroic brass, big band, jazz swing'
 prompt_from:
   tool: ChatGPT

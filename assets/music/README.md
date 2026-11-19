@@ -47,7 +47,7 @@ A record holds only the keys it has values for:
 | `original_title` | The track's title, its file name without the extension. |
 | `title_in_source` | The song's title in its source, when it differs from `original_title`, e.g. "UFO 1" in v03ai. |
 | `song_url` | The song's page in its source, e.g. `https://suno.com/song/<id>`. |
-| `model` | The source's model that made the song, e.g. `v6 (chirp-hawk)` for Suno: the version Suno shows, then its internal model name. |
+| `model` | The source's model that made the song, as the source labels it, e.g. `Music v2.5` for ElevenLabs, from the label beside the song in the ElevenLabs Music history, or `v6 (chirp-hawk)` for Suno: the version Suno shows, then its internal model name. |
 | `created` | When the song was made, as a date, or a date and time in Pacific time: the time the source keeps, e.g. the exact Added time of an ElevenLabs song in the Assets page, to the second, which orders songs made in the same minute; or, where the source shows none, e.g. for most v03ai songs, the time its download was saved. |
 | `variation_of` | The file of the track generated in the same run from the same prompt, e.g. one of the two variations ElevenLabs makes per generation: the two have an identical prompt and length and were added seconds apart. It names the track that holds the prompt's provenance, or the earlier-added one; when the other variation was not kept as a track, it names that song's title in its source, e.g. `'Containment Protocol'`. |
 | `description` | The source's own description of the song. |
@@ -66,7 +66,7 @@ A record holds only the keys it has values for:
 
 ## Tracks from ElevenLabs
 
-All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/) Music. Each is named after its song's title in ElevenLabs, with the spaces kept, although ElevenLabs downloads it with underscores for spaces, e.g. the download `Silent_Threat_Protocol.opus` is saved as `Silent Threat Protocol.opus`. Their track records hold what the song's details panel in the ElevenLabs Assets page shows: the description and prompt, word for word, and the tags, BPM, and length.
+All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/) Music. Each is named after its song's title in ElevenLabs, with the spaces kept, although ElevenLabs downloads it with underscores for spaces, e.g. the download `Silent_Threat_Protocol.opus` is saved as `Silent Threat Protocol.opus`. Their track records hold what the song's details panel in the ElevenLabs Assets page shows: the description and prompt, word for word, and the tags, BPM, and length; their `model` comes from the ElevenLabs Music history, which labels each song with the model that made it.
 
 ## Tracks from Suno v5 via v03ai
 
