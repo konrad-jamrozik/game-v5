@@ -26,6 +26,18 @@ Recorded on 2026-11-18.
 - The exception is a very special Mission that the player gets only one attempt at: its Lead is not repeatable after the first Mission site, whatever becomes of that Mission site.
 - Quite complex logic is therefore expected around Lead repeatability, more than the fixed conditions of today's [Lead availability](../specs/design/mechanics/leads-and-progression.md#lead-availability).
 
+## Working name for how long a Lead keeps creating Mission sites
+
+Recorded on 2026-11-18. "Repeatable" is too ambiguous as the name of this setting, so its working name is `stops_after`, a property of the MissionSiteArchetype whose values each name the event after which the Lead creates no further Mission site of it:
+
+| Value | Meaning |
+| --- | --- |
+| `first_mission_site` | The Lead creates one Mission site ever, whatever becomes of it. This is the very special Mission that the player gets only one attempt at. |
+| `first_win` | The Lead creates a new Mission site after each one whose Mission is Lost or that Expired, until one Mission is Won. This is the default. |
+| `never` | The Lead keeps creating Mission sites even after a Won Mission, so the Mission can be Won any number of times. |
+
+The value `never` means only that this setting never stops the Lead. The conditions that decide whether the Mission site can exist still can, e.g. when the Lead's Faction is Eliminated.
+
 ## Leads that can be Completed at most once
 
 - Such a Lead can be investigated until it is Completed, and then never again.
