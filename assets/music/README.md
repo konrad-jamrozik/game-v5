@@ -129,7 +129,7 @@ The following table lists every key a record may hold; the list is exhaustive. A
 | `control_sliders` |  | Suno's advanced sliders, each named after its label in the Suno UI with the prefix `suno_`. |
 | `control_sliders.suno_weirdness` |  | Suno's Weirdness, from 0 to 1, e.g. Weirdness 40% is `0.4`. |
 | `control_sliders.suno_style_influence` |  | Suno's Style influence, from 0 to 1, e.g. Style influence 70% is `0.7`. |
-| `control_sliders.suno_variety` |  | Suno's Variety, as one of the numbers `0` to `4`, each a slider setting: `0` Off (Exact style), `1` Normal (Balanced variety), `2` High (Distinct styles), `3` Extra (Bold exploration), `4` Max (Unreasonably varied). At `0`, Suno keeps the Styles text as written; above `0`, it may rewrite it. |
+| `control_sliders.suno_variety` |  | Suno's Variety, as one of these values, each a slider setting from left to right, with its UI label and tooltip: `'0 - Off / Exact style'`, `'1 - Normal / Balanced variety'`, `'2 - High / Distinct styles'`, `'3 - Extra / Bold exploration'`, `'4 - Max / Unreasonably varied'`. At `0`, Suno keeps the Styles text as written; above `0`, it may rewrite it. |
 | `notes` |  | Anything else needed to read the record, e.g. that the prompt given to the source was truncated. |
 
 ## Tracks from ElevenLabs

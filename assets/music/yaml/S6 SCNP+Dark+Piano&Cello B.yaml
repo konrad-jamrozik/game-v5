@@ -40,6 +40,6 @@ exclude_styles: |-
 control_sliders:
   suno_weirdness: 0.4
   suno_style_influence: 0.7
-  suno_variety: 1
+  suno_variety: '1 - Normal / Balanced variety'
 notes: |-
-  `prompt` is the Styles text Suno stored, not the one pasted in: ChatGPT's `produced_prompt` was pasted into Styles, and Suno's Variety control, which was at Normal (`suno_variety: 1`), rewrote it, differently for each variation. The `exclude_styles` and the Weirdness and Style influence sliders are those ChatGPT recommended.
+  `prompt` is the Styles text Suno stored, not the one pasted in: ChatGPT's `produced_prompt` was pasted into Styles, and Suno's Variety control, which was at Normal (`suno_variety: '1 - Normal / Balanced variety'`), rewrote it, differently for each variation. The `exclude_styles` and the Weirdness and Style influence sliders are those ChatGPT recommended.

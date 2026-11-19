@@ -51,6 +51,6 @@ exclude_styles: |-
 control_sliders:
   suno_weirdness: 0.4
   suno_style_influence: 0.7
-  suno_variety: 0
+  suno_variety: '0 - Off / Exact style'
 notes: |-
   Generated from the specification proposed in the Codex chat "Find untried instrument combinations"; the Game designer confirmed following those instructions. The song page supplies the current source title, model, creation time, display tags, duration, Styles text, Exclude styles, Instrumental setting, and sliders. The source titles already match the repository names; earlier source titles are not known. `created` is the Suno generation time converted to Pacific time, not the later download time. `prompt` preserves the Styles text stored by Suno, including its paragraph indentation. Max Mode off, Personalize off, Duration Auto, and empty Lyrics were instructed; those three UI controls are not exposed in the retrieved song metadata.
