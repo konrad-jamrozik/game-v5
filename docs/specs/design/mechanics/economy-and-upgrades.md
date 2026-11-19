@@ -151,6 +151,19 @@ E.g., with funding 3, one change of −10 gives 0, and two changes of +5 and −
 
 A funding change starts producing income in the first Agency income step that follows it. Only the [Consequences](missions.md#consequences) of Mission sites change funding, and they apply after the Agency income step of the same Advance turn under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), so a funding change first affects income in the next Advance turn.
 
+## Money and funding Effect kinds
+
+Game data changes the Agency's money and funding through two [Effect kinds](../foundation/effect-lists.md#glossary), so that every reward and every penalty changes them in the same way.
+
+**Proposed rule:** The following table defines both Effect kinds, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists. It is exhaustive for the Effect kinds that change the Agency.
+
+| Effect kind | Value | What applying one Effect changes | Several in one Turn advancement step |
+| --- | --- | --- | --- |
+| `money` | A whole number of money: positive, zero, or negative. | The value is added to the Agency's money at once, in the Turn advancement step that applies the [Effect](../foundation/effect-lists.md#glossary), and the result is never clamped, under [Agency properties](#agency-properties). | The values add up, and a sum does not depend on order. |
+| `funding` | A whole number of money: positive, zero, or negative. | It is a funding change of that amount, under [Funding changes](#funding-changes). | They are summed with every other funding change of that step and floored at 0 once, under [Funding changes](#funding-changes). |
+
+Neither Effect kind needs a supplied input, because a Campaign has exactly one Agency. An Effect whose value is 0 changes nothing.
+
 # Agency caps
 
 **Proposed rule:** The Agent cap, Transport cap, and Training cap are Derived values of the Agency, each computed by the same formula from a base value of EconomyParameters and the Upgrade bonus of the cap's effect identifier, under [Upgrade bonus](#upgrade-bonus):

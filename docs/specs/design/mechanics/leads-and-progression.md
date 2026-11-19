@@ -41,17 +41,15 @@ A Lead describes one line of inquiry. A Lead is a GDR serving the Referenced GDR
 | `faction` | The identifier of a FactionArchetype. | The [Faction](domain-model.md#factions) the Lead concerns: the Faction whose [Archetype](../foundation/core-concepts.md#campaign-instances) is this FactionArchetype. It decides the target Faction of the [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) the Lead creates, and blocks the Lead once that Faction is [Eliminated](factions.md#glossary). | [Lead availability](#lead-availability); [Completion effect](#completion-effect) |
 | `required_progress` | A whole number of at least 1. | The Required progress of the Lead, in progress points. | [Investigations](investigations.md) |
 | `requires` | A list, possibly empty, of prerequisites. Each prerequisite is a map with exactly one key, the prerequisite kind, and a value for that key. | The prerequisites that must all hold before the Lead is available, under [Prerequisites](#prerequisites). | [Prerequisites](#prerequisites) |
-| `on_completion` | A map with exactly one key, the effect kind, and a value for that key. | What happens when an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of the Lead completes, under [Completion effect](#completion-effect). | [Completion effect](#completion-effect) |
+| `on_completion` | An [Effect list](../foundation/effect-lists.md#glossary) that holds exactly one [Effect](../foundation/effect-lists.md#glossary), of the [Effect kind](../foundation/effect-lists.md#glossary) `create_mission_site`. | What happens when an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of the Lead completes, under [Completion effect](#completion-effect). | [Completion effect](#completion-effect) |
 
-Exactly one prerequisite kind and exactly one effect kind exist, and these two tables are exhaustive:
+Exactly one prerequisite kind exists, and this table is exhaustive:
 
 | Prerequisite kind | Value | Meaning |
 | --- | --- | --- |
 | `mission_won` | The identifier of a MissionSiteArchetype. | Holds under [Prerequisites](#prerequisites) once a [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) at a Mission site of that MissionSiteArchetype, targeting the Lead's Faction, is Won. |
 
-| Effect kind | Value | Meaning |
-| --- | --- | --- |
-| `create_mission_site` | The identifier of a MissionSiteArchetype. | Creates one [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) under [Completion effect](#completion-effect). |
+`create_mission_site` is the only Effect kind that `on_completion` may hold. Its value is the identifier of a MissionSiteArchetype of kind initiative, and applying it creates one [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions), under [Mission site Effect kind](missions.md#mission-site-effect-kind) in Missions.
 
 A Lead names the MissionSiteArchetypes of its prerequisites, its Faction, and the MissionSiteArchetype it creates by GDR identifier, never by inference from identifier text, under [References](../foundation/campaign-instances.md#references) in Campaign Instances.
 
@@ -65,7 +63,7 @@ A Lead names the MissionSiteArchetypes of its prerequisites, its Faction, and th
 4. **Prerequisite kinds are known:** `requires` is a list, and each of its entries is a map with exactly one key, which is `mission_won`. An entry with any other key, or with more than one key, is invalid.
 5. **Prerequisite references resolve:** The value of each `mission_won` entry is the identifier of a MissionSiteArchetype the Game build supplies, and no two entries of one `requires` name the same MissionSiteArchetype.
 6. **Prerequisites form no cycle:** Consider the relation in which each Lead points to every Lead whose `create_mission_site` names a MissionSiteArchetype that its `requires` names. Following it from any Lead never visits a Lead twice. A cycle, including a Lead whose `requires` names the MissionSiteArchetype it creates itself, is invalid.
-7. **Completion effect is valid:** `on_completion` is a map with exactly one key, which is `create_mission_site`. A map with no key, with more than one key, or with any other key is invalid. The value of `create_mission_site` is the identifier of a MissionSiteArchetype the Game build supplies whose `kind` is `initiative`; naming a MissionSiteArchetype of kind response is invalid.
+7. **Completion effect is valid:** `on_completion` is a valid Effect list, under [Effect list format](../foundation/effect-lists.md#effect-list-format) in Effect Lists, that holds exactly one Effect, whose Effect kind is `create_mission_site`. An Effect list with no Effect, with more than one Effect, or with an Effect of any other kind is invalid, and a Lead may not omit `on_completion`. The value of the `create_mission_site` Effect is the identifier of a MissionSiteArchetype the Game build supplies whose `kind` is `initiative`, as its Effect kind requires; naming a MissionSiteArchetype of kind response is invalid.
 
 These rules guarantee that the prerequisite relation is a finite acyclic graph, that every Lead has exactly one Faction and exactly one MissionSiteArchetype to create, and that the [Completion effect](#completion-effect) supplies a MissionSiteArchetype of kind initiative, as [Mission site creation](missions.md#mission-site-creation) requires of its creating rule. A Lead that no other Lead requires, and a Lead whose prerequisite chain starts at a Lead with an empty `requires`, are valid; a Lead whose prerequisites can never hold in practice is also valid, because the rules do not examine Mission outcomes. A prerequisite may name a MissionSiteArchetype that no Lead creates, e.g. one of kind response.
 
@@ -153,12 +151,12 @@ A discovered Lead satisfies condition 1, so the table covers every discovered Le
 
 # Completion effect
 
-**Proposed rule:** When an Investigation of a Lead L completes, the effect named by the `on_completion` of L applies. The completion itself, i.e. in which Advance turn an Investigation becomes Completed, is decided under [Completion](investigations.md#completion); it happens in the [Turn advancement step](domain-model.md#turn-advancement-steps) [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions). The effect kind `create_mission_site` has the following complete effect, applied once for that completion, in the same step:
+**Proposed rule:** When an Investigation of a Lead L completes, the Effect list `on_completion` of L is applied, under [Applying an Effect list](../foundation/effect-lists.md#applying-an-effect-list) in Effect Lists. The completion itself, i.e. in which Advance turn an Investigation becomes Completed, is decided under [Completion](investigations.md#completion); it happens in the [Turn advancement step](domain-model.md#turn-advancement-steps) [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions). The one Effect of `on_completion`, of the Effect kind `create_mission_site`, has the following complete effect, applied once for that completion, in the same step:
 
-1. It is the creating rule of an Initiative Mission site under [Mission site creation](missions.md#mission-site-creation) in Missions, and supplies to it exactly these three inputs:
-   - the MissionSiteArchetype: the one whose identifier is the value of `create_mission_site`, which is of kind initiative under [Lead GDR validation](#lead-gdr-validation);
-   - the origin Investigation: the Investigation of L that completed;
-   - the target Faction: the Faction whose Archetype is the FactionArchetype named by the `faction` of L, which exists and is exactly one under [Initial Factions](factions.md#initial-factions) in Factions.
+1. It is the creating rule of an Initiative Mission site under [Mission site creation](missions.md#mission-site-creation) in Missions, which receives exactly these three inputs:
+   - the MissionSiteArchetype: the one whose identifier is the value of the `create_mission_site` Effect, which is of kind initiative under [Lead GDR validation](#lead-gdr-validation);
+   - the origin Investigation, which this rule supplies: the Investigation of L that completed;
+   - the target Faction, which this rule supplies: the Faction whose Archetype is the FactionArchetype named by the `faction` of L, which exists and is exactly one under [Initial Factions](factions.md#initial-factions) in Factions.
 2. Missions then creates exactly one Initiative Mission site from these inputs, with the initial values, Enemies, and expiration that [Missions](missions.md) gives it.
 
 The effect creates one Mission site per completion, never more and never none. It does not depend on the availability of L at the moment of completion, and it does not depend on whether the Faction of L is Eliminated: if the Faction became Eliminated before the completion, [Missions](missions.md) cancels the new Mission site at the end of the Turn advancement step Mission resolution of the same Advance turn, under [Cancellation](missions.md#cancellation). The effect changes nothing else, and it spends nothing.
@@ -205,7 +203,7 @@ The player can therefore see why a discovered Lead is not available: every Block
 - **Won Response Mission:** It is from no Lead, because no Lead created its Mission site, so it makes condition 2 fail for no Lead; it makes hold every `mission_won` prerequisite that names its MissionSiteArchetype, of a Lead of its target Faction, and so can discover a Lead ([Missions from a Lead](#missions-from-a-lead), [Prerequisites](#prerequisites), [Lead discovery](#lead-discovery)).
 - **Several Won Missions in one Advance turn:** Each makes condition 2 fail for the Lead it is from and makes the prerequisites it satisfies hold; the result does not depend on the order ([Prerequisites](#prerequisites)).
 - **Game build without a Lead:** It passes [Lead GDR validation](#lead-gdr-validation). No Lead exists to be available and no Initiative Mission site is ever created.
-- **Invalid GDRs:** A Game build that fails [Lead GDR validation](#lead-gdr-validation), e.g. with a cycle in its prerequisites, a `create_mission_site` of a MissionSiteArchetype of kind response, or two effects in `on_completion`, is defective and no Campaign is created from it.
+- **Invalid GDRs:** A Game build that fails [Lead GDR validation](#lead-gdr-validation), e.g. with a cycle in its prerequisites, a `create_mission_site` of a MissionSiteArchetype of kind response, or two Effects in `on_completion`, is defective and no Campaign is created from it.
 
 # TODOs
 

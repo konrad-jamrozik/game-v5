@@ -98,6 +98,19 @@ The Game build is not required to supply any FactionArchetype; the consequence i
 - **Several contributions:** Contributions add up, and the order in which they are added does not change the result: the Pending panic change is the sum of all Panic increases of the Advance turn minus the sum of all Panic reductions of the Advance turn. This is the combined result for the Panic step that [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn Advancement requires. It is a whole number and is negative when reductions exceed increases.
 - **No intermediate clamp:** Panic itself does not change while contributions are added. Nothing is clamped until the Panic step, so a contribution that would take Panic above 100 or below 0 on its own is added in full.
 
+## Panic Effect kind
+
+Game data changes Panic through one [Effect kind](../foundation/effect-lists.md#glossary), whose sign says whether Panic rises or falls.
+
+**Proposed rule:** The Effect kind `panic` is defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
+
+- **Value:** a whole number of Panic percentage points: positive, zero, or negative. It is never a percentage of the current Panic.
+- **Change:** applying one [Effect](../foundation/effect-lists.md#glossary) adds one contribution to the Pending panic change, under the rules above: a positive value `v` adds a Panic increase of `v`, a negative value `−v` adds a Panic reduction of `v`, and 0 adds nothing. It never changes Panic directly.
+- **Supplied inputs:** none, because a Campaign has exactly one Panic.
+- **Combined result:** the contributions add up as **Several contributions** above states, and the Panic step applies their sum once.
+
+A rule may apply a `panic` Effect only in a Turn advancement step before the Panic step, under **When contributions are added** above.
+
 # Panic step
 
 **Proposed rule:** In the Turn advancement step Panic, Panic changes by the Pending panic change and is then clamped to the range 0 to 100. This is a formula, with the following parts:

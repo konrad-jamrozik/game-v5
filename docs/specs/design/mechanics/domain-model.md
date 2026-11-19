@@ -162,6 +162,29 @@ Campaign instances reference each other as follows. Every row holds in every [Wo
 
 A Mission site is either an Initiative Mission site or a Response Mission site, so every Mission site has exactly one origin. An Initiative Mission site identifies, through its origin Investigation, the Lead that created it. A Faction operation occurrence that spans several Mission sites, or that has no Response Mission site, is out of scope.
 
+# Effect kinds
+
+Game data changes a Campaign through [Effect lists](../foundation/effect-lists.md#glossary), and each [Effect kind](../foundation/effect-lists.md#glossary) is defined once, by the Mechanics specification that details the concept it changes.
+
+The game has the following Effect kinds. This table is exhaustive.
+
+| Effect kind | What an Effect of it changes | Defined under |
+| --- | --- | --- |
+| `money` | The Agency's money. | [Money and funding Effect kinds](economy-and-upgrades.md#money-and-funding-effect-kinds) in Economy and Upgrades |
+| `funding` | The Agency's funding. | [Money and funding Effect kinds](economy-and-upgrades.md#money-and-funding-effect-kinds) in Economy and Upgrades |
+| `panic` | Panic. | [Panic Effect kind](panic-and-endings.md#panic-effect-kind) in Panic and Endings |
+| `eliminate_faction` | Whether a Faction is Eliminated. | [Elimination](factions.md#elimination) in Factions |
+| `create_mission_site` | It creates one Initiative Mission site. | [Mission site Effect kind](missions.md#mission-site-effect-kind) in Missions |
+
+The following GDR properties hold an Effect list, and the specification named for each says when it is applied and which Effect kinds it may hold. This table is exhaustive.
+
+| GDR property | Applied when | Stated under |
+| --- | --- | --- |
+| `on_completion` of a Lead | An Investigation of the Lead completes. | [Completion effect](leads-and-progression.md#completion-effect) in Leads and Progression |
+| `on_win` of a MissionSiteArchetype | A Mission at an Initiative Mission site is Won. | [Consequences](missions.md#consequences) in Missions |
+| `on_win` of a FactionOperationLevel | A Mission at a Response Mission site is Won. | [Consequences](missions.md#consequences) in Missions |
+| `on_ignored_or_lost` of a FactionOperationLevel | A Mission at a Response Mission site is Lost, or the Response Mission site is Expired. | [Consequences](missions.md#consequences) in Missions |
+
 # Campaign and Agency
 
 A Campaign contains one Agency, the current [Turn](../foundation/engine-contract.md#player-actions-and-turns), Panic and the Campaign ending, Agents, Factions, Investigations, Mission sites, and Missions. Campaign-wide properties, e.g. the current Turn and Panic, belong directly to Campaign state, not to the Agency.

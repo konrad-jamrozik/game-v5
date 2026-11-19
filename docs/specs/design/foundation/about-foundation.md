@@ -38,6 +38,10 @@ The family reads from abstract to concrete: words, then engine promises, then da
 
 [Game Data Records](game-data-records.md) answers _what can a Game Data Record (GDR) be used for?_ It owns the six purposes a GDR can serve and a worked example of each.
 
+## Effect Lists
+
+[Effect Lists](effect-lists.md) answers _how does game data say what changes when something happens?_ It owns the Effect list, a plain list of Effects that a GDR declares for one occasion, and what the definition of each Effect kind must state. It defines no Effect kind: each Mechanics specification defines the Effect kinds that change the values it owns.
+
 ## Campaign Lifecycle
 
 [Campaign Lifecycle](campaign-lifecycle.md) answers _how does a Session get, change, and lose its Current campaign?_ It owns when a Session starts and ends, creating, loading, selecting, and closing the Current campaign, what `session.getStatus()` reports, and which Session API operations need no Current campaign.
@@ -72,7 +76,7 @@ The family reads from abstract to concrete: words, then engine promises, then da
 
 # How they relate
 
-Core Concepts sits underneath everything, and Engine Contract, which states the guarantees shared by every subsystem, comes next. Campaign State and Player API build directly on those two. Determinism and Randomness and Game Data Records build on Campaign State; Campaign Instances, Numbers, and Saves build on Determinism and Randomness; Timeline and Campaign Lifecycle build on Saves; History and Turn Report, Autopilot, and Developer Access build on Timeline; and Configuration, which uses History and Turn Report for the Turn series of a Campaign configuration value, is the top layer. No Foundation specification references a Mechanics specification; the [Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base.
+Core Concepts sits underneath everything, and Engine Contract, which states the guarantees shared by every subsystem, comes next. Campaign State, Effect Lists, and Player API build directly on those two. Determinism and Randomness and Game Data Records build on Campaign State; Campaign Instances, Numbers, and Saves build on Determinism and Randomness; Timeline and Campaign Lifecycle build on Saves; History and Turn Report, Autopilot, and Developer Access build on Timeline; and Configuration, which uses History and Turn Report for the Turn series of a Campaign configuration value, is the top layer. No Foundation specification references a Mechanics specification; the [Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base.
 
 <!-- generated:family-diagram:start -->
 
@@ -96,6 +100,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 - **Engine Contract versus Player API:** the shape of the engine changes when a part or a kind of caller is added; what the player may see changes with every mechanic. Mechanics specifications rely mostly on the second, so it has its own document.
 - **Campaign State, Campaign Instances, and History and Turn Report:** what a Campaign's data is made of, how one thing in it is modeled, and what it remembers of its past change for different reasons, so each has its own document. E.g., a new Turn series changes only History and Turn Report, and a change to how a Role Type is declared changes only Campaign Instances.
 - **Campaign State versus Game Data Records:** the first holds the rules for data that changes during a Campaign; the second holds the uses of data that never changes during one.
+- **Game Data Records versus Effect Lists:** the first holds the uses a GDR can serve as a whole; the second holds one shape that a property of a GDR can have, which many Types share. E.g., a new Effect kind changes one Mechanics specification and neither of these two.
 - **Engine Contract versus the engine subsystem specifications:** Engine Contract holds only what is true across all engine subsystems, and each engine subsystem has exactly one owning specification, which owns no other. E.g., the rule for which World state `undoAction()` makes current is stated once, in Timeline.
 - **Saves versus Timeline:** Saves holds what most games have: saving, loading, and the Autosaves the engine writes. It needs nothing from Timeline. Timeline holds all undo and redo and builds on Saves. Undo and redo within a Turn work without any Campaign save; undo and redo across Turns load Autosaves, so Timeline uses Saves rather than the reverse.
 - **Numbers:** several Mechanics documents depend on the same arithmetic, e.g. the same rounding operations, so it does not belong inside a single mechanic.
@@ -105,7 +110,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 
 1. [Core Concepts](core-concepts.md) for the vocabulary.
 2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns, then [Player API](player-api.md) for what the player sees and does.
-3. [Campaign State](campaign-state.md), [Campaign Instances](campaign-instances.md), [History and Turn Report](world-history.md), and [Game Data Records](game-data-records.md) for how campaign data is shaped.
+3. [Campaign State](campaign-state.md), [Campaign Instances](campaign-instances.md), [History and Turn Report](world-history.md), [Game Data Records](game-data-records.md), and [Effect Lists](effect-lists.md) for how campaign data and game data are shaped.
 4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md), [Developer Access](developer-access.md), and [Determinism and Randomness](determinism-and-randomness.md) for the engine subsystems.
 5. [Numbers](numbers.md) as needed.
 6. The [Mechanics family](../mechanics/about-mechanics.md) for the game itself.

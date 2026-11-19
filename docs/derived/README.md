@@ -13,7 +13,7 @@ These informative views are derived from the registered Markdown specifications.
 | ------------------ | ------------- | -------------- |
 | Governance         | Conventions   | 8              |
 | Governance         | Process       | 3              |
-| Design             | Foundation    | 15             |
+| Design             | Foundation    | 16             |
 | Design             | Mechanics     | 12             |
 | Design             | Content       | 1              |
 | Design             | UI            | 17             |
@@ -54,6 +54,7 @@ These informative views are derived from the registered Markdown specifications.
 | CSTATE | [Campaign State](../specs/design/foundation/campaign-state.md) | What Campaign state is made of, what the Game rules read of it, and how Campaign initialization produces it. |
 | DETERM | [Determinism and Randomness](../specs/design/foundation/determinism-and-randomness.md) | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay. |
 | DEV | [Developer Access](../specs/design/foundation/developer-access.md) | Dev mode, full Campaign state inspection, Player cheat actions, and random outcome overrides. |
+| EFFECT | [Effect Lists](../specs/design/foundation/effect-lists.md) | How game data declares the changes the Game rules make on one occasion: Effects, Effect kinds, and Effect lists. |
 | ENG | [Engine Contract](../specs/design/foundation/engine-contract.md) | The engine as a whole: how it divides, who may call what, and the guarantees every engine subsystem keeps. |
 | GDR | [Game Data Records](../specs/design/foundation/game-data-records.md) | The purposes a GDR can serve relative to the Game rules and Campaign state, with a worked example of each. |
 | LIFE | [Campaign Lifecycle](../specs/design/foundation/campaign-lifecycle.md) | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status. |

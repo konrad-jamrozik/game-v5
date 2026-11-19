@@ -58,8 +58,8 @@ A FactionOperationLevel describes one Faction operation level. This property tab
 | --- | --- | --- |
 | `level` | The Faction operation level as a whole number; it is the key that `operation_level_weights` uses, and the value that the MissionSiteArchetype property `operation_level` names. | [Operation level](#operation-level); [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) |
 | `name` | The level's display name. | [Player-visible information](#player-visible-information) |
-| `on_win` | What the [Agency](domain-model.md#agency-and-agents) gains when a [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions) at a site of this level is Won. | [Missions](missions.md) |
-| `on_ignored_or_lost` | What changes when a Response Mission site of this level is Expired or its [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) Lost. | [Missions](missions.md) |
+| `on_win` | An [Effect list](../foundation/effect-lists.md#glossary): what the [Agency](domain-model.md#agency-and-agents) gains when a [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions) at a site of this level is Won. | [Missions](missions.md) |
+| `on_ignored_or_lost` | An Effect list: what changes when a Response Mission site of this level is Expired or its [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) Lost. | [Missions](missions.md) |
 
 ## Faction GDR validation
 
@@ -191,6 +191,13 @@ Making a Faction F Eliminated during an Advance turn has the following complete 
 - Faction activity level, Turns until the next level, and Turns until the next operation keep their current values.
 
 When the effect is applied to a Faction whose Eliminated is already yes, nothing changes; in particular, its Eliminated turn keeps its first value.
+
+**Proposed rule:** Game data makes a Faction Eliminated through the [Effect kind](../foundation/effect-lists.md#glossary) `eliminate_faction`, defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
+
+- **Value:** always `true`. Any other value is invalid; an [Effect list](../foundation/effect-lists.md#glossary) that eliminates no Faction holds no [Effect](../foundation/effect-lists.md#glossary) of this kind.
+- **Change:** applying one Effect makes one Faction Eliminated, with the complete effects stated above.
+- **Supplied inputs:** the Faction to make Eliminated, which the rule that applies the Effect supplies.
+- **Combined result:** several Effects applied to the same Faction in one Turn advancement step make it Eliminated once, with one Eliminated turn, because applying the effect to a Faction that is already Eliminated changes nothing.
 
 The following table states every change of Eliminated. Every change not listed, e.g. from yes to no, is impossible.
 
