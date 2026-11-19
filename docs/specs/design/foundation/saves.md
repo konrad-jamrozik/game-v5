@@ -103,7 +103,7 @@ The following rules are complete.
 - **The Current Autosave cannot be turned off:** No setting disables the Current Autosave, and it does not count toward the Autosave limit.
 - **Autosave limit:** The Autosave limit is a whole number of at least 0, and its [Game build default](engine-contract.md#persisted-data) is 5. Writing a Turn-end Autosave that brings the Campaign above the Autosave limit removes the Turn-end Autosave of the earliest Turn. With an Autosave limit of 0, no Turn-end Autosave is written. The Autosave limit counts only Turn-end Autosaves.
 - **One Turn-end Autosave for each Turn:** A Turn-end Autosave written for a Turn that already has one replaces it.
-- **Autopilot engagements:** No Turn-end Autosave is written during an Autopilot engagement, however many Advance turn actions the [Autopilot AI](engine-contract.md#principals-and-access) commits. Engaging Autopilot replaces the Engagement Autosave, and completing disengagement replaces the Disengagement Autosave. This holds for every Autopilot engagement, including one that ends no Turn and a second one in the same Turn. The Current Autosave is replaced during an Autopilot engagement as at any other time.
+- **Autopilot engagements:** No Turn-end Autosave is written during an Autopilot engagement, however many Advance turn actions the [Autopilot AI](engine-contract.md#principals-and-access) commits. Engaging Autopilot replaces the Engagement Autosave, and completing disengagement replaces the Disengagement Autosave. This holds for every Autopilot engagement, including one that ends no Turn, one that commits no Player action, and a second one in the same Turn. The Current Autosave is replaced during an Autopilot engagement as at any other time.
 
 # Listing Campaign saves
 

@@ -55,7 +55,7 @@ Every assignment to or from Contracting and Investigations costs one Advance tur
 
 # Turn routine
 
-During each Turn the Basic Autopilot AI makes its [Player actions](../foundation/engine-contract.md#player-actions-and-turns) in the following order, and then ends the Turn. Each step sees the Assignments the earlier steps produced, so an earlier step has first claim on Rested Agents and money.
+During each Turn the Basic Autopilot AI makes its [Player actions](../foundation/engine-contract.md#player-actions-and-turns) in the following order, and then ends the Turn by requesting Advance turn, under [Autopilot limits](../foundation/autopilot.md#autopilot-limits) in [Autopilot](../foundation/engine-contract.md#autopilot). When no step has a Player action left to make, e.g. when Autopilot is engaged again in a Turn it has already played through, its first request is Advance turn. Each step sees the Assignments the earlier steps produced, so an earlier step has first claim on Rested Agents and money.
 
 1. Recall to Standby each Agent on Contracting or Training whose exhaustion is above the Recall threshold, so that it can rest. An Agent on Contracting is recalled only while Expected income still covers projected upkeep with the margin without it (Keep Agents fit).
 2. If Expected income is below projected upkeep, assign Agents to Contracting until it is not. This step may draw on the Agent reserve and on less rested Agents (Stay solvent).
