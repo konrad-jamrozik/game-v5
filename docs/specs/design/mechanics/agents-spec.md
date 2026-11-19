@@ -38,7 +38,7 @@ What makes an [Agent](domain-model.md#agency-and-agents) or an [Enemy](domain-mo
 | Exhaustion | How worn down a Combatant is, as a whole number of at least zero with no upper bound; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. An Agent's exhaustion is its Exact exhaustion rounded up. | Fatigue |
 | Exact exhaustion | The stored value behind an Agent's exhaustion: a [Decimal quantity](../foundation/numbers.md#glossary) of at least zero, so that rest can lower it by less than one point, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion). |  |
 | Base weapon damage | The typical current health a Combatant's hit removes, as a stored whole number, before any adjustment for the situation and before the random spread. | Weapon damage, naming the stored value |
-| Effective weapon damage | A Combatant's base weapon damage as adjusted for the situation; the value around which a Combat rolls the damage outcome. It equals base weapon damage, because no rule adjusts it yet. |  |
+| Effective weapon damage | A Combatant's base weapon damage as adjusted for the situation; the value around which a Combat rolls the damage outcome. For a Serving Agent it adds what the Agency's [Upgrades](domain-model.md#agency-and-agents) add to weapon damage. |  |
 
 ## Assignments
 
@@ -155,7 +155,8 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 | Base health | State | The Agent's base health. | Authoritative value. A whole number of at least 1. No rule in scope changes it after creation. |
 | Exact exhaustion | State | The Agent's Exact exhaustion. | Authoritative value. A Decimal quantity of at least 0, with no upper bound, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion). |
 | Weapon | State | A reference to the Weapon GDR the Agent is equipped with. | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule in scope changes it after creation. |
-| Base weapon damage | State | The Agent's base weapon damage. | Authoritative value. A whole number of at least 1. Only the rules under [Modifiable values](#modifiable-values) change it. |
+| Base weapon damage | State | The Agent's base weapon damage. | Authoritative value. A whole number of at least 1. No rule in scope changes it after creation. |
+| Final weapon damage | State | Present exactly when the Agent is Terminated: the effective weapon damage the Agent had when it became Terminated. | Authoritative value. A whole number of at least 1, under [Service record](#service-record). |
 | Assignment | State | Present exactly when the Agent is Serving: one of Standby, Contracting, Training, Recovery, an Investigation with a Mutable reference to it, or Deployed with a Mutable reference to the Mission. | Authoritative value, under [Assignment and Agent status](#assignment-and-agent-status). |
 | Agent status | State | At assignment, In transit, Recovering, Killed, or Dismissed, under [Agent status](#agent-status). | Authoritative value, under [Agent status](#agent-status) and [Assignment and Agent status](#assignment-and-agent-status). |
 | [Participation history](domain-model.md#agency-and-agents) | State | The Investigations and Missions the Agent took part in and has left. | Authoritative value, under [Participation history records](#participation-history-records). |
@@ -163,7 +164,7 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 | Turn terminated | State | Present exactly when the Agent is Terminated: the turn number of the Turn in which it became Terminated. | Authoritative value. A whole number of at least its Turn hired, under [Service record](#service-record). |
 | Killed by | State | Present exactly when the Agent is Killed: an Immutable reference to the Enemy whose attack made it dead, and an Immutable reference to that Enemy's [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions). | Authoritative value, under [Service record](#service-record). |
 
-Base skill, current health, base health, exhaustion, Weapon, and base weapon damage are the properties the [Combatant Role Type](#combatant-role-type) requires; Weapon and base weapon damage together are the equipped weapon values. An Agent holds its exhaustion as its Exact exhaustion. An Agent also has four [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its exhaustion, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion); its effective skill, under [Effective skill](#effective-skill); whether it can be assigned, under [Agents that can be assigned](#agents-that-can-be-assigned); and whether it is Fit for work, under [Start-work gate](#start-work-gate). An Agent has no [Turn series](../foundation/world-history.md#glossary).
+Base skill, current health, base health, exhaustion, Weapon, and base weapon damage are the properties the [Combatant Role Type](#combatant-role-type) requires; Weapon and base weapon damage together are the equipped weapon values. An Agent holds its exhaustion as its Exact exhaustion. An Agent also has five [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its exhaustion, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion); its effective skill, under [Effective skill](#effective-skill); its effective weapon damage, under [Effective weapon damage](#effective-weapon-damage); whether it can be assigned, under [Agents that can be assigned](#agents-that-can-be-assigned); and whether it is Fit for work, under [Start-work gate](#start-work-gate). An Agent has no [Turn series](../foundation/world-history.md#glossary).
 
 **Retention:** An Agent keeps every property above for the whole Campaign, whatever its Agent status, so that every reference to it resolves, e.g. from a [Combat report](domain-model.md#combat) or a Participation history. An Agent becomes [Retired](../foundation/world-history.md#glossary) when it becomes Terminated, and is kept in the [Retired world state](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in History and Turn Report. No Agent is ever removed.
 
@@ -175,13 +176,14 @@ Base skill, current health, base health, exhaustion, Weapon, and base weapon dam
 
 An Agent that leaves the Agency keeps a record of how its service ended and what it achieved, so that the player can look back on it after the [Combat reports](domain-model.md#combat) that told the story are no longer kept in full.
 
-**Proposed rule:** Enemies killed, Turn terminated, and Killed by change only as follows:
+**Proposed rule:** Enemies killed, Turn terminated, Killed by, and Final weapon damage change only as follows:
 
 - **Enemies killed** is 0 when the Agent is created, under [Agent creation](#agent-creation), and rises by 1 each time an attack the Agent makes leaves its defender dead, under [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat. No rule lowers it.
 - **Turn terminated** is set when the Agent becomes Terminated, under [Agent status](#agent-status): for a Killed Agent, the turn number of the Turn that the Advance turn fighting its Combat ends; for a Dismissed Agent, the turn number of the Turn in which `dismissAgents` dismissed it.
 - **Killed by** is set when the Agent becomes Killed, under [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat, to the attacking Enemy and that Enemy's Mission site.
+- **Final weapon damage** is set when the Agent becomes Terminated, to the effective weapon damage it had as a Serving Agent in the [World state](../foundation/engine-contract.md#player-actions-and-turns) before it became Terminated, under [Effective weapon damage](#effective-weapon-damage). An Upgrade bought later therefore does not change what the record shows.
 
-Once set, Turn terminated and Killed by never change, and Enemies killed never changes after the Agent is Terminated, because a Terminated Agent fights no Combat. E.g., an Agent hired in Turn 3 that makes two Enemies dead in the Combat of the Advance turn ending Turn 6 and is made dead by enemy-7 at Mission site s4 in the Combat of the Advance turn ending Turn 9 ends with Enemies killed 2, Turn terminated 9, and Killed by enemy-7 at s4.
+Once set, Turn terminated, Killed by, and Final weapon damage never change, and Enemies killed never changes after the Agent is Terminated, because a Terminated Agent fights no Combat. E.g., an Agent hired in Turn 3 that makes two Enemies dead in the Combat of the Advance turn ending Turn 6 and is made dead by enemy-7 at Mission site s4 in the Combat of the Advance turn ending Turn 9 ends with Enemies killed 2, Turn terminated 9, and Killed by enemy-7 at s4.
 
 # Agent status
 
@@ -288,7 +290,15 @@ Effective skill is never stored. Whenever a rule reads it, it is computed from t
 
 ## Effective weapon damage
 
-**Proposed rule:** A Combatant's effective weapon damage is a Derived value equal to its base weapon damage. It is shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and it is the value around which a Combat rolls the damage outcome, under [Damage outcome](combat.md#damage-outcome) in Combat. No rule adjusts it yet; it is kept apart from base weapon damage so that a later rule can adjust weapon damage for the situation without changing the stored value, as effective skill does for base skill. Effective weapon damage is never stored, and it follows every change of base weapon damage at once.
+**Proposed rule:** A Combatant's effective weapon damage is a Derived value. It is shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and it is the value around which a Combat rolls the damage outcome, under [Damage outcome](combat.md#damage-outcome) in Combat. It is kept apart from base weapon damage so that a rule can adjust weapon damage without changing the stored value, as effective skill does for base skill. The following table states it for every Combatant, and is exhaustive.
+
+| Combatant | Effective weapon damage |
+| --- | --- |
+| An Enemy | Its base weapon damage. |
+| A Serving Agent | Its base weapon damage plus what the Agency's [Upgrades](domain-model.md#agency-and-agents) add to weapon damage, under [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) in Economy and Upgrades. |
+| A Terminated Agent | Its Final weapon damage, under [Service record](#service-record). |
+
+The effective weapon damage of an Enemy and of a Serving Agent is never stored, and it follows every change of its inputs at once: buying an Upgrade that adds to weapon damage raises the effective weapon damage of every Serving Agent in the same World state, and rewrites no value of any Agent. The result is a whole number of at least 1.
 
 ## Changes to attributes
 
@@ -302,13 +312,13 @@ An Agent's attributes change only through a few named rules, so the cause of eve
 | Current health | [Agent Recovery](agent-recovery.md); the [Base health Upgrade](economy-and-upgrades.md#base-health-upgrade), under [Modifiable values](#modifiable-values) | [Combat](combat.md), in a Combat |
 | Base health | The [Base health Upgrade](economy-and-upgrades.md#base-health-upgrade), under [Modifiable values](#modifiable-values) | No rule |
 | Exhaustion | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`; [Mission exhaustion](missions.md#mission-exhaustion) in Missions; [Work exhaustion](#work-exhaustion) | [Agent Recovery](agent-recovery.md) |
-| Base weapon damage | The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade), under [Modifiable values](#modifiable-values) | No rule |
+| Base weapon damage | No rule | No rule |
 
 Standby, Recovery, and being In transit leave exhaustion unchanged except through [Agent Recovery](agent-recovery.md), which lowers it on Standby and Recovery. Each specification named in the table applies the clamps under [Attribute ranges](#attribute-ranges).
 
 # Modifiable values
 
-**Proposed rule:** Base weapon damage, base health, and current health are the only Agent values that an [Upgrade](economy-and-upgrades.md#glossary) may change. Each is an individual value of each Agent, not an Agency value. The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises the base weapon damage of Serving Agents and of Agents created later, and the [Base health Upgrade](economy-and-upgrades.md#base-health-upgrade) raises the base health and current health of Serving Agents together and the base health of Agents created later, under [Agent creation](#agent-creation). No [Upgrade](domain-model.md#agency-and-agents) changes base skill, exhaustion, or Weapon. An Upgrade under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) changes no Agent value at once: it raises the training skill gain that [Training growth](#training-growth) reads, or a rate that [Agent Recovery](agent-recovery.md) reads.
+**Proposed rule:** Base health and current health are the only stored Agent values that an [Upgrade](economy-and-upgrades.md#glossary) may change. Each is an individual value of each Agent, not an Agency value. The [Base health Upgrade](economy-and-upgrades.md#base-health-upgrade) raises the base health and current health of Serving Agents together and the base health of Agents created later, under [Agent creation](#agent-creation). The [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) changes no stored Agent value: it raises the effective weapon damage of every Serving Agent, under [Effective weapon damage](#effective-weapon-damage). No [Upgrade](domain-model.md#agency-and-agents) changes base skill, exhaustion, Weapon, or base weapon damage, and no Upgrade bought after an Agent became Terminated changes any value of that Agent, e.g. its Final weapon damage. An Upgrade under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) changes no Agent value at once: it raises the training skill gain that [Training growth](#training-growth) reads, or a rate that [Agent Recovery](agent-recovery.md) reads.
 
 # Assignments and transit
 
@@ -501,12 +511,13 @@ A Forced return makes the Agent Fit for work again only after it has rested, und
 | Enemies killed | 0. | This rule. |
 | Turn terminated | Absent. | This rule. |
 | Killed by | Absent. | This rule. |
+| Final weapon damage | Absent. | This rule. |
 
-The table above states the initial base weapon damage, base health, and current health before any Upgrade has been acquired; for an Agent created after an Upgrade has been acquired, the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises its base weapon damage, and the [Base health Upgrade](economy-and-upgrades.md#base-health-upgrade) raises its base health and its current health. The new Agent joins the Agency's roster of Agents. No [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above. Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
+The table above states the initial base health and current health before any Upgrade has been acquired; for an Agent created after an Upgrade has been acquired, the [Base health Upgrade](economy-and-upgrades.md#base-health-upgrade) raises its base health and its current health. No Upgrade changes the initial base weapon damage: a new Agent has the effective weapon damage of every other Serving Agent with its Weapon, under [Effective weapon damage](#effective-weapon-damage). The new Agent joins the Agency's roster of Agents. No [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above. Creating an Agent changes nothing else; e.g., any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
 ## Initial roster
 
-**Proposed rule:** The initial Campaign state contains exactly `initial_roster_size` Agents, the value of AgentParameters, and no other Agent, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model requires. Each is created under [Agent creation](#agent-creation) with Agent status At assignment and Turn hired equal to the turn number of the Campaign's first Turn. Because no Upgrade has been acquired at campaign creation, each has the Weapon `base_weapon_damage` as its base weapon damage and the AgentArchetype's `base_health` as its base health. Every Agent of the initial roster can be assigned in the first Turn. An `initial_roster_size` of 0 is valid and gives an empty roster.
+**Proposed rule:** The initial Campaign state contains exactly `initial_roster_size` Agents, the value of AgentParameters, and no other Agent, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model requires. Each is created under [Agent creation](#agent-creation) with Agent status At assignment and Turn hired equal to the turn number of the Campaign's first Turn. Because no Upgrade has been acquired at campaign creation, each has the Weapon `base_weapon_damage` as its effective weapon damage and the AgentArchetype's `base_health` as its base health. Every Agent of the initial roster can be assigned in the first Turn. An `initial_roster_size` of 0 is valid and gives an empty roster.
 
 # Assigning Agents
 
@@ -574,7 +585,7 @@ Each lists its Agents by Instance ID, in the order of the Agents in Campaign sta
 | Value | Player-visible information |
 | --- | --- |
 | An Agent's Instance ID, its AgentArchetype including the AgentArchetype's `name`, its Agency, and its Turn hired | Yes |
-| An Agent's base skill, Experience, current health, base health, exhaustion, Exact exhaustion, Weapon, and base weapon damage | Yes |
+| An Agent's base skill, Experience, current health, base health, exhaustion, Exact exhaustion, Weapon, base weapon damage, effective weapon damage, and, for a Terminated Agent, Final weapon damage | Yes |
 | An Agent's effective skill | Yes |
 | An Agent's Agent status, and its Assignment, including the Investigation or Mission it references | Yes |
 | Whether an Agent can be assigned, whether it is Fit for work, and whether it is In base or Away | Yes |

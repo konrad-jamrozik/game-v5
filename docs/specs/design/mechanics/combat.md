@@ -74,7 +74,7 @@ A Weapon GDR describes the base weapon damage of the Combatants equipped with it
 | `name` | The display name of the Weapon. | [Player-visible information](#player-visible-information) |
 | `base_weapon_damage` | The base weapon damage of a newly created Combatant equipped with this Weapon, in health points. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation) in Agents, for Agents |
 
-A Combatant's base weapon damage is a value of the Combatant, set from `base_weapon_damage` at creation; a Combat reads the Combatant's base weapon damage, never the Weapon's `base_weapon_damage`. An Agent's base weapon damage can differ from its Weapon's `base_weapon_damage` under [Modifiable values](agents-spec.md#modifiable-values) in Agents. Individual inventory items are out of scope.
+A Combatant's base weapon damage is a value of the Combatant, set from `base_weapon_damage` at creation; a Combat reads the Combatant's [effective weapon damage](agents-spec.md#combatant-attributes), never the Weapon's `base_weapon_damage`. An Agent's effective weapon damage can exceed its Weapon's `base_weapon_damage`, under [Effective weapon damage](agents-spec.md#effective-weapon-damage) in Agents. Individual inventory items are out of scope.
 
 ## CombatParameters
 
@@ -176,7 +176,7 @@ A Combat turns a deployment into a result without any choice from the player. Th
 
 1. **The Agents' side:** a list of one or more distinct Agents, each [Serving](agents-spec.md#agent-statuses). This is the [Mission](domain-model.md#leads-investigations-mission-sites-and-missions)'s [Current team](domain-model.md#leads-investigations-mission-sites-and-missions).
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
-3. **Current values:** the base skill, current health, base health, exhaustion, and base weapon damage of every Combatant in the two lists, as they are when the Combat begins.
+3. **Current values:** the base skill, current health, base health, exhaustion, and effective weapon damage of every Combatant in the two lists, as they are when the Combat begins.
 4. **GDR values:** the four values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`, `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, `skill_gain_per_attack_hit`, `skill_gain_per_attack_miss`, `skill_gain_per_defense_hit`, and `skill_gain_per_defense_miss` of AgentParameters.
 5. **Random outcomes:** the named random outcomes of its attacks, under [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome).
 
@@ -400,7 +400,7 @@ By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is n
 1. **Combat outcome:** Prevailed, Retreated, or Wiped.
 2. **Number of Combat rounds:** a whole number of at least 0.
 3. **Participants:** the Agents' side and the Enemies' side, each as the list of Instance IDs in its fixed order.
-4. **Starting values:** for each participant, its base skill, current health, base health, exhaustion, base weapon damage, effective skill, and Incapacitated value when the Combat began, after [Combat start](#combat-start) step 1.
+4. **Starting values:** for each participant, its base skill, current health, base health, exhaustion, effective weapon damage, effective skill, and Incapacitated value when the Combat began, after [Combat start](#combat-start) step 1.
 5. **Final values:** for each participant, its current health, exhaustion, and effective skill when the Combat ended, and its final condition: able to fight, Incapacitated, or dead. A dead Agent is Killed.
 6. **Damage dealt and damage taken:** for each participant, its damage dealt, i.e. the sum of the health removed by its attacks, and its damage taken, i.e. the sum of the health removed by attacks on it; and for each Agent, its combat skill gain, under [Combat skill gain](#combat-skill-gain).
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.

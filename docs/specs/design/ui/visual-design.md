@@ -221,7 +221,7 @@ E.g., after sorting the [Agent table](screens/agents-view.md#agent-table) by eff
 
 A view may lock a tier above the four, e.g. the Blocked by tier of the Agent table while an [Assignment filter](screens/agents-view.md#glossary) is on. Pressing a locked tier's header changes nothing, and pressing any other header changes the tiers under it as above.
 
-The header of each column in a tier shows its direction as ▲ for ascending or ▼ for descending, after its label, at full opacity for the first tier and at 70 %, 45 %, and 25 % opacity for the second, third, and fourth tier, counting a locked tier as the first and showing every tier past the fourth at 25 %. A header is never cut short: each column's width holds its header's label together with that arrow, e.g. the base weapon damage column of the [Agents View](screens/agents-view.md) is wide enough for its label followed by "▼".
+The header of each column in a tier shows its direction as ▲ for ascending or ▼ for descending, after its label, at full opacity for the first tier and at 70 %, 45 %, and 25 % opacity for the second, third, and fourth tier, counting a locked tier as the first and showing every tier past the fourth at 25 %. A header is never cut short: each column's width holds its header's label together with that arrow, e.g. the effective weapon damage column of the [Agents View](screens/agents-view.md) is wide enough for its label followed by "▼".
 
 ## Agent condition
 

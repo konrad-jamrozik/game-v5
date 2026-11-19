@@ -78,7 +78,7 @@ Type owner: [Economy and Upgrades](../mechanics/economy-and-upgrades.md).
 | `agent_cap` | Upgrade | Calculation parameter | Price and increment of the [Upgrade](../mechanics/domain-model.md#agency-and-agents) raising the [Agent cap](../mechanics/domain-model.md#agency-and-agents). |
 | `transport_cap` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the Transport cap. |
 | `training_cap` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the Training cap. |
-| `weapon_damage` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the [base weapon damage](../mechanics/agents-spec.md#combatant-attributes) of every Agent. |
+| `weapon_damage` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the [effective weapon damage](../mechanics/agents-spec.md#combatant-attributes) of every [Serving](../mechanics/agents-spec.md#agent-statuses) Agent. |
 | `base_health` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the [base health](../mechanics/agents-spec.md#combatant-attributes) and current health of every Agent. |
 | `training_skill_gain` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the base skill every Agent on Training gains. |
 | `exhaustion_recovery` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the exhaustion every resting Agent loses. |

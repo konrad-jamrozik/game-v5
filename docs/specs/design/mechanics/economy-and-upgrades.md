@@ -26,7 +26,7 @@ These terms are specific to the [Agency](domain-model.md#agency-and-agents)'s ec
 | Increment | How much one acquisition of an Upgrade raises the value it improves: the Upgrade's `increment`. |  |
 | Upgrade bonus | For one effect identifier, what every Upgrade with that effect adds to the starting value of the value they improve: the sum of each such Upgrade's Increment × its Acquisitions. |  |
 | Cap Upgrade | An Upgrade that raises the [Agent cap](domain-model.md#agency-and-agents), the Transport cap, or the Training cap. | Cap effect |
-| Weapon damage Upgrade | An Upgrade that raises the [base weapon damage](agents-spec.md#combatant-attributes) of Agents. | Base weapon damage effect; Agent value effect |
+| Weapon damage Upgrade | An Upgrade that raises the [effective weapon damage](agents-spec.md#combatant-attributes) of [Serving](agents-spec.md#agent-statuses) Agents. | Base weapon damage effect; Agent value effect |
 | Base health Upgrade | An Upgrade that raises the [base health](agents-spec.md#combatant-attributes) of Agents. | Hit points upgrade |
 | Rate Upgrade | An Upgrade that raises one rate every [Agent](domain-model.md#agency-and-agents) shares: the training skill gain, the [exhaustion](agents-spec.md#combatant-attributes) recovery, or the health recovery percentage. |  |
 | Transport cap | The most Agents the Agency can have [Deployed](agents-spec.md#assignments) at the same time. |  |
@@ -271,7 +271,7 @@ Rejection: when a precondition fails, the action is rejected with an error that 
 State changes: when both preconditions hold, the action is one Player action that applies at once, within the same Turn:
 
 - The Agency's money falls by `hire_cost`. Because money was at least `hire_cost`, money afterwards is at least 0.
-- One Agent is created under [Agent creation](agents-spec.md#agent-creation) in Agents: Serving, on [Standby](agents-spec.md#assignments), In transit, with Turn hired equal to the current turn number, and with the initial base weapon damage under [Weapon damage Upgrade](#weapon-damage-upgrade).
+- One Agent is created under [Agent creation](agents-spec.md#agent-creation) in Agents: Serving, on [Standby](agents-spec.md#assignments), In transit, with Turn hired equal to the current turn number.
 
 Nothing else changes. The new Agent counts toward the Agent cap and in projected upkeep at once. It arrives in the next Advance turn, under [Transit rule](agents-spec.md#transit-rule), and is counted in that Advance turn's Upkeep step. Hiring several Agents takes one `hireAgent` action each.
 
@@ -348,7 +348,7 @@ Nothing else changes. The price is the GDR's `price` for every acquisition; it d
 | `agent_cap` | Cap Upgrade | Raises the Agent cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades). |
 | `transport_cap` | Cap Upgrade | Raises the Transport cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades). |
 | `training_cap` | Cap Upgrade | Raises the Training cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades). |
-| `agent_weapon_damage` | Weapon damage Upgrade | Raises the base weapon damage of Agents by the Upgrade's Increment, under [Weapon damage Upgrade](#weapon-damage-upgrade). |
+| `agent_weapon_damage` | Weapon damage Upgrade | Raises the effective weapon damage of every Serving Agent by the Upgrade's Increment, under [Weapon damage Upgrade](#weapon-damage-upgrade). |
 | `agent_base_health` | Base health Upgrade | Raises the base health and [current health](agents-spec.md#combatant-attributes) of Agents by the Upgrade's Increment, under [Base health Upgrade](#base-health-upgrade). |
 | `training_skill_gain` | Rate Upgrade | Raises the training skill gain by the Upgrade's Increment, under [Rate Upgrades](#rate-upgrades). |
 | `exhaustion_recovery` | Rate Upgrade | Raises the exhaustion recovery by the Upgrade's Increment, under [Rate Upgrades](#rate-upgrades). |
@@ -373,18 +373,15 @@ A Cap Upgrade changes no stored value beyond the Acquisitions: the cap it raises
 
 ### Weapon damage Upgrade
 
-[Base weapon damage](agents-spec.md#combatant-attributes) is one of the Agent values an Upgrade may change, under [Modifiable values](agents-spec.md#modifiable-values) in Agents. An acquisition of an Upgrade whose `effect` is `agent_weapon_damage`, i.e. of a Weapon damage Upgrade, has two results:
-
-1. **Serving Agents:** When the purchase is committed, the base weapon damage of every Serving Agent rises by that Upgrade's Increment, whatever the Agent's Assignment and Agent status; e.g., a Deployed Agent, an Agent In transit, and an Agent on Recovery are all raised. Killed and Dismissed Agents keep their base weapon damage, which is retained in the Retired world state, under [Agent properties](agents-spec.md#agent-properties) in Agents.
-2. **Agents created later:** Every Agent created after the purchase, under [Agent creation](agents-spec.md#agent-creation) in Agents, starts with the initial base weapon damage below.
+A Weapon damage Upgrade, i.e. an Upgrade whose `effect` is `agent_weapon_damage`, changes no stored value beyond the Acquisitions. The [effective weapon damage](agents-spec.md#combatant-attributes) of every Serving Agent is a Derived value, computed by [Upgrade bonus](#upgrade-bonus), under [Effective weapon damage](agents-spec.md#effective-weapon-damage) in Agents:
 
 ```text
-initial base weapon damage = base_weapon_damage + Upgrade bonus of agent_weapon_damage
+effective weapon damage = base weapon damage + Upgrade bonus of agent_weapon_damage
 ```
 
-Inputs: `base_weapon_damage` is that of the Weapon GDR that the AgentArchetype's `weapon` references, a whole number of at least 1, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the World state in which the Agent is created. The result is a whole number of at least `base_weapon_damage`, so of at least 1. This formula applies to every Agent creation: hiring, `addAgents`, and the initial roster, whose Agents start with `base_weapon_damage` because the Upgrade bonus is 0 at campaign creation.
+Inputs: [base weapon damage](agents-spec.md#combatant-attributes) is the Agent's own, a whole number of at least 1, which no Upgrade changes, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the World state in which the value is read. The result is a whole number of at least the Agent's base weapon damage, so of at least 1.
 
-Consequently, every Serving Agent's base weapon damage equals the formula above, whichever Turn the Agent was created in, because no other rule changes base weapon damage, under [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents. The effect changes no other Agent value, no Weapon GDR, and no [Enemy](domain-model.md#combat).
+The formula holds for every Serving Agent alike, whatever its Assignment and Agent status and whichever Turn it was created in; e.g., a Deployed Agent, an Agent In transit, an Agent on Recovery, and an Agent hired after the purchase all have it. It rises by the Increment at once, within the same Turn, so the first [Combat](domain-model.md#combat) fought after a purchase already uses the raised value. A [Terminated](agents-spec.md#agent-statuses) Agent is not affected: it keeps the Final weapon damage recorded when it became Terminated, under [Service record](agents-spec.md#service-record) in Agents. The effect changes no stored Agent value, no Weapon GDR, and no [Enemy](domain-model.md#combat).
 
 ### Base health Upgrade
 
@@ -496,11 +493,11 @@ The [History entry](../foundation/world-history.md#glossary) of the Turn the Adv
 - **Dismissing an Agent that is not on Standby, At assignment:** Rejected as a whole; e.g., an Agent on Standby but In transit, an Agent on Contracting, and a Deployed Agent cannot be dismissed ([Dismissing Agents](#dismissing-agents)).
 - **Dismissing every Agent:** Valid; an Agency with no Serving Agent pays no upkeep. Whether the Campaign ends is decided under [Defeat](panic-and-endings.md#defeat) ([Dismissing Agents](#dismissing-agents)).
 - **Unknown Upgrade:** `purchaseUpgrade` with an identifier that names no Upgrade GDR, including one naming a GDR of another Type, is rejected ([Purchasing Upgrades](#purchasing-upgrades)).
-- **Base weapon damage of Agents who are not Serving:** A Killed or Dismissed Agent keeps its base weapon damage when a base weapon damage Upgrade is purchased ([Weapon damage Upgrade](#weapon-damage-upgrade)). Likewise, a Killed or Dismissed Agent keeps its base health and current health when a Base health Upgrade is purchased ([Base health Upgrade](#base-health-upgrade)).
+- **Weapon damage of Agents who are not Serving:** A Killed or Dismissed Agent keeps its Final weapon damage when a Weapon damage Upgrade is purchased ([Weapon damage Upgrade](#weapon-damage-upgrade)). Likewise, a Killed or Dismissed Agent keeps its base health and current health when a Base health Upgrade is purchased ([Base health Upgrade](#base-health-upgrade)).
 - **Damaged Agent and a Base health Upgrade:** An Agent on Recovery with current health 20 of 30 has 21 of 31 after a purchase with Increment 1, and stays on Recovery; the purchase never ends Recovery and never puts an Agent below full current health ([Base health Upgrade](#base-health-upgrade)).
 - **Rate Upgrade purchased during a Turn:** The raised rate applies from the next Advance turn and changes no Agent value at once ([Rate Upgrades](#rate-upgrades)).
 - **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises Acquisitions but no value it improves, and a purchase of the second costs no money ([Economy GDR validation](#economy-gdr-validation)).
-- **Large values:** Money, Acquisitions, caps, base weapon damage, base health, and the rates a Rate Upgrade raises have no upper bound, and every computation is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
+- **Large values:** Money, Acquisitions, caps, effective weapon damage, base health, and the rates a Rate Upgrade raises have no upper bound, and every computation is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
 - **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is created from it ([Economy GDR validation](#economy-gdr-validation), [Campaign configuration values](#campaign-configuration-values)). A World state violating an invariant of the Agency, e.g. negative funding, is an internal invariant violation, reported under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 - **Campaign ended:** Once the Campaign has a Campaign ending, `hireAgent`, `dismissAgents`, `purchaseUpgrade`, `addMoney`, and Advance turn are rejected, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
 
