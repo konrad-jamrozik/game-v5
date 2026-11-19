@@ -94,12 +94,14 @@ See also: [Contracting](#contracting) · [Training](#training) · [Investigation
 
 Source: `content/compendium/compendium_articles/mechanics_combat.yaml`
 
-A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, and each attacker goes for the most skilled opponent. The Combat ends when one side can no longer fight or your team [retreats](#retreat).
+A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once. Attackers spread out over their opponents, and each prefers an opponent it clearly outclasses. The Combat ends when one side can no longer fight or your team [retreats](#retreat).
 
 | Formulas |  |
 | --- | --- |
 | Chance to hit | A² ÷ (A² + D²), where A is the [effective skill](#skill) of the attacker and D that of the defender |
-| Target | The opponent with the highest effective skill that is able to fight |
+| Target | Among the opponents attacked least often this round, the one whose effective skill is nearest to 0.5 × that of the attacker, counting only those from 0.2 × to 0.8 × of it; effective skill is taken as it was when the round began |
+| No such opponent | The opponent attacked least often this round |
+| Taking cover | A [wounded](#recovery) opponent may stay out of reach of one attacker; the chance is the share of its [health](#health) it has lost |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +1 for the defender, hit or miss |
 | Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
 | Combat rating | The effective skill of everyone on a side who is able to fight, added up |
@@ -134,7 +136,7 @@ A hit removes [health](#health) from its target. How much depends on the weapon 
 | Weapon damage of an Agent | That of its weapon, plus Upgrades |
 | A miss | No damage |
 
-See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Sidearm](#sidearm) · [Rifle](#rifle) · [Heavy rifle](#heavy-rifle)
+See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Pistol](#pistol) · [Sidearm](#sidearm) · [Rifle](#rifle) · [Battle rifle](#battle-rifle) · [Assault rifle](#assault-rifle) · [Heavy rifle](#heavy-rifle) · [Machine gun](#machine-gun)
 
 ### Exhaustion
 
@@ -487,7 +489,7 @@ See also: [Factions](#factions) · [Panic](#panic) · [Money and funding](#money
 
 Source: `content/compendium/compendium_articles/field_agent_article.yaml`
 
-The backbone of the Agency: a trained operative who can investigate, earn [money](#money-and-funding) on contract, train, or fight. Every [Agent](#agents) you [hire](#hiring-and-upkeep) starts as a Field agent and grows through [Training](#training) and the [Missions](#missions) it survives.
+The backbone of the Agency: a trained [operative](#operative) who can investigate, earn [money](#money-and-funding) on contract, train, or fight. Every [Agent](#agents) you [hire](#hiring-and-upkeep) starts as a Field agent and grows through [Training](#training) and the [Missions](#missions) it survives.
 
 | `field_agent` | AgentArchetype |
 | ------------- | -------------- |
@@ -497,6 +499,19 @@ The backbone of the Agency: a trained operative who can investigate, earn [money
 | `weapon`      | `sidearm`      |
 
 ## Subject articles: EnemyArchetype
+
+### Commander
+
+Source: `content/compendium/compendium_articles/commander_article.yaml`
+
+A senior officer who directs the larger [operations](#faction-operations) of a cult, and fights as well as several [Soldiers](#soldier).
+
+| `commander`   | EnemyArchetype |
+| ------------- | -------------- |
+| `name`        | `Commander`    |
+| `base_skill`  | `300`          |
+| `base_health` | `40`           |
+| `weapon`      | `heavy_rifle`  |
 
 ### Cult leader
 
@@ -511,6 +526,45 @@ The heart of a cult, guarded in its headquarters. Only a strong, rested team sho
 | `base_health` | `40`           |
 | `weapon`      | `heavy_rifle`  |
 
+### Elite
+
+Source: `content/compendium/compendium_articles/elite_article.yaml`
+
+A hand-picked veteran, far more dangerous than a [Soldier](#soldier). Only well-trained [Agents](#agents) meet an Elite on even terms.
+
+| `elite`       | EnemyArchetype  |
+| ------------- | --------------- |
+| `name`        | `Elite`         |
+| `base_skill`  | `250`           |
+| `base_health` | `40`            |
+| `weapon`      | `assault_rifle` |
+
+### Handler
+
+Source: `content/compendium/compendium_articles/handler_article.yaml`
+
+A junior officer who runs a cell of [Initiates](#initiate) and [Operatives](#operative).
+
+| `handler`     | EnemyArchetype |
+| ------------- | -------------- |
+| `name`        | `Handler`      |
+| `base_skill`  | `80`           |
+| `base_health` | `25`           |
+| `weapon`      | `sidearm`      |
+
+### High commander
+
+Source: `content/compendium/compendium_articles/high_commander_article.yaml`
+
+One of the few who answer only to the [Cult leader](#cult-leader). A High commander is a match for a whole team of new [Agents](#agents).
+
+| `high_commander` | EnemyArchetype   |
+| ---------------- | ---------------- |
+| `name`           | `High commander` |
+| `base_skill`     | `500`            |
+| `base_health`    | `50`             |
+| `weapon`         | `machine_gun`    |
+
 ### Initiate
 
 Source: `content/compendium/compendium_articles/initiate_article.yaml`
@@ -522,6 +576,32 @@ A new recruit of a hostile cult, with more zeal than [skill](#skill). Initiates 
 | `name`        | `Initiate`     |
 | `base_skill`  | `40`           |
 | `base_health` | `20`           |
+| `weapon`      | `pistol`       |
+
+### Lieutenant
+
+Source: `content/compendium/compendium_articles/lieutenant_article.yaml`
+
+An officer who [leads](#leads) [Soldiers](#soldier) in the field, and fights a little better than those under command.
+
+| `lieutenant`  | EnemyArchetype |
+| ------------- | -------------- |
+| `name`        | `Lieutenant`   |
+| `base_skill`  | `140`          |
+| `base_health` | `30`           |
+| `weapon`      | `battle_rifle` |
+
+### Operative
+
+Source: `content/compendium/compendium_articles/operative_article.yaml`
+
+A cult member trusted with real work. Operatives shoot straighter than [Initiates](#initiate) and stand beside them in most fights.
+
+| `operative`   | EnemyArchetype |
+| ------------- | -------------- |
+| `name`        | `Operative`    |
+| `base_skill`  | `60`           |
+| `base_health` | `25`           |
 | `weapon`      | `sidearm`      |
 
 ### Soldier
@@ -714,13 +794,13 @@ Source: `content/compendium/compendium_articles/apprehend_member_article.yaml`
 
 A cult member has been found, lightly guarded. Bring the member in before the trail goes cold.
 
-| `apprehend_member` | MissionSiteArchetype         |
-| ------------------ | ---------------------------- |
-| `kind`             | `initiative`                 |
-| `name`             | `Apprehend member`           |
-| `expires_in_turns` | `5`                          |
-| `enemies`          | `{"initiate":3}`             |
-| `on_win`           | `[{"money":5},{"panic":-1}]` |
+| `apprehend_member` | MissionSiteArchetype           |
+| ------------------ | ------------------------------ |
+| `kind`             | `initiative`                   |
+| `name`             | `Apprehend member`             |
+| `expires_in_turns` | `5`                            |
+| `enemies`          | `{"initiate":2,"operative":1}` |
+| `on_win`           | `[{"money":5},{"panic":-1}]`   |
 
 ### Foil recruitment push
 
@@ -728,13 +808,13 @@ Source: `content/compendium/compendium_articles/foil_recruitment_push_article.ya
 
 A cult is recruiting openly. Break up the rally before the cult grows.
 
-| `foil_recruitment_push` | MissionSiteArchetype    |
-| ----------------------- | ----------------------- |
-| `kind`                  | `response`              |
-| `name`                  | `Foil recruitment push` |
-| `operation_level`       | `1`                     |
-| `expires_in_turns`      | `3`                     |
-| `enemies`               | `{"initiate":5}`        |
+| `foil_recruitment_push` | MissionSiteArchetype           |
+| ----------------------- | ------------------------------ |
+| `kind`                  | `response`                     |
+| `name`                  | `Foil recruitment push`        |
+| `operation_level`       | `1`                            |
+| `expires_in_turns`      | `3`                            |
+| `enemies`               | `{"initiate":4,"operative":1}` |
 
 ### Foil sabotage
 
@@ -742,13 +822,13 @@ Source: `content/compendium/compendium_articles/foil_sabotage_article.yaml`
 
 A cult plans to strike critical infrastructure. Stop the saboteurs before the blast.
 
-| `foil_sabotage`    | MissionSiteArchetype         |
-| ------------------ | ---------------------------- |
-| `kind`             | `response`                   |
-| `name`             | `Foil sabotage`              |
-| `operation_level`  | `2`                          |
-| `expires_in_turns` | `4`                          |
-| `enemies`          | `{"initiate":4,"soldier":2}` |
+| `foil_sabotage`    | MissionSiteArchetype                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| `kind`             | `response`                                                            |
+| `name`             | `Foil sabotage`                                                       |
+| `operation_level`  | `2`                                                                   |
+| `expires_in_turns` | `4`                                                                   |
+| `enemies`          | `{"initiate":2,"operative":2,"soldier":2,"handler":1,"lieutenant":1}` |
 
 ### Raid HQ
 
@@ -775,7 +855,7 @@ Storm the safehouse of a cult before it is moved. Expect it to be well guarded.
 | `kind`             | `initiative`                                 |
 | `name`             | `Raid safehouse`                             |
 | `expires_in_turns` | `8`                                          |
-| `enemies`          | `{"initiate":8,"soldier":1}`                 |
+| `enemies`          | `{"initiate":4,"operative":4,"handler":1}`   |
 | `on_win`           | `[{"money":100},{"funding":5},{"panic":-2}]` |
 
 ## Subject articles: Upgrade
@@ -886,6 +966,28 @@ Better ammunition and gunsmithing make the weapons of every [Agent](#agents) hit
 
 ## Subject articles: Weapon
 
+### Assault rifle
+
+Source: `content/compendium/compendium_articles/assault_rifle_article.yaml`
+
+A fast-firing long gun issued to the best fighters of a cult.
+
+| `assault_rifle`      | Weapon          |
+| -------------------- | --------------- |
+| `name`               | `Assault rifle` |
+| `base_weapon_damage` | `20`            |
+
+### Battle rifle
+
+Source: `content/compendium/compendium_articles/battle_rifle_article.yaml`
+
+A full-power long gun carried by officers in the field.
+
+| `battle_rifle`       | Weapon         |
+| -------------------- | -------------- |
+| `name`               | `Battle rifle` |
+| `base_weapon_damage` | `16`           |
+
 ### Heavy rifle
 
 Source: `content/compendium/compendium_articles/heavy_rifle_article.yaml`
@@ -896,6 +998,28 @@ A powerful weapon reserved for those a cult trusts most.
 | -------------------- | ------------- |
 | `name`               | `Heavy rifle` |
 | `base_weapon_damage` | `22`          |
+
+### Machine gun
+
+Source: `content/compendium/compendium_articles/machine_gun_article.yaml`
+
+A heavy automatic weapon, rare and devastating.
+
+| `machine_gun`        | Weapon        |
+| -------------------- | ------------- |
+| `name`               | `Machine gun` |
+| `base_weapon_damage` | `28`          |
+
+### Pistol
+
+Source: `content/compendium/compendium_articles/pistol_article.yaml`
+
+A cheap handgun handed to the newest recruits.
+
+| `pistol`             | Weapon   |
+| -------------------- | -------- |
+| `name`               | `Pistol` |
+| `base_weapon_damage` | `8`      |
 
 ### Rifle
 
@@ -912,7 +1036,7 @@ A reliable long gun for trained fighters.
 
 Source: `content/compendium/compendium_articles/sidearm_article.yaml`
 
-A compact pistol, easy to carry and easy to hide. [Upgrades](#upgrades) to [weapon damage](#damage) make it hit harder in [Agent](#agents) hands.
+A compact service handgun, easy to carry and easy to hide. [Upgrades](#upgrades) to [weapon damage](#damage) make it hit harder in [Agent](#agents) hands.
 
 | `sidearm`            | Weapon    |
 | -------------------- | --------- |

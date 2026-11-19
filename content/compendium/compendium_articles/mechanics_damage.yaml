@@ -14,4 +14,15 @@ formulas:
   - label: 'A miss'
     text: 'No damage'
 see_also:
-  [mechanics_combat, mechanics_health, weapon_damage_article, sidearm_article, rifle_article, heavy_rifle_article]
+  [
+    mechanics_combat,
+    mechanics_health,
+    weapon_damage_article,
+    pistol_article,
+    sidearm_article,
+    rifle_article,
+    battle_rifle_article,
+    assault_rifle_article,
+    heavy_rifle_article,
+    machine_gun_article,
+  ]

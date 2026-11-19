@@ -4,7 +4,8 @@ kind: initiative
 name: Apprehend member
 expires_in_turns: 5
 enemies:
-  initiate: 3 # game-ts: 2 initiate, 1 operative
+  initiate: 2
+  operative: 1
 on_win:
   - money: 5
   - panic: -1
@@ -15,8 +16,9 @@ kind: initiative
 name: Raid safehouse
 expires_in_turns: 8
 enemies:
-  initiate: 8 # game-ts: 4 initiate, 4 operative
-  soldier: 1 # game-ts: 1 handler
+  initiate: 4
+  operative: 4
+  handler: 1
 on_win:
   - money: 100
   - funding: 5
@@ -41,7 +43,8 @@ name: Foil recruitment push
 operation_level: 1
 expires_in_turns: 3
 enemies:
-  initiate: 5 # game-ts: 4 initiate, 1 operative
+  initiate: 4
+  operative: 1
 ---
 id: foil_sabotage
 type: MissionSiteArchetype
@@ -50,5 +53,8 @@ name: Foil sabotage
 operation_level: 2
 expires_in_turns: 4
 enemies:
-  initiate: 4
-  soldier: 2 # game-ts: 2 soldier, 1 handler, 1 lieutenant
+  initiate: 2
+  operative: 2
+  soldier: 2
+  handler: 1
+  lieutenant: 1

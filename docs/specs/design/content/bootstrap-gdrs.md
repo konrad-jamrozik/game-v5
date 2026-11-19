@@ -33,15 +33,15 @@ The Bootstrap GDRs keep every kind of GDR the [Game concepts](../mechanics/domai
 | Lead and [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Nine Leads, three of each Faction, one InvestigationArchetype, and one parameter GDR | 11 |
 | [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | Three MissionSiteArchetypes of kind initiative and two of kind response | 5 |
 | Mission | One MissionArchetype | 1 |
-| Enemy and [Combat](../mechanics/domain-model.md#combat) | Three EnemyArchetypes, three Weapons, and one parameter GDR | 7 |
+| Enemy and [Combat](../mechanics/domain-model.md#combat) | Nine EnemyArchetypes, seven Weapons, and one parameter GDR | 17 |
 | Agent recovery | One parameter GDR | 1 |
 | Economy and upgrades | One parameter GDR and eight [Upgrades](../mechanics/economy-and-upgrades.md#glossary) | 9 |
 | Faction | Three FactionArchetypes, three [Faction activity levels](../mechanics/factions.md#glossary), and two [Faction operation levels](../mechanics/factions.md#glossary) | 8 |
 | Panic and endings | One parameter GDR | 1 |
-| [Compendium article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary), 25 [Mechanics articles](../mechanics/compendium.md#glossary), and one [Subject article](../mechanics/compendium.md#glossary) about each of 32 other Bootstrap GDRs | 63 |
+| [Compendium article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary), 25 [Mechanics articles](../mechanics/compendium.md#glossary), and one [Subject article](../mechanics/compendium.md#glossary) about each of 42 other Bootstrap GDRs | 73 |
 | [Background artwork](../ui/visual-design.md#glossary) | Three BackgroundArtworks | 3 |
 | [Soundtrack](../ui/music.md#glossary) | One parameter GDR | 1 |
-| **Total** |  | 115 |
+| **Total** |  | 135 |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
 
@@ -133,12 +133,22 @@ Type owner: [Combat](../mechanics/combat.md).
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
 | `initiate` | EnemyArchetype | Archetype | The weakest [Enemy](../mechanics/domain-model.md#combat): base skill, base health, and Weapon. |
+| `operative` | EnemyArchetype | Archetype | An Enemy a little stronger than `initiate`: base skill, base health, and Weapon. |
+| `handler` | EnemyArchetype | Archetype | The officer of `initiate` and `operative` Enemies: base skill, base health, and Weapon. |
 | `soldier` | EnemyArchetype | Archetype | An Enemy roughly matching a newly hired Agent: base skill, base health, and Weapon. |
-| `cult_leader` | EnemyArchetype | Archetype | The strongest Enemy, met only in `raid_hq`: base skill, base health, and Weapon. |
-| `sidearm` | Weapon | Referenced GDR | [Base weapon damage](../mechanics/agents-spec.md#combatant-attributes) of the Weapon of every Agent and of `initiate`. |
+| `lieutenant` | EnemyArchetype | Archetype | The officer of `soldier` Enemies: base skill, base health, and Weapon. |
+| `elite` | EnemyArchetype | Archetype | An Enemy about twice as skilled as `soldier`: base skill, base health, and Weapon. No Bootstrap MissionSiteArchetype has one yet. |
+| `commander` | EnemyArchetype | Archetype | The officer of `elite` Enemies: base skill, base health, and Weapon. No Bootstrap MissionSiteArchetype has one yet. |
+| `high_commander` | EnemyArchetype | Archetype | The strongest officer below `cult_leader`: base skill, base health, and Weapon. No Bootstrap MissionSiteArchetype has one yet. |
+| `cult_leader` | EnemyArchetype | Archetype | The Enemy that leads a Faction, met only in `raid_hq`: base skill, base health, and Weapon. |
+| `pistol` | Weapon | Referenced GDR | [Base weapon damage](../mechanics/agents-spec.md#combatant-attributes) of the Weapon of `initiate`. |
+| `sidearm` | Weapon | Referenced GDR | Base weapon damage of the Weapon of every Agent, of `operative`, and of `handler`. |
 | `rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `soldier`. |
-| `heavy_rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `cult_leader`. |
-| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, and the incapacitation threshold. |
+| `battle_rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `lieutenant`. |
+| `assault_rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `elite`. |
+| `heavy_rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `commander` and of `cult_leader`. |
+| `machine_gun` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `high_commander`. |
+| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, the incapacitation threshold, and the three fractions of an attacker's [effective skill](../mechanics/agents-spec.md#combatant-attributes) that target selection prefers. |
 
 ## Agent Recovery GDRs
 
@@ -181,7 +191,7 @@ Type owner: [Compendium](../mechanics/compendium.md).
 | --- | --- | --- | --- |
 | `guide_agency`, `guide_agents`, `guide_investigations`, `guide_missions`, `guide_panic`, `guide_upgrades` | CompendiumArticle | Display content | The six Guide articles, each a short orientation on one part of playing the game. |
 | `mechanics_turns`, `mechanics_agents`, `mechanics_skill`, `mechanics_skill_gain`, `mechanics_health`, `mechanics_recovery`, `mechanics_exhaustion`, `mechanics_assignments`, `mechanics_contracting`, `mechanics_training`, `mechanics_transit`, `mechanics_hiring_and_upkeep`, `mechanics_money_and_funding`, `mechanics_leads`, `mechanics_investigations`, `mechanics_mission_sites`, `mechanics_missions`, `mechanics_combat`, `mechanics_damage`, `mechanics_retreat`, `mechanics_factions`, `mechanics_faction_operations`, `mechanics_panic`, `mechanics_upgrades`, `mechanics_winning_and_losing` | CompendiumArticle | Display content | The 25 Mechanics articles, one for each mechanic the Player meets, each with the formulas of that mechanic. |
-| One `<subject>_article` for each of `field_agent`, `initiate`, `soldier`, `cult_leader`, `sidearm`, `rifle`, `heavy_rifle`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `max_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | CompendiumArticle | Display content | A Subject article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
+| One `<subject>_article` for each of `field_agent`, `initiate`, `operative`, `handler`, `soldier`, `lieutenant`, `elite`, `commander`, `high_commander`, `cult_leader`, `pistol`, `sidearm`, `rifle`, `battle_rifle`, `assault_rifle`, `heavy_rifle`, `machine_gun`, `agent_cap`, `transport_cap`, `training_cap`, `weapon_damage`, `max_health`, `training_skill_gain`, `exhaustion_recovery`, `health_recovery`, `red_dawn`, `locate_red_dawn_member`, `locate_red_dawn_safehouse`, `locate_red_dawn_hq`, `exalt`, `locate_exalt_member`, `locate_exalt_safehouse`, `locate_exalt_hq`, `black_lotus`, `locate_black_lotus_member`, `locate_black_lotus_safehouse`, `locate_black_lotus_hq`, `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, and `foil_sabotage` | CompendiumArticle | Display content | A Subject article about that GDR, e.g. `soldier_article` about the EnemyArchetype `soldier`. |
 
 Every AgentArchetype, EnemyArchetype, Weapon, Upgrade, FactionArchetype, Lead, and MissionSiteArchetype of the Bootstrap GDRs has a Subject article. The identifier of a Guide article starts with `guide_`, that of a Mechanics article with `mechanics_`, and that of a Subject article is the identifier of its subject followed by `_article`, so that no article's identifier equals that of another GDR; the identifiers carry no meaning beyond that, under [References](../foundation/campaign-instances.md#references) in Campaign Instances. Every value of a GDR that an article states is a [Placeholder](../mechanics/compendium.md#glossary), and only a number that is part of a rule itself is written out, e.g. the 100 and 500 of the contracting income formula; [Compendium coverage](#compendium-coverage) states which GDR values the articles must cover.
 
@@ -223,15 +233,15 @@ The following table is exhaustive: it lists every Bootstrap GDR file, and the on
 | `content/investigations/investigation_parameters.yaml` | InvestigationParameters | `investigation_parameters` |
 | `content/missions/mission_site_archetypes.yaml` | MissionSiteArchetype | `apprehend_member`, `raid_safehouse`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage` |
 | `content/missions/mission_archetypes.yaml` | MissionArchetype | `standard_mission` |
-| `content/combat/enemy_archetypes.yaml` | EnemyArchetype | `initiate`, `soldier`, `cult_leader` |
-| `content/combat/weapons.yaml` | Weapon | `sidearm`, `rifle`, `heavy_rifle` |
+| `content/combat/enemy_archetypes.yaml` | EnemyArchetype | `initiate`, `operative`, `handler`, `soldier`, `lieutenant`, `elite`, `commander`, `high_commander`, `cult_leader` |
+| `content/combat/weapons.yaml` | Weapon | `pistol`, `sidearm`, `rifle`, `battle_rifle`, `assault_rifle`, `heavy_rifle`, `machine_gun` |
 | `content/combat/combat_parameters.yaml` | CombatParameters | `combat_parameters` |
 | `content/agent-recovery/recovery_parameters.yaml` | RecoveryParameters | `recovery` |
 | `content/factions/faction_archetypes.yaml` | FactionArchetype | `red_dawn`, `exalt`, `black_lotus` |
 | `content/factions/faction_activity_levels.yaml` | FactionActivityLevel | `faint`, `active`, `war` |
 | `content/factions/faction_operation_levels.yaml` | FactionOperationLevel | `operation_level_1`, `operation_level_2` |
 | `content/panic-and-endings/ending_parameters.yaml` | EndingParameters | `endings` |
-| `content/compendium/compendium_articles/<id>.yaml` | CompendiumArticle | The 63 GDRs under [Compendium GDRs](#compendium-gdrs), each in a file named after its identifier, e.g. `content/compendium/compendium_articles/mechanics_combat.yaml` |
+| `content/compendium/compendium_articles/<id>.yaml` | CompendiumArticle | The 73 GDRs under [Compendium GDRs](#compendium-gdrs), each in a file named after its identifier, e.g. `content/compendium/compendium_articles/mechanics_combat.yaml` |
 | `content/visual-design/background_artworks.yaml` | BackgroundArtwork | `missions_view_artwork`, `agents_view_artwork`, `leads_view_artwork` |
 | `content/music/music_parameters.yaml` | MusicParameters | `music` |
 
@@ -298,11 +308,11 @@ Most Bootstrap GDR values are copied from game-ts. The following table is exhaus
 
 | Bootstrap GDR value | game-ts | Bootstrap | Informative rationale |
 | --- | --- | --- | --- |
-| EnemyArchetypes | 9 enemy kinds | 3 | `initiate` merges initiate and operative; `soldier` merges soldier, handler, and lieutenant; `cult_leader` replaces commander and above. |
-| `cult_leader` base skill and base health | Cult leader: base skill 800, base health 80 | game-ts commander values | An 800-skill Enemy cannot be beaten after a three-step Victory path. |
-| `initiate` Weapon | Base weapon damage 8 | `sidearm` | Sharing the Agents' Weapon saves one Weapon GDR. |
+| Weapons | A weapon damage number on each enemy kind, with no weapon of its own | Seven Weapons, each shared by the EnemyArchetypes of equal base weapon damage | A Combatant's base weapon damage comes from a Weapon GDR. |
+| `cult_leader` base skill, base health, and Weapon | Cult leader: base skill 800, base health 80, weapon damage 32 | The values and the Weapon of `commander` | An 800-skill Enemy cannot be beaten after a three-step Victory path. |
+| Target selection where no opponent is preferred | A random choice among the opponents attacked least often | The earliest of them in the fixed order | The cover outcomes stay the only chance in target selection. |
 | `locate_red_dawn_hq` `required_progress` | 25 | Lower | The HQ is the third step of three, not the eighth of eight. |
-| `raid_hq` expiration and Enemies | Expires in 40 Turns; 111 Enemies | Shorter; ten Enemies | Winnable by six to eight trained Agents, i.e. after one or two purchases of the Transport cap Upgrade; a starting-size team rarely wins. |
+| `raid_hq` expiration and Enemies | Expires in 40 Turns; 111 Enemies | Shorter; ten Enemies | Winnable by about eight trained Agents, i.e. after two purchases of the Transport cap Upgrade; a starting-size team does not win. |
 | Starting transport cap | 6 | Lower, raised by `transport_cap` | Transport capacity becomes something the Agency invests in. |
 | Starting training cap | 0 | Above zero, raised by `training_cap` | Training is available from the first Turn. |
 | Panic change of `operation_level_1` and `operation_level_2` | 0.02% and 0.1% when ignored or lost | 3% and 8% when ignored or lost | At the game-ts scale, Panic cannot end a Campaign as short as the Victory path. |

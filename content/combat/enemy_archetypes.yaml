@@ -3,7 +3,21 @@ type: EnemyArchetype
 name: Initiate
 base_skill: 40
 base_health: 20
-weapon: sidearm # game-ts: damage 8
+weapon: pistol
+---
+id: operative
+type: EnemyArchetype
+name: Operative
+base_skill: 60
+base_health: 25
+weapon: sidearm
+---
+id: handler
+type: EnemyArchetype
+name: Handler
+base_skill: 80
+base_health: 25
+weapon: sidearm
 ---
 id: soldier
 type: EnemyArchetype
@@ -12,9 +26,37 @@ base_skill: 120
 base_health: 30
 weapon: rifle
 ---
+id: lieutenant
+type: EnemyArchetype
+name: Lieutenant
+base_skill: 140
+base_health: 30
+weapon: battle_rifle
+---
+id: elite
+type: EnemyArchetype
+name: Elite
+base_skill: 250
+base_health: 40
+weapon: assault_rifle
+---
+id: commander
+type: EnemyArchetype
+name: Commander
+base_skill: 300
+base_health: 40
+weapon: heavy_rifle
+---
+id: high_commander
+type: EnemyArchetype
+name: High commander
+base_skill: 500
+base_health: 50
+weapon: machine_gun
+---
 id: cult_leader
 type: EnemyArchetype
 name: Cult leader
 base_skill: 300 # game-ts: 800
 base_health: 40 # game-ts: 80
-weapon: heavy_rifle
+weapon: heavy_rifle # game-ts: damage 32

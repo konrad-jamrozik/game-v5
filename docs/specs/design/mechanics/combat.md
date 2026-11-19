@@ -47,6 +47,9 @@ Whether a Combatant still takes part in a Combat, and how strong it and its side
 | Incapacitated | Alive but too weakened to take further part in the current Combat. |  |
 | Able to fight | Alive and not Incapacitated, so still attacking and still liable to be attacked. |  |
 | Combat rating | How strong a Combatant or a side is in a Combat: the [effective skill](agents-spec.md#combatant-attributes) of one Combatant, or the sum of the effective skill of a side's Combatants able to fight. | Combat strength; combat power |
+| Round-start effective skill | A Combatant's effective skill at the moment the current Combat round began. An attacker compares it when choosing whom to attack, so that a Combatant does not become a different kind of opponent as it is worn down within the Combat round. |  |
+| Attacks received | The number of attacks made on a Combatant so far in the current Combat round. |  |
+| Taking cover | A Combatant with health lost staying out of reach of one attacker while that attacker chooses whom to attack, decided by a cover outcome. It lasts for that one choice only. | Self-removal |
 
 # Combat GDRs
 
@@ -86,6 +89,9 @@ CombatParameters bundles the scalar values that Combats read. The table below is
 | `retreat_below_agent_rating_fraction` | The fraction of the Agents' side's Combat rating at Combat start below which the team considers retreating. | [End-of-Combat-round checks](#end-of-combat-round-checks) |
 | `retreat_at_enemy_to_agent_rating` | The ratio of the Enemies' side's Combat rating to the Agents' side's Combat rating at or above which a team that considers retreating retreats. | [End-of-Combat-round checks](#end-of-combat-round-checks) |
 | `incapacitation_skill_fraction` | The fraction of a Combatant's base skill at or below which its effective skill makes it Incapacitated. | [Incapacitation condition](#incapacitation-condition) |
+| `target_skill_min_fraction` | The lowest Round-start effective skill an attacker prefers in a target, as a fraction of the attacker's own Round-start effective skill. | [Target selection](#target-selection) |
+| `target_skill_preferred_fraction` | The Round-start effective skill an attacker most prefers in a target, as a fraction of the attacker's own Round-start effective skill. | [Target selection](#target-selection) |
+| `target_skill_max_fraction` | The highest Round-start effective skill an attacker prefers in a target, as a fraction of the attacker's own Round-start effective skill. | [Target selection](#target-selection) |
 
 ## AgentParameters values this document reads
 
@@ -113,6 +119,7 @@ Combats read seven values of [AgentParameters](agents-spec.md#agentparameters), 
 6. **Incapacitation threshold is valid:** `incapacitation_skill_fraction` is a decimal number of at least 0 and less than 1.
 7. **Every attack tires someone:** `exhaustion_per_attack + exhaustion_per_defense` is at least 1.
 8. **Exact properties:** Each EnemyArchetype, Weapon, and CombatParameters GDR has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
+9. **Target skill fractions are valid:** `target_skill_min_fraction`, `target_skill_preferred_fraction`, and `target_skill_max_fraction` are each a decimal number of at least 0, and `target_skill_min_fraction ≤ target_skill_preferred_fraction ≤ target_skill_max_fraction`.
 
 Rule 7, together with the exhaustion clause of the [Incapacitation condition](#incapacitation-condition), guarantees that every Combat ends, under [Termination](#termination). [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents makes `exhaustion_incapacitation` a whole number of at least 1.
 
@@ -232,7 +239,7 @@ Combat rating is a Derived value and is never stored, except where the Combat re
 
 # Combat flow
 
-A Combat proceeds in a fixed order, so the only chance in it comes from its attacks. These rules decide who acts when, and whom each Combatant attacks.
+A Combat proceeds in a fixed order, so the only chance in it comes from which wounded opponents take cover from an attacker and from the attacks themselves. These rules decide who acts when, and whom each Combatant attacks.
 
 ## Fixed order of each side
 
@@ -257,19 +264,53 @@ A Combat that ends at its start makes no attack and changes no value of any Comb
 1. **Agents' phase:** each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.
 2. **Enemies' phase:** each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.
 
-On its Combat turn, a Combatant that is not able to fight at that moment does nothing. A Combatant that is able to fight selects a target under [Target selection](#target-selection); if no opponent is able to fight it does nothing, and otherwise it makes exactly one attack on the target, under [Attacks](#attacks). Every effect of an attack applies immediately, before the next Combat turn, so every later Combat turn, target selection, and attack in the same Combat round reads the changed values. E.g., an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same Combat round.
+On its Combat turn, a Combatant that is not able to fight at that moment does nothing. A Combatant that is able to fight selects a target under [Target selection](#target-selection); if no opponent is able to fight it does nothing, and otherwise it makes exactly one attack on the target, under [Attacks](#attacks). Every effect of an attack applies immediately, before the next Combat turn, so every later Combat turn, target selection, and attack in the same Combat round reads the changed values; the one exception is the Round-start effective skill that [Target selection](#target-selection) compares. E.g., an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same Combat round.
+
+When a Combat round begins, before its Agents' phase, the Round-start effective skill of every Combatant of both sides is set to its effective skill at that moment, and the Attacks received of every Combatant is set to 0. Each attack raises the Attacks received of its defender by 1.
 
 After the Enemies' phase, the [End-of-Combat-round checks](#end-of-combat-round-checks) decide whether the Combat ends or another Combat round begins.
 
 ## Target selection
 
-**Proposed rule:** An attacker's target is the opponent, i.e. the Combatant of the other side, that is able to fight at the moment of the attacker's Combat turn and has the highest effective skill at that moment. When several such opponents share the highest effective skill, the target is the one that comes earliest in the fixed order of its side. An opponent that is not able to fight is never a target, whatever its effective skill. When no opponent is able to fight, there is no target.
+An attacker spreads its side's attacks over the opponents and prefers an opponent it clearly outclasses, while a wounded opponent may take cover.
 
-**Informative rationale:** game-ts used a five-step target selection with random self-removal. Among four simple targeting rules simulated with the Bootstrap GDR values, targeting the strongest opponent was the only one under which the [Victory path](../content/bootstrap-gdrs.md#glossary) is winnable; this is evidence for the choice, not a requirement.
+**Inherited behavior** for the three steps; **Proposed rule** for the tie-breaks and for the fallback of step 3. An attacker selects its target at the moment of its Combat turn, in these steps. An opponent is a Combatant of the other side.
+
+1. **Reachable opponents:** The reachable opponents are the opponents able to fight at that moment. When there is none, there is no target and no later step applies. An opponent that is not able to fight is never a target.
+2. **Taking cover:** Each reachable opponent whose current health is below its effective max health has one named random outcome, its cover outcome for this target selection, whose possible values are takes cover and stays. It takes cover with the [Probability](../foundation/numbers.md#glossary)
+
+   ```text
+   cover Probability = (H − h) / H
+   ```
+
+   where `h` is the opponent's current health and `H` its effective max health, both read at that moment. A reachable opponent with no health lost has no cover outcome and stays. The candidates are the reachable opponents that stay. When every reachable opponent takes cover, the candidates are all reachable opponents instead.
+
+3. **Choice:** Let `a` be the attacker's Round-start effective skill and `s(o)` that of a candidate `o`. A candidate is preferred exactly when
+
+   ```text
+   target_skill_min_fraction × a  ≤  s(o)  ≤  target_skill_max_fraction × a
+   ```
+
+   The candidates are considered in groups of equal Attacks received, from the lowest Attacks received upward. The target is taken from the first group that holds a preferred candidate: the preferred candidate of that group whose distance `| s(o) − target_skill_preferred_fraction × a |` is smallest. Among several at the smallest distance, the target is the one with the lowest `s(o)`, and among those the one that comes earliest in the fixed order of its side. When no group holds a preferred candidate, the target is the candidate with the lowest Attacks received, and among several the one that comes earliest in the fixed order of its side.
+
+| Symbol | Meaning                                               | Unit and domain                                  |
+| ------ | ----------------------------------------------------- | ------------------------------------------------ |
+| `h`    | The opponent's current health.                        | Health points; greater than 0 and less than `H`. |
+| `H`    | The opponent's effective max health.                  | Health points; at least 1.                       |
+| `a`    | The attacker's Round-start effective skill.           | Skill points; a whole number of at least 1.      |
+| `s(o)` | The Round-start effective skill of the candidate `o`. | Skill points; a whole number of at least 1.      |
+
+The cover Probability is the exact ratio of `H − h` to `H`, under [Probabilities](../foundation/numbers.md#probabilities) in Numbers: it is never rounded and never stored, and it lies strictly between 0 and 1 because `0 < h < H`. Every comparison of step 3 is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, and no product is rounded. Each cover outcome is independent of every other random outcome. The cover outcomes of one target selection are decided in the fixed order of the opponents' side, and a Combatant that takes cover from one attacker is a reachable opponent again in the next target selection, with a new cover outcome.
+
+The attacker and every candidate were able to fight when the Combat round began, because no Combatant becomes able to fight during a Combat, under [Monotonicity within a Combat](#monotonicity-within-a-combat); each therefore has a Round-start effective skill of at least 1, under [Incapacitation condition](#incapacitation-condition). Whenever a reachable opponent exists, the steps select exactly one target.
+
+E.g., with the Bootstrap values, an attacker whose Round-start effective skill is 100 prefers candidates from 20 to 80 and most prefers 50. Against candidates of Round-start effective skill 40, 60, and 120, all with Attacks received 0, both 40 and 60 are preferred and are equally far from 50, so the target is the one of 40. Once that candidate has Attacks received 1, the next attacker of 100 targets the one of 60. Once that one has Attacks received 1 too, a further attacker of 100 finds no preferred candidate in the group with Attacks received 0, which holds only the candidate of 120, and so targets the candidate of 40 again, the nearest to 50 in the group with Attacks received 1; the candidate of 120 is targeted only when no group holds a preferred candidate.
+
+**Informative rationale:** This is the game-ts target selection. It spreads attacks, so that a large side cannot bring every attack to bear on one opponent in one Combat round, and it lets strong Combatants cut down the weak before they face each other. game-ts chose at random where no candidate was preferred; here the fixed order decides, so that the cover outcomes are the only chance in target selection. An earlier v5 rule targeted the opponent with the highest effective skill.
 
 # Attacks
 
-An attack is made by one attacker on one defender, its target. It has one hit outcome and, when the hit outcome is a hit, one damage outcome. These are its only random outcomes; no other part of a Combat is random. Each outcome depends only on the values its section names, and is independent of every other random outcome, except that a damage outcome exists only for an attack whose hit outcome is a hit. No random outcome of a Combat is hidden from the player.
+An attack is made by one attacker on one defender, its target. It has one hit outcome and, when the hit outcome is a hit, one damage outcome. These are the attack's own random outcomes; the only other random outcomes of a Combat are the cover outcomes of [Target selection](#target-selection). Each outcome depends only on the values its section names, and is independent of every other random outcome, except that a damage outcome exists only for an attack whose hit outcome is a hit. No random outcome of a Combat is hidden from the player.
 
 ## Hit outcome
 
@@ -404,7 +445,7 @@ By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is n
 5. **Final values:** for each participant, its current health, exhaustion, and effective skill when the Combat ended, and its final condition: able to fight, Incapacitated, or dead. A dead Agent is Killed.
 6. **Damage dealt and damage taken:** for each participant, its damage dealt, i.e. the sum of the health removed by its attacks, and its damage taken, i.e. the sum of the health removed by attacks on it; and for each Agent, its combat skill gain, under [Combat skill gain](#combat-skill-gain).
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
-8. **Combat log:** every attack, in the order in which it was made, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the damage outcome when there is one, the health removed, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
+8. **Combat log:** every attack, in the order in which it was made, each with its Combat round number, its attacker and defender by Instance ID, the opponents that took cover in its target selection by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the damage outcome when there is one, the health removed, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
 9. **Mission:** the Instance ID of the Mission whose Combat it records, which [Missions](missions.md) supplies when it has the Combat fought. It influences nothing in the Combat.
 
 A participant's base skill, effective max health, and effective weapon damage do not change in a Combat, so its final values need not repeat them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above, and that an Agent's base skill and current health, and so the health removed from an Agent and the damage dealt and damage taken that sum it, are [Decimal quantities](../foundation/numbers.md#glossary), under [Attribute ranges](agents-spec.md#attribute-ranges) in Agents. E.g., a damage outcome of 10 against an Agent with current health 5.60 removes 5.60.
@@ -440,7 +481,9 @@ Incapacitated and a Combat in progress never exist in a World state, under [Comb
 - **Damage outcome of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no current health but still raises exhaustion ([Damage outcome](#damage-outcome)).
 - **Exhaustion of `exhaustion_incapacitation` or more:** A Combatant reaching it is Incapacitated whatever its effective skill, and its exhaustion is not clamped; an Agent may start a Combat with exhaustion above it and is then Incapacitated from the start ([Incapacitation condition](#incapacitation-condition), [Termination](#termination)).
 - **Simultaneous end conditions:** When no Combatant of either side is able to fight, the outcome is Prevailed. When no Agent is able to fight and the Retreated check would also hold, the outcome is Wiped ([End-of-Combat-round checks](#end-of-combat-round-checks)).
-- **Ties in target selection:** The earliest opponent in the fixed order wins the tie ([Target selection](#target-selection)).
+- **Ties in target selection:** Among preferred candidates equally far from the most preferred skill, the one with the lowest Round-start effective skill is the target, and among those the earliest in the fixed order ([Target selection](#target-selection)).
+- **Every reachable opponent takes cover:** The candidates are then all reachable opponents, so an attacker with a reachable opponent always has a target ([Target selection](#target-selection)).
+- **No preferred candidate:** When no candidate's Round-start effective skill lies within the preferred range, e.g. every opponent is stronger than the attacker, the target is the candidate with the lowest Attacks received, the earliest in the fixed order among several ([Target selection](#target-selection)).
 - **Every attack misses:** The Combat still ends, through Incapacitated or Retreated, within `N × exhaustion_incapacitation` Combat rounds ([Termination](#termination)).
 - **Invalid inputs:** An empty Agents' side, a duplicate Combatant, or an Agent that is not Serving is an internal invariant violation ([Combat inputs and outputs](#combat-inputs-and-outputs)).
 - **Invalid GDRs:** A Game build that fails [Combat GDR validation](#combat-gdr-validation), e.g. with a Weapon `base_weapon_damage` of 0, a `weapon_damage_range` of 1.5, or `exhaustion_per_attack` and `exhaustion_per_defense` both 0, is defective and no Campaign is created from it.
@@ -448,4 +491,3 @@ Incapacitated and a Combat in progress never exist in a World state, under [Comb
 # TODOs
 
 - TODO (later): Morale.
-- TODO (later): Target selection that matches attackers to defenders by base skill, under [Target selection](#target-selection).
