@@ -27,6 +27,7 @@ Which Turn advancement step each rule applied during Advance turn belongs to, th
 - **One step per rule:** Every rule that a specification states is applied during Advance turn belongs to exactly one Turn advancement step under [Turn advancement steps](#turn-advancement-steps). A rule that belongs to no step is not applied during Advance turn.
 - **The canonical order prevails:** When another specification contradicts these sections about which step a rule belongs to, the order of steps, or which values a rule uses, that specification is defective and must be corrected to match them. Until it is corrected, these sections govern.
 - **New rules:** A specification that adds a rule applied during Advance turn is complete only when [Turn advancement steps](#turn-advancement-steps) places the rule in an existing step or gains a step for it.
+- **Steps are named:** Every other specification refers to a Turn advancement step by its name, e.g. "the Mission resolution step", never by its number in the order. Only Turn Advancement uses the numbers.
 - **Restatements:** The description of each step restates rules that the owning Mechanics specification states in full. Where the two differ about what a rule computes or changes, rather than about when it applies, the owning Mechanics specification governs that content and the description is corrected.
 
 # Turn advancement steps

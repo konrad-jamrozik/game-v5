@@ -38,6 +38,15 @@ Recorded on 2026-11-18. "Repeatable" is too ambiguous as the name of this settin
 
 The value `never` means only that this setting never stops the Lead. The conditions that decide whether the Mission site can exist still can, e.g. when the Lead's Faction is Eliminated.
 
+## Decisions on conditions that can stop holding
+
+Recorded on 2026-11-18.
+
+- **Discovered stays discovered:** Once a Lead is discovered it stays discovered, even when the conditions that discovered it stop holding. The Retired world state should therefore keep a list of the discovered Leads, instead of "discovered" being calculated from conditions that hold for ever.
+- **Temporarily unavailable versus permanently gone:** A discovered Lead may be unavailable for investigation. The player must be able to tell a Lead that is discovered but temporarily unavailable from a Lead that is discovered and can never be investigated again, e.g. because its single Mission was Won. Today's Lead statuses Inactive and Archived make this distinction.
+- **The player sees no conditions:** The player never sees a Blocking condition or a fulfilled condition of a Lead. To the player a Lead is either available or not.
+- **Instant interruption:** For now, when the conditions stop holding while an Investigation of the Lead is Active, the Investigation is cancelled at once and its Agents are sent back. A Mission site of the Lead that is Active is cancelled at once too. A Deployed Mission is never cancelled.
+
 ## Leads that can be Completed at most once
 
 - Such a Lead can be investigated until it is Completed, and then never again.
