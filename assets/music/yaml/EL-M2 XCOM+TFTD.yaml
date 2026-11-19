@@ -1,9 +1,9 @@
-file: 'EL-M2 XCOM+TFTD B.opus'
+file: 'EL-M2 XCOM+TFTD.opus'
 source: ElevenLabs Music
 original_title: 'Abyss Protocol'
 model: 'Music v2'
 created: '2026-11-16 23:42:03'
-variation_of: 'EL-M2 XCOM+TFTD A.opus'
+variation_of: 'EL-M2 XCOM+TFTD X1.opus'
 tags: [electronic, ambient]
 bpm: 160
 length: '1:00'
@@ -17,7 +17,7 @@ prompt_from:
   tool: ChatGPT
   conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afb9ab3-67b0-83e8-87db-9d7bf6ab3333
   share_url: https://chatgpt.com/share/6afe2395-cf20-83e8-95e4-6a466299dbfd
-  same_prompt_as: 'EL-M2 XCOM+TFTD A.opus'
+  same_prompt_as: 'EL-M2 XCOM+TFTD X1.opus'
 prompt: |-
   Dark, atmospheric 1990s science-fiction tactical strategy game soundtrack, inspired by the original X-COM: UFO Defense (1994) and X-COM: Terror from the Deep (1995), with subtle Lovecraftian cosmic horror influences.
 

@@ -4,21 +4,21 @@ The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music
 
 Every track is named under the [Naming scheme](#naming-scheme), so that its name tells how it was made. The table lists each track with its original title, the title its source gave it, which finds the song in the source; its source; and whether it is excluded from the Soundtrack.
 
-The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yaml`](../../content/music/music_parameters.yaml) decides which tracks are excluded, and the Excluded column mirrors it. An excluded track's audio file is not kept in this repository but in the Game designer's personal backup, outside it; its row in the table, and its track record, stay here.
+The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yaml`](../../content/music/music_parameters.yaml) decides which tracks are excluded, and the Excluded column mirrors it; an excluded track's name ends in its `X` number, as [Naming scheme](#naming-scheme) describes. An excluded track's audio file is not kept in this repository but in the Game designer's personal backup, outside it; its row in the table, and its track record, stay here.
 
 | File | Original title | Source | Excluded |
 | --- | --- | --- | --- |
 | `EL-M2 XCOM.opus` | Silent Contact Protocol | ElevenLabs |  |
-| `EL-M2 XCOM+TFTD A.opus` | Subsurface Directive | ElevenLabs | Yes |
-| `EL-M2 XCOM+TFTD B.opus` | Abyss Protocol | ElevenLabs |  |
-| `EL-M2.5 XCOM A.opus` | Unseen Sector | ElevenLabs | Yes |
-| `EL-M2.5 XCOM B.opus` | Unseen Threat Protocol | ElevenLabs | Yes |
+| `EL-M2 XCOM+TFTD X1.opus` | Subsurface Directive | ElevenLabs | Yes |
+| `EL-M2 XCOM+TFTD.opus` | Abyss Protocol | ElevenLabs |  |
+| `EL-M2.5 XCOM X1.opus` | Unseen Sector | ElevenLabs | Yes |
+| `EL-M2.5 XCOM X2.opus` | Unseen Threat Protocol | ElevenLabs | Yes |
 | `EL-M2.5 XCOM+NoPulse+Geo+Ominous.opus` | Black Orbit Watch | ElevenLabs |  |
 | `EL-M2.5 XCOM+TFTD+NoPulse A.opus` | Depth Signal | ElevenLabs |  |
 | `EL-M2.5 XCOM+TFTD+NoPulse B.opus` | Abyssal Tactical Drift | ElevenLabs |  |
 | `EL-M2.5 XCOM+Var A.opus` | Unknown Contact | ElevenLabs |  |
-| `EL-M2.5 XCOM+Var B.opus` | Beneath the Grid | ElevenLabs | Yes |
-| `EL-M2.5 XCOM+Var C.opus` | Silent Contact | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var B.opus` | Silent Contact | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var X1.opus` | Beneath the Grid | ElevenLabs | Yes |
 | `EL-M2.5 XCOM+Var+Bare+Slow A.opus` | Silent Hostile Sector | ElevenLabs |  |
 | `EL-M2.5 XCOM+Var+Bare+Slow B.opus` | Silent Threat Protocol | ElevenLabs |  |
 | `S6 SCNP A.mp3` | Signal Intercept var1 | Suno v6 |  |
@@ -31,8 +31,8 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 | `V3A-S5 SCNP+Dark.mp3` | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |  |
 | `V3A-S5 SCNP+Dark+Cello&BClar.mp3` | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |  |
 | `V3A-S5 SCNP+Dark+Violin.mp3` | v03AI UFO 5 - Scanning Protocol - Dark Violin | Suno v5 via v03ai |  |
-| `V3A-S5 XCOM+Sections+Loop.mp3` | v03AI UFO 2 | Suno v5 via v03ai | Yes |
-| `V3A-S5 XCOM+Var.mp3` | v03AI UFO 1 | Suno v5 via v03ai | Yes |
+| `V3A-S5 XCOM+Sections+Loop X1.mp3` | v03AI UFO 2 | Suno v5 via v03ai | Yes |
+| `V3A-S5 XCOM+Var X1.mp3` | v03AI UFO 1 | Suno v5 via v03ai | Yes |
 
 ## Naming scheme
 
@@ -47,7 +47,8 @@ e.g. `EL-M2.5 XCOM+TFTD+NoPulse B` is the second track that ElevenLabs Music v2.
 - **Source and model:** where the song was generated and, joined by a hyphen, the model, from `source` and `model`. A source with no recorded model is its code alone, e.g. `EL`.
 - **Stem:** the code of `meta_prompt_taxonomy.stem`.
 - **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`. An adjustment that only limits the prompt's length, e.g. "kept short" or "fit within v03ai's 1,000 characters", has no code, since it says nothing about the music; neither has a source setting, e.g. Suno's sliders or Exclude styles, since it is not a request to the chatbot. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`. A code appears once even when two adjustments share it.
-- **Take:** when two or more tracks would get the same name, a letter tells them apart, `A`, `B`, `C` and on in the order of `created`, e.g. the two variations of one generation, or two generations of the same prompt with different lengths. A track whose name no other track shares gets no letter.
+- **Take:** tells apart the tracks that would otherwise get the same name, e.g. the two variations of one generation, or two generations of the same prompt with different lengths, in the order of `created`. The tracks kept in the Soundtrack are lettered `A`, `B`, `C` and on, so the Player only ever sees an unbroken run of letters; a kept track that no other kept track shares its name with gets no letter. The excluded tracks are numbered apart, `X1`, `X2`, `X3` and on, even when alone, e.g. `EL-M2.5 XCOM+Var X1`.
+- **Renaming on exclusion:** excluding a track renames it and re-letters the kept tracks of its name. E.g., of tracks `A` to `F`, excluding `C` and `E` makes them `X1` and `X2`, and `D` and `F` become `C` and `D`. Nothing keeps an old name, so every mention of a renamed track changes with it: its file and record, the `file`, `variation_of`, `same_prompt_as`, and `continues_from` of every record, the notes, the GDR `music`, and this README.
 
 A name is a file name, so it must be valid on Windows: no code may contain any of `\ / : * ? " < > |`, and a name must not end in a space or a period. The codes use only letters, digits, and `-`, `.`, `&`, with `+` and spaces between them, e.g. a model is `M2.5`, never `M2:5`.
 
