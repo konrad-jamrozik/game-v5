@@ -298,6 +298,8 @@ hi = round down( w × (1 + weapon_damage_range) )
 
 Each bound is evaluated exactly and rounded once, with [Round up](../foundation/numbers.md#glossary) for `lo` and [Round down](../foundation/numbers.md#glossary) for `hi`, under [Rounding](../foundation/numbers.md#rounding) in Numbers, before the range is formed. Because w is a whole number, `w × (1 − weapon_damage_range) ≤ w ≤ w × (1 + weapon_damage_range)` gives `0 ≤ lo ≤ w ≤ hi`, so the range is never empty. Each of the `hi − lo + 1` values has the Probability `1 / (hi − lo + 1)`. The damage outcome does not depend on the defender. [Effective weapon damage](agents-spec.md#combatant-attributes) does not change during a Combat, so the range of one attacker is the same for all its attacks.
 
+**Proposed rule:** A damage outcome supplied from outside the Combat, e.g. by a random outcome override under [Random outcome overrides](../foundation/developer-access.md#random-outcome-overrides) in Developer Access, must be one of the whole numbers from `lo` to `hi`; any other value is rejected and never applied.
+
 ## Effects of an attack
 
 **Proposed rule:** One attack applies these effects, in this order, before the next Combat turn begins:

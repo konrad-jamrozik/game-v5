@@ -114,11 +114,15 @@ The following table is the exhaustive list of rules that change the Agency's Sta
 
 | Value | Raised by | Lowered by |
 | --- | --- | --- |
-| Money | [Agency income](#agency-income); [Adding money](#adding-money); the [Consequences](missions.md#consequences) of a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) | [Upkeep](#upkeep); [Hiring Agents](#hiring-agents); [Purchasing Upgrades](#purchasing-upgrades) |
+| Money | [Agency income](#agency-income); [Adding money](#adding-money); the [Consequences](missions.md#consequences) of a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) | [Upkeep](#upkeep); [Hiring Agents](#hiring-agents); [Purchasing Upgrades](#purchasing-upgrades); [Adding money](#adding-money), with a negative `amount` |
 | Funding | The [Consequences](missions.md#consequences) of a Mission site, through [Funding changes](#funding-changes) | The [Consequences](missions.md#consequences) of a Mission site, through [Funding changes](#funding-changes) |
 | Acquisitions | [Purchasing Upgrades](#purchasing-upgrades) | No rule |
 
-A rule of another specification that changes money adds a whole amount to it, positive or negative, and the result is never clamped. The Agency is [retained](../foundation/world-history.md#glossary) for the whole Campaign and never removed.
+A rule of another specification that changes money adds a whole amount to it, positive or negative, and the result is never clamped.
+
+**Proposed rule:** In every [Committed state](../foundation/engine-contract.md#player-actions-and-turns) of a Campaign that has no [Campaign ending](domain-model.md#campaign-standing), money is at least 0. No [Player action](../foundation/engine-contract.md#player-actions-and-turns) takes money below 0: `hireAgent` and `purchaseUpgrade` require money of at least their cost, and `addMoney` is rejected when it would, under [Adding money](#adding-money). An Advance turn that leaves money below 0 records a Campaign ending, under [Upkeep](#upkeep). Money is therefore negative only within an Advance turn and in a Campaign that has a Campaign ending.
+
+The Agency is [retained](../foundation/world-history.md#glossary) for the whole Campaign and never removed.
 
 ## Agency creation
 
@@ -223,7 +227,7 @@ Inputs:
 
 S counts every Serving Agent, including one that is [In transit](domain-model.md#agency-and-agents), one that arrived in the Transit step of the same Advance turn, one on [Recovery](agents-spec.md#assignments), and one that is Deployed, under the upkeep exception of [Transit rule](agents-spec.md#transit-rule) in Agents. A Killed or [Dismissed](agents-spec.md#agent-statuses) Agent is not Serving and is not counted. An Agent Killed in the Mission resolution step of an Advance turn was Serving in the Upkeep step of that same Advance turn, so it is counted in that Advance turn and in no later one. No rounding occurs. Upkeep is a whole number of at least 0.
 
-**Negative money:** Upkeep is always paid in full. Money may become negative, and it is neither clamped nor is the Advance turn rejected; e.g., money 15 and upkeep 40 give money −25. Whether negative money ends the Campaign is decided under [Defeat](panic-and-endings.md#defeat). While money is negative, `hireAgent` and `purchaseUpgrade`, the Player actions that spend money, are rejected, because each precondition requires money of at least its cost.
+**Negative money:** Upkeep is always paid in full. Money may become negative, and it is neither clamped nor is the Advance turn rejected; e.g., money 15 and upkeep 40 give money −25. A later step of the same Advance turn may raise it again. Whether negative money ends the Campaign is decided only by the Ending check step, under [Defeat](panic-and-endings.md#defeat).
 
 ## Projected income and upkeep
 
@@ -422,15 +426,15 @@ A Player cheat action changes Campaign state in a way ordinary play does not all
 
 ## Adding money
 
-**Proposed rule:** The Player cheat action `developer.actions.addMoney(amount)` adds money to the Agency. It follows every rule under [Player cheat actions](../foundation/developer-access.md#player-cheat-actions) in Developer Access, including that only the [Session controller](../foundation/engine-contract.md#principals-and-access) can call it, only with [Dev mode](../foundation/engine-contract.md#principals-and-access) enabled, and that each successful call is one Player action recorded as one [Timeline entry](../foundation/timeline.md#glossary).
+**Proposed rule:** The Player cheat action `developer.actions.addMoney(amount)` adds money to the Agency, or with a negative `amount` removes it. It follows every rule under [Player cheat actions](../foundation/developer-access.md#player-cheat-actions) in Developer Access, including that only the [Session controller](../foundation/engine-contract.md#principals-and-access) can call it, only with [Dev mode](../foundation/engine-contract.md#principals-and-access) enabled, and that each successful call is one Player action recorded as one [Timeline entry](../foundation/timeline.md#glossary).
 
-| Parameter | Meaning                                              |
-| --------- | ---------------------------------------------------- |
-| `amount`  | How much money to add: a whole number of at least 1. |
+| Parameter | Meaning                                                                                |
+| --------- | -------------------------------------------------------------------------------------- |
+| `amount`  | How much money to add: a whole number other than 0. A negative `amount` removes money. |
 
-Validation: the operation is rejected, and changes nothing, when `amount` is not a whole number or is less than 1. No upper limit applies.
+Validation: the operation is rejected, and changes nothing, when `amount` is not a whole number, when it is 0, or when the Agency's money plus `amount` is less than 0. The last rejection keeps money at least 0, under [Agency properties](#agency-properties), so `addMoney` cannot bring about the Money below zero condition of [Defeat](panic-and-endings.md#defeat); its error identifies that the result would be negative money. No upper limit applies.
 
-Effect: the Agency's money rises by `amount`. Nothing else changes; e.g., funding, Acquisitions, and the values already recorded in the Turn series are unchanged. Money that was negative may become zero or positive.
+Effect: `amount` is added to the Agency's money. Nothing else changes; e.g., funding, Acquisitions, and the values already recorded in the Turn series are unchanged.
 
 # Turn report
 
@@ -466,7 +470,7 @@ The [History entry](../foundation/world-history.md#glossary) of the Turn the Adv
 # Edge cases and failure behavior
 
 - **Exact affordability:** Money exactly equal to `hire_cost` or to an Upgrade's `price` satisfies the precondition; the action succeeds and leaves money 0 ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
-- **Insufficient or negative money:** Money below the cost, including any negative money, rejects `hireAgent` and `purchaseUpgrade`; nothing changes ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
+- **Insufficient money:** Money below the cost rejects `hireAgent` and `purchaseUpgrade`; nothing changes ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
 - **Agent cap reached:** With exactly as many Serving Agents as the Agent cap, `hireAgent` is rejected even with enough money. Serving Agents In transit, on Recovery, or Deployed count; Killed and Dismissed Agents do not ([Hiring Agents](#hiring-agents), [Agency caps](#agency-caps)).
 - **Training cap reached:** An order to Training that would exceed the cap is rejected as a whole, even when only one of its Agents does not fit ([Training cap on assigning Agents](#training-cap-on-assigning-agents)).
 - **Count above a cap:** After a Player cheat action, e.g. `addAgents`, a count may exceed its cap; nothing is removed and only further additions are rejected ([Counts above a cap](#counts-above-a-cap)).
@@ -584,7 +588,7 @@ In the Advance turn ending Turn 9, Agency income counts only a5, because a2 arri
 
 ## Negative money
 
-This example exercises [Upkeep](#upkeep), [Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades), and [Adding money](#adding-money). The Agency has money 15, funding 0, and 4 Serving Agents, none on Contracting. In the next Advance turn, income is 0 + 30 × 0 = 0 and money stays 15; upkeep is 10 × 4 = 40 and money becomes −25. Money at the start of turn for the next Turn is −25. Whether the Campaign ends is decided by [Panic and Endings](panic-and-endings.md). If it has not ended, `hireAgent()` and `purchaseUpgrade(agent_cap)` are each rejected, because −25 is less than 50 and less than 200. With Dev mode enabled, `developer.actions.addMoney(25)` makes money 0, and `addMoney(75)` after it makes money 75; `hireAgent()` then succeeds and leaves money 25.
+This example exercises [Upkeep](#upkeep), [Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades), and [Adding money](#adding-money). The Agency has money 15, funding 0, and 4 Serving Agents, none on Contracting. In the next Advance turn, income is 0 + 30 × 0 = 0 and money stays 15; upkeep is 10 × 4 = 40 and money becomes −25. Money at the start of turn for the next Turn is −25. If no later step of that Advance turn raises money to at least 0, its Ending check step records a Campaign ending, under [Defeat](panic-and-endings.md#defeat), so no Player action is ever requested with money −25. In another Campaign, with money 15 and Dev mode enabled, `developer.actions.addMoney(-15)` makes money 0, `addMoney(-1)` after it is rejected and money stays 0, and `addMoney(75)` makes money 75; `hireAgent()` then succeeds and leaves money 25.
 
 ## Funding changes from Mission sites
 
@@ -693,7 +697,7 @@ This example exercises [Purchasing Upgrades](#purchasing-upgrades) and [Adding m
 | `purchaseUpgrade(agent_morale)` | Rejected: no Upgrade GDR has the identifier `agent_morale`.           |
 | `purchaseUpgrade(sidearm)`      | Rejected: `sidearm` is a Weapon GDR, not an Upgrade GDR.              |
 
-After `developer.actions.addMoney(1)`, money is 200 and `purchaseUpgrade(training_cap)` succeeds, leaving money 0 and a Training cap of 8. `addMoney(0)`, `addMoney(-5)`, and `addMoney(2.5)` are each rejected and change nothing.
+After `developer.actions.addMoney(1)`, money is 200 and `purchaseUpgrade(training_cap)` succeeds, leaving money 0 and a Training cap of 8. `addMoney(0)` and `addMoney(2.5)` are each rejected, and so is `addMoney(-5)`, which would leave money −5; none changes anything.
 
 ## GDR validation
 

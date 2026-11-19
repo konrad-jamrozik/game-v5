@@ -71,7 +71,7 @@ Each line starts with the number of the Player action in the Turn, from 1, in th
 | `startInvestigation` | "Started Investigation of" and the [Lead](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s `name`, then "with N Agents", e.g. "Started Investigation of Locate Red Dawn courier with 2 Agents". |
 | `assignAgentsToInvestigation` | "Assigned N Agents to Investigation of" and its Lead's `name`. |
 | `deployAgents` | "[Deployed](../../mechanics/agents-spec.md#assignments) N Agents to" and the Mission site's MissionSiteArchetype `name`, e.g. "Deployed 3 Agents to Raid safehouse". |
-| `addMoney` | "Added" and the amount, then "money (cheat)". |
+| `addMoney` | "Added" and the amount, then "money (cheat)"; for a negative amount, "Removed" and the amount without its sign, then "money (cheat)". |
 | `addAgents` | "Added N Agents (cheat)". |
 | Any other operation | The operation's name, e.g. a Campaign configuration change by the name of its operation. |
 

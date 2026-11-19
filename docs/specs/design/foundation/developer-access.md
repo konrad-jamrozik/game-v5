@@ -33,7 +33,7 @@ A Player cheat action changes Campaign state in a way ordinary play does not all
 - **Who and when:** Only the Session controller can call a Player cheat action, only with Dev mode enabled, under [Dev mode](#dev-mode). An Autopilot AI never can.
 - **Validated:** A Player cheat action rejects invalid inputs and then changes nothing, under [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract.
 - **Recorded:** Each successful Player cheat action is one atomic [Player action](engine-contract.md#player-actions-and-turns), recorded as one [Timeline entry](timeline.md#glossary).
-- **Invariants kept:** A Player cheat action preserves every invariant that a specification states.
+- **Invariants kept:** A Player cheat action preserves every invariant that a specification states. One whose effect would leave the [Campaign](core-concepts.md#campaign-and-session) in a state that violates an invariant is rejected and changes nothing, and its error identifies the invariant; e.g., `addMoney` with an amount that would leave negative money is rejected, because money is at least 0 in every Campaign without a Campaign ending. A Player cheat action therefore never ends a Campaign.
 
 # Random outcome overrides
 
