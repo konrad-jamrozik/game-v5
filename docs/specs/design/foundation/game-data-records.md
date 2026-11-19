@@ -5,14 +5,14 @@
 | Spec ID | GDR |
 | Family | Foundation |
 | Audience | Engine designer, Content designer, Implementer |
-| Owns | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each. |
+| Owns | The purposes a GDR can serve relative to the Game rules and Campaign state, with a worked example of each. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
 A [Game build](core-concepts.md#game-build-and-content) carries a large body of fixed game data, e.g. how much health a Thug starts with, or what the encyclopedia says about it. Each piece of it is a [Game Data Record](core-concepts.md#game-build-and-content) (GDR), authored as YAML, conforming to a declared [Type](core-concepts.md#data-modeling), and never changed during play. Whatever changes belongs to [Campaign state](core-concepts.md#campaign-and-session) instead, as [Campaign State](campaign-state.md) describes it, so one GDR serves every [Campaign](core-concepts.md#campaign-and-session) at once.
 
-Because a GDR never changes, what sets one use of it apart from another is how game behavior and Campaign state relate to it. A GDR can supply starting values when a Campaign or a [Campaign instance](core-concepts.md#campaign-instances) is created, be read by game behavior whenever a calculation needs it, or be referenced from Campaign state, which may then key its own facts by that GDR's identity. A GDR that no game behavior reads exists only for the player to see. One GDR may serve several purposes at once, e.g. the Thug GDR is the [Archetype](core-concepts.md#campaign-instances) of an [Enemy](../mechanics/domain-model.md#combat) and also supplies its display name.
+Because a GDR never changes, what sets one use of it apart from another is how the Game rules and Campaign state relate to it. A GDR can supply starting values when a Campaign or a [Campaign instance](core-concepts.md#campaign-instances) is created, be read by the Game rules whenever a calculation needs it, or be referenced from Campaign state, which may then key its own facts by that GDR's identity. A GDR that the Game rules never read exists only for the player to see. One GDR may serve several purposes at once, e.g. the Thug GDR is the [Archetype](core-concepts.md#campaign-instances) of an [Enemy](../mechanics/domain-model.md#combat) and also supplies its display name.
 
 # Glossary
 
@@ -34,7 +34,7 @@ GDRs can serve the following seven purposes. The purposes can overlap; they do n
 | Archetype | A Campaign instance references the GDR as its [Archetype](core-concepts.md#campaign-instances); the GDR supplies shared characteristics and initial values named by [Campaign instance creation](campaign-instances.md#campaign-instance-creation). | A newly created [Enemy](../mechanics/domain-model.md#combat) whose Archetype is Thug has [current health](../mechanics/agents-spec.md#combatant-attributes) 10 and a fresh [Instance ID](campaign-instances.md#glossary). |
 | Referenced GDR | A Campaign instance holds a reference to a GDR other than its Archetype. | An [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) holds a reference to the [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) GDR it pursues. |
 | Key for campaign facts | [Campaign state](core-concepts.md#campaign-and-session) holds facts keyed by a GDR’s identity while the GDR remains immutable. | The engine records completions against a Lead GDR’s identity. |
-| Display content | No game behavior reads the GDR's value; the engine exposes it to the player through [Player API](engine-contract.md#api-surfaces), subject to [Player-visible information](engine-contract.md#api-surfaces) boundaries. | The Thug GDR's display name and description appear in the enemy list and the encyclopedia. |
+| Display content | The [Game rules](core-concepts.md#game-build-and-content) never read the GDR's value; the engine exposes it to the player through [Player API](engine-contract.md#api-surfaces), subject to [Player-visible information](engine-contract.md#api-surfaces) boundaries. | The Thug GDR's display name and description appear in the enemy list and the encyclopedia. |
 
 # GDR authoring format
 
@@ -99,7 +99,7 @@ If training later raises the Agent's base skill to 110, the engine reads 110 fro
 
 When serving the Campaign configuration preset purpose, a GDR supplies one value for every Campaign configuration value, and campaign creation takes those values as the initial Campaign configuration. The Game build can supply several such GDRs, and the player selects one of them. Unlike every other purpose, this one comes with a built-in engine capability: before the Campaign is created, the player may override individual values of the selected preset.
 
-A value belongs to Campaign configuration if and only if the preset GDRs supply it. Whatever no preset can change is not Campaign configuration. It is either a GDR serving another purpose, e.g. the new-base-Agent-skill GDR, or game behavior, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign.
+A value belongs to Campaign configuration if and only if the preset GDRs supply it. Whatever no preset can change is not Campaign configuration. It is either a GDR serving another purpose, e.g. the new-base-Agent-skill GDR, or part of the Game rules, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign.
 
 ## Worked example: campaign configuration preset
 
@@ -344,11 +344,11 @@ body: A hired street enforcer with little training and less loyalty.
 subject: thug
 ```
 
-The [Combat](../mechanics/domain-model.md#combat) specification reads Thug's base health 10 as its Archetype initial value; no game behavior reads its display name, its description, or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the encyclopedia once the player is entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.
+The [Combat](../mechanics/domain-model.md#combat) specification reads Thug's base health 10 as its Archetype initial value; the Game rules never read its display name, its description, or the Thug article. Through Player API, the engine exposes the display name and description wherever a Player-visible view shows an Enemy whose Archetype is Thug, and exposes the Thug article in the encyclopedia once the player is entitled to see it. The purposes overlap: Thug serves the Archetype and Display content purposes at once.
 
 Display content follows these requirements:
 
-- **No gameplay dependence:** No game behavior reads a value that serves the Display content purpose. Changing Display content in a Game build changes only what the player sees; equal initial Campaign state and the same ordered committed [Player actions](engine-contract.md#player-actions-and-turns) still produce equal Campaign state.
+- **No gameplay dependence:** The Game rules never read a value that serves the Display content purpose. Changing Display content in a Game build changes only what the player sees; equal initial Campaign state and the same ordered committed [Player actions](engine-contract.md#player-actions-and-turns) still produce equal Campaign state.
 - **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing something hidden from the player stays hidden until it becomes Player-visible. The value described states when it becomes Player-visible, under [Player-visible information](player-api.md#player-visible-information) in Player API.
 - **No inference:** Relationships and gameplay facts are never inferred from Display content, extending the rule under [References](campaign-instances.md#references). The Thug article identifies its subject through its reference to the Thug GDR, not through its title.
 - **Media:** A reference to an image or other media is a value in the GDR; the referenced media is part of the Game build. Media formats and loading are left to the implementation.
@@ -358,7 +358,7 @@ flowchart LR
     Thug["GDR: Thug<br/>base health 10<br/>display name and description"]
     Article["GDR: Thug article<br/>title, body text"]
     Article -->|subject reference| Thug
-    Thug -->|base health 10| Combat["Game behavior: Enemy creation and Combat"]
+    Thug -->|base health 10| Combat["Game rules: Enemy creation and Combat"]
     Thug -->|display name and description| PlayerAPI["Player API:<br/>Player-visible information"]
     Article -->|article when Player-visible| PlayerAPI
     PlayerAPI --> UserInterface["A user interface renders it for the player"]

@@ -71,9 +71,9 @@ Mission sites come before routine Contracting because a Mission site expires, wh
 
 When choosing among Agents for any step, the Basic Autopilot AI prefers the most rested Rested Agent, and it prefers Agents on Standby over Agents on Training. When several choices are equally good, it breaks the tie in a fixed order derived from [Player-visible information](../foundation/engine-contract.md#api-surfaces), so that the same Player-visible information always yields the same Player actions.
 
-# Information and memory
+# Information
 
-The Basic Autopilot AI decides each Player action from the current Player-visible information alone, which [What an Autopilot AI receives](../foundation/autopilot.md#what-an-autopilot-ai-receives) in [Autopilot](../foundation/engine-contract.md#autopilot) bounds. It keeps no plan across Turns and writes no [Autopilot memory](../foundation/engine-contract.md#persisted-data): every fact it needs, e.g. how many Upgrades the Agency has bought or which Agents are In transit, is Player-visible. Because it does not receive its [Autopilot limit](../foundation/autopilot.md#glossary), it plays every Turn the same way whether Autopilot disengages after one Player action or after many Turns.
+The Basic Autopilot AI decides each Player action from the current Player-visible information alone, which [What an Autopilot AI receives](../foundation/autopilot.md#what-an-autopilot-ai-receives) in [Autopilot](../foundation/engine-contract.md#autopilot) bounds. It keeps no plan across Turns: every fact it needs, e.g. how many Upgrades the Agency has bought or which Agents are In transit, is Player-visible. Because it does not receive its [Autopilot limit](../foundation/autopilot.md#glossary), it plays every Turn the same way whether Autopilot disengages after one Player action or after many Turns.
 
 To judge whether it could win the Mission site a Lead creates, it reads the MissionSiteArchetype the Lead creates and the EnemyArchetypes that MissionSiteArchetype names. Both are Player-visible from the Lead's discovery, before any such Mission site exists, under [Player-visible information](../mechanics/leads-and-progression.md#player-visible-information) in Leads and Progression and [Player-visible information](../mechanics/combat.md#player-visible-information) in Combat.
 

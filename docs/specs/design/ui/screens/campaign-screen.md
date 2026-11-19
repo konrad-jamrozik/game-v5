@@ -44,7 +44,7 @@ A Detail view opens over the Globe stage and covers it, while the status bar and
   3. [Agents](agents-view.md), for hiring, dismissing, and assigning [Agents](../../mechanics/domain-model.md#agency-and-agents), with the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents.
   4. [Upgrades](upgrades-view.md), for the [Upgrades](../../mechanics/domain-model.md#agency-and-agents) of the agency.
 - **Records,** the Detail views in which the Player reads what has happened and how the game works:
-  1. [Turn report](turn-report-view.md), for the most recent [Turn report](../../foundation/world-history.md#glossary) in full.
+  1. [Turn report](turn-report-view.md), for the most recent [Turn report](../../foundation/campaign-state.md#glossary) in full.
   2. [History](history-view.md).
   3. [Charts](charts-view.md).
   4. [Compendium](compendium-view.md), for reference information about the game.

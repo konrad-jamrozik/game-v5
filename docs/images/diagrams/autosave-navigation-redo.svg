@@ -83,5 +83,5 @@
   <circle class="entry" cx="624" cy="268" r="5"/>
   <text class="m" x="638" y="272">Timeline entry</text>
   <circle class="badge" cx="34" cy="298" r="9"/><text class="b mid" x="34" y="302.5">1</text>
-  <text class="m" x="52" y="302">to 4: successive redoToAutosave() calls. Call 4 loads the Furthest progress Autosave, restoring Turn 10 as it was left.</text>
+  <text class="m" x="52" y="302">to 4: successive redoToAutosave() calls. Call 4 loads the Furthest progress Autosave, returning to Turn 10 as it was left.</text>
 </svg>

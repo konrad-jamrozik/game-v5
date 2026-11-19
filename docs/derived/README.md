@@ -47,21 +47,21 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| AUTO | [Autopilot](../specs/design/foundation/autopilot.md) | Autopilot limits, what an Autopilot AI receives, Autopilot engagement lifecycle, and Autopilot memory. |
+| AUTO | [Autopilot](../specs/design/foundation/autopilot.md) | Autopilot limits, what an Autopilot AI receives, and Autopilot engagement lifecycle. |
 | CINST | [Campaign Instances](../specs/design/foundation/campaign-instances.md) | How every thing in a Campaign's world is modeled as a Campaign instance. |
 | CONFIG | [Configuration](../specs/design/foundation/configuration.md) | Kinds of setting, Global configuration, and the configuration cascade. |
 | CORE | [Core Concepts](../specs/design/foundation/core-concepts.md) | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build. |
-| CSTATE | [Campaign State](../specs/design/foundation/campaign-state.md) | What Campaign state is made of, and how Campaign initialization produces it. |
+| CSTATE | [Campaign State](../specs/design/foundation/campaign-state.md) | What Campaign state is made of, what the Game rules read of it, and how Campaign initialization produces it. |
 | DETERM | [Determinism and Randomness](../specs/design/foundation/determinism-and-randomness.md) | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay. |
 | DEV | [Developer Access](../specs/design/foundation/developer-access.md) | Dev mode, full Campaign state inspection, Player cheat actions, and random outcome overrides. |
 | ENG | [Engine Contract](../specs/design/foundation/engine-contract.md) | The engine as a whole: how it divides, who may call what, and the guarantees every engine subsystem keeps. |
-| GDR | [Game Data Records](../specs/design/foundation/game-data-records.md) | The purposes a GDR can serve relative to game behavior and Campaign state, with a worked example of each. |
+| GDR | [Game Data Records](../specs/design/foundation/game-data-records.md) | The purposes a GDR can serve relative to the Game rules and Campaign state, with a worked example of each. |
 | LIFE | [Campaign Lifecycle](../specs/design/foundation/campaign-lifecycle.md) | Session start and end, creating, loading, selecting, and closing the Current campaign, and Session status. |
 | NUMBERS | [Numbers](../specs/design/foundation/numbers.md) | That every stored quantity is held as a whole number, of units or of hundredths, the rounding operations, how percentages and probabilities are computed, and exact evaluation. |
 | PAPI | [Player API](../specs/design/foundation/player-api.md) | What the player can see of a Campaign, and how gameplay actions change it. |
 | SAVES | [Saves](../specs/design/foundation/saves.md) | Campaign save contents, saving, loading, Autosaves, deleting Campaign saves, the Save size limit, and Game build compatibility. |
-| TIMELINE | [Timeline](../specs/design/foundation/timeline.md) | Undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what a restored Committed state guarantees. |
-| WHIST | [World History](../specs/design/foundation/world-history.md) | What a Campaign remembers about its past, and for how long. |
+| TIMELINE | [Timeline](../specs/design/foundation/timeline.md) | The structure of the Timeline, undo and redo of the Player actions of the current Turn, undo and redo across Turns, and what returning to a Committed state guarantees. |
+| WHIST | [History and Turn Report](../specs/design/foundation/world-history.md) | What a Campaign remembers about its past, and for how long, including the Turn report and what Player API returns of the past. |
 
 ## Mechanics
 

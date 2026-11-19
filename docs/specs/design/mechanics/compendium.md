@@ -10,7 +10,7 @@
 
 # Overview
 
-The Player learns the game by playing it, but needs somewhere to look things up: what an Enemy is, what an Upgrade does, or how an Investigation progresses. The Compendium is that reference, written by the Game designer as game data. It is a set of Encyclopedia articles, each a [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) that serves only the Display content purpose, under [GDR purpose: display content](../foundation/game-data-records.md#gdr-purpose-display-content) in Game Data Records: no game behavior reads an article, so adding, removing, or rewriting one never changes gameplay.
+The Player learns the game by playing it, but needs somewhere to look things up: what an Enemy is, what an Upgrade does, or how an Investigation progresses. The Compendium is that reference, written by the Game designer as game data. It is a set of Encyclopedia articles, each a [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) that serves only the Display content purpose, under [GDR purpose: display content](../foundation/game-data-records.md#gdr-purpose-display-content) in Game Data Records: the Game rules never read an article, so adding, removing, or rewriting one never changes gameplay.
 
 An article can describe one GDR of the game, its subject, or explain the game in general. An article must never tell the Player more than the Player may know, so an article about a subject becomes Player-visible exactly when its subject does, e.g. an article about a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) appears once the Lead is discovered.
 

@@ -133,7 +133,7 @@ One Advance turn can change an Agent's current health and exhaustion in more tha
 
 # Turn report
 
-**Proposed rule:** The [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds, for each Agent that recovers in it under [Which Agents recover](#which-agents-recover), in the order of the Agents in [Campaign state](../foundation/core-concepts.md#campaign-and-session), its [Instance ID](../foundation/campaign-instances.md#glossary), its current health, Exact exhaustion, and exhaustion after its recovery step, and whether its Recovery ended in it. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds none of these. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
+**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Agent that recovers in it under [Which Agents recover](#which-agents-recover), in the order of the Agents in [Campaign state](../foundation/core-concepts.md#campaign-and-session), its [Instance ID](../foundation/campaign-instances.md#glossary), its current health, Exact exhaustion, and exhaustion after its recovery step, and whether its Recovery ended in it. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds none of these. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
 
 # Player-visible information
 

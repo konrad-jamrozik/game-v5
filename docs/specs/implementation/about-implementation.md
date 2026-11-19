@@ -4,7 +4,7 @@
 
 # What Implementation specifications are for
 
-The Design specifications are abstract on purpose, while an Implementation is built in a concrete environment, e.g. a directory on the Game designer's machine with a particular toolchain. Implementation specifications bridge the two. They are non-behavioural: they own no game behavior, observable contract, or GDR, and no acceptance test through the engine API depends on them.
+The Design specifications are abstract on purpose, while an Implementation is built in a concrete environment, e.g. a directory on the Game designer's machine with a particular toolchain. Implementation specifications bridge the two. They are non-behavioural: they own none of the Game rules, no observable contract, and no GDR, and no acceptance test through the engine API depends on them.
 
 # Families
 

@@ -167,7 +167,7 @@ The effect applies once for each completion of an Investigation of L. Another co
 
 # Turn report
 
-**v5 requirement:** The [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds the Leads discovered in it: every Lead that is discovered in the Committed state that Advance turn commits and is not discovered in the Committed state before it, each by its GDR identifier. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds the same list, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History. An Advance turn that discovers no Lead holds an empty list.
+**v5 requirement:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds the Leads discovered in it: every Lead that is discovered in the Committed state that Advance turn commits and is not discovered in the Committed state before it, each by its GDR identifier. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds the same list, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. An Advance turn that discovers no Lead holds an empty list.
 
 # Player-visible information
 

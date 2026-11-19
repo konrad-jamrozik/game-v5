@@ -35,4 +35,4 @@ A [Campaign save](engine-contract.md#persisted-data) contains information that i
 # Acceptance examples
 
 - **Same answer for every [Principal](engine-contract.md#principals-and-access):** A value H is not Player-visible information. With Dev mode enabled, the Session controller makes a Player API query; at an equal Campaign state, an Autopilot AI makes the same query. Both receive equal results, and neither result contains H ([Player-visible information](#player-visible-information)).
-- **A rejection reveals nothing:** A gameplay action is rejected because of the hidden value H. Its error does not reveal H, and Campaign state, the Timeline, and [Autopilot memory](engine-contract.md#persisted-data) are unchanged ([Gameplay actions](#gameplay-actions), [Information boundary](#information-boundary)).
+- **A rejection reveals nothing:** A gameplay action is rejected because of the hidden value H. Its error does not reveal H, and Campaign state is unchanged ([Gameplay actions](#gameplay-actions), [Information boundary](#information-boundary)).

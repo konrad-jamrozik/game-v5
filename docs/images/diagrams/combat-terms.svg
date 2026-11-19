@@ -96,7 +96,7 @@
   <text class="b" x="720" y="424">Mission: Won or Lost</text>
   <text class="m" x="720" y="444">Won exactly when the Combat outcome</text>
   <text class="m" x="720" y="462">is Prevailed; otherwise Lost</text>
-  <text class="m" x="720" y="480">retained in World history</text>
+  <text class="m" x="720" y="480">kept in Retired world state</text>
   <line class="arrow" x1="660" y1="461" x2="702" y2="461"/>
 
   <rect class="stored" x="704" y="550" width="272" height="92" rx="8"/>

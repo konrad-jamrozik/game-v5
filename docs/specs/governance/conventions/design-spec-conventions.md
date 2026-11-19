@@ -27,7 +27,7 @@ Terms about [specifications](spec-conventions.md#specifications) in general are 
 [Design specifications](spec-conventions.md#specifications) describe the design of the game; any [implementation](spec-conventions.md#artifacts) that obeys them is acceptable. A statement belongs in a Design specification only if it meets at least one of the following criteria. This list is exhaustive:
 
 1. **Observable:** a black-box test through the engine API, a save, or a replay could fail when the statement is violated.
-2. **Designer-authored:** the statement is game data or a description of game behavior that the [Engine designer](spec-conventions.md#participants) must write down.
+2. **Designer-authored:** the statement is game data or a rule of the game that the [Engine designer](spec-conventions.md#participants) must write down.
 3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
 
 Everything else is left to the implementer's discretion and must not be specified. E.g., the following are out of scope:
@@ -44,7 +44,7 @@ Some Design specifications describe how the engine API is used rather than how t
 
 UI specifications are non-behavioural. They guide how a user interface presents the engine API to the [Player](spec-conventions.md#participants), e.g. which screens exist, what each shows by default, and how the graphical user interface looks, but they add no gameplay information, engine API operation, or game data. What a user interface may show and call remains owned by the Foundation specifications that define the engine API and by the specification that owns each value.
 
-Autopilot AIs specifications describe how an AI that plays the game chooses its actions, e.g. which goals it pursues and in what order, but they add no engine API operation, game behavior, or game data. What every such AI receives and may call remains owned by the Foundation specifications that define the engine API.
+Autopilot AIs specifications describe how an AI that plays the game chooses its actions, e.g. which goals it pursues and in what order, but they add no engine API operation, rule of the game, or game data. What every such AI receives and may call remains owned by the Foundation specifications that define the engine API.
 
 # Specifying a game concept
 

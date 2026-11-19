@@ -37,7 +37,7 @@ The Campaign selection decides which [Campaign](core-concepts.md#campaign-and-se
 
 The following operations are the complete set that change the Campaign selection:
 
-- **Create:** `session.campaign.create(options)` creates a Campaign using the current [Game build](core-concepts.md#game-build-and-content) and the Session's new-Campaign setup, and selects it as the Current campaign. A newly created Campaign has a [Timeline](engine-contract.md#persisted-data) with no [Player actions](engine-contract.md#player-actions-and-turns) and no [Autopilot memory](engine-contract.md#persisted-data), and the engine writes its [Current Autosave](saves.md#autosave-kinds) at once, under [Autosaves](saves.md#autosaves) in Saves.
+- **Create:** `session.campaign.create(options)` creates a Campaign using the current [Game build](core-concepts.md#game-build-and-content) and the Session's new-Campaign setup, and selects it as the Current campaign. A newly created Campaign has a [Timeline](engine-contract.md#persisted-data) with no [Player actions](engine-contract.md#player-actions-and-turns), and the engine writes its [Current Autosave](saves.md#autosave-kinds) at once, under [Autosaves](saves.md#autosaves) in Saves.
 - **Load:** `session.saves.load(save)` restores a [Campaign save](engine-contract.md#persisted-data) and selects its Campaign as the Current campaign. What loading restores is stated under [Loading](saves.md#loading).
 - **Close:** `session.campaign.close()` removes the Current campaign and returns the Session to the Main menu.
 

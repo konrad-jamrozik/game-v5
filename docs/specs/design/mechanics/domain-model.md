@@ -66,7 +66,7 @@ A Combat, its participants, and its [retained](../foundation/world-history.md#gl
 | Combatant | An Agent or an Enemy as a participant in a Combat. |  |
 | Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Combat lasts. |  |
 | Enemy | An opponent present at one Mission site, whom the Agency's Agents fight in a Combat. |  |
-| Combat report | The record of how a Combat went, kept as part of the [Turn report](../foundation/world-history.md#glossary) of the Advance turn that fought it and used to determine its Mission's Consequences. | Battle result |
+| Combat report | The record of how a Combat went, kept as part of the [Turn report](../foundation/campaign-state.md#glossary) of the Advance turn that fought it and used to determine its Mission's Consequences. | Battle result |
 
 ## Factions
 
@@ -172,11 +172,11 @@ Campaign state must contain exactly one Agency, because a Campaign has exactly o
 
 ## Initial Campaign state
 
-Everything a new Campaign starts with is either game data, supplied as GDRs by the Game build, or game behavior, stated as rules in specifications. Among GDRs, only those serving the [Campaign configuration preset](../foundation/configuration.md#glossary) purpose can be overridden by the player before creation; every other GDR is fixed, e.g. a Faction's Archetype.
+Everything a new Campaign starts with is either game data, supplied as GDRs by the Game build, or the [Game rules](../foundation/core-concepts.md#game-build-and-content), stated in specifications. Among GDRs, only those serving the [Campaign configuration preset](../foundation/configuration.md#glossary) purpose can be overridden by the player before creation; every other GDR is fixed, e.g. a Faction's Archetype.
 
 Which Campaign instances the initial Campaign state contains is the same for every new Campaign. No GDR serving the [Campaign configuration preset](../foundation/game-data-records.md#glossary) purpose, under [GDR purpose: campaign configuration preset](../foundation/game-data-records.md#gdr-purpose-campaign-configuration-preset), adds, removes, or selects an initial Campaign instance; e.g., no preset changes the initial roster of Agents, the initial Factions, or the absence of initial Mission sites. A [Campaign configuration](../foundation/campaign-state.md#glossary) value can still supply an initial value of an initial Campaign instance, e.g. starting money becomes the Agency's initial money, and can influence which Campaign instances come into existence during play, e.g. a multiplier of how often Mission sites appear.
 
-The initial Campaign state contains exactly one Agency, under [Agency per Campaign](#agency-per-campaign), exactly one Faction for each FactionArchetype the Game build supplies, and no Mission sites, and therefore no Missions and no Enemies. For each Campaign instance Type, the rule determining the initial Campaign instances of that Type and the source of each of their initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation), is in the Mechanics specification that details it; e.g., [Initial Factions](factions.md#initial-factions) gives which values each initial Faction takes from its FactionArchetype. The rule is game behavior; the content it reads is supplied by GDRs that serve no Campaign configuration preset purpose, e.g. the FactionArchetypes and their values.
+The initial Campaign state contains exactly one Agency, under [Agency per Campaign](#agency-per-campaign), exactly one Faction for each FactionArchetype the Game build supplies, and no Mission sites, and therefore no Missions and no Enemies. For each Campaign instance Type, the rule determining the initial Campaign instances of that Type and the source of each of their initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation), is in the Mechanics specification that details it; e.g., [Initial Factions](factions.md#initial-factions) gives which values each initial Faction takes from its FactionArchetype. The rule is one of the Game rules; the content it reads is supplied by GDRs that serve no Campaign configuration preset purpose, e.g. the FactionArchetypes and their values.
 
 ## Campaign instance identity scope
 

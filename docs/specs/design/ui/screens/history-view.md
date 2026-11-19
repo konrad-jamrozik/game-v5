@@ -12,7 +12,7 @@
 
 The History View lets the Player find the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) in which something changed in the [Campaign](../../foundation/core-concepts.md#campaign-and-session), and see what the player did in that Turn and what came of it. It is one of the Records [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md); the trends over the same Turns are in the [Charts View](charts-view.md).
 
-It shows one row for each [History entry](../../foundation/world-history.md#glossary) that `getHistory()` returns, under [Current state, Turn report, and history](../../foundation/world-history.md#current-state-turn-report-and-history) in World History, and one row for the current Turn from its [Open History entry](../../foundation/world-history.md#glossary), so that the Player sees this Turn's decisions so far beside earlier Turns, as if the Turn ended now. The current Turn's row follows every Player action, undo, and redo, e.g. an undone `hireAgent` leaves its list and its Agent leaves its Agents count, and a redo puts both back.
+It shows one row for each [History entry](../../foundation/world-history.md#glossary) that `getHistory()` returns, under [Current state, Turn report, and history](../../foundation/world-history.md#current-state-turn-report-and-history) in History and Turn Report, and one row for the current Turn from its [Open History entry](../../foundation/world-history.md#glossary), so that the Player sees this Turn's decisions so far beside earlier Turns, as if the Turn ended now. The current Turn's row follows every Player action, undo, and redo, e.g. an undone `hireAgent` leaves its list and its Agent leaves its Agents count, and a redo puts both back.
 
 # Turn by Turn table
 
@@ -22,7 +22,7 @@ The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn
 | --- | --- | --- |
 | Turn | The turn number t. | A number. |
 | Money start | Money at the start of turn for Turn t, under [Turn series of money](../../mechanics/economy-and-upgrades.md#turn-series-of-money) in Economy and Upgrades. | A number. |
-| Expenditures | The money spent by the [Player actions](../../foundation/engine-contract.md#player-actions-and-turns) of Turn t: the sum of the money changes below 0 in its [Action record](../../foundation/world-history.md#glossary), under [Action record](../../foundation/world-history.md#action-record) in World History, as a positive amount. | "−" and the amount in Danger, or "0" in Text muted when nothing was spent. |
+| Expenditures | The money spent by the [Player actions](../../foundation/engine-contract.md#player-actions-and-turns) of Turn t: the sum of the money changes below 0 in its [Action record](../../foundation/world-history.md#glossary), under [Action record](../../foundation/world-history.md#action-record) in History and Turn Report, as a positive amount. | "−" and the amount in Danger, or "0" in Text muted when nothing was spent. |
 | Money end | Money at the end of turn for Turn t, under [Turn series](../../foundation/world-history.md#glossary) of money. | A number. |
 | Income | The income that the [Agency](../../mechanics/domain-model.md#agency-and-agents) income step of the Advance turn ending Turn t added, under [Agency income](../../mechanics/economy-and-upgrades.md#agency-income) in Economy and Upgrades. | "+" and the amount in Positive. |
 | Upkeep | The upkeep that the Upkeep step of that Advance turn charged, under [Upkeep](../../mechanics/economy-and-upgrades.md#upkeep) in Economy and Upgrades. | "−" and the amount in Danger. |
@@ -45,7 +45,7 @@ Every column except Events holds numbers, under Tables in Visual Design. The fou
 
 # Events
 
-The Events column lists the following labels, in this order, each only when it applies; the list is exhaustive. Each counts or names what the reduced [Turn report](../../foundation/world-history.md#glossary) in the [History entry](../../foundation/world-history.md#glossary) holds, under the specification that owns it.
+The Events column lists the following labels, in this order, each only when it applies; the list is exhaustive. Each counts or names what the reduced [Turn report](../../foundation/campaign-state.md#glossary) in the [History entry](../../foundation/world-history.md#glossary) holds, under the specification that owns it.
 
 1. **Each [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions):** for each [Combat](../../mechanics/domain-model.md#combat) the Advance turn fought, in the order of its [Combat reports](../../mechanics/domain-model.md#combat), under [Combat report](../../mechanics/combat.md#combat-report) in Combat, its [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s [MissionSiteArchetype](../../mechanics/missions.md#missionsitearchetype) `name` followed by "won" in Positive or "lost" in Danger, and then ", N killed" when N of its Agents were [Killed](../../mechanics/agents-spec.md#agent-statuses); e.g. "Apprehend member won, 1 killed".
 2. **Investigations completed:** "N Investigations completed", or "1 [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) completed", in Accent text, under [Turn report](../../mechanics/investigations.md#turn-report) in Investigations.
@@ -73,7 +73,7 @@ Each line starts with the number of the Player action in the Turn, from 1, in th
 | `deployAgents` | "[Deployed](../../mechanics/agents-spec.md#assignments) N Agents to" and the Mission site's MissionSiteArchetype `name`, e.g. "Deployed 3 Agents to Raid safehouse". |
 | `addMoney` | "Added" and the amount, then "money (cheat)"; for a negative amount, "Removed" and the amount without its sign, then "money (cheat)". |
 | `addAgents` | "Added N Agents (cheat)". |
-| Any other operation | The operation's name, e.g. a Campaign configuration change by the name of its operation. |
+| Any other operation | The operation's name, e.g. that of a Player action a later Mechanics specification adds. |
 
 A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents an action concerned; a line names only the Lead or Mission site it concerned, resolved through `getHistory()` when it is [Retired](../../foundation/world-history.md#glossary).
 

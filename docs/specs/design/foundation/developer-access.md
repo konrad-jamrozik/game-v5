@@ -16,9 +16,9 @@ The guiding principle is that these powers stay apart from ordinary play. They a
 
 # Dev mode
 
-Only the [Session controller](engine-contract.md#principals-and-access) can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires a [Current campaign](core-concepts.md#campaign-and-session) and no active [Autopilot engagement](engine-contract.md#autopilot). Inspection returns detached, read-only full [Campaign state](core-concepts.md#campaign-and-session). It never reveals hidden facts through ordinary game behavior. Every [Player cheat action](engine-contract.md#player-actions-and-turns) belongs in `developer.actions` and follows [Player cheat actions](#player-cheat-actions).
+Only the [Session controller](engine-contract.md#principals-and-access) can call `session.developer.enable()` or `session.developer.disable()`. Enabling requires a [Current campaign](core-concepts.md#campaign-and-session) and no active [Autopilot engagement](engine-contract.md#autopilot). Inspection returns detached, read-only full [Campaign state](core-concepts.md#campaign-and-session). It never reveals hidden facts through [Player API](engine-contract.md#api-surfaces). Every [Player cheat action](engine-contract.md#player-actions-and-turns) belongs in `developer.actions` and follows [Player cheat actions](#player-cheat-actions).
 
-[Dev mode](engine-contract.md#principals-and-access) starts disabled and is disabled on successful creation, load, or closure, under [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle. Timeline navigation and [Autosave navigation](timeline.md#autosave-navigation) leave the current Dev mode setting unchanged. Dev mode is not Campaign state and is never restored from a [Campaign save](engine-contract.md#persisted-data) or the [Timeline](engine-contract.md#persisted-data). Disabling Dev mode revokes subsequent [Developer API](engine-contract.md#api-surfaces) access. Previously returned information cannot be erased from the Session controller's knowledge.
+[Dev mode](engine-contract.md#principals-and-access) starts disabled and is disabled on successful creation, load, or closure, under [Campaign selection](campaign-lifecycle.md#campaign-selection) in Campaign Lifecycle. Timeline navigation and [Autosave navigation](timeline.md#autosave-navigation) leave the current Dev mode setting unchanged. Dev mode is not Campaign state, so no [Campaign save](engine-contract.md#persisted-data) holds it and no [Timeline](engine-contract.md#persisted-data) navigation changes it. Disabling Dev mode revokes subsequent [Developer API](engine-contract.md#api-surfaces) access. Previously returned information cannot be erased from the Session controller's knowledge.
 
 Autopilot may be engaged while Dev mode is enabled, but Developer API operations remain unavailable while [Autopilot](engine-contract.md#autopilot) is engaged and the [Autopilot AI](engine-contract.md#principals-and-access) never receives them. Dev mode transitions are unavailable while Autopilot is engaged. To inspect or cheat, the Session controller disengages Autopilot and waits for disengagement to complete.
 
@@ -43,7 +43,7 @@ An override is a Player cheat action under [Player cheat actions](#player-cheat-
 
 # Isolation and Timeline navigation
 
-Undo and redo of a committed Player cheat action follow [Restored Committed states](timeline.md#restored-committed-states): they do not require Dev mode and give an Autopilot AI no way to commit a Player cheat action.
+Undo and redo of a committed Player cheat action follow [Returning to a Committed state](timeline.md#returning-to-a-committed-state): they do not require Dev mode and give an Autopilot AI no way to commit a Player cheat action.
 
 # Edge cases and failure behavior
 

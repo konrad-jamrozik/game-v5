@@ -47,7 +47,7 @@ The kinds of participant in making, changing, or playing the game.
 | --- | --- | --- |
 | Persona | A kind of participant in making, changing, or playing the game, defined by what the participant does with the game. The Personas are Game designer, Engine designer, Content designer, UI designer, AI designer, Implementer, and Player. | Audience; actor; user role. The Audience metadata row keeps its name, and ordinary uses of "role" remain valid. |
 | Game designer | The Persona that does all the design of the game, encompassing what the Engine designer, Content designer, UI designer, and AI designer do. |  |
-| Engine designer | The Persona that designs the engine and its game behavior, decides which inputs to that behavior game data supplies, and establishes these specification conventions. | Ruleset designer |
+| Engine designer | The Persona that designs the engine and the rules of the game, decides which inputs to those rules game data supplies, and establishes these specification conventions. | Ruleset designer |
 | Content designer | The Persona that authors game data within the structures the Engine designer exposes for content. |  |
 | UI designer | The Persona that designs player-facing interfaces over the engine API. |  |
 | AI designer | The Persona that designs an AI that plays the game. |  |
@@ -100,7 +100,7 @@ The following table is the exhaustive set of Personas. The last column names the
 | Persona | Filled by | What the Persona does | Primary Families |
 | --- | --- | --- | --- |
 | Game designer | Human | Does all the design of the game, encompassing the Engine designer, Content designer, UI designer, and AI designer Personas, and decides how much of that work to delegate to LLMs. | All Families |
-| Engine designer | Human | Designs the engine and its game behavior, decides which inputs to that behavior game data supplies and so become content, and establishes these specification conventions. | Conventions, Foundation, Mechanics |
+| Engine designer | Human | Designs the engine and the rules of the game, decides which inputs to those rules game data supplies and so become content, and establishes these specification conventions. | Conventions, Foundation, Mechanics |
 | Content designer | Human or LLM | Authors game data, including the initial content and in-game encyclopedia articles, within the structures the Engine designer exposes for content. | Foundation, Mechanics |
 | UI designer | Human or LLM | Designs player-facing interfaces over the shared engine API. | UI, Foundation |
 | AI designer | Human or LLM | Designs an AI that plays the game. | Autopilot AIs, Foundation |
@@ -130,7 +130,7 @@ Readers find their way through many specifications by knowing where everything s
 1. Framing sections:
    1. `# Overview`, describing the subject of the specification
    2. `# Glossary`
-2. Topic sections: one or more H1 sections, each named after a subject the specification owns; e.g., `# Order cancellation`. Topic sections state the specification's definitions, game behavior, requirements, and constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
+2. Topic sections: one or more H1 sections, each named after a subject the specification owns; e.g., `# Order cancellation`. Topic sections state the specification's definitions, rules, requirements, and constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
 3. Closing sections:
    1. `# Edge cases and failure behavior`
    2. `# Acceptance examples`

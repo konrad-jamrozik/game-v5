@@ -52,7 +52,7 @@ A MissionArchetype is the Archetype of every Mission. The following property tab
 | -------- | ---------------------------------------- | --------------------------------------------------------- |
 | `name`   | The display name of the kind of Mission. | [Player-visible information](#player-visible-information) |
 
-No rule of game behavior reads a MissionArchetype property: every Mission behaves the same, and what distinguishes one Mission from another is its Mission site and its team.
+None of the [Game rules](../foundation/core-concepts.md#game-build-and-content) reads a MissionArchetype property: every Mission behaves the same, and what distinguishes one Mission from another is its Mission site and its team.
 
 ## FactionOperationLevel properties used by Missions
 
@@ -111,7 +111,7 @@ A Mission site also has [Derived values](../foundation/core-concepts.md#value-cl
 2. A Mission whose Mission site reference identifies this Mission site exists exactly when the lifecycle state is Deployed or Concluded, and at most one such Mission exists.
 3. The Enemies list has one Enemy for each unit of each count of the MissionSiteArchetype's `enemies`, and each of those Enemies references this Mission site.
 
-**Retention:** A Mission site keeps every property above for the whole Campaign, whatever its lifecycle state, so that every reference to it resolves, e.g. from an Enemy or a Mission. A Mission site becomes [Retired](../foundation/world-history.md#glossary) when it reaches a [Final Mission site state](#glossary), and is kept in [World history](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No Mission site is ever removed.
+**Retention:** A Mission site keeps every property above for the whole Campaign, whatever its lifecycle state, so that every reference to it resolves, e.g. from an Enemy or a Mission. A Mission site becomes [Retired](../foundation/world-history.md#glossary) when it reaches a [Final Mission site state](#glossary), and is kept in the [Retired world state](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in History and Turn Report. No Mission site is ever removed.
 
 ## Mission site kind and provenance
 
@@ -145,7 +145,7 @@ Each new Mission site has a fresh [Instance ID](../foundation/campaign-instances
 | Turns until expiration | The MissionSiteArchetype's `expires_in_turns`. | `expires_in_turns` of the MissionSiteArchetype. |
 | Enemies | Newly created Enemies, under [Enemy creation](#enemy-creation). | `enemies` of the MissionSiteArchetype. |
 
-Each Mission site created by an Advance turn is listed in its [Turn report](../foundation/world-history.md#glossary), under [Turn report](#turn-report). Creating a Mission site changes nothing else; e.g., it creates no Mission, spends no money, changes no Panic, and changes no [Agent](domain-model.md#agency-and-agents). A Mission site created during an Advance turn does not count down in that same Advance turn, under [Mission site expiration](#mission-site-expiration), whichever of the two occasions creates it. Several Mission sites may be created in one Advance turn, each a distinct Campaign instance, including several with the same MissionSiteArchetype.
+Each Mission site created by an Advance turn is listed in its [Turn report](../foundation/campaign-state.md#glossary), under [Turn report](#turn-report). Creating a Mission site changes nothing else; e.g., it creates no Mission, spends no money, changes no Panic, and changes no [Agent](domain-model.md#agency-and-agents). A Mission site created during an Advance turn does not count down in that same Advance turn, under [Mission site expiration](#mission-site-expiration), whichever of the two occasions creates it. Several Mission sites may be created in one Advance turn, each a distinct Campaign instance, including several with the same MissionSiteArchetype.
 
 ## MissionSiteArchetype selection
 
@@ -193,7 +193,7 @@ A Mission also has Derived values, which are never stored: its kind, which is th
 1. Its Mission site is Deployed or Concluded, and no other Mission references that Mission site.
 2. Its Current team equals its Team sent exactly when the lifecycle state is Deployed, and is empty when it is Won or Lost.
 
-**Retention:** A Mission keeps every property above for the whole Campaign, whatever its lifecycle state, so that every reference to it resolves, e.g. from a [Participation history](domain-model.md#agency-and-agents), and so that Lead prerequisites and [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions) can read which Missions are Won, under [Leads and Progression](leads-and-progression.md). A Mission becomes Retired when it becomes Won or Lost, and is kept in World history with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No Mission is ever removed.
+**Retention:** A Mission keeps every property above for the whole Campaign, whatever its lifecycle state, so that every reference to it resolves, e.g. from a [Participation history](domain-model.md#agency-and-agents), and so that Lead prerequisites and [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions) can read which Missions are Won, under [Leads and Progression](leads-and-progression.md). A Mission becomes Retired when it becomes Won or Lost, and is kept in the Retired world state with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in History and Turn Report. No Mission is ever removed.
 
 The Agents who took part in a Mission remain recorded after its Current team is empty: in its Team sent and in each [Agent](domain-model.md#agency-and-agents)'s [Participation history](domain-model.md#agency-and-agents), under [Participation history records](agents-spec.md#participation-history-records) in Agents.
 
@@ -201,7 +201,7 @@ The Agents who took part in a Mission remain recorded after its Current team is 
 
 A Mission takes place at exactly one Mission site, and a Mission site has at most one Mission, under [How concepts relate](domain-model.md#how-concepts-relate) in Domain Model, because the Agency can deploy only one team of Agents to a Mission site, once. No Mission exists without a Mission site, and a Mission site that no team is ever deployed to never has a Mission. Both are [retained](../foundation/world-history.md#glossary) for the whole Campaign, so the Mission's reference to its Mission site always resolves.
 
-A Mission is its own Campaign instance, not a part of its Mission site's State, because it carries facts the Mission site does not have, e.g. the Turn it was deployed in, the team sent, its own lifecycle from deployment to its outcome; and because Assignments and Participation history reference it directly. The [Combat report](domain-model.md#combat) of its Combat, by contrast, is not part of the Mission: it is part of the [Turn report](../foundation/world-history.md#glossary) of the Advance turn that fought the Combat, under [Combat report](combat.md#combat-report) in Combat.
+A Mission is its own Campaign instance, not a part of its Mission site's State, because it carries facts the Mission site does not have, e.g. the Turn it was deployed in, the team sent, its own lifecycle from deployment to its outcome; and because Assignments and Participation history reference it directly. The [Combat report](domain-model.md#combat) of its Combat, by contrast, is not part of the Mission: it is part of the [Turn report](../foundation/campaign-state.md#glossary) of the Advance turn that fought the Combat, under [Combat report](combat.md#combat-report) in Combat.
 
 The Mission site and its Mission have separate lifecycles, under [Mission site lifecycle](#mission-site-lifecycle) and [Mission lifecycle](#mission-lifecycle). The Mission site's lifecycle describes the opportunity, e.g. whether a team can still be deployed to it or whether it expired unattended; the Mission's lifecycle describes the attempt, e.g. whether its Combat is still to be fought and whether it was Won or Lost.
 
@@ -362,7 +362,7 @@ Every amount a Consequence applies is read from GDRs when the transition happens
 
 # Turn report
 
-**Proposed rule:** Besides the [Combat report](domain-model.md#combat) of each Mission it resolves, under [Resolving one Mission](#resolving-one-mission), the [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds three lists of Mission sites, each by Instance ID: the Mission sites created in it, under [Mission site creation](#mission-site-creation); the Mission sites that became Expired in it, under [Mission site expiration](#mission-site-expiration); and the Mission sites that became Cancelled in it, under [Cancellation](#cancellation). The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds the same three lists, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History. A list with no Mission site is empty. The [Initial Mission sites](#initial-mission-sites) are created with the Campaign, not by an Advance turn, so no Turn report lists them.
+**Proposed rule:** Besides the [Combat report](domain-model.md#combat) of each Mission it resolves, under [Resolving one Mission](#resolving-one-mission), the [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds three lists of Mission sites, each by Instance ID: the Mission sites created in it, under [Mission site creation](#mission-site-creation); the Mission sites that became Expired in it, under [Mission site expiration](#mission-site-expiration); and the Mission sites that became Cancelled in it, under [Cancellation](#cancellation). The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds the same three lists, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. A list with no Mission site is empty. The [Initial Mission sites](#initial-mission-sites) are created with the Campaign, not by an Advance turn, so no Turn report lists them.
 
 The Turn report also holds:
 

@@ -283,7 +283,7 @@ Together, conditions 4 to 6 mean that every listed Agent must be Serving, At ass
 
 Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [Committed state integrity](../foundation/engine-contract.md#committed-state-integrity) in Engine Contract.
 
-State changes: when every precondition holds, the action is one Player action that applies at once, within the same Turn, to every Agent in `agents`: the Agent becomes Dismissed under [Agent status](agents-spec.md#agent-status) in Agents, which removes its Assignment and Agent status and sets its Turn terminated to the current turn number, under [Service record](agents-spec.md#service-record). No money is refunded or spent, and nothing else changes. A Dismissed Agent stops counting toward the Agent cap and in projected upkeep at once, and is not counted in any later Upkeep step. It stays in the Agency's roster and in [World history](../foundation/campaign-state.md#glossary) with its final values.
+State changes: when every precondition holds, the action is one Player action that applies at once, within the same Turn, to every Agent in `agents`: the Agent becomes Dismissed under [Agent status](agents-spec.md#agent-status) in Agents, which removes its Assignment and Agent status and sets its Turn terminated to the current turn number, under [Service record](agents-spec.md#service-record). No money is refunded or spent, and nothing else changes. A Dismissed Agent stops counting toward the Agent cap and in projected upkeep at once, and is not counted in any later Upkeep step. It stays in the Agency's roster and is kept in the [Retired world state](../foundation/campaign-state.md#glossary) with its final values.
 
 # Training cap on assigning Agents
 
@@ -362,7 +362,7 @@ A Cap Upgrade changes no stored value beyond the Acquisitions: the cap it raises
 
 [Base weapon damage](agents-spec.md#combatant-attributes) is one of the Agent values an Upgrade may change, under [Modifiable values](agents-spec.md#modifiable-values) in Agents. An acquisition of an Upgrade whose `effect` is `agent_weapon_damage`, i.e. of a Weapon damage Upgrade, has two results:
 
-1. **Serving Agents:** When the purchase is committed, the base weapon damage of every Serving Agent rises by that Upgrade's Increment, whatever the Agent's Assignment and Agent status; e.g., a Deployed Agent, an Agent In transit, and an Agent on Recovery are all raised. Killed and Dismissed Agents keep their base weapon damage, which is retained in World history, under [Agent properties](agents-spec.md#agent-properties) in Agents.
+1. **Serving Agents:** When the purchase is committed, the base weapon damage of every Serving Agent rises by that Upgrade's Increment, whatever the Agent's Assignment and Agent status; e.g., a Deployed Agent, an Agent In transit, and an Agent on Recovery are all raised. Killed and Dismissed Agents keep their base weapon damage, which is retained in the Retired world state, under [Agent properties](agents-spec.md#agent-properties) in Agents.
 2. **Agents created later:** Every Agent created after the purchase, under [Agent creation](agents-spec.md#agent-creation) in Agents, starts with the initial base weapon damage below.
 
 ```text
@@ -402,7 +402,7 @@ Inputs: `training_skill_gain_per_turn` is that of AgentParameters, and `exhausti
 
 # Turn series of money
 
-**Proposed rule:** The Agency's money has exactly the following two [Turn series](../foundation/world-history.md#glossary), under [Turn series](../foundation/world-history.md#turn-series) in World History. Each records the Agency's money, a whole number of money that may be negative.
+**Proposed rule:** The Agency's money has exactly the following two [Turn series](../foundation/world-history.md#glossary), under [Turn series](../foundation/world-history.md#turn-series) in History and Turn Report. Each records the Agency's money, a whole number of money that may be negative.
 
 | Turn series | Recorded moment of each Turn |
 | --- | --- |
@@ -418,7 +418,7 @@ The current Turn has a recorded value of Money at the start of turn but none of 
 
 ## Money in the Action record
 
-**Proposed rule:** Every item of an [Action record](../foundation/world-history.md#glossary), under [Action record](../foundation/world-history.md#action-record) in World History, also holds its money change: the Agency's money right after its Player action minus the Agency's money right before it. It is a whole number, negative for money spent and positive for money added; e.g., −`hire_cost` for `hireAgent`, minus the Upgrade's `price` for `purchaseUpgrade`, `amount` for `addMoney`, and 0 for a Player action that changes no money, e.g. `assignAgents`. The money changes are Player-visible information, so the money a Turn's Player actions spent can be read back after the Turn has ended.
+**Proposed rule:** Every item of an [Action record](../foundation/world-history.md#glossary), under [Action record](../foundation/world-history.md#action-record) in History and Turn Report, also holds its money change: the Agency's money right after its Player action minus the Agency's money right before it. It is a whole number, negative for money spent and positive for money added; e.g., −`hire_cost` for `hireAgent`, minus the Upgrade's `price` for `purchaseUpgrade`, `amount` for `addMoney`, and 0 for a Player action that changes no money, e.g. `assignAgents`. The money changes are Player-visible information, so the money a Turn's Player actions spent can be read back after the Turn has ended.
 
 # Player cheat actions
 
@@ -438,14 +438,14 @@ Effect: `amount` is added to the Agency's money. Nothing else changes; e.g., fun
 
 # Turn report
 
-**Proposed rule:** The [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds, of the Agency's money and funding:
+**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, of the Agency's money and funding:
 
 - **Agency income step:** the funding it used, the number of Agents in C, the income it added, and the Agency's money after it, under [Agency income](#agency-income).
 - **Upkeep step:** S, the upkeep it charged, and the Agency's money after it, under [Upkeep](#upkeep).
 - **Funding:** the Agency's funding in the Turn-end state and after the Advance turn.
 - **Money:** the Agency's money in the Turn-end state and after the Advance turn.
 
-The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds, of these, the income, the upkeep, and the Agency's money and funding after the Advance turn, and holds the Agency's money and funding in the Turn-start state and in the Turn-end state of that Turn. All are Player-visible information, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
+The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds, of these, the income, the upkeep, and the Agency's money and funding after the Advance turn, and holds the Agency's money and funding in the Turn-start state and in the Turn-end state of that Turn. All are Player-visible information, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
 
 # Player-visible information
 

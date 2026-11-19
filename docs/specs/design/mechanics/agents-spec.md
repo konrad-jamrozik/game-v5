@@ -148,7 +148,7 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 
 Base skill, current health, base health, exhaustion, Weapon, and base weapon damage are the properties the [Combatant Role Type](#combatant-role-type) requires; Weapon and base weapon damage together are the equipped weapon values. An Agent holds its exhaustion as its Exact exhaustion. An Agent also has four [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its exhaustion, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion); its effective skill, under [Effective skill](#effective-skill); whether it can be assigned, under [Agents that can be assigned](#agents-that-can-be-assigned); and whether it is Fit for work, under [Start-work gate](#start-work-gate). An Agent has no [Turn series](../foundation/world-history.md#glossary).
 
-**Retention:** An Agent keeps every property above for the whole Campaign, whatever its Agent status, so that every reference to it resolves, e.g. from a [Combat report](domain-model.md#combat) or a Participation history. An Agent becomes [Retired](../foundation/world-history.md#glossary) when it becomes Terminated, and is kept in [World history](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in World History. No Agent is ever removed.
+**Retention:** An Agent keeps every property above for the whole Campaign, whatever its Agent status, so that every reference to it resolves, e.g. from a [Combat report](domain-model.md#combat) or a Participation history. An Agent becomes [Retired](../foundation/world-history.md#glossary) when it becomes Terminated, and is kept in the [Retired world state](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in History and Turn Report. No Agent is ever removed.
 
 ## Participation history records
 
@@ -512,13 +512,13 @@ Effect: the operation creates `count` Agents, each under [Agent creation](#agent
 
 # Turn report
 
-**Proposed rule:** The [Turn report](../foundation/world-history.md#glossary) of an Advance turn holds, of its Agents:
+**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, of its Agents:
 
 - **Arrivals:** the Agents that arrived at their Assignment in its Transit step, under [Transit rule](#transit-rule).
 - **Training:** for each Agent with a Training gain outcome in it, that outcome and the Agent's base skill and exhaustion after its Training step, under [Training growth](#training-growth).
 - **Forced returns:** each Agent that had a Forced return in it, with the Assignment it was returned from, under [Forced return](#forced-return).
 
-Each lists its Agents by Instance ID, in the order of the Agents in Campaign state. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds none of these, and holds the number of Serving Agents in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in World History.
+Each lists its Agents by Instance ID, in the order of the Agents in Campaign state. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds none of these, and holds the number of Serving Agents in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
 
 # Player-visible information
 

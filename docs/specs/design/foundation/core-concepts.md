@@ -12,7 +12,7 @@
 
 Every specification of the game must mean the same thing by the same word, whichever subject it covers. Core Concepts holds the words that every family relies on, and gives each one a meaning independent of the contracts that use it, e.g. [Engine Contract](./engine-contract.md) and the [Mechanics family](../mechanics/about-mechanics.md).
 
-The words fall into groups by what they describe: how data is modeled independently of a programming language, e.g. Type and Property; what the Game build supplies, i.e. Game Data Records (GDRs) and game behavior; and what one playthrough is, i.e. a Campaign and its Campaign state, as opposed to the Session that runs it. One classification runs across all of them: every value is either an Authoritative value, kept as a fact, or a Derived value, calculated from other values.
+The words fall into groups by what they describe: how data is modeled independently of a programming language, e.g. Type and Property; what the Game build supplies, i.e. Game Data Records (GDRs) and the Game rules; and what one playthrough is, i.e. a Campaign and its Campaign state, as opposed to the Session that runs it. One classification runs across all of them: every value is either an Authoritative value, kept as a fact, or a Derived value, calculated from other values.
 
 # Glossary
 
@@ -42,7 +42,8 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Game build | A particular version of the game's data and of the executable implementation of its game behavior, supplied together. | Build. Ordinary build-tool operations keep their meaning. |
+| Game build | A particular version of the game's data and of the executable implementation of its Game rules, supplied together. | Build. Ordinary build-tool operations keep their meaning. |
+| Game rules | The rules of the game: which actions the player may take, what each action changes, what happens when the player ends a turn, and what each query reports. A Game build implements them, and the specifications state them. | Game behavior; game behaviour. Ordinary uses of "behavior", e.g. the behavior of an interface, remain valid. |
 | Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated. | Content entry; Content; entry; entries; Content definition; GDR role, for which say GDR purpose. The Content Family, document titles, and the Display content GDR purpose keep their names. |
 
 ## Campaign and Session
@@ -52,7 +53,7 @@ A playthrough, its data, and the runtime context that selects it. [Campaign Stat
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
 | Campaign | A particular playthrough with its own evolving Campaign state. |  |
-| Campaign state | Data describing one Campaign, including data describing its past Campaign state or events. | Evolving campaign facts; Continuation state; continuation data; Controller continuation data |
+| Campaign state | All data describing one Campaign: its world as it stood at the start of the current turn and after each action since, what its earlier turns left behind, and its settings. | Evolving campaign facts; Continuation state; continuation data; Controller continuation data |
 | Session | The runtime context of one running game, holding the selection of at most one Campaign and runtime-only access and execution state. |  |
 | Current campaign | The Campaign selected in the Session by the most recent successful campaign creation or load, until replacement or closure. |  |
 
@@ -62,7 +63,7 @@ Classifications of a value, whether a GDR or Campaign state supplies it.
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Authoritative value | A value that a GDR supplies, or a value of Campaign state that specifications define by its initial value and the changes game behavior makes to it, rather than by a formula over other values. | Authoritative fact |
+| Authoritative value | A value that a GDR supplies, or a value of Campaign state that specifications define by its initial value and the changes the Game rules make to it, rather than by a formula over other values. | Authoritative fact |
 | Derived value | A value that specifications define by a formula over the Authoritative values of one Campaign state and of GDRs. It always equals that formula applied to the Campaign state as it is at that moment. | Computed value; calculated value |
 
 # Campaign versus Session
@@ -74,7 +75,7 @@ Campaign identifies a playthrough; Campaign state describes its data. A Session 
 A Derived value's formula reads only the current Campaign state and GDRs, never an earlier Campaign state. Replaying a Campaign would reproduce every value, but that does not make a value Derived. The classification has the following consequences:
 
 - **A Derived value follows its inputs:** when an Authoritative value its formula uses changes, the Derived value changes too, without any rule saying so.
-- **An Authoritative value changes only when game behavior changes it:** game behavior changes only the Authoritative values its specification says it changes. E.g., an unlock recorded as earned stays earned after its condition stops holding.
+- **An Authoritative value changes only when the Game rules change it:** the Game rules change only the Authoritative values its specification says it changes. E.g., an unlock recorded as earned stays earned after its condition stops holding.
 - **Campaign state consists of Authoritative values:** two Campaign states are equal exactly when their Authoritative values are equal.
 
 Which values are Authoritative is the Engine designer's choice, because the player can see the difference.

@@ -35,7 +35,7 @@ Settings differ in whom they serve and how long they last, so each kind lives in
 
 # Global configuration
 
-Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and a Campaign save does not contain it. Interface preferences belong to Global configuration, e.g. volume, language, and tutorial popups. So does a setting that governs the engine without being consulted by game behavior, e.g. the [Autosave limit](saves.md#limits), under [Autosaves](saves.md#autosaves).
+Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and a Campaign save does not contain it. Interface preferences belong to Global configuration, e.g. volume, language, and tutorial popups. So does a setting that governs the engine without being read by the [Game rules](core-concepts.md#game-build-and-content), e.g. the [Autosave limit](saves.md#limits), under [Autosaves](saves.md#autosaves).
 
 Global configuration stores only values the player has set. A setting the player has not set follows the current [Game build default](engine-contract.md#persisted-data), so a changed Game build default in a later Game build reaches it. Resetting a setting removes its stored value.
 
@@ -47,7 +47,7 @@ The [Session controller](engine-contract.md#principals-and-access) reads and cha
 | `session.globalConfiguration.set(setting, value)` | Stores `value` for `setting`. A value the setting does not permit is rejected and changes nothing. |
 | `session.globalConfiguration.reset(setting)` | Removes the stored value of `setting`, so the setting follows the Game build default. |
 
-A successful `set` or `reset` is persisted in Game storage at once and applies from then on, in this Session and in later ones. These operations need no [Current campaign](core-concepts.md#campaign-and-session). They are not [Player actions](engine-contract.md#player-actions) and change no Campaign state, [Timeline](engine-contract.md#persisted-data), or Campaign save, so undo, redo, and load never change Global configuration. They remain available during an [Autopilot engagement](engine-contract.md#autopilot), under [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency); e.g., the player can change the volume while an [Autopilot AI](engine-contract.md#principals-and-access) plays.
+A successful `set` or `reset` is persisted in Game storage at once and applies from then on, in this Session and in later ones. These operations need no [Current campaign](core-concepts.md#campaign-and-session). They are not [Player actions](engine-contract.md#player-actions) and change no Campaign state or Campaign save, so undo, redo, and load never change Global configuration. They remain available during an [Autopilot engagement](engine-contract.md#autopilot), under [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency); e.g., the player can change the volume while an [Autopilot AI](engine-contract.md#principals-and-access) plays.
 
 Global configuration holds nothing that campaign creation uses: creating a Campaign neither reads nor changes it.
 
@@ -55,13 +55,13 @@ Global configuration holds nothing that campaign creation uses: creating a Campa
 
 The Game build supplies one or more Campaign configuration presets. Each preset is one [GDR](core-concepts.md#game-build-and-content) serving the Campaign configuration preset purpose under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs) and supplies a value for every Campaign configuration value. A preset is never partial, and presets do not combine. Exactly one preset is the Game build default preset.
 
-A value is a Campaign configuration value if and only if the presets supply it. E.g., starting money, enemy difficulty, and a multiplier of how often [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) appear can be Campaign configuration values. Whatever no preset can change about a new Campaign is not Campaign configuration. It is either a GDR serving another purpose, e.g. a new base [Agent](../mechanics/domain-model.md#agency-and-agents) base skill value, or game behavior, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign, and the rule determining which [Campaign instances](core-concepts.md#campaign-instances) the initial Campaign state contains, under [Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state). The [Campaign seed](determinism-and-randomness.md#campaign-seed) is the one exception: no preset supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor part of the new-Campaign setup; campaign creation receives it separately, under [Campaign seed](determinism-and-randomness.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after creation, under the [Campaign State glossary](campaign-state.md#glossary).
+A value is a Campaign configuration value if and only if the presets supply it. E.g., starting money, enemy difficulty, and a multiplier of how often [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) appear can be Campaign configuration values. Whatever no preset can change about a new Campaign is not Campaign configuration. It is either a GDR serving another purpose, e.g. a new base [Agent](../mechanics/domain-model.md#agency-and-agents) base skill value, or part of the Game rules, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign, and the rule determining which [Campaign instances](core-concepts.md#campaign-instances) the initial Campaign state contains, under [Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state). The [Campaign seed](determinism-and-randomness.md#campaign-seed) is the one exception: no preset supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor part of the new-Campaign setup; campaign creation receives it separately, under [Campaign seed](determinism-and-randomness.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after creation, under the [Campaign State glossary](campaign-state.md#glossary).
 
 ## Game build default preset
 
 The Game build supplies exactly one GDR of [Type](core-concepts.md#data-modeling) ConfigurationParameters. Its `default_preset` property holds the identifier of one Campaign configuration preset, and that preset is the Game build default preset. No preset states whether it is the default, so the presets supply Campaign configuration values only.
 
-The ConfigurationParameters GDR serves none of the purposes under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs): it affects only the preset selection, which the Session holds, and neither game behavior nor Campaign state reads it.
+The ConfigurationParameters GDR serves none of the purposes under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs): it affects only the preset selection, which the Session holds; the Game rules never read it, and Campaign state never refers to it.
 
 A Game build is defective, and no Campaign is created from it, if it supplies no ConfigurationParameters GDR or more than one, if that GDR has a property other than `id`, `type`, and `default_preset`, or if its `default_preset` is not the identifier of a Campaign configuration preset the Game build supplies. The violation is reported as a data defect, under [Committed state integrity](engine-contract.md#committed-state-integrity) in Engine Contract.
 
@@ -71,13 +71,13 @@ Presets are immutable: a Preset edit, or a later change to Campaign configuratio
 
 The effective value of each setting follows this complete rule set:
 
-| Setting scope | Effective value |
-| --- | --- |
-| Global preference | A value stored in Global configuration overrides the Game build default. |
-| New Campaign | A Preset edit for the selected Campaign configuration preset overrides that preset's value. |
-| Existing Campaign | Its own Campaign configuration applies, including changes committed during play and the values restored by undo, redo, and load. |
+| Setting scope     | Effective value                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| Global preference | A value stored in Global configuration overrides the Game build default.                    |
+| New Campaign      | A Preset edit for the selected Campaign configuration preset overrides that preset's value. |
+| Existing Campaign | Its own Campaign configuration applies, including changes made during play.                 |
 
-Changes committed during play follow [Changing Campaign configuration during play](#changing-campaign-configuration-during-play).
+Changes made during play, and which Campaign configuration applies after undo, redo, and load, follow [Changing Campaign configuration during play](#changing-campaign-configuration-during-play).
 
 Which preset is selected, and which Preset edits exist, follows [Preset selection and edits](#preset-selection-and-edits). Presets and the completeness of each preset follow [Campaign configuration presets](#campaign-configuration-presets).
 
@@ -109,13 +109,15 @@ The Session controller reads and changes the preset selection and the Preset edi
 
 Difficulty is represented by Campaign configuration. Players must be able to change difficulty during an ongoing Campaign without restarting it or enabling [Dev mode](engine-contract.md#principals-and-access), so the Campaign configuration values representing difficulty are adjustable during play.
 
-A Campaign configuration change follows these complete rules:
+`session.campaignConfiguration.set(values)` is the one operation that changes Campaign configuration during play. It is a [Session API](engine-contract.md#api-surfaces) operation, so only the [Session controller](engine-contract.md#principals-and-access) can call it, never an [Autopilot AI](engine-contract.md#principals-and-access), and it is unavailable during an [Autopilot engagement](engine-contract.md#autopilot), under [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency). It needs a [Current campaign](core-concepts.md#campaign-and-session) and changes only that Campaign's Campaign configuration. A change follows these complete rules:
 
 - **Only adjustable values:** A change may name only values that are adjustable during play. A request naming a value that is fixed after creation is invalid.
-- **All or nothing:** The complete requested change is validated before it is committed. An invalid request leaves Campaign state unchanged.
-- **One action:** An accepted change is committed atomically as one [Timeline entry](timeline.md#glossary) and does not end the Turn.
-- **No change:** A request that leaves Campaign configuration unchanged follows the rule for an action with no effect under [Player actions](engine-contract.md#player-actions) in Engine Contract.
-- **No rewriting:** Changing Campaign configuration alone never regenerates existing [World state](campaign-state.md#glossary), rewrites past outcomes, or redraws random outcomes. Any such effect requires an explicit rule in the Mechanics specification that introduces the value.
+- **All or nothing:** The complete requested change is validated before it is applied. An invalid request is rejected and leaves Campaign state unchanged.
+- **Not a [Player action](engine-contract.md#player-actions-and-turns):** An accepted change is applied atomically and at once. It is not a [Player action](engine-contract.md#player-actions-and-turns): it adds no [Timeline entry](timeline.md#glossary), does not move the [Timeline pointer](engine-contract.md#persisted-data), is listed in no [Action record](world-history.md#glossary), does not end the Turn, and cannot be undone or redone. A request that leaves Campaign configuration unchanged is accepted and changes nothing.
+- **Sticky:** A changed value stays in force until the next change. Undo and redo within a Turn keep it, because they move only the Timeline pointer, and undo and redo across Turns keep it too, under [Autosave navigation](timeline.md#autosave-navigation) in [Timeline](engine-contract.md#persisted-data). Only a load of a Campaign save replaces it, with the value that Campaign save holds, under [Loading](saves.md#loading) in Saves.
+- **Saved at once:** An accepted change changes the Campaign state of the Current campaign, so it replaces the [Current Autosave](saves.md#autosave-kinds), under [Autosaves](saves.md#autosaves) in Saves.
+- **Future calculations only:** A change affects only calculations made after it. It never rewrites a [World state](campaign-state.md#glossary) that already exists, i.e. none that the [Timeline](engine-contract.md#persisted-data) holds, including the current [Committed state](engine-contract.md#player-actions-and-turns) and every [Undone action](timeline.md#glossary), and nothing that the [History](campaign-state.md#glossary) holds. It therefore never regenerates existing World state, rewrites past outcomes, or redraws random outcomes, and redo after a change reaches the Committed state as it was first produced.
+- **Recorded nowhere else:** No [History entry](world-history.md#glossary) or other part of Campaign state records that a change was made. The Mechanics specification that introduces a value may declare a [Turn series](world-history.md#glossary) of it, under [Turn series](world-history.md#turn-series) in History and Turn Report.
 
 Interface specifications must expose these rules and must not introduce different validation or timing.
 
@@ -126,7 +128,7 @@ The Mechanics specification that introduces a Campaign configuration value state
 - its Type and its permitted values;
 - whether it is adjustable during play or fixed after creation, under the [Campaign State glossary](campaign-state.md#glossary);
 - for a value fixed after creation, how campaign creation uses it; e.g., starting money becomes the Agency's initial money;
-- for a value adjustable during play, when a change takes effect and whether it affects existing World state, future calculations or generation, or both, including how activities already underway are treated.
+- for a value adjustable during play, which future calculations or generation a change affects, including how activities already underway are treated; a change never affects existing World state, under [Changing Campaign configuration during play](#changing-campaign-configuration-during-play).
 
 Examples of possible values are enemy count and an investigation difficulty multiplier; they establish no inventory and no balance values. The values themselves are supplied by the Campaign configuration presets, which are GDRs.
 
@@ -143,7 +145,6 @@ These examples use a Game build with two presets: Standard, the Game build defau
 - **Creation discards edits:** Select Hard, set a Preset edit of starting money 80, and create a Campaign. Afterwards the selected preset is Standard, and selecting Hard shows starting money 60 ([Preset selection and edits](#preset-selection-and-edits)).
 - **New Session starts from the default:** Select Hard, set a Preset edit of starting money 80, and end the Session without creating a Campaign. In the next Session the selected preset is Standard, and selecting Hard shows starting money 60 ([Preset selection and edits](#preset-selection-and-edits)).
 - **Invalid edit:** Set a Preset edit of starting money to a value that Campaign configuration value does not permit. The request is rejected, and Hard still shows its previous starting money ([Preset selection and edits](#preset-selection-and-edits)).
-- **Adjustment during play:** In an ongoing Campaign, submit valid values for adjustable Campaign configuration values, different from the current ones. The requested values commit together, the Turn remains unchanged, and the change is one Timeline entry ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
 - **Invalid adjustment:** Submit a change containing a value outside its permitted values. The whole request fails, and both Campaign configuration and World state remain unchanged ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
 - **Fixed value:** Submit a change containing a valid value for an adjustable value and a different value for a value that is fixed after creation. The whole request fails, and both Campaign configuration and World state remain unchanged ([Changing Campaign configuration during play](#changing-campaign-configuration-during-play)).
 - **Unset setting follows the Game build:** The player never sets the language. A later Game build changes the Game build default language, and the game starts in the new default ([Global configuration](#global-configuration)).
@@ -153,7 +154,7 @@ These examples use a Game build with two presets: Standard, the Game build defau
 
 # TODOs
 
-- TODO: Define the inventory of Campaign configuration values that are adjustable during play, e.g. the values representing difficulty, the Mechanics specification that introduces each, and the Engine API operations that change them. Only two Campaign configuration values exist so far: starting money and starting funding, under [Campaign configuration values](../mechanics/economy-and-upgrades.md#campaign-configuration-values), which are both fixed after Campaign creation, so neither is adjustable during play.
-- TODO: Define the public [Player action](engine-contract.md#player-actions-and-turns) and report signatures for [Changing Campaign configuration during play](#changing-campaign-configuration-during-play).
+- TODO: Define the inventory of Campaign configuration values that are adjustable during play, e.g. the values representing difficulty, and the Mechanics specification that introduces each. Only two Campaign configuration values exist so far: starting money and starting funding, under [Campaign configuration values](../mechanics/economy-and-upgrades.md#campaign-configuration-values), which are both fixed after Campaign creation, so neither is adjustable during play.
+- TODO: Define what `session.campaignConfiguration.set(values)` reports, under [Changing Campaign configuration during play](#changing-campaign-configuration-during-play).
 - TODO (later): Allow Campaign-specific overrides of Global configuration preferences, see [Global configuration](#global-configuration).
 - TODO (later): Store a selected preset or Preset edits beyond the Session, e.g. a player-saved custom preset or a remembered last selection, see [Preset selection and edits](#preset-selection-and-edits).

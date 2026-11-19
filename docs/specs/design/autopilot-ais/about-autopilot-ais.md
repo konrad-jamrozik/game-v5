@@ -4,9 +4,9 @@
 
 # What this family is for
 
-The Autopilot AIs family describes the Autopilot AIs that a Game build offers: for each one, what it tries to achieve when it plays a Campaign and how it prioritizes those aims. [Autopilot](../foundation/autopilot.md) in the Foundation family defines Autopilot as a game feature, i.e. how an Autopilot engagement is bounded, what any Autopilot AI receives, and how Autopilot memory behaves. It deliberately leaves out how an Autopilot AI decides what to do. This family fills that gap, one specification per Autopilot AI, so that the Implementer knows what to build behind each `autopilotAiId`.
+The Autopilot AIs family describes the Autopilot AIs that a Game build offers: for each one, what it tries to achieve when it plays a Campaign and how it prioritizes those aims. [Autopilot](../foundation/autopilot.md) in the Foundation family defines Autopilot as a game feature, i.e. how an Autopilot engagement is bounded, what any Autopilot AI receives, and how it ends. It deliberately leaves out how an Autopilot AI decides what to do. This family fills that gap, one specification per Autopilot AI, so that the Implementer knows what to build behind each `autopilotAiId`.
 
-A specification in this family describes an Autopilot AI at the level of goals and priorities, e.g. that it never deploys a team that is likely to lose. It leaves exact thresholds and algorithms to the Implementer. It adds no engine API operation and no game behavior: an Autopilot AI plays only through Player API, and every game value it reads is owned by its Mechanics specification.
+A specification in this family describes an Autopilot AI at the level of goals and priorities, e.g. that it never deploys a team that is likely to lose. It leaves exact thresholds and algorithms to the Implementer. It adds no engine API operation and none of the Game rules: an Autopilot AI plays only through Player API, and every game value it reads is owned by its Mechanics specification.
 
 # Documents
 
@@ -36,4 +36,4 @@ This family has a single specification, so there are no references within it.
 
 # Why these boundaries
 
-Autopilot AIs are kept apart from Foundation so that adding, changing, or removing an Autopilot AI never changes the Autopilot feature or any other game behavior: the engine treats every Autopilot AI the same way, whichever one the Session controller engages. They are kept apart from Mechanics because they choose among Player actions rather than define what those actions do.
+Autopilot AIs are kept apart from Foundation so that adding, changing, or removing an Autopilot AI never changes the Autopilot feature or the Game rules: the engine treats every Autopilot AI the same way, whichever one the Session controller engages. They are kept apart from Mechanics because they choose among Player actions rather than define what those actions do.
