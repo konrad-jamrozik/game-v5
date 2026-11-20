@@ -78,7 +78,7 @@ Two properties of [FactionOperationLevel](factions.md#factionoperationlevel) app
 8. **Every Faction operation level can be served:** For every key of every FactionActivityLevel's `operation_level_weights`, under [FactionActivityLevel](factions.md#factionactivitylevel) in Factions, the Game build supplies at least one MissionSiteArchetype whose `kind` is `response` and whose `operation_level` equals that key.
 9. **Existence Condition only for Initiative:** A MissionSiteArchetype whose `kind` is `response` has no `can_exist_when`. When a MissionSiteArchetype whose `kind` is `initiative` has `can_exist_when`, it is a valid Condition, under [Condition format](../foundation/conditions.md#condition-format) in Conditions, that uses no [Condition kind](../foundation/conditions.md#glossary) other than `mission_won` and `lead_completed`, each with a value its Condition kind permits.
 
-These rules guarantee that every Mission site has at least one [Enemy](domain-model.md#combat) and an expiration of at least one Advance turn, that every Enemy it names can be created, that every Consequence under [Consequences](#consequences) is a whole number, and that [MissionSiteArchetype selection](#missionsitearchetype-selection) has at least one possible value for every [Faction operation occurrence](domain-model.md#factions). That every MissionSiteArchetype the creating rule of an Initiative Mission site supplies has the `kind` `initiative` follows from the value of the `create_mission_site` Effect kind, under [Mission site Effect kind](#mission-site-effect-kind), and is validated under [Lead GDR validation](leads-and-progression.md#lead-gdr-validation).
+These rules guarantee that every Mission site has at least one [Enemy](domain-model.md#combat) and an expiration of at least one Advance turn, that every Enemy it names can be created, that every Consequence under [Consequences](#consequences) has a valid amount, and that [MissionSiteArchetype selection](#missionsitearchetype-selection) has at least one possible value for every [Faction operation occurrence](domain-model.md#factions). That every MissionSiteArchetype the creating rule of an Initiative Mission site supplies has the `kind` `initiative` follows from the value of the `create_mission_site` Effect kind, under [Mission site Effect kind](#mission-site-effect-kind), and is validated under [Lead GDR validation](leads-and-progression.md#lead-gdr-validation).
 
 ## MissionArchetype validation
 
@@ -181,7 +181,7 @@ A Mission site is a place worth going to only while there is something there to 
 
 A MissionSiteArchetype of kind `response` has no `can_exist_when`, so a Response Mission site can exist exactly when its target Faction is not Eliminated. The value decides two things, and this list is exhaustive:
 
-- **[Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions):** a Lead is available only while the Mission site it creates can exist, under [Lead availability](leads-and-progression.md#lead-availability) in Leads and Progression.
+- **[Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions):** a Lead that creates a Mission site is available only while that Mission site can exist, under [Lead availability](leads-and-progression.md#lead-availability) in Leads and Progression.
 - **Cancellation:** an Active Mission site that cannot exist is Cancelled, under [Cancellation](#cancellation).
 
 It does not decide whether a Mission site is created: a rule that creates a Mission site creates it whether or not it can exist, and Cancellation then removes it from play in the same Advance turn. `can_exist_when`, and whether it or any part of it holds, is not [Player-visible information](../foundation/engine-contract.md#api-surfaces).
@@ -401,7 +401,7 @@ Each Effect list is applied under [Applying an Effect list](../foundation/effect
 | `eliminate_faction` | The target Faction made Eliminated. | [Elimination](factions.md#elimination) in Factions |
 | `defeat` | The Campaign lost in the Ending check step of the same Advance turn, with Panic unchanged. | [Defeat Effect kind](panic-and-endings.md#defeat-effect-kind) in Panic and Endings |
 
-Only the `on_win` of a MissionSiteArchetype of kind initiative may hold an `eliminate_faction` Effect, so a Won Initiative Mission is the only thing that makes a Faction Eliminated.
+Among these Effect lists, only the `on_win` of a MissionSiteArchetype of kind initiative may hold an `eliminate_faction` Effect, so a Won Initiative Mission is the only Mission consequence that makes a Faction Eliminated. The completion of a Lead can do so too, under [Completion effect](leads-and-progression.md#completion-effect) in Leads and Progression.
 
 **Consequences for an Eliminated Faction:** A Consequence that changes a Faction, whether to its benefit or to its harm, changes nothing when that Faction is Eliminated at the moment the Consequence applies, including when another Mission resolved in the same step made it Eliminated. In scope the only such Consequence is making the target Faction Eliminated. Every other Consequence, i.e. the money, the funding change, the Panic increase, the Panic reduction, and the Defeat, changes the Agency or the Campaign, not a Faction, and applies in full whether or not the target Faction is Eliminated.
 

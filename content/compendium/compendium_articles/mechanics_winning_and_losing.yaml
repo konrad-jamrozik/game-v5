@@ -4,12 +4,12 @@ category: mechanics
 title: Winning and losing
 terms: [victory, defeat]
 body: >-
-  You win the Campaign by eliminating every Faction. You lose it if Panic reaches its limit, your money falls below
+  You win the Campaign by completing the Lead Peace on Earth, which appears once every Faction is terminated. You lose it if Panic reaches its limit, your money falls below
   zero, or you fail to stop an existential Faction operation. All are checked at the end of every turn, and a win counts
   first.
 formulas:
   - label: 'Victory'
-    text: 'Every Faction is eliminated'
+    text: 'The Lead Peace on Earth is completed'
   - label: 'Defeat by Panic'
     text: 'Panic of {endings.defeat_at_panic_pct}% or more'
   - label: 'Defeat by money'

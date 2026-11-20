@@ -76,7 +76,7 @@ The opposing organizations and their operations. [Factions](factions.md) states 
 | --- | --- | --- |
 | Faction | An organization that opposes the Agency and carries out operations in the world. |  |
 | Faction operation occurrence | One operation carried out by a Faction, which creates one Response Mission site. |  |
-| Eliminated | Permanently put out of action by a Won [Mission](domain-model.md#leads-investigations-mission-sites-and-missions): an Eliminated Faction no longer escalates or carries out operations, and it stays Eliminated for the rest of the [Campaign](../foundation/core-concepts.md#campaign-and-session). | Defeated; defeat, naming the end of a Faction. Defeat remains the Campaign ending under [Panic and Endings](panic-and-endings.md). |
+| Eliminated | Permanently put out of action, e.g. by the completion of a Lead: an Eliminated Faction no longer escalates or carries out operations, and it stays Eliminated for the rest of the [Campaign](../foundation/core-concepts.md#campaign-and-session). | Defeated; defeat, naming the end of a Faction. Defeat remains the Campaign ending under [Panic and Endings](panic-and-endings.md). |
 
 ## Campaign standing
 
@@ -175,6 +175,7 @@ The game has the following Effect kinds. This table is exhaustive.
 | `panic` | Panic. | [Panic Effect kind](panic-and-endings.md#panic-effect-kind) in Panic and Endings |
 | `eliminate_faction` | Whether a Faction is Eliminated. | [Elimination](factions.md#elimination) in Factions |
 | `defeat` | Whether the Campaign is lost in this Advance turn. | [Defeat Effect kind](panic-and-endings.md#defeat-effect-kind) in Panic and Endings |
+| `win_campaign` | Whether the Campaign is won in this Advance turn. | [Victory Effect kind](panic-and-endings.md#victory-effect-kind) in Panic and Endings |
 | `create_mission_site` | It creates one Initiative Mission site. | [Mission site Effect kind](missions.md#mission-site-effect-kind) in Missions |
 
 The following GDR properties hold an Effect list, and the specification named for each says when it is applied and which Effect kinds it may hold. This table is exhaustive.

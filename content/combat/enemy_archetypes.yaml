@@ -57,6 +57,6 @@ weapon: machine_gun
 id: cult_leader
 type: EnemyArchetype
 name: Cult leader
-base_skill: 300 # game-ts: 800
-base_health: 40 # game-ts: 80
-weapon: heavy_rifle # game-ts: damage 32
+base_skill: 800
+base_health: 80
+weapon: anti_materiel_rifle

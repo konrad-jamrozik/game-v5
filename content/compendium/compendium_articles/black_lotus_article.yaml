@@ -2,7 +2,9 @@ id: black_lotus_article
 type: CompendiumArticle
 category: subject
 subject: black_lotus
+visible_when:
+  lead_completed: black_lotus_profile
 terms: [Black Lotus]
 body: >-
-  A ruthless cult that trades in fear and silence. Follow its members back to its safehouse and its headquarters, and a
-  won raid on the headquarters ends Black Lotus for good.
+  A ruthless cult that trades in fear and silence. Follow its members up the chain to its headquarters and its leader, and a
+  final operation ends Black Lotus for good.

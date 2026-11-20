@@ -4,6 +4,6 @@ category: guide
 title: Following Leads
 body: >-
   Send Agents after a Lead and they form an Investigation, which gains progress each turn. Partway through you learn
-  roughly how much progress it needs. A completed Investigation reveals a Mission site. Taking Agents away loses
+  roughly how much progress it needs. A completed Investigation may reveal a Mission site or open the way to further Leads. Taking Agents away loses
   progress, and taking them all away abandons the Investigation.
 see_also: [mechanics_leads, mechanics_investigations]

@@ -45,6 +45,7 @@ Each Compendium article is one GDR of [Type](../foundation/core-concepts.md#game
 | `formulas` | Only for a Mechanics article, and required: an ordered list of one or more rows. Each row has exactly two properties, `label` and `text`, each templated text: what the row is about, and its formula or effect. | [Article resolution](#article-resolution) |
 | `terms` | Optional: a list of the Article terms of the article, each a word or phrase. An article without it has no Article term. | [Article links](#article-links) |
 | `see_also` | Optional: an ordered list of identifiers of other Compendium articles that the article points the Player to. | [See also](#see-also) |
+| `visible_when` | Optional: a [Condition](../foundation/conditions.md#glossary) that must hold for the article to be Player-visible, e.g. that the Lead which profiles a Faction is a Completed Lead. An article without it sets no such Condition. | [Article visibility](#article-visibility) |
 
 Templated text is plain text that may contain Placeholders, under [Placeholders](#placeholders). The templated texts of an article are its `body` and the `label` and `text` of each row of its `formulas`. An article contains no other markup: no headings, lists, emphasis, or authored links.
 
@@ -159,7 +160,7 @@ The value is read as the exact decimal number the GDR file states, under [GDR au
 **Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for CompendiumArticle GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different content, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **Category is valid:** Each CompendiumArticle has a `category` that is exactly `guide`, `mechanics`, or `subject`.
-2. **Exact properties:** Each CompendiumArticle has `body`, has `title`, `subject`, and `formulas` exactly as the table under [Article categories](#article-categories) requires for its `category`, and may have `terms` and `see_also`. Apart from `id` and `type`, no other property is present.
+2. **Exact properties:** Each CompendiumArticle has `body`, has `title`, `subject`, and `formulas` exactly as the table under [Article categories](#article-categories) requires for its `category`, and may have `terms`, `see_also`, and `visible_when`. Apart from `id` and `type`, no other property is present.
 3. **Text is present:** The `title` and the `body` are each non-empty text. `formulas` is a list of one or more rows, and each row has exactly a `label` and a `text`, each non-empty text.
 4. **Subject exists:** A `subject` identifies a GDR of the Game build whose Type is not CompendiumArticle and that has a `name` that is non-empty text.
 5. **One article per subject:** No two CompendiumArticles have the same `subject`.
@@ -167,17 +168,18 @@ The value is read as the exact decimal number the GDR file states, under [GDR au
 7. **Article terms are valid:** `terms`, when present, is a list of texts, each non-empty, without a brace, and without white space at its start or end. No two Article terms of the Game build, whether of one article or of two, are equal ignoring case.
 8. **See also is valid:** `see_also`, when present, is a list of identifiers, each identifying a CompendiumArticle of the Game build other than the article itself, and none appears twice.
 9. **Placeholders are valid:** Every templated text follows the brace rules under [Placeholders](#placeholders). Every Placeholder names a GDR the Game build supplies, or `subject` in a Subject article; names a property that GDR has and that [Placeholder sources](#placeholder-sources) allows in that form; has an index exactly when the value of the property is a list, and then one from 1 to the number of entries; and names a value that [Value formatting](#value-formatting) can show.
+10. **Visibility Condition is valid:** `visible_when`, when present, is a valid Condition, under [Condition format](../foundation/conditions.md#condition-format) in Conditions, that uses no [Condition kind](../foundation/conditions.md#glossary) other than `lead_completed`, under [Lead completed Condition kind](leads-and-progression.md#lead-completed-condition-kind) in Leads and Progression.
 
 Rule 9 makes a renamed or removed GDR property a data defect of every article that still names it, so an article cannot silently keep an outdated value. The Game build may supply any number of CompendiumArticles, including none, and a GDR may have no article. An Article term need not occur in any article.
 
 # Article visibility
 
-**Proposed rule:** In each [World state](../foundation/engine-contract.md#player-actions-and-turns), a Compendium article is Player-visible exactly when one of the following holds:
+**Proposed rule:** In each [World state](../foundation/engine-contract.md#player-actions-and-turns), a Compendium article is Player-visible exactly when its `visible_when`, if it has one, holds in that World state, under [Evaluating a Condition](../foundation/conditions.md#evaluating-a-condition) in Conditions, and one of the following holds:
 
 1. It is a Guide article or a Mechanics article.
 2. It is a Subject article and its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR.
 
-Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the World state in which it is read; it is never stored. It changes only when the visibility of its subject changes, so a Subject article becomes Player-visible in the same World state as its subject, e.g. in the World state after the Advance turn whose Mission resolution step discovers its Lead.
+Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the World state in which it is read; it is never stored. It changes only when the visibility of its subject changes or its `visible_when` starts to hold, so a Subject article without `visible_when` becomes Player-visible in the same World state as its subject, e.g. in the World state after the Advance turn whose Mission resolution step discovers its Lead.
 
 The following table restates, for the Types the [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) supply Subject articles for, when the specification that owns each Type makes one of its GDRs Player-visible. It is informative; each owning specification's Player-visible information section governs.
 

@@ -89,7 +89,7 @@ const REFERENCE_PROPERTIES: Readonly<Record<string, readonly string[]>> = {
   EnemyArchetype: ['weapon'],
 }
 
-const ARTICLE_PROPERTIES = ['category', 'title', 'body', 'subject', 'formulas', 'terms', 'see_also']
+const ARTICLE_PROPERTIES = ['category', 'title', 'body', 'subject', 'formulas', 'terms', 'see_also', 'visible_when']
 const CATEGORIES: readonly ArticleCategory[] = ['guide', 'mechanics', 'subject']
 
 function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
@@ -102,6 +102,25 @@ function isText(value: unknown): value is string {
 
 function compareText(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0
+}
+
+/** What is wrong with a `visible_when` Condition, which may use the Condition kind `lead_completed` only. */
+function visibilityConditionFindings(condition: unknown, gameData: GameData): string[] {
+  if (!isRecord(condition) || Object.keys(condition).length !== 1) {
+    return ['visible_when is a Condition, i.e. a map with exactly one key.']
+  }
+  const [key, value] = Object.entries(condition)[0] ?? ['', undefined]
+  if (key === 'all' || key === 'any') {
+    if (!Array.isArray(value)) return [`visible_when: ${key} holds a list of Conditions.`]
+    return value.flatMap((part: unknown) => visibilityConditionFindings(part, gameData))
+  }
+  if (key === 'not') return visibilityConditionFindings(value, gameData)
+  if (key !== 'lead_completed')
+    return [`visible_when uses the Condition kind "${key}"; only lead_completed is allowed.`]
+  if (!isText(value) || gameData.gdrs.get(value)?.type !== 'Lead') {
+    return [`visible_when: lead_completed names "${String(value)}", which is no Lead.`]
+  }
+  return []
 }
 
 /** Reads every GDR of the YAML files under `content/`. A file may hold several GDRs, one YAML document each. */
@@ -286,6 +305,10 @@ export function loadCompendium(gameData: GameData): Compendium {
     const { category, title, body, subject, formulas, terms, see_also: seeAlso } = gdr.properties
     const unknown = Object.keys(gdr.properties).filter((property) => !ARTICLE_PROPERTIES.includes(property))
     if (unknown.length > 0) report(`unknown properties: ${unknown.join(', ')}.`)
+    const visibleWhen = gdr.properties['visible_when']
+    if (visibleWhen !== undefined) {
+      for (const finding of visibilityConditionFindings(visibleWhen, gameData)) report(finding)
+    }
     const articleCategory = CATEGORIES.find((candidate) => candidate === category)
     if (!articleCategory) {
       report('category is guide, mechanics, or subject.')

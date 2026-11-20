@@ -189,7 +189,7 @@ A Faction operation occurrence does not depend on any existing Mission site. In 
 
 # Elimination
 
-**Proposed rule:** Eliminated is a permanent fact of a Faction. It changes exactly once at most, from no to yes, and never back. Only a Mission consequence under [Consequences](missions.md#consequences) makes a Faction Eliminated.
+**Proposed rule:** Eliminated is a permanent fact of a Faction. It changes exactly once at most, from no to yes, and never back. Only an `eliminate_faction` [Effect](../foundation/effect-lists.md#glossary) makes a Faction Eliminated: one applied by the [Completion effect](leads-and-progression.md#completion-effect) of a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions), or one applied as a Mission consequence under [Consequences](missions.md#consequences).
 
 Making a Faction F Eliminated during an Advance turn has the following complete effects on F, applied at once:
 
@@ -210,27 +210,28 @@ The following table states every change of Eliminated. Every change not listed, 
 
 | From | To | Trigger | Condition |
 | --- | --- | --- | --- |
-| No | Yes | A Mission consequence under [Consequences](missions.md#consequences) eliminates the Faction. | None. |
+| No | Yes | An `eliminate_faction` Effect is applied to the Faction, by the [Completion effect](leads-and-progression.md#completion-effect) of a Lead or by a Mission consequence under [Consequences](missions.md#consequences). | None. |
 
 A Faction whose Eliminated is yes no longer does any of the following; the list is exhaustive for the Faction rules:
 
 - It no longer escalates: [Escalation](#escalation) does not apply to it.
 - It no longer carries out operations: no Faction operation occurrence of it happens, so it creates no further Response Mission site.
 
-What becomes of Mission sites that target a Eliminated Faction, whether a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) of a Eliminated Faction is available, and whether every Faction being Eliminated ends the Campaign are stated by [Missions](missions.md), [Leads and Progression](leads-and-progression.md), and [Panic and Endings](panic-and-endings.md).
+What becomes of Mission sites that target a Eliminated Faction, whether a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) of a Eliminated Faction is available, and what wins the Campaign are stated by [Missions](missions.md), [Leads and Progression](leads-and-progression.md), and [Panic and Endings](panic-and-endings.md).
 
 # Turn report
 
-**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Faction whose Faction activity level escalated in it or that had a Faction operation occurrence in it, in the order of the Factions' Instance IDs, from the lowest number, its Instance ID, the Faction activity level it escalated to, if it escalated, and the Response Mission site its Faction operation occurrence created with that occurrence's FactionOperationLevel, if one happened. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds the Factions that escalated in it, by Instance ID. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report; neither reveals either countdown, under [Player-visible information](#player-visible-information).
+**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Faction that had a Faction operation occurrence in it, in the order of the Factions' Instance IDs, from the lowest number, its Instance ID and the Response Mission site its Faction operation occurrence created with that occurrence's FactionOperationLevel. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds nothing of a Faction beyond what [Missions](missions.md) holds of that Response Mission site. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. Neither holds whether a Faction escalated, and neither reveals either countdown, under [Player-visible information](#player-visible-information).
 
 # Player-visible information
 
-**Proposed rule:** Each Faction value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces), or not, as the table states, under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces). The table is exhaustive. Each Player-visible value is visible from campaign creation, without a reveal condition, for every Faction, whether or not it is Eliminated.
+**Proposed rule:** Each Faction value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces), or not, as the table states, under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces). The table is exhaustive. Each Player-visible value is visible from campaign creation, without a reveal condition, for every Faction, whether or not it is Eliminated. How dangerous a Faction has become is never shown: the player judges it from the operations the Faction carries out.
 
 | Value | Player-visible information |
 | --- | --- |
 | A Faction's Instance ID and its FactionArchetype, including the FactionArchetype's `name` | Yes |
-| A Faction's Faction activity level, including every property of that FactionActivityLevel: `name`, `lasts_turns`, `operation_every_turns`, `operation_level_weights`, and `next` | Yes |
+| A Faction's Faction activity level, and that it has moved to a new one | No |
+| The FactionActivityLevels the Game build supplies, with their properties `name`, `lasts_turns`, `operation_every_turns`, `operation_level_weights`, and `next` | No |
 | Every FactionOperationLevel's `level` and `name` | Yes |
 | A Faction's Eliminated and Eliminated turn | Yes |
 | A Faction's Turns until the next level | No |
@@ -238,9 +239,9 @@ What becomes of Mission sites that target a Eliminated Faction, whether a [Lead]
 | The value of every Level duration outcome and every Operation interval outcome | No |
 | The initiating Faction, Faction operation level, and turn number of each Faction operation occurrence | Yes, once the occurrence has happened, through its Response Mission site under [Missions](missions.md) |
 
-**Hidden versus absent:** Player API returns no property for either countdown of any Faction. It never reports a hidden countdown as zero, as empty, or as absent, and it reports nothing that distinguishes a present Turns until the next level from an absent one. The player tells a final Faction activity level, at which Turns until the next level is absent, from the visible `next` of that level being `null`, never from the countdown. Eliminated turn is never hidden: when Player API reports it as absent, the Faction is not Eliminated.
+**Hidden versus absent:** Player API returns no property for either countdown of any Faction. It never reports a hidden countdown as zero, as empty, or as absent, and it reports nothing that distinguishes a present countdown from an absent one, so the player cannot tell a Faction at a final Faction activity level, or at a level without operations, from any other. Eliminated turn is never hidden: when Player API reports it as absent, the Faction is not Eliminated.
 
-Under [Information boundary](../foundation/player-api.md#information-boundary) in Player API, no channel of Player API reveals either countdown, e.g. neither a validation error nor the [Turn report](../foundation/campaign-state.md#glossary) nor a [History entry](../foundation/world-history.md#glossary) states how many Advance turns remain before a Faction moves to its next level or carries out its next operation. That a Faction operation occurrence has happened is visible through its Response Mission site, and that a Faction has moved to a new level is visible through its Faction activity level; neither reveals the new value of either countdown. The countdowns are available only through [Developer API](../foundation/engine-contract.md#api-surfaces).
+Under [Information boundary](../foundation/player-api.md#information-boundary) in Player API, no channel of Player API reveals either countdown, e.g. neither a validation error nor the [Turn report](../foundation/campaign-state.md#glossary) nor a [History entry](../foundation/world-history.md#glossary) states how many Advance turns remain before a Faction moves to its next level or carries out its next operation. That a Faction operation occurrence has happened is visible through its Response Mission site, which reveals neither countdown. That a Faction has moved to a new level is not visible. The Faction activity level and the countdowns are available only through [Developer API](../foundation/engine-contract.md#api-surfaces).
 
 # Edge cases and failure behavior
 
@@ -261,4 +262,3 @@ Under [Information boundary](../foundation/player-api.md#information-boundary) i
 # TODOs
 
 - TODO (later): Faction suppression, under [Faction activity](#faction-activity).
-- TODO (later): Faction discovery, under [Player-visible information](#player-visible-information).

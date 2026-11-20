@@ -5,7 +5,7 @@ title: Investigations
 terms: [Investigation, Investigations]
 body: >-
   An Investigation is a team of Agents following a Lead. Each turn the team adds progress from its skill, and when the
-  progress reaches a hidden target the Investigation completes and reveals a Mission site. Pulling Agents out loses
+  progress reaches a hidden target the Investigation completes and takes effect, e.g. by revealing a Mission site. Pulling Agents out loses
   progress, and pulling them all out abandons the Investigation.
 formulas:
   - label: 'Progress each turn'
@@ -21,7 +21,7 @@ formulas:
   - label: 'Removing every Agent'
     text: 'The Investigation is abandoned; a new one starts from zero'
   - label: 'Completion'
-    text: 'A Mission site appears, and the team goes to Standby, in transit'
+    text: 'The effect of the Lead takes place, e.g. a Mission site appears, and the team goes to Standby, in transit'
   - label: 'Exhaustion'
     text: '+{agent_parameters.exhaustion_per_investigation_turn} for each Agent each turn of work'
   - label: 'Joining'

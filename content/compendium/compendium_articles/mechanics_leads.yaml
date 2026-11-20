@@ -4,8 +4,8 @@ category: mechanics
 title: Leads
 terms: [Lead, Leads]
 body: >-
-  A Lead is a trail your Agents can follow. An Investigation that follows it to the end reveals a Mission site, and
-  winning the Mission there can uncover the next Lead. You see only the Leads you have discovered.
+  A Lead is a trail your Agents can follow. An Investigation that follows it to the end may reveal a Mission site, and
+  winning the Mission there or completing the Lead can uncover the next Lead. You see only the Leads you have discovered.
 formulas:
   - label: 'Discovery'
     text: 'A Lead appears when its hidden condition is met, e.g. by a won Mission, and stays known'

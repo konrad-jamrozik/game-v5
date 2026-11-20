@@ -32,3 +32,8 @@ id: machine_gun
 type: Weapon
 name: Machine gun
 base_weapon_damage: 28
+---
+id: anti_materiel_rifle
+type: Weapon
+name: Anti-materiel rifle
+base_weapon_damage: 32
