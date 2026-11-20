@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "4173", "--directory", "lib/globe"],
       "port": 4173
+    },
+    {
+      "name": "gdr-balance-bench",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/gdr-balance-bench/server.ts"],
+      "port": 4717
     }
   ]
 }

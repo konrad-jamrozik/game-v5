@@ -21,6 +21,7 @@
     "docs:link-terms": "node scripts/link-terms.ts",
     "docs:plain": "node scripts/plain-docs.ts",
     "artboards:export": "node scripts/export-artboards.ts",
+    "balance:bench": "node tools/gdr-balance-bench/server.ts",
     "lint": "npm run lint:specs && npm run lint:code",
     "lint:fix": "npm run lint:specs && npm run lint:code -- --fix",
     "format": "oxfmt . --write",

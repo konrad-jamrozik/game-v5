@@ -45,30 +45,31 @@ When agents run in [T3 Code](https://github.com/pingdotgg/t3code), the skills th
 
 ## Commands
 
-| Command                    | Purpose                                                       |
-| -------------------------- | ------------------------------------------------------------- |
-| `npm run typecheck`        | Check tests and tooling                                       |
-| `npm run lint:code`        | Run type-aware Oxlint; warnings fail                          |
-| `npm run lint:specs`       | Deterministically lint registered specifications              |
-| `npm run compendium:check` | Check the Compendium articles against the game data           |
-| `npm run docs:generate`    | Update views derived from registered specifications           |
-| `npm run docs:check`       | Check that derived specification views are current            |
-| `npm run docs:link-terms`  | Link the first mention of every term to its definition        |
-| `npm run docs:plain`       | Print specifications with every link reduced to its label     |
+| Command | Purpose |
+| --- | --- |
+| `npm run typecheck` | Check tests and tooling |
+| `npm run lint:code` | Run type-aware Oxlint; warnings fail |
+| `npm run lint:specs` | Deterministically lint registered specifications |
+| `npm run compendium:check` | Check the Compendium articles against the game data |
+| `npm run docs:generate` | Update views derived from registered specifications |
+| `npm run docs:check` | Check that derived specification views are current |
+| `npm run docs:link-terms` | Link the first mention of every term to its definition |
+| `npm run docs:plain` | Print specifications with every link reduced to its label |
 | `npm run artboards:export` | Export Artboard images from a local copy of the Design canvas |
-| `npm run terms:report`     | List the first mention of every term in every specification   |
-| `npm run lint`             | Run code and specification linting                            |
-| `npm run fix`              | Link terms, regenerate derived views, format, fix code lint   |
-| `npm run lint:fix`         | Fix code lint, then check specifications read-only            |
-| `npm run check:commit`     | Run the read-only checks used by the commit hook              |
-| `npm run format`           | Format supported files                                        |
-| `npm run format:check`     | Check formatting without editing                              |
-| `npm test`                 | Run tests once                                                |
-| `npm run test:watch`       | Watch tests                                                   |
-| `npm run test:ui`          | Start the local Vitest UI                                     |
-| `npm run test:coverage`    | Generate text, HTML, and LCOV reports in `coverage/`          |
-| `npm run hooks:install`    | Enable the tracked Git hooks for this checkout                |
-| `npm run check`            | Run the same validation used in CI                            |
+| `npm run balance:bench` | Serve the [GDR Balance Bench](tools/gdr-balance-bench/README.md), a local page for balancing GDR values |
+| `npm run terms:report` | List the first mention of every term in every specification |
+| `npm run lint` | Run code and specification linting |
+| `npm run fix` | Link terms, regenerate derived views, format, fix code lint |
+| `npm run lint:fix` | Fix code lint, then check specifications read-only |
+| `npm run check:commit` | Run the read-only checks used by the commit hook |
+| `npm run format` | Format supported files |
+| `npm run format:check` | Check formatting without editing |
+| `npm test` | Run tests once |
+| `npm run test:watch` | Watch tests |
+| `npm run test:ui` | Start the local Vitest UI |
+| `npm run test:coverage` | Generate text, HTML, and LCOV reports in `coverage/` |
+| `npm run hooks:install` | Enable the tracked Git hooks for this checkout |
+| `npm run check` | Run the same validation used in CI |
 
 ## Verification
 

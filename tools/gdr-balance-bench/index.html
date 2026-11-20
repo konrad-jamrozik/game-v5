@@ -1,0 +1,1651 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GDR Balance Bench</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      /* Layout: one section per mechanic; in each, the GDR values on the left and what they cause on the right.
+   Single dark look on purpose: the palette and type are the game's own Visual Design tokens. */
+      :root {
+        color-scheme: dark;
+        --bg: #0d0d0b;
+        --surface: #151512;
+        --raised: #22211c;
+        --divider: #2b2a24;
+        --border: #3a382f;
+        --text: #e8e4d8;
+        --text2: #b8b3a6;
+        --muted: #9c978a;
+        --axis: #8f8a7d;
+        --accent: #ff7a1a;
+        --accent-dim: #7a4a22;
+        --accent-text: #ff8a33;
+        --on-accent: #1a0b00;
+        --positive: #b7c77a;
+        --warning: #e3c14b;
+        --danger: #ff7f78;
+        --notice: #8fb8d6;
+        --limit: rgba(229, 72, 77, 0.12);
+        --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+        --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
+        --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.5 var(--body);
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0 0 auto;
+        height: env(safe-area-inset-top, 0px);
+        z-index: 10;
+        background: var(--bg);
+      }
+      .wrap {
+        max-width: 2200px;
+        margin: 0 auto;
+        padding-block: 20px 80px;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+      }
+      h1,
+      h2,
+      h3,
+      th,
+      .lbl,
+      button,
+      nav a {
+        font-family: var(--head);
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: 34px;
+        letter-spacing: 0.04em;
+        margin: 0;
+        line-height: 1.1;
+      }
+      h2 {
+        font-size: 22px;
+        letter-spacing: 0.08em;
+        margin: 0;
+      }
+      h3 {
+        font-size: 16px;
+        letter-spacing: 0.08em;
+        margin: 0;
+        color: var(--text2);
+      }
+      p {
+        margin: 0;
+        color: var(--text2);
+        max-width: 68ch;
+      }
+      code,
+      input,
+      select,
+      .num,
+      td,
+      textarea {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+      }
+      code {
+        font-size: 13px;
+        color: var(--text);
+      }
+      .intro {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .bar {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 5;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        align-items: center;
+        padding-block: 10px;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 14px;
+        flex: 1 1 auto;
+      }
+      nav a {
+        color: var(--text2);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+      }
+      nav a:hover,
+      nav a:focus-visible {
+        color: var(--accent-text);
+      }
+      .acts {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      #count {
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--muted);
+      }
+      #count.on {
+        color: var(--accent-text);
+      }
+      button {
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+        background: var(--raised);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 5px 12px;
+        cursor: pointer;
+      }
+      button.pri {
+        background: var(--accent);
+        color: var(--on-accent);
+        border-color: var(--accent);
+      }
+      button:hover {
+        border-color: var(--text2);
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        scroll-margin-top: 70px;
+      }
+      .shead {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .cols {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 0;
+      }
+      .panel {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0;
+      }
+      .panel.read {
+        border-top-color: var(--accent-dim);
+      }
+      .src {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted);
+        overflow-wrap: anywhere;
+      }
+      .kv {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--raised);
+      }
+      .kv:last-child {
+        border-bottom: 0;
+      }
+      .k {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .k code {
+        overflow-wrap: anywhere;
+      }
+      .k small,
+      .note {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+      input,
+      select {
+        background: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 4px 6px;
+        font-size: 13px;
+        width: 84px;
+        text-align: right;
+        flex: none;
+      }
+      select {
+        width: auto;
+        text-align: left;
+      }
+      td input {
+        width: 58px;
+      }
+      td.w input {
+        width: 44px;
+      }
+      td.w {
+        padding-inline: 3px;
+      }
+      input.chg,
+      select.chg {
+        border-color: var(--accent);
+        color: var(--accent-text);
+      }
+      .tw {
+        overflow-x: auto;
+        min-width: 0;
+      }
+      table {
+        border-collapse: collapse;
+        font-size: 13px;
+        width: 100%;
+      }
+      th {
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-align: right;
+        padding: 4px 6px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        vertical-align: bottom;
+      }
+      td {
+        padding: 3px 6px;
+        text-align: right;
+        border-bottom: 1px solid var(--raised);
+        white-space: nowrap;
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+      td.name {
+        font-family: var(--body);
+        color: var(--text);
+      }
+      td.d,
+      th.d {
+        color: var(--text2);
+        background: rgba(255, 122, 26, 0.04);
+      }
+      th.d {
+        color: var(--accent-dim);
+        color: var(--muted);
+      }
+      tr.sep td {
+        border-top: 1px solid var(--border);
+      }
+      .out {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 4px 16px;
+        align-items: baseline;
+      }
+      .out dt {
+        color: var(--text2);
+      }
+      .out dd {
+        margin: 0;
+        font-family: var(--mono);
+        color: var(--accent-text);
+        text-align: right;
+      }
+      .out dd small {
+        color: var(--muted);
+      }
+      .ctl {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+      }
+      .ctl label {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .lbl {
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+      }
+      .meter {
+        display: inline-block;
+        width: 70px;
+        height: 8px;
+        background: var(--divider);
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+      .meter i {
+        display: block;
+        height: 100%;
+      }
+      .good {
+        color: var(--positive);
+      }
+      .warn {
+        color: var(--warning);
+      }
+      .bad {
+        color: var(--danger);
+      }
+      .chart {
+        position: relative;
+      }
+      .chart svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .tip {
+        position: absolute;
+        top: 0;
+        pointer-events: none;
+        background: var(--raised);
+        border: 1px solid var(--border);
+        padding: 4px 8px;
+        font: 12px var(--mono);
+        white-space: nowrap;
+        transform: translateX(-50%);
+      }
+      .chg-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .chg-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        padding: 4px 0;
+        border-bottom: 1px solid var(--raised);
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+      .chg-row span {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .chg-row b {
+        color: var(--accent-text);
+        font-weight: 500;
+      }
+      .chg-row button {
+        padding: 1px 8px;
+        font-size: 12px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 150px;
+        background: var(--bg);
+        color: var(--text2);
+        border: 1px solid var(--border);
+        padding: 8px;
+        font-size: 12px;
+        resize: vertical;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="intro">
+        <h1>GDR Balance Bench</h1>
+        <p>
+          Every balance value of the Bootstrap GDRs, next to what it causes. Change a value and the readouts recompute
+          from the rules of the specifications. Nothing here writes to the repository: copy the list of changes at the
+          bottom and hand it to Claude to apply to <code>content/</code>. The GDR values are read from
+          <code>content/</code>, and the engine is run from the <code>game-v5-impl-web</code> clone, each time this page
+          loads.
+        </p>
+      </div>
+      <div class="bar">
+        <nav>
+          <a href="#combat">Combat</a><a href="#agents">Agents</a><a href="#economy">Economy</a
+          ><a href="#leads">Leads</a><a href="#factions">Factions</a><a href="#changes">Changes</a>
+        </nav>
+        <div class="acts">
+          <span id="count">0 changed</span><button class="pri" id="copy">Copy changes</button
+          ><button id="reset">Reset all</button>
+        </div>
+      </div>
+      <div id="app" style="display: contents"></div>
+    </div>
+
+    <script>
+      'use strict'
+      /* ---------- Bootstrap GDR values, copied from content/*.yaml ---------- */
+      const EN = [
+        'initiate',
+        'operative',
+        'handler',
+        'soldier',
+        'lieutenant',
+        'elite',
+        'commander',
+        'high_commander',
+        'cult_leader',
+      ]
+      const EN_AB = {
+        initiate: 'Init',
+        operative: 'Oper',
+        handler: 'Hand',
+        soldier: 'Sold',
+        lieutenant: 'Lieut',
+        elite: 'Elite',
+        commander: 'Cmdr',
+        high_commander: 'HiCmd',
+        cult_leader: 'Cult',
+      }
+      const WP = [
+        'pistol',
+        'sidearm',
+        'rifle',
+        'battle_rifle',
+        'assault_rifle',
+        'heavy_rifle',
+        'machine_gun',
+        'anti_materiel_rifle',
+      ]
+      const UP = [
+        'agent_cap',
+        'transport_cap',
+        'training_cap',
+        'weapon_damage',
+        'max_health',
+        'training_skill_gain',
+        'exhaustion_recovery',
+        'health_recovery',
+      ]
+      const AL = ['dormant', 'faint', 'emerging', 'active', 'expanding', 'escalating', 'war', 'total_war']
+      const FA = ['red_dawn', 'exalt', 'black_lotus']
+      const OL = [1, 2, 3, 4, 5, 6].map((n) => 'operation_level_' + n)
+      const site = (kind, lv, exp, en, win) => {
+        const e = {}
+        EN.forEach((k) => (e[k] = en[k] || 0))
+        const s = { kind, expires_in_turns: exp, enemies: e }
+        if (lv) s.level = lv
+        if (win) s.on_win = win
+        return s
+      }
+      const lvl = (lasts, every, w) => {
+        const o = { lasts_turns: lasts, operation_every_turns: every, operation_level_weights: {} }
+        if (every) for (let i = 1; i <= 6; i++) o.operation_level_weights[i] = w[i - 1] || 0
+        return o
+      }
+      const BASE = {
+        standard: { starting_money: 500, starting_funding: 20 },
+        field_agent: { base_skill: 100, base_health: 30, weapon: 'sidearm' },
+        agent_parameters: {
+          initial_roster_size: 4,
+          exhaustion_incapacitation: 100,
+          exhaustion_free_points: 30,
+          skill_penalty_pct_per_exhaustion: 1,
+          exhaustion_per_attack: 1,
+          exhaustion_per_defense: 1,
+          exhaustion_per_mission: 5,
+          exhaustion_per_pct_killed: 1,
+          exhaustion_per_contracting_turn: 1,
+          exhaustion_per_training_turn: 1,
+          exhaustion_per_investigation_turn: 1,
+          exhaustion_work_start_max: 30,
+          exhaustion_work_limit: 70,
+          training_skill_gain_per_turn: 1,
+          experience_per_attack_hit: 4,
+          experience_per_attack_miss: 2,
+          experience_per_defense_hit: 1,
+          experience_per_defense_miss: 2,
+          experience_per_mission_survived: [30, 25, 20, 15],
+        },
+        combat_parameters: {
+          weapon_damage_range: 0.5,
+          retreat_below_agent_rating_fraction: 0.5,
+          retreat_at_enemy_to_agent_rating: 0.8,
+          incapacitation_skill_fraction: 0.1,
+        },
+        recovery: { health_recovery_pct_per_turn: 2, exhaustion_recovery_per_turn: 5 },
+        economy: {
+          hire_cost: 50,
+          upkeep_per_agent: 10,
+          contracting_income_per_agent: 30,
+          base_agent_cap: 20,
+          base_transport_cap: 4,
+          base_training_cap: 4,
+        },
+        investigation_parameters: {
+          team_efficiency_exponent: 0.8,
+          required_progress_max_pct: 150,
+          assessment_threshold_pct: 25,
+        },
+        endings: { defeat_at_panic_pct: 100 },
+        initiate: { base_skill: 40, base_health: 20, weapon: 'pistol' },
+        operative: { base_skill: 60, base_health: 25, weapon: 'sidearm' },
+        handler: { base_skill: 80, base_health: 25, weapon: 'sidearm' },
+        soldier: { base_skill: 120, base_health: 30, weapon: 'rifle' },
+        lieutenant: { base_skill: 140, base_health: 30, weapon: 'battle_rifle' },
+        elite: { base_skill: 250, base_health: 40, weapon: 'assault_rifle' },
+        commander: { base_skill: 300, base_health: 40, weapon: 'heavy_rifle' },
+        high_commander: { base_skill: 500, base_health: 50, weapon: 'machine_gun' },
+        cult_leader: { base_skill: 800, base_health: 80, weapon: 'anti_materiel_rifle' },
+        pistol: { base_weapon_damage: 8 },
+        sidearm: { base_weapon_damage: 10 },
+        rifle: { base_weapon_damage: 14 },
+        battle_rifle: { base_weapon_damage: 16 },
+        assault_rifle: { base_weapon_damage: 20 },
+        heavy_rifle: { base_weapon_damage: 22 },
+        machine_gun: { base_weapon_damage: 28 },
+        anti_materiel_rifle: { base_weapon_damage: 32 },
+        agent_cap: { price: 200, increment: 4 },
+        transport_cap: { price: 1000, increment: 2 },
+        training_cap: { price: 200, increment: 4 },
+        weapon_damage: { price: 500, increment: 1 },
+        max_health: { price: 500, increment: 1 },
+        training_skill_gain: { price: 500, increment: 0.1 },
+        exhaustion_recovery: { price: 500, increment: 0.5 },
+        health_recovery: { price: 500, increment: 0.2 },
+        red_dawn: { initial_activity_level: 'faint' },
+        exalt: { initial_activity_level: 'dormant' },
+        black_lotus: { initial_activity_level: 'dormant' },
+        dormant: lvl([15, 30], null),
+        faint: lvl([60, 90], [15, 25], [80, 20]),
+        emerging: lvl([60, 90], [13, 23], [60, 30, 10]),
+        active: lvl([60, 90], [11, 21], [40, 40, 15, 5]),
+        expanding: lvl([60, 90], [10, 20], [30, 30, 30, 10]),
+        escalating: lvl([60, 90], [9, 19], [20, 25, 35, 15, 5]),
+        war: lvl([60, 90], [8, 18], [15, 20, 30, 20, 10, 5]),
+        total_war: lvl(null, [7, 17], [10, 15, 25, 25, 15, 10]),
+        operation_level_1: { on_win: { money: 10, funding: 0 }, on_ignored_or_lost: { panic: 0.02, funding: 0 } },
+        operation_level_2: { on_win: { money: 30, funding: 5 }, on_ignored_or_lost: { panic: 0.1, funding: -1 } },
+        operation_level_3: { on_win: { money: 100, funding: 20 }, on_ignored_or_lost: { panic: 0.3, funding: -4 } },
+        operation_level_4: { on_win: { money: 300, funding: 40 }, on_ignored_or_lost: { panic: 1, funding: -8 } },
+        operation_level_5: { on_win: { money: 1000, funding: 80 }, on_ignored_or_lost: { panic: 3, funding: -16 } },
+        operation_level_6: {},
+        apprehend_member: site(
+          'initiative',
+          0,
+          5,
+          { initiate: 2, operative: 1 },
+          { money: 5, funding: 0, panic: -0.05 },
+        ),
+        raid_safehouse: site(
+          'initiative',
+          0,
+          8,
+          { initiate: 4, operative: 4, handler: 1 },
+          { money: 100, funding: 5, panic: -0.1 },
+        ),
+        raid_outpost: site(
+          'initiative',
+          0,
+          10,
+          { initiate: 12, operative: 8, soldier: 3, handler: 4 },
+          { money: 400, funding: 10, panic: -0.5 },
+        ),
+        raid_training_facility: site(
+          'initiative',
+          0,
+          12,
+          { initiate: 40, operative: 20, soldier: 4, handler: 10, lieutenant: 1 },
+          { money: 800, funding: 15, panic: -1 },
+        ),
+        raid_logistics_hub: site(
+          'initiative',
+          0,
+          15,
+          { initiate: 32, operative: 16, soldier: 20, elite: 4, handler: 6, lieutenant: 4, commander: 1 },
+          { money: 2000, funding: 20, panic: -2 },
+        ),
+        raid_command_center: site(
+          'initiative',
+          0,
+          20,
+          { initiate: 20, operative: 20, soldier: 30, elite: 10, handler: 8, lieutenant: 6, commander: 3 },
+          { money: 3000, funding: 25, panic: -5 },
+        ),
+        raid_regional_stronghold: site(
+          'initiative',
+          0,
+          30,
+          {
+            initiate: 20,
+            operative: 40,
+            soldier: 40,
+            elite: 12,
+            handler: 10,
+            lieutenant: 8,
+            commander: 3,
+            high_commander: 1,
+          },
+          { money: 5000, funding: 50, panic: -10 },
+        ),
+        raid_hq: site(
+          'initiative',
+          0,
+          40,
+          { soldier: 60, elite: 30, lieutenant: 12, commander: 6, high_commander: 2, cult_leader: 1 },
+          { money: 10000, funding: 100, panic: -20 },
+        ),
+        foil_recruitment_push: site('response', 1, 3, { initiate: 4, operative: 1 }),
+        foil_supply_theft: site('response', 1, 3, { initiate: 4, operative: 3 }),
+        foil_business_extortion: site('response', 1, 3, { initiate: 6, operative: 2, handler: 1 }),
+        foil_sabotage: site('response', 2, 4, { initiate: 2, operative: 2, soldier: 2, handler: 1, lieutenant: 1 }),
+        foil_vip_assassination: site('response', 2, 4, { initiate: 4, operative: 4, soldier: 2, handler: 1 }),
+        defend_against_office_raid: site('response', 2, 4, {
+          initiate: 4,
+          operative: 4,
+          soldier: 4,
+          handler: 1,
+          lieutenant: 1,
+        }),
+        foil_financial_heist: site('response', 3, 5, {
+          initiate: 10,
+          operative: 10,
+          soldier: 8,
+          handler: 4,
+          lieutenant: 2,
+        }),
+        intercept_arms_deal: site('response', 3, 5, {
+          initiate: 12,
+          operative: 12,
+          soldier: 10,
+          elite: 2,
+          handler: 4,
+          lieutenant: 2,
+          commander: 1,
+        }),
+        defend_against_facility_raid: site('response', 3, 5, {
+          initiate: 16,
+          operative: 12,
+          soldier: 12,
+          elite: 2,
+          handler: 6,
+          lieutenant: 3,
+          commander: 1,
+        }),
+        counter_civilian_terror: site('response', 4, 6, {
+          initiate: 30,
+          operative: 24,
+          soldier: 15,
+          elite: 4,
+          handler: 10,
+          lieutenant: 3,
+          commander: 1,
+        }),
+        defend_against_city_government_assault: site('response', 4, 6, {
+          initiate: 24,
+          operative: 24,
+          soldier: 20,
+          elite: 8,
+          handler: 6,
+          lieutenant: 4,
+          commander: 2,
+        }),
+        defend_against_retaliation_strike: site('response', 4, 6, {
+          initiate: 24,
+          operative: 8,
+          soldier: 24,
+          elite: 8,
+          handler: 4,
+          lieutenant: 6,
+          commander: 3,
+        }),
+        foil_coup_attempt: site('response', 5, 7, {
+          operative: 20,
+          soldier: 20,
+          elite: 20,
+          lieutenant: 5,
+          commander: 5,
+          high_commander: 1,
+        }),
+        foil_nuclear_plant_bombing: site('response', 5, 7, {
+          initiate: 28,
+          operative: 24,
+          soldier: 20,
+          elite: 12,
+          handler: 10,
+          lieutenant: 5,
+          commander: 3,
+          high_commander: 1,
+        }),
+        defend_military_installation: site('response', 5, 7, {
+          initiate: 20,
+          operative: 30,
+          soldier: 24,
+          elite: 12,
+          handler: 7,
+          lieutenant: 6,
+          commander: 3,
+          high_commander: 1,
+        }),
+        defend_against_hq_assault: site('response', 6, 8, {
+          initiate: 40,
+          operative: 40,
+          soldier: 40,
+          elite: 10,
+          handler: 10,
+          lieutenant: 10,
+          commander: 4,
+          high_commander: 1,
+        }),
+      }
+      const LEADS = [
+        ['criminal_organizations', 3],
+        ['locate_<faction>_member', 3, 'apprehend_member'],
+        ['interrogate_<faction>_member', 3],
+        ['<faction>_profile', 5],
+        ['locate_<faction>_safehouse', 6, 'raid_safehouse'],
+        ['interrogate_<faction>_handler', 3],
+        ['locate_<faction>_outpost', 8, 'raid_outpost'],
+        ['interrogate_<faction>_soldier', 4],
+        ['locate_<faction>_training_facility', 10, 'raid_training_facility'],
+        ['interrogate_<faction>_lieutenant', 5],
+        ['locate_<faction>_logistics_hub', 12, 'raid_logistics_hub'],
+        ['interrogate_<faction>_commander', 6],
+        ['locate_<faction>_command_center', 15, 'raid_command_center'],
+        ['analyze_<faction>_command_structure', 8],
+        ['locate_<faction>_regional_stronghold', 20, 'raid_regional_stronghold'],
+        ['interrogate_<faction>_high_commander', 8],
+        ['locate_<faction>_hq', 25, 'raid_hq'],
+        ['interrogate_<faction>_cult_leader', 8],
+        ['terminate_<faction>', 35],
+        ['peace_on_earth', 40],
+      ]
+      LEADS.forEach((l) => (BASE[l[0]] = { required_progress: l[1] }))
+      const SITES = Object.keys(BASE).filter((k) => BASE[k].kind)
+      const INIT = SITES.filter((k) => BASE[k].kind === 'initiative')
+      const FILES = [
+        ['configuration/campaign_configurations.yaml', ['standard']],
+        ['agents/agent_archetypes.yaml', ['field_agent']],
+        ['agents/agent_parameters.yaml', ['agent_parameters']],
+        ['combat/combat_parameters.yaml', ['combat_parameters']],
+        ['combat/enemy_archetypes.yaml', EN],
+        ['combat/weapons.yaml', WP],
+        ['agent-recovery/recovery_parameters.yaml', ['recovery']],
+        ['economy-and-upgrades/economy_parameters.yaml', ['economy']],
+        ['economy-and-upgrades/upgrades.yaml', UP],
+        ['investigations/investigation_parameters.yaml', ['investigation_parameters']],
+        ['leads-and-progression/leads.yaml', LEADS.map((l) => l[0])],
+        ['missions/mission_site_archetypes.yaml', SITES],
+        ['factions/faction_archetypes.yaml', FA],
+        ['factions/faction_activity_levels.yaml', AL],
+        ['factions/faction_operation_levels.yaml', OL],
+        ['panic-and-endings/ending_parameters.yaml', ['endings']],
+      ]
+
+      /* ---------- state ---------- */
+      const clone = (o) => JSON.parse(JSON.stringify(o))
+      let cur = clone(BASE)
+      const TEAM0 = { n: 4, skill: 100, ex: 0, wu: 0, hu: 0, target: 90, inv_n: 4, inv_skill: 100, ign: 100 }
+      let T = clone(TEAM0)
+      const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o)
+      const set = (o, p, v) => {
+        const ks = p.split('.')
+        const l = ks.pop()
+        ks.reduce((a, k) => a[k], o)[l] = v
+      }
+      function leaves(o, pre, acc) {
+        for (const k in o) {
+          const v = o[k],
+            p = pre ? pre + '.' + k : k
+          if (v && typeof v === 'object') leaves(v, p, acc)
+          else if (k !== 'kind' && k !== 'level' && v !== null) acc.push(p)
+        }
+        return acc
+      }
+      const PATHS = leaves(BASE, '', [])
+      const changes = () => PATHS.filter((p) => get(cur, p) !== get(BASE, p))
+      function save() {
+        try {
+          const d = {}
+          changes().forEach((p) => (d[p] = get(cur, p)))
+          localStorage.setItem('gdr-bench', JSON.stringify({ d, T }))
+        } catch (e) {}
+      }
+      function load() {
+        try {
+          const s = JSON.parse(localStorage.getItem('gdr-bench') || 'null')
+          if (!s) return
+          for (const p in s.d) if (PATHS.includes(p)) set(cur, p, s.d[p])
+          Object.assign(T, s.T || {})
+        } catch (e) {}
+      }
+
+      /* ---------- html helpers ---------- */
+      const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      const sid = (p) => 'i_' + p.replace(/[^a-z0-9]/gi, '_')
+      const f = (x, d = 1) => (Number.isFinite(x) ? (+x.toFixed(d)).toLocaleString('en-US') : '–')
+      function inp(p, o = {}) {
+        const v = get(cur, p),
+          b = get(BASE, p)
+        return `<input type="number" inputmode="decimal" id="${sid(p)}" data-p="${p}" value="${v}" step="${o.step || 1}" min="${o.min ?? 0}" title="${esc(p)} · Bootstrap value ${b}" aria-label="${esc(p)}"${v !== b ? ' class="chg"' : ''}>`
+      }
+      function sel(p, opts) {
+        const v = get(cur, p)
+        return `<select id="${sid(p)}" data-p="${p}" aria-label="${esc(p)}"${v !== get(BASE, p) ? ' class="chg"' : ''}>${opts.map((o) => `<option${o === v ? ' selected' : ''}>${o}</option>`).join('')}</select>`
+      }
+      const row = (p, hint, o) =>
+        `<div class="kv"><span class="k"><code>${esc(p.split('.').slice(1).join('.'))}</code><small>${hint}</small></span>${inp(p, o)}</div>`
+      const panel = (title, src, body, cls = '') =>
+        `<div class="panel ${cls}"><h3>${title}</h3>${src ? `<div class="src">${src}</div>` : ''}${body}</div>`
+      const tin = (k, label, o = {}) =>
+        `<label><span class="lbl">${label}</span><input type="number" id="t_${k}" data-t="${k}" value="${T[k]}" step="${o.step || 1}" min="${o.min ?? 0}"${o.max ? ` max="${o.max}"` : ''}></label>`
+      const out = (rows) => `<dl class="out">${rows.map((r) => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('')}</dl>`
+      const title = (id) => id.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())
+
+      /* ---------- build the editable scaffold ---------- */
+      function build() {
+        const ap = 'agent_parameters',
+          cp = 'combat_parameters'
+        const h = []
+        /* Combat */
+        h.push(`<section id="combat"><div class="shead"><h2>Combat</h2><p>How strong each side is, and so how large a team each Mission site demands. The table at the end has the engine fight every site ${TRIALS} times with the test team.</p></div>
+  <div class="cols"><div class="col">
+  ${panel('Enemy archetypes', 'content/combat/enemy_archetypes.yaml', `<div class="tw"><table><tr><th>Enemy</th><th>base_skill</th><th>base_health</th><th>weapon</th><th class="d">damage roll</th></tr>${EN.map((e) => `<tr><td class="name">${title(e)}</td><td>${inp(e + '.base_skill')}</td><td>${inp(e + '.base_health', { min: 1 })}</td><td>${sel(e + '.weapon', WP)}</td><td class="d" id="dr_${e}"></td></tr>`).join('')}</table></div>`)}
+  ${panel('Weapons', 'content/combat/weapons.yaml', `<div class="tw"><table><tr><th>Weapon</th><th>base_weapon_damage</th><th class="d">damage roll</th><th class="d">used by</th></tr>${WP.map((w) => `<tr><td class="name">${title(w)}</td><td>${inp(w + '.base_weapon_damage', { min: 1 })}</td><td class="d" id="wr_${w}"></td><td class="d" id="wu_${w}" style="font-family:var(--body);white-space:normal"></td></tr>`).join('')}</table></div>`)}
+  </div><div class="col">
+  ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + extra(cp))}
+  ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
+  </div></div>
+  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('hu', 'Max health upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}</div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
+  ${panel('Mission sites', 'content/missions/mission_site_archetypes.yaml', `<div class="tw"><table id="sites"><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th></tr>${SITES.map((s, i) => `<tr${i === INIT.length ? ' class="sep"' : ''}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td></tr>`).join('')}</table></div><div class="note"><b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombat</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; each team size tried is fought until the result is decided, at most ${TRIALS} Combats. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice.</div>`)}
+  </section>`)
+        /* Agents */
+        h.push(`<section id="agents"><div class="shead"><h2>Agents</h2><p>How long an Agent can work before it tires, how fast it rests and heals, and how fast it grows.</p></div><div class="cols"><div class="col">
+  ${panel('Work, growth and experience', 'content/agents/agent_parameters.yaml', row(ap + '.initial_roster_size', 'Agents at campaign creation') + row(ap + '.exhaustion_per_contracting_turn', '') + row(ap + '.exhaustion_per_training_turn', '') + row(ap + '.exhaustion_per_investigation_turn', '') + row(ap + '.exhaustion_per_mission', 'to every survivor') + row(ap + '.exhaustion_per_pct_killed', 'per 1% of the team Killed') + row(ap + '.exhaustion_work_start_max', 'most exhaustion at which work can start') + row(ap + '.exhaustion_work_limit', 'exhaustion that forces a return') + row(ap + '.training_skill_gain_per_turn', 'base skill per Turn of Training', { step: 0.1 }) + row(ap + '.experience_per_attack_hit', '') + row(ap + '.experience_per_attack_miss', '') + row(ap + '.experience_per_defense_hit', '') + row(ap + '.experience_per_defense_miss', '') + [0, 1, 2, 3].map((i) => row(ap + '.experience_per_mission_survived.' + i, ['first Mission survived', 'second', 'third', 'every later one'][i])).join('') + extra(ap))}
+  ${panel('Recovery', 'content/agent-recovery/recovery_parameters.yaml', row('recovery.health_recovery_pct_per_turn', '% of effective max health per Turn', { step: 0.1 }) + row('recovery.exhaustion_recovery_per_turn', 'on Standby or Recovery', { step: 0.5 }) + extra('recovery'))}
+  </div><div class="col">
+  ${panel('Effective skill by exhaustion', '', `<div class="chart" id="ch_skill"></div>`, 'read')}
+  ${panel('What these values cause', '', `<div id="o_agents"></div>`, 'read')}
+  </div></div></section>`)
+        /* Economy */
+        h.push(`<section id="economy"><div class="shead"><h2>Economy</h2><p>What an Agent earns and costs, what Upgrades cost in Turns of work, and what Missions pay.</p></div><div class="cols"><div class="col">
+  ${panel('Starting money and economy', 'content/configuration/campaign_configurations.yaml · economy-and-upgrades/economy_parameters.yaml', `<div class="kv"><span class="k"><code>standard.starting_money</code><small></small></span>${inp('standard.starting_money')}</div><div class="kv"><span class="k"><code>standard.starting_funding</code><small>income every Turn</small></span>${inp('standard.starting_funding')}</div>` + row('economy.hire_cost', '') + row('economy.upkeep_per_agent', 'every Serving Agent, every Turn') + row('economy.contracting_income_per_agent', 'at effective skill 100') + row('economy.base_agent_cap', '') + row('economy.base_transport_cap', 'Agents that can be Deployed at once') + row('economy.base_training_cap', '') + extra('economy'))}
+  ${panel('Upgrades', 'content/economy-and-upgrades/upgrades.yaml', `<div class="tw"><table><tr><th>Upgrade</th><th>price</th><th>increment</th><th class="d">Contractor-Turns</th></tr>${UP.map((u) => `<tr><td class="name">${title(u)}</td><td>${inp(u + '.price')}</td><td>${inp(u + '.increment', { step: 0.1 })}</td><td class="d" id="ut_${u}"></td></tr>`).join('')}</table></div><div class="note">Contractor-Turns is the price divided by what one skill-100 Agent on Contracting earns after its own upkeep.</div>`)}
+  </div><div class="col">
+  ${panel('What these values cause', '', `<div id="o_econ"></div>`, 'read')}
+  ${panel('Initiative Mission rewards', 'content/missions/mission_site_archetypes.yaml · on_win', `<div class="tw"><table><tr><th>Mission site</th><th>money</th><th>funding</th><th>panic</th><th class="d">Σ money</th><th class="d">Σ funding</th></tr>${INIT.map((s) => `<tr><td class="name">${title(s)}</td><td>${inp(s + '.on_win.money')}</td><td>${inp(s + '.on_win.funding')}</td><td>${inp(s + '.on_win.panic', { step: 0.05, min: -100 })}</td><td class="d" id="rm_${s}"></td><td class="d" id="rf_${s}"></td></tr>`).join('')}</table></div><div class="note">The sums run down one Faction's chain, each site Won once.</div>`)}
+  </div></div></section>`)
+        /* Leads */
+        h.push(`<section id="leads"><div class="shead"><h2>Leads and Investigations</h2><p>How many Turns of investigating stand between the Agency and each step of the Victory path.</p></div><div class="cols"><div class="col">
+  ${panel('Required progress', 'content/leads-and-progression/leads.yaml · each &lt;faction&gt; row sets the Lead of all three Factions', `<div class="tw"><table><tr><th>Lead</th><th>required_progress</th><th class="d">Actual range</th><th class="d">Turns</th></tr>${LEADS.map((l) => `<tr><td><code>${esc(l[0])}</code></td><td>${inp(l[0] + '.required_progress', { min: 1 })}</td><td class="d" id="lr_${sid(l[0])}"></td><td class="d" id="lt_${sid(l[0])}"></td></tr>`).join('')}</table></div>`)}
+  </div><div class="col">
+  ${panel('Investigation parameters', 'content/investigations/investigation_parameters.yaml', row('investigation_parameters.team_efficiency_exponent', 'a team of n works at n^e / n per member', { step: 0.05 }) + row('investigation_parameters.required_progress_max_pct', 'Actual required progress is drawn from 100% to this', { min: 100, step: 5 }) + row('investigation_parameters.assessment_threshold_pct', 'progress at which the requirement is revealed', { step: 5 }) + extra('investigation_parameters'))}
+  ${panel('Investigating team', 'not a GDR: the team the Turns column assumes', `<div class="ctl">${tin('inv_n', 'Agents', { min: 1 })}${tin('inv_skill', 'Effective skill each', { min: 1 })}</div>`, 'read')}
+  ${panel('What these values cause', '', `<div id="o_leads"></div>`, 'read')}
+  </div></div></section>`)
+        /* Factions */
+        const wcols = [1, 2, 3, 4, 5, 6]
+        h.push(`<section id="factions"><div class="shead"><h2>Factions and Panic</h2><p>How fast the Factions escalate, how often they strike, and how long the Agency can afford to look away.</p></div>
+  ${panel(
+    'Faction activity levels',
+    'content/factions/faction_activity_levels.yaml',
+    `<div class="tw"><table><tr><th>Level</th><th colspan="2">lasts_turns</th><th colspan="2">operation_every_turns</th>${wcols.map((k) => `<th title="operation_level_weights.${k}">w${k}</th>`).join('')}<th class="d">Ops / 100 Turns</th><th class="d">Panic per ignored op</th><th class="d">Existential</th>${FA.map((x) => `<th class="d">${title(x)} from</th>`).join('')}</tr>${AL.map(
+      (a) => {
+        const L = BASE[a]
+        return `<tr><td class="name">${title(a)}</td>${L.lasts_turns ? `<td>${inp(a + '.lasts_turns.0', { min: 1 })}</td><td>${inp(a + '.lasts_turns.1', { min: 1 })}</td>` : `<td colspan="2" style="text-align:center;color:var(--muted)">final</td>`}${L.operation_every_turns ? `<td>${inp(a + '.operation_every_turns.0', { min: 1 })}</td><td>${inp(a + '.operation_every_turns.1', { min: 1 })}</td>${wcols.map((k) => `<td class="w">${inp(a + '.operation_level_weights.' + k)}</td>`).join('')}` : `<td colspan="8" style="text-align:center;color:var(--muted)">no operations</td>`}<td class="d" id="ao_${a}"></td><td class="d" id="ap_${a}"></td><td class="d" id="ae_${a}"></td>${FA.map((x) => `<td class="d" id="at_${a}_${x}"></td>`).join('')}</tr>`
+      },
+    ).join(
+      '',
+    )}</table></div><div class="note">The last three columns give the Turn on which each Faction is expected to enter the level, taking every duration at its mean.</div>`,
+  )}
+  <div class="cols"><div class="col">
+  ${panel(
+    'Faction operation levels',
+    'content/factions/faction_operation_levels.yaml',
+    `<div class="tw"><table><tr><th>Level</th><th>win money</th><th>win funding</th><th>loss panic</th><th>loss funding</th></tr>${OL.slice(
+      0,
+      5,
+    )
+      .map(
+        (o, i) =>
+          `<tr><td class="name">${i + 1}</td><td>${inp(o + '.on_win.money')}</td><td>${inp(o + '.on_win.funding')}</td><td>${inp(o + '.on_ignored_or_lost.panic', { step: 0.01 })}</td><td>${inp(o + '.on_ignored_or_lost.funding', { min: -999 })}</td></tr>`,
+      )
+      .join(
+        '',
+      )}<tr><td class="name">6</td><td colspan="4" style="text-align:center;color:var(--muted)">no reward · the Campaign is lost outright</td></tr></table></div>`,
+  )}
+  ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div>`).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
+  </div><div class="col">
+  ${panel('Expected Panic if operations are not stopped', '', `<div class="ctl">${tin('ign', 'Operations ignored or lost, %', { max: 100, step: 5 })}</div><div class="chart" id="ch_panic"></div><div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from Won Missions: each level lasts its mean duration and operations arrive at the mean interval.</div>`, 'read')}
+  </div></div></section>`)
+        /* Changes */
+        h.push(
+          `<section id="changes"><div class="shead"><h2>Changes</h2><p>Every value that differs from the Bootstrap GDRs, grouped by the YAML file that records it.</p></div>${panel('Changed values', '', `<div class="chg-list" id="chglist"></div><textarea id="chgtext" readonly aria-label="Changes as text"></textarea>`)}</section>`,
+        )
+        document.getElementById('app').innerHTML = h.join('')
+        paintLevels()
+        paintStatus()
+      }
+
+      /* ---------- rules ---------- */
+      const dmgRange = (w) => {
+        const r = cur.combat_parameters.weapon_damage_range
+        return [Math.ceil(w * (1 - r) - 1e-9), Math.floor(w * (1 + r) + 1e-9)]
+      }
+      const wdmg = (w) => cur[w].base_weapon_damage
+      const TRIALS = 100,
+        MAXN = 300
+      /* LOCAL is what server.ts reported when the page loaded: the engine it runs and the GDR values it read from disk. */
+      let ENGINE = '',
+        LOCAL = null,
+        runCtl = null
+      /* The GDR values a Combat reads, by authored name, as developer.tools.fightCombat takes them. The engine names them; the list below is used only until it has. */
+      const COMBAT_NAMES = [
+        'weapon_damage_range',
+        'retreat_below_agent_rating_fraction',
+        'retreat_at_enemy_to_agent_rating',
+        'incapacitation_skill_fraction',
+        'exhaustion_incapacitation',
+        'exhaustion_free_points',
+        'skill_penalty_pct_per_exhaustion',
+        'exhaustion_per_attack',
+        'exhaustion_per_defense',
+      ]
+      function simParams() {
+        const a = cur.agent_parameters,
+          c = cur.combat_parameters,
+          o = {}
+        ;((ENG && ENG.combatGdrValueNames) || COMBAT_NAMES).forEach((k) => {
+          const v = k in c ? c[k] : a[k]
+          if (typeof v === 'number') o[k] = v
+        })
+        return o
+      }
+      /* Parameter GDRs whose values the YAML may add to: a value on disk that this page does not know gets a row of its own. */
+      const KNOWN = {}
+      ;['combat_parameters', 'agent_parameters', 'recovery', 'economy', 'investigation_parameters'].forEach(
+        (id) => (KNOWN[id] = Object.keys(BASE[id])),
+      )
+      const extra = (id) =>
+        Object.keys(cur[id])
+          .filter((k) => !KNOWN[id].includes(k) && typeof cur[id][k] === 'number')
+          .map((k) => row(id + '.' + k, 'read from disk; this page has no description of it', { step: 'any' }))
+          .join('')
+      /* ---------- engine: every Combat is fought by the game-v5-impl-web engine on disk, through server.ts ---------- */
+      let gen = 0,
+        simSig = '',
+        ENG = null,
+        engineErr = '',
+        doneSites = 0
+      const cell = (p, s) => document.getElementById(p + '_' + s)
+      function paintStatus() {
+        const e = document.getElementById('simstatus')
+        if (!e) return
+        const src = LOCAL
+          ? `the game-v5-impl-web engine on disk (${LOCAL.impl}, ${ENGINE}) on ${LOCAL.threads} threads. GDR values were read from ${LOCAL.spec} when this page loaded; reload the page to read both again`
+          : ''
+        e.textContent = engineErr
+          ? 'The engine could not be used: ' + engineErr
+          : !ENG
+            ? 'Starting the game-v5-impl-web engine…'
+            : doneSites >= SITES.length
+              ? `All ${SITES.length} Mission sites fought by ${src}.`
+              : `Fighting: ${doneSites} of ${SITES.length} Mission sites done, by ${src}.`
+      }
+      function paintLevels() {
+        if (!ENG) return
+        INIT.forEach((s) => {
+          const c = cell('sl', s),
+            l = ENG.initiativeLevels[s]
+          if (c) c.textContent = 'Initiative · operation level ' + (l == null ? 'none' : l)
+        })
+      }
+      function showErr(m) {
+        engineErr = m
+        paintStatus()
+        SITES.forEach((s) => {
+          cell('sw', s).textContent = '–'
+          cell('sn', s).textContent = '–'
+        })
+      }
+      /* Paints one result message; true when it is the last message of its Mission site. */
+      function paintMsg(m) {
+        const s = m.id
+        if (m.type === 'rate') {
+          const cls = m.win >= 85 ? 'good' : m.win >= 50 ? 'warn' : 'bad',
+            col = { good: 'var(--positive)', warn: 'var(--warning)', bad: 'var(--danger)' }[cls]
+          cell('sw', s).innerHTML =
+            `<span class="meter"><i style="width:${m.win}%;background:${col}"></i></span><span class="${cls}">${f(m.win, 0)}%</span>`
+          cell('sk', s).textContent = f(m.killed, 1)
+          return false
+        }
+        if (m.type === 'need') {
+          const need = m.need
+          cell('sn', s).textContent = need ? need : '>' + MAXN
+          if (need) {
+            const cap = cur.economy.base_transport_cap,
+              inc = cur.transport_cap.increment,
+              k = need > cap ? (inc > 0 ? Math.ceil((need - cap) / inc) : Infinity) : 0
+            cell('st', s).innerHTML = k
+              ? `${f(k, 0)} <small style="color:var(--muted)">· ${f(k * cur.transport_cap.price, 0)}</small>`
+              : '0'
+          } else cell('st', s).textContent = '–'
+          return true
+        }
+        if (m.type === 'failed') {
+          cell('sw', s).textContent = 'rejected'
+          cell('sw', s).title = m.message
+          cell('sn', s).textContent = '–'
+          cell('st', s).textContent = '–'
+          return true
+        }
+        return false
+      }
+      /* Sends every Mission site to server.ts and paints its answers as they arrive, one JSON message per line. */
+      async function runLocal(jobs, g) {
+        if (runCtl) runCtl.abort()
+        const ctl = (runCtl = new AbortController())
+        try {
+          const r = await fetch('api/run', { method: 'POST', body: JSON.stringify({ jobs }), signal: ctl.signal })
+          if (!r.ok) throw new Error('the server answered ' + r.status)
+          const rd = r.body.getReader(),
+            dec = new TextDecoder()
+          let buf = ''
+          for (;;) {
+            const { done, value } = await rd.read()
+            if (done) break
+            buf += dec.decode(value, { stream: true })
+            let i
+            while ((i = buf.indexOf('\n')) >= 0) {
+              const line = buf.slice(0, i)
+              buf = buf.slice(i + 1)
+              if (line && g === gen && paintMsg(JSON.parse(line))) {
+                doneSites++
+                paintStatus()
+              }
+            }
+          }
+        } catch (e) {
+          if (e.name !== 'AbortError' && g === gen) showErr(String(e.message || e) + '. Is server.ts still running?')
+        }
+      }
+      function runSims() {
+        if (!ENG) {
+          paintStatus()
+          return
+        }
+        const fa = cur.field_agent,
+          mh = Math.max(1, Math.round(fa.base_health + T.hu * cur.max_health.increment)),
+          w = Math.max(1, Math.round(wdmg(fa.weapon) + T.wu * cur.weapon_damage.increment))
+        const agent = {
+            kind: 'explicit',
+            baseSkill: Math.round(T.skill * 100) / 100,
+            currentHealth: mh,
+            effectiveMaxHealth: mh,
+            exhaustion: Math.round(T.ex),
+            effectiveWeaponDamage: w,
+          },
+          gdrValues = simParams()
+        const jobs = SITES.map((s) => {
+          /* Enemies in the order a new Mission site creates them, as the engine reported it. */
+          const order = (ENG.enemyOrder[s] || []).filter((e) => EN.includes(e))
+          EN.forEach((e) => {
+            if (!order.includes(e)) order.push(e)
+          })
+          const enemies = []
+          order.forEach((e) => {
+            const d = cur[e]
+            for (let k = 0; k < cur[s].enemies[e]; k++)
+              enemies.push({
+                kind: 'explicit',
+                baseSkill: d.base_skill,
+                currentHealth: d.base_health,
+                effectiveMaxHealth: d.base_health,
+                exhaustion: 0,
+                effectiveWeaponDamage: wdmg(d.weapon),
+              })
+          })
+          return {
+            type: 'site',
+            id: s,
+            enemies,
+            agent,
+            n: T.n,
+            gdrValues,
+            target: T.target,
+            trials: TRIALS,
+            maxn: MAXN,
+          }
+        })
+        const sig = JSON.stringify([
+          jobs.map((j) => j.enemies.map((e) => [e.baseSkill, e.currentHealth, e.effectiveWeaponDamage])),
+          agent,
+          T.n,
+          T.target,
+          gdrValues,
+          cur.economy.base_transport_cap,
+          cur.transport_cap,
+        ])
+        if (sig === simSig) return
+        simSig = sig
+        gen++
+        doneSites = 0
+        engineErr = ''
+        SITES.forEach((s) => {
+          cell('sw', s).textContent = '…'
+          cell('sw', s).title = ''
+          cell('sk', s).textContent = ''
+          cell('sn', s).textContent = '…'
+          cell('st', s).textContent = ''
+        })
+        paintStatus()
+        runLocal(jobs, gen)
+      }
+      /* Start: take the GDR values and the engine from disk, through server.ts. The values written in BASE above give the page its shape and are replaced here. */
+      async function init() {
+        try {
+          const r = await fetch('api/info', { cache: 'no-store' })
+          if (!r.ok) throw new Error('the server answered ' + r.status)
+          const j = await r.json()
+          PATHS.forEach((p) => {
+            const v = get(j.gdr, p)
+            if (v !== undefined && v !== null && typeof v === typeof get(BASE, p)) set(BASE, p, v)
+          })
+          for (const id in KNOWN)
+            for (const k in j.gdr[id] || {})
+              if (!(k in BASE[id]) && typeof j.gdr[id][k] === 'number') {
+                BASE[id][k] = j.gdr[id][k]
+                PATHS.push(id + '.' + k)
+              }
+          cur = clone(BASE)
+          LOCAL = j
+          ENGINE = j.engine
+          if (j.enemyOrder) ENG = j
+          else engineErr = j.engineError || 'the engine did not start'
+        } catch (e) {
+          engineErr =
+            'this page must be opened through tools/gdr-balance-bench/server.ts (' +
+            String(e.message || e) +
+            '). The values shown are the ones written in the page, not the ones on disk'
+        }
+        load()
+        build()
+        derive()
+      }
+
+      /* ---------- charts ---------- */
+      function niceStep(max, n) {
+        const raw = max / n,
+          p = Math.pow(10, Math.floor(Math.log10(raw))),
+          m = raw / p
+        return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p
+      }
+      function lineChart(host, o) {
+        const W = 640,
+          H = 260,
+          m = { l: 46, r: 16, t: 30, b: 38 },
+          X = (x) => m.l + (x / o.xmax) * (W - m.l - m.r),
+          Y = (y) => H - m.b - (y / o.ymax) * (H - m.t - m.b)
+        let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label)}">`
+        if (o.band != null && o.band <= o.ymax)
+          s += `<rect x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${Math.max(0, Y(o.band) - m.t)}" fill="var(--limit)"/><line x1="${m.l}" x2="${W - m.r}" y1="${Y(o.band)}" y2="${Y(o.band)}" stroke="var(--danger)" stroke-width="1"/><text x="${W - m.r - 4}" y="${Y(o.band) + 14}" text-anchor="end" font-size="11" fill="var(--danger)" font-family="var(--mono)">${esc(o.bandLabel)}</text>`
+        const ys = niceStep(o.ymax, 4),
+          xs = niceStep(o.xmax, 6)
+        for (let y = 0; y <= o.ymax + 1e-9; y += ys)
+          s += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(y)}" y2="${Y(y)}" stroke="var(--divider)" stroke-width="1"/><text x="${m.l - 6}" y="${Y(y) + 4}" text-anchor="end" font-size="11" fill="var(--axis)" font-family="var(--mono)">${f(y, 2)}</text>`
+        for (let x = 0; x <= o.xmax + 1e-9; x += xs)
+          s += `<text x="${X(x)}" y="${H - m.b + 15}" text-anchor="middle" font-size="11" fill="var(--axis)" font-family="var(--mono)">${f(x, 0)}</text>`
+        s += `<line x1="${m.l}" x2="${W - m.r}" y1="${H - m.b}" y2="${H - m.b}" stroke="var(--border)"/><text x="${(m.l + W - m.r) / 2}" y="${H - 5}" text-anchor="middle" font-size="11" fill="var(--axis)" font-family="var(--body)">${esc(o.xl)}</text>`
+        ;(o.vl || [])
+          .filter((v) => v.x >= 0 && v.x <= o.xmax)
+          .forEach((v, i) => {
+            s += `<line x1="${X(v.x)}" x2="${X(v.x)}" y1="${m.t - 4 + (i % 2) * 0}" y2="${H - m.b}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3"/><text x="${X(v.x)}" y="${10 + (i % 2) * 12}" text-anchor="${X(v.x) > W - 90 ? 'end' : 'middle'}" font-size="10.5" fill="var(--text2)" font-family="var(--body)">${esc(v.label)}</text>`
+          })
+        s += `<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="${o.pts.map((p) => X(p[0]).toFixed(1) + ',' + Y(Math.min(p[1], o.ymax)).toFixed(1)).join(' ')}"/>`
+        s += `<g class="hv" visibility="hidden"><line y1="${m.t}" y2="${H - m.b}" stroke="var(--text2)" stroke-width="1"/><circle r="4.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/></g></svg><div class="tip" hidden></div>`
+        host.innerHTML = s
+        const svg = host.querySelector('svg'),
+          hv = host.querySelector('.hv'),
+          tip = host.querySelector('.tip')
+        svg.onpointermove = (ev) => {
+          const b = svg.getBoundingClientRect(),
+            vx = ((ev.clientX - b.left) / b.width) * W,
+            x = ((vx - m.l) / (W - m.l - m.r)) * o.xmax
+          let best = o.pts[0]
+          for (const p of o.pts) if (Math.abs(p[0] - x) < Math.abs(best[0] - x)) best = p
+          const px = X(best[0]),
+            py = Y(Math.min(best[1], o.ymax))
+          hv.setAttribute('visibility', 'visible')
+          hv.querySelector('line').setAttribute('x1', px)
+          hv.querySelector('line').setAttribute('x2', px)
+          hv.querySelector('circle').setAttribute('cx', px)
+          hv.querySelector('circle').setAttribute('cy', py)
+          tip.hidden = false
+          tip.textContent = o.fmt(best)
+          tip.style.left = Math.min(Math.max((px / W) * 100, 14), 86) + '%'
+        }
+        svg.onpointerleave = () => {
+          hv.setAttribute('visibility', 'hidden')
+          tip.hidden = true
+        }
+      }
+
+      /* ---------- derived readouts ---------- */
+      const mean = (a) => (a[0] + a[1]) / 2
+      function derive() {
+        const a = cur.agent_parameters,
+          e = cur.economy,
+          $ = (id) => document.getElementById(id)
+        /* combat tables */
+        EN.forEach((x) => {
+          const [lo, hi] = dmgRange(wdmg(cur[x].weapon))
+          $('dr_' + x).textContent = lo + '–' + hi
+        })
+        WP.forEach((w) => {
+          const [lo, hi] = dmgRange(wdmg(w))
+          $('wr_' + w).textContent = lo + '–' + hi
+          const u = EN.filter((x) => cur[x].weapon === w).map(title)
+          if (cur.field_agent.weapon === w) u.unshift('Agents')
+          $('wu_' + w).textContent = u.join(', ') || '–'
+        })
+        SITES.forEach((s) => {
+          let c = 0,
+            r = 0
+          EN.forEach((x) => {
+            c += cur[s].enemies[x]
+            r += cur[s].enemies[x] * cur[x].base_skill
+          })
+          $('sc_' + s).textContent = c
+          $('sr_' + s).textContent = f(r, 0)
+        })
+        const fa = cur.field_agent,
+          tw = wdmg(fa.weapon) + T.wu * cur.weapon_damage.increment,
+          th = fa.base_health + T.hu * cur.max_health.increment,
+          [tlo, thi] = dmgRange(tw)
+        $('teamnote').textContent =
+          `Each Agent: health ${f(th, 0)}, damage roll ${tlo}–${thi}. Starting Combat rating ${f(T.n * Math.floor((T.skill * Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, T.ex - a.exhaustion_free_points))) / 100), 0)}.`
+        /* agents */
+        const pen = (x) =>
+          Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, x - a.exhaustion_free_points))
+        const xm = Math.max(a.exhaustion_incapacitation, a.exhaustion_work_limit) + 10,
+          pts = []
+        for (let x = 0; x <= xm; x++) pts.push([x, pen(x)])
+        lineChart($('ch_skill'), {
+          pts,
+          xmax: xm,
+          ymax: 100,
+          xl: 'Exhaustion',
+          label: 'Effective skill as a percentage of base skill, by exhaustion',
+          vl: [
+            { x: a.exhaustion_work_start_max, label: 'can start work' },
+            { x: a.exhaustion_work_limit, label: 'forced return' },
+            { x: a.exhaustion_incapacitation, label: 'Incapacitated' },
+          ],
+          fmt: (p) => `exhaustion ${p[0]} → ${f(p[1], 0)}% of base skill`,
+        })
+        const rec = cur.recovery,
+          stretch = (k) => (a[k] > 0 ? Math.ceil(a.exhaustion_work_limit / a[k]) : Infinity),
+          rest =
+            rec.exhaustion_recovery_per_turn > 0
+              ? Math.ceil(
+                  Math.max(0, a.exhaustion_work_limit - a.exhaustion_work_start_max) / rec.exhaustion_recovery_per_turn,
+                )
+              : Infinity,
+          restFull =
+            rec.exhaustion_recovery_per_turn > 0
+              ? Math.ceil(a.exhaustion_work_limit / rec.exhaustion_recovery_per_turn)
+              : Infinity,
+          ws = stretch('exhaustion_per_contracting_turn')
+        const xp = a.experience_per_mission_survived,
+          hr = Math.ceil(rec.health_recovery_pct_per_turn * th - 1e-9) / 100
+        $('o_agents').innerHTML = out([
+          ['Turns a rested Agent contracts before a forced return', f(ws, 0)],
+          ['… investigates', f(stretch('exhaustion_per_investigation_turn'), 0)],
+          ['… trains', f(stretch('exhaustion_per_training_turn'), 0)],
+          [
+            'Turns of work at full skill',
+            f(
+              a.exhaustion_per_contracting_turn > 0
+                ? Math.floor(a.exhaustion_free_points / a.exhaustion_per_contracting_turn)
+                : Infinity,
+              0,
+            ),
+          ],
+          ['Effective skill at the forced return', f(pen(a.exhaustion_work_limit), 0) + '%'],
+          ['Turns of rest until it can start work again', f(rest, 0)],
+          ['Turns of rest to zero exhaustion', f(restFull, 0)],
+          ['Share of Turns working, rest to zero each cycle', f((ws / (ws + restFull)) * 100, 0) + '%'],
+          ['Turns on Recovery after losing half its health', f(Math.ceil(th / 2 / hr - 1e-9), 0)],
+          ['Turns on Recovery from 1 health', f(Math.ceil((th - 1) / hr - 1e-9), 0)],
+          [
+            'Base skill from one full Training stretch',
+            `+${f(stretch('exhaustion_per_training_turn') * a.training_skill_gain_per_turn, 1)} <small>at most; a tired Agent gains less often</small>`,
+          ],
+          [
+            'Experience for surviving Missions 1 to 4',
+            xp.join(' · ') + ` <small>= +${xp.reduce((x, y) => x + y, 0)} skill</small>`,
+          ],
+          [
+            'Experience per 10 attacks made, half of them hits',
+            f(5 * a.experience_per_attack_hit + 5 * a.experience_per_attack_miss, 0),
+          ],
+        ])
+        /* economy */
+        const net = e.contracting_income_per_agent - e.upkeep_per_agent,
+          n0 = a.initial_roster_size,
+          st = cur.standard,
+          idle = n0 * e.upkeep_per_agent - st.starting_funding
+        $('o_econ').innerHTML = out([
+          ['One skill-100 contractor nets, per Turn', f(net, 1)],
+          ['A contractor of skill 200 nets', f(e.contracting_income_per_agent * 1.2 - e.upkeep_per_agent, 1)],
+          ['Turns for a hire to repay its cost by Contracting', f(net > 0 ? e.hire_cost / net : Infinity, 1)],
+          ['Idle Agents one contractor pays for', f(e.upkeep_per_agent > 0 ? net / e.upkeep_per_agent : Infinity, 2)],
+          [
+            'Starting roster, all on Contracting, per Turn',
+            (st.starting_funding + n0 * net >= 0 ? '+' : '') + f(st.starting_funding + n0 * net, 0),
+          ],
+          ['Starting roster, none on Contracting, per Turn', (-idle >= 0 ? '+' : '') + f(-idle, 0)],
+          [
+            'Turns until bankruptcy with nobody contracting',
+            idle > 0 ? f(Math.floor(st.starting_money / idle) + 1, 0) : 'never',
+          ],
+          [
+            'Hires the starting money buys',
+            f(
+              e.hire_cost > 0 ? Math.min(Math.floor(st.starting_money / e.hire_cost), e.base_agent_cap - n0) : Infinity,
+              0,
+            ),
+          ],
+          [
+            'Agents on Contracting to fund a full Agent cap',
+            f(
+              net + e.upkeep_per_agent > 0
+                ? Math.max(
+                    0,
+                    Math.ceil(
+                      (e.base_agent_cap * e.upkeep_per_agent - st.starting_funding) / e.contracting_income_per_agent,
+                    ),
+                  )
+                : Infinity,
+              0,
+            ) + ` <small>of ${e.base_agent_cap}</small>`,
+          ],
+        ])
+        UP.forEach((u) => ($('ut_' + u).textContent = net > 0 ? f(cur[u].price / net, 0) : '–'))
+        let sm = 0,
+          sf = 0
+        INIT.forEach((s) => {
+          sm += cur[s].on_win.money
+          sf += cur[s].on_win.funding
+          $('rm_' + s).textContent = f(sm, 0)
+          $('rf_' + s).textContent = '+' + f(sf, 0)
+        })
+        /* leads */
+        const ip = cur.investigation_parameters,
+          S = T.inv_n * T.inv_skill,
+          gain = Math.floor((S * Math.pow(T.inv_n, ip.team_efficiency_exponent)) / T.inv_n + 1e-9),
+          turns = {}
+        LEADS.forEach((l) => {
+          const R = cur[l[0]].required_progress,
+            hi = Math.max(R, Math.floor((R * ip.required_progress_max_pct) / 100 + 1e-9))
+          let t = 0
+          for (let x = R; x <= hi; x++) t += gain > 0 ? Math.ceil((x * 100) / gain) : Infinity
+          t /= hi - R + 1
+          turns[l[0]] = t
+          $('lr_' + sid(l[0])).textContent = R + '–' + hi
+          $('lt_' + sid(l[0])).textContent = f(t, 1)
+        })
+        const fac = LEADS.slice(1, 19).reduce((x, l) => x + turns[l[0]], 0),
+          c0 = turns.criminal_organizations,
+          pe = turns.peace_on_earth,
+          solo = T.inv_skill * 1
+        $('o_leads').innerHTML =
+          out([
+            ['Progress this team adds per Turn', f(gain / 100, 2)],
+            [
+              'Per member, against working alone',
+              f(gain / 100 / T.inv_n, 2) + ` <small>vs ${f(solo / 100, 2)}</small>`,
+            ],
+            ["Turns of investigating for one Faction's 18 Leads", f(fac, 0)],
+            ['Whole Victory path, one team, Factions in turn', f(c0 + 3 * fac + pe, 0)],
+            ['Whole Victory path, three such teams side by side', f(c0 + fac + pe, 0)],
+            [
+              'Turns one stretch of investigating lasts',
+              f(
+                a.exhaustion_per_investigation_turn > 0
+                  ? Math.ceil(a.exhaustion_work_limit / a.exhaustion_per_investigation_turn)
+                  : Infinity,
+                0,
+              ) + ' <small>before a forced return</small>',
+            ],
+          ]) +
+          `<div class="note" style="margin-top:8px">Turns are the mean over the Actual required progress range, for members at full skill. They leave out transit, the Missions between Leads, and the skill a tired member loses.</div>`
+        /* factions */
+        const opPanic = (k) => (k < 6 ? cur['operation_level_' + k].on_ignored_or_lost.panic : 0)
+        const lv = {}
+        AL.forEach((x) => {
+          const L = cur[x],
+            o = { rate: 0, ep: 0, ex: 0 }
+          if (L.operation_every_turns) {
+            const W = [1, 2, 3, 4, 5, 6].reduce((s, k) => s + L.operation_level_weights[k], 0)
+            o.rate = 1 / mean(L.operation_every_turns)
+            if (W > 0) {
+              o.ep = [1, 2, 3, 4, 5].reduce((s, k) => s + (L.operation_level_weights[k] / W) * opPanic(k), 0)
+              o.ex = L.operation_level_weights[6] / W
+            }
+          }
+          lv[x] = o
+          $('ao_' + x).textContent = o.rate ? f(o.rate * 100, 1) : '–'
+          $('ap_' + x).textContent = o.rate ? f(o.ep, 3) : '–'
+          $('ae_' + x).textContent = o.rate ? f(o.ex * 100, 1) + '%' : '–'
+        })
+        const tl = {}
+        FA.forEach((x) => {
+          const m = {}
+          let t = 1,
+            i = AL.indexOf(cur[x].initial_activity_level)
+          while (i < AL.length) {
+            m[AL[i]] = t
+            const L = cur[AL[i]]
+            if (!L.lasts_turns) break
+            t += mean(L.lasts_turns)
+            i++
+          }
+          tl[x] = m
+          AL.forEach((l) => ($('at_' + l + '_' + x).textContent = m[l] != null ? f(m[l], 0) : '–'))
+        })
+        const lim = cur.endings.defeat_at_panic_pct,
+          ign = T.ign / 100,
+          levelAt = (x, t) => {
+            let r = null
+            for (const l of AL) if (tl[x][l] != null && tl[x][l] <= t) r = l
+            return r
+          }
+        const pp = [[0, 0]]
+        let panic = 0,
+          surv = 1,
+          tLim = null,
+          tHalf = null,
+          tEx = null
+        const HOR = 1500
+        for (let t = 1; t <= HOR; t++) {
+          for (const x of FA) {
+            const o = lv[levelAt(x, t)]
+            panic += o.rate * o.ep * ign
+            surv *= 1 - Math.min(1, o.rate * o.ex * ign)
+            if (tEx == null && o.ex > 0 && o.rate > 0) tEx = t
+          }
+          panic = Math.min(100, panic)
+          pp.push([t, panic])
+          if (tLim == null && panic >= lim) tLim = t
+          if (tHalf == null && surv <= 0.5) tHalf = t
+        }
+        const xmax = Math.min(HOR, Math.max(200, Math.ceil(((tLim || tHalf || 600) * 1.2) / 50) * 50))
+        lineChart($('ch_panic'), {
+          pts: pp.filter((p) => p[0] <= xmax),
+          xmax,
+          ymax: Math.max(10, Math.min(100, lim * 1.1)),
+          xl: 'Turn',
+          label: 'Expected Panic by Turn',
+          band: lim,
+          bandLabel: 'Panic limit ' + lim,
+          vl: [
+            tEx && { x: tEx, label: 'existential ops begin' },
+            tHalf && { x: tHalf, label: '50% lost outright' },
+          ].filter(Boolean),
+          fmt: (p) => `Turn ${p[0]} → Panic ${f(p[1], 2)}`,
+        })
+        $('o_panic').innerHTML = out([
+          ['Expected Panic reaches the limit on Turn', tLim ? f(tLim, 0) : `not within ${HOR}`],
+          ['First Turn an existential operation can occur', tEx ? f(tEx, 0) : 'never'],
+          [
+            'Even odds an existential operation has ended the Campaign by Turn',
+            tHalf ? f(tHalf, 0) : `not within ${HOR}`,
+          ],
+          ['Expected Panic on Turn 200', f(pp[200][1], 2)],
+        ])
+        renderChanges()
+        runSims()
+        save()
+      }
+
+      /* ---------- changes ---------- */
+      function changesText(ch) {
+        if (!ch.length) return 'No changes: every value equals the Bootstrap GDRs.'
+        const L = ['GDR balance changes to apply under content/ (old -> new):']
+        FILES.forEach(([file, ids]) => {
+          const mine = ch.filter((p) => ids.includes(p.split('.')[0]))
+          if (!mine.length) return
+          L.push('', 'content/' + file)
+          mine.forEach((p) =>
+            L.push(
+              `  ${p}: ${get(BASE, p)} -> ${get(cur, p)}` +
+                (p.includes('<faction>') ? '   (red_dawn, exalt, and black_lotus)' : ''),
+            ),
+          )
+        })
+        if (ch.some((p) => /operation_level_weights|on_win|on_ignored_or_lost/.test(p)))
+          L.push('', 'Note: a weight or Effect that was absent in the YAML shows as 0.')
+        return L.join('\n')
+      }
+      function renderChanges() {
+        const ch = changes(),
+          c = document.getElementById('count')
+        c.textContent = ch.length + ' changed'
+        c.className = ch.length ? 'on' : ''
+        document.getElementById('chglist').innerHTML = ch.length
+          ? ch
+              .map(
+                (p) =>
+                  `<div class="chg-row"><span>${esc(p)}: ${get(BASE, p)} → <b>${get(cur, p)}</b></span><button data-rev="${esc(p)}">Revert</button></div>`,
+              )
+              .join('')
+          : `<div class="note">Nothing changed yet. Edited fields turn orange and are listed here.</div>`
+        document.getElementById('chgtext').value = changesText(ch)
+      }
+
+      /* ---------- events ---------- */
+      let timer
+      const later = () => {
+        clearTimeout(timer)
+        timer = setTimeout(derive, 180)
+      }
+      function onEdit(el) {
+        if (el.dataset.p) {
+          const p = el.dataset.p,
+            v = el.tagName === 'SELECT' ? el.value : parseFloat(el.value)
+          if (typeof v === 'number' && !Number.isFinite(v)) return
+          set(cur, p, v)
+          el.classList.toggle('chg', v !== get(BASE, p))
+          later()
+        } else if (el.dataset.t) {
+          const v = parseFloat(el.value)
+          if (!Number.isFinite(v)) return
+          const k = el.dataset.t
+          T[k] =
+            k === 'n' || k === 'inv_n' ? Math.max(1, Math.min(k === 'n' ? 300 : 99, Math.round(v))) : Math.max(0, v)
+          later()
+        }
+      }
+      document.addEventListener('input', (ev) => onEdit(ev.target))
+      document.addEventListener('change', (ev) => {
+        if (ev.target.tagName === 'SELECT') onEdit(ev.target)
+      })
+      document.addEventListener('click', (ev) => {
+        const t = ev.target
+        if (t.dataset.rev) {
+          set(cur, t.dataset.rev, get(BASE, t.dataset.rev))
+          build()
+          derive()
+        } else if (t.id === 'reset') {
+          cur = clone(BASE)
+          T = clone(TEAM0)
+          simSig = ''
+          build()
+          derive()
+        } else if (t.id === 'copy') {
+          const ta = document.getElementById('chgtext'),
+            done = () => {
+              t.textContent = 'Copied'
+              setTimeout(() => (t.textContent = 'Copy changes'), 1500)
+            },
+            fall = () => {
+              location.hash = 'changes'
+              ta.focus()
+              ta.select()
+              t.textContent = 'Selected: press Ctrl+C'
+              setTimeout(() => (t.textContent = 'Copy changes'), 3000)
+            }
+          try {
+            navigator.clipboard.writeText(ta.value).then(done, fall)
+          } catch (e) {
+            fall()
+          }
+        }
+      })
+      init()
+    </script>
+  </body>
+</html>
