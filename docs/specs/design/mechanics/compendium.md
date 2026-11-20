@@ -5,7 +5,7 @@
 | Spec ID | COMP |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, UI designer, Implementer |
-| Owns | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, and what Player API reports of it. |
+| Owns | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes and Weapons are Met subjects, what Player API reports of it, and the Revealed Compendium. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -27,6 +27,8 @@ These terms are specific to the Compendium.
 | Placeholder | A marker in the text of a Compendium article that names a GDR property and is replaced by the value of that property. |
 | Article term | A word or phrase that names a Compendium article, so that its first mention in another article links to that article. |
 | Article link | A link from a mention of an Article term, or from a See also entry, to the Compendium article it names. |
+| Met subject | An EnemyArchetype or Weapon that the Player has faced or can foresee facing in a [World state](../foundation/engine-contract.md#player-actions-and-turns), under [Met subjects](#met-subjects). |
+| Revealed Compendium | Every Compendium article of the [Game build](../foundation/core-concepts.md#game-build-and-content), each resolved as though every article were Player-visible, under [Revealed Compendium](#revealed-compendium). |
 
 # Compendium article GDRs
 
@@ -177,21 +179,30 @@ Rule 9 makes a renamed or removed GDR property a data defect of every article th
 In each [World state](../foundation/engine-contract.md#player-actions-and-turns), a Compendium article is Player-visible exactly when its `visible_when`, if it has one, holds in that World state, under [Evaluating a Condition](../foundation/conditions.md#evaluating-a-condition) in Conditions, and one of the following holds:
 
 1. It is a Guide article or a Mechanics article.
-2. It is a Subject article and its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR.
+2. It is a Subject article and its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR. When the subject is an EnemyArchetype or a Weapon, it must also be a Met subject in that World state, under Met subjects.
 
-Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the World state in which it is read; it is never stored. It changes only when the visibility of its subject changes or its `visible_when` starts to hold, so a Subject article without `visible_when` becomes Player-visible in the same World state as its subject, e.g. in the World state after the Advance turn whose Mission resolution step discovers its Lead.
+Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the World state in which it is read; it is never stored. It changes only when the visibility of its subject changes, its subject becomes a Met subject, or its `visible_when` starts to hold, so a Subject article without `visible_when` about a subject of another Type becomes Player-visible in the same World state as its subject, e.g. in the World state after the Advance turn whose Mission resolution step discovers its Lead.
 
 The following table restates, for the Types the [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) supply Subject articles for, when the specification that owns each Type makes one of its GDRs Player-visible. It is informative; each owning specification's Player-visible information section governs.
 
 | Subject Type | Owning specification | The subject is Player-visible |
 | --- | --- | --- |
 | AgentArchetype | [Player-visible information](agents-spec.md#player-visible-information) in Agents | In every World state. |
-| EnemyArchetype | [Player-visible information](combat.md#player-visible-information) in [Combat](domain-model.md#combat) | In every World state. |
-| Weapon | [Player-visible information](combat.md#player-visible-information) in Combat | In every World state. |
+| EnemyArchetype | [Player-visible information](combat.md#player-visible-information) in [Combat](domain-model.md#combat) | In every World state; its article also needs it to be a Met subject. |
+| Weapon | [Player-visible information](combat.md#player-visible-information) in Combat | In every World state; its article also needs it to be a Met subject. |
 | Upgrade | [Player-visible information](economy-and-upgrades.md#player-visible-information) in Economy and Upgrades | In every World state. |
 | FactionArchetype | [Player-visible information](factions.md#player-visible-information) in Factions | While a [Faction](domain-model.md#factions) whose [Archetype](../foundation/core-concepts.md#campaign-instances) it is exists, i.e. in every World state for an initial Faction's Archetype. |
 | Lead | [Player-visible information](leads-and-progression.md#player-visible-information) in Leads and Progression | Once the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) is discovered, which is permanent, under [Lead discovery](leads-and-progression.md#lead-discovery). |
 | MissionSiteArchetype | [Player-visible information](missions.md#player-visible-information) in Missions | While a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) whose Archetype it is exists, or a discovered Lead creates a Mission site from it. |
+
+## Met subjects
+
+Every EnemyArchetype and every Weapon is Player-visible in every World state, so that a Mission site or a [Combat report](domain-model.md#combat) can always name the Enemies in it. An article about each of them from the first [Turn](../foundation/engine-contract.md#player-actions-and-turns) would still tell the Player more than the Player may know, e.g. that a Cult leader with an anti-materiel rifle waits at the end of the Campaign. The article about one therefore waits until the Player meets its subject, i.e. until a Mission site the Player knows of, or can foresee, brings it into play. The following rules are complete. In a World state:
+
+- **EnemyArchetype:** an EnemyArchetype is a Met subject when the `enemies` of a MissionSiteArchetype that is Player-visible in that World state include it, under [Player-visible information](missions.md#player-visible-information) in Missions.
+- **Weapon:** a Weapon is a Met subject when it is the `weapon` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
+
+Whether a GDR is a Met subject is a Derived value of the World state, never stored. It follows the visibility of the MissionSiteArchetypes, so the article about an [Enemy](domain-model.md#combat) becomes Player-visible when a Lead is discovered that creates a Mission site holding that Enemy, or when a Mission site holding it is created, whichever comes first, e.g. with the Bootstrap GDRs, discovering a Lead that creates an Apprehend member Mission site makes the articles about the initiate, the operative, and the pistol Player-visible, while the article about the sidearm is Player-visible from the start because every Agent carries one.
 
 # Article resolution
 
@@ -245,6 +256,12 @@ A reference is only useful if it is complete: a Player who wants to know how a m
 
 The Compendium articles of the Bootstrap GDRs name, in a Placeholder of at least one article, every property of every parameter GDR, i.e. every GDR whose Type name ends in "Parameters", except the properties that the [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) specification exempts because they describe no mechanic of the game. A new property of a parameter GDR therefore comes with the Mechanics article text that explains it. This is a requirement on the Bootstrap GDRs as authored, which the repository check `npm run compendium:check` enforces; it is not a rule of [Compendium article GDR validation](#compendium-article-gdr-validation), so a Game build whose articles leave a property out is not defective.
 
+# Revealed Compendium
+
+A Game designer who writes or checks articles needs to read every one of them, without playing until each is revealed. The Revealed Compendium serves [Revealed presentation](../foundation/developer-access.md#revealed-presentation) in Developer Access: it is the Compendium as it would be if every article were Player-visible.
+
+`developer.queries.getRevealedCompendium()` reports every Compendium article of the Game build in its resolved form, under Article resolution, with V in [Article links](#article-links) being every Compendium article, so that every Article term takes part, every See also entry is kept, and the Article term lookup reports the article of any Article term. It also reports, for each article, whether it is Player-visible in the [Current world state](../foundation/engine-contract.md#player-actions-and-turns). Placeholders resolve as in every other resolved form, from the same GDR properties. It is a query of [Developer API](../foundation/engine-contract.md#api-surfaces), available only under [Dev mode](../foundation/developer-access.md#dev-mode): it changes no [Campaign state](../foundation/core-concepts.md#campaign-and-session), is not a [Player action](../foundation/engine-contract.md#player-actions-and-turns), and reports nothing through [Player API](../foundation/engine-contract.md#api-surfaces).
+
 # Player-visible information
 
 Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), with the reveal condition the table states. The table is exhaustive.
@@ -266,6 +283,8 @@ Player API reports every Player-visible article in its resolved form, never as a
 
 - **Subject that is never Player-visible:** A Subject article whose subject no specification ever declares Player-visible, e.g. an article about an undiscovered Lead in a Campaign that never discovers it, is never Player-visible. This is not a defect ([Article visibility](#article-visibility)).
 - **Subject visible, then hidden:** A Subject article follows its subject in every World state, so it is no longer Player-visible after undo, redo, or load restores a World state in which its subject is not Player-visible. Article links to it in other articles are plain text again in that World state ([Article visibility](#article-visibility), [Article links](#article-links)).
+- **Enemy seen at a Mission site, then the site expires:** The article about the Enemy stays Player-visible, because a Mission site exists in every lifecycle state, so its MissionSiteArchetype stays Player-visible ([Met subjects](#met-subjects)).
+- **Enemy named before its article is visible:** Every Enemy belongs to a Mission site whose MissionSiteArchetype lists the Enemy's EnemyArchetype, so the EnemyArchetype of every Enemy in a Player-visible value, e.g. in a Combat report, is a Met subject, and a user interface that links the Enemy's name to its article finds that article Player-visible ([Met subjects](#met-subjects)).
 - **A link appears where another was:** When a hidden article becomes Player-visible, a longer Article term of it can match where a shorter Article term of another article matched before, e.g. "Raid safehouse" where "Raid" linked. The resolved form then has the new Article link, and the first later mention of the shorter Article term links instead ([Article links](#article-links)).
 - **Article about another article:** A `subject` that identifies a CompendiumArticle fails [Compendium article GDR validation](#compendium-article-gdr-validation), so visibility never depends on another article.
 - **Subject without a name:** A `subject` that identifies a GDR without a `name`, e.g. a parameter GDR, fails rule 4 of [Compendium article GDR validation](#compendium-article-gdr-validation), because the article would have no displayed title.
